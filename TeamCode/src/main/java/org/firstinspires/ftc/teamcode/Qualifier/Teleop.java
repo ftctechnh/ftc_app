@@ -41,7 +41,7 @@ public class Teleop extends OpMode {
     public boolean righttriggerIsReleased = true;
     public boolean tristanmode = false;
     boolean onehitwonder = false;
-    boolean out = true;
+    boolean out = true;                          // what the heck does out mean?
 
     //SLOW SERVO
     public boolean elbowmoving = false;
@@ -372,9 +372,9 @@ public class Teleop extends OpMode {
 
         //Elbow Slowly
         if (gamepad2.left_stick_y < -0.1  && gromit.relicArm.relicArmMotor.getCurrentPosition() > 300) {
-            gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition()+.004);
-        } else if (gamepad2.left_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > 300) {
-            gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition()-.004);
+            gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition() + 0.004);
+        } else if (gamepad2.left_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition()  > 300) {
+            gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition() - 0.004);
         }
 
 
@@ -399,14 +399,14 @@ public class Teleop extends OpMode {
             if (rightbtn2IsReleased) {//IF CHANGE IN STATE
                 rightbtn2IsReleased = false;
                 onehitwonder = true;
-                gromit.relicArm.relicArmMotor.setPower(0.8);
+                gromit.relicArm.relicArmMotor.setPower(0.8);  // start powering out the arm
 
                 //Begin ELbow move
-                movetime = 1000;
+                movetime = 2000;
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
-                elbowstarttime = runtime.milliseconds();//Start time
-                elbowtarget = gromit.relicArm.elbowup+.09;
+                elbowstarttime = runtime.milliseconds();                            //Start time
+                elbowtarget = gromit.relicArm.elbowup + .09;                        // why the + 0.9???
                 elbowtotalmove = elbowtarget - elbowstartpos;
             }
         } else {
@@ -414,20 +414,24 @@ public class Teleop extends OpMode {
         }
         if(onehitwonder){
            if(gromit.relicArm.relicArmMotor.getCurrentPosition()> 4900 && out){
-               gromit.relicArm.relicArmMotor.setPower(0.0);
+               gromit.relicArm.relicArmMotor.setPower(0.0);                          // all the way out, stop the motor
                out = false;
-               gromit.relicArm.clawOpen();
-               while( gromit.relicArm.relicClawServo.getPosition() > 0.45){
+               //gromit.relicArm.relicElbowServo.setPosition(elbowtarget);
+               // maybe a wait here to make sure the elbow is all the way down?
+               sleep(300);
+               gromit.relicArm.clawOpen();      // unclamp
+               sleep(500);
+               while( gromit.relicArm.relicClawServo.getPosition() > 0.45){           // wait for claw to open enough?
                }
-               gromit.relicArm.relicArmMotor.setPower(-0.7);
+               gromit.relicArm.relicArmMotor.setPower(-0.7);                          // rewind the arm
                movetime = 700;
                elbowmoving = true;
                elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                elbowstarttime = runtime.milliseconds();//Start time
-               elbowtarget = gromit.relicArm.elbowtop;
+               elbowtarget = gromit.relicArm.elbowtop;                                 // set elbow target
                elbowtotalmove = elbowtarget - elbowstartpos;
            }
-           else if(gromit.relicArm.relicArmMotor.getCurrentPosition()< 300 && !out){
+           else if(gromit.relicArm.relicArmMotor.getCurrentPosition()< 300 && !out){    // turn things off?
                gromit.relicArm.relicArmMotor.setPower(0.0);
                out = true;
                onehitwonder = false;
@@ -443,6 +447,36 @@ public class Teleop extends OpMode {
 
     }
 
+    public void wait(int mSeconds){
+        double startTime =  runtime.milliseconds();
+        while ( runtime.milliseconds() < startTime + mSeconds ){
+
+        }
+    }
+
+    /**
+     * This method puts the current thread to sleep for the given time in msec.
+     * It handles InterruptException where it recalculates the remaining time
+     * and calls sleep again repeatedly until the specified sleep time has past.
+     *
+     * @param sleepTime specifies sleep time in msec.
+     */
+    public static void sleep(long sleepTime)
+    {
+        long wakeupTime = System.currentTimeMillis() + sleepTime;
+
+        while (sleepTime > 0)
+        {
+            try
+            {
+                Thread.sleep(sleepTime);
+            }
+            catch (InterruptedException e)
+            {
+            }
+            sleepTime = wakeupTime - System.currentTimeMillis();
+        }
+    }   //sleep
     @Override
     public void stop() {
         gromit.driveTrain.stopMotors();

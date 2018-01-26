@@ -32,6 +32,7 @@ public class RelicArm {
         relicArmMotor = hardwareMap.get(DcMotor.class, "relic_arm");
         relicArmMotor.setDirection(DcMotor.Direction.REVERSE);
         relicArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        relicArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         relicArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
