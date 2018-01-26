@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Robot;
@@ -41,11 +42,29 @@ public class RelicRecoveryRobot extends Robot {
 
         this.optionsMap = parser.parseFile(new File(AppUtil.FIRST_FOLDER + "/options.json"));
 
+        DcMotor.Direction left = DcMotor.Direction.FORWARD;
+        DcMotor.Direction right = DcMotor.Direction.FORWARD;
+        DcMotor.Direction middle = DcMotor.Direction.FORWARD;
+
+
+        if(!(boolean) getOptionsMap().get("isLeftWheelDirReverse")){
+            left = DcMotorSimple.Direction.REVERSE;
+        }
+        if(!(boolean) getOptionsMap().get("isMiddleWheelDirReverse")){
+            middle = DcMotorSimple.Direction.REVERSE;
+        }
+        if(!(boolean) getOptionsMap().get("isRightWheelDirReverse")){
+            right = DcMotorSimple.Direction.REVERSE;
+        }
+
+
         this.hDriveTrain = new HDriveTrain.Builder(this)
-                .setRightMotorDirection(DcMotor.Direction.REVERSE)
-                .setWheelDiameterInches(4)
-                .setInsideWheelGearingRatio(1.0)
-                .setOutsideWheelGearingRatio(1.5)
+                .setLeftMotorDirection(left)
+                .setRightMotorDirection(middle)
+                .setMiddleMotorDirection(right)
+                .setWheelDiameterInches((double) getOptionsMap().get("wheelDiam"))
+                .setInsideWheelGearingRatio((double) getOptionsMap().get("wheelRatIn"))
+                .setOutsideWheelGearingRatio((double) getOptionsMap().get("wheelRatOut"))
                 .build();
 
         this.glyphLift = new GlyphLift(this);

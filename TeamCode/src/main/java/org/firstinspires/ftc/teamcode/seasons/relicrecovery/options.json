@@ -1,3 +1,9 @@
 {
-  "wheelDiam" : 4
+  "wheelDiam" : 4,
+  "wheelRatIn" : 1.0,
+  "wheelRatOut" : 1.5,
+  "isLeftWheelDirReverse" : true,
+  "isRightWheelDirReverse" : true,
+  "isMidWheelDirReverse" : true
+
 }
