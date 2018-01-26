@@ -67,6 +67,10 @@ public class MyHardwarePushbot
     public static final double OPEN_offset      =  0.2  ;   // open claws
     public static final double MID_offset       =  0;       // mid position of claws
     public static final double CLOSE_offset     =  -.1 ;    // close claws
+    public static final double rightclawcorrection = -0.06;   // to correct the setup of the right claw servo
+    public static final double rightclawupcorrection = 0.08;  // to correct the setup of the right upper claw servo
+    public static final double leftclawcorrection = 0;
+    public static final double leftclawupcorrection = -0.07;
     public static final int liftclaw = 300 ;          // adjust lift height when open or close claw
     public static final int maxlift = 5470;                     // maxiumum lift height one inch is 421
     public static final int minlift = 0;                    // mininum lift height
@@ -121,6 +125,8 @@ public class MyHardwarePushbot
 
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
+        rightClawup.setPosition(MID_SERVO);
+        leftClawup.setPosition(MID_SERVO);
         ballArm.setPosition(.7); // sets position to mid servo or .5 of 180
     }
  }
