@@ -329,7 +329,7 @@ public class Teleop extends OpMode {
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();//Start time
                 if(gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMax-1000){
-                    elbowtarget = gromit.relicArm.elbowup+.07;
+                    elbowtarget = gromit.relicArm.elbowup+.09;
                 }
                 else {
                     elbowtarget = gromit.relicArm.elbowup;

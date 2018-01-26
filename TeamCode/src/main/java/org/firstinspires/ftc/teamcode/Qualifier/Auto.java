@@ -301,7 +301,7 @@ public class Auto extends LinearOpMode {
         gromit.glyphTrain.glyphclamp("close");
         sleep(100);
         //Raise Block
-        gromit.glyphTrain.liftGlyph(3);
+        gromit.glyphTrain.liftGlyph(4);
         // do the jewel should be a method in the jewelArm
 //sleep(3000);
         gromit.jewelArm.jewelArmDown();
@@ -324,6 +324,8 @@ public class Auto extends LinearOpMode {
             }
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, distance1, menuFile.RedFrontHeading1,0);
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
+            gromit.glyphTrain.lowerGlyph(2);
+
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2,0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(400);
@@ -339,6 +341,7 @@ public class Auto extends LinearOpMode {
             }
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, distance1, menuFile.BlueFrontHeading1,0);
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.BlueFrontTurn1);
+            gromit.glyphTrain.lowerGlyph(2);
             sleep(400);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.5, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
             gromit.glyphTrain.glyphclamp  ("open");
@@ -354,6 +357,8 @@ public class Auto extends LinearOpMode {
                 distance2 = menuFile.RedBackDistance2Left ;
             }
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
+            gromit.glyphTrain.lowerGlyph(2);
+
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.5, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
             gromit.glyphTrain.glyphclamp  ("open");
             sleep(400);
@@ -367,10 +372,12 @@ public class Auto extends LinearOpMode {
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 distance2 = menuFile.BlueBackDistance2Right ;
             }
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
-            sleep(1000);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, distance2, menuFile.RedBackHeading2, -90);  //-90
+            sleep(400);
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.BlueBackTurn3);   // about face 180.
-            sleep(1000);
+            sleep(400);
+            gromit.glyphTrain.lowerGlyph(2);
+
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.5, menuFile.BlueBackDistance3,  menuFile.BlueBackHeading3,0);  // 0
 
             gromit.glyphTrain.glyphclamp("open");

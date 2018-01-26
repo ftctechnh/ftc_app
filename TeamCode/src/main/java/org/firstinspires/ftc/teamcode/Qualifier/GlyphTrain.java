@@ -159,7 +159,7 @@ public class GlyphTrain {
         // clamp glyph
         //glyphclamp("close");
 
-        //height is encoder counts or inches, absolute or relative?
+        //height is encoder counts or inches,  relative?
         // get the current encoder counts
         int startposition = lift_motor.getCurrentPosition();
 
