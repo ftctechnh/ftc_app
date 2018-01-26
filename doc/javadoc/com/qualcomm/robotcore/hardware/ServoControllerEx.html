@@ -105,8 +105,8 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">ServoControllerEx</span>
 extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.html" title="interface in com.qualcomm.robotcore.hardware">ServoController</a></pre>
-<div class="block">ServoControllerEx is an optional upDownServo controller interface supported by some hardware
- that provides enhanced upDownServo functionality.</div>
+<div class="block">ServoControllerEx is an optional servo controller interface supported by some hardware
+ that provides enhanced servo functionality.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html" title="interface in com.qualcomm.robotcore.hardware"><code>PwmControl</code></a></dd>
@@ -153,33 +153,33 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.htm
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#getServoPwmRange-int-">getServoPwmRange</a></span>(int&nbsp;upDownServo)</code>
-<div class="block">Returns the PWM range of the indicated upDownServo on this controller.</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#getServoPwmRange-int-">getServoPwmRange</a></span>(int&nbsp;servo)</code>
+<div class="block">Returns the PWM range of the indicated servo on this controller.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#isServoPwmEnabled-int-">isServoPwmEnabled</a></span>(int&nbsp;upDownServo)</code>
-<div class="block">Returns whether the PWM is energized for this particular upDownServo</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#isServoPwmEnabled-int-">isServoPwmEnabled</a></span>(int&nbsp;servo)</code>
+<div class="block">Returns whether the PWM is energized for this particular servo</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmDisable-int-">setServoPwmDisable</a></span>(int&nbsp;upDownServo)</code>
-<div class="block">Returns whether the PWM is energized a this particular upDownServo</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmDisable-int-">setServoPwmDisable</a></span>(int&nbsp;servo)</code>
+<div class="block">Returns whether the PWM is energized a this particular servo</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmEnable-int-">setServoPwmEnable</a></span>(int&nbsp;upDownServo)</code>
-<div class="block">Individually denergizes the PWM for a particular upDownServo</div>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmEnable-int-">setServoPwmEnable</a></span>(int&nbsp;servo)</code>
+<div class="block">Individually denergizes the PWM for a particular servo</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmRange-int-com.qualcomm.robotcore.hardware.PwmControl.PwmRange-">setServoPwmRange</a></span>(int&nbsp;upDownServo,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmRange-int-com.qualcomm.robotcore.hardware.PwmControl.PwmRange-">setServoPwmRange</a></span>(int&nbsp;servo,
                 <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;range)</code>
-<div class="block">Sets the PWM range of the indicated upDownServo.</div>
+<div class="block">Sets the PWM range of the indicated servo.</div>
 </td>
 </tr>
 </table>
@@ -217,13 +217,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.htm
 <ul class="blockList">
 <li class="blockList">
 <h4>setServoPwmRange</h4>
-<pre>void&nbsp;setServoPwmRange(int&nbsp;upDownServo,
+<pre>void&nbsp;setServoPwmRange(int&nbsp;servo,
                       <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;range)</pre>
-<div class="block">Sets the PWM range of the indicated upDownServo.</div>
+<div class="block">Sets the PWM range of the indicated servo.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>upDownServo</code> - the upDownServo port number on the controller</dd>
-<dd><code>range</code> - the new range for the upDownServo</dd>
+<dd><code>servo</code> - the servo port number on the controller</dd>
+<dd><code>range</code> - the new range for the servo</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#getServoPwmRange-int-"><code>getServoPwmRange(int)</code></a>, 
 <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmRange-com.qualcomm.robotcore.hardware.PwmControl.PwmRange-"><code>PwmControl.setPwmRange(PwmControl.PwmRange)</code></a></dd>
@@ -236,13 +236,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.htm
 <ul class="blockList">
 <li class="blockList">
 <h4>getServoPwmRange</h4>
-<pre><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;getServoPwmRange(int&nbsp;upDownServo)</pre>
-<div class="block">Returns the PWM range of the indicated upDownServo on this controller.</div>
+<pre><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;getServoPwmRange(int&nbsp;servo)</pre>
+<div class="block">Returns the PWM range of the indicated servo on this controller.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>upDownServo</code> - the upDownServo port number on the controller</dd>
+<dd><code>servo</code> - the servo port number on the controller</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the PWM range of the indicated upDownServo on this controller.</dd>
+<dd>the PWM range of the indicated servo on this controller.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/ServoControllerEx.html#setServoPwmRange-int-com.qualcomm.robotcore.hardware.PwmControl.PwmRange-"><code>setServoPwmRange(int, PwmControl.PwmRange)</code></a>, 
 <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#getPwmRange--"><code>PwmControl.getPwmRange()</code></a></dd>
@@ -255,11 +255,11 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.htm
 <ul class="blockList">
 <li class="blockList">
 <h4>setServoPwmEnable</h4>
-<pre>void&nbsp;setServoPwmEnable(int&nbsp;upDownServo)</pre>
-<div class="block">Individually denergizes the PWM for a particular upDownServo</div>
+<pre>void&nbsp;setServoPwmEnable(int&nbsp;servo)</pre>
+<div class="block">Individually denergizes the PWM for a particular servo</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>upDownServo</code> - the upDownServo port number on the controller</dd>
+<dd><code>servo</code> - the servo port number on the controller</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmEnable--"><code>PwmControl.setPwmEnable()</code></a></dd>
 </dl>
@@ -271,11 +271,11 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.htm
 <ul class="blockList">
 <li class="blockList">
 <h4>setServoPwmDisable</h4>
-<pre>void&nbsp;setServoPwmDisable(int&nbsp;upDownServo)</pre>
-<div class="block">Returns whether the PWM is energized a this particular upDownServo</div>
+<pre>void&nbsp;setServoPwmDisable(int&nbsp;servo)</pre>
+<div class="block">Returns whether the PWM is energized a this particular servo</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>upDownServo</code> - the upDownServo port number on the controller</dd>
+<dd><code>servo</code> - the servo port number on the controller</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmDisable--"><code>PwmControl.setPwmDisable()</code></a></dd>
 </dl>
@@ -287,11 +287,11 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/ServoController.htm
 <ul class="blockListLast">
 <li class="blockList">
 <h4>isServoPwmEnabled</h4>
-<pre>boolean&nbsp;isServoPwmEnabled(int&nbsp;upDownServo)</pre>
-<div class="block">Returns whether the PWM is energized for this particular upDownServo</div>
+<pre>boolean&nbsp;isServoPwmEnabled(int&nbsp;servo)</pre>
+<div class="block">Returns whether the PWM is energized for this particular servo</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>upDownServo</code> - the upDownServo port number on the controller</dd>
+<dd><code>servo</code> - the servo port number on the controller</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#isPwmEnabled--"><code>PwmControl.isPwmEnabled()</code></a></dd>
 </dl>

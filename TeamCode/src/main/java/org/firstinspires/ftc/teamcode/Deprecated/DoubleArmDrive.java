@@ -81,7 +81,7 @@ public class DoubleArmDrive extends OpMode {
         BigRotation.setPower(bigRotationSpeed);
         Motor.setPower(motorSpeed);
         telemetry.addData("ClawServoPos",Claw.getPosition());
-        telemetry.addData("Wrist upDownServo position",UpDown.getPosition());
+        telemetry.addData("Wrist servo position",UpDown.getPosition());
         telemetry.addData("Big Rotation goal",bigRotationSpeed);
         telemetry.addData("big rotation speed",BigRotation.getPower());
         telemetry.update();

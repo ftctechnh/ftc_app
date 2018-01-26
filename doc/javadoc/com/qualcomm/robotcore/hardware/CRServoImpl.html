@@ -119,7 +119,7 @@ var activeTableTab = "activeTableTab";
 extends java.lang.Object
 implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" title="interface in com.qualcomm.robotcore.hardware">CRServo</a></pre>
 <div class="block">ContinuousRotationServoImpl provides an implementation of continuous
- rotation upDownServo functionality.</div>
+ rotation servo functionality.</div>
 </li>
 </ul>
 </div>
@@ -245,7 +245,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" ti
 <tr id="i2" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/ServoController.html" title="interface in com.qualcomm.robotcore.hardware">ServoController</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/CRServoImpl.html#getController--">getController</a></span>()</code>
-<div class="block">Returns the underlying upDownServo controller on which this upDownServo is situated.</div>
+<div class="block">Returns the underlying servo controller on which this servo is situated.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
@@ -269,7 +269,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" ti
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/CRServoImpl.html#getPortNumber--">getPortNumber</a></span>()</code>
-<div class="block">Returns the port number on the underlying upDownServo controller on which this motor is situated.</div>
+<div class="block">Returns the port number on the underlying servo controller on which this motor is situated.</div>
 </td>
 </tr>
 <tr id="i7" class="rowColor">
@@ -424,8 +424,8 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" ti
 <div class="block">Constructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>controller</code> - Servo controller that this upDownServo is attached to</dd>
-<dd><code>portNumber</code> - physical port number on the upDownServo controller</dd>
+<dd><code>controller</code> - Servo controller that this servo is attached to</dd>
+<dd><code>portNumber</code> - physical port number on the servo controller</dd>
 </dl>
 </li>
 </ul>
@@ -441,8 +441,8 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" ti
 <div class="block">Constructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>controller</code> - Servo controller that this upDownServo is attached to</dd>
-<dd><code>portNumber</code> - physical port number on the upDownServo controller</dd>
+<dd><code>controller</code> - Servo controller that this servo is attached to</dd>
+<dd><code>portNumber</code> - physical port number on the servo controller</dd>
 <dd><code>direction</code> - FORWARD for normal operation, REVERSE to reverse operation</dd>
 </dl>
 </li>
@@ -564,12 +564,12 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" ti
 <h4>getController</h4>
 <pre>public&nbsp;<a href="../../../../com/qualcomm/robotcore/hardware/ServoController.html" title="interface in com.qualcomm.robotcore.hardware">ServoController</a>&nbsp;getController()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html#getController--">CRServo</a></code></span></div>
-<div class="block">Returns the underlying upDownServo controller on which this upDownServo is situated.</div>
+<div class="block">Returns the underlying servo controller on which this servo is situated.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html#getController--">getController</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" title="interface in com.qualcomm.robotcore.hardware">CRServo</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the underlying upDownServo controller on which this upDownServo is situated.</dd>
+<dd>the underlying servo controller on which this servo is situated.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html#getPortNumber--"><code>CRServo.getPortNumber()</code></a></dd>
 </dl>
@@ -583,12 +583,12 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" ti
 <h4>getPortNumber</h4>
 <pre>public&nbsp;int&nbsp;getPortNumber()</pre>
 <div class="block"><span class="descfrmTypeLabel">Description copied from interface:&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html#getPortNumber--">CRServo</a></code></span></div>
-<div class="block">Returns the port number on the underlying upDownServo controller on which this motor is situated.</div>
+<div class="block">Returns the port number on the underlying servo controller on which this motor is situated.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html#getPortNumber--">getPortNumber</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" title="interface in com.qualcomm.robotcore.hardware">CRServo</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the port number on the underlying upDownServo controller on which this motor is situated.</dd>
+<dd>the port number on the underlying servo controller on which this motor is situated.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html#getController--"><code>CRServo.getController()</code></a></dd>
 </dl>

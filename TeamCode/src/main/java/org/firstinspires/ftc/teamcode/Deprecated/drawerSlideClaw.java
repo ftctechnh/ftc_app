@@ -49,7 +49,7 @@ public class drawerSlideClaw extends OpMode {
         arm.setPosition(armDir);
         arm.setPosition(armDir);
         telemetry.addData("clawposition: ", claw.getPosition());
-        telemetry.addData("upDownServo pos", arm.getPosition());
+        telemetry.addData("servo pos", arm.getPosition());
     }
 
 }

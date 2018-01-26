@@ -274,7 +274,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoImpl.html#getPosition--">getPosition</a></span>()</code>
-<div class="block">Returns the position to which the upDownServo was last commanded, or Double.NaN if that is
+<div class="block">Returns the position to which the servo was last commanded, or Double.NaN if that is
  unavailable.</div>
 </td>
 </tr>
@@ -298,7 +298,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoImpl.html#scaleRange-double-double-">scaleRange</a></span>(double&nbsp;min,
           double&nbsp;max)</code>
-<div class="block">Automatically scales the position of the upDownServo.</div>
+<div class="block">Automatically scales the position of the servo.</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
@@ -310,7 +310,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/ServoImpl.html#setPosition-double-">setPosition</a></span>(double&nbsp;position)</code>
-<div class="block">Commands the upDownServo to move to a designated position.</div>
+<div class="block">Commands the servo to move to a designated position.</div>
 </td>
 </tr>
 </table>
@@ -399,8 +399,8 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <div class="block">Constructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>controller</code> - Servo controller that this upDownServo is attached to</dd>
-<dd><code>portNumber</code> - physical port number on the upDownServo controller</dd>
+<dd><code>controller</code> - Servo controller that this servo is attached to</dd>
+<dd><code>portNumber</code> - physical port number on the servo controller</dd>
 </dl>
 </li>
 </ul>
@@ -416,8 +416,8 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <div class="block">COnstructor</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>controller</code> - Servo controller that this upDownServo is attached to</dd>
-<dd><code>portNumber</code> - physical port number on the upDownServo controller</dd>
+<dd><code>controller</code> - Servo controller that this servo is attached to</dd>
+<dd><code>portNumber</code> - physical port number on the servo controller</dd>
 <dd><code>direction</code> - FORWARD for normal operation, REVERSE to reverse operation</dd>
 </dl>
 </li>
@@ -543,7 +543,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getController--">getController</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" title="interface in com.qualcomm.robotcore.hardware">Servo</a></code></dd>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>upDownServo controller</dd>
+<dd>servo controller</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getPortNumber--"><code>Servo.getPortNumber()</code></a></dd>
 </dl>
@@ -611,13 +611,13 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <li class="blockList">
 <h4>setPosition</h4>
 <pre>public&nbsp;void&nbsp;setPosition(double&nbsp;position)</pre>
-<div class="block">Commands the upDownServo to move to a designated position. This method initiates the movement;
- the upDownServo will arrive at the commanded position at some later time.</div>
+<div class="block">Commands the servo to move to a designated position. This method initiates the movement;
+ the servo will arrive at the commanded position at some later time.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-">setPosition</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" title="interface in com.qualcomm.robotcore.hardware">Servo</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>position</code> - the commanded upDownServo position. Should be in the range [0.0, 1.0].</dd>
+<dd><code>position</code> - the commanded servo position. Should be in the range [0.0, 1.0].</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/ServoImpl.html#getPosition--"><code>getPosition()</code></a></dd>
 </dl>
@@ -639,7 +639,7 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <li class="blockList">
 <h4>getPosition</h4>
 <pre>public&nbsp;double&nbsp;getPosition()</pre>
-<div class="block">Returns the position to which the upDownServo was last commanded, or Double.NaN if that is
+<div class="block">Returns the position to which the servo was last commanded, or Double.NaN if that is
  unavailable.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
@@ -660,13 +660,13 @@ implements <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" titl
 <h4>scaleRange</h4>
 <pre>public&nbsp;void&nbsp;scaleRange(double&nbsp;min,
                        double&nbsp;max)</pre>
-<div class="block">Automatically scales the position of the upDownServo.</div>
+<div class="block">Automatically scales the position of the servo.</div>
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#scaleRange-double-double-">scaleRange</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" title="interface in com.qualcomm.robotcore.hardware">Servo</a></code></dd>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>min</code> - the lower limit of the upDownServo movement range, a value in the interval [0.0, 1.0]</dd>
-<dd><code>max</code> - the upper limit of the upDownServo movement range, a value in the interval [0.0, 1.0]</dd>
+<dd><code>min</code> - the lower limit of the servo movement range, a value in the interval [0.0, 1.0]</dd>
+<dd><code>max</code> - the upper limit of the servo movement range, a value in the interval [0.0, 1.0]</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-"><code>Servo.setPosition(double)</code></a></dd>
 </dl>

@@ -109,9 +109,9 @@ var activeTableTab = "activeTableTab";
  the PWM is enabled or disabled.
 
  <p>PWM is commonly used to control servos. <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html" title="interface in com.qualcomm.robotcore.hardware"><code>PwmControl</code></a> is thus found as a second
- interface on upDownServo objects whose primary interface is <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" title="interface in com.qualcomm.robotcore.hardware"><code>Servo</code></a> or <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" title="interface in com.qualcomm.robotcore.hardware"><code>CRServo</code></a>
- when the underlying upDownServo controller hardware supports this fine-grained control (not all
- upDownServo controllers provide such control). To access the <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html" title="interface in com.qualcomm.robotcore.hardware"><code>PwmControl</code></a> interface,
+ interface on servo objects whose primary interface is <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" title="interface in com.qualcomm.robotcore.hardware"><code>Servo</code></a> or <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" title="interface in com.qualcomm.robotcore.hardware"><code>CRServo</code></a>
+ when the underlying servo controller hardware supports this fine-grained control (not all
+ servo controllers provide such control). To access the <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html" title="interface in com.qualcomm.robotcore.hardware"><code>PwmControl</code></a> interface,
  cast your <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html" title="interface in com.qualcomm.robotcore.hardware"><code>Servo</code></a> or <a href="../../../../com/qualcomm/robotcore/hardware/CRServo.html" title="interface in com.qualcomm.robotcore.hardware"><code>CRServo</code></a> object to <a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html" title="interface in com.qualcomm.robotcore.hardware"><code>PwmControl</code></a>; however, it is
  usually prudent to first test whether the cast will succeed by testing using <pre>instanceof</pre>.</p></div>
 <dl>
@@ -141,7 +141,7 @@ var activeTableTab = "activeTableTab";
 <td class="colFirst"><code>static class&nbsp;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a></span></code>
 <div class="block">PwmRange instances are used to specify the upper and lower pulse widths
- and overall framing rate for a upDownServo.</div>
+ and overall framing rate for a servo.</div>
 </td>
 </tr>
 </table>
@@ -162,31 +162,31 @@ var activeTableTab = "activeTableTab";
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#getPwmRange--">getPwmRange</a></span>()</code>
-<div class="block">Returns the current PWM range limits for the upDownServo</div>
+<div class="block">Returns the current PWM range limits for the servo</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#isPwmEnabled--">isPwmEnabled</a></span>()</code>
-<div class="block">Returns whether the PWM is energized for this particular upDownServo</div>
+<div class="block">Returns whether the PWM is energized for this particular servo</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmDisable--">setPwmDisable</a></span>()</code>
-<div class="block">Individually denergizes the PWM for this particular upDownServo</div>
+<div class="block">Individually denergizes the PWM for this particular servo</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmEnable--">setPwmEnable</a></span>()</code>
-<div class="block">Individually energizes the PWM for this particular upDownServo.</div>
+<div class="block">Individually energizes the PWM for this particular servo.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmRange-com.qualcomm.robotcore.hardware.PwmControl.PwmRange-">setPwmRange</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;range)</code>
-<div class="block">Sets the PWM range limits for the upDownServo</div>
+<div class="block">Sets the PWM range limits for the servo</div>
 </td>
 </tr>
 </table>
@@ -211,10 +211,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>setPwmRange</h4>
 <pre>void&nbsp;setPwmRange(<a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;range)</pre>
-<div class="block">Sets the PWM range limits for the upDownServo</div>
+<div class="block">Sets the PWM range limits for the servo</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>range</code> - the new PWM range limits for the upDownServo</dd>
+<dd><code>range</code> - the new PWM range limits for the servo</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#getPwmRange--"><code>getPwmRange()</code></a></dd>
 </dl>
@@ -227,10 +227,10 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>getPwmRange</h4>
 <pre><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.PwmRange.html" title="class in com.qualcomm.robotcore.hardware">PwmControl.PwmRange</a>&nbsp;getPwmRange()</pre>
-<div class="block">Returns the current PWM range limits for the upDownServo</div>
+<div class="block">Returns the current PWM range limits for the servo</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the current PWM range limits for the upDownServo</dd>
+<dd>the current PWM range limits for the servo</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmRange-com.qualcomm.robotcore.hardware.PwmControl.PwmRange-"><code>setPwmRange(PwmRange)</code></a></dd>
 </dl>
@@ -243,7 +243,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>setPwmEnable</h4>
 <pre>void&nbsp;setPwmEnable()</pre>
-<div class="block">Individually energizes the PWM for this particular upDownServo.</div>
+<div class="block">Individually energizes the PWM for this particular servo.</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmDisable--"><code>setPwmDisable()</code></a>, 
@@ -258,7 +258,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>setPwmDisable</h4>
 <pre>void&nbsp;setPwmDisable()</pre>
-<div class="block">Individually denergizes the PWM for this particular upDownServo</div>
+<div class="block">Individually denergizes the PWM for this particular servo</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmEnable--"><code>setPwmEnable()</code></a></dd>
@@ -272,7 +272,7 @@ var activeTableTab = "activeTableTab";
 <li class="blockList">
 <h4>isPwmEnabled</h4>
 <pre>boolean&nbsp;isPwmEnabled()</pre>
-<div class="block">Returns whether the PWM is energized for this particular upDownServo</div>
+<div class="block">Returns whether the PWM is energized for this particular servo</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/PwmControl.html#setPwmEnable--"><code>setPwmEnable()</code></a></dd>
