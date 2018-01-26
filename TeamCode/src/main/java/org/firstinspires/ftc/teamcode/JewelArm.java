@@ -45,32 +45,6 @@ public class JewelArm {
 
     public void left() {setEndPosition(LEFT_POSITION);}
 
-    public String findJewel() {
-        down();
-        while (cs.red() < 2 && cs.blue() < 2) {
-
-        }
-        int blue = 0;
-        int red = 0;
-        for (int i = 0; i <= 5; i++) {
-            if (cs.blue() > cs.red()) {
-                blue += 1;
-            } else if (cs.blue() < cs.red()) {
-                red += 1;
-            }
-        }
-        if (red > blue) {
-            addLine("RED");
-            return "Red";
-        } else if (blue > red) {
-            addLine("BLUE");
-            return "Blue";
-        } else {
-            addLine("NOTHING");
-            return "nothing";
-        }
-    }
-
     public void init() {
         up();
         cs.enableLed(true);

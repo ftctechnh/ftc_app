@@ -37,7 +37,7 @@ public class BlueFar extends LinearOpMode {
         Systems.findJewel(Color.BLUE);
         pictograph = Systems.getMark();
         sleep(500);
-        drive.driveTranslateRotate(0,-drive.DRIVE_OFF_BALANCE_BOARD_SPEED, 0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
+        drive.backward(-drive.DRIVE_OFF_BALANCE_BOARD_SPEED, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
         drive.rightGyro(0,0, drive.SPIN_TO_CRYPTOBOX_SPEED, -178);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
             drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
