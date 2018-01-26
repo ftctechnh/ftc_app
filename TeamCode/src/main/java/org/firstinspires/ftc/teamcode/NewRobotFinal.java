@@ -747,7 +747,7 @@ public class NewRobotFinal
         if (moveDown)
         {
             wingMotor.setPower(-1f);
-            while ((wingMotor.getCurrentPosition() > -2750) && (wingTouchSens.getState()) && !opMode.isStopRequested())
+            while ((wingMotor.getCurrentPosition() > -2725) && (wingTouchSens.getState()) && !opMode.isStopRequested())
             {
                 if(!wingTouchSens.getState())
                     break;
