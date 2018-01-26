@@ -7,6 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
@@ -15,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public abstract class MeccyAutoMode extends MeccyMode{
     //
-    PengwinFin pengwinFin;
+    //PengwinFin pengwinFin;
     PengwinWing pengwinWing;
     double rotationInches;
     //
@@ -31,11 +34,6 @@ public abstract class MeccyAutoMode extends MeccyMode{
     //</editor-fold>
     //
     //<editor-fold desc="Extraneous">
-    //
-    public void startify (){
-        pengwinFin = new PengwinFin(hardwareMap);
-        pengwinWing = new PengwinWing(hardwareMap);
-    }
     //
     public void configureMotors(String leftFront, String rightFront, String leftBack, String rightBack){
         super.configureMotors();
@@ -142,7 +140,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
         BNO055IMU.Parameters parameter = new BNO055IMU.Parameters();
         parameter.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameter.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameter.calibrationDataFile = "GyroCal.json"; // see the calibration sample opmode
+        //parameter.calibrationDataFile = "GyroCal.json"; // see the calibration sample opmode
         parameter.loggingEnabled = true;
         parameter.loggingTag = "IMU";
         parameter.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
@@ -150,10 +148,20 @@ public abstract class MeccyAutoMode extends MeccyMode{
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameter);
         //</editor-fold>
+        //<editor-fold desc="Everything Else">
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double yaw = angles.firstAngle;
         turn(speedDirection);
-        while (yaw == 3){}
+        double input2 = (2 * Math.ceil((speedDirection + Math.abs(speedDirection)) / 2) - 1);
+        telemetry.addLine("Output 1: " + input2);
+        while (!(angles.firstAngle == ( -1 * (((Math.floor(Math.abs((degrees * input2) + yaw) / 180)) * input2 * 360) - ((degrees * input2) + yaw))))){
+            telemetry.addData("Position", angles.firstAngle);
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+            //
+        }
         turn(0);
+        //</editor-fold>
     }
     //</editor-fold>
     //

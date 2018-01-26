@@ -15,8 +15,6 @@ public class SouthBlue extends LinearOpMode {
     JeffThePengwin jeffThePengwin;
     private ElapsedTime runtime = new ElapsedTime();
     //
-
-    //
     //Push
     @Override
     public void runOpMode() throws InterruptedException {

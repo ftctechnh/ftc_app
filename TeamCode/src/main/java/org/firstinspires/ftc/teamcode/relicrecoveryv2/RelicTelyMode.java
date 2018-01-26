@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -8,12 +9,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.opmode.TelemetryImpl;
 
 import java.util.Random;
 
@@ -87,6 +91,10 @@ public class RelicTelyMode  extends MeccyMode{
         leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
         rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
         configureMotors();
+        //
+        BNO055IMU imu;
+        Orientation angles;
+        Acceleration gravity;
         //</editor-fold>
         //
         waitForStartify();
