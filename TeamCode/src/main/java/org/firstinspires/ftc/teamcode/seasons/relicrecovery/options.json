@@ -2,8 +2,8 @@
   "wheelDiam" : 4,
   "wheelRatIn" : 1.0,
   "wheelRatOut" : 1.5,
-  "isLeftWheelDirReverse" : true,
+  "isLeftWheelDirReverse" : false,
   "isRightWheelDirReverse" : true,
-  "isMidWheelDirReverse" : true
+  "isMidWheelDirReverse" : false
 
 }
