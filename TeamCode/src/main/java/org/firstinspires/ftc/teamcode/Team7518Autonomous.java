@@ -78,7 +78,10 @@ public class Team7518Autonomous extends LinearOpMode {
                     leftRear.setPower(speed);
                     rightRear.setPower(-speed);
                 }//end while
-
+                leftFront.setPower(0);
+                rightFront.setPower(0);
+                leftRear.setPower(0);
+                rightRear.setPower(0);
             }//end while
             while(bColor>0) {
                 sleep(500);
@@ -88,7 +91,11 @@ public class Team7518Autonomous extends LinearOpMode {
                     leftRear.setPower(-speed);
                     rightRear.setPower(speed);
                 }//end while
-            }//end else while
+                leftFront.setPower(0);
+                rightFront.setPower(0);
+                leftRear.setPower(0);
+                rightRear.setPower(0);
+            }//end while
         }//end while loop
 
 
