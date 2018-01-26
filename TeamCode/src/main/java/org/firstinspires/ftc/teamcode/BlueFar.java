@@ -37,20 +37,20 @@ public class BlueFar extends LinearOpMode {
         Systems.findJewel(Color.BLUE);
         pictograph = Systems.getMark();
         sleep(500);
-        drive.backward(-drive.DRIVE_OFF_BALANCE_BOARD_SPEED, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
+        drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
         drive.rightGyro(0,0, drive.SPIN_TO_CRYPTOBOX_SPEED, -178);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.strafeRight(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
+            drive.strafeRight(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.strafeRight(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
-        drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
+        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
         Systems.pushInBlock();
-        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 4);
+        drive.forward(drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
         //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 30);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);
