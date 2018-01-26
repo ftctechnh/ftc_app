@@ -29,7 +29,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         robot.lift.setTargetPosition(-100);
         robot.lift.setPower(.3);
         robot.sleep(200);
-        driveUntilUltrasonicDist(0.10, 0);
+        driveUntilUltrasonicDist(-0.10, 0);
         turnToPos(Math.PI/2);
         driveUntilUltrasonicDist(0.159, Math.PI/2);
         turnToPos(0);
