@@ -41,13 +41,13 @@ public class RedFar extends LinearOpMode {
         sleep(500);
         drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.strafeLeft(-drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.strafeLeft(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.strafeLeft(-drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
         Systems.pushInBlock();
