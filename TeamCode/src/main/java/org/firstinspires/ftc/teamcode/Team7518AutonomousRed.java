@@ -15,9 +15,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Ryan Gniadek and Ben Bernstein
  */
 
-@Autonomous(name="7518Autonomous", group="7518")
+@Autonomous(name="7518AutonomousRed", group="7518")
 
-public class Team7518Autonomous extends LinearOpMode {
+public class Team7518AutonomousRed extends LinearOpMode {
 
     /* Declare OpMode members. */
     private CRServo testServo;
@@ -57,7 +57,7 @@ public class Team7518Autonomous extends LinearOpMode {
         int count = 0;
 
         runtime.reset();
-        while(opModeIsActive() && runtime.seconds()<3){
+        while(opModeIsActive() && runtime.seconds()<10){
             count++;
             colorSensor.enableLed(true);
 
@@ -70,27 +70,30 @@ public class Team7518Autonomous extends LinearOpMode {
 
             if (count==1)
                 timer.reset();
-            while(rColor>0){
+            while(opModeIsActive() && rColor>0){
                 sleep(500);
-                while(timer.seconds()<1){
+                while(opModeIsActive() && timer.seconds()<1.5){
                     leftFront.setPower(speed);
                     rightFront.setPower(-speed);
                     leftRear.setPower(speed);
                     rightRear.setPower(-speed);
                 }//end while
+                arm.setPosition(1);
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftRear.setPower(0);
                 rightRear.setPower(0);
+
             }//end while
-            while(bColor>0) {
+            while(opModeIsActive() && bColor>0) {
                 sleep(500);
-                while(timer.seconds()<1){
+                while(opModeIsActive() && timer.seconds()<1.5){
                     leftFront.setPower(-speed);
                     rightFront.setPower(speed);
                     leftRear.setPower(-speed);
                     rightRear.setPower(speed);
                 }//end while
+                arm.setPosition(1);
                 leftFront.setPower(0);
                 rightFront.setPower(0);
                 leftRear.setPower(0);

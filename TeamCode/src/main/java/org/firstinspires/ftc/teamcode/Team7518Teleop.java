@@ -87,6 +87,7 @@ public class Team7518Teleop extends LinearOpMode{
                             rotationMotor.setPower(0);
 
 
+
             telemetry.addData("bottom", upperLimitSwitch.getState()); //get limit switch state (upper)
             for (int i = 0; i < 8; i++){
                 telemetry.addData("Digital " + i, cdi.getDigitalChannelState(i));
@@ -101,7 +102,6 @@ public class Team7518Teleop extends LinearOpMode{
                             yAxis.setPower(-.75);
                         else
                             yAxis.setPower(0);
-
 
                         telemetry.update();
                         idle();
