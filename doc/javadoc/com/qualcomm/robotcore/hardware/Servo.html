@@ -109,7 +109,7 @@ var activeTableTab = "activeTableTab";
 <br>
 <pre>public interface <span class="typeNameLabel">Servo</span>
 extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html" title="interface in com.qualcomm.robotcore.hardware">HardwareDevice</a></pre>
-<div class="block">Instances of Servo interface provide access to servo hardware devices.</div>
+<div class="block">Instances of Servo interface provide access to upDownServo hardware devices.</div>
 </li>
 </ul>
 </div>
@@ -160,13 +160,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr class="altColor">
 <td class="colFirst"><code>static double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#MAX_POSITION">MAX_POSITION</a></span></code>
-<div class="block">The maximum allowable position to which a servo can be moved</div>
+<div class="block">The maximum allowable position to which a upDownServo can be moved</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>static double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#MIN_POSITION">MIN_POSITION</a></span></code>
-<div class="block">The minimum allowable position to which a servo can be moved</div>
+<div class="block">The minimum allowable position to which a upDownServo can be moved</div>
 </td>
 </tr>
 </table>
@@ -187,44 +187,44 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <tr id="i0" class="altColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/ServoController.html" title="interface in com.qualcomm.robotcore.hardware">ServoController</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getController--">getController</a></span>()</code>
-<div class="block">Returns the underlying servo controller on which this servo is situated.</div>
+<div class="block">Returns the underlying upDownServo controller on which this upDownServo is situated.</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code><a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware">Servo.Direction</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getDirection--">getDirection</a></span>()</code>
-<div class="block">Returns the current logical direction in which this servo is set as operating.</div>
+<div class="block">Returns the current logical direction in which this upDownServo is set as operating.</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getPortNumber--">getPortNumber</a></span>()</code>
-<div class="block">Returns the port number on the underlying servo controller on which this motor is situated.</div>
+<div class="block">Returns the port number on the underlying upDownServo controller on which this motor is situated.</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>double</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getPosition--">getPosition</a></span>()</code>
-<div class="block">Returns the position to which the servo was last commanded to move.</div>
+<div class="block">Returns the position to which the upDownServo was last commanded to move.</div>
 </td>
 </tr>
 <tr id="i4" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#scaleRange-double-double-">scaleRange</a></span>(double&nbsp;min,
           double&nbsp;max)</code>
-<div class="block">Scales the available movement range of the servo to be a subset of its maximum range.</div>
+<div class="block">Scales the available movement range of the upDownServo to be a subset of its maximum range.</div>
 </td>
 </tr>
 <tr id="i5" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setDirection-com.qualcomm.robotcore.hardware.Servo.Direction-">setDirection</a></span>(<a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware">Servo.Direction</a>&nbsp;direction)</code>
-<div class="block">Sets the logical direction in which this servo operates.</div>
+<div class="block">Sets the logical direction in which this upDownServo operates.</div>
 </td>
 </tr>
 <tr id="i6" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-">setPosition</a></span>(double&nbsp;position)</code>
-<div class="block">Sets the current position of the servo, expressed as a fraction of its available
+<div class="block">Sets the current position of the upDownServo, expressed as a fraction of its available
  range.</div>
 </td>
 </tr>
@@ -257,7 +257,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>MIN_POSITION</h4>
 <pre>static final&nbsp;double MIN_POSITION</pre>
-<div class="block">The minimum allowable position to which a servo can be moved</div>
+<div class="block">The minimum allowable position to which a upDownServo can be moved</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-"><code>setPosition(double)</code></a>, 
@@ -272,7 +272,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>MAX_POSITION</h4>
 <pre>static final&nbsp;double MAX_POSITION</pre>
-<div class="block">The maximum allowable position to which a servo can be moved</div>
+<div class="block">The maximum allowable position to which a upDownServo can be moved</div>
 <dl>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-"><code>setPosition(double)</code></a>, 
@@ -295,10 +295,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getController</h4>
 <pre><a href="../../../../com/qualcomm/robotcore/hardware/ServoController.html" title="interface in com.qualcomm.robotcore.hardware">ServoController</a>&nbsp;getController()</pre>
-<div class="block">Returns the underlying servo controller on which this servo is situated.</div>
+<div class="block">Returns the underlying upDownServo controller on which this upDownServo is situated.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the underlying servo controller on which this servo is situated.</dd>
+<dd>the underlying upDownServo controller on which this upDownServo is situated.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getPortNumber--"><code>getPortNumber()</code></a></dd>
 </dl>
@@ -311,10 +311,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getPortNumber</h4>
 <pre>int&nbsp;getPortNumber()</pre>
-<div class="block">Returns the port number on the underlying servo controller on which this motor is situated.</div>
+<div class="block">Returns the port number on the underlying upDownServo controller on which this motor is situated.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the port number on the underlying servo controller on which this motor is situated.</dd>
+<dd>the port number on the underlying upDownServo controller on which this motor is situated.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getController--"><code>getController()</code></a></dd>
 </dl>
@@ -327,10 +327,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>setDirection</h4>
 <pre>void&nbsp;setDirection(<a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware">Servo.Direction</a>&nbsp;direction)</pre>
-<div class="block">Sets the logical direction in which this servo operates.</div>
+<div class="block">Sets the logical direction in which this upDownServo operates.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>direction</code> - the direction to set for this servo</dd>
+<dd><code>direction</code> - the direction to set for this upDownServo</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getDirection--"><code>getDirection()</code></a>, 
 <a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware"><code>Servo.Direction</code></a></dd>
@@ -344,10 +344,10 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getDirection</h4>
 <pre><a href="../../../../com/qualcomm/robotcore/hardware/Servo.Direction.html" title="enum in com.qualcomm.robotcore.hardware">Servo.Direction</a>&nbsp;getDirection()</pre>
-<div class="block">Returns the current logical direction in which this servo is set as operating.</div>
+<div class="block">Returns the current logical direction in which this upDownServo is set as operating.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the current logical direction in which this servo is set as operating.</dd>
+<dd>the current logical direction in which this upDownServo is set as operating.</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setDirection-com.qualcomm.robotcore.hardware.Servo.Direction-"><code>setDirection(Direction)</code></a></dd>
 </dl>
@@ -360,12 +360,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>setPosition</h4>
 <pre>void&nbsp;setPosition(double&nbsp;position)</pre>
-<div class="block">Sets the current position of the servo, expressed as a fraction of its available
- range. If PWM power is enabled for the servo, the servo will attempt to move to
+<div class="block">Sets the current position of the upDownServo, expressed as a fraction of its available
+ range. If PWM power is enabled for the upDownServo, the upDownServo will attempt to move to
  the indicated position.</div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>position</code> - the position to which the servo should move, a value in the range [0.0, 1.0]</dd>
+<dd><code>position</code> - the position to which the upDownServo should move, a value in the range [0.0, 1.0]</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/ServoController.html#pwmEnable--"><code>ServoController.pwmEnable()</code></a>, 
 <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#getPosition--"><code>getPosition()</code></a></dd>
@@ -379,12 +379,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <li class="blockList">
 <h4>getPosition</h4>
 <pre>double&nbsp;getPosition()</pre>
-<div class="block">Returns the position to which the servo was last commanded to move. Note that this method
- does NOT read a position from the servo through any electrical means, as no such electrical
+<div class="block">Returns the position to which the upDownServo was last commanded to move. Note that this method
+ does NOT read a position from the upDownServo through any electrical means, as no such electrical
  mechanism is, generally, available.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>the position to which the servo was last commanded to move, or Double.NaN
+<dd>the position to which the upDownServo was last commanded to move, or Double.NaN
          if no such position is known</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-"><code>setPosition(double)</code></a>, 
@@ -401,13 +401,13 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
 <h4>scaleRange</h4>
 <pre>void&nbsp;scaleRange(double&nbsp;min,
                 double&nbsp;max)</pre>
-<div class="block">Scales the available movement range of the servo to be a subset of its maximum range. Subsequent
- positioning calls will operate within that subset range. This is useful if your servo has
+<div class="block">Scales the available movement range of the upDownServo to be a subset of its maximum range. Subsequent
+ positioning calls will operate within that subset range. This is useful if your upDownServo has
  only a limited useful range of movement due to the physical hardware that it is manipulating
  (as is often the case) but you don't want to have to manually scale and adjust the input
  to <a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-"><code>setPosition()</code></a> each time.
 
- <p>For example, if scaleRange(0.2, 0.8) is set; then servo positions will be
+ <p>For example, if scaleRange(0.2, 0.8) is set; then upDownServo positions will be
  scaled to fit in that range:<br>
  setPosition(0.0) scales to 0.2<br>
  setPosition(1.0) scales to 0.8<br>
@@ -417,12 +417,12 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/HardwareDevice.html
  </p>
 
  <p>Note the parameters passed here are relative to the underlying full range of motion of
- the servo, not its currently scaled range, if any. Thus, scaleRange(0.0, 1.0) will reset
- the servo to its full range of movement.</p></div>
+ the upDownServo, not its currently scaled range, if any. Thus, scaleRange(0.0, 1.0) will reset
+ the upDownServo to its full range of movement.</p></div>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>min</code> - the lower limit of the servo movement range, a value in the interval [0.0, 1.0]</dd>
-<dd><code>max</code> - the upper limit of the servo movement range, a value in the interval [0.0, 1.0]</dd>
+<dd><code>min</code> - the lower limit of the upDownServo movement range, a value in the interval [0.0, 1.0]</dd>
+<dd><code>max</code> - the upper limit of the upDownServo movement range, a value in the interval [0.0, 1.0]</dd>
 <dt><span class="seeLabel">See Also:</span></dt>
 <dd><a href="../../../../com/qualcomm/robotcore/hardware/Servo.html#setPosition-double-"><code>setPosition(double)</code></a></dd>
 </dl>

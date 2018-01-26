@@ -16,26 +16,26 @@ public class AutoDrive {
     private DcMotor RearLeft;
     private DcMotor RearRight;
     private REVGyro imu;
-    private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
-    private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit.
-    double heading;
+    static private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
+    static private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit.
+    public double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    final double MIN_SPEED = 0.15;
-    final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
-    final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
-    final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
-    final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;
-    final double SPIN_TO_CRYPTOBOX_SPEED = 0.5;
-    final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
-    final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION = 34.5;
-    final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 15.5;
-    final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
-    final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
-    final double SPIN_TO_CENTER_SPEED = 0.75;
-    final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
-    final double FIND_VUMARK_DISTANCE = 2;
-    final double TRY_AGAIN_JEWEL_DISTANCE = 0.6;
+    static final double MIN_SPEED = 0.15;
+    static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
+    static final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
+    static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
+    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;
+    static final double SPIN_TO_CRYPTOBOX_SPEED = 0.5;
+    static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
+    static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION = 34.5;
+    static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 15.5;
+    static final double CYRPTOBOX_COLUMNS_OFFSET = 7.5;
+    static final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
+    static final double SPIN_TO_CENTER_SPEED = 0.75;
+    static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
+    static final double FIND_VUMARK_DISTANCE = 2;
+    static final double TRY_AGAIN_JEWEL_DISTANCE = 0.6;
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");

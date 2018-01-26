@@ -154,7 +154,7 @@ extends <a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynchSimpl
      mode, background reads are also performed, but only if the user initiates a manual read first after
      a write operation. The object does not automatically start background reads on its own, as the
      transition from writing to reading can be a relatively expensive one. This mode can be useful
-     for objects like motor and servo controllers which exhibit a balanced mix of both write and
+     for objects like motor and upDownServo controllers which exhibit a balanced mix of both write and
      read operations</li>
      <li><a href="../../../../com/qualcomm/robotcore/hardware/I2cDeviceSynch.ReadMode.html#ONLY_ONCE"><code>ONLY_ONCE</code></a>. In this
      mode, no background reading is performed; data is always retrieved with a synchronous
