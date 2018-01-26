@@ -5,6 +5,7 @@ import android.os.Environment;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -64,6 +65,9 @@ public class NullbotHardware {
 
     public PixyCam leftPixyCam;
     public AnalogInput frontUltrasonic;
+    public AnalogInput leftUltrasonic;
+    public AnalogInput backUltrasonic;
+    public ColorSensor colorSensor;
 
     // Sensors
     public ManualHeadingAdjustmentController headingAdjuster;
@@ -115,6 +119,9 @@ public class NullbotHardware {
 
         leftPixyCam = hwMap.get(PixyCam.class, "leftPixy");
         frontUltrasonic = hwMap.get(AnalogInput.class, "frontUltrasonic");
+        leftUltrasonic = hwMap.get(AnalogInput.class, "leftUltrasonic");
+        backUltrasonic = hwMap.get(AnalogInput.class, "backUltrasonic");
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
         if (!isTestChassis) {
             lift = hwMap.dcMotor.get("lift");
