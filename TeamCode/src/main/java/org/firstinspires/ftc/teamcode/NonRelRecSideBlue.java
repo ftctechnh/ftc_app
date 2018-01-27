@@ -15,16 +15,16 @@ public class NonRelRecSideBlue extends AutoMaster {
         telemetry.addData("skatin fast,", "eatin' ass");
 
         //Knocks off the right ball
-        robot.arm.setPosition(1);
+        robot.arm.setPosition(CSENSOR_ARM_DOWN);
         wait(750);
         if (robot.color.red() > 0) {
             encode(5, 0.25, MoveType.STRAIGHT);
-            robot.arm.setPosition(0);
+            robot.arm.setPosition(CSENSOR_ARM_UP);
             wait(1000);
             encode(5, -0.25, MoveType.STRAIGHT);
         } else {
             encode(5, -0.25, MoveType.STRAIGHT);
-            robot.arm.setPosition(0);
+            robot.arm.setPosition(CSENSOR_ARM_UP);
             wait(1000);
             encode(5, 0.25, MoveType.STRAIGHT);
         }

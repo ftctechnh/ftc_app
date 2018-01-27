@@ -40,6 +40,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         STRAIGHT, LATERALLY, ROT
     }
 
+    static final double CSENSOR_ARM_DOWN = .72;
+    static final double CSENSOR_ARM_UP   = .16;
+
     static final double VUF_DISTANCE = 10;
     final static double PULSES_PER_INCH = (1120 / (4 * Math.PI));
     private ElapsedTime runtime = new ElapsedTime();
@@ -107,9 +110,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
             robot.rrDrive.setTargetPosition(targetRR);
 
             runtime.reset();
+            wait(1);
             robot.flDrive.setPower(speed * multFL);
+            wait(1);
             robot.frDrive.setPower(speed * multFR);
+            wait(1);
             robot.rlDrive.setPower(speed * multRL);
+            wait(1);
             robot.rrDrive.setPower(speed * multRR);
 
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
@@ -162,10 +169,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
                 multRR *= -1;
             }
         }
-        robot.flDrive.setPower(speed * multFL);
-        robot.frDrive.setPower(speed * multFR);
         robot.rlDrive.setPower(speed * multRL);
         robot.rrDrive.setPower(speed * multRR);
+        robot.flDrive.setPower(speed * multFL);
+        robot.frDrive.setPower(speed * multFR);
     }
     public void wait(int t) {
         try {

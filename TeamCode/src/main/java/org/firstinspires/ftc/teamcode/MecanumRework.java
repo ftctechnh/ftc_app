@@ -150,10 +150,10 @@ public class MecanumRework extends OpMode {
         }
 
         if(gamepad1.y){
-            robot.arm.setPosition(1); // outwards
+            robot.arm.setPosition(.72); // outwards
         }
         if(gamepad1.x){
-            robot.arm.setPosition(0.5); // back up towards robot
+            robot.arm.setPosition(0.16); // back up towards robot
         }
         // TODO: gripper implementation and locking setup
 
