@@ -170,8 +170,17 @@
       <file leaf-file-name="Delta_TeleOp.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/Delta_TeleOp.java">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="654">
               <caret line="321" column="0" lean-forward="true" selection-start-line="321" selection-start-column="0" selection-end-line="321" selection-end-column="0" />
+=======
+<<<<<<< HEAD
+            <state relative-caret-position="529">
+              <caret line="321" column="0" lean-forward="true" selection-start-line="321" selection-start-column="0" selection-end-line="321" selection-end-column="0" />
+=======
+            <state relative-caret-position="309">
+              <caret line="319" column="37" lean-forward="false" selection-start-line="319" selection-start-column="37" selection-end-line="319" selection-end-column="37" />
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
               <folding>
                 <element signature="imports" expanded="true" />
                 <marker date="1517025292997" expanded="true" signature="10516:10524" ph="{...}" />
@@ -219,9 +228,14 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
               <caret line="9" column="42" lean-forward="false" selection-start-line="9" selection-start-column="42" selection-end-line="9" selection-end-column="42" />
+<<<<<<< HEAD
               <folding>
                 <element signature="imports" expanded="false" />
               </folding>
+=======
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
+              <folding />
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
             </state>
           </provider>
         </entry>
@@ -3073,6 +3087,14 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+<<<<<<< HEAD
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="AndroidView">
+        <subPane>
+=======
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="ftc_app" />
@@ -3247,6 +3269,10 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+<<<<<<< HEAD
+        </subPane>
+      </pane>
+=======
           <PATH>
             <PATH_ELEMENT>
               <option name="myItemId" value="ftc_app" />
@@ -3401,6 +3427,11 @@
           </PATH>
         </subPane>
       </pane>
+<<<<<<< HEAD
+=======
+      <pane id="Scratches" />
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
       <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="Scratches" />
@@ -3520,7 +3551,15 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+<<<<<<< HEAD
         <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1517026334161" />
+=======
+<<<<<<< HEAD
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1516591143307" />
+=======
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1516596292625" />
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
       </method>
     </configuration>
     <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Instrumented Tests">
@@ -3568,7 +3607,15 @@
       </Profilers>
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+<<<<<<< HEAD
         <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1517026334161" />
+=======
+<<<<<<< HEAD
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1516591143307" />
+=======
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1516596292625" />
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
       </method>
     </configuration>
     <configuration default="true" type="Application" factoryName="Application">
@@ -3730,7 +3777,15 @@
       <option name="ACTIVITY_CLASS" value="" />
       <method>
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
+<<<<<<< HEAD
         <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1517026334163" />
+=======
+<<<<<<< HEAD
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1516591143308" />
+=======
+        <option name="com.android.instantApps.provision.BeforeRunTask" enabled="true" clearCache="false" clearProvisionedDevices="false" myTimestamp="1516596292627" />
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
       </method>
     </configuration>
     <list size="1">
@@ -4288,8 +4343,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/Autonomous/blueBack_George.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="374">
           <caret line="27" column="14" lean-forward="false" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
+=======
+<<<<<<< HEAD
+        <state relative-caret-position="529">
+          <caret line="321" column="0" lean-forward="true" selection-start-line="321" selection-start-column="0" selection-end-line="321" selection-end-column="0" />
+=======
+        <state relative-caret-position="309">
+          <caret line="319" column="37" lean-forward="false" selection-start-line="319" selection-start-column="37" selection-end-line="319" selection-end-column="37" />
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
           <folding>
             <element signature="imports" expanded="false" />
           </folding>
@@ -4298,8 +4362,14 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/ftc2017to2018season/TeleOp/curious_george_teleop.java">
       <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
         <state relative-caret-position="1683">
           <caret line="105" column="76" lean-forward="false" selection-start-line="105" selection-start-column="76" selection-end-line="105" selection-end-column="76" />
+=======
+        <state relative-caret-position="374">
+          <caret line="27" column="14" lean-forward="false" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
+>>>>>>> 2b90b0764e9acd0200fbdc7d019f1713356947be
+>>>>>>> 308a212d1c1d2ca1ddf1dcdde868b478d6b9cfcc
           <folding />
         </state>
       </provider>
