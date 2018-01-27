@@ -44,6 +44,7 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(adjustment + 19);
+                        break;
                     default:
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(18);
