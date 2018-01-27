@@ -19,9 +19,9 @@ public class JSONParser {
     /**
      * This method returns a map that contains all the data of a Json file.
      *
-     * @param file the file to parse the Json data from
+     * @param file the file to parse the JSON data from
      *
-     *
+     * @return A Map<String, Object> filled with all the data from the JSON file you requested
      */
 
     public Map<String, Object> parseFile(File file){

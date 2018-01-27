@@ -7,8 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
+import org.firstinspires.ftc.teamcode.seasons.relicrecovery.JSONParser;
+import org.firstinspires.ftc.teamcode.seasons.relicrecovery.RelicRecoveryRobot;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * The glyph lift mechanism collects glyphs with two grippers and is able to place them in the cryptobox.
@@ -16,20 +22,26 @@ import org.firstinspires.ftc.teamcode.mechanism.IMechanism;
 
 public class GlyphLift implements IMechanism {
 
-    private static final double MAX_LIFT_ROTATION_MOTOR_POWER = 0.4;
-    private static final double MAX_LIFT_MOTOR_POWER_UP = 0.4;
-    private static final double MAX_LIFT_MOTOR_POWER_DOWN = 0.9;
+
+    private static final JSONParser parser = new JSONParser();
+
+    public static Map<String, Object> optionsMap = parser.parseFile(new File(AppUtil.FIRST_FOLDER + "/options.json"));
 
 
-    private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
-    private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
+  //  private static final double MAX_LIFT_ROTATION_MOTOR_POWER = 0.4;
+    private final double MAX_LIFT_MOTOR_POWER_UP = (double) optionsMap.get("maxLiftPowerUp");
+    private final double MAX_LIFT_MOTOR_POWER_DOWN = (double) optionsMap.get("maxLiftPowerDown");
 
-    private static final double ROTATION_MOTOR_GYRO_POWER = 0.8;
 
-    private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
+    private static final double ROTATION_MOTOR_POWER_AUTOMATIC = (double) optionsMap.get("rotPowerAuto");
+    private static final double ROTATION_MOTOR_POWER_MANUAL = (double) optionsMap.get("rotPowerManual");
 
-    public static final int LIFT_RAISE_TARGET_POSITION = 850;
-    public static final int LIFT_LOWER_TARGET_POSITION = -850;
+ //   private static final double ROTATION_MOTOR_GYRO_POWER = 0.8;
+
+   // private static final int ROTATION_MOTOR_POSITION_THRESHOLD = 20;
+
+   // public static final int LIFT_RAISE_TARGET_POSITION = 850;
+    //public static final int LIFT_LOWER_TARGET_POSITION = -850;
 
     private OpMode opMode;
 
@@ -57,7 +69,10 @@ public class GlyphLift implements IMechanism {
      *
      */
     public enum RotationMotorPosition {
-        UP(0), DOWN(1700), LEFT(850), RIGHT(-850);
+        UP((int) optionsMap.get("autoUp")),
+        DOWN((int) optionsMap.get("autoDown")),
+        LEFT((int) optionsMap.get("autoLeft")),
+        RIGHT((int) optionsMap.get("autoRight"));
 
         private int encoderPosition;
 
@@ -186,7 +201,7 @@ public class GlyphLift implements IMechanism {
     }
 
     /**
-     * Close the blue gripper.
+     * Close the blue gripper. 
      */
     public void closeBlueGripper() {
         blueLeftServo.setPosition(0.65);

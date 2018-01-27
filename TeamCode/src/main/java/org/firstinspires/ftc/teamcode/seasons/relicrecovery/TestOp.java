@@ -19,7 +19,13 @@ public class TestOp extends LinearOpMode {
         telemetry.update();
 
         while (opModeIsActive()) {
-            telemetry.addData("JsonData", robot.getOptionsMap().get("wheelDiam"));
+            telemetry.addData("Wheel Diameter", robot.getOptionsMap().get("wheelDiam"));
+            telemetry.addData("Inside Wheel Gearing Ratio", robot.getOptionsMap().get("wheelRatIn"));
+            telemetry.addData("Outside Wheel Gearing Ratio", robot.getOptionsMap().get("wheelRatOut"));
+            telemetry.addData("Jewel Arm Retract Pos", robot.getOptionsMap().get("jewelArmRetract"));
+            telemetry.addData("Jewel Arm Extend Pos", robot.getOptionsMap().get("jewelArmExtend"));
+            telemetry.addData("Relic Grip Open Pos", robot.getOptionsMap().get("relicGripOpen"));
+            telemetry.addData("Relic Grip Close Pos", robot.getOptionsMap().get("relicGripClose"));
             telemetry.update();
         }
     }

@@ -42,26 +42,8 @@ public class RelicRecoveryRobot extends Robot {
 
         this.optionsMap = parser.parseFile(new File(AppUtil.FIRST_FOLDER + "/options.json"));
 
-        DcMotor.Direction left = DcMotor.Direction.FORWARD;
-        DcMotor.Direction right = DcMotor.Direction.FORWARD;
-        DcMotor.Direction middle = DcMotor.Direction.FORWARD;
-
-
-        if(!(boolean) getOptionsMap().get("isLeftWheelDirReverse")){
-            left = DcMotorSimple.Direction.REVERSE;
-        }
-        if(!(boolean) getOptionsMap().get("isMiddleWheelDirReverse")){
-            middle = DcMotorSimple.Direction.REVERSE;
-        }
-        if(!(boolean) getOptionsMap().get("isRightWheelDirReverse")){
-            right = DcMotorSimple.Direction.REVERSE;
-        }
-
-
         this.hDriveTrain = new HDriveTrain.Builder(this)
-                .setLeftMotorDirection(left)
-                .setRightMotorDirection(middle)
-                .setMiddleMotorDirection(right)
+                .setRightMotorDirection(DcMotorSimple.Direction.REVERSE)
                 .setWheelDiameterInches((double) getOptionsMap().get("wheelDiam"))
                 .setInsideWheelGearingRatio((double) getOptionsMap().get("wheelRatIn"))
                 .setOutsideWheelGearingRatio((double) getOptionsMap().get("wheelRatOut"))

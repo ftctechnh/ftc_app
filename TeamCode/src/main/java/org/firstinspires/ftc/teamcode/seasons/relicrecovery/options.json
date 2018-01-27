@@ -1,9 +1,13 @@
 {
   "wheelDiam" : 4,
+
   "wheelRatIn" : 1.0,
   "wheelRatOut" : 1.5,
-  "isLeftWheelDirReverse" : false,
-  "isRightWheelDirReverse" : true,
-  "isMidWheelDirReverse" : false
+
+  "jewelKnockerRetract" : 0.2,
+  "jewelKnockerExtend" : 1.0,
+
+  "relicGripOpen" : 0,
+  "relicGripClose" : 1
 
 }
