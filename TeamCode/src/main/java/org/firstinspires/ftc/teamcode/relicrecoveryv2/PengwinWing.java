@@ -17,73 +17,61 @@ import org.firstinspires.ftc.teamcode.TouchSensorCheck;
  * Created by Nora and Eric on 12/30/2017.
  */
 
-public class PengwinWing {
-    //motors
-    DcMotor motorOne;
-    DcMotor motorTwo;
-    //servos
-    CRServo upLeft;
-    CRServo upRight;
-    //Servo downLeft;
-    //Servo downRight;
-    //sensors
-    ColorSensor upperColor;
-    ColorSensor lowerColor;
-    TouchSensor slHome;
-    TouchSensor slUp;
-    TouchSensor extenderOut;
-    TouchSensor extenderIn;
-    TouchSensor upperGrabberFilled;
-    TouchSensor lowerGrabberFilled;
-    ModernRoboticsI2cRangeSensor jeep;
-    //setting power and whatnot
-    //motors
-    double motorOnePower;
-    double motorTwoPower;
-    //servos
-    double servoOnePower;
-    double servoTwoPower;
-    //sensors
-    boolean upperColorReturn;
-    boolean lowerColorReturn;
-    boolean slHomeReturn;
-    boolean slUpReturn;
-    boolean extenderOutReturn;
-    boolean extenderInReturn;
-    boolean upperGrabberFilledReturn;
-    boolean lowerGrabberFilledReturn;
-
+public class PengwinWing{
+    //<editor-fold desc="Declare n' stuff">
+    DcMotor up;
+    DcMotor extend;
+    Servo left;
+    Servo right;
+    TouchSensor extended;
+    TouchSensor retracted;
+    //</editor-fold>
+    //
     public PengwinWing(HardwareMap hardwareMap) {
-        //sets the things
-        //<editor-fold desc="HardwareMap">
-        //motorOne = hardwareMap.dcMotor.get("motor1");
-        //motorTwo = hardwareMap.dcMotor.get("motor2");
-        upLeft = hardwareMap.crservo.get("servo1");
-        upRight = hardwareMap.crservo.get("servo2");
-        //downLeft = hardwareMap.servo.get("servo3");
-        //downRight = hardwareMap.servo.get("servo4");
-        /*upperColor = hardwareMap.colorSensor.get("color1");
-        lowerColor = hardwareMap.colorSensor.get("color2");
-        slHome = hardwareMap.touchSensor.get("touch1");
-        slUp = hardwareMap.touchSensor.get("touch2");
-        extenderOut = hardwareMap.touchSensor.get("touch3");
-        extenderIn = hardwareMap.touchSensor.get("touch4");
-        upperGrabberFilled = hardwareMap.touchSensor.get("touch5");
-        lowerGrabberFilled = hardwareMap.touchSensor.get("touch6");*/
-        //</editor-fold>
-        //
+        up = hardwareMap.dcMotor.get("up");
+        extend = hardwareMap.dcMotor.get("extend");
+        left = hardwareMap.servo.get("left");
+        right = hardwareMap.servo.get("right");
+        extended = hardwareMap.touchSensor.get("extended");
+        retracted = hardwareMap.touchSensor.get("retracted");
+        up.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
-    public void upLeft(double power) {
-        upLeft.setPower(power);
+    //
+    public void setServos(boolean lefty, boolean righty){
+        if (lefty){
+            left.setPosition(.8); //closed
+        }else {
+            left.setPosition(-1); //open
+        }
+        if (righty){
+            right.setPosition(.8); //closed
+        }else {
+            right.setPosition(-1); //open
+        }
     }
-    public void upRight(double power) {
-        upRight.setPower(-power);
+    //
+    //<editor-fold desc="Arm">
+    public void raiseArm(){
+        up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        up.setTargetPosition(90);
     }
-    /*public void downLeft(double power) {
-        downLeft.setPosition(power);
+    //
+    public void lowerArm(){
+        up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        up.setTargetPosition(0);
     }
-    public void downRight(double power) {
-        downRight.setPosition(-power);
-    }*/
+    //
+    public void manualArm(double power){
+        up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        up.setPower(power);
+    }
+    //
+    public void extendArm(double power){
+        if (!extended.isPressed() && power >= 0 || !retracted.isPressed() && power < 0) {
+            extend.setPower(power);
+        }
+    }
+    //</editor-fold>
 }
-
+//This statement is false.
+//Paradox

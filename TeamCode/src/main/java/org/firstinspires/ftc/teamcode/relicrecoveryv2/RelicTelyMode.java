@@ -40,37 +40,31 @@ public class RelicTelyMode  extends MeccyMode{
     //
     double degreeOfRobotPower = 1;
     DrivingAction drivingAction = DrivingAction.Driving;
-    GrabberUp grabberUp = GrabberUp.push;
-    GrabberDown grabberDown = GrabberDown.push;
+    //
+    boolean powered = false;
     //
     //<editor-fold desc="Controls"
-    double leftX;
+    //joysticks
+    double leftX;//j*
     double leftY;
-    double rightX;
-    boolean halfPower;
-    boolean quarterPower;
-    //
-    boolean liftup;
-    boolean liftdown;
-    boolean retract;
-    boolean extend;
-    boolean halfSLPower;
-    boolean left;
+    double rightX;//*j
+    double up;//m
+    double extend;//m
+    //triggers
+    boolean halfPower;//j
+    boolean quarterPower;//j
+    boolean left;//m*
     boolean right;
-    double pushAbove;
-    double pushBelow;
-    double down;
-    double up;
-    double Rup;
-    double Rdown;
+    boolean grabberPosition = false;//true is closed
+    boolean armPosition = true;//true is up  //*m
+    //
+    double switchify = 1;
     //</editor-fold>
     //
     //</editor-fold>
     //
     public void runOpMode() {
         //<editor-fold desc="Initialize">
-        //pengwinFin = new PengwinFin(hardwareMap);
-        pengwinWing = new PengwinWing(hardwareMap);
         //<editor-fold desc="Vuforia">
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -86,6 +80,9 @@ public class RelicTelyMode  extends MeccyMode{
         relicTemplate.setName("relicVuMarkTemplate");
         //</editor-fold>
         //
+        //<editor-fold desc="Other">
+        //pengwinFin = new PengwinFin(hardwareMap);
+        pengwinWing = new PengwinWing(hardwareMap);
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
         rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
         leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
@@ -96,14 +93,15 @@ public class RelicTelyMode  extends MeccyMode{
         Orientation angles;
         Acceleration gravity;
         //</editor-fold>
+        //</editor-fold>
         //
         waitForStartify();
         //
+        //<editor-fold desc="Reset">
         telemetry.log().clear();
-        //
         relicTrackables.activate();
-        //
         time.reset();
+        //</editor-fold>
         //
         while (opModeIsActive()) {
             //<editor-fold desc="Update">
@@ -113,19 +111,11 @@ public class RelicTelyMode  extends MeccyMode{
             rightX = gamepad1.right_stick_x;
             halfPower = gamepad1.right_bumper;
             quarterPower = gamepad1.left_bumper;
-            //Meg's controller
-            /*liftup = gamepad2.dpad_up;
-            liftdown = gamepad2.dpad_down;
-            retract = gamepad2.x;
-            extend = gamepad2.y;
-            halfSLPower = gamepad2.b;*/
-            up = gamepad2.left_stick_y;
-            down = gamepad2.right_stick_y;
-            Rup = gamepad2.left_stick_x;
-            Rdown = gamepad2.right_stick_x;
-
+            //Meg's Controller
             left = !(gamepad2.left_trigger == 0);
             right = !(gamepad2.right_trigger == 0);
+            up = gamepad2.left_stick_y;
+            extend = gamepad2.right_stick_y;
             //
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             //</editor-fold>
@@ -162,20 +152,15 @@ public class RelicTelyMode  extends MeccyMode{
             drivingAction = DrivingAction.Driving;
         }
         //
-        if (Math.abs(up) > Math.abs(Rup)){
-            grabberUp = GrabberUp.push;
-        }else {
-            grabberUp = GrabberUp.rotate;
-        }
-        //
-        if (Math.abs(down) > Math.abs(Rdown)){
-            grabberDown = GrabberDown.push;
+        if(gamepad2.dpad_right){
+            grabberPosition = true;
         }else{
-            grabberDown = GrabberDown.rotate;
+            grabberPosition = false;
         }
     }
     //
     private void moveTheRobot() {
+        //<editor-fold desc="Chassy">
         switch (drivingAction){
             case Driving:
                     drive(-leftY * degreeOfRobotPower);
@@ -187,40 +172,44 @@ public class RelicTelyMode  extends MeccyMode{
                     strafe(leftX * degreeOfRobotPower, -leftY * degreeOfRobotPower);
                 break;
         }
+        //</editor-fold>
         //
-        if (left){
-            pengwinWing.upLeft(up);
-            pengwinWing.upRight(0);
-            //pengwinWing.downLeft(down);
-        }else if (right){
-            pengwinWing.upLeft(0);
-            pengwinWing.upRight(up);
-            //pengwinWing.downRight(down);
-        }else{
-            switch (grabberUp){
-                case push:
-                    pengwinWing.upLeft(up);
-                    pengwinWing.upRight(up);
-                    break;
-                case rotate:
-                    pengwinWing.upLeft(-Rup);
-                    pengwinWing.upRight(Rup);
-                    break;
-            }
-            switch (grabberDown){
-                case push:
-                    /*pengwinWing.downLeft(down);
-                    pengwinWing.downRight(down);*/
-                    break;
-                case rotate:
-                    /*pengwinWing.downLeft(-Rdown);
-                    pengwinWing.downRight(Rdown);*/
+        //<editor-fold desc="Grabber">
+        if (left && right || grabberPosition){
+            pengwinWing.setServos(true, true);
+            if (left || right){grabberPosition = false;}
+        }else if(left){
+            pengwinWing.setServos(true, false);
+        }else if(right){
+            pengwinWing.setServos(false, true);
+        }else {
+            pengwinWing.setServos(false, false);
+        }
+        //</editor-fold>
+        //
+        //<editor-fold desc="Arm">
+        if (gamepad2.y){
+            pengwinWing.raiseArm();
+        }else if(gamepad2.x){
+            pengwinWing.lowerArm();
+        }
+        //
+        pengwinWing.extendArm(gamepad2.right_stick_y);
+        //
+        if (!(gamepad2.left_stick_y == 0) || powered){
+            pengwinWing.manualArm(gamepad2.left_stick_y);
+            if (gamepad2.left_stick_y == 0){
+                powered = false;
+            }else {
+                powered = true;
             }
         }
+        //</editor-fold>
     }
     //
     private void telemetryJazz(RelicRecoveryVuMark vuMark) {
         telemetry.addData("Unicorn Crossing", time.milliseconds());
+        telemetry.addData("Motor", leftBackMotor.getCurrentPosition());
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             //
             telemetry.addData("VuMark", vuMark);
@@ -232,3 +221,11 @@ public class RelicTelyMode  extends MeccyMode{
     }
     //</editor-fold>
 }
+/*List
+1. Gyro Turn
+2. Encoder Telemetry
+3. Arm Configuration
+4. Arm Set Position
+5. Joystick Manual Position
+6. Limit Switch Allowance
+ */

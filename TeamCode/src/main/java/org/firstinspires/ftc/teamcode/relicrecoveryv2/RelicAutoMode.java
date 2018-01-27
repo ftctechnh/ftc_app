@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -78,9 +79,43 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         //
         relicTrackables.activate();
         //
+        waitForStartify();
+        //
+        //<editor-fold desc="Jewel">
         pengwinFin.moveFinDown();
         //
         int blueJewel = (pengwinFin.doesColorSensorSeeBlueJewel()) ? 1 : -1 * key;
+        //
+        turnWithGyro(15, .4 * blueJewel);
+        sleep(100);
+        turnWithGyro(15, .4 * -blueJewel);
+        sleep(100);
+        //
+        pengwinFin.moveFinUp();
+        //</editor-fold>
+        //
+        //<editor-fold desc="Vuforia">
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        drive(-.4 * key);
+        while (vuMark != RelicRecoveryVuMark.UNKNOWN){
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        }
+        drive(0);
+        //
+        double distance = 1;
+        if (vuMark == RelicRecoveryVuMark.LEFT){
+            distance = 1;
+        }else if (vuMark == RelicRecoveryVuMark.CENTER){
+            distance = 2;
+        }else if (vuMark == RelicRecoveryVuMark.RIGHT){
+            distance = 3;
+        }
+        //</editor-fold>
+        //
+        pengwinFin.moveFinSense();
+        //
+        drive(.4 * key);
+        //
 
     }
 }

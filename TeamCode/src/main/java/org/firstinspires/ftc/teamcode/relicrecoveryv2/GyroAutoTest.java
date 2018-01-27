@@ -20,12 +20,15 @@ public class GyroAutoTest extends MeccyAutoMode {
         startify();
         //
         telemetry.addData("Why?", "");
+        telemetry.update();
         //
         waitForStartify();
         //
         telemetry.addLine("Working!");
+        telemetry.update();
         turnWithGyro(90, .4);
         telemetry.addLine("Not Working!");
+        telemetry.update();
     }
     //
     public void startify (){

@@ -19,12 +19,14 @@ public class GyroOtherTest extends MeccyAutoMode {
     public void runOpMode() {
         //
         telemetry.addData("Hello", "World");
-        telemetry.addLine("Hello World!");
         //
-
+        waitForStartify();
+        //
+        telemetry.addLine("Hello World!");
         //
         while (opModeIsActive()){
             telemetry.addData("Hello", "World");
+            telemetry.update();
         }
     }
     //

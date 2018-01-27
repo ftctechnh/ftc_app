@@ -159,6 +159,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             gravity  = imu.getGravity();
             //
+            telemetry.update();
         }
         turn(0);
         //</editor-fold>
