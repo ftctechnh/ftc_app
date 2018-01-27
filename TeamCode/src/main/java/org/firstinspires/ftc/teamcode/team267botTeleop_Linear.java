@@ -64,6 +64,7 @@ public class team267botTeleop_Linear extends LinearOpMode {
         double leftBeltPower;
         double rightBeltPower;
         double spinnerPower;
+        double rampStatus = robot.RAMP_CLOSED;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -111,7 +112,16 @@ public class team267botTeleop_Linear extends LinearOpMode {
                 spinnerPower= 0;
             }
             robot.leftBelt.setPower(leftBeltPower);
-            robot.rightBelt.setPower(rightBeltPower);
+
+
+            if (gamepad1.x) {
+                rampStatus = robot.RAMP_OPEN;
+            }
+            else if (gamepad1.b) {
+                rampStatus = robot.RAMP_CLOSED;
+            }
+            robot.beltOpener.setPosition(rampStatus);
+            //robot.rightBelt.setPower(rightBeltPower);
 
 
             // Send telemetry message to signify robot running;

@@ -54,9 +54,8 @@ public class Hardware267Bot
     public static final double BUTTON_LEFT = 0.5; //TODO: Find value
     public static final double BUTTON_RIGHT = 0.5; //TODO: Find value
     public static final double BUTTON_CENTER = 0.5; //TODO: Find value
-    public static final double MIN_SERVO =0;
-    public static final double MID_SERVO =0.5;
-    public static final double MAX_SERVO =1;
+    public static final double RAMP_CLOSED =0;
+    public static final double RAMP_OPEN =0.4;
     public enum ButtonPusherState { LEFT , RIGHT , CENTER }
 
     /* local OpMode members. */
@@ -78,8 +77,8 @@ public class Hardware267Bot
         leftMotor   = hwMap.dcMotor.get("leftMotor");
         rightMotor  = hwMap.dcMotor.get("rightMotor");
         leftBelt  = hwMap.dcMotor.get("leftBelt");
-        rightBelt  = hwMap.dcMotor.get("rightBelt");
-        spinnerMotor  = hwMap.dcMotor.get("botSpinner");
+        //rightBelt  = hwMap.dcMotor.get("rightBelt");
+        spinnerMotor  = hwMap.dcMotor.get("spinnerMotor");
         beltOpener = hwMap.servo.get("beltOpener");
         //color = hwMap.colorSensor.get("color");
         //color.enableLed(false);
@@ -95,14 +94,14 @@ public class Hardware267Bot
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
         leftBelt.setDirection(DcMotor.Direction.REVERSE);
-        rightBelt.setDirection(DcMotor.Direction.FORWARD);
+        //rightBelt.setDirection(DcMotor.Direction.FORWARD);
         //belt = hwMap.dcMotor.get("belt");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         leftBelt.setPower(0);
-        rightBelt.setPower(0);
+       // rightBelt.setPower(0);
         spinnerMotor.setPower(0);
 
         //leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
