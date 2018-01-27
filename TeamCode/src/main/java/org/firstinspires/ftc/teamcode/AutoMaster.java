@@ -109,17 +109,24 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
             robot.rlDrive.setTargetPosition(targetRL);
             robot.rrDrive.setTargetPosition(targetRR);
 
+            double otherSpeed = speed / 10;
+
             runtime.reset();
-            wait(1);
-            robot.flDrive.setPower(speed * multFL);
-            wait(1);
-            robot.frDrive.setPower(speed * multFR);
-            wait(1);
-            robot.rlDrive.setPower(speed * multRL);
-            wait(1);
-            robot.rrDrive.setPower(speed * multRR);
+            robot.flDrive.setPower(otherSpeed * multFL);
+            robot.frDrive.setPower(otherSpeed * multFR);
+            robot.rlDrive.setPower(otherSpeed * multRL);
+            robot.rrDrive.setPower(otherSpeed * multRR);
 
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
+
+                if (otherSpeed < speed) {
+                    otherSpeed = (otherSpeed) + (speed / 10);
+                    wait(50);
+                    robot.flDrive.setPower(otherSpeed * multFL);
+                    robot.frDrive.setPower(otherSpeed * multFR);
+                    robot.rlDrive.setPower(otherSpeed * multRL);
+                    robot.rrDrive.setPower(otherSpeed * multRR);
+                }
                 int i = 0;
                 telemetry.addData("Current fl: ", robot.flDrive.getCurrentPosition());
                 telemetry.addData("Current fr: ", robot.frDrive.getCurrentPosition());
