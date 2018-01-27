@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
-//import com.qualcomm.hardware.bosch.BNO055IMU;
-//import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -16,14 +16,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-//import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-//import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-//import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-//import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-//import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-//import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -70,9 +70,9 @@ public class NewRobotFinal
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
 
-    //private BNO055IMU imu;
-    //Orientation angles;
-    //Acceleration gravity;
+    private BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
 
     DigitalChannel wingTouchSens;
     DigitalChannel bottomLiftMagSwitch;
@@ -91,7 +91,7 @@ public class NewRobotFinal
     public NewRobotFinal(HardwareMap hardwareMap)
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
@@ -174,7 +174,7 @@ public class NewRobotFinal
         leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
-    /*public void initIMU()
+    public void initIMU()
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -185,31 +185,31 @@ public class NewRobotFinal
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-    }*/
+    }
 
-    /*public void updateIMUValues()
+    public void updateIMUValues()
     {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         gravity = imu.getGravity();
-    }*/
+    }
 
-    /*public float getYaw()
+    public float getYaw()
     {
         updateIMUValues();
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-    }*/
+    }
 
-    /*public double anglePerpToGrav()
+    public double anglePerpToGrav()
     {
         updateIMUValues();
         return Math.atan(gravity.yAccel / gravity.zAccel);
-    }*/
+    }
 
-    /*public String getGravToString()
+    public String getGravToString()
     {
         updateIMUValues();
         return gravity.toString();
-    }*/
+    }
 
     public char getGlyphCipher()
     {

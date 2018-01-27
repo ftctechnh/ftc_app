@@ -115,6 +115,7 @@ public class CompTeleFinal extends OpMode
         telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
         telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
         telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
+        telemetry.addData("WingEnc", newRobot.getWingMotor().getCurrentPosition());
         telemetry.addData("Left Y", gamepad1.left_stick_y);
         telemetry.addData("Right y", gamepad1.right_stick_y);
         telemetry.update();
@@ -124,5 +125,4 @@ public class CompTeleFinal extends OpMode
     {
         newRobot.stopAllMotors();
     }
-
 }
