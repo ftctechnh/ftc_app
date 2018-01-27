@@ -202,14 +202,14 @@ public class NewRobotFinal
     public double anglePerpToGrav()
     {
         updateIMUValues();
-        return Math.atan(gravity.yAccel / gravity.zAccel);
+        return Math.atan(gravity.yAccel / gravity.zAccel) * (180/Math.PI);
     }
 
-    public String getGravToString()
+   /* public String getGravToString()
     {
         updateIMUValues();
         return gravity.toString();
-    }
+    }*/
 
     public char getGlyphCipher()
     {
@@ -787,7 +787,7 @@ public class NewRobotFinal
         rightDoorWall.setPosition(rightDoorPos);
     }
 
-    /*public void autoPark() //We saw the angle wasn't detecting it on the new robot.
+    public void autoPark() //We saw the angle wasn't detecting it on the new robot.
     //Maybe x over z? Look at the data collected
     {
         double angle = anglePerpToGrav();
@@ -806,7 +806,6 @@ public class NewRobotFinal
 
         }
     }
-    */
 
     public void OpenCloseGrabber(boolean close)
     {
