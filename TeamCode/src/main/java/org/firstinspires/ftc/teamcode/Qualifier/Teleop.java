@@ -69,7 +69,7 @@ public class Teleop extends OpMode {
 
     public int liftTarget = 0;
     public boolean trainon = false;
-    boolean relicclamped = false;
+    boolean reliczeroing = false;
     double relicspeed = .6;
 
 
@@ -263,14 +263,14 @@ public class Teleop extends OpMode {
             }
         }
         if (gamepad2.right_trigger > 0.1) {
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 300){
+            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 150){
                 gromit.glyphTrain.glyphclamp("open");
             }
             else{
                 gromit.relicArm.clawOpen();
             }
         } else if (gamepad2.right_bumper) {
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 300){
+            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 150){
                 gromit.glyphTrain.glyphclamp("close");
             }
             else{
@@ -309,7 +309,7 @@ public class Teleop extends OpMode {
          */
         //SLOW RELIC ELBOW
         //Zero position
-        if (gamepad2.start && gromit.relicArm.relicArmMotor.getCurrentPosition() > 300) {
+        if (gamepad2.start && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
             if (start2IsReleased) {//IF CHANGE IN STATE
                 start2IsReleased = false;
                 movetime = 500;
@@ -323,7 +323,7 @@ public class Teleop extends OpMode {
             start2IsReleased = true;
         }
         //Middle Position
-        if (gamepad2.left_trigger > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > 300) {
+        if (gamepad2.left_trigger > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
             if (leftttriggerIsReleased) {//IF CHANGE IN STATE
                 leftttriggerIsReleased = false;
                 movetime = 500;
@@ -342,7 +342,7 @@ public class Teleop extends OpMode {
             leftttriggerIsReleased = true;
         }
         //TOP POSITION
-        if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() > 300) {
+        if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
             if (leftbumperIsReleased) {//IF CHANGE IN STATE
                 leftbumperIsReleased = false;
                 movetime = 700;
@@ -351,6 +351,9 @@ public class Teleop extends OpMode {
                 elbowstarttime = runtime.milliseconds();//Start time
                 elbowtarget = gromit.relicArm.elbowtop;
                 elbowtotalmove = elbowtarget - elbowstartpos;
+                //Start relic arm in to zero it for easy driving
+                reliczeroing = true;
+                gromit.relicArm.relicArmMotor.setPower(-0.6);
             }
         } else {
             leftbumperIsReleased = true;
@@ -361,6 +364,13 @@ public class Teleop extends OpMode {
                 elbowmoving = false;
             }
         }
+        if(reliczeroing){
+            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 150){
+                gromit.relicArm.relicArmMotor.setPower(0.0);
+                reliczeroing = false;
+            }
+        }
+
 
         //Clamp slowly
         if(gamepad2.right_stick_y > 0.1){
@@ -371,26 +381,26 @@ public class Teleop extends OpMode {
         }
 
         //Elbow Slowly
-        if (gamepad2.left_stick_y < -0.1  && gromit.relicArm.relicArmMotor.getCurrentPosition() > 300) {
+        if (gamepad2.left_stick_y < -0.1  && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
             gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition() + 0.004);
-        } else if (gamepad2.left_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition()  > 300) {
+        } else if (gamepad2.left_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition()  > 150) {
             gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition() - 0.004);
         }
 
 
         // RELIC ARM IN/OUT
-        if (gamepad1.dpad_up && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax && !onehitwonder) {
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() > 300 && !glyphinit){
+        if (gamepad1.dpad_up && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax && !onehitwonder && !reliczeroing) {
+            if(gromit.relicArm.relicArmMotor.getCurrentPosition() > 150 && !glyphinit){
                 glyphinit = true;
                 gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.elbowup);
             }
             gromit.relicArm.relicArmMotor.setPower(relicspeed);
         }
-       else if(gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin && !onehitwonder){
+       else if(gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin && !onehitwonder && !reliczeroing){
             gromit.relicArm.relicArmMotor.setPower(-relicspeed);
             }
 
-        else if (!onehitwonder){
+        else if (!onehitwonder && !reliczeroing){
             gromit.relicArm.relicArmMotor.setPower(0.0);
         }
 
@@ -402,11 +412,11 @@ public class Teleop extends OpMode {
                 gromit.relicArm.relicArmMotor.setPower(0.8);  // start powering out the arm
 
                 //Begin ELbow move
-                movetime = 2000;
+                movetime = 1700;
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();                            //Start time
-                elbowtarget = gromit.relicArm.elbowup + .09;                        // why the + 0.9???
+                elbowtarget = gromit.relicArm.elbowup + .02;                        // why the + 0.9???
                 elbowtotalmove = elbowtarget - elbowstartpos;
             }
         } else {
@@ -431,7 +441,7 @@ public class Teleop extends OpMode {
                elbowtarget = gromit.relicArm.elbowtop;                                 // set elbow target
                elbowtotalmove = elbowtarget - elbowstartpos;
            }
-           else if(gromit.relicArm.relicArmMotor.getCurrentPosition()< 300 && !out){    // turn things off?
+           else if(gromit.relicArm.relicArmMotor.getCurrentPosition()< 150 && !out){    // turn things off?
                gromit.relicArm.relicArmMotor.setPower(0.0);
                out = true;
                onehitwonder = false;
