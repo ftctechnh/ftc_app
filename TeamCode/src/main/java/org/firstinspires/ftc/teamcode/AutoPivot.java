@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,6 +15,9 @@ import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
@@ -42,7 +44,6 @@ public class AutoPivot extends LinearOpMode {
     Orientation angles;
     Acceleration gravity;
     NormalizedColorSensor colorSensor;
-    static ModernRoboticsI2cGyro gyro;
     boolean iAmBlue = false;
     boolean iAmRed = true;
     boolean isBoxSide = true;
@@ -59,10 +60,10 @@ public class AutoPivot extends LinearOpMode {
         parameters.loggingTag          = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
         // H a r d w a r e   M a p p i n g
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
         motorFR = hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
         motorFL = hardwareMap.dcMotor.get("motorFL");
@@ -94,34 +95,42 @@ public class AutoPivot extends LinearOpMode {
         telemetry.addLine("starting");
         telemetry.update();
 
-        pivotBy(90);
-
-        Wait(2);
-        pivotBy(180);
-        Wait(2);
-        pivotBy(45);
+       pivotTo(90);
     }
     void pivotTo (int target){
         //Pivot to counterclockwise is positive.
-        //pivot to clockwise is negative.
-
-        float wheelPower = angles.firstAngle - target;
-        if(target > 0){
-            motorFL.setPower(-wheelPower);
-            motorBL.setPower(-wheelPower);
-            motorFR.setPower(wheelPower);
-            motorBR.setPower(wheelPower);
-
+        //Pivot to clockwise is negative.
+        double baseWheelPower = .35;
+        double minWheelPower = .15;
+        double wheelPower = baseWheelPower;
+        float fudgeFactor = 5f;
+        double dif = target;
+        while(dif > fudgeFactor - minWheelPower) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            if (angles != null) {
+                double currentHeading = angles.firstAngle;
+                dif = (target - currentHeading);
+                wheelPower = ( ( ( dif / target ) - minWheelPower ) * baseWheelPower ) + minWheelPower ;
+                if (target - currentHeading > 0) {
+                    motorFL.setPower(-wheelPower);
+                    motorBL.setPower(-wheelPower);
+                    motorFR.setPower(wheelPower);
+                    motorBR.setPower(wheelPower);
+                } else {
+                    motorFL.setPower(wheelPower);
+                    motorBL.setPower(wheelPower);
+                    motorFR.setPower(-wheelPower);
+                    motorBR.setPower(-wheelPower);
+                }
+            }
         }
     }
     void pivotBy(int angle) {
 
-
-
         // Positive angle turns clockwise with power given
 
         // Any faster than this and the gyro is far less accurate
-        float power = .25f;
+       /* float power = .25f;
 
         // The gyro tends to overestimate the angle
         float fudgeFactor = 0.97f;
@@ -146,13 +155,13 @@ public class AutoPivot extends LinearOpMode {
         int iCount = 0;
         while (curHeading < angle) {
             iCount = iCount + 1;
-            curHeading = Math.abs(angles.firstangle() - initialHeading);
+            //curHeading = Math.abs(angles.firstangle() - initialHeading);
             telemetry.addData("1", "%03d", curHeading);
             telemetry.addData("2", "%03d", gyro.getIntegratedZValue());
             telemetry.addData("3", "%03d", iCount);
             telemetry.update();
         }
-        sR();
+        sR();*/
     }
 
     void move(float posx, float posy, float waitTime) {

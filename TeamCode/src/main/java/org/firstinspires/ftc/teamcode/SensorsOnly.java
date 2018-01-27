@@ -99,7 +99,7 @@ public class SensorsOnly extends LinearOpMode
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
         if (colorSensor instanceof SwitchableLight) {
