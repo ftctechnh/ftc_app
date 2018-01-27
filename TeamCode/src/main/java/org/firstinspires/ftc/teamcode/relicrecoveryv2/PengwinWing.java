@@ -23,8 +23,9 @@ public class PengwinWing{
     DcMotor extend;
     Servo left;
     Servo right;
-    TouchSensor extended;
     TouchSensor retracted;
+    TouchSensor armUp;
+    TouchSensor armDown;
     //</editor-fold>
     //
     public PengwinWing(HardwareMap hardwareMap) {
@@ -32,8 +33,9 @@ public class PengwinWing{
         extend = hardwareMap.dcMotor.get("extend");
         left = hardwareMap.servo.get("left");
         right = hardwareMap.servo.get("right");
-        extended = hardwareMap.touchSensor.get("extended");
         retracted = hardwareMap.touchSensor.get("retracted");
+        armUp = hardwareMap.touchSensor.get("armUp");
+        armDown = hardwareMap.touchSensor.get("armdown");
         up.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     //
@@ -67,7 +69,7 @@ public class PengwinWing{
     }
     //
     public void extendArm(double power){
-        if (!extended.isPressed() && power >= 0 || !retracted.isPressed() && power < 0) {
+        if (power >= 0 || !retracted.isPressed() && power < 0) {
             extend.setPower(power);
         }
     }

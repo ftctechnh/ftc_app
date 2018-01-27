@@ -65,7 +65,7 @@ public abstract class MeccyAutoMode extends MeccyMode{
     //</editor-fold>
     //
     //<editor-fold desc="Moving">
-    public void forwardToPosition(double inches, double speed){
+    public void toPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
         //
         leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
@@ -75,19 +75,6 @@ public abstract class MeccyAutoMode extends MeccyMode{
         //
         setSpeed(speed);
     }
-    //
-    //
-    public void backToPosition(double inches, double speed){
-        int move = (int)(Math.round(inches*countify));
-        //
-        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
-        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
-        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
-        //
-        setSpeed(speed);
-    }
-
     //
     public void rightToPosition(double inches, double speed){
         int move = (int)(Math.round(inches*countify));
