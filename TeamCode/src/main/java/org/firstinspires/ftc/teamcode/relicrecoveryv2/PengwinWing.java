@@ -35,7 +35,7 @@ public class PengwinWing{
         right = hardwareMap.servo.get("right");
         retracted = hardwareMap.touchSensor.get("retracted");
         armUp = hardwareMap.touchSensor.get("armUp");
-        armDown = hardwareMap.touchSensor.get("armdown");
+        armDown = hardwareMap.touchSensor.get("armDown");
         up.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     //
