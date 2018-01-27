@@ -63,6 +63,7 @@ public class team267botTeleop_Linear extends LinearOpMode {
         double right;
         double leftBeltPower;
         double rightBeltPower;
+        double spinnerPower;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -94,17 +95,20 @@ public class team267botTeleop_Linear extends LinearOpMode {
                 //normalize to between 0 and 1
                 leftBeltPower=  gamepad1.left_trigger;
                 rightBeltPower= gamepad1.left_trigger;
+                spinnerPower= gamepad1.left_trigger;
 
             }
             else if (gamepad1.right_trigger >0) {
                 //If the right trigger is pressed, move block backwards.
                 leftBeltPower= -gamepad1.right_trigger;
                 rightBeltPower= -gamepad1.right_trigger;
+                spinnerPower= -gamepad1.right_trigger;
             }
             else {
                 //If neither triggers are pressed, do nothing.
                 leftBeltPower= 0;
                 rightBeltPower= 0;
+                spinnerPower= 0;
             }
             robot.leftBelt.setPower(leftBeltPower);
             robot.rightBelt.setPower(rightBeltPower);
@@ -116,6 +120,7 @@ public class team267botTeleop_Linear extends LinearOpMode {
             telemetry.addData("right", "%.2f", right);
             telemetry.addData("leftBelt", "%.2f", leftBeltPower);
             telemetry.addData("rightBelt","%.2f", rightBeltPower);
+            telemetry.addData("spinnerPower","%.2f", spinnerPower);
             telemetry.addData("leftTrigger", "%.2f", gamepad1.left_trigger);
             telemetry.addData("rightTrigger","%.2f", gamepad1.right_trigger);
             telemetry.update();
