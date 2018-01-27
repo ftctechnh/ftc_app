@@ -146,9 +146,9 @@ public class redBack_NoGyro_Delta extends Autonomous_General {
         sleep(1000);
         stopMotors();
         if(rangeSensorWorking) {
-            encoderTurn (-76,0.3);
+            encoderTurn (-90,0.3);
         }else{
-            encoderTurn (76,0.3);
+            encoderTurn (88,0.3);
         }
 
         sleep(750);

@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
 @Autonomous(name="Red Front George")
+@Disabled
 public class redFront_George extends Autonomous_General {
 
     public double rsBuffer = 20.00;

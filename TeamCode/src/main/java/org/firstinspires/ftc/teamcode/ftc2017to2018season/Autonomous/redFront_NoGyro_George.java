@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
 @Autonomous(group = "Red Front No Gyro George")
+@Disabled
 public class redFront_NoGyro_George extends Autonomous_General {
 
     public double rsBuffer = 20.00;
@@ -106,7 +108,7 @@ public class redFront_NoGyro_George extends Autonomous_General {
 
         light.setPower(0);
 
-        encoderMecanumDrive(0.9, -19, -19, 5000, 0);
+        encoderMecanumDrive(0.9, -25, -25, 5000, 0);
 
         encoderTurn(-97,0.4);
         sleep(400);

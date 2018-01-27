@@ -112,10 +112,10 @@ public class blueFront_NoGyro_Delta extends Autonomous_General {
 
         //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
-        encoderMecanumDrive(0.3,15,15,5000,0);
+        encoderMecanumDrive(0.3,28,28,5000,0);
         sleep(250);
 
-        encoderTurn(-87, 0.5);
+        encoderTurn(-98, 0.5);
         sleep(1000);
 
         encoderMecanumDrive(0.9, -60, -60, 5000, 0);
@@ -140,7 +140,7 @@ public class blueFront_NoGyro_Delta extends Autonomous_General {
 
         sleep(1000);
 
-        encoderTurn(90, 0.5);
+        encoderTurn(98, 0.5);
 
         sleep(750);
 

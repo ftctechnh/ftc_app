@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * Created by Pahel and Rohan on 11/18/17.
+ * Created by Rohan on 11/18/17.
  */
 
 

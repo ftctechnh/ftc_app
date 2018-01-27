@@ -107,9 +107,9 @@ public class redFront_NoGyro_Delta extends Autonomous_General {
 
         light.setPower(0);
 
-        encoderMecanumDrive(0.9, -19, -19, 5000, 0);
+        encoderMecanumDrive(0.9, -21, -21, 5000, 0);
 
-        encoderTurn(-97,0.4);
+        encoderTurn(-100,0.4);
         sleep(400);
         encoderMecanumDrive(0.4,-75,-75,5000,0);
 
@@ -134,7 +134,7 @@ public class redFront_NoGyro_Delta extends Autonomous_General {
 
         sleep(1000);
 
-        encoderTurn(-90, 0.5);
+        encoderTurn(-98, 0.5);
 
         sleep(750);
 
