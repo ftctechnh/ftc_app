@@ -1,11 +1,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -31,8 +28,7 @@ public class Hardware267Bot
     // Hardware:
     public DcMotor  leftMotor     = null;
     public DcMotor  rightMotor    = null;
-    public DcMotor  leftBelt      = null;
-    public DcMotor  rightBelt     = null;
+    public DcMotor  belts         = null;
     public DcMotor  spinnerMotor  = null;
     public Servo    beltOpener    = null;
     /*
@@ -76,7 +72,7 @@ public class Hardware267Bot
         //lineviewer = hwMap.opticalDistanceSensor.get("lightveiwer");
         leftMotor   = hwMap.dcMotor.get("leftMotor");
         rightMotor  = hwMap.dcMotor.get("rightMotor");
-        leftBelt  = hwMap.dcMotor.get("leftBelt");
+        belts = hwMap.dcMotor.get("belts");
         //rightBelt  = hwMap.dcMotor.get("rightBelt");
         spinnerMotor  = hwMap.dcMotor.get("spinnerMotor");
         beltOpener = hwMap.servo.get("beltOpener");
@@ -93,14 +89,14 @@ public class Hardware267Bot
         //armMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setDirection(DcMotor.Direction.FORWARD);
-        leftBelt.setDirection(DcMotor.Direction.REVERSE);
+        belts.setDirection(DcMotor.Direction.REVERSE);
         //rightBelt.setDirection(DcMotor.Direction.FORWARD);
         //belt = hwMap.dcMotor.get("belt");
 
         // Set all motors to zero power
         leftMotor.setPower(0);
         rightMotor.setPower(0);
-        leftBelt.setPower(0);
+        belts.setPower(0);
        // rightBelt.setPower(0);
         spinnerMotor.setPower(0);
 

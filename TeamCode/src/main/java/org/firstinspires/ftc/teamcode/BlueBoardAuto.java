@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import java.text.SimpleDateFormat;
@@ -68,7 +67,7 @@ public class BlueBoardAuto extends LinearOpMode {
 
 
         // Step 4: Turn Belt
-        robot.leftBelt.setPower(1.0);
+        robot.belts.setPower(1.0);
         robot.rightBelt.setPower(1.0);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
