@@ -18,7 +18,7 @@ public class ForkLift {
     private DigitalChannel bottomButton;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    private final double CLAW_CLOSE_POSITION = 1;
+    private final double CLAW_CLOSE_POSITION = 0.7;
     private final double CLAW_OPEN_POSITION = 0;
 
     public ForkLift(HardwareMap hardwareMap, Telemetry telemetry) {
