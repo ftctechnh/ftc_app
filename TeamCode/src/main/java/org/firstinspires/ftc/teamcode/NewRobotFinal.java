@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+//import com.qualcomm.hardware.bosch.BNO055IMU;
+//import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+//import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
@@ -18,12 +18,12 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+//import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+//import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
+//import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+//import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -70,7 +70,7 @@ public class NewRobotFinal
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
 
-    private BNO055IMU imu;
+    //private BNO055IMU imu;
     Orientation angles;
     Acceleration gravity;
 
@@ -91,7 +91,8 @@ public class NewRobotFinal
     public NewRobotFinal(HardwareMap hardwareMap)
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+        //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+        //initIMU();
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
@@ -174,7 +175,7 @@ public class NewRobotFinal
         leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
-    public void initIMU()
+    /*public void initIMU()
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -205,7 +206,7 @@ public class NewRobotFinal
         return Math.atan(gravity.yAccel / gravity.zAccel) * (180/Math.PI);
     }
 
-   /* public String getGravToString()
+    public String getGravToString()
     {
         updateIMUValues();
         return gravity.toString();
@@ -787,7 +788,7 @@ public class NewRobotFinal
         rightDoorWall.setPosition(rightDoorPos);
     }
 
-    public void autoPark() //We saw the angle wasn't detecting it on the new robot.
+    /*public void autoPark() //We saw the angle wasn't detecting it on the new robot.
     //Maybe x over z? Look at the data collected
     {
         double angle = anglePerpToGrav();
@@ -805,7 +806,7 @@ public class NewRobotFinal
             driveRightOne.setPower(0);
 
         }
-    }
+    }*/
 
     public void OpenCloseGrabber(boolean close)
     {
