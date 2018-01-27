@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 /**
- * Created by Eric on 1/6/2018.
+ * Created by Nora on 1/19/2018.
  */
 
-//@Autonomous(name="NorthRed", group="AutoMode")
-public class NorthRed extends RelicAutoMode {
+//@Autonomous(name="SouthRed", group="AutoMode")
+public class SouthRed extends RelicAutoMode {
     @Override
     public void runOpMode() {
         //

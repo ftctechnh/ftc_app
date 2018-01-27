@@ -21,6 +21,7 @@ public class PengwinWing{
     //<editor-fold desc="Declare n' stuff">
     DcMotor up;
     DcMotor extend;
+    DcMotor cableRetract;
     Servo left;
     Servo right;
     TouchSensor retracted;
@@ -37,6 +38,7 @@ public class PengwinWing{
         armUp = hardwareMap.touchSensor.get("armUp");
         armDown = hardwareMap.touchSensor.get("armDown");
         up.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        cableRetract = hardwareMap.dcMotor.get("cableRetract");
     }
     //
     public void setServos(boolean lefty, boolean righty){
@@ -56,23 +58,31 @@ public class PengwinWing{
     public void raiseArm(){
         up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         up.setTargetPosition(90);
+        cableRetract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        cableRetract.setPower(0);
     }
     //
     public void lowerArm(){
         up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         up.setTargetPosition(0);
+        cableRetract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        cableRetract.setPower(0);
     }
     //
     public void manualArm(double power){
         up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        cableRetract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         if(power >= 0 && !armUp.isPressed() || power < 0 && armDown.isPressed()) {
             up.setPower(power);
         }
+        cableRetract.setPower(0);
     }
     //
     public void extendArm(double power){
         if (power >= 0 || !retracted.isPressed() && power < 0) {
             extend.setPower(power);
+            cableRetract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            cableRetract.setPower(0);
         }
     }
     //</editor-fold>

@@ -25,8 +25,7 @@ public abstract class MeccyMode extends LinearOpMode{
     public void configureMotors(){
         rightBackMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rightFrontMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
-    //
+    }    //
     public boolean isMoving(){
         return leftBackMotor.isBusy() &&
                 leftFrontMotor.isBusy() &&
