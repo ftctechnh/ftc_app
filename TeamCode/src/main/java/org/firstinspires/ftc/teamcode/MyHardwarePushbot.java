@@ -64,9 +64,9 @@ public class MyHardwarePushbot
     public Servo    ballArm     = null; //sets the servo ball arm to null L.A.S
 
     public static final double MID_SERVO       =  0.5 ;     // mid position of both claw servos
-    public static final double OPEN_offset      =  0.2  ;   // open claws
-    public static final double MID_offset       =  0;       // mid position of claws
-    public static final double CLOSE_offset     =  -.1 ;    // close claws
+    public static final double OPEN_offset      =  0.15  ;   // open claws .2
+    public static final double MID_offset       =  0.05;       // mid position of claws
+    public static final double CLOSE_offset     =  -.15 ;    // close claws
     public static final double rightclawcorrection = -0.06;   // to correct the setup of the right claw servo
     public static final double rightclawupcorrection = 0.08;  // to correct the setup of the right upper claw servo
     public static final double leftclawcorrection = 0;

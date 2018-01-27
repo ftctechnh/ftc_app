@@ -63,7 +63,7 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
     // could also use HardwarePushbotMatrix class.
 
     private ElapsedTime runtime = new ElapsedTime();
-    double          clawOffset  = 0.0 ;                  // Servo mid position
+    double          clawOffset  = robot.OPEN_offset ;                  // Servo open position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
     int             target = 0;                          // lift motor target
 
@@ -81,6 +81,12 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
         robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //resetting all the claws to open
+        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset + robot.leftclawcorrection);
+        robot.leftClawup.setPosition(robot.MID_SERVO - clawOffset + robot.leftclawupcorrection);
+        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset + robot.rightclawcorrection);
+        robot.rightClawup.setPosition(robot.MID_SERVO + clawOffset + robot.rightclawupcorrection);
 
         robot.ballArm.setPosition(.7);
 
@@ -140,10 +146,12 @@ public class MyPushbotTeleopTank_Iterative extends OpMode{
                 clawOffset = robot.CLOSE_offset;
 
             // Move both servos to new position.  Assume servos are mirror image of each other.
-            // 0.15 correction factor for difference in hand attachment to left and right servo
+            // 0.06 correction factor for difference in hand attachment for bottom left and right servo
             clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-            robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset -.06);
+            robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset + robot.leftclawcorrection);
+            robot.leftClawup.setPosition(robot.MID_SERVO - clawOffset + robot.leftclawupcorrection);
+            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset + robot.rightclawcorrection);
+            robot.rightClawup.setPosition(robot.MID_SERVO + clawOffset + robot.rightclawupcorrection);
             runtime.reset();
             while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
             }
