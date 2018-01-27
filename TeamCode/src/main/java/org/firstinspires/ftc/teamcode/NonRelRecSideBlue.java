@@ -42,16 +42,16 @@ public class NonRelRecSideBlue extends AutoMaster {
         }
 
         //Lines up the proper box
-        encode(23.5, -0.5, MoveType.STRAIGHT);
+        encode(25, -0.5, MoveType.STRAIGHT);
         encode(57, 0.5, MoveType.ROT);
-        encode(23, 0.5, MoveType.STRAIGHT);
+        encode(13.5, 0.5, MoveType.STRAIGHT);
         encode(19, -0.5, MoveType.ROT);
         if (vufSpeed != 0) {
             encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
         }
 
         //Final approach
-        encode(15, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
+        encode(12, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);

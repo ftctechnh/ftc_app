@@ -42,7 +42,7 @@ public class NonRelRecSideRed extends AutoMaster {
         //Lines up the proper box
         encode(25, 0.5, MoveType.STRAIGHT);
         encode(19, -0.5, MoveType.ROT);
-        encode(13 , 0.5, MoveType.STRAIGHT);
+        encode(17 , 0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         if (vufSpeed != 0) {
             encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);

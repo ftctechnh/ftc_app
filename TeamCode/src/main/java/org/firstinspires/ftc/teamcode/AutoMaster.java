@@ -119,7 +119,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
             while (opModeIsActive() && (robot.flDrive.isBusy() && robot.frDrive.isBusy() && robot.rlDrive.isBusy() && robot.rrDrive.isBusy())) {
 
-                if (otherSpeed < speed) {
+                if (Math.abs(otherSpeed) < Math.abs(speed)) {
                     otherSpeed = (otherSpeed) + (speed / 10);
                     wait(50);
                     robot.flDrive.setPower(otherSpeed * multFL);

@@ -30,9 +30,9 @@ public class Thing extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         while (opModeIsActive()) {
-            encode(19, 0.25, MoveType.ROT);
+            encode(19, 1, MoveType.ROT);
             wait(100);
-            encode(19, -0.25, MoveType.ROT);
+            encode(19, -1, MoveType.ROT);
         }
     }
 }

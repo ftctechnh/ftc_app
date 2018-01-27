@@ -40,14 +40,14 @@ public class RelRecSideBlue extends AutoMaster {
         }
 
         //Lines up the proper box
-        encode(23, -0.5, MoveType.STRAIGHT);
+        encode(32, -0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         if (vufSpeed != 0) {
             encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
         }
 
         //Final approach
-        encode(5, 0.5, MoveType.STRAIGHT);
+        encode(9, 0.5, MoveType.STRAIGHT);
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);

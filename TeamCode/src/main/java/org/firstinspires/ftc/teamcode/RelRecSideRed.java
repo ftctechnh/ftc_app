@@ -41,7 +41,7 @@ public class RelRecSideRed extends AutoMaster {
         }
 
         //Lines up the proper box
-        encode(36.5, 0.5, MoveType.STRAIGHT);
+        encode(37, 0.5, MoveType.STRAIGHT);
         encode(19, 0.5, MoveType.ROT);
         if (vufSpeed != 0) {
             encode(VUF_DISTANCE, vufSpeed, MoveType.LATERALLY);
