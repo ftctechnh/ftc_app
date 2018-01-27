@@ -311,18 +311,18 @@ public class Delta_TeleOp extends OpMode {
 
     }
   public void openGlyph(){
-        glyphServoRight.setPosition(0.7);
-        glyphServoLeft.setPosition(0.15);
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
   }
 
   public void closeGlyph(){
-      glyphServoRight.setPosition(0.78);
-      glyphServoLeft.setPosition(0.00);
+      glyphServoRight.setPosition(0.8);
+      glyphServoLeft.setPosition(0.05);
   }
 
   public void middleGlyph(){
-      glyphServoRight.setPosition(0.7);
-      glyphServoLeft.setPosition(0.05);
+      glyphServoRight.setPosition(0.75);
+      glyphServoLeft.setPosition(0.15);
 
   }
 }

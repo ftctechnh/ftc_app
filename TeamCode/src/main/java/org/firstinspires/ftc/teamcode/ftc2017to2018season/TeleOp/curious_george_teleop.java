@@ -88,11 +88,16 @@ public class curious_george_teleop extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
+        relicMain = hardwareMap.servo.get("relicMain");
+        relicLeft = hardwareMap.servo.get("relicLeft");
+        relicRight = hardwareMap.servo.get("relicRight");
+        relicMotor = hardwareMap.dcMotor.get("relicMotor");
 
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        relicMotor.setDirection(DcMotor.Direction.REVERSE);
 
         openGlyph();
         jewel_servo.setPosition(0.1);
