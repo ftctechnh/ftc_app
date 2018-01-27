@@ -65,7 +65,9 @@ public class PengwinWing{
     //
     public void manualArm(double power){
         up.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        up.setPower(power);
+        if(power >= 0 && !armUp.isPressed() || power < 0 && armDown.isPressed()) {
+            up.setPower(power);
+        }
     }
     //
     public void extendArm(double power){
