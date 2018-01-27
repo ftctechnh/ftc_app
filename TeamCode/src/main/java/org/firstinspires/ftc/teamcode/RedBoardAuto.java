@@ -67,7 +67,6 @@ public class RedBoardAuto extends LinearOpMode {
 
         // Step 3: Turn Belt
         robot.belts.setPower(1.0);
-        robot.rightBelt.setPower(1.0);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             telemetry.addData("Path", "Turning Left");
