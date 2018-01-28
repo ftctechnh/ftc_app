@@ -139,14 +139,8 @@ public class Delta_TeleOp extends OpMode {
         glyphManipulator();
         // slideIncrement();
         incrementOpen();
-
-        if(gamepad2.dpad_up){
-          moveUpInch(13*2.54);
-        }else if(gamepad2.dpad_right){
-            moveUpInch(7*2.54);
-        }else if(gamepad2.dpad_down){
-            moveUpInch(2*2.54);
-        }
+        incrementClose();
+       slideIncrement();
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -266,12 +260,14 @@ public class Delta_TeleOp extends OpMode {
 
     public void slideIncrement() {
 
-        if (gamepad2.dpad_up) {
-
-            moveUpInch(2.54);
-
+        if(gamepad2.dpad_up){
+            moveUpInch(13);
+        }else if(gamepad2.dpad_right){
+            moveUpInch(7);
+        }else if(gamepad2.dpad_down){
+            moveUpInch(2);
         }
-        else {
+        else{
 
         }
     }
@@ -281,6 +277,14 @@ public class Delta_TeleOp extends OpMode {
         while (gamepad1.x){
             glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
             glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
+            wait(300);
+        }
+    }
+    public void incrementClose(){
+
+        while (gamepad1.y) {
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
             wait(300);
         }
     }
