@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 
+import com.google.gson.JsonPrimitive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -28,7 +29,7 @@ public class RelicRecoveryRobot extends Robot {
     private final JewelKnocker jewelKnocker;
 
     private final JSONParser parser;
-    private final Map<String, Object> optionsMap;
+    private final Map<String, JsonPrimitive> optionsMap;
 
     /**
      * Construct a new Relic Recovery robot, with an op-mode that is using this robot.
@@ -44,9 +45,9 @@ public class RelicRecoveryRobot extends Robot {
 
         this.hDriveTrain = new HDriveTrain.Builder(this)
                 .setRightMotorDirection(DcMotorSimple.Direction.REVERSE)
-                .setWheelDiameterInches((double) getOptionsMap().get("wheelDiam"))
-                .setInsideWheelGearingRatio((double) getOptionsMap().get("wheelRatIn"))
-                .setOutsideWheelGearingRatio((double) getOptionsMap().get("wheelRatOut"))
+                .setWheelDiameterInches( ( (JsonPrimitive) getOptionsMap().get("wheelDiam") ).getAsDouble() )
+                .setInsideWheelGearingRatio( ( (JsonPrimitive) getOptionsMap().get("wheelRatIn") ).getAsDouble())
+                .setOutsideWheelGearingRatio( ( (JsonPrimitive) getOptionsMap().get("wheelRatOut") ).getAsDouble())
                 .build();
 
         this.glyphLift = new GlyphLift(this);
@@ -78,7 +79,7 @@ public class RelicRecoveryRobot extends Robot {
         return jewelKnocker;
     }
 
-    public Map<String, Object> getOptionsMap() {
+    public Map<String, JsonPrimitive> getOptionsMap() {
         return optionsMap;
     }
 

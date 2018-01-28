@@ -8,6 +8,9 @@
   "jewelKnockerExtend" : 1.0,
 
   "relicGripOpen" : 0,
-  "relicGripClose" : 1
+  "relicGripClose" : 1,
+
+  "hDrivePowerMin" : -1,
+  "hDrivePowerMax" : 1
 
 }

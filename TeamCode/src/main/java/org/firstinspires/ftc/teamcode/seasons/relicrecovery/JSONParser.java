@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.seasons.relicrecovery;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonPrimitive;
 import com.qualcomm.robotcore.hardware.usb.serial.SerialPort;
 
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
@@ -24,10 +25,10 @@ public class JSONParser {
      * @return A Map<String, Object> filled with all the data from the JSON file you requested
      */
 
-    public Map<String, Object> parseFile(File file){
+    public Map<String, JsonPrimitive> parseFile(File file){
 
         JsonObject obj = null;
-        Map<String, Object> result = new HashMap<>();
+        Map<String, JsonPrimitive> result = new HashMap<>();
         JsonParser parser = new JsonParser();
 
         try {
@@ -37,7 +38,7 @@ public class JSONParser {
         }
         for(Map.Entry<String, JsonElement> e: obj.entrySet()){
 
-            result.put(e.getKey(), e.getValue());
+            result.put(e.getKey(), e.getValue().getAsJsonPrimitive());
 
         }
         return result;

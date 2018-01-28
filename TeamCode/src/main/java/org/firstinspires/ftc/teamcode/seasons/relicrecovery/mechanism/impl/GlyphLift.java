@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.seasons.relicrecovery.mechanism.impl;
 
+import com.google.gson.JsonPrimitive;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,18 +24,13 @@ import java.util.Map;
 public class GlyphLift implements IMechanism {
 
 
-    private static final JSONParser parser = new JSONParser();
-
-    public static Map<String, Object> optionsMap = parser.parseFile(new File(AppUtil.FIRST_FOLDER + "/options.json"));
-
-
   //  private static final double MAX_LIFT_ROTATION_MOTOR_POWER = 0.4;
-    private final double MAX_LIFT_MOTOR_POWER_UP = (double) optionsMap.get("maxLiftPowerUp");
-    private final double MAX_LIFT_MOTOR_POWER_DOWN = (double) optionsMap.get("maxLiftPowerDown");
+    private final double MAX_LIFT_MOTOR_POWER_UP = 0.4;
+    private final double MAX_LIFT_MOTOR_POWER_DOWN = 0.9;
 
 
-    private static final double ROTATION_MOTOR_POWER_AUTOMATIC = (double) optionsMap.get("rotPowerAuto");
-    private static final double ROTATION_MOTOR_POWER_MANUAL = (double) optionsMap.get("rotPowerManual");
+    private static final double ROTATION_MOTOR_POWER_AUTOMATIC = 0.8;
+    private static final double ROTATION_MOTOR_POWER_MANUAL = 0.4;
 
  //   private static final double ROTATION_MOTOR_GYRO_POWER = 0.8;
 
@@ -69,10 +65,10 @@ public class GlyphLift implements IMechanism {
      *
      */
     public enum RotationMotorPosition {
-        UP((int) optionsMap.get("autoUp")),
-        DOWN((int) optionsMap.get("autoDown")),
-        LEFT((int) optionsMap.get("autoLeft")),
-        RIGHT((int) optionsMap.get("autoRight"));
+        UP(0),
+        DOWN(1700),
+        LEFT(850),
+        RIGHT(-850);
 
         private int encoderPosition;
 

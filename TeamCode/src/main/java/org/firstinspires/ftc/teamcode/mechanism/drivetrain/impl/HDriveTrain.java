@@ -1,13 +1,19 @@
 package org.firstinspires.ftc.teamcode.mechanism.drivetrain.impl;
 
+import com.google.gson.JsonPrimitive;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import org.firstinspires.ftc.teamcode.Robot;
 import org.firstinspires.ftc.teamcode.mechanism.drivetrain.IDirectionalDriveTrain;
+import org.firstinspires.ftc.teamcode.seasons.relicrecovery.JSONParser;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * This class implements control of an H-drive train, which has four wheels parallel to the
@@ -33,6 +39,10 @@ public class HDriveTrain implements IDirectionalDriveTrain {
     private double insideWheelGearing;
     private double outsideWheelGearing;
     private double wheelDiameterInches;
+
+    private JSONParser parser = new JSONParser();
+    private Map<String, JsonPrimitive> optionsMap = parser.parseFile(new File(AppUtil.FIRST_FOLDER + "/options.json"));
+
 
     /**
      * A nested class used to construct {@link HDriveTrain} instances.
@@ -220,9 +230,11 @@ public class HDriveTrain implements IDirectionalDriveTrain {
         middleDrive.setTargetPosition(axialCounts);
 
         // set motor powers
-        leftDrive.setPower(Range.clip(speed * insideWheelGearing, -1, 1));
-        rightDrive.setPower(Range.clip(speed * insideWheelGearing, -1, 1));
-        middleDrive.setPower(Range.clip(speed * outsideWheelGearing, -1, 1));
+
+
+        leftDrive.setPower(Range.clip(speed * insideWheelGearing, optionsMap.get("hDrivePowerMin").getAsInt(), optionsMap.get("hDrivePowerMax").getAsInt()));
+        rightDrive.setPower(Range.clip(speed * insideWheelGearing, optionsMap.get("hDrivePowerMin").getAsInt(), optionsMap.get("hDrivePowerMax").getAsInt()));
+        middleDrive.setPower(Range.clip(speed * outsideWheelGearing, optionsMap.get("hDrivePowerMin").getAsInt(), optionsMap.get("hDrivePowerMax").getAsInt()));
     }
 
     @Override
