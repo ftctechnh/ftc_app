@@ -15,23 +15,30 @@ public class EncoderTest extends LinearOpMode {
         robot.init(hardwareMap);
         waitForStart();
 
-
         telemetry.addData("run mode: ",robot.rightDriveFront.getMode());
 
+        robot.s1.setPosition(0.3);
+        robot.s2.setPosition(1);
 
+        robot.setAllRightDrivePower(0.5);
+        robot.setAllLeftDrivePower(0.5);
+        Thread.sleep(1500);
+
+        robot.setAllRightDrivePower(0);
+        robot.setAllLeftDrivePower(0);
 
 
 
         //while (opModeIsActive())
         //{
 
-            //robot.leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.leftDriveBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
-        //robot.encoderSwitch();
+        //robot.encoderSwitc);
 
-        int current = robot.rightDriveFront.getCurrentPosition();
-        int target = current + (int)(robot.COUNTS_PER_INCH * 10);
+        /*int current = robot.rightDriveFront.getCurrentPosition();
+        int target = current + (int)(robot.COUNTS_PER_INCH * 50);
         telemetry.addData("run mode: ",robot.rightDriveFront.getMode());
         telemetry.addData("current pos", robot.rightDriveFront.getCurrentPosition());
         telemetry.update();
@@ -42,22 +49,22 @@ public class EncoderTest extends LinearOpMode {
         robot.leftDriveBack.setTargetPosition(target);
         telemetry.addData("target pos: ",robot.rightDriveFront.getTargetPosition());
 
-        robot.setAllLeftDrivePower(1);
-        robot.setAllRightDrivePower(1);
-        while( Math.abs(target - robot.leftDriveFront.getCurrentPosition()) > 1 && Math.abs(target - robot.rightDriveFront.getCurrentPosition()) > 1 && Math.abs(target - robot.leftDriveBack.getCurrentPosition()) > 1 && Math.abs(target - robot.rightDriveBack.getCurrentPosition()) > 1)
+        robot.leftDriveFront.setPower(-1);
+        robot.leftDriveBack.setPower(-1);
+        robot.rightDriveFront.setPower(-1);
+        robot.rightDriveBack.setPower(-1);
+
+        while( Math.abs(target - robot.leftDriveFront.getCurrentPosition()) > 100 && Math.abs(target - robot.rightDriveFront.getCurrentPosition()) > 100 && Math.abs(target - robot.leftDriveBack.getCurrentPosition()) > 100 && Math.abs(target - robot.rightDriveBack.getCurrentPosition()) > 100)
         {
 
         }
-        //robot.rightDriveFront.
-        //robot.rightDriveFront.setPower(0);
+
         robot.setAllLeftDrivePower(0);
         robot.setAllRightDrivePower(0);
+
+
         telemetry.addData("current pos", robot.rightDriveFront.getCurrentPosition());
-        telemetry.update();
+        telemetry.update();*/
         Thread.sleep(10000);
-
-
-
-
     }
 }

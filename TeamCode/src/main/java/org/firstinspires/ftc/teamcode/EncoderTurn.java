@@ -1,11 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by andrew on 11/17/17.
  */
 
+@Disabled
+@Autonomous(name = "Encoder turn")
 public class EncoderTurn extends LinearOpMode {
 
     HardwareRobot robot = new HardwareRobot();
@@ -30,13 +34,13 @@ public class EncoderTurn extends LinearOpMode {
         robot.setAllLeftDrivePower(1);
         robot.setAllRightDrivePower(1);
 
-        while (Math.abs(robot.leftDriveFront.getCurrentPosition() - targetPos) > 1) {
+        while (Math.abs(robot.leftDriveFront.getCurrentPosition() - targetPos) > 1 && Math.abs(robot.leftDriveBack.getCurrentPosition() - targetPos) > 1 && Math.abs(robot.rightDriveFront.getCurrentPosition() - targetPos) > 1 && Math.abs(robot.rightDriveBack.getCurrentPosition() - targetPos) > 1){
 
         }
 
         telemetry.addData( "current pos: ", robot.leftDriveFront.getCurrentPosition());
 
-        targetPos = currentPos + (int)(robot.COUNTS_PER_INCH * 14.13);
+        targetPos = currentPos + (int)(robot.COUNTS_PER_INCH * 19.99);
 
         robot.leftDriveFront.setTargetPosition(-targetPos);
         robot.leftDriveBack.setTargetPosition(-targetPos);
@@ -48,8 +52,7 @@ public class EncoderTurn extends LinearOpMode {
         robot.setAllLeftDrivePower(-1);
         robot.setAllRightDrivePower(1);
 
-        while ((Math.abs(robot.leftDriveFront.getCurrentPosition() - targetPos) > 1) &&
-                (Math.abs(robot.rightDriveFront.getCurrentPosition() - targetPos) > 1)) {
+        while (Math.abs(robot.leftDriveFront.getCurrentPosition() - targetPos) > 1 && Math.abs(robot.leftDriveBack.getCurrentPosition() - targetPos) > 1 && Math.abs(robot.rightDriveFront.getCurrentPosition() - targetPos) > 1 && Math.abs(robot.rightDriveBack.getCurrentPosition() - targetPos) > 1){
 
         }
 
