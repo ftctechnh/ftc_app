@@ -59,9 +59,22 @@ public class MyHardwarePushbot
     public DcMotor  lift        = null;
     public Servo    leftClaw    = null;
     public Servo    rightClaw   = null;
+    public Servo    rightClawup    = null;
+    public Servo    leftClawup    = null;
     public Servo    ballArm     = null; //sets the servo ball arm to null L.A.S
 
-    public static final double MID_SERVO       =  0.5 ;
+    public static final double MID_SERVO       =  0.5 ;     // mid position of both claw servos
+    public static final double OPEN_offset      =  0.15  ;   // open claws .2
+    public static final double MID_offset       =  0.05;       // mid position of claws
+    public static final double CLOSE_offset     =  -.15 ;    // close claws
+    public static final double rightclawcorrection = -0.06;   // to correct the setup of the right claw servo
+    public static final double rightclawupcorrection = 0.08;  // to correct the setup of the right upper claw servo
+    public static final double leftclawcorrection = 0;
+    public static final double leftclawupcorrection = -0.07;
+    public static final int liftclaw = 300 ;          // adjust lift height when open or close claw
+    public static final int maxlift = 5470;                     // maxiumum lift height one inch is 421
+    public static final int minlift = 0;                    // mininum lift height
+    public static final int liftstep = 2435;               // how many counts per 6 inches of lift
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
     public static final double ballArmUp = .1; //defines starting position of ball arm
@@ -105,11 +118,15 @@ public class MyHardwarePushbot
 
         // Define and initialize ALL installed servos.
         leftClaw  = hwMap.get(Servo.class, "left_hand");
+        leftClawup  = hwMap.get(Servo.class, "left_handup");
         rightClaw = hwMap.get(Servo.class, "right_hand");
+        rightClawup = hwMap.get(Servo.class, "right_handup");
         ballArm = hwMap.get(Servo.class, "ball_arm") ; // assigns ballArm to ball_arm
 
         leftClaw.setPosition(MID_SERVO);
         rightClaw.setPosition(MID_SERVO);
+        rightClawup.setPosition(MID_SERVO);
+        leftClawup.setPosition(MID_SERVO);
         ballArm.setPosition(.7); // sets position to mid servo or .5 of 180
     }
  }

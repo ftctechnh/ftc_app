@@ -85,7 +85,7 @@ public class BlueRight2 extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     int             target = 0;
     int             maxlift = 7100;                     // maxiumum lift height
-    double          clawOffset  = - 0.40 ; // starts claw closed on block
+    double          clawOffset; // starts claw closed on block
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.25;
     double          ballArmUp = .7; // makes ball Arm a variable
@@ -139,10 +139,12 @@ public class BlueRight2 extends LinearOpMode {
         robot.ballArm.setPosition(ballArmDown);// lowers ballArm all the way down
 
         //grab and slightly lift glyph
-        clawOffset =-.4;
+        clawOffset =robot.CLOSE_offset;
         clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
+        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset + robot.leftclawcorrection);
+        robot.leftClawup.setPosition(robot.MID_SERVO - clawOffset + robot.leftclawupcorrection);
+        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset + robot.rightclawcorrection);
+        robot.rightClawup.setPosition(robot.MID_SERVO + clawOffset + robot.rightclawupcorrection);
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
@@ -173,7 +175,7 @@ public class BlueRight2 extends LinearOpMode {
         }
 
         // turn toward and view pictograph
-        encoderDrive(TURN_SPEED, -2.25, 2.25,5 );
+        encoderDrive(TURN_SPEED, 2.25, -2.25,5 );
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
     //   telemetry.setAutoClear(false);
         runtime.reset();
@@ -184,7 +186,7 @@ public class BlueRight2 extends LinearOpMode {
         }while ( runtime.seconds() < 1 );   // vuMark ==  RelicRecoveryVuMark.UNKNOWN)
         telemetry.addData("VuMark", "%s visible", vuMark);
         telemetry.update();
-        encoderDrive(TURN_SPEED, 2.25, -2.25,5 );
+        encoderDrive(TURN_SPEED, -2.25, 2.25,5 );
 
         // drive to cryptobox
         encoderDrive(DRIVE_SPEED, -29, -29, 5);      // drives off balancing stone
@@ -195,7 +197,7 @@ public class BlueRight2 extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.LEFT){
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, 6,-6,5);
+            encoderDrive(TURN_SPEED, 6.25,-6.25,5);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER ) {
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -205,19 +207,21 @@ public class BlueRight2 extends LinearOpMode {
         else if (vuMark == RelicRecoveryVuMark.RIGHT) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, 3.6,-3.6,5);
+            encoderDrive(TURN_SPEED, 4,-4,5);
         }
         else if  (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-            encoderDrive(TURN_SPEED, 6,-6,5);
+            encoderDrive(TURN_SPEED, 6.25,-6.25,5);
         }
         encoderDrive(DRIVE_SPEED, -35,-35,5);   // drive into cryptobox
 
         // release glyph and lower lift
-        clawOffset = .0;
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset - .15);
+        clawOffset = robot.OPEN_offset;
+        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset + robot.leftclawcorrection);
+        robot.leftClawup.setPosition(robot.MID_SERVO - clawOffset + robot.leftclawupcorrection);
+        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset + robot.rightclawcorrection);
+        robot.rightClawup.setPosition(robot.MID_SERVO + clawOffset + robot.rightclawupcorrection);
         runtime.reset();
         while (runtime.seconds() < .4) {    //wait for claw to finsh open or close
         }
