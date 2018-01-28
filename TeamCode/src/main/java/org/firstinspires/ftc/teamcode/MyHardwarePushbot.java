@@ -61,11 +61,10 @@ public class MyHardwarePushbot
     public Servo    rightClaw   = null;
     public Servo    ballArm     = null; //sets the servo ball arm to null L.A.S
 
+
+    public static final int  minlift = 0;                    // mininum lift height
+    public static final int  maxlift = 5470;
     public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
-    public static final double ballArmUp = .1; //defines starting position of ball arm
-    public static final double ballArmDown = -1;
 
 
     /* local OpMode members. */
