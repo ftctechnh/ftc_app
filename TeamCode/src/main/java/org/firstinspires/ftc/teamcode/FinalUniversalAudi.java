@@ -40,9 +40,10 @@ public class FinalUniversalAudi extends LinearOpMode
                     case 'b':
                         adjustment = -3;
                         newRobot.driveStraight_In(adjustment);
-                        adjustment = -5;
+                        adjustment = -6;
                         break;
                     default:
+                        adjustment = -2;
                         break;
                 }
                 newRobot.moveWing(false);
@@ -51,22 +52,22 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.driveStraight_In(20f - adjustment,.6);
+                        newRobot.driveStraight_In(18f - adjustment,.6);
                         newRobot.pivot(85, .6);
                         break;
                     case 'r':
-                        newRobot.driveStraight_In(24 - adjustment,.6);
+                        newRobot.driveStraight_In(30 - adjustment,.6);
                         newRobot.pivot(85, .6);
                         break;
                     case 'c':
                     default:
-                        newRobot.driveStraight_In(18.5f - adjustment,.6);
+                        newRobot.driveStraight_In(24 - adjustment,.6);
                         newRobot.pivot(85, .6);
                         break;
                 }
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In_Stall(16, .25);
+                newRobot.driveStraight_In_Stall(14, .25);
                 //newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-6,1);
                 newRobot.stopAllMotors();
@@ -85,10 +86,10 @@ public class FinalUniversalAudi extends LinearOpMode
                     case 'r':
                         adjustment = -3;
                         newRobot.driveStraight_In(adjustment);
-                        adjustment = -5;
+                        adjustment = -7;
                         break;
                     case 'b':
-                        adjustment = 4;
+                        adjustment = 6;
                         newRobot.driveStraight_In(adjustment);
                         break;
                     default:
