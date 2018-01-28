@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Preciousss: AutoPivot", group="Preciousss")
+@Autonomous(name="Preciousss: AutoPivotDumb", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
