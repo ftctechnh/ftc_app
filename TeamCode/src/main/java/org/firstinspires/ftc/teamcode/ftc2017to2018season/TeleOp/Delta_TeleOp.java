@@ -246,10 +246,7 @@ public class Delta_TeleOp extends OpMode {
 
           closeGlyph();
         }
-        else if (gamepad1.y){
-           middleGlyph();
 
-        }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
