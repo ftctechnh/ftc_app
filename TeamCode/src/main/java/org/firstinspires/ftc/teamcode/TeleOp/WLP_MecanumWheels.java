@@ -52,7 +52,7 @@ public class WLP_MecanumWheels {
     double[] wheelPowers = new double[4];
 
     // Override Default constructor
-     WLP_MecanumWheels() {
+     public WLP_MecanumWheels() {
          left_x=0;
          left_y=0;
          right_x=0;
