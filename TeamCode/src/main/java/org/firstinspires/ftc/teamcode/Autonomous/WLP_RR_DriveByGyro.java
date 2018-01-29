@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -116,6 +117,7 @@ public class WLP_RR_DriveByGyro {
     // Code to run ONCE when the driver hits INIT
     public void init(Telemetry telemetry, HardwareMap hardwareMap, WLP_RR_Autonomous parent) {
 
+
         // Initialize hardware devices passed from parent
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
@@ -146,6 +148,8 @@ public class WLP_RR_DriveByGyro {
         telemetry.addData("DriveByGyro", "Calibrating Gyro");
         telemetry.update();
 
+        ElapsedTime calTime =  new ElapsedTime();
+
         gyro.calibrate();
 
         // make sure the gyro is calibrated before continuing
@@ -154,13 +158,14 @@ public class WLP_RR_DriveByGyro {
             parent.idle();
         }
 
-        telemetry.addData("DriveByGyro", "Calibaration completed");    //
-        telemetry.update();
-
         gyro.resetZAxisIntegrator();
+
+        // Send telemetry message to alert driver that we are calibrating;
+        telemetry.addData("DriveByGyro", "Gyro calibaration took " + calTime.toString());
 
         isInitialized = true;
         telemetry.addData("DriveByGyro", "Initialization succeeded");
+        telemetry.update();
     }
 
 
@@ -205,20 +210,11 @@ public class WLP_RR_DriveByGyro {
            // Set power using the wheel calculation
            setPower();
 
-
            // keep looping while we are still active, and BOTH motors are running.
            while (parent.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy()) {
 
                // Set power using the wheel calculation
                setPower();
-
-               // Display drive status for the driver.
-               telemetry.addData("DriveByGyro::MoveForward:frontLeft", "%.2f", frontLeft.getPower());
-               telemetry.addData("DriveByGyro::MoveForward:frontRight", "%.2f", frontRight.getPower());
-               telemetry.addData("DriveByGyro::MoveForward:rearLeft", "%.2f", rearLeft.getPower());
-               telemetry.addData("DriveByGyro::MoveForward:rearRight", "%.2f", rearRight.getPower());
-               telemetry.update();
-
            }
 
            // Stop all motion;

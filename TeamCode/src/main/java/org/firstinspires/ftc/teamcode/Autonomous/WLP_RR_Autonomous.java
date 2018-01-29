@@ -50,9 +50,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WLP_RR_Autonomous extends LinearOpMode {
 
-    static final double     SPEED_STRAIGHT = 0.4;
-    static final double     SPEED_KNOCK = 0.2;
-    static final double     SPEED_TURN = 0.3;
+    static final double     SPEED_STRAIGHT = 0.7;
+    static final double     SPEED_KNOCK = 0.4;
+    static final double     SPEED_TURN = 0.5;
 
     static final double     BR_JEWEL_TO_CRYPTO_0    = -92 ;    // Go at 0 degree 92 CM from Jewel to Crypto Box
     static final double     BR_JEWEL_TO_CRYPTO_90   = 50 ;    // Go at 90 degree 61 CM from Jewel to Crypto Box
@@ -66,7 +66,6 @@ public class WLP_RR_Autonomous extends LinearOpMode {
 
     private WLP_RevColorSensor.ColorName teamColor = WLP_RevColorSensor.ColorName.BLUE;
 
-
     @Override
     public void runOpMode() {
 
@@ -74,17 +73,23 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         double distance_at_90 = BR_JEWEL_TO_CRYPTO_90;
         double jewelKnockDistance = JEWEL_KNOCK_DISTANCE;
 
-        telemetry.addData("Status", "Initializing");
+        runtime.reset();
+        telemetry.addData("WLP_RR_Autonomous", "Init time started ....");
         telemetry.update();
 
         arm.init(telemetry, hardwareMap);
         colorSensor.init(telemetry, hardwareMap);
         drivetrain.init(telemetry, hardwareMap, this);
 
+        telemetry.addData("WLP_RR_Autonomous", "Init completed in " + runtime.toString());
+        telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        telemetry.addData("WLP_RR_Autonomous", "autonomous period started ...");
+        telemetry.update();
 
         // Lower the ARM
         arm.lowerArm();
@@ -104,17 +109,20 @@ public class WLP_RR_Autonomous extends LinearOpMode {
 
         // Move straight to crypto box
         telemetry.addData("WLP_RR_Autonomous", "Starting to drive forward");
+        telemetry.update();
         drivetrain.moveStraight(SPEED_STRAIGHT, distance_at_0);
 
 
-        telemetry.addData("WLP_RR_Autonomous", "Turning right");
+        telemetry.addData("WLP_RR_Autonomous", "Taking a trun ...");
+        telemetry.update();
         drivetrain.gyroTurn(SPEED_TURN, -90);
 
-        telemetry.addData("WLP_RR_Autonomous", "Starting to drive forward");
+        telemetry.addData("WLP_RR_Autonomous", "Streeing toward crypto ...");
+        telemetry.update();
         drivetrain.moveStraight(SPEED_STRAIGHT, distance_at_90);
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("WLP_RR_Autonomous", "Completed in (secs)" + runtime.toString());
+        telemetry.addData("WLP_RR_Autonomous", "Completed in " + runtime.toString());
         telemetry.update();
     }
 

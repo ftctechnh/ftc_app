@@ -100,7 +100,7 @@ public class WLP_RevColorSensor {
 
         isInitialized = true;
         telemetry.addData("Color Sensor", "Initialization succeeded");
-    }
+}
 
     // Main method that return currently seen color name
     public ColorName getColor() {
