@@ -28,17 +28,13 @@ public class RR_TeleOP_Test extends OpMode {
     @Override
     public void loop() {
 
-        robot.blockLift.clamp(gamepad1.a, gamepad1.x, gamepad1.y, gamepad1.b);
+        robot.blockLift.grab(gamepad1.left_bumper, gamepad1.left_trigger);
         robot.blockLift.lift(gamepad1.right_bumper, gamepad1.right_trigger, telemetry);
         robot.driveTrain.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         robot.relicGrab.relicGrab(gamepad2.left_bumper, gamepad2.left_trigger, gamepad2.dpad_up, gamepad2.dpad_down, gamepad2.y, gamepad2.a, gamepad2.right_bumper, gamepad2.right_trigger);
         robot.relicGrab.servoInfo(telemetry);
         robot.setServos();
-        telemetry.addData("Raw Optical", rangeSensor.rawOptical());
-        telemetry.addData("Raw Ultrasonic", rangeSensor.rawUltrasonic());
-        telemetry.addData("Inch", "%.2f inch", rangeSensor.getDistance(DistanceUnit.INCH));
-        telemetry.update();
     }
 
 }

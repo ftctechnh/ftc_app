@@ -33,7 +33,7 @@ public class testRangeMovement extends OpMode {
         }
 
         if (canMove2) {
-            canMove2 = !robot.firstColumn(AllianceColor.RED, telemetry, 2);
+            canMove2 = !robot.columnDrive(AllianceColor.RED, telemetry, 2);
         } else {
             canMove2 = gamepad1.b;
         }

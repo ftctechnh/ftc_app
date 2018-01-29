@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.GMR.Robot;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -39,10 +37,8 @@ public class Robot {
     private IntegratingGyroscope gyro;
 
     private DcMotor liftMotor;
-    private Servo topLeftGrab;
-    private Servo topRightGrab;
-    private Servo bottomLeftGrab;
-    private Servo bottomRightGrab;
+    private DcMotor leftGrab;
+    private DcMotor rightGrab;
 
     private DcMotor relicLift;
     private Servo slideLift;
@@ -78,10 +74,8 @@ public class Robot {
         rightRear = hardwareMap.dcMotor.get("rightrear");
 
         liftMotor = hardwareMap.dcMotor.get("liftmotor");
-        topLeftGrab = hardwareMap.servo.get("topleftgrab");
-        topRightGrab = hardwareMap.servo.get("toprightgrab");
-        bottomLeftGrab = hardwareMap.servo.get("bottomleftgrab");
-        bottomRightGrab = hardwareMap.servo.get("bottomrightgrab");
+        leftGrab = hardwareMap.dcMotor.get("leftgrab");
+        rightGrab = hardwareMap.dcMotor.get("rightgrab");
 
         rightColor = hardwareMap.servo.get("rightArm");
         leftColor = hardwareMap.servo.get("leftArm");
@@ -102,13 +96,11 @@ public class Robot {
 
         driveTrain = new DriveTrain(leftFront, rightFront, leftRear, rightRear, gyro, telemetry);
 
-        blockLift = new BlockLift(liftMotor, topLeftGrab, topRightGrab, bottomLeftGrab, bottomRightGrab);
+        blockLift = new BlockLift(liftMotor, leftGrab, rightGrab);
 
         relicGrab = new RelicGrab(relicLift, slideLift, relicTilt, relicClamp);
 
         columnDetection = new ColumnDetection(vuforia, parameters, relicTrackables, relicTemplate);
-
-        blockLift.clamp(false, true, false, false);
     }
 
     public void setServos() {
@@ -146,9 +138,9 @@ public class Robot {
 
     private void driveDirection(AllianceColor color) {
         if (color == AllianceColor.RED) {
-            driveTrain.drive(DriveTrain.Direction.E, strafePower);
-        } else {
             driveTrain.drive(DriveTrain.Direction.W, strafePower);
+        } else {
+            driveTrain.drive(DriveTrain.Direction.E, strafePower);
         }
     }
 
@@ -180,7 +172,16 @@ public class Robot {
         }
 
     }
-    public boolean firstColumn(AllianceColor color, Telemetry telemetry, int goalColumn) {
+
+    private  DriveTrain.Direction columnAlignDirection(AllianceColor color) {
+        if(color == AllianceColor.RED) {
+            return(DriveTrain.Direction.W);
+        } else {
+            return(DriveTrain.Direction.E);
+        }
+    }
+
+    public boolean columnDrive(AllianceColor color, Telemetry telemetry, int goalColumn) {
 
         if (ultraRange - rawUltrasonic() >= distanceThreshold && ultraRange != 0) {
             columnPassed += 1;
@@ -192,7 +193,7 @@ public class Robot {
         telemetry.addData("Raw Ultrasonic", rawUltrasonic());
 
         if (columnPassed >= goalColumn) {
-            return(driveTrain.encoderDrive(DriveTrain.Direction.E, strafePower, .9));
+            return(driveTrain.encoderDrive(columnAlignDirection(color), strafePower, .9));
         } else {
             driveDirection(color);
             return false;

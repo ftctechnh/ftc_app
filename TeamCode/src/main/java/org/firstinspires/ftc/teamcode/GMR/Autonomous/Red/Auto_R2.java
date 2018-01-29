@@ -85,10 +85,8 @@ public class Auto_R2 extends OpMode {
             switch(state){
                 case TIME:
                     state = States.GRAB;
-                    robot.blockLift.clamp(false,true, true, false);
                     break;
                 case GRAB:
-                    robot.blockLift.clamp(false,false, false, true);
                     state = States.LIFT;
                     goalSeconds = currentSeconds + 0.4;
                 case LIFT:
@@ -194,7 +192,6 @@ public class Auto_R2 extends OpMode {
                     } break;
 
                 case DROP:
-                    robot.blockLift.clamp(false, false,true, false);
                     state = States.DRIVEBACK;
                     break;
                 case DRIVEBACK:
