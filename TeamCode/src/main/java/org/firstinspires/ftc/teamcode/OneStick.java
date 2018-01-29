@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Pushbot: One Stick" , group="Pushbot")
 //@Disabled
-public class OneStick extends DriveTeleop {
+public class OneStick extends driveTeleop {
 
     // Constructor
     public OneStick() {

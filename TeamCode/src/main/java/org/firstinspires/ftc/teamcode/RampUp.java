@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Pushbot: Ramp Up" , group="Pushbot")
 //@Disabled
-public class RampUp extends DriveTeleop {
+public class RampUp extends driveTeleop {
 
     // Constructor
     public RampUp() {

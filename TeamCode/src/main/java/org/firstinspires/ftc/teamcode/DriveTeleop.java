@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Pushbot: Drive Teleop", group="Pushbot")
 //@Disabled
-public abstract class DriveTeleop extends OpMode{
+public abstract class driveTeleop extends OpMode{
 
     /* Declare OpMode members. */
     MyHardwarePushbot robot       = new MyHardwarePushbot(); // use the class created to define a Pushbot's hardware

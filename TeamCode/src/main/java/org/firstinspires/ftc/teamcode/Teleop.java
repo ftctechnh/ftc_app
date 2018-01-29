@@ -61,7 +61,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name="Pushbot: Teleop Tank" , group="Pushbot")
 //@Disabled
-public class Teleop extends DriveTeleop {
+public class Teleop extends driveTeleop {
 
     // Constructor
     public Teleop() {
