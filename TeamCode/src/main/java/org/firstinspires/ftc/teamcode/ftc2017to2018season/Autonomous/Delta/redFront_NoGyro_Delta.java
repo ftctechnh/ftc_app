@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
 
 //10-28-17
-@Autonomous(group = "Red Front No Gyro")
+@Autonomous(group = "Red Front No Gyro Delta")
 public class redFront_NoGyro_Delta extends Autonomous_General {
 
     public double rsBuffer = 20.00;

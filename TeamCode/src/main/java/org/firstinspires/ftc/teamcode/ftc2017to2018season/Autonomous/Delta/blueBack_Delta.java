@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Final.Autonomous_General_final;
 
 //10-28-17
-@Autonomous(name="Blue Back")
+@Autonomous(name="Blue Back Delta")
 public class blueBack_Delta extends Autonomous_General {
 
     DcMotor leftFront;
