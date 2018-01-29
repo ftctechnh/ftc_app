@@ -118,22 +118,21 @@ public class Red1wGyro extends LinearOpMode {
 
         servoTapper.setPosition(0.2d);
         Wait(.2f);
-        servoTapper.setPosition(0.689d);
+        servoTapper.setPosition(0.675d);
         Wait(.2f);
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
-        while (true) {
+
             NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
             telemetry.addLine()
-                    .addData("r", "%.3f", colors.red*100)
-                    .addData("b", "%.3f", colors.blue*100);
+                    .addData("r", "%.3f", colors.red*10000)
+                    .addData("b", "%.3f", colors.blue*10000);
 
             telemetry.update();
-        }}
 
 
-       /* if (colors.red > colors.blue) {
+        if (colors.red * 10000 > colors.blue * 10000) {
             iSeeRed = true;
             iSeeBlue = false;
         } else {
@@ -276,7 +275,7 @@ public class Red1wGyro extends LinearOpMode {
         motorFR.setPower(power);
         motorBR.setPower(power);
     }
-*/
+
     void Wait(double WaitTime) {
         runtime.reset();
         while (runtime.seconds() < WaitTime) {
