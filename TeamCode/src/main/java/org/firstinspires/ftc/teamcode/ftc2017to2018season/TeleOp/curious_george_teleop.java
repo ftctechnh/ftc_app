@@ -145,6 +145,7 @@ public class curious_george_teleop extends OpMode {
         slideMove();
         glyphManipulator();
         slideIncrement();
+        relicManipulator();
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());

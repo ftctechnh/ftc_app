@@ -142,11 +142,7 @@ public class Delta_TeleOp extends OpMode {
         incrementClose();
        slideIncrement();
 
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-
-      //  telemetry.addData("jewel pos", jewel_servo.getPosition());
-
+        telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
 
     }
