@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -55,7 +54,7 @@ public class Red1wGyro extends LinearOpMode {
     Orientation angles;
     Acceleration gravity;
     NormalizedColorSensor colorSensor;
-    static ModernRoboticsI2cGyro gyro;
+    NormalizedRGBA colors;
     boolean iAmBlue = false;
     boolean iAmRed = true;
     boolean isBoxSide = true;
@@ -106,9 +105,22 @@ public class Red1wGyro extends LinearOpMode {
             ((SwitchableLight) colorSensor).enableLight(true);
         }
 
+
+
         // S t a r t
 
         waitForStart();
+
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            colors = colorSensor.getNormalizedColors();
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+        }
+        });
 
         // J e w e l s
         boolean autoClear = false;
@@ -116,32 +128,47 @@ public class Red1wGyro extends LinearOpMode {
         telemetry.addLine("starting");
         telemetry.update();
 
+        boolean iSeeBlue = false;
+        boolean iSeeRed = false;
         servoTapper.setPosition(0.2d);
         Wait(.2f);
         servoTapper.setPosition(0.675d);
-        Wait(.2f);
-        boolean iSeeBlue = false;
-        boolean iSeeRed = false;
+        Wait(2f);
 
-            NormalizedRGBA colors = colorSensor.getNormalizedColors();
 
+            telemetry.update();
+            //colors = colorSensor.getNormalizedColors();
+            float redValue = colors.red * 10000;
+            float blueValue = colors.blue * 10000;
             telemetry.addLine()
                     .addData("r", "%.3f", colors.red*10000)
                     .addData("b", "%.3f", colors.blue*10000);
 
-            telemetry.update();
+            //telemetry.update();
 
 
-        if (colors.red * 10000 > colors.blue * 10000) {
+        if (colors.red > colors.blue) {
             iSeeRed = true;
             iSeeBlue = false;
+
+            telemetry.update();
         } else {
             iSeeBlue = true;
 
             iSeeRed = false;
         }
+        telemetry.addLine()
+                .addData("r", "%.3f", redValue)
+                .addData("b", "%.3f", blueValue)
+                .addData("iSeeRed", "%b", iSeeRed)
+                .addData("iSeeBlue", "%b", iSeeBlue)
+                .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
+                .addData ( "iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
+                .addData ( "Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
 
-        Wait(.2f);
+        telemetry.update();
+
+        Wait(10f);
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
@@ -283,19 +310,5 @@ public class Red1wGyro extends LinearOpMode {
             //telemetry.addData("5", " %2.5f S Elapsed", runtime.seconds());
             //telemetry.update();
         }
-    }
-
-    double lightLevel(double odsVal) {
-        /*
-         * This method adjusts the light sensor input, read as an ODS,
-         * to obtain values that are large enough to use to drive
-         * the robot.  It does this by taking the third decimal values
-         * and beyond as the working values.
-         */
-        // LB = left bumper, RB = right bumper.
-        int prefix = (int) (odsVal * 10);
-        odsVal = Math.pow(10, odsVal) * prefix;
-
-        return (odsVal);
     }
 }
