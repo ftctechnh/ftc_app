@@ -83,7 +83,7 @@ public abstract class driveAutonomous extends LinearOpMode {
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.1415);
     int             target = 0;
     double          clawOffset ; // starts claw closed on block
     static final double     DRIVE_SPEED             = 0.6;
@@ -132,8 +132,8 @@ public abstract class driveAutonomous extends LinearOpMode {
 
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftDrive.getCurrentPosition(),
-                          robot.rightDrive.getCurrentPosition());
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
@@ -202,37 +202,38 @@ public abstract class driveAutonomous extends LinearOpMode {
             encoderDrive(TURN_SPEED, -14*sign, 14*sign, 30);
             encoderDrive(DRIVE_SPEED, -18.5,  -18.5, 5);  //  drive that clears the balancing stone
 
-            if ((alliance == "red" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "blue" && vuMark == RelicRecoveryVuMark.LEFT)){
+            if ((alliance == "Red" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "Blue" && vuMark == RelicRecoveryVuMark.LEFT)){
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
-                encoderDrive(TURN_SPEED, -6.25*sign,6.25*sign,5);
+                encoderDrive(TURN_SPEED, -6.75*sign,6.75*sign,5);
             }
-            else if (vuMark == RelicRecoveryVuMark.CENTER ) {
+            else if (vuMark == RelicRecoveryVuMark.CENTER) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
-                encoderDrive(TURN_SPEED, -5*sign,5*sign,5);
+                encoderDrive(TURN_SPEED, -5.5*sign,5.5*sign,5);
             }
-            else if ((alliance == "blue" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "red" && vuMark == RelicRecoveryVuMark.LEFT) || vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            else if ((alliance == "Blue" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "Red" && vuMark == RelicRecoveryVuMark.LEFT)  || vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
-                encoderDrive(TURN_SPEED, -4*sign,4*sign,5);
+                encoderDrive(TURN_SPEED, -4.5*sign,4.5*sign,5);
             }
             encoderDrive(DRIVE_SPEED, -35,-35,5);   // drive into cryptobox
 
-         }
+        }
         else {
             encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5); // Drive off balance board
-            if ((alliance == "red" && vuMark == RelicRecoveryVuMark.RIGHT )|| (alliance == "blue" && vuMark == RelicRecoveryVuMark.LEFT ) ||  vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            if ((alliance == "Red" && vuMark == RelicRecoveryVuMark.RIGHT )|| (alliance == "Blue" && vuMark == RelicRecoveryVuMark.LEFT ) ||  vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
                 encoderDrive(TURN_SPEED, -15*sign, 15*sign, 5);
             }
             else if (vuMark == RelicRecoveryVuMark.CENTER) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.addData("Turn", "14", vuMark);
                 telemetry.update();
                 encoderDrive(TURN_SPEED, -14*sign, 14*sign, 5);
             }
-            else if ((alliance == "blue" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "red" && vuMark == RelicRecoveryVuMark.LEFT)) {
+            else if ((alliance == "Blue" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "Red" && vuMark == RelicRecoveryVuMark.LEFT)) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
                 encoderDrive(TURN_SPEED, -13*sign, 13*sign, 5);
@@ -258,12 +259,14 @@ public abstract class driveAutonomous extends LinearOpMode {
 
         encoderDrive(DRIVE_SPEED, 2.5, 2.5, 5);    // back up
         if (position == "Front") {
-            encoderDrive(TURN_SPEED, 3 * sign*-1, -3 * sign*1, 5);   // turn to push glyph into cryptobox
+            encoderDrive(TURN_SPEED, -3 * sign, 3 * sign, 1);   // turn to push glyph into cryptobox
         }
         else{
-            encoderDrive(TURN_SPEED, 3 * sign, -3 * sign, 5);
+            encoderDrive(TURN_SPEED, 3 * sign, -3 * sign,1);
         }
-        encoderDrive(DRIVE_SPEED, 3.5,3.5,5);   // backup away from glyph
+        encoderDrive(DRIVE_SPEED, 3.5,3.5,1);   // backup away from glyph
+        encoderDrive(DRIVE_SPEED, -3.5,-3.5,1);   // drive towards glyph
+        encoderDrive(DRIVE_SPEED, 3.5,3.5,1);   // backup away from glyph
 
     }
 
@@ -306,14 +309,14 @@ public abstract class driveAutonomous extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.leftDrive.isBusy() || robot.rightDrive.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftDrive.isBusy() || robot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
                 telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftDrive.getCurrentPosition(),
-                                            robot.rightDrive.getCurrentPosition());
+                        robot.leftDrive.getCurrentPosition(),
+                        robot.rightDrive.getCurrentPosition());
                 telemetry.update();
             }
 
