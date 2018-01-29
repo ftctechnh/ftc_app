@@ -295,10 +295,10 @@ public class Delta_TeleOp extends OpMode {
     }
 
 
-    public void moveUpInch(double cm) {
+    public void moveUpInch(double inch) {
         double target_Position;
         double countsPerCM = 150;
-        double finalTarget = cm * countsPerCM;
+        double finalTarget = inch * countsPerCM * 2.54;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int) target_Position);
