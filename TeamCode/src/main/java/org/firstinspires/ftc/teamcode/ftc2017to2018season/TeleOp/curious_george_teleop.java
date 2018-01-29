@@ -338,13 +338,15 @@ public class curious_george_teleop extends OpMode {
     public void openGlyph(){
 
         //switching values with closeGlyph
-        glyphServoRight.setPosition(0.9);
-        glyphServoLeft.setPosition(0.0);
+        //reversed values
+        glyphServoRight.setPosition(0.0);
+        glyphServoLeft.setPosition(0.9);
     }
 
     public void closeGlyph(){
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+        //reversed values
+        glyphServoRight.setPosition(0.4);
+        glyphServoLeft.setPosition(0.5);
     }
 
     public void middleGlyph(){
