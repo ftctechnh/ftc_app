@@ -183,7 +183,7 @@ public class curious_george_teleop extends OpMode {
 
         if(leftBumper){
             relicLeft.setPosition(0.75);
-            relicRight.setPosition(0.25);
+            relicRight.setPosition(0.1);
         }
 
         if (rightBumper){
@@ -195,8 +195,16 @@ public class curious_george_teleop extends OpMode {
             relicMain.setPosition(0);
         }
 
+        if(gamepad2.b){
+            relicLeft.setPosition(0.75);
+            relicRight.setPosition(0.25);
+        }
+
         if (rightButtonA){
             relicMain.setPosition(1);
+        }
+        if (gamepad2.x){
+            relicMain.setPosition(0.45);
         }
     }
 

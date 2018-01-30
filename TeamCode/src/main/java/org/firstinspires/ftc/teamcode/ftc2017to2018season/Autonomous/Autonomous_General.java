@@ -861,10 +861,12 @@ public class Autonomous_General extends LinearOpMode {
         back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        front_left_motor.setPower(leftSpeed);
-        front_right_motor.setPower(rightSpeed);
-        back_left_motor.setPower(leftSpeed);
-        back_right_motor.setPower(rightSpeed);
+        double weightConstant = 1;//this constant will depend on the robot. you need to test experimentally to see which is best
+
+        front_left_motor.setPower(weightConstant*leftSpeed);
+        front_right_motor.setPower(weightConstant*rightSpeed);
+        back_left_motor.setPower(weightConstant*leftSpeed);
+        back_right_motor.setPower(weightConstant*rightSpeed);
 
         telemetry.addData("Target angle","%5.2f",angle);
         telemetry.addData("Error/Steer", "%5.2f/%5.2f", error, steer);
