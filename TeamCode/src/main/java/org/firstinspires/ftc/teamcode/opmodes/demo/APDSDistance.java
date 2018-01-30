@@ -15,7 +15,7 @@ import java.util.LinkedList;
  */
 
 @Autonomous(name = "APDS Linearization", group = "test")
-@Disabled
+//@Disabled
 public class APDSDistance extends CrappyGraphLib {
     APDS9930 dist;
     APDS9930 redDist;
