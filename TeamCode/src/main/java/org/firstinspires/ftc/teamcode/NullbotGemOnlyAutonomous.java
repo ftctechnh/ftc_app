@@ -51,6 +51,9 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
             updateBlocks();
             telemetry.addData("Red ball:", redBall.toString());
             telemetry.addData("Blue ball:", blueBall.toString());
+            telemetry.addData("Color sensor red:", robot.colorSensor.red());
+            telemetry.addData("Color sensor green:", robot.colorSensor.green());
+            telemetry.addData("Color sensor blue:", robot.colorSensor.blue());
             telemetry.update();
         }
 
