@@ -413,14 +413,12 @@ public class NullbotHardware {
     }
 
     public double getSignedAngleDifference(double d1, double d2) {
-        double posDiff = (d2 - d1) % (Math.PI * 2);
-        double negDiff = (d1 - d2) % (Math.PI * 2);
-        tel.addData("Pos difference: ", posDiff);
-        tel.addData("Neg difference: ", negDiff);
-        if (Math.abs(posDiff) < Math.abs(negDiff)) {
-            return posDiff;
+        double zeroed = normAngle(d2 - d1);
+
+        if (zeroed >= Math.PI) { // If it's in the pI to 2PI range
+            return -((Math.PI * 2) - zeroed);
         } else {
-            return negDiff;
+            return zeroed;
         }
 
     }
@@ -440,6 +438,7 @@ public class NullbotHardware {
     public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(0.49);}
     public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(0.08);}
     public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(0.12);}
+    public void almostLowerWhipSnake() {leftWhipSnake.setPosition(0.44);}
 
     public void crunchBlockClaw() {
         leftBlockClaw.setPosition(200.0/255.0);
