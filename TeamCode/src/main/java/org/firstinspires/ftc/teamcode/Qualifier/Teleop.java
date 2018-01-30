@@ -411,12 +411,12 @@ public class Teleop extends OpMode {
                 onehitwonder = true;
                 gromit.relicArm.relicArmMotor.setPower(0.8);  // start powering out the arm
 
-                //Begin ELbow move
-                movetime = 1700;
+                //Begin ELbow movev
+                movetime = 2100;
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();                            //Start time
-                elbowtarget = gromit.relicArm.elbowup + .02;                        // why the + 0.9???
+                elbowtarget = gromit.relicArm.elbowup + .05;                        // why the + 0.9???
                 elbowtotalmove = elbowtarget - elbowstartpos;
             }
         } else {
