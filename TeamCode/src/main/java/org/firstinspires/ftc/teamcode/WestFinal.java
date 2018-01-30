@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
 @TeleOp
 //@Disabled
-public class WestFinal2 extends OpMode
+public class WestFinal extends OpMode
 {
 
     private DcMotor m1, m2,grabber,lift;
@@ -21,8 +19,8 @@ public class WestFinal2 extends OpMode
     private double leftPower = 0;
 
     private int deployedPos = 111;
-    private int liftPos1 = -150;
-    private int liftPos2 = -432;
+    private int liftPos1 = -441;
+    private int liftPos2 = -735;
     private int placeBlockPos = -20;
 
     private double grab1Max = 0.28;
@@ -51,9 +49,11 @@ public class WestFinal2 extends OpMode
 
         grabber.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         grabber.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        grabber.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         grab1 = hardwareMap.get(Servo.class, "Grab1");
@@ -96,6 +96,9 @@ public class WestFinal2 extends OpMode
 
         m1.setPower(rightPower);
         m2.setPower(-leftPower);
+
+        lift.setPower(0);
+        grabber.setPower(0);
 
         if (gamepad1.right_bumper && ((sens+0.1) <= 1)){
             sens += 0.1;
