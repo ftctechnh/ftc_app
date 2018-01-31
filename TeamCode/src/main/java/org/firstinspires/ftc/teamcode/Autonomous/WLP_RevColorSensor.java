@@ -105,25 +105,20 @@ public class WLP_RevColorSensor {
     // Main method that return currently seen color name
     public ColorName getColor() {
 
-        if (sensorColor.red() > colorThreashold
-                && sensorColor.red() > (sensorColor.blue() + sensorColor.green())) {
+
+        telemetry.addData("Alpha", sensorColor.alpha());
+        telemetry.addData("Red  ", sensorColor.red());
+        telemetry.addData("Green", sensorColor.green());
+        telemetry.addData("Blue ", sensorColor.blue());
+
+        if (sensorColor.red() > sensorColor.blue() ) {
             return ColorName.RED;
         }
 
-        if (sensorColor.blue() > colorThreashold
-                && sensorColor.blue() > (sensorColor.red() + sensorColor.green())) {
-            return ColorName.BLUE;
-        }
-
-        if (sensorColor.green() > colorThreashold
-                && sensorColor.green() > (sensorColor.red() + sensorColor.blue())) {
-            return ColorName.GREEN;
-        }
-
-        return ColorName.UNKNOWN;
+        return ColorName.BLUE;
     }
 
-    // Get distuance of the object in cm
+    // Get distance of the object in cm
     public double getDistanceInCm() {
         return sensorDistance.getDistance(DistanceUnit.CM);
     }

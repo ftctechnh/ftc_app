@@ -49,10 +49,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Autonomous(name= "WLP_RR_Autonomous", group = "We Love PI")
 
 public class WLP_RR_Autonomous extends LinearOpMode {
-
-    static final double     SPEED_STRAIGHT = 0.7;
-    static final double     SPEED_KNOCK = 0.4;
-    static final double     SPEED_TURN = 0.5;
+    //me llamo malin
+    static final double     SPEED_STRAIGHT = 0.15;
+    static final double     SPEED_KNOCK = 0.1;
+    static final double     SPEED_TURN = 0.1;
 
     static final double     BR_JEWEL_TO_CRYPTO_0    = -92 ;    // Go at 0 degree 92 CM from Jewel to Crypto Box
     static final double     BR_JEWEL_TO_CRYPTO_90   = 50 ;    // Go at 90 degree 61 CM from Jewel to Crypto Box
@@ -88,24 +88,58 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        telemetry.addData("WLP_RR_Autonomous", "autonomous period started ...");
-        telemetry.update();
+        /*
 
+        telemetry.addData("WLP_RR_Autonomous", "autonomous period started ...");
+
+
+        // Start with 500 ms sleep
+        telemetry.addData("WLP_RR_Autonomous", "going straight 20 cm");
+        telemetry.update();
+        sleep(1000);
+
+        drivetrain.moveStraight(SPEED_STRAIGHT, 10);
+        sleep(5000);
+
+        // Start with 500 ms sleep
+        telemetry.addData("WLP_RR_Autonomous", "going backward 20 cm");
+        telemetry.update();
+        sleep(5000);
+        //malin is cool
+        drivetrain.moveStraight(SPEED_STRAIGHT, -10);
+
+
+*/
         // Lower the ARM
         arm.lowerArm();
+        telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
+        telemetry.update();
+        sleep(1000);
 
-        sleep(100);
 
         // Knock the Jewel
-        if (teamColor != colorSensor.getColor()) {
-            jewelKnockDistance = -1.0*JEWEL_KNOCK_DISTANCE;
+        WLP_RevColorSensor.ColorName jewelColor = colorSensor.getColor();
+        telemetry.addData("WLP_RR_Autonomous", "JewelColor is " + jewelColor);
+
+        if (teamColor != jewelColor) {
+            jewelKnockDistance = -1.0 * JEWEL_KNOCK_DISTANCE;
         }
+
 
         drivetrain.moveStraight(SPEED_KNOCK, jewelKnockDistance);
         distance_at_0 += jewelKnockDistance;
 
         // Raise the arm
         arm.raiseArm();
+        telemetry.addData("WLP_RR_Autonomous", "Arm raised at " + runtime.toString());
+        telemetry.update();
+
+        /*
+
+        // Show the elapsed game time and wheel power.
+        telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
+        telemetry.update();
+
 
         // Move straight to crypto box
         telemetry.addData("WLP_RR_Autonomous", "Starting to drive forward");
@@ -120,10 +154,14 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         telemetry.addData("WLP_RR_Autonomous", "Streeing toward crypto ...");
         telemetry.update();
         drivetrain.moveStraight(SPEED_STRAIGHT, distance_at_90);
+        */
 
         // Show the elapsed game time and wheel power.
-        telemetry.addData("WLP_RR_Autonomous", "Completed in " + runtime.toString());
-        telemetry.update();
+        // telemetry.addData("WLP_RR_Autonomous", "Completed in " + runtime.toString());
+        // telemetry.update();
+        sleep(10000);
+
+
     }
 
 }

@@ -30,8 +30,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -48,7 +46,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class WLP_RR_JewelArm {
 
     // constants
-    static final double     ARM_DOWN    = 0.8;    // ARM Down Servo position
+    static final double     ARM_DOWN    = 0.75;    // ARM Down Servo position
     static final double     ARM_UP    = 0.0;    // ARM Resting Servo position
 
 
@@ -84,20 +82,53 @@ public class WLP_RR_JewelArm {
 
         arm = hardwareMap.get(Servo.class, "jewel_servo");
 
+        // set servo range
+        arm.scaleRange(ARM_UP, ARM_DOWN);
+
+        // RESET the servo position
+        arm.setPosition(ARM_UP);
+
         isInitialized = true;
+        telemetry.addData("Jewel Arm", "Servo Postion %f", arm.getPosition());
         telemetry.addData("Jewel Arm", "Initialization succeeded");
     }
 
     // Lowers the jewel arm by using the servor motor
-    public void lowerArm()  {
-        arm.setPosition(ARM_DOWN);
+    public void lowerArm() {
+        double delta = 0.2;
+        double pos = arm.getPosition();
 
+        telemetry.addData("lowerArm", "Position before %.2f", pos);
+        while (pos < ARM_DOWN) {
+            pos += delta;
+            arm.setPosition(pos);
+            sleep(50);
+        }
+        telemetry.addData("lowerArm", "Position after %.2f", arm.getPosition());
     }
 
     // Pulls up the jewel arm to its original position
     public void raiseArm()  {
-        arm.setPosition(ARM_UP);
+
+        double delta = 0.2;
+        double pos = arm.getPosition();
+
+        telemetry.addData("raiseArm", "Position before %.2f", pos);
+
+        while (pos > ARM_UP) {
+            pos -= delta;
+            arm.setPosition(pos);
+            sleep(50);
+        }
+        telemetry.addData("raiseArm", "Position after %.2f", arm.getPosition());
 
     }
 
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

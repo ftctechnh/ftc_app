@@ -121,7 +121,7 @@ public class WLP_RR_DriveByGyro {
         // Initialize hardware devices passed from parent
         this.telemetry = telemetry;
         this.hardwareMap = hardwareMap;
-        this. parent = parent;
+        this.parent = parent;
 
         gyro = (ModernRoboticsI2cGyro)hardwareMap.gyroSensor.get("gyro");
 
@@ -211,11 +211,7 @@ public class WLP_RR_DriveByGyro {
            setPower();
 
            // keep looping while we are still active, and BOTH motors are running.
-           while (parent.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy()) {
-
-               // Set power using the wheel calculation
-               setPower();
-           }
+           while (parent.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy());
 
            // Stop all motion;
            setPower(0.0);
@@ -315,11 +311,11 @@ public class WLP_RR_DriveByGyro {
 
     //set specified power
     private void setPower(double power) {
+        updatePowerTelemetry();
         frontLeft.setPower(power);
         frontRight.setPower(power);
         rearRight.setPower(power);
         rearLeft.setPower(power);
-        updatePowerTelemetry();
     }
 
     //Update Power Telemetry values
@@ -331,5 +327,6 @@ public class WLP_RR_DriveByGyro {
         telemetry.addData("DriveByGyro::rearLeft", "%.2f", rearLeft.getPower());
         telemetry.addData("DriveByGyro::rearRight", "%.2f", rearRight.getPower());
         telemetry.update();
+        parent.sleep(1000);
     }
 }
