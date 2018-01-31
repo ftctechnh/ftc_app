@@ -222,9 +222,26 @@ public class Delta_TeleOp_Main extends OpMode {
     }
 
     public void slideIncrement() {
-
-
+        if (gamepad2.dpad_down){
+        moveTo2Inch();
     }
+    else if (gamepad2.dpad_right){
+            moveTo7Inch();
+        }
+    else if (gamepad2.dpad_up){
+        moveTo13Inch();
+        }
+    }
+
+   public void moveTo2Inch(){
+
+   }
+   public void moveTo7Inch(){
+
+   }
+   public void moveTo13Inch(){
+
+   }
 
     public void glyphManipulator() {
        /* Boolean Right_Bumper = (gamepad1.right_bumper);
