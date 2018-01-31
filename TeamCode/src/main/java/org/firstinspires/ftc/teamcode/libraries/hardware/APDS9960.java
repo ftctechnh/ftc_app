@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.libraries.hardware;
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cWaitControl;
@@ -44,7 +46,7 @@ public class APDS9960 {
         sensor.disengage();
         sensor.engage();
         //kill I2c if it was doing anythig
-        //sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(0, 0, I2cDeviceSynch.ReadMode.ONLY_ONCE));
+        sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(0, 0, I2cDeviceSynch.ReadMode.ONLY_ONCE));
         //setup address
         sensor.setI2cAddress(I2cAddr.create7bit(ADDR));
         sensor.enableWriteCoalescing(true);
@@ -55,6 +57,7 @@ public class APDS9960 {
         //disable device
         sensor.write8(Regs.ENABLE.REG, 0);
         //configure!
+        sensor.write8(Regs.ATIME.REG, config.ATIME);
         sensor.write8(Regs.PILT.REG, config.PILT);
         sensor.write8(Regs.PIHT.REG, config.PIHT);
         sensor.write8(Regs.PERS.REG, config.PERS);
@@ -64,6 +67,12 @@ public class APDS9960 {
         //wait for it
         sensor.waitForWriteCompletions(I2cWaitControl.WRITTEN);
         return thing;
+    }
+
+    public void stopDevice() {
+        sensor.write8(Regs.ENABLE.REG, 0);
+        sensor.disengage();
+        sensor.close();
     }
 
     public void updateGain() {
@@ -77,8 +86,7 @@ public class APDS9960 {
         //start I2c background polling
         //read from PDATA in background if no interrupt
         //else read from STATUS-PDATA to check interrupt
-        //if(!config.interruptEnabled) sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.PDATA.REG, 1, I2cDeviceSynch.ReadMode.REPEAT));
-        //else sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.STATUS.REG, 10, I2cDeviceSynch.ReadMode.REPEAT));
+        sensor.setReadWindow(new I2cDeviceSynch.ReadWindow(Regs.CDATAL.REG, 9, I2cDeviceSynch.ReadMode.REPEAT));
         sensor.waitForWriteCompletions(I2cWaitControl.WRITTEN);
     }
 
@@ -91,9 +99,21 @@ public class APDS9960 {
         return dist;
     }
 
+    public int[] getColor() {
+        byte[] ray = sensor.read(Regs.CDATAL.REG, 8);
+        return new int[] {  (ray[0] & 0xff) | (ray[1] & 0xff) << 8,
+                            (ray[2] & 0xff) | (ray[3] & 0xff) << 8,
+                            (ray[4] & 0xff) | (ray[5] & 0xff) << 8,
+                            (ray[6] & 0xff) | (ray[7] & 0xff) << 8};
+    }
+
     private void setSensorGain(APDS9960.Config.DistGain gain) {
         config.setPulse(config.len, config.count, config.strength, config.boost, gain);
         updateGain();
+    }
+
+    public Config.DistGain getSensorGain() {
+        return config.gain;
     }
 
     public boolean checkInterrupt() {
@@ -171,6 +191,7 @@ public class APDS9960 {
     //I love java
     private enum Regs {
         ENABLE (0x80),
+        ATIME (0x81), //how long to integrate the ALS
         PILT (0x89), //lower bits for thresh for prox int
         PIHT (0x8B), //higher bits
         PERS (0x8C), //int persistence filters
@@ -179,6 +200,14 @@ public class APDS9960 {
         CONFIG2 (0x90), //LED boost
         ID (0x92),
         STATUS (0x93),
+        CDATAL (0x94),
+        CDATAH (0x95),
+        RDATAL (0x96),
+        RDATAH (0x97),
+        GDATAL (0x98),
+        GDATAH (0x99),
+        BDATAL (0x9A),
+        BDATAH (0x9B),
         PDATA (0x9C),
         PICLEAR (0xE5); //clear interrupt
 
@@ -225,6 +254,16 @@ public class APDS9960 {
             DistGain(int val) { this.bVal = (byte)val; }
         }
 
+        public enum ColorGain {
+            GAIN_1X(0),
+            GAIN_4X(1),
+            GAIN_16X(2),
+            GAIN_64X(3);
+
+            private final byte bVal;
+            ColorGain(int val) { this.bVal = (byte)val; }
+        }
+
         public enum LEDBoost {
             BOOST_1X (0),
             BOOST_1P5X (1),
@@ -237,6 +276,7 @@ public class APDS9960 {
 
         //members
         public byte ENABLE;
+        public final byte ATIME = (byte)182;
         public byte PILT;
         public byte PIHT;
         public byte PERS;
@@ -254,7 +294,7 @@ public class APDS9960 {
 
         //register specific functions
         public void disableInterrupt() {
-            this.ENABLE = (byte)(0b00000101);
+            this.ENABLE = (byte)(0b00000111);
             this.PILT = 0;
             this.PIHT = 0;
             this.PERS = 0;
@@ -265,26 +305,30 @@ public class APDS9960 {
             //argcheck
             if(overCount > 15 || overCount < 0) throw new InvalidParameterException("Interrupt persistence outside possible values");
             //enable power, proximity sensing, and interrupt if desired
-            this.ENABLE = (byte)(0b00100101);//(byte)(1 | (1 << 2) | (1 << 5));
+            this.ENABLE = (byte)(0b00100101);
             this.PILT = lowThresh;
             this.PIHT = highThresh;
             this.PERS = (byte)(overCount << 4);
             this.interruptEnabled = true;
         }
 
-        public void setPulse(PulseLength len, byte count, LEDStrength strength, LEDBoost boost, DistGain gain) {
+        public void setPulse(PulseLength len, byte count, LEDStrength strength, LEDBoost boost, DistGain gain, ColorGain colorGain) {
             //argcheck
             if(count > 63 || count < 0) throw new InvalidParameterException("Pulse count outside possible values");
             //set pulse
             this.PPULSE = (byte)(count | (len.bVal << 6));
             //set drive and gain values
-            this.CONTROL = (byte)((gain.bVal << 2) | (strength.bVal << 6));
+            this.CONTROL = (byte)(colorGain.bVal | (gain.bVal << 2) | (strength.bVal << 6));
             this.CONFIG2 = (byte)(boost.bVal << 4);
             this.gain = gain;
             this.len = len;
             this.count = count;
             this.strength = strength;
             this.boost = boost;
+        }
+
+        public void setPulse(PulseLength len, byte count, LEDStrength strength, LEDBoost boost, DistGain gain) {
+            this.setPulse(len, count, strength, boost, gain, ColorGain.GAIN_16X);
         }
     }
 

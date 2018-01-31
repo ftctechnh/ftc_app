@@ -7,7 +7,9 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9930;
 import org.firstinspires.ftc.teamcode.libraries.CrappyGraphLib;
+import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -17,8 +19,10 @@ import java.util.LinkedList;
 @Autonomous(name = "APDS Linearization", group = "test")
 //@Disabled
 public class APDSDistance extends CrappyGraphLib {
-    APDS9930 dist;
-    APDS9930 redDist;
+    APDS9960 dist;
+    APDS9960.Config distConfig = new APDS9960.Config();
+    //APDS9960 redDist;
+    //APDS9960.Config redDistConfig = new APDS9960.Config();
 
     private int regDist;
     private double linearDist;
@@ -30,22 +34,22 @@ public class APDSDistance extends CrappyGraphLib {
     public void init() {
         initGraph(data, true);
 
-        dist = new APDS9930(hardwareMap.get(I2cDeviceSynch.class, "bluedist"), true, APDS9930.ProxGain.GAIN_1X, APDS9930.ProxGain.GAIN_8X);
-        redDist = new APDS9930(hardwareMap.get(I2cDeviceSynch.class, "reddist"), true, APDS9930.ProxGain.GAIN_2X, APDS9930.ProxGain.GAIN_8X);
+        dist = new APDS9960(distConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"), true, APDS9960.Config.DistGain.GAIN_8X);
+        //redDist = new APDS9960(redDistConfig, hardwareMap.get(I2cDeviceSynch.class, "reddist"), true, APDS9960.Config.DistGain.GAIN_8X);
         dist.initDevice();
-        redDist.initDevice();
+        //redDist.initDevice();
         dist.startDevice();
-        redDist.startDevice();
+        //redDist.startDevice();
 
         telemetry.addAction(new Runnable() {
             @Override
             public void run() {
-                APDS9930.ProxGain mahGain = dist.getPGAIN();
+                APDS9960.Config.DistGain mahGain = dist.getSensorGain();
                 regDist = dist.getDist();
                 linearDist = dist.getLinearizedDistance(regDist, mahGain, false);
-                mahGain = redDist.getPGAIN();
-                redRegDist = redDist.getDist();
-                redLinearDist = redDist.getLinearizedDistance(redRegDist, mahGain, false);
+                //mahGain = redDist.getSensorGain();
+                //redRegDist = redDist.getDist();
+                //redLinearDist = redDist.getLinearizedDistance(redRegDist, mahGain, false);
             }
         });
 
@@ -62,18 +66,18 @@ public class APDSDistance extends CrappyGraphLib {
             }
         });
 
-        telemetry.addLine().addData("Red Unfixed Distance", new Func<Integer>() {
-            @Override
-            public Integer value() {
-                return redRegDist;
-            }
-        });
-        telemetry.addLine().addData("Red Linear Distance", new Func<Double>() {
-            @Override
-            public Double value() {
-                return redLinearDist;
-            }
-        });
+        //telemetry.addLine().addData("Red Unfixed Distance", new Func<Integer>() {
+        //    @Override
+        //    public Integer value() {
+        //        return redRegDist;
+        //    }
+        //});
+        //telemetry.addLine().addData("Red Linear Distance", new Func<Double>() {
+        //    @Override
+        //    public Double value() {
+        //        return redLinearDist;
+        //    }
+        //});
     }
 
     public void start() {
@@ -81,13 +85,13 @@ public class APDSDistance extends CrappyGraphLib {
     }
 
     public void loop() {
-        APDS9930.ProxGain gain = dist.getPGAIN();
+        APDS9960.Config.DistGain gain = dist.getSensorGain();
         int heh = dist.getDist();
         linearDist = dist.getLinearizedDistance(heh, gain, false);
 
-        APDS9930.ProxGain gain2 = redDist.getPGAIN();
-        int heh2 = redDist.getDist();
-        double linearDist2 = redDist.getLinearizedDistance(heh2, gain2, false);
+        //APDS9960.Config.DistGain gain2 = redDist.getSensorGain();
+        //int heh2 = redDist.getDist();
+        //double linearDist2 = redDist.getLinearizedDistance(heh2, gain2, false);
 
         //add graph stuff
         this.data.add(linearDist);
@@ -95,17 +99,19 @@ public class APDSDistance extends CrappyGraphLib {
 
         drawGraph();
         telemetry.addData("BLUE", "");
-        telemetry.addData("Gain", dist.getPGAIN().toString());
+        telemetry.addData("Gain", dist.getSensorGain().toString());
         telemetry.addData("Regular", heh);
         telemetry.addData("Linear", linearDist);
+        telemetry.addData("Color", Arrays.toString(dist.getColor()));
         telemetry.addData("RED", "");
-        telemetry.addData("Red Gain", redDist.getPGAIN().toString());
-        telemetry.addData("Red Regular", heh2);
-        telemetry.addData("Red Linear", linearDist2);
+        //telemetry.addData("Red Gain", redDist.getSensorGain().toString());
+        //telemetry.addData("Red Regular", heh2);
+        //telemetry.addData("Red Linear", linearDist2);
+        //telemetry.addData("Red Color", dist.getColor());
     }
 
     public void stop() {
         dist.stopDevice();
-        redDist.stopDevice();
+        //redDist.stopDevice();
     }
 }
