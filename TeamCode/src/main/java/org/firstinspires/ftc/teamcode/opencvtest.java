@@ -43,13 +43,16 @@ public class opencvtest extends OpMode{
             }else {//if the glyph is too far to the left:
                 drive.driveTranslateRotateNonstop(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED);
             }
+
+            drive.stopMotors();
+
             telemetry.addData("Glyph Position", glyphDetector.getChosenGlyphPosition());
             telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
         }
         //grab the glyph:
         drive.init();
         drive.rightGyro(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, -90);
-        ForkLift.closeClaw();
+        ForkLift.openClaw();
         drive.driveTranslateRotate(0.5, 0, 0, 36);
         ForkLift.closeClaw();
     }
