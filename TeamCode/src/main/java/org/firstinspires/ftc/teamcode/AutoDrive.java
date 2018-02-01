@@ -75,7 +75,18 @@ public class AutoDrive {
         }
         stopMotors();
     }
+    public void driveTranslateRotateNonstop(double x, double y, double z) {
+        double fl = clip(-y + -x - z);
+        double fr = clip(-y + x + z);
+        double rl = clip(-y + x - z);
+        double rr = clip(-y + -x + z);
+        double flSpeed = fl;
+        double frSpeed = fr;
+        double rlSpeed = rl;
+        double rrSpeed = rr;
 
+        driveSpeeds(fl, fr, rl, rr);
+    }
 
     private void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
         FrontLeft.setPower(clip(flSpeed));

@@ -36,19 +36,21 @@ public class opencvtest extends OpMode{
 
         //While the glyph is not within 10 pixels of the center:
         telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
-        while(!(-10 < glyphDetector.getChosenGlyphOffset()) && (glyphDetector.getChosenGlyphOffset() < 10)) {
+        long precision = 10;
+        while(!(-precision < glyphDetector.getChosenGlyphOffset()) && (glyphDetector.getChosenGlyphOffset() < precision)) {
             if(glyphDetector.getChosenGlyphOffset() > 0) {//if the glyph is too far to the right:
-                drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, 1);
+                drive.driveTranslateRotateNonstop(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED);
             }else {//if the glyph is too far to the left:
-                drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, -1);
+                drive.driveTranslateRotateNonstop(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED);
             }
+            telemetry.addData("Glyph Position", glyphDetector.getChosenGlyphPosition());
             telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
-            sleep(1000);
         }
         //grab the glyph:
-        drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, 10);
+        drive.init();
+        drive.rightGyro(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, -90);
         ForkLift.closeClaw();
-        drive.driveTranslateRotate(1, 0, 0, 12);
+        drive.driveTranslateRotate(0.5, 0, 0, 36);
         ForkLift.closeClaw();
     }
     public void loop() {
