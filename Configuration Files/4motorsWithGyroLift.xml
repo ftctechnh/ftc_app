@@ -22,6 +22,7 @@
             <Servo name="relictilt" port="1" />
             <Servo name="relicclamp" port="2" />
             <LynxColorSensor name="colorDistanceRight" port="0" bus="0" />
+            <ModernRoboticsI2cRangeSensor name="range" port="0" bus="1" />
         </LynxModule>
     </LynxUsbDevice>
 </Robot>

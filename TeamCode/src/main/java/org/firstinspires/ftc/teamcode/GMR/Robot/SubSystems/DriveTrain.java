@@ -319,7 +319,6 @@ public class DriveTrain {
         int rightStrafeValue = ((getLeftEncoder() + -getRightEncoder()) / 2);
 
         if (encodersCanRun){
-            currentGyro = getYaw();
             goalEncoderPosition = (combinedEnValue + (inches * countsPerInch));
             goalBackwardPosition = (combinedEnValue - (inches * countsPerInch));
             goalLeftPosition = (getLeftEncoder() + (inches * countsPerInch));

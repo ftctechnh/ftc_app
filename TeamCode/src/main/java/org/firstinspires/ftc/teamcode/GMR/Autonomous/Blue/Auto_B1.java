@@ -90,13 +90,10 @@ public class Auto_B1 extends OpMode {
                 case TIME:
                     //Starts the timer
                     state = States.GRAB;
-                    robot.blockLift.clamp(false,true, true, false);
                     stageCheck += "Time - ";
                     break;
                 case GRAB:
-                    robot.blockLift.clamp(false,false, false, true);
                     state = States.LIFT;
-
                     goalSeconds = currentSeconds + 0.5;
                     stageCheck += "Grab - ";
                     break;
@@ -215,7 +212,6 @@ public class Auto_B1 extends OpMode {
                     }
                     break;
                 case DROP:
-                    robot.blockLift.clamp(false, false,true, false);
                     state = States.DRIVEBACK;
                     break;
                 case DRIVEBACK:
@@ -230,7 +226,6 @@ public class Auto_B1 extends OpMode {
                     }
                     break;
                 case CLOSE:
-                    robot.blockLift.clamp(true, false, false, true);
                     if (currentSeconds >= goalSeconds) {
                         state = States.DRIVEFORWARD;
                     }
@@ -243,7 +238,6 @@ public class Auto_B1 extends OpMode {
                         goalSeconds = currentSeconds += 0.4;
                     }
                 case OPEN:
-                    robot.blockLift.clamp(false, true, true, false);
                     if (currentSeconds >= goalSeconds) {
                         state = States.BACKUPFROMBLOCK;
                     }
