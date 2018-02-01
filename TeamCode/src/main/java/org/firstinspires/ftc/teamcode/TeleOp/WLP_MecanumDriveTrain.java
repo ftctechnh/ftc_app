@@ -120,9 +120,9 @@ public class WLP_MecanumDriveTrain {
         } else if (gamepad1.dpad_right) {
             left_x = max_stick;
         } else if (gamepad1.dpad_up) {
-            left_y = min_stick;
-        } else if (gamepad1.dpad_down) {
             left_y = max_stick;
+        } else if (gamepad1.dpad_down) {
+            left_y = min_stick;
         } else {
             left_x = gamepad1.left_stick_x;
             left_y = gamepad1.left_stick_y;
