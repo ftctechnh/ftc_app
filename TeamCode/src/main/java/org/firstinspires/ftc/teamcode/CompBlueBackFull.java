@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by guberti on 12/2/2017.
  */
-@Autonomous(name="Complete BACK BLUE autonomous", group="Autonomous")
-public class CompBlueBackFull extends CompleteAutonomous {
+@Autonomous(name="Ultrasonic BACK BLUE autonomous", group="Autonomous")
+public class CompBlueBackFull extends NavigatorAutonomous {
 
     @Override
     public void runOpMode() {

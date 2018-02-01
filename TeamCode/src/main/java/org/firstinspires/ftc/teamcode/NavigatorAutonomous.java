@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -11,29 +11,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.firstinspires.ftc.teamcode.Alliance.BLUE;
 import static org.firstinspires.ftc.teamcode.Alliance.RED;
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 
 /**
- * Created by guberti on 10/17/2017.
+ * Created by guberti on 10/17/2017
  */
-@Autonomous(name="Test Ultrasonic Nav", group="Demo")
+/*@Autonomous(name="Test Ultrasonic Nav", group="Demo")*/
 public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
     final double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45; // 1 degree
-    final int GUESS_TIME = 1000; // Milliseconds
+    final int GUESS_TIME = 2000; // Milliseconds
 
     final int TICKS_PER_INCH = 100; // For sideways movement
     final double CM_TO_INCHES = 1/2.54;
 
-    final double CENTER_DISTANCE = 47.5; // Inches
-    final double LEFT_DISTANCE = 47.5 - 7.625; // Inches
-    final double RIGHT_DISTANCE = 47.5 + 7.625;
-
-    final double[] COLUMN_DISTANCES = new double[] {LEFT_DISTANCE, CENTER_DISTANCE, RIGHT_DISTANCE};
-
-    final double[] APPROX_POSITIONS = new double[] {26, 33, 40};
+    Map<RelicRecoveryVuMark, Double[]> COLUMN_DISTANCES = new HashMap<>();
 
     VuforiaLocalizer vuforia;
     VuforiaTrackable relicTemplate;
@@ -41,10 +38,23 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
     @Override
     public void runOpMode() {
 
+        // Initialize variables
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.LEFT, new Double[] {47.5, 33.0});
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {47.5 + 7.625, 39.0});
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.RIGHT, new Double[] {47.5 + 2 * 7.625, 45.0});
+
         robot.init(hardwareMap, this, gamepad1, gamepad2);
-        robot.color = BLUE;
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            if (m instanceof DcMotorEx) {
+                // Set the PID coefficients
+                DcMotorEx mX = (DcMotorEx) m;
+
+                // Quadruple the integral component
+                mX.getPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER).i *= 4;
+                mX.getPIDCoefficients(DcMotor.RunMode.RUN_TO_POSITION).i *= 4;
+                telemetry.log().add("Updated PID coefficients for a motor");
+            }
         }
 
         initializeVuforia();
@@ -54,7 +64,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Front raw cm: ", voltageToInches(robot.frontUltrasonic));
             telemetry.addData("Left raw cm: ", voltageToInches(robot.leftUltrasonic));
-            telemetry.addData("Back raw cm: ", voltageToInches(robot.backUltrasonic));
+            telemetry.addData("Right raw cm: ", voltageToInches(robot.rightUltrasonic));
             telemetry.addData("VuMark: ", vuMark.toString());
             telemetry.update();
         } while (!isStarted());
@@ -74,8 +84,13 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
 
+        if (vuMark == RelicRecoveryVuMark.UNKNOWN) { // We have to make a guess
+            vuMark = RelicRecoveryVuMark.CENTER;
+        }
+
         // Any time that we already spent looking for the pictograph can be discounted here
-        robot.sleep((long) (500 - timeUntilGuess.milliseconds()));
+        // We have to sleep to have time to raise the lift, lower the whipsnake, etc.
+        robot.sleep((long) (Math.max(0, 500 - timeUntilGuess.milliseconds())));
 
         Alliance rightBall = (robot.colorSensor.red() > robot.colorSensor.blue()) ? RED : BLUE;
         knockOffBalls(rightBall);
@@ -83,10 +98,12 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         // Drive forward to approximately correct position
         robot.setDriveMode(DcMotor.RunMode.RUN_TO_POSITION);
         for (DcMotor m : robot.motorArr) {
-            m.setPower(0.5);
-            m.setTargetPosition(33*TICKS_PER_INCH);
+            m.setPower(0.75);
+            m.setTargetPosition((int) Math.round(COLUMN_DISTANCES.get(vuMark)[1]*TICKS_PER_INCH) *
+            robot.color.getColorCode()); // Inverts distance if on red
         }
-        robot.sleep(300);
+
+        robot.sleep(500);
         robot.raiseWhipSnake();
         waitUntilMovementsComplete();
 
@@ -94,26 +111,43 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         stopMoving();
 
         while (opModeIsActive()) {
-            double currentDist = voltageToInches(robot.leftUltrasonic);
+            robot.sleep(700);
+            double currentDist;
+
+            if (robot.color == Alliance.BLUE) {
+                currentDist = voltageToInches(robot.leftUltrasonic);
+            } else {
+                currentDist = voltageToInches(robot.rightUltrasonic);
+            }
 
             telemetry.log().add("Current left distance: " + currentDist);
-            double difference = DESIRED_DISTANCE - currentDist;
+            telemetry.log().add("Targeting a distance of " +  COLUMN_DISTANCES.get(vuMark)[0]);
+            double difference = COLUMN_DISTANCES.get(vuMark)[0] - currentDist;
             telemetry.log().add("Off by " + difference + " inches");
 
             if (Math.abs(difference) < CM_TO_INCHES) {
                 break;
             } else {
-                driveSidewaysInches((DESIRED_DISTANCE - currentDist));
+                driveSidewaysInches(difference);
             }
             stopMoving();
             turnToPos(Math.PI/2);
-            stopMoving();
-            robot.sleep(2000);
         }
 
         driveStraight(Math.PI/2, 0.6, 2000);
-        stopMoving();
+        robot.openBlockClaw();
+        robot.sleep(400); // Give time for claw to open
+        robot.lift.setTargetPosition(0); // Bring lift back to ground
 
+        // Ram the blocks in somewhere
+        driveStraight(Math.PI/2, -0.6, 500);
+        driveStraight(Math.PI/2, 0.6, 1000);
+
+        // Turn around to get more blocks
+        driveStraight(Math.PI/2, -0.6, 1000); // Back up
+        turnToPos(Math.PI*1.5);
+
+        stopMoving();
 
 
     }
@@ -175,12 +209,10 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         while(Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && opModeIsActive()) {
             robot.updateReadings();
 
-            difference = robot.getSignedAngleDifference(pos, robot.getGyroHeading());
+            difference = robot.getSignedAngleDifference(robot.normAngle(pos), robot.getGyroHeading());
             double turnSpeed = Math.max(-0.6, Math.min(0.6, difference));
 
             double[] unscaledMotorPowers = new double[4];
-
-            telemetry.addData("Turnspeed", turnSpeed);
 
             for (int i = 0; i < unscaledMotorPowers.length; i++) {
                 if (i % 2 == 0) {
@@ -201,6 +233,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             m.setPower(0);
         }
     }
+
     public void waitUntilMovementsComplete() {
         boolean done = false;
 
@@ -212,10 +245,9 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
                     break;
                 }
             }
-
         }
-        robot.sleep(500);
     }
+
     public void knockOffBalls(Alliance rightMostBall) {
 
         robot.lowerLeftWhipSnake();
