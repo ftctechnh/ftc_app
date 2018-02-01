@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by FTC 4316 on 1/14/2018.
  */
 
-public class ColumnDetection {
+public class Vision {
 
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
@@ -21,7 +21,7 @@ public class ColumnDetection {
     VuforiaLocalizer.Parameters parameters;
 
 
-    public ColumnDetection(VuforiaLocalizer vuforia, VuforiaLocalizer.Parameters parameters, VuforiaTrackables relicTrackables, VuforiaTrackable relicTemplate){
+    public Vision(VuforiaLocalizer vuforia, VuforiaLocalizer.Parameters parameters, VuforiaTrackables relicTrackables, VuforiaTrackable relicTemplate){
         this.vuforia = vuforia;
         this.parameters = parameters;
         this.relicTrackables = relicTrackables;
