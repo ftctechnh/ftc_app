@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 @Autonomous(name = "Blue Recovery", group = "Autonomous")
 public class BlueRecovery extends LinearOpMode {
     private AutoDrive drive;
-    private JewelArm jewelArm;
+    private JewelArm JewelArm;
     private ForkLift ForkLift;
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
@@ -23,20 +23,20 @@ public class BlueRecovery extends LinearOpMode {
         telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init(); //Calibrates gyro
-        jewelArm = new JewelArm(hardwareMap, telemetry);
+        JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, jewelArm, vuforia, telemetry);
+        Systems = new Systems(drive, ForkLift, JewelArm, vuforia, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
-        jewelArm.up();
+        JewelArm.up();
         ForkLift.closeClaw();
         sleep(200);
         ForkLift.moveMotor(1, 300);
-        Systems.findJewel(Color.BLUE);
+        JewelArm.findJewel(Color.BLUE);
         pictograph = Systems.getMark();
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {

@@ -36,7 +36,7 @@ public class RedRecovery extends LinearOpMode {
         ForkLift.closeClaw();
         sleep(200);
         ForkLift.moveMotor(1, 300);
-        Systems.findJewel(Color.RED);
+        JewelArm.findJewel(Color.RED);
         pictograph = Systems.getMark();
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
