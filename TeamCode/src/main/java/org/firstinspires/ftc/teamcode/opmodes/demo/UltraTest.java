@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 /**
@@ -10,10 +11,10 @@ import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 @Autonomous(name="Ultra Teleop", group="test")
 public class UltraTest extends OpMode {
-    UltrasonicSensor sensor;
+    AnalogInput ultra;
 
     public void init() {
-        sensor = hardwareMap.ultrasonicSensor.get("ultra");
+        ultra = hardwareMap.analogInput.get("ultra");
     }
 
     public void start() {
@@ -21,11 +22,12 @@ public class UltraTest extends OpMode {
     }
 
     public void loop() {
-        telemetry.addData("Ultra", sensor.getUltrasonicLevel());
-        telemetry.addData("Ultra Status", sensor.status());
+        telemetry.addData("Max Voltage", ultra.getMaxVoltage());
+        telemetry.addData("Voltage", ultra.getVoltage());
+        telemetry.addData("Normalized", Math.round((ultra.getVoltage() / ultra.getMaxVoltage()) * 255));
     }
 
     public void stop() {
-
+        ultra.close();
     }
 }

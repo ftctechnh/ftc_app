@@ -14,8 +14,11 @@ import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
+import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
+
+import java.util.Arrays;
 
 /**
  * Created by Noah on 12/20/2017.
@@ -25,7 +28,10 @@ import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 public class ADPSAuto extends VuforiaBallLib {
     private static final double BALL_WAIT_SEC = 2.0;
 
-    APDS9930 dist;
+    APDS9960 backDist; //formerly redDist
+    APDS9960.Config backConfig = new APDS9960.Config();
+    APDS9960 frontDist;
+    APDS9960.Config frontConfig = new APDS9960.Config();
     protected boolean red = false;
     protected boolean justDrive = false;
     private BotHardware bot = new BotHardware(this);
@@ -54,17 +60,62 @@ public class ADPSAuto extends VuforiaBallLib {
 
     private static final double MM_PER_ENCODE = 13.298;
 
+    private enum AutoPath {
+        RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, 1, 125),
+        RED_FRONT_CENTER(true, false, RelicRecoveryVuMark.CENTER, 0, 125),
+        RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, 2, 55),
+        RED_REAR_LEFT(true, true, RelicRecoveryVuMark.LEFT, 1, 125),
+        RED_REAR_CENTER(true, true, RelicRecoveryVuMark.CENTER, 2, 55),
+        RED_REAR_RIGHT(true, true, RelicRecoveryVuMark.RIGHT, 1, 55),
+
+        BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 125),
+        BLUE_FRONT_CENTER(false, false, RelicRecoveryVuMark.CENTER, 1, 55),
+        BLUE_FRONT_RIGHT(false, false, RelicRecoveryVuMark.RIGHT, 2, 55),
+        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 125),
+        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55),
+        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55);
+
+        public RelicRecoveryVuMark vuMark;
+        public boolean red;
+        public boolean rear;
+        public int skipCount;
+        public float turnAmount;
+        AutoPath(boolean red, boolean rear, RelicRecoveryVuMark mark, int skipCount, float turnAmount) {
+            this.red = red;
+            this.rear = rear;
+            this.vuMark = mark;
+            this.skipCount = skipCount;
+            this.turnAmount = turnAmount;
+        }
+
+        static AutoPath getPath(boolean red, boolean rear, RelicRecoveryVuMark mark) {
+            //return match
+            if(mark != null && mark != RelicRecoveryVuMark.UNKNOWN){
+                for(AutoPath path : values()) if(path.red == red && path.rear == rear && path.vuMark == mark) return path;
+                throw new IllegalArgumentException("WTF Why");
+            }
+            //else return default
+            if(red && rear) return RED_REAR_RIGHT;
+            if(red) return RED_FRONT_CENTER;
+            if(rear) return BLUE_REAR_CENTER;
+            return BLUE_FRONT_CENTER;
+        }
+    }
+
     public void init() {
         initVuforia(true);
 
-        dist = new APDS9930(hardwareMap.get(I2cDeviceSynch.class, red ? "reddist" : "bluedist"), true);
-        dist.initDevice();
+        backDist = new APDS9960(backConfig, hardwareMap.get(I2cDeviceSynch.class, "reddist"), true, APDS9960.Config.DistGain.GAIN_4X);
+        frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"), true, APDS9960.Config.DistGain.GAIN_4X);
+        backDist.initDevice();
+        frontDist.initDevice();
 
         bot.init();
     }
 
     public void start() {
-        dist.startDevice();
+        backDist.startDevice();
+        frontDist.startDevice();
         startTracking();
     }
 
@@ -76,7 +127,7 @@ public class ADPSAuto extends VuforiaBallLib {
             CameraDevice.getInstance().setFlashTorchMode(false);
             //init whacky stick code here
             AutoLib.Sequence whack = new AutoLib.LinearSequence();
-            //check detection
+
             if(color != BallColor.Indeterminate && color != BallColor.Undefined) {
                 if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
                 else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
@@ -88,37 +139,14 @@ public class ADPSAuto extends VuforiaBallLib {
                 final AutoLib.Step whackRight;
                 if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
                 else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
-                if(color == BallColor.LeftBlue) {
-                    if(red) whack.add(whackLeft);
-                    else whack.add(whackRight);
-                }
-                else if(color == BallColor.LeftRed) {
-                    if(red) whack.add(whackRight);
-                    else whack.add(whackLeft);
-                }
+                whack.add(new APDSBallFind(red, frontDist, backDist, color, whackLeft, whackRight, this));
                 whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
                 whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             }
 
             final int mul = red ? -1 : 1;
 
-            int skip = 1;
-            boolean closest = false;
-
-            if(getLastVuMark() != null) {
-                RelicRecoveryVuMark thing = getLastVuMark();
-                //if we're on red it's the far one, else it's the close one
-                //and if its' on the right and we're on blue, go twice
-                if((thing == RelicRecoveryVuMark.LEFT && red) || (thing == RelicRecoveryVuMark.RIGHT && !red)) skip = 2;
-                //if it's center, always increment
-                else if(thing == RelicRecoveryVuMark.CENTER) skip = 1;
-                else {
-                    skip = 3;
-                    closest = true;
-                }
-                //telemetry
-                telemetry.addData("Mark", thing.toString());
-            }
+            AutoPath path = AutoPath.getPath(red, false, getLastVuMark());
 
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
 
@@ -129,20 +157,17 @@ public class ADPSAuto extends VuforiaBallLib {
             GyroCorrectStep step;
             if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 360.0f);
             else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 360.0f);
-            if(red) skip--;
+            final APDS9960 dist = red ? backDist : frontDist;
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.65, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
-                    30, 10, skip, 30, this, red));
+                    30, 10, path.skipCount, 30, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
-            float heading = 55;
-            if(closest) heading = 180 - 55;
-            if(red) heading = 180 - heading;
-            findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
+            findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 195.0f, 410, true));
             findPilliar.add(bot.getDropStep());
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
             DcMotor[] temp = bot.getMotorRay();
-            if(closest != red) {
+            if(path.turnAmount > 55) {
                 oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.2f, 2.0, true));
                 oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.2f, 2.0, true));
             }
@@ -154,7 +179,7 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 200, true));
 
             mSeq.add(whack);
-            mSeq.add(findPilliar);
+            //mSeq.add(findPilliar);
 
             firstLoop = true;
         }
@@ -167,7 +192,8 @@ public class ADPSAuto extends VuforiaBallLib {
             if(firstLoop && mSeq.loop()) requestOpModeStop();
         }
         catch (Exception e) {
-            dist.stopDevice();
+            backDist.stopDevice();
+            frontDist.stopDevice();
             bot.stopAll();
             throw e;
         }
@@ -175,7 +201,8 @@ public class ADPSAuto extends VuforiaBallLib {
 
 
     public void stop() {
-        dist.stopDevice();
+        backDist.stopDevice();
+        frontDist.stopDevice();
         bot.stopAll();
         stopVuforia();
     }
@@ -183,7 +210,7 @@ public class ADPSAuto extends VuforiaBallLib {
     public static class APDSFind extends AutoLib.Step {
         private final int mError;
         private final int mDist;
-        private final APDS9930 sens;
+        private final APDS9960 sens;
         private final OpMode mode;
         private final SensorLib.PID errorPid;
         private final GyroCorrectStep gyroStep;
@@ -203,7 +230,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private static final int APDS_FOUND_COUNT = 10;
         private static final int COUNTS_BETWEEN_PILLIAR = 175;
 
-        APDSFind(Servo stick, double stickDown, double stickUp, APDS9930 sens, SensorLib.PID errorPid,
+        APDSFind(Servo stick, double stickDown, double stickUp, APDS9960 sens, SensorLib.PID errorPid,
                  GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode, boolean red) {
             this.errorPid = errorPid;
             this.sens = sens;
@@ -397,6 +424,63 @@ public class ADPSAuto extends VuforiaBallLib {
 
         public float getMaxPower() {
             return this.powerMax;
+        }
+    }
+
+    public static class APDSBallFind extends AutoLib.Step {
+        private final boolean red;
+        private final APDS9960 frontDist;
+        private final APDS9960 backDist;
+        private BallColor color;
+        private final AutoLib.Step whackLeft;
+        private final AutoLib.Step whackRight;
+        private final OpMode mode;
+
+        APDSBallFind(boolean red, APDS9960 frontDist, APDS9960 backDist, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight, OpMode mode) {
+            this.red = red;
+            this.frontDist = frontDist;
+            this.backDist = backDist;
+            this.color = color;
+            this.whackLeft = whackLeft;
+            this.whackRight = whackRight;
+            this.mode = mode;
+        }
+
+        public boolean loop() {
+            //check detection
+            if(color == BallColor.Indeterminate || color == BallColor.Undefined) {
+                //get colors
+                int[] backColor;
+                int[] frontColor;
+                int count = 0;
+                do {
+                    backColor = backDist.getColor();
+                    frontColor = frontDist.getColor();
+                    count++;
+                } while ((backColor[1] == 0 || backColor[3] == 0 || frontColor[1] == 0 || frontColor[3] == 0) && count < 5);
+                if(backColor[1] != 0 && backColor[3] != 0 && frontColor[1] != 0 && frontColor[3] != 0) {
+                    if(backColor[1] < backColor[3] && frontColor[1] > frontColor[3]) color = BallColor.LeftRed;
+                    else if(backColor[1] > backColor[3] && frontColor[1] < frontColor[3]) color = BallColor.LeftBlue;
+                    else {
+                        mode.telemetry.addData("MUY SKETCH", Arrays.toString(frontColor) + ' ' + Arrays.toString(backColor));
+                        if(backColor[1] > frontColor[1]) color = BallColor.LeftBlue;
+                        else if(backColor[1] < frontColor[1]) color = BallColor.LeftRed;
+                        else color = BallColor.Indeterminate;
+                    }
+                }
+                else color = BallColor.Undefined;
+            }
+            //run appropriete sewunce
+            if(color == BallColor.LeftBlue) {
+                if(red) return whackLeft.loop();
+                else return whackRight.loop();
+            }
+            else if(color == BallColor.LeftRed) {
+                if(red) return whackRight.loop();
+                else return whackLeft.loop();
+            }
+            //or finish immedietly
+            return true;
         }
     }
 }
