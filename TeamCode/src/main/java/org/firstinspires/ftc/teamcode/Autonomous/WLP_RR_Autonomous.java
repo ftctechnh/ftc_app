@@ -58,6 +58,10 @@ public class WLP_RR_Autonomous extends LinearOpMode {
     static final double     BR_JEWEL_TO_CRYPTO_90   = 50 ;    // Go at 90 degree 61 CM from Jewel to Crypto Box
     static final double     JEWEL_KNOCK_DISTANCE = 8;          // Forward and backward distance to knock the jewel
 
+    static final long     BR_JEWEL_TO_CRYPTO_0_T    = 4000 ;    // Go at 0 degree 92 CM from Jewel to Crypto Box
+    static final long     BR_JEWEL_TO_CRYPTO_90_T   = 1000 ;    // Go at 90 degree 61 CM from Jewel to Crypto Box
+    static final long     JEWEL_KNOCK_DISTANCE_T = 500;          // Forward and backward distance to knock the jewel
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private WLP_RR_JewelArm arm = new WLP_RR_JewelArm();
@@ -69,9 +73,9 @@ public class WLP_RR_Autonomous extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        double distance_at_0 = BR_JEWEL_TO_CRYPTO_0;
-        double distance_at_90 = BR_JEWEL_TO_CRYPTO_90;
-        double jewelKnockDistance = JEWEL_KNOCK_DISTANCE;
+        long time_at_0 = BR_JEWEL_TO_CRYPTO_0_T;
+        long time_at_90 = BR_JEWEL_TO_CRYPTO_90_T;
+        long jewelKnockTime = JEWEL_KNOCK_DISTANCE_T;
 
         runtime.reset();
         telemetry.addData("WLP_RR_Autonomous", "Init time started ....");
@@ -88,28 +92,29 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        /*
+
 
         telemetry.addData("WLP_RR_Autonomous", "autonomous period started ...");
 
 
+        /*
         // Start with 500 ms sleep
         telemetry.addData("WLP_RR_Autonomous", "going straight 20 cm");
         telemetry.update();
         sleep(1000);
 
-        drivetrain.moveStraight(SPEED_STRAIGHT, 10);
-        sleep(5000);
+        drivetrain.moveStraightTime(0.4, 4000);
 
         // Start with 500 ms sleep
         telemetry.addData("WLP_RR_Autonomous", "going backward 20 cm");
         telemetry.update();
-        sleep(5000);
-        //malin is cool
-        drivetrain.moveStraight(SPEED_STRAIGHT, -10);
+        sleep(1000);
 
+
+        drivetrain.moveStraightTime(-0.4, 4000);
 
 */
+
         // Lower the ARM
         arm.lowerArm();
         telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
@@ -121,21 +126,20 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         WLP_RevColorSensor.ColorName jewelColor = colorSensor.getColor();
         telemetry.addData("WLP_RR_Autonomous", "JewelColor is " + jewelColor);
 
-        if (teamColor != jewelColor) {
-            jewelKnockDistance = -1.0 * JEWEL_KNOCK_DISTANCE;
+        if (teamColor == jewelColor) {
+            jewelKnockTime = -JEWEL_KNOCK_DISTANCE_T;
         }
 
 
-        drivetrain.moveStraight(SPEED_KNOCK, jewelKnockDistance);
-        distance_at_0 += jewelKnockDistance;
+        drivetrain.moveStraightTime(SPEED_KNOCK, JEWEL_KNOCK_DISTANCE_T);
+        time_at_0 += jewelKnockTime;
 
         // Raise the arm
         arm.raiseArm();
         telemetry.addData("WLP_RR_Autonomous", "Arm raised at " + runtime.toString());
         telemetry.update();
 
-        /*
-
+        
         // Show the elapsed game time and wheel power.
         telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
         telemetry.update();
@@ -144,7 +148,7 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         // Move straight to crypto box
         telemetry.addData("WLP_RR_Autonomous", "Starting to drive forward");
         telemetry.update();
-        drivetrain.moveStraight(SPEED_STRAIGHT, distance_at_0);
+        drivetrain.moveStraightTime(SPEED_STRAIGHT, time_at_0);
 
 
         telemetry.addData("WLP_RR_Autonomous", "Taking a trun ...");
@@ -153,8 +157,7 @@ public class WLP_RR_Autonomous extends LinearOpMode {
 
         telemetry.addData("WLP_RR_Autonomous", "Streeing toward crypto ...");
         telemetry.update();
-        drivetrain.moveStraight(SPEED_STRAIGHT, distance_at_90);
-        */
+        drivetrain.moveStraightTime(SPEED_STRAIGHT, time_at_90);
 
         // Show the elapsed game time and wheel power.
         // telemetry.addData("WLP_RR_Autonomous", "Completed in " + runtime.toString());

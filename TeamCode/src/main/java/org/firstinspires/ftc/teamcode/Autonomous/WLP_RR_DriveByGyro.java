@@ -73,10 +73,10 @@ import org.firstinspires.ftc.teamcode.TeleOp.WLP_MecanumWheels;
 
 public class WLP_RR_DriveByGyro {
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0;    // 4 inches = 10.16 cm
-    static final double     WHEEL_DIAMETER_CM       =   (WHEEL_DIAMETER_INCHES * 2.54);
+    static final double     COUNTS_PER_MOTOR_REV    = 7 ;  // NeveRest Classic 40 Gearmotor (am-2964a)
+    static final double     DRIVE_GEAR_REDUCTION    = 40 ;   // This is < 1.0 if geared UP
+    static final double     WHEEL_DIAMETER_INCHES   = 4.0;
+    static final double     WHEEL_DIAMETER_CM       =  10.16;  // 4 inches = 10.16 cm
 
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -141,11 +141,13 @@ public class WLP_RR_DriveByGyro {
         rearRight.setDirection(DcMotor.Direction.REVERSE);
 
         // Set autonomous mode
+
+        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         // Send telemetry message to alert driver that we are calibrating;
-        telemetry.addData("DriveByGyro", "Calibrating Gyro");
+        telemetry.addData("DriveByGyro", "Gyro calibration started ...");
         telemetry.update();
 
         ElapsedTime calTime =  new ElapsedTime();
@@ -164,8 +166,8 @@ public class WLP_RR_DriveByGyro {
         telemetry.addData("DriveByGyro", "Gyro calibaration took " + calTime.toString());
 
         isInitialized = true;
+        telemetryPosition();
         telemetry.addData("DriveByGyro", "Initialization succeeded");
-        telemetry.update();
     }
 
 
@@ -208,19 +210,73 @@ public class WLP_RR_DriveByGyro {
            wheels.UpdateInput(0.0, speed, 0.0);
 
            // Set power using the wheel calculation
-           setPower();
+           setPower(wheels);
 
            // keep looping while we are still active, and BOTH motors are running.
-           while (parent.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy());
+           while (parent.opModeIsActive() && frontLeft.isBusy() && frontRight.isBusy()) {
+               // Display it for the driver.
+               telemetryPosition();
+               telemetry.update();
+           }
 
            // Stop all motion;
            setPower(0.0);
 
            // Turn off RUN_TO_POSITION
            setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+           parent.sleep(250);
 
        }
    }
+
+
+    /**
+     *  Move the robot straight forward or backward to a desired distance
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Driver stops the opmode running.
+     *
+     * @param speed      Target speed for forward motion.
+     * @param distanceInCm   Distance (in cm) to move from current position.  Negative distance means move backwards.
+     */
+
+    public void moveStraightTime(double speed, long milliseconds ) {
+
+
+        ElapsedTime     runtime = new ElapsedTime();
+
+        // Ensure that the opmode is still active
+        if (parent.opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+
+            setRunMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            // start motion.
+            speed = Range.clip(speed, -1.0, 1.0);
+            wheels.UpdateInput(0.0, speed, 0.0);
+
+            // Set power using the wheel calculation
+            setPower(wheels);
+            runtime.reset();
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (parent.opModeIsActive() && runtime.milliseconds() < milliseconds) {
+                setPower(wheels);
+                // Display it for the driver.
+                telemetryPosition();
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            setPower(0.0);
+
+            // Turn off RUN_TO_POSITION
+            setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            parent.sleep(250);
+
+        }
+    }
 
     /**
      *  Method to spin on central axis to point in a new direction.
@@ -245,9 +301,9 @@ public class WLP_RR_DriveByGyro {
 
             double right_x = getSteer(error, P_TURN_COEFF);
             wheels.UpdateInput(0.0, 0.0, right_x);
+            setPower(wheels);
             error = getError(angle);
             telemetry.addData("DriveByGyro::GyroTurn:error", "%.2f", error);
-            setPower();
         }
         // Stop all motors
         setPower(0.0);
@@ -301,32 +357,44 @@ public class WLP_RR_DriveByGyro {
     }
 
     // Set power using mecanum wheel
-    private void setPower() {
+    private void setPower(WLP_MecanumWheels wheels) {
         frontLeft.setPower(wheels.getFrontLeftPower());
         frontRight.setPower(wheels.getFrontRightPower());
         rearRight.setPower(wheels.getRearRightPower());
         rearLeft.setPower(wheels.getRearLeftPower());
-        updatePowerTelemetry();
     }
 
     //set specified power
     private void setPower(double power) {
-        updatePowerTelemetry();
         frontLeft.setPower(power);
         frontRight.setPower(power);
         rearRight.setPower(power);
         rearLeft.setPower(power);
     }
 
-    //Update Power Telemetry values
-    private void updatePowerTelemetry() {
 
-        // Display drive status for the driver.
-        telemetry.addData("DriveByGyro::frontLeft", "%.2f", frontLeft.getPower());
-        telemetry.addData("DriveByGyro::frontRight", "%.2f", frontRight.getPower());
-        telemetry.addData("DriveByGyro::rearLeft", "%.2f", rearLeft.getPower());
-        telemetry.addData("DriveByGyro::rearRight", "%.2f", rearRight.getPower());
-        telemetry.update();
-        parent.sleep(1000);
+    //Update Motor position Telemetry values
+    private void telemetryPosition() {
+
+        // Display current motor positions
+        telemetry.addData("Front Left Postion ", "target: %7d, current: %7d",
+                frontLeft.getTargetPosition(), frontLeft.getCurrentPosition());
+        telemetry.addData("Front Right Postion ", "target: %7d, current: %7d",
+                frontRight.getTargetPosition(), frontLeft.getCurrentPosition());
+        telemetry.addData("Rear Left Postion ", "target: %7d, current: %7d",
+                rearLeft.getTargetPosition(), rearLeft.getCurrentPosition());
+        telemetry.addData("Rear Right Postion ", "target: %7d, current: %7d",
+                rearRight.getTargetPosition(), rearRight.getCurrentPosition());
+    }
+
+
+    //Update Power Telemetry values
+    private void telemetryPower() {
+
+        // Display motor power
+        telemetry.addData("frontLeft power", "%.2f", frontLeft.getPower());
+        telemetry.addData("frontRight power", "%.2f", frontRight.getPower());
+        telemetry.addData("rearLeft power", "%.2f", rearLeft.getPower());
+        telemetry.addData("rearRight power", "%.2f", rearRight.getPower());
     }
 }
