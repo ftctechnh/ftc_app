@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.Qualifier;
 
-import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -100,7 +99,8 @@ public class Teleop extends OpMode {
         double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
         telemetry.addData("Sharp IR V ", sharpIRVoltage);
         telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
-        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance), " Ticks " + Integer.toString(gromit.driveTrain.left_front.getCurrentPosition()));
+        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance) );
+//        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance), " Ticks " + Integer.toString(gromit.driveTrain.left_front.getCurrentPosition()));
 
         //------------------------------------------------------------------------------
         //toggle  drive direction-when the button was released and it is now pressed.

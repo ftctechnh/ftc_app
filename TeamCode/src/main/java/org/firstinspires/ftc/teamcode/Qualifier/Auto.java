@@ -8,12 +8,14 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
@@ -284,9 +286,27 @@ public class Auto extends LinearOpMode {
         relicTrackables.deactivate();
 
         if(menuFile.mode == 3){   //  test mode
-            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
+//            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
+//            gromit.driveTrain.mecanumDrive();
+            while(runtime.milliseconds() <2000) {
+                gromit.driveTrain.left_rear.setPower(0.4);
+                gromit.driveTrain.left_front.setPower(0.4);
+                gromit.driveTrain.right_rear.setPower(0.4);
+                gromit.driveTrain.right_front.setPower(0.4);
+                double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+                double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+                RobotLog.vv("[Gromit] IR", Double.toString(IRdistance) );
+//                Log.d("[Gromi2] IR",Double.toString(IRdistance));
+                idle();
+            }
+            gromit.driveTrain.stopMotors();
 
             while (opModeIsActive()) {
+                telemetry.addLine("TEST MODE 3 ");
+                double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+                double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+//                gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.RedFrontTurn1);
+                telemetry.addData("", "Distance: %4.2f ", IRdistance);
                 telemetry.addData("", "Heading: %4.2f ", gromit.driveTrain.getheading());
                 telemetry.update();
             }
