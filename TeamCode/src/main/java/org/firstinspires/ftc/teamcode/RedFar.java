@@ -39,19 +39,19 @@ public class RedFar extends LinearOpMode {
         Systems.findJewel(Color.RED);
         pictograph = Systems.getMark();
         sleep(500);
-        drive.driveTranslateRotate(0, drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  0, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
+        drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.driveTranslateRotate(-drive.STRAFING_PAST_CRYPTOBOX_SPEED, 0, 0, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
-        drive.driveTranslateRotate(0, drive.DRIVE_INTO_CRYPTOBOX_SPEED, 0, 3);
+        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
         Systems.pushInBlock();
-        drive.driveTranslateRotate(0,drive.BACK_AWAY_FROM_BLOCK_SPEED, 0, 4);
+        drive.forward(drive.BACK_AWAY_FROM_BLOCK_SPEED,4);
         //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);
