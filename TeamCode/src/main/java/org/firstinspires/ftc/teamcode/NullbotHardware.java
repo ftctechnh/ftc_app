@@ -66,7 +66,7 @@ public class NullbotHardware {
     public PixyCam leftPixyCam;
     public AnalogInput frontUltrasonic;
     public AnalogInput leftUltrasonic;
-    public AnalogInput backUltrasonic;
+    public AnalogInput rightUltrasonic;
     public ColorSensor colorSensor;
 
     // Sensors
@@ -120,7 +120,7 @@ public class NullbotHardware {
         leftPixyCam = hwMap.get(PixyCam.class, "leftPixy");
         frontUltrasonic = hwMap.get(AnalogInput.class, "frontUltrasonic");
         leftUltrasonic = hwMap.get(AnalogInput.class, "leftUltrasonic");
-        backUltrasonic = hwMap.get(AnalogInput.class, "backUltrasonic");
+        rightUltrasonic = hwMap.get(AnalogInput.class, "rightUltrasonic");
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
         if (!isTestChassis) {
@@ -473,9 +473,13 @@ public class NullbotHardware {
         }
     }
 
-    public double relicFipperPosition = 80;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 83.0/255.0;
-    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;
+    //public double relicFipperPosition = 80;
+    //public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 83.0/255.0;
+    //public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;
+
+    public double relicFipperPosition = 0.33;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 1.0;
+    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 0.333;
 
     public void extendFlipper() {
         relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_EXTENDED_POSITION);
