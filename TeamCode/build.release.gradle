@@ -5,4 +5,5 @@ dependencies {
     compile (name: 'FtcCommon-release', ext: 'aar')
     compile (name:'Analytics-release', ext:'aar')
     compile (name:'WirelessP2p-release', ext:'aar')
+    testCompile 'junit:junit:4.12'
 }

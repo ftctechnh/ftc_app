@@ -20,6 +20,11 @@ import java.util.regex.Pattern
 apply plugin: 'com.android.application'
 
 android {
+    lintOptions {
+
+        abortOnError false
+
+    }
 
     compileSdkVersion 23
     buildToolsVersion '25.0.3'
@@ -96,6 +101,7 @@ android {
 }
 
 repositories {
+    mavenCentral()
     flatDir {
         dirs rootProject.file('libs')
     }

@@ -1,3 +1,12 @@
+| Branch    | Status |
+| --------  | -------- |
+| Master    | [![Build Status](https://travis-ci.org/ftcgearedup/ftc_app.svg?branch=master)](https://travis-ci.org/ftcgearedup/ftc_app)   |
+| Develop   | [![Build Status](https://travis-ci.org/ftcgearedup/ftc_app.svg?branch=beta)](https://travis-ci.org/ftcgearedup/ftc_app)   |
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/8a3ca1de5fcd4795879a4d03fcd58bfe)](https://www.codacy.com/app/GearedUp/ftc_app?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=ftcgearedup/ftc_app&amp;utm_campaign=Badge_Grade)
+
+# ftc_app
+FTC Android Studio project to create FTC Robot Controller app.
+=======
 ## Welcome!
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
 
