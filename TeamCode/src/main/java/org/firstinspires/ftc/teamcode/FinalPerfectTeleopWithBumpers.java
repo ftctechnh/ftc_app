@@ -37,13 +37,13 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
         /* The init() method of the hardware class does all the work here*/
         robot.init(hardwareMap);
 
-        robot.verticalArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
 //        /* Initialize the vertical arm encoder */
         robot.verticalArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        robot.clawMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(100);
         robot.verticalArmMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        robot.clawMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the start button
@@ -58,8 +58,8 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
             telemetry.addData("Claw Opening Controls", "X is Close, B is Open");
             telemetry.addData("Claw Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
 
-            telemetry.addData("Encoder Mode:", robot.verticalArmMotor.getMode());
-            telemetry.addData("Vertical Encoder:", robot.verticalArmMotor.getCurrentPosition());
+            telemetry.addData("Encoder Mode:", robot.backRightMotor.getMode());
+            telemetry.addData("Back Right Encoder Data:", robot.backRightMotor.getCurrentPosition());
             telemetry.addLine("Side RS Data");
             telemetry.addData("cm", "%.2f cm", robot.sideRangeSensor.cmUltrasonic());
             telemetry.addLine("Front RS Data");
@@ -68,56 +68,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
 
         /* Put the servo arm up */
             robot.gemServo.setPosition(robot.xPosUp);
-
-//        /* Claw Motor Control */
-//            if (gamepad2.x && robot.clawMotor.getCurrentPosition() > clawMin) {
-//                if (robot.ClawPower != robot.clawClose) {
-//                    robot.clawMotor.setPower(robot.clawClose);
-//                    robot.ClawPower = robot.clawClose;
-//                }
-//            }
-//            else{
-//                if(gamepad2.x && robot.clawMotor.getCurrentPosition() <= clawMin){
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//                else{
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//            }
-//
-//            if (gamepad2.b && robot.clawMotor.getCurrentPosition() < clawMax) {
-//                if (robot.ClawPower != robot.clawOpen) {
-//                    robot.clawMotor.setPower(robot.clawOpen);
-//                    robot.ClawPower = robot.clawOpen;
-//                }
-//            }
-//            else{
-//                if(gamepad2.b && robot.clawMotor.getCurrentPosition() >= clawMax){
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//                else{
-//                    if (robot.ClawPower != robot.clawStill) {
-//                        robot.clawMotor.setPower(robot.clawStill);
-//                        robot.ClawPower = robot.clawStill;
-//                    }
-//                }
-//            }
-//
-//            if (!gamepad2.b && !gamepad2.x) {
-//                if (robot.ClawPower != robot.clawStill) {
-//                    robot.clawMotor.setPower(robot.clawStill);
-//                    robot.ClawPower = robot.clawStill;
-//                }
-//            }
 
         /* Vertical Arm Motor */
             if (gamepad2.dpad_up && robot.verticalArmMotor.getCurrentPosition() < verticalMax) {
@@ -327,7 +277,6 @@ public class FinalPerfectTeleopWithBumpers extends LinearOpMode {
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
-
 
     /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
