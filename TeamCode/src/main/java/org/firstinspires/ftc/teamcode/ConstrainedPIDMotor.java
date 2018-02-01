@@ -19,6 +19,7 @@ public class ConstrainedPIDMotor {
     int lockPos;
     double forwardRunSpeed;
     double backwardRunSpeed;
+    double lockPositionSpeed;
     int min;
     int max;
     int encoderOffset;
@@ -28,11 +29,12 @@ public class ConstrainedPIDMotor {
     Integer targetPos;
 
     public ConstrainedPIDMotor(DcMotor m, int t, double forwardRunSpeed, double backwardRunSpeed,
-                               int min, int max, Telemetry tel) {
+                               int min, int max, Telemetry tel, double lS) {
         this.m = m;
         timeTillLock = t;
         this.forwardRunSpeed = forwardRunSpeed;
         this.backwardRunSpeed = backwardRunSpeed;
+        this.lockPositionSpeed = lS;
         timer = new ElapsedTime();
         this.min = min;
         this.max = max;
@@ -89,7 +91,7 @@ public class ConstrainedPIDMotor {
                     }
                     m.setPower(0);
                 } else {
-                    goToPos(lockPos, 1.0, false, 0);
+                    goToPos(lockPos, lockPositionSpeed, false, 0);
                 }
                 break;
 
