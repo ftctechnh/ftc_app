@@ -816,12 +816,14 @@ public class NewRobotFinal
 
     public void fineAdjGrabber(float in)
     {
-             grabber.setPosition(grabber.getPosition() + in);
+        double newGrabberPos = grabber.getPosition() + in;
+        grabber.setPosition(newGrabberPos);
     }
 
     public void fineAdjGrabberRotator(float in)
     {
-        grabberRotator.setPosition(grabberRotator.getPosition() + in);
+        double newRotatorPos = grabberRotator.getPosition() + in;
+        grabberRotator.setPosition(newRotatorPos);
     }
 
     public void stopAllMotors()
