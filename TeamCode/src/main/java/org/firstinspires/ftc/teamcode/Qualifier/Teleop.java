@@ -512,27 +512,28 @@ public class Teleop extends OpMode {
 //    private String configFileName = "8045TeleOp.txt";
 //    private String directoryPath = "/sdcard/FIRST/";
          String teleOpFilePath = "/sdcard/FIRST/8045TeleOp.txt";
-
+         File tmpDir = new File(teleOpFilePath);
 //        telemetry.addLine("Reading from file method");
 //        telemetry.update();
+        if (tmpDir.exists() ) {
+            try {
+                FileReader fr = new FileReader(teleOpFilePath);
+                BufferedReader br = new BufferedReader(fr);
+                String s;
 
-        try {
-            FileReader fr = new FileReader(teleOpFilePath);
-            BufferedReader br = new BufferedReader(fr);
-            String s;
-
-            while ((s = br.readLine()) != null ) {                // no Loop, but this checks for the end of the file
+                while ((s = br.readLine()) != null) {                // no Loop, but this checks for the end of the file
 //                double elbowtime = Double.parseDouble(br.readLine());
-                elbowtime = Integer.parseInt(br.readLine());          //read elbow time
+                    elbowtime = Integer.parseInt(br.readLine());          //read elbow time
+                }
+
+
+                fr.close();                                            // close the file
+
+            } catch (IOException ex) {
+                System.err.println("Couldn't read this: " + teleOpFilePath);//idk where this is printing
+
             }
-
-
-
-
-            fr.close();                                            // close the file
-
-        } catch (IOException ex) {
-            System.err.println("Couldn't read this: " + teleOpFilePath);//idk where this is printing
+        }else{
             writeTeleDataToTxtFile(context);
         }
     }
