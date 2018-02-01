@@ -61,7 +61,7 @@ public class Systems {
         sleep(250);
         ForkLift.moveMotor(1, 250);
     }
-    private void sleep(long time) {
+    static void sleep(long time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {}
