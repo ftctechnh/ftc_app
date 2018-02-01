@@ -126,7 +126,7 @@ public class AutoDrive {
         RearRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    private void stopMotors() {
+    public void stopMotors() {
         driveSpeeds(0, 0, 0, 0);
     }
 

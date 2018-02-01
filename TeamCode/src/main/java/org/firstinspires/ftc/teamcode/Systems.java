@@ -138,4 +138,10 @@ public class Systems {
             Thread.sleep(time);
         } catch (InterruptedException e) {}
     }
+
+    public void stopAll() {
+        AutoDrive.stopMotors();
+        ForkLift.moveMotor(0);
+        RelicClaw.moveMotor(0);
+    }
 }

@@ -15,7 +15,7 @@ public class JewelArm {
     public Servo endServo;
     ColorSensor cs;
     private final double DOWN_POSITION = 0;
-    private final double UP_POSITION = 1;
+    private final double UP_POSITION = 0.035;
     private final double RIGHT_POSITION = 1;
     private final double LEFT_POSITION = 0;
     private Telemetry telemetry;
