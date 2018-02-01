@@ -57,10 +57,18 @@ public class christianControlsV2 extends LinearOpMode {
         double clawActiveTimeInSec = 0;
         boolean clawActive = false;
         double elapsedTime;
+        boolean prepareClamp = true;
 
         //Always True
         while (opModeIsActive() ) {
             elapsedTime = runtime.time();
+            
+            if(prepareClamp)
+            {
+                rightClampServo.setPosition(0);
+                prepareClamp = false;
+            }
+
             // on gamepad movement (controls robot wheel movment)
             if(gamepad1.right_trigger > .5) {
                 driveStright(.9);
