@@ -85,7 +85,7 @@ public class MenuFileHandler {
     public void initializeNTransferValues(Boolean init) {
 
         if (init) {
-            menulabel[0] = "Team Color";
+            menulabel[0] = "Team Color (1)";
             menuvalue[0] = 1;
             menulowerlimit[0] = 0;
             menuupperlimit[0] = 1;
@@ -96,7 +96,7 @@ public class MenuFileHandler {
         teamIsRed = (menuvalue[0] == 1);
 
         if (init) {
-            menulabel[1] = "Start Position";
+            menulabel[1] = "Start Position (1)";
             menuvalue[1] = 1;
             menulowerlimit[1] = 0;
             menuupperlimit[1] = 1;
@@ -107,7 +107,7 @@ public class MenuFileHandler {
         startPositionIsFront = (menuvalue[1] == 1);
 
         if (init) {
-            menulabel[2] = "Mode";
+            menulabel[2] = "Mode (0)";
             menuvalue[2] = 0;
             menulowerlimit[2] = 0;
             menuupperlimit[2] = 3;
@@ -120,7 +120,7 @@ public class MenuFileHandler {
         mode = menuvalue[2];
 
         if (init) {
-            menulabel[3] = "Drive Speed  ";
+            menulabel[3] = "Drive Speed (0.5) ";
             menuvalue[3] = 0.5;
             menulowerlimit[3] =  0;
             menuupperlimit[3] = 2;
@@ -129,7 +129,7 @@ public class MenuFileHandler {
         DriveSpeed = menuvalue[3];
 
         if (init) {
-            menulabel[4] = "RED Front Distance 1 RIGHT";
+            menulabel[4] = "RED Front Distance 1 RIGHT (-34.0)";
             menuvalue[4] = -34;
             menulowerlimit[4] = -70;
             menuupperlimit[4] =  70;
@@ -138,8 +138,8 @@ public class MenuFileHandler {
         RedFrontDistance1Right = menuvalue[4];
 
         if (init) {
-            menulabel[5] = "RED Front Distance 1 CENTER";
-            menuvalue[5] = -34 - 10;
+            menulabel[5] = "RED Front Distance 1 CENTER (-44.0)";
+            menuvalue[5] = -44;
             menulowerlimit[5] = -70;
             menuupperlimit[5] =  70;
             menuincrement[5] = 0.5;
@@ -147,8 +147,8 @@ public class MenuFileHandler {
         RedFrontDistance1Center = menuvalue[5];
 
         if (init) {
-            menulabel[6] = "RED Front Distance 1 LEFT";
-            menuvalue[6] = -34 - 19;
+            menulabel[6] = "RED Front Distance 1 LEFT (-53.5)";
+            menuvalue[6] = -53.5;
             menulowerlimit[6] = -70;
             menuupperlimit[6] =  70;
             menuincrement[6] = 0.5;
@@ -156,7 +156,7 @@ public class MenuFileHandler {
         RedFrontDistance1Left = menuvalue[6];
 
         if (init) {
-            menulabel[7] = "RED Front Heading 1";
+            menulabel[7] = "RED Front Heading 1 (0)";
             menuvalue[7] = 0;
             menulowerlimit[7] = -180;
             menuupperlimit[7] =  180;
@@ -165,7 +165,7 @@ public class MenuFileHandler {
         RedFrontHeading1 = menuvalue[7];
 
         if (init) {
-            menulabel[8] = "RED Front Turn    1";
+            menulabel[8] = "RED Front Turn 1 (-90.0)";
             menuvalue[8] = -90;
             menulowerlimit[8] = -180;
             menuupperlimit[8] =  180;
@@ -174,7 +174,7 @@ public class MenuFileHandler {
         RedFrontTurn1 = menuvalue[8];
 
         if (init) {
-            menulabel[9] = "RED Front Distance 2";
+            menulabel[9] = "RED Front Distance 2 (-9.0)";
             menuvalue[9] = -9;
             menulowerlimit[9] = -70;
             menuupperlimit[9] =  70;
@@ -183,7 +183,7 @@ public class MenuFileHandler {
         RedFrontDistance2 = menuvalue[9];
 
         if (init) {
-            menulabel[10] = "RED Front Heading 2";
+            menulabel[10] = "RED Front Heading 2 (-90)";
             menuvalue[10] = -90;
             menulowerlimit[10] = -180;
             menuupperlimit[10] =  180;
@@ -192,7 +192,7 @@ public class MenuFileHandler {
         RedFrontHeading2 = menuvalue[10];   //fb 3-7
 
         if (init) {
-            menulabel[11] = "BLUE Front Distance 1 RIGHT";
+            menulabel[11] = "BLUE Front Distance 1 RIGHT (55.0)";
             menuvalue[11] = 55;
             menulowerlimit[11] = -70;
             menuupperlimit[11] =  70;
@@ -201,7 +201,7 @@ public class MenuFileHandler {
         BlueFrontDistance1Right = menuvalue[11];
 
         if (init) {
-            menulabel[12] = "BLUE Front Distance 1 CENTER";
+            menulabel[12] = "BLUE Front Distance 1 CENTER (45.5)";
             menuvalue[12] = 45.5;
             menulowerlimit[12] = -70;
             menuupperlimit[12] =  70;
@@ -210,7 +210,7 @@ public class MenuFileHandler {
         BlueFrontDistance1Center = menuvalue[12];
 
         if (init) {
-            menulabel[13] = "BLUE Front Distance 1 LEFT";
+            menulabel[13] = "BLUE Front Distance 1 LEFT (36.0)";
             menuvalue[13] = 36;
             menulowerlimit[13] = -70;
             menuupperlimit[13] =  70;
@@ -219,7 +219,7 @@ public class MenuFileHandler {
         BlueFrontDistance1Left = menuvalue[13];
 
         if (init) {
-            menulabel[14] = "BLUE Front Heading 1";
+            menulabel[14] = "BLUE Front Heading 1 (0)";
             menuvalue[14] = 0;
             menulowerlimit[14] = -180;
             menuupperlimit[14] =  180;
@@ -228,7 +228,7 @@ public class MenuFileHandler {
        BlueFrontHeading1 = menuvalue[14];
 
         if (init) {
-            menulabel[15] = "BLUE Front Turn    1";
+            menulabel[15] = "BLUE Front Turn 1 (-90)";
             menuvalue[15] = -90;
             menulowerlimit[15] = -180;
             menuupperlimit[15] =  180;
@@ -237,7 +237,7 @@ public class MenuFileHandler {
         BlueFrontTurn1 = menuvalue[15];
 
         if (init) {
-            menulabel[16] = "BLUE Front Distance 2";
+            menulabel[16] = "BLUE Front Distance 2 (-9.0)";
             menuvalue[16] = -9;
             menulowerlimit[16] = -70;
             menuupperlimit[16] =  70;
@@ -246,7 +246,7 @@ public class MenuFileHandler {
         BlueFrontDistance2 = menuvalue[16];
 
         if (init) {
-            menulabel[17] = "BLUE Front Heading 2";
+            menulabel[17] = "BLUE Front Heading 2 (-90)";
             menuvalue[17] =  -90;
             menulowerlimit[17] = -180;
             menuupperlimit[17] =  180;
@@ -255,7 +255,7 @@ public class MenuFileHandler {
        BlueFrontHeading2 = menuvalue[17];
 
         if (init) {
-            menulabel[18] = "RED Back Distance 1";
+            menulabel[18] = "RED Back Distance 1 (-30.0)";
             menuvalue[18] = -30;
             menulowerlimit[18] = -70;
             menuupperlimit[18] =  70;
@@ -264,7 +264,7 @@ public class MenuFileHandler {
        RedBackDistance1 = menuvalue[18];
 
         if (init) {
-            menulabel[19] = "RED Back Heading 1";
+            menulabel[19] = "RED Back Heading 1 (0.0)";
             menuvalue[19] = 0;
             menulowerlimit[19] = -180;
             menuupperlimit[19] =  180;
@@ -273,7 +273,7 @@ public class MenuFileHandler {
         RedBackHeading1 = menuvalue[19];
 
         if (init) {
-            menulabel[20] = "RED Back Distance 2 RIGHT";
+            menulabel[20] = "RED Back Distance 2 RIGHT (7.0)";
             menuvalue[20] = 7;
             menulowerlimit[20] = -70;
             menuupperlimit[20] =  70;
@@ -282,8 +282,8 @@ public class MenuFileHandler {
         RedBackDistance2Right = menuvalue[20];
        
         if (init) {
-            menulabel[21] = "RED Back Distance 2 CENTER";
-            menuvalue[21] = 7 + 10.5;
+            menulabel[21] = "RED Back Distance 2 CENTER (17.5)";
+            menuvalue[21] =  17.5;
             menulowerlimit[21] = -70;
             menuupperlimit[21] =  70;
             menuincrement[21] = 0.5;
@@ -291,8 +291,8 @@ public class MenuFileHandler {
         RedBackDistance2Center = menuvalue[21];
         
         if (init) {
-            menulabel[22] = "RED Back Distance 2 LEFT";
-            menuvalue[22] = 7 + 22;
+            menulabel[22] = "RED Back Distance 2 LEFT (29.0)";
+            menuvalue[22] = 29.0;
             menulowerlimit[22] = -70;
             menuupperlimit[22] =  70;
             menuincrement[22] = 0.5;
@@ -300,7 +300,7 @@ public class MenuFileHandler {
         RedBackDistance2Left = menuvalue[22];
 
         if (init) {
-            menulabel[23] = "RED Back Heading 2";
+            menulabel[23] = "RED Back Heading 2 (0)";
             menuvalue[23] = 0;
             menulowerlimit[23] = -180;
             menuupperlimit[23] =  180;
@@ -309,7 +309,7 @@ public class MenuFileHandler {
         RedBackHeading2 = menuvalue[23];
 
         if (init) {
-            menulabel[24] = "RED Back Distance 3 Right";
+            menulabel[24] = "RED Back Distance 3 Right (-9.0)";
             menuvalue[24] = -9;
             menulowerlimit[24] = -70;
             menuupperlimit[24] =  70;
@@ -318,7 +318,7 @@ public class MenuFileHandler {
         RedBackDistance3 = menuvalue[24];
 
         if (init) {
-            menulabel[25] = "RED Back Heading 3";
+            menulabel[25] = "RED Back Heading 3 (0)";
             menuvalue[25] = 0;
             menulowerlimit[25] = -180;
             menuupperlimit[25] =  180;
@@ -327,8 +327,8 @@ public class MenuFileHandler {
         RedBackHeading3 = menuvalue[25];
 
         if (init) {
-            menulabel[26] = "BLUE Back Distance 1";
-            menuvalue[26] = 30;
+            menulabel[26] = "BLUE Back Distance 1 (32.0)";
+            menuvalue[26] = 32;
             menulowerlimit[26] = -70;
             menuupperlimit[26] =  70;
             menuincrement[26] = 0.5;
@@ -336,7 +336,7 @@ public class MenuFileHandler {
         BlueBackDistance1 = menuvalue[26];
 
         if (init) {
-            menulabel[27] = "BLUE Back Heading 1";
+            menulabel[27] = "BLUE Back Heading 1 (0)";
             menuvalue[27] = 0;
             menulowerlimit[27] = -180;
             menuupperlimit[27] =  180;
@@ -345,7 +345,7 @@ public class MenuFileHandler {
         BlueBackHeading1 = menuvalue[27];
 
         if (init) {
-            menulabel[28] = "BLUE Back Distance 2 LEFT";
+            menulabel[28] = "BLUE Back Distance 2 LEFT (7.5)";
             menuvalue[28] = 7.5;
             menulowerlimit[28] = -70;
             menuupperlimit[28] =  70;
@@ -354,7 +354,7 @@ public class MenuFileHandler {
         BlueBackDistance2Left = menuvalue[28];
 
         if (init) {
-            menulabel[29] = "BLUE Back Distance 2 CENTER";
+            menulabel[29] = "BLUE Back Distance 2 CENTER (20.0)";
             menuvalue[29] = 20.0;
             menulowerlimit[29] = -70;
             menuupperlimit[29] =  70;
@@ -363,8 +363,8 @@ public class MenuFileHandler {
         BlueBackDistance2Center = menuvalue[29];
 
         if (init) {
-            menulabel[30]= "BLUE Back Distance 2 RIGHT";
-            menuvalue[30] = 33.0;
+            menulabel[30]= "BLUE Back Distance 2 RIGHT (32.5)";
+            menuvalue[30] = 32.5;
             menulowerlimit[30] = -70;
             menuupperlimit[30] =  70;
             menuincrement[30] = 0.5;
@@ -372,7 +372,7 @@ public class MenuFileHandler {
         BlueBackDistance2Right = menuvalue[30];
 
         if (init) {
-            menulabel[31]= "BLUE Back Heading 2";
+            menulabel[31]= "BLUE Back Heading 2 (0)";
             menuvalue[31]= 0;
             menulowerlimit[31]= -180;
             menuupperlimit[31]=  180;
@@ -382,7 +382,7 @@ public class MenuFileHandler {
 
         // need a turn180 here
         if (init) {
-            menulabel[32] = "*BLUE Back Turn   3";
+            menulabel[32] = "*BLUE Back Turn   3 (180)";
             menuvalue[32] = 180;
             menulowerlimit[32] = -180;
             menuupperlimit[32] =  180;
@@ -392,8 +392,8 @@ public class MenuFileHandler {
 
 
         if (init) {
-            menulabel[33] = "BLUE Back Distance 3";
-            menuvalue[33] = -12;
+            menulabel[33] = "BLUE Back Distance 3 (-10)";
+            menuvalue[33] = -10;
             menulowerlimit[33] = -70;
             menuupperlimit[33] =  70;
             menuincrement[33] = 0.5;
@@ -401,7 +401,7 @@ public class MenuFileHandler {
         BlueBackDistance3 = menuvalue[33];
 
         if (init) {
-            menulabel[34] = "BLUE Back Heading 3";
+            menulabel[34] = "BLUE Back Heading 3 (-180)";
             menuvalue[34] = -180;
             menulowerlimit[34] = -180;
             menuupperlimit[34] =  180;

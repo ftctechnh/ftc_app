@@ -1,12 +1,22 @@
 package org.firstinspires.ftc.teamcode.Qualifier;
 
 
+import android.content.Context;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import RicksCode.Bill_Adapted.ConfigFileHandler;
 
 import static java.lang.Math.PI;
 import static java.lang.Math.abs;
@@ -22,6 +32,9 @@ import static java.lang.Math.atan;
 public class Teleop extends OpMode {
 
     RobotRR gromit;
+
+    // variables used during the configuration process
+
     double turnDirection;
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -71,7 +84,8 @@ public class Teleop extends OpMode {
     boolean reliczeroing = false;
     double relicspeed = .6;
 
-
+    // file variables
+    public int elbowtime =1444;
 
     @Override
     public void init() {
@@ -82,7 +96,8 @@ public class Teleop extends OpMode {
 
         turnDirection = 1;
         timeLeft = 120;
-
+//        writeTeleDataToTxtFile(hardwareMap.appContext);
+        readTeleDataFromTxtFile(hardwareMap.appContext);
 //       lastLoadTime = -10000;
     }
 
@@ -97,6 +112,7 @@ public class Teleop extends OpMode {
 
         double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
         double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+        telemetry.addData("ElbowTime from file",elbowtime);
         telemetry.addData("Sharp IR V ", sharpIRVoltage);
         telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
         RobotLog.ii("[Gromit] IR", Double.toString(IRdistance) );
@@ -487,6 +503,65 @@ public class Teleop extends OpMode {
         gromit.glyphTrain.stopGlyphMotors();
         gromit.glyphTrain.lift_motor.setPower(0.0);
         //               gromit.relicArm.stoprelic...
+    }
+
+
+    public void readTeleDataFromTxtFile(Context context) {
+        // setup initial configuration parameters here
+        //initializeValues();
+//    private String configFileName = "8045TeleOp.txt";
+//    private String directoryPath = "/sdcard/FIRST/";
+         String teleOpFilePath = "/sdcard/FIRST/8045TeleOp.txt";
+
+//        telemetry.addLine("Reading from file method");
+//        telemetry.update();
+
+        try {
+            FileReader fr = new FileReader(teleOpFilePath);
+            BufferedReader br = new BufferedReader(fr);
+            String s;
+
+            while ((s = br.readLine()) != null ) {                // no Loop, but this checks for the end of the file
+//                double elbowtime = Double.parseDouble(br.readLine());
+                elbowtime = Integer.parseInt(br.readLine());          //read elbow time
+            }
+
+
+
+
+            fr.close();                                            // close the file
+
+        } catch (IOException ex) {
+            System.err.println("Couldn't read this: " + teleOpFilePath);//idk where this is printing
+            writeTeleDataToTxtFile(context);
+        }
+    }
+
+    public boolean writeTeleDataToTxtFile(Context context) {
+        // may want to write configuration parameters to a file here if they are needed for teleop too!
+//        String fileName = "test.txt";
+//        String directoryPath = "/sdcard/FIRST/";
+//        String filePath = directoryPath + fileName;
+        new File("/sdcard/FIRST/").mkdir();        // Make sure that the directory exists
+        String teleOpFilePath = "/sdcard/FIRST/8045TeleOp.txt";
+
+        int i=0;
+        try {
+            FileWriter fw = new FileWriter(teleOpFilePath);
+                fw.write(("Elbow Time (mseconds)" + "\n"));
+                fw.write((elbowtime + "\n"));
+
+            fw.close();
+            return true;
+
+        } catch (IOException ex) {
+            System.err.println("Couldn't write this file: "+teleOpFilePath);
+            return false;
+        }
+        //telemetry.addData("ConfigFile saved to", filePath);
+        //telemetry.update();
+        //sleep(500);
+
     }
 
 }
