@@ -100,11 +100,13 @@ public class GlyphTrain {
     void glyphclamp(String moveto) {
         double clampRange = 0.4;
         if (moveto == "open") {
+//            leftlower.setPosition(0.45);
+//            rightlower.setPosition(0.50); //glyph open
             leftlower.setPosition(0.45);
             rightlower.setPosition(0.50); //glyph open
         } else if (moveto == "close") {
-            leftlower.setPosition(0.45 - clampRange);
-            rightlower.setPosition(0.50 + clampRange);
+            leftlower.setPosition(0.05);
+            rightlower.setPosition(0.9);
         }
     }
 

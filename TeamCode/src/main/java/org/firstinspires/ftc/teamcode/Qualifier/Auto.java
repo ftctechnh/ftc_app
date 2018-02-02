@@ -354,7 +354,9 @@ public class Auto extends LinearOpMode {
             sleep(400);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedFrontHeading2,0);
 
-
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.RedFrontHeading2, -90);  //-90    strafe (strafe is never as long)
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.RedFrontHeading2,0);    // forward
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedFrontHeading2,0);    // back up
 
 
         } else if (!menuFile.teamIsRed && menuFile.startPositionIsFront ){               /** BLUE Front  */
@@ -373,7 +375,7 @@ public class Auto extends LinearOpMode {
             sleep(400);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);    // back up
 
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.RedBackHeading2, -90);  //-90    strafe (strafe is never as long)
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.BlueFrontHeading2, -90);  //-90    strafe (strafe is never as long)
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.BlueFrontHeading2,0);    // forward
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);    // back up
 
@@ -394,6 +396,10 @@ public class Auto extends LinearOpMode {
             sleep(400);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedBackHeading3,0);
 
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.RedBackHeading3, -90);  //-90    strafe (strafe is never as long)
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.RedBackHeading3,0);    // forward
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedBackHeading3,0);    // back up
+
         } else if ( !menuFile.teamIsRed && !menuFile.startPositionIsFront ){                 /** BLUE Back  */     //  back  4, 14, 26
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  // drive off stone
             double distance2 = menuFile.BlueBackDistance2Left;
@@ -413,6 +419,10 @@ public class Auto extends LinearOpMode {
             gromit.glyphTrain.glyphclamp("open");
             sleep(400);
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueBackHeading3,0);
+
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.BlueBackHeading3, -90);  //-90    strafe (strafe is never as long)
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.BlueBackHeading3,0);    // forward
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueBackHeading3,0);    // back up
 
         }
 
