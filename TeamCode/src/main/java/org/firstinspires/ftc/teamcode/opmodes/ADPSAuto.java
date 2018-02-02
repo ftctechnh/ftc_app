@@ -168,6 +168,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             }
             else {
+                //TODO: implement encoder count backup autonmatically
                 findPilliar.add(new UltraHoneStep(this, red ? backUltra : frontUltra, 200, 5, 5, new SensorLib.PID(0.5f, 0.15f, 0, 10), step));
                 findPilliar.add(new AutoLib.GyroTurnStep(this, red ? 90 : -90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             }
@@ -179,6 +180,7 @@ public class ADPSAuto extends VuforiaBallLib {
             if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 360.0f);
             else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 360.0f);
             final APDS9960 dist = red ? backDist : frontDist;
+            //TODO: add camera fallback
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.65, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
                     30, 10, path.skipCount, 30, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
