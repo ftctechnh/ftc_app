@@ -5,6 +5,8 @@ package org.firstinspires.ftc.teamcode;
  */
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -22,6 +24,10 @@ public class BeehiveVuforia {
     private VuforiaTrackable relicTemplate;
     private VuforiaTrackables relicTrackables;
     private ElapsedTime time;
+    private Servo servo;
+    private final double LEFT_POSITION = 0;
+    private final double RIGHT_POSITION = 1;
+    private final double MIDDLE_POSITION = 0.5;
     public BeehiveVuforia(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -37,13 +43,24 @@ public class BeehiveVuforia {
     }
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
-        boolean tryAgain = false;
         time.start();
         while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
-       // if(time.getElapsedTime())
-        return null;
+        if(time.getElapsedTime()<=3000) {
+          setServoPosition(LEFT_POSITION);
+          time.start();
+          while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+          }
+        }
+        setServoPosition(MIDDLE_POSITION);
+        telemetry.addData("Pictograph", "%s visible", vuMark);
+        telemetry.update();
+        return vuMark;
       }
-
+    public void setServoPosition(double position) {
+      servo.setPosition(position);
+      servo.setPosition(position);
+    }
 }
