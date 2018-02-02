@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "Delta_TeleOp")
+@TeleOp(name = "Delta_TeleOp_main")
 //@Disabled
 public class Delta_TeleOp_Main extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.

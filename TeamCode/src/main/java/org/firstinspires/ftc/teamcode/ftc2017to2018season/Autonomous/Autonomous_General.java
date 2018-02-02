@@ -109,7 +109,6 @@ public class Autonomous_General extends LinearOpMode {
         ENCODERS_PER_DEGREE = ((COUNTS_PER_MOTOR_REV * ((RobotWidth*Math.PI)/WHEEL_PERIMETER_CM))/360);
         ENCODERSPER360 = 5645;
 
-
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
