@@ -288,8 +288,9 @@ public class Auto extends LinearOpMode {
         if(menuFile.mode == 3){   //  test mode
 //            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
 //            gromit.driveTrain.mecanumDrive();
+            RobotLog.vv("[Gromit] IR", "Begin" );
 
-            while(runtime.milliseconds() <2000) {
+            while(runtime.milliseconds() <3000) {
                 gromit.driveTrain.left_rear.setPower(0.5);
                 gromit.driveTrain.left_front.setPower(0.5);
                 gromit.driveTrain.right_rear.setPower(0.5);
@@ -300,6 +301,7 @@ public class Auto extends LinearOpMode {
 //                Log.d("[Gromi2] IR",Double.toString(IRdistance));
                 idle();
             }
+            RobotLog.vv("[Gromit] IR", "End" );
             gromit.driveTrain.stopMotors();
 
             while (opModeIsActive()) {
