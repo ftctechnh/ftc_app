@@ -42,6 +42,8 @@ public class BeehiveVuforia {
         while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
-        if(time.getElapsedTime())
+       // if(time.getElapsedTime())
+        return null;
       }
+
 }
