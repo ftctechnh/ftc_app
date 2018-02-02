@@ -22,6 +22,9 @@ public class BeehiveVuforia {
     private VuforiaTrackable relicTemplate;
     private VuforiaTrackables relicTrackables;
     private ElapsedTime time;
+    private Servo servo;
+    private final double LEFT_POSITION = 0;
+    private final double RIGHT_POSITION = 1;
     public BeehiveVuforia(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
@@ -42,6 +45,21 @@ public class BeehiveVuforia {
         while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
-        if(time.getElapsedTime())
+        if(time.getElapsedTime()<=3000) {
+          tryAgain = true;
+          setServoPosition(LEFT_POSITION);
+          time.start();
+          while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+          }
+        }
+        if(tryAgain) {
+          setServoPosition(MIDDLE_POSITION);
+        }
+        return vuMark;
       }
+    public void setServoPosition(double position) {
+      servo.setPosition(position);
+      servo.setPosition(position);
+    }
 }
