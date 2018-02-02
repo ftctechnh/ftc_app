@@ -123,13 +123,13 @@ public class WestAutonomous1 extends OpMode
             if (l >= 2) {
                 if ((colors[0] >= 2) && (colors[1] <= 5) && (colors[2] <= 5)){
                     rotate(true);
-                    done = true;
                     rotate(false);
+                    done = true;
                 }
                 else if ((colors[0] <= 5) && (colors[1] <= 5) && (colors[2] >= 2)){
                     rotate(false);
+                    rotate(true);
                     done = true;
-                    rotate(false);
                 }
 
             }
@@ -168,7 +168,7 @@ public class WestAutonomous1 extends OpMode
 
         rotate(false);
 
-        move(-ret);
+        move(ret);
 
 
 
@@ -205,6 +205,8 @@ public class WestAutonomous1 extends OpMode
         else{
             m1.setTargetPosition(-rotatePos);
             m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            power = -0.2;
         }
 
         while (m1.isBusy()) {
@@ -252,6 +254,15 @@ public class WestAutonomous1 extends OpMode
             drop1.setPosition(current1);
             drop2.setPosition(current2);
         }
+
+
+        while ((current1 <= 1) || (current2 >= 0)){
+            current1 = (current1 < 1)? current1 + interval:current1;
+            current2 = (current2 > 0)? current2 - interval:current2;
+            drop1.setPosition(current1);
+            drop2.setPosition(current2);
+        }
+
     }
 
 

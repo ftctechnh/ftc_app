@@ -126,7 +126,7 @@ public class WestAutonomous2 extends OpMode
                 else if ((colors[0] <= 5) && (colors[1] <= 5) && (colors[2] >= 2)){
                     rotate(false);
                     done = true;
-                    rotate(false);
+                    rotate(true);
                 }
 
             }
@@ -255,6 +255,17 @@ public class WestAutonomous2 extends OpMode
         while ((current1 >= drop1Min) || (current2 <= drop2Max)){
             current1 = (current1 > drop1Min)? current1 - interval:current1;
             current2 = (current2 < drop2Max)? current2 + interval:current2;
+            drop1.setPosition(current1);
+            drop2.setPosition(current2);
+        }
+
+        for (int i = 0; i <= 1000000;i++){
+            i = i;
+        }
+
+        while ((current1 <= 1) || (current2 >= 0)){
+            current1 = (current1 < 1)? current1 + interval:current1;
+            current2 = (current2 > 0)? current2 - interval:current2;
             drop1.setPosition(current1);
             drop2.setPosition(current2);
         }
