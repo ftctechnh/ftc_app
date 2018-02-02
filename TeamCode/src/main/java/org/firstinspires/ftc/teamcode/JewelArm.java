@@ -54,6 +54,7 @@ public class JewelArm {
     }
     public void findJewel(Color allianceColor) {
         down();
+        Systems.sleep(1000);
         ElapsedTime time = new ElapsedTime();
         time.start();
         boolean tryAgain = false;
