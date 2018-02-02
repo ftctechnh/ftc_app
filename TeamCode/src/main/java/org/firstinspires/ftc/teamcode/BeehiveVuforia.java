@@ -39,6 +39,7 @@ public class BeehiveVuforia {
         relicTemplate = relicTrackables.get(0);
         time = new ElapsedTime();
         vuMark = RelicRecoveryVuMark.UNKNOWN;
+        servo = hardwareMap.servo.get("s7");
     }
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
