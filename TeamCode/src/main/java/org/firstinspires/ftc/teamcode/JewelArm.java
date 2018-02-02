@@ -52,7 +52,7 @@ public class JewelArm {
         up();
         cs.enableLed(true);
     }
-    
+
     public void findJewel(Color allianceColor) {
         down();
         Systems.sleep(1000);

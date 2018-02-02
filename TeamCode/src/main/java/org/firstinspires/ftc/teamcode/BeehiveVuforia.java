@@ -37,12 +37,11 @@ public class BeehiveVuforia {
     }
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
+        boolean tryAgain = false;
         time.start();
-        while (time.getElapsedTime() < 3000 && vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
+          vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
-        telemetry.addData("Pictograph", "%s visible", vuMark);
-        telemetry.update();
-        return vuMark;
-    }
+        if(time.getElapsedTime())
+      }
 }
