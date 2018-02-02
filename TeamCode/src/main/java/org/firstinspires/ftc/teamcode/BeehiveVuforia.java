@@ -16,7 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class BeehiveVuforia {
-    private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia;
     private RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.UNKNOWN;
     private HardwareMap hardwareMap;
