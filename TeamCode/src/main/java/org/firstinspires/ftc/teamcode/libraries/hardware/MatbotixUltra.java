@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.libraries.hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cWaitControl;
 import com.qualcomm.robotcore.hardware.TimestampedData;
 import com.qualcomm.robotcore.hardware.TimestampedI2cData;
+import com.qualcomm.robotcore.hardware.UltrasonicSensor;
 
 import java.sql.Time;
 import java.util.concurrent.TimeUnit;
@@ -32,18 +34,16 @@ public class MatbotixUltra {
 
     private final I2cDeviceSynch sensor;
     private final long waitNanos;
-    private final OpMode mode;
 
     private long lastTime = 0;
 
-    public MatbotixUltra(I2cDeviceSynch sensor, int waitMillis, OpMode mode) {
+    public MatbotixUltra(I2cDeviceSynch sensor, int waitMillis) {
         this.sensor = sensor;
         this.waitNanos = TimeUnit.MILLISECONDS.toNanos(waitMillis);
-        this.mode = mode;
     }
 
     MatbotixUltra(I2cDeviceSynch sensor) {
-        this(sensor, 0, null);
+        this(sensor, 90);
     }
 
     public void initDevice() {
@@ -51,9 +51,12 @@ public class MatbotixUltra {
         sensor.engage();
         //setup address
         sensor.setI2cAddress(I2cAddr.create7bit(ADDR));
+        sensor.waitForWriteCompletions(I2cWaitControl.WRITTEN);
     }
 
     public void startDevice() {
+        //the below line will generate a NACK
+        //I'm hoping all this will mean is more logs
         sensor.write8(Regs.RANGE_TAKE.REG, 0);
         lastTime = System.nanoTime();
     }
@@ -66,7 +69,11 @@ public class MatbotixUltra {
                 catch (InterruptedException e) { /* hmmmm */ }
             }
         }
-        TimestampedData data = sensor.readTimeStamped(Regs.RANGE_TAKE.REG, 2);
+        //get the reading (will generate NACK)
+        TimestampedData data = sensor.readTimeStamped(Regs.RANGE_READ.REG, 2);
+        //tell the sensor to start measuring again (another NACK)
+        sensor.write8(Regs.RANGE_TAKE.REG, 0);
+        //cache time and return
         if(waitNanos > 0) lastTime = data.nanoTime;
         return data.data[0] << 8 | data.data[1];
     }
