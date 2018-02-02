@@ -16,8 +16,8 @@ public class JewelArm {
     ColorSensor cs;
     private final double DOWN_POSITION = 0;
     private final double UP_POSITION = 0.035;
-    private final double RIGHT_POSITION = 1;
-    private final double LEFT_POSITION = 0;
+    private final double RIGHT_POSITION = 0.15;
+    private final double LEFT_POSITION = 0.85;
     private final double MIDDLE_POSITION = 0.5;
     private final double TRY_AGAIN_POSITION = 0.35;
     private final double MIN_COLOR_DETECTION_THRESHOLD = 5;

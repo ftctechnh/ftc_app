@@ -28,6 +28,6 @@ public class jewelservotesting extends OpMode {
 
     }
     private double clip(double value) {
-        return Range.clip(value, 0, 0.035);
+        return Range.clip(value, 0, 1);
     }
 }
