@@ -34,21 +34,7 @@ public class Systems {
         ForkLift.moveUntilDown(0.75);
         AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
     }
-    public RelicRecoveryVuMark getMark() {
-        RelicRecoveryVuMark vuMark;
-        boolean tryAgain = false;
-        vuMark = vuforia.getMark();
-        if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            AutoDrive.driveTranslateRotate(0,0,-AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE);
-            vuMark = vuforia.getMark();
-            tryAgain = true;
-        }
-        if (tryAgain) {
-            AutoDrive.driveTranslateRotate(0, 0, AutoDrive.SPIN_ON_BALANCE_BOARD_SPEED, AutoDrive.FIND_VUMARK_DISTANCE);
-        }
-        return vuMark;
-    }
-    
+
     public void grabSecondGlyph() {
         ForkLift.closeClaw();
         ForkLift.moveMotor(1, 750);

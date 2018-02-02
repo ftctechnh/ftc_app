@@ -35,7 +35,7 @@ public class BlueFar extends LinearOpMode {
         sleep(200);
         ForkLift.moveMotor(1, 400);
         JewelArm.findJewel(Color.BLUE);
-        pictograph = Systems.getMark();
+        pictograph = vuforia.getMark();
         sleep(500);
         drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
         drive.rightGyro(0,0, drive.SPIN_TO_CRYPTOBOX_SPEED, -178);

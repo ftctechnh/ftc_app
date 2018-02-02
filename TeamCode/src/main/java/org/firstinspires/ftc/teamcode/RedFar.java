@@ -37,7 +37,7 @@ public class RedFar extends LinearOpMode {
         sleep(200);
         ForkLift.moveMotor(1, 300);
         JewelArm.findJewel(Color.RED);
-        pictograph = Systems.getMark();
+        pictograph = vuforia.getMark();
         sleep(500);
         drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {

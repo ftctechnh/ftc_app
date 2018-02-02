@@ -37,7 +37,7 @@ public class RedRecovery extends LinearOpMode {
         sleep(200);
         ForkLift.moveMotor(1, 300);
         JewelArm.findJewel(Color.RED);
-        pictograph = Systems.getMark();
+        pictograph = vuforia.getMark();
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
             drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
