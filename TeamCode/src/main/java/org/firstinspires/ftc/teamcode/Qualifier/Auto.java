@@ -288,11 +288,12 @@ public class Auto extends LinearOpMode {
         if(menuFile.mode == 3){   //  test mode
 //            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
 //            gromit.driveTrain.mecanumDrive();
+
             while(runtime.milliseconds() <2000) {
-                gromit.driveTrain.left_rear.setPower(0.4);
-                gromit.driveTrain.left_front.setPower(0.4);
-                gromit.driveTrain.right_rear.setPower(0.4);
-                gromit.driveTrain.right_front.setPower(0.4);
+                gromit.driveTrain.left_rear.setPower(0.5);
+                gromit.driveTrain.left_front.setPower(0.5);
+                gromit.driveTrain.right_rear.setPower(0.5);
+                gromit.driveTrain.right_front.setPower(0.5);
                 double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
                 double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
                 RobotLog.vv("[Gromit] IR", Double.toString(IRdistance) );
@@ -352,6 +353,8 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedFrontHeading2,0);
 
 
+
+
         } else if (!menuFile.teamIsRed && menuFile.startPositionIsFront ){               /** BLUE Front  */
             double distance1 = menuFile.BlueFrontDistance1Right;
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -366,7 +369,12 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.5, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2,0);
             gromit.glyphTrain.glyphclamp  ("open");
             sleep(400);
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);    // back up
+
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.RedBackHeading2, -90);  //-90    strafe (strafe is never as long)
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.BlueFrontHeading2,0);    // forward
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);    // back up
+
 
         } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */    //  back  4, 14, 26
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
@@ -385,14 +393,14 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedBackHeading3,0);
 
         } else if ( !menuFile.teamIsRed && !menuFile.startPositionIsFront ){                 /** BLUE Back  */     //  back  4, 14, 26
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  //0
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.8, menuFile.BlueBackDistance1,  menuFile.BlueBackHeading1,0);  // drive off stone
             double distance2 = menuFile.BlueBackDistance2Left;
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 distance2 = menuFile.BlueBackDistance2Center   ;
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 distance2 = menuFile.BlueBackDistance2Right ;
             }
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, distance2, menuFile.RedBackHeading2, -90);  //-90
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, distance2, menuFile.RedBackHeading2, -90);  //-90    strafe
             sleep(400);
             gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.BlueBackTurn3);   // about face 180.
             sleep(400);
