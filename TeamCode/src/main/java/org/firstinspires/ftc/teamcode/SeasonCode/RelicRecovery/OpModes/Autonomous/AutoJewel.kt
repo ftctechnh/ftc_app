@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.Autonomous
 
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
@@ -44,7 +45,7 @@ class AutoJewel : LinearOpMode()
 
         waitForStart()
 
-        sleep(_autoMenu.startDelay());
+        sleep(_autoMenu.startDelay())
 
         _autoStopper.startChecking()
 

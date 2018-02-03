@@ -111,6 +111,15 @@ public class Lift extends RobotComponent
 
 
     /**
+     * @return The lift motor
+     */
+    public DcMotor motor()
+    {
+        return _liftMotor;
+    }
+
+
+    /**
      * Outputs telemetry to current OpMode
      */
     private void _outputTelMet()
