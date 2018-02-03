@@ -199,15 +199,15 @@ class AutoBackSideBlue : LinearOpMode()
         sleep(100)
 
 
-        // Run backwards to align lmao
+        // Run backwards to align
         _base.drivetrain.driveForTime.setParams(1_000 , -.75)
         _base.drivetrain.driveForTime.runSequentially()
         sleep(100)
 
 
         // Go forward various amounts depending on VuMark
-        val NEAR_COL_DISTANCE = 19.5
-        val COL_SEPARATION = 7.6
+        val NEAR_COL_DISTANCE = 18.0
+        val COL_SEPARATION = 8.5
 
 
         when(vuMark)

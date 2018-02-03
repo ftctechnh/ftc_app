@@ -185,7 +185,7 @@ public class AutoBackSideRed extends LinearOpMode
         _base.drivetrain.driveForTime.runSequentially();
         sleep(100);
 
-        _base.drivetrain.driveTo.setParams(7.0 , .75 , 5_000);
+        _base.drivetrain.driveTo.setParams(5.0 , .75 , 5_000);
         _base.drivetrain.driveTo.runSequentially();
         sleep(100);
 
@@ -193,13 +193,13 @@ public class AutoBackSideRed extends LinearOpMode
         _base.drivetrain.turnTo.runSequentially();
         sleep(100);
 
-        // Run backwards to align lmao
+        // Run backwards to align
         _base.drivetrain.driveForTime.setParams(1_000 , -.75);
         _base.drivetrain.driveForTime.runSequentially();
         sleep(100);
 
 
-        final double NEAR_COL_DISTANCE = 17;
+        final double NEAR_COL_DISTANCE = 18;
         final double COL_SEPARATION = 8.5;
 
 
