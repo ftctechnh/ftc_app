@@ -3,41 +3,30 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Red1wGyro", group="Preciousss")
+@Autonomous(name="Preciousss: Blue1wGyro", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Red1wGyro extends LinearOpMode {
+public class Blue1wGyro extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -55,8 +44,8 @@ public class Red1wGyro extends LinearOpMode {
     Acceleration gravity;
     NormalizedColorSensor colorSensor;
     NormalizedRGBA colors;
-    boolean iAmBlue = false;
-    boolean iAmRed = true;
+    boolean iAmBlue = true;
+    boolean iAmRed = false;
     boolean isBoxSide = true;
 
 
@@ -179,15 +168,15 @@ public class Red1wGyro extends LinearOpMode {
             move(0f, -.2f, .3f);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .3f);
+            move(0f, -.2f, .25f);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, .2f, .3f);
+            move(0f, .2f, .25f);
         }
         telemetry.update();
 
-        move(0f, -0.5f, .47f);
+        move(0f, 0.5f, .6f);
 
         Wait(.5);
 
@@ -195,15 +184,11 @@ public class Red1wGyro extends LinearOpMode {
 
         Wait(1);
 
-        move(0f,-.25f,.3f);
+        move(0f,-.25f,.5f);
 
         Wait(1);
 
         Conveyor(3f);
-
-        Wait(.5);
-
-        move(0f,.25f,.3f);
 
         Wait(1);
 

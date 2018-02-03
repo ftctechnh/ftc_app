@@ -3,41 +3,30 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Red1wGyro", group="Preciousss")
+@Autonomous(name="Preciousss: Blue2wGyro", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Red1wGyro extends LinearOpMode {
+public class Blue2wGyro extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -55,8 +44,8 @@ public class Red1wGyro extends LinearOpMode {
     Acceleration gravity;
     NormalizedColorSensor colorSensor;
     NormalizedRGBA colors;
-    boolean iAmBlue = false;
-    boolean iAmRed = true;
+    boolean iAmBlue = true;
+    boolean iAmRed = false;
     boolean isBoxSide = true;
 
 
@@ -78,7 +67,6 @@ public class Red1wGyro extends LinearOpMode {
 
 
         // V u f o r i a  s e t u p
-
 
 
         // H a r d w a r e   M a p p i n g
@@ -106,20 +94,20 @@ public class Red1wGyro extends LinearOpMode {
         }
 
 
-
         // S t a r t
 
         waitForStart();
 
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            colors = colorSensor.getNormalizedColors();
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity  = imu.getGravity();
-        }
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                colors = colorSensor.getNormalizedColors();
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                gravity = imu.getGravity();
+            }
         });
 
         // J e w e l s
@@ -136,15 +124,15 @@ public class Red1wGyro extends LinearOpMode {
         Wait(1.5f);
 
 
-            telemetry.update();
-            //colors = colorSensor.getNormalizedColors();
-            float redValue = colors.red * 10000;
-            float blueValue = colors.blue * 10000;
-            telemetry.addLine()
-                    .addData("r", "%.3f", colors.red*10000)
-                    .addData("b", "%.3f", colors.blue*10000);
+        telemetry.update();
+        //colors = colorSensor.getNormalizedColors();
+        float redValue = colors.red * 10000;
+        float blueValue = colors.blue * 10000;
+        telemetry.addLine()
+                .addData("r", "%.3f", colors.red * 10000)
+                .addData("b", "%.3f", colors.blue * 10000);
 
-            //telemetry.update();
+        //telemetry.update();
 
 
         if (colors.red > colors.blue) {
@@ -162,9 +150,9 @@ public class Red1wGyro extends LinearOpMode {
                 .addData("b", "%.3f", blueValue)
                 .addData("iSeeRed", "%b", iSeeRed)
                 .addData("iSeeBlue", "%b", iSeeBlue)
-                .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
-                .addData ( "iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
-                .addData ( "Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
+                .addData("iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
+                .addData("iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
+                .addData("Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
 
         telemetry.update();
 
@@ -187,31 +175,31 @@ public class Red1wGyro extends LinearOpMode {
         }
         telemetry.update();
 
-        move(0f, -0.5f, .47f);
-
-        Wait(.5);
-
-        pivotTo(-90);
+        move(0f, 0.5f, .23f);
 
         Wait(1);
 
-        move(0f,-.25f,.3f);
+        move(-.7f, 0f, 1f);
+
+        Wait(1);
+
+        pivotTo(179);
+
+        Wait(1);
+
+        move(0f, -.25f, .2f);
 
         Wait(1);
 
         Conveyor(3f);
 
-        Wait(.5);
+        Wait(1);
 
-        move(0f,.25f,.3f);
+        move(0f, .25f, .45f);
 
         Wait(1);
 
-        move(0f,-.25f,.35f);
-
-        Wait(1);
-
-        move(0f,.25f,.25f);
+        move(0f, -.25f, .5f);
     }
 
     void move(float posx, float posy, float waitTime) {
