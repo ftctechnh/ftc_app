@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
 
 
 /**
- * Created by pahel on 1/21/18.
+ * Created by Team Inspiration on 1/21/18.
  */
 @TeleOp(name = "Curious George")
 public class curious_george_teleop extends OpMode {
@@ -34,6 +34,10 @@ public class curious_george_teleop extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
+    DcMotor relicMotor;
+    Servo relicMain;
+    Servo relicLeft;
+    Servo relicRight;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -84,11 +88,16 @@ public class curious_george_teleop extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
+        relicMain = hardwareMap.servo.get("relicMain");
+        relicLeft = hardwareMap.servo.get("relicLeft");
+        relicRight = hardwareMap.servo.get("relicRight");
+        relicMotor = hardwareMap.dcMotor.get("relicMotor");
 
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
+        relicMotor.setDirection(DcMotor.Direction.REVERSE);
 
         openGlyph();
         jewel_servo.setPosition(0.1);
@@ -136,6 +145,7 @@ public class curious_george_teleop extends OpMode {
         slideMove();
         glyphManipulator();
         slideIncrement();
+        relicManipulator();
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -159,6 +169,44 @@ public class curious_george_teleop extends OpMode {
 
     Functions go here
  */
+
+    public void relicManipulator(){
+
+        boolean rightBumper = gamepad2.right_bumper;
+        boolean leftBumper = gamepad2.left_bumper;
+        float leftY_gp2 = (-gamepad2.left_stick_y);
+        boolean rightButtonY = gamepad2.y;
+        boolean rightButtonA = gamepad2.a;
+
+
+        relicMotor.setPower(leftY_gp2);
+
+        if(leftBumper){
+            relicLeft.setPosition(0.75);
+            relicRight.setPosition(0.1);
+        }
+
+        if (rightBumper){
+            relicLeft.setPosition(0);
+            relicRight.setPosition(1);
+        }
+
+        if (rightButtonY){
+            relicMain.setPosition(0);
+        }
+
+        if(gamepad2.b){
+            relicLeft.setPosition(0.75);
+            relicRight.setPosition(0.25);
+        }
+
+        if (rightButtonA){
+            relicMain.setPosition(1);
+        }
+        if (gamepad2.x){
+            relicMain.setPosition(0.45);
+        }
+    }
 
     public void FourWheelDrive() {
         /*
@@ -189,25 +237,11 @@ public class curious_george_teleop extends OpMode {
             rightWheelMotorBack.setPower(-1);
 
         } else {
-            leftWheelMotorFront.setPower(leftY_gp1);
-            leftWheelMotorBack.setPower(leftY_gp1);
-            rightWheelMotorFront.setPower(rightY_gp1);
-            rightWheelMotorBack.setPower(rightY_gp1);
+            leftWheelMotorFront.setPower(-leftY_gp1);
+            leftWheelMotorBack.setPower(-leftY_gp1);
+            rightWheelMotorFront.setPower(-rightY_gp1);
+            rightWheelMotorBack.setPower(-rightY_gp1);
         }
-
-        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
-        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
-        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
-        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
-        //  telemetry.update();
-        //telemetry.addData("",)
-        //telemetry.update();
-        //These were going to be used to find the values of triggers but we couldn't acomplish it
-        //run the motors by setting power to the motors with the game pad values
-        //leftWheelMotorFront.setPower(leftY_gp1);
-        //leftWheelMotorBack.setPower(leftY_gp1);
-        //rightWheelMotorFront.setPower(rightY_gp1);
-        //rightWheelMotorBack.setPower(rightY_gp1);
 
 
     }
@@ -312,13 +346,15 @@ public class curious_george_teleop extends OpMode {
     public void openGlyph(){
 
         //switching values with closeGlyph
-        glyphServoRight.setPosition(0.9);
-        glyphServoLeft.setPosition(0.0);
+        //reversed values
+        glyphServoRight.setPosition(0.0);
+        glyphServoLeft.setPosition(0.9);
     }
 
     public void closeGlyph(){
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+        //reversed values
+        glyphServoRight.setPosition(0.4);
+        glyphServoLeft.setPosition(0.5);
     }
 
     public void middleGlyph(){

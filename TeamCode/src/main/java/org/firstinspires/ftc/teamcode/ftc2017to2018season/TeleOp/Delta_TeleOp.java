@@ -8,13 +8,15 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
 
+import java.sql.Time;
+
 
 /**
  * Created by Rohan on 11/18/17.
  */
 
 
-@TeleOp(name = "DeltaTeleOp")
+@TeleOp(name = "Delta_TeleOp")
 //@Disabled
 public class Delta_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -135,13 +137,12 @@ public class Delta_TeleOp extends OpMode {
         FourWheelDrive();
         slideMove();
         glyphManipulator();
-        slideIncrement();
+        // slideIncrement();
+        incrementOpen();
+        incrementClose();
+       slideIncrement();
 
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-
-      //  telemetry.addData("jewel pos", jewel_servo.getPosition());
-
+        telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
 
     }
@@ -178,12 +179,12 @@ public class Delta_TeleOp extends OpMode {
 
             leftWheelMotorFront.setPower(-0.7);
             leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(0.7);
+            rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
         } else if (gamepad1.right_trigger > 0) {
 
-            leftWheelMotorFront.setPower(1);
+            leftWheelMotorFront.setPower(0.7);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
@@ -241,10 +242,7 @@ public class Delta_TeleOp extends OpMode {
 
           closeGlyph();
         }
-        else if (gamepad1.x){
-           middleGlyph();
 
-        }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
@@ -255,21 +253,52 @@ public class Delta_TeleOp extends OpMode {
 
     public void slideIncrement() {
 
-        if (gamepad2.dpad_up) {
-
-            moveUpInch(2.54);
-
-        } else if (gamepad2.dpad_down) {
-            moveDownInch(2.54);
-        } else {
+        if(gamepad2.dpad_up){
+            moveUpInch(13);
+        }else if(gamepad2.dpad_right){
+            moveUpInch(7);
+        }else if(gamepad2.dpad_down){
+            moveUpInch(2);
+        }
+        else{
 
         }
     }
 
-    public void moveUpInch(double cm) {
+    public void incrementOpen(){
+
+        while (gamepad1.x){
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
+            wait(300);
+        }
+    }
+    public void incrementClose(){
+
+        while (gamepad1.y) {
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
+            wait(300);
+        }
+    }
+
+    public void wait(int mSec){
+        double startTime;
+        double endTime;
+
+        startTime = System.currentTimeMillis();
+        endTime = startTime+mSec;
+
+        while(endTime >= System.currentTimeMillis()){
+
+        }
+    }
+
+
+    public void moveUpInch(double inch) {
         double target_Position;
-        double countsPerCM = 250;
-        double finalTarget = cm * countsPerCM;
+        double countsPerCM = 150;
+        double finalTarget = inch * countsPerCM * 2.54;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int) target_Position);
@@ -288,9 +317,9 @@ public class Delta_TeleOp extends OpMode {
 
     }
 
-    public void moveDownInch(double cm) {
+  /*  public void moveDownInch(double cm) {
         double target_Position;
-        double countsPerCM = 250;
+        double countsPerCM = 150;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
@@ -310,19 +339,20 @@ public class Delta_TeleOp extends OpMode {
         slideMotor.setPower(0);
 
     }
+    */
   public void openGlyph(){
-        glyphServoRight.setPosition(0.7);
-        glyphServoLeft.setPosition(0.15);
+        glyphServoRight.setPosition(0.6);
+        glyphServoLeft.setPosition(0.3);
   }
 
   public void closeGlyph(){
-      glyphServoRight.setPosition(0.78);
+      glyphServoRight.setPosition(0.8);
       glyphServoLeft.setPosition(0.05);
   }
 
   public void middleGlyph(){
-      glyphServoRight.setPosition(0.7);
-      glyphServoLeft.setPosition(0.05);
+      glyphServoRight.setPosition(0.75);
+      glyphServoLeft.setPosition(0.1);
 
   }
 }
