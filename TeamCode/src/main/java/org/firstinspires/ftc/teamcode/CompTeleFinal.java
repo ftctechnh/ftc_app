@@ -30,7 +30,7 @@ public class CompTeleFinal extends OpMode
     public void loop ()
     {
         /**
-         * ATTACHMENTS CONTROLLER FIRST
+         * ATTACHMENTS CONTROLLER
          * GAMEPAD 2
          */
         if (gamepad2.dpad_up)
@@ -82,9 +82,9 @@ public class CompTeleFinal extends OpMode
             newRobot.getTailRelease().setPower(0f);
 
         if (gamepad2.a)
-            newRobot.fineAdjGrabber(.04f);
+            newRobot.fineAdjGrabber(.028f);
         else if (gamepad2.b)
-            newRobot.fineAdjGrabber(-.04f);
+            newRobot.fineAdjGrabber(-.028f);
 
         if (gamepad2.x)
         {
@@ -102,6 +102,8 @@ public class CompTeleFinal extends OpMode
 
             if (gamepad1.right_trigger > .4f)
                 newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
+            else if (gamepad1.left_trigger > .4f)
+                newRobot.selfBal();
             else
                 newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
