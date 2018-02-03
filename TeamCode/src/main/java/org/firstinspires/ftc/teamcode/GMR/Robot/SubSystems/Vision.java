@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 /**
- * Created by FTC 4316 on 1/14/2018.
+ * Created by FTC 4316 on 1/14/2018
  */
 
 public class Vision {
@@ -20,6 +20,7 @@ public class Vision {
     VuforiaTrackable relicTemplate;
     VuforiaLocalizer.Parameters parameters;
 
+    private int columnNum = 0;
 
     public Vision(VuforiaLocalizer vuforia, VuforiaLocalizer.Parameters parameters, VuforiaTrackables relicTrackables, VuforiaTrackable relicTemplate){
         this.vuforia = vuforia;
@@ -40,13 +41,13 @@ public class Vision {
 
         relicTrackables.activate();
     }
+
     public RelicRecoveryVuMark detectPictograph(){
         return RelicRecoveryVuMark.from(relicTemplate);
     }
 
     public int keyColumnDetect(AllianceColor color){
         RelicRecoveryVuMark column = detectPictograph();
-        int columnNum = 0;
 
         if(column == RelicRecoveryVuMark.UNKNOWN){
             columnNum = 0;

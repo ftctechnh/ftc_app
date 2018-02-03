@@ -200,7 +200,6 @@ public class Auto_B2 extends OpMode {
                     }
 
                     break;
-
                 case DROP:
                     state = States.DRIVEBACK;
                     break;

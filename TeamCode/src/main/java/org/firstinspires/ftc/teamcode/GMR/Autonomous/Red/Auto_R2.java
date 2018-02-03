@@ -48,6 +48,9 @@ public class Auto_R2 extends OpMode {
     private double currentSeconds;
     private double goalSeconds;
 
+    private int turnRadius = 20;
+    private double turnPower = 0.15;
+
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -91,7 +94,7 @@ public class Auto_R2 extends OpMode {
                     goalSeconds = currentSeconds + 0.4;
                 case LIFT:
                     if (currentSeconds >= goalSeconds) {
-                        robot.blockLift.setLift(700);
+                        robot.blockLift.setLift(400);
                         state = States.ARMDOWN;
                         goalSeconds = currentSeconds += 2.0;
                     }
@@ -122,9 +125,7 @@ public class Auto_R2 extends OpMode {
 
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
-                    } else{
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;
                         time.reset();
@@ -132,51 +133,50 @@ public class Auto_R2 extends OpMode {
 
                 case RIGHTKNOCK:
                     //Knocks the right ball off of the pedestal WORKING
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.25, 0.5);
-                    } else{
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.RIGHTARMUP;
-                        time.reset();
+                        goalSeconds = currentSeconds += 1.0;
                     } break;
 
                 case LEFTARMUP:
                     //Lifts arm up after knocking left ball WORKING
                     rightArm.setPosition(position);
-                    if(time.seconds() >= 1){
+                    if(currentSeconds >= goalSeconds){
                         state = States.LEFTZONE;
                     } break;
 
                 case RIGHTARMUP:
                     //Lifts arm up after knocking right ball WORKING
                     rightArm.setPosition(position);
-                    if(time.seconds() >= 1){
+                    if(currentSeconds >= goalSeconds){
                         state = States.RIGHTZONE;
                     } break;
 
                 case LEFTZONE:
                     //Returns to original position from knocking left ball WORKING
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 2.5);
-                    } else{
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
-                        state = States.STRAFE;
+                        state = States.OFFSTONE;
                         time.reset();
                     } break;
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 9.5);
-                    } else{
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
-                        state = States.STRAFE;
+                        state = States.OFFSTONE;
                         time.reset();
                     } break;
 
+                case OFFSTONE:
+                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7)) {
+                        state = States.STRAFE;
+                    }
+                    break;
                 case STRAFE:
                     //Strafes left to face CryptoBox. UNTESTED/DEACTIVATED
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 3.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 1);
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
