@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.Mocks;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /**
  * Created by guberti on 1/9/2018.
  */
 
-public class MockDcMotor implements DcMotor {
+public class MockDcMotor implements DcMotorEx {
 
     double speed;
     RunMode mode;
@@ -140,7 +143,32 @@ public class MockDcMotor implements DcMotor {
     }
 
     @Override
-    public void close() {
+    public void close() {}
 
-    }
+    @Override
+    public void setMotorEnable() {}
+
+    @Override
+    public void setMotorDisable() {}
+
+    @Override
+    public boolean isMotorEnabled() {return false;}
+
+    @Override
+    public void setVelocity(double angularRate, AngleUnit unit) {}
+
+    @Override
+    public double getVelocity(AngleUnit unit) {return 0;}
+
+    @Override
+    public void setPIDCoefficients(RunMode mode, PIDCoefficients pidCoefficients) {}
+
+    @Override
+    public PIDCoefficients getPIDCoefficients(RunMode mode) {return null;}
+
+    @Override
+    public void setTargetPositionTolerance(int tolerance) {}
+
+    @Override
+    public int getTargetPositionTolerance() {return 0;}
 }

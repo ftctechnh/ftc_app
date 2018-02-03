@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,28 +14,27 @@ public class ConstrainedPIDMotor {
     public enum Direction {
         FORWARD, BACKWARD, HOLD, COAST
     }
-    DcMotor m;
+    DcMotorEx m;
     ElapsedTime timer;
     int timeTillLock;
     int lockPos;
     double forwardRunSpeed;
     double backwardRunSpeed;
-    double lockPositionSpeed;
     int min;
     int max;
     int encoderOffset;
     public boolean override;
+    boolean unlockAtZero;
     Telemetry logging;
     boolean seekingPosition;
     Integer targetPos;
 
-    public ConstrainedPIDMotor(DcMotor m, int t, double forwardRunSpeed, double backwardRunSpeed,
-                               int min, int max, Telemetry tel, double lS) {
+    public ConstrainedPIDMotor(DcMotorEx m, int t, double forwardRunSpeed, double backwardRunSpeed,
+                               int min, int max, Telemetry tel, boolean unlockAtZero) {
         this.m = m;
         timeTillLock = t;
         this.forwardRunSpeed = forwardRunSpeed;
         this.backwardRunSpeed = backwardRunSpeed;
-        this.lockPositionSpeed = lS;
         timer = new ElapsedTime();
         this.min = min;
         this.max = max;
@@ -44,6 +44,7 @@ public class ConstrainedPIDMotor {
         logging = tel;
         seekingPosition = false;
         targetPos = null;
+        this.unlockAtZero = unlockAtZero;
     }
 
     public void setDirection(Direction d) {
@@ -91,7 +92,16 @@ public class ConstrainedPIDMotor {
                     }
                     m.setPower(0);
                 } else {
-                    goToPos(lockPos, lockPositionSpeed, false, 0);
+                    if (Math.abs(lockPos - m.getCurrentPosition()) < 100 && lockPos < 100 && unlockAtZero) {
+                        m.setMotorDisable();
+                        logging.addData("Zarm on: ", true);
+                    } else {
+                        if (unlockAtZero) {
+                            m.setMotorEnable();
+                            logging.addData("Zarm off: ", false);
+                        }
+                        goToPos(lockPos, 1.0, false, 0);
+                    }
                 }
                 break;
 

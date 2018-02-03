@@ -1,4 +1,5 @@
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.ConstrainedPIDMotor;
@@ -15,9 +16,9 @@ public class ConstrainedPIDMotorTest {
 
     @Test
     public void constrainedPIDMotor_OperatesNormally() {
-        DcMotor mock = new MockDcMotor();
+        DcMotorEx mock = new MockDcMotor();
         ConstrainedPIDMotor m = new ConstrainedPIDMotor(mock, 100, 0.6,
-        0.4, 0, 5000, mock(Telemetry.class));
+        0.4, 0, 5000, mock(Telemetry.class), false);
 
         // Make sure we're going to maximum
         mock.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER); // Make sure this gets changed
@@ -58,9 +59,9 @@ public class ConstrainedPIDMotorTest {
 
     @Test
     public void constrainedPIDMotor_LocksPosition() throws InterruptedException {
-        DcMotor mock = new MockDcMotor();
+        DcMotorEx mock = new MockDcMotor();
         ConstrainedPIDMotor m = new ConstrainedPIDMotor(mock, 100, 0.6,
-                0.4, 0, 5000, mock(Telemetry.class));
+                0.4, 0, 5000, mock(Telemetry.class), false);
 
         m.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
         ((MockDcMotor) mock).setCurrentPosition(500);
