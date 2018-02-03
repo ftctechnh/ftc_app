@@ -1,0 +1,3 @@
+[submodule "DogeCV"]
+	path = DogeCV
+	url = https://github.com/GTHSRobotics/DogeCV
