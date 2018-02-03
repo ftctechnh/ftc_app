@@ -14,10 +14,10 @@ public class JewelArm {
     public Servo upDownServo;
     public Servo endServo;
     ColorSensor cs;
-    private final double DOWN_POSITION = 0;
-    private final double UP_POSITION = 0.035;
-    private final double RIGHT_POSITION = 0;
-    private final double LEFT_POSITION = 1;
+    private final double DOWN_POSITION = 0.025;
+    private final double UP_POSITION = 0.06;
+    private final double RIGHT_POSITION = 1;
+    private final double LEFT_POSITION = 0;
     private final double MIDDLE_POSITION = 0.5;
     private final double TRY_AGAIN_POSITION = 0.35;
     private final double MIN_COLOR_DETECTION_THRESHOLD = 5;
@@ -56,7 +56,7 @@ public class JewelArm {
     public void findJewel(Color allianceColor) {
         setEndPosition(MIDDLE_POSITION);
         down();
-        Systems.sleep(1250);
+        Systems.sleep(1500);
         ElapsedTime time = new ElapsedTime();
         time.start();
         boolean tryAgain = false;
@@ -67,7 +67,7 @@ public class JewelArm {
             }
         }
         if (tryAgain) {
-            setEndPosition(TRY_AGAIN_POSITION);
+            //setEndPosition(TRY_AGAIN_POSITION);
             time.start();
             while (cs.red() < MIN_COLOR_DETECTION_THRESHOLD && cs.blue() < MIN_COLOR_DETECTION_THRESHOLD) {
                 if(time.getElapsedTime() > 3000) {
@@ -104,6 +104,8 @@ public class JewelArm {
         setEndPosition(MIDDLE_POSITION);
         cs.enableLed(false);
         up();
+        Systems.sleep(750);
+        left();
     }
 
     public void setUpDownPosition(double postion) {

@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.util.Range;
 public class jewelservotesting extends OpMode {
     Servo servo;
     public void init() {
-        servo = hardwareMap.servo.get("s3");
-        servo.setPosition(0.5);
+        servo = hardwareMap.servo.get("s4");
+        servo.setPosition(0.01);
     }
     public void loop() {
         if(gamepad1.a) {
