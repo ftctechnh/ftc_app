@@ -70,6 +70,8 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
 
         _busy = true
 
+        _drivetrain.leftMotor().power = _speed
+        _drivetrain.rightMotor().power = _speed
 
         var startTime = System.currentTimeMillis()
         while(!_interrupt && _drivetrain.leftMotor().isBusy && _drivetrain.rightMotor().isBusy &&

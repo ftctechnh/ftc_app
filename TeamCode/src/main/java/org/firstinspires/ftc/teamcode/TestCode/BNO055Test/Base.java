@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TestCode.BNO055Test;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -15,7 +16,7 @@ public class Base extends RobotBase
 
 
     @Override
-    public void init(HardwareMap HW , OpMode OPMODE)
+    public void init(HardwareMap HW , LinearOpMode OPMODE)
     {
         super.init(HW , OPMODE);
 
