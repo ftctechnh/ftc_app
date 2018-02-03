@@ -194,7 +194,7 @@ public class AutoBackSideRed extends LinearOpMode
         sleep(100);
 
         // Run backwards to align
-        _base.drivetrain.driveForTime.setParams(1_000 , -.75);
+        _base.drivetrain.driveForTime.setParams(1_250 , -.50);
         _base.drivetrain.driveForTime.runSequentially();
         sleep(100);
 
