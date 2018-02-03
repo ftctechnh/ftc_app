@@ -90,12 +90,6 @@ public class Auto_B2 extends OpMode {
                 case GRAB:
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds + 0.4;
-                case LIFT:
-                    if (currentSeconds >= goalSeconds) {
-                        robot.blockLift.setLift(400);
-                        state = States.ARMDOWN;
-                        goalSeconds = currentSeconds += 2.0;
-                    }
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     leftArm.setPosition(goalPosition);
@@ -166,7 +160,7 @@ public class Auto_B2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7)) {
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5 )) {
                         state = States.STRAFE;
                         completedStates += "OFFSTONE - ";
                     }
@@ -175,16 +169,16 @@ public class Auto_B2 extends OpMode {
                 case STRAFE:
                     //Turns left to face CryptoBox. WORKING
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 4.5);
                     } else{
                         isFinished = false;
-                        state = States.COLUMNMOVE;
+                        state = States.DRIVEBOX;
                         completedStates += "STRAFE - ";
                     }
 
                     break;
                 case COLUMNMOVE:
-                    if (robot.columnDrive(AllianceColor.BLUE, telemetry, 3)) {
+                    if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
                         state = States.DRIVEBOX;
                         completedStates += "CLOUMNMOVE - ";
                     }
@@ -197,11 +191,16 @@ public class Auto_B2 extends OpMode {
                         isFinished = false;
                         state = States.DROP;
                         completedStates += "DRIVEBOX";
+                        goalSeconds = currentSeconds += 2;
                     }
 
                     break;
                 case DROP:
-                    state = States.DRIVEBACK;
+                    robot.blockLift.grab(false, 1);
+                    if (goalSeconds >= currentSeconds) {
+                        state = States.DRIVEBACK;
+                        robot.blockLift.grab(false, 0);
+                    }
                     break;
                 case DRIVEBACK:
                     if(!isFinished){

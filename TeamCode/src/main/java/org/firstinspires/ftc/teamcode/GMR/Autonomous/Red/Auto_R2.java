@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.GMR.Autonomous.States;
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
 /**
@@ -50,6 +51,8 @@ public class Auto_R2 extends OpMode {
 
     private int turnRadius = 20;
     private double turnPower = 0.15;
+
+    private float endUltrasonic;
 
     @Override
     public void init() {
@@ -90,14 +93,8 @@ public class Auto_R2 extends OpMode {
                     state = States.GRAB;
                     break;
                 case GRAB:
-                    state = States.LIFT;
+                    state = States.ARMDOWN;
                     goalSeconds = currentSeconds + 0.4;
-                case LIFT:
-                    if (currentSeconds >= goalSeconds) {
-                        robot.blockLift.setLift(400);
-                        state = States.ARMDOWN;
-                        goalSeconds = currentSeconds += 2.0;
-                    }
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
@@ -162,6 +159,7 @@ public class Auto_R2 extends OpMode {
                     } break;
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
+
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.OFFSTONE;
@@ -169,30 +167,26 @@ public class Auto_R2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7)) {
+                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5)) {
                         state = States.STRAFE;
+                        isFinished = false;
                     }
                     break;
                 case STRAFE:
                     //Strafes left to face CryptoBox. UNTESTED/DEACTIVATED
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 1);
-                    } else{
-                        isFinished = false;
-                        state = States.DRIVEBOX;
-                    } break;
-
-                case DRIVEBOX:
-                    //Drives into CryptoBox
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, 3.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 4.5);
                     } else{
                         isFinished = false;
                         state = States.DROP;
+                        goalSeconds = currentSeconds += 2.0;
                     } break;
-
                 case DROP:
-                    state = States.DRIVEBACK;
+                    robot.blockLift.grab(false, 1);
+                    if (goalSeconds >= currentSeconds) {
+                        state = States.DRIVEBACK;
+                        robot.blockLift.grab(false, 0);
+                    }
                     break;
                 case DRIVEBACK:
                     if(!isFinished){
@@ -206,6 +200,8 @@ public class Auto_R2 extends OpMode {
                     robot.driveTrain.stop();
                     break;
             }
+
+            telemetry.addData("End Ultrasonic", endUltrasonic);
 
         }
 
