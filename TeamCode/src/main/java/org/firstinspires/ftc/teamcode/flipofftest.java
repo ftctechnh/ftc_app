@@ -16,6 +16,7 @@ public class flipofftest extends LinearOpMode {
         JewelArm = new JewelArm(hardwareMap, telemetry);
         waitForStart();
         JewelArm.findJewel(Color.RED);
+        sleep(1000);
 
     }
 }
