@@ -102,6 +102,7 @@ public class JewelArm {
         }
         Systems.sleep(750);
         setEndPosition(MIDDLE_POSITION);
+        cs.enableLed(false);
         up();
     }
 
