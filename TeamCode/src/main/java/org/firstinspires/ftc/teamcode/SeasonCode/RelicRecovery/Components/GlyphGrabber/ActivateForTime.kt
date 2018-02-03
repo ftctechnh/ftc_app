@@ -11,6 +11,8 @@ class ActivateForTime(private var _glyphGrabber: GlyphGrabber): RobotCommand()
     private var _interrupt = false
     private var _busy = false
 
+    private var _t: Thread? = null
+
 
     fun setParams(time: Long , state: GlyphGrabber.State)
     {
@@ -42,7 +44,15 @@ class ActivateForTime(private var _glyphGrabber: GlyphGrabber): RobotCommand()
 
     override fun runParallel()
     {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(_t == null)
+        {
+            _t = Thread(Runnable
+            {
+                runSequentially()
+            })
+
+            _t!!.start()
+        }
     }
 
 

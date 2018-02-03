@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain
 
+
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 
 
@@ -31,8 +32,8 @@ class DriveForTime(private var _drivetrain: Drivetrain): RobotCommand()
      */
     override fun runSequentially()
     {
-        _drivetrain.encoderStopReset()
         _drivetrain.encoderOn()
+
         // Freeze input to the drivetrain so that only the command can control it
         // Of course, the idea is that it can be overwritten
         _drivetrain.freezeInput()

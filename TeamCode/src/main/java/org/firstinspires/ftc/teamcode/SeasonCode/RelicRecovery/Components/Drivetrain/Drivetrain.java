@@ -367,6 +367,18 @@ public class Drivetrain extends RobotComponent
 
 
     /**
+     * Sets the zero power behavior of the drivetrain
+     *
+     * @param mode Zero power behavior to set to the drivetrain.
+     */
+    public void setZeroPowerMode(DcMotor.ZeroPowerBehavior mode)
+    {
+        _leftMotor.setZeroPowerBehavior(mode);
+        _rightMotor.setZeroPowerBehavior(mode);
+    }
+
+
+    /**
      * Outputs telemetry to current OpMode
      */
     private void _outputTelMet()

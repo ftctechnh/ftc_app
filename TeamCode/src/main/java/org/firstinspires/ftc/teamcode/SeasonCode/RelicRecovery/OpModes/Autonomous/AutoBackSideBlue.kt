@@ -1,9 +1,10 @@
-@file:Suppress("PackageDirectoryMismatch")
+@file:Suppress("PackageDirectoryMismatch", "LocalVariableName")
 package org.directcurrent.season.relicrecovery.autonomous
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.directcurrent.core.AutoStopper
 import org.directcurrent.opencv.CVBridge
 import org.directcurrent.season.relicrecovery.jewelarm.JewelArm
@@ -19,17 +20,19 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphG
 /**
  * Autonomous for the back side of the field (side away from the Relic Recovery Zones)
  *
+ * BLUE ALLIANCE
+ *
  * What it does:
  *
- * 1. Knock of correct Jewel
+ * 1. Knock off correct Jewel
  * 2. Move off of Balancing Stone
  * 3. Turn and drive in front of appropriate Cryptobox column as dictated by Cryptobox Key
  * 4. Place Glyph in Cryptobox column
  * 5. Turn to face Glyph Pit
  */
-@Autonomous(name = "Back Side")
+@Autonomous(name = "Back Side Blue")
 @Suppress("unused")
-class AutoBackSide: LinearOpMode()
+class AutoBackSideBlue : LinearOpMode()
 {
     private val _base = Base()
 
@@ -57,30 +60,18 @@ class AutoBackSide: LinearOpMode()
     override fun runOpMode() {
         _base.init(hardwareMap, this)
 
-        _base.imu.calibrateTo(90)
+        _base.imu.calibrateTo(95)
 
         _vuforia.init(hardwareMap, VuforiaLocalizer.CameraDirection.BACK)
         _vuforia.activate()
 
-//        _autoMenu.preRunInit()
-
         waitForStart()
+
+        _base.drivetrain.setZeroPowerMode(DcMotor.ZeroPowerBehavior.BRAKE)
 
         _autoStopper.startChecking()
 
-
-        _base.drivetrain.turnTo.setParams(95.0 , .3 , 1_000)
-        _base.drivetrain.turnTo.runSequentially()
-        sleep(100)
-
-
         val vuMark = _vuforia.currentMarker()
-
-
-        _base.drivetrain.turnTo.setParams(90.0 , .3 , 1_000)
-        _base.drivetrain.turnTo.runSequentially()
-        sleep(100)
-
 
         _vuforia.deactivate()
         telemetry.addLine("Waiting for OpenCV...")
@@ -177,8 +168,9 @@ class AutoBackSide: LinearOpMode()
                 _base.jewelArm.setState(JewelArm.State.DOWN)
                 sleep(750)
 
-                _base.drivetrain.turnTo.setParams(45.0 , .5 , 4_000)
-                _base.drivetrain.turnTo.runSequentially()
+                _base.drivetrain.driveTo.setParams(-3.0 , .3 , 3_000)
+                _base.drivetrain.driveTo.runSequentially()
+                sleep(100)
 
                 _base.jewelArm.setState(JewelArm.State.UP)
                 sleep(750)
@@ -190,82 +182,95 @@ class AutoBackSide: LinearOpMode()
             }
         }
 
-        if(_autoMenu.teamColor() == Color.ColorID.BLUE)
+        if(jewelStatus == JewelStatus.GO_BACKWARD)
         {
-            _base.drivetrain.driveTo.setParams(-24.0 , .75 , 5_000)
-            _base.drivetrain.driveTo.runSequentially()
-            sleep(100)
-
-            _base.drivetrain.turnTo.setParams(180.0 , .75 , 7_500)
-            _base.drivetrain.turnTo.runSequentially()
-            sleep(100)
-
-
-            // Run backwards to align lmao
-            _base.drivetrain.driveForTime.setParams(1_000 , -.75)
-            _base.drivetrain.driveForTime.runSequentially()
-            sleep(100)
-
-
-            // Go forward various amounts depending on VuMark
-            val NEAR_COL_DISTANCE = 18.0
-            val COL_SEPERATION = 8.0
-
-
-            when(vuMark)
-            {
-                RelicRecoveryVuMark.LEFT ->
-                {
-                    _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE , .5 , 3_000)
-                }
-
-                RelicRecoveryVuMark.CENTER ->
-                {
-                    _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + COL_SEPERATION , .5 , 3_000)
-                }
-
-                RelicRecoveryVuMark.RIGHT ->
-                {
-                    _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + 2 * COL_SEPERATION , .5 , 3_000)
-                }
-
-                RelicRecoveryVuMark.UNKNOWN ->
-                {
-                    _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + 2 * COL_SEPERATION , .5 , 3_000)
-                }
-
-                else ->
-                {
-                    _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + 2 * COL_SEPERATION , .5 , 3_000)
-                }
-            }
-
-            _base.drivetrain.driveTo.runSequentially()
-            sleep(100)
-
-            _base.drivetrain.turnTo.setParams(270.0 , .60 , 3_000)
-            _base.drivetrain.turnTo.runSequentially()
-            sleep(100)
-
-            _base.glyphGrabber.activateForTime.setParams(5_000 , GlyphGrabber.State.OUTPUT)
-            _base.glyphGrabber.activateForTime.runSequentially()
-            sleep(100)
-
-
-            _base.drivetrain.driveForTime.setParams(2_000 , .3)
-            _base.drivetrain.driveForTime.runSequentially()
-            sleep(100)
-
-            _base.drivetrain.driveTo.setParams(3.0 , .3 , 1_000)
-            _base.drivetrain.driveTo.runSequentially()
-            sleep(100)
+            _base.drivetrain.driveTo.setParams(-21.0 , .75 , 5_000)
         }
         else
         {
-            // Park
-            _base.drivetrain.driveForTime.setParams(5_000 , .4)
-            _base.drivetrain.driveForTime.runSequentially()
+            _base.drivetrain.driveTo.setParams(-24.0 , .75 , 5_000)
         }
+
+        _base.drivetrain.driveTo.runSequentially()
+        sleep(100)
+
+        _base.drivetrain.turnTo.setParams(180.0 , .75 , 7_500)
+        _base.drivetrain.turnTo.runSequentially()
+        sleep(100)
+
+
+        // Run backwards to align lmao
+        _base.drivetrain.driveForTime.setParams(1_000 , -.75)
+        _base.drivetrain.driveForTime.runSequentially()
+        sleep(100)
+
+
+        // Go forward various amounts depending on VuMark
+        val NEAR_COL_DISTANCE = 19.5
+        val COL_SEPARATION = 7.6
+
+
+        when(vuMark)
+        {
+            RelicRecoveryVuMark.LEFT ->
+            {
+                _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE , .5 , 3_000)
+            }
+
+            RelicRecoveryVuMark.CENTER ->
+            {
+                _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + COL_SEPARATION , .5 , 3_000)
+            }
+
+            RelicRecoveryVuMark.RIGHT ->
+            {
+                _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + 2 * COL_SEPARATION , .5 , 3_000)
+            }
+
+            RelicRecoveryVuMark.UNKNOWN ->
+            {
+                _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + 2 * COL_SEPARATION , .5 , 3_000)
+            }
+
+            else ->
+            {
+                _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + 2 * COL_SEPARATION , .5 , 3_000)
+            }
+        }
+
+        _base.drivetrain.driveTo.runSequentially()
+        sleep(100)
+
+        _base.drivetrain.turnTo.setParams(270.0 , .60 , 3_000)
+        _base.drivetrain.turnTo.runSequentially()
+        sleep(100)
+
+        _base.glyphGrabber.activateForTime.setParams(1_000 , GlyphGrabber.State.OUTPUT)
+        _base.glyphGrabber.activateForTime.runSequentially()
+        sleep(100)
+
+
+        _base.drivetrain.driveForTime.setParams(2_000 , .3)
+        _base.drivetrain.driveForTime.runSequentially()
+        sleep(100)
+
+        _base.drivetrain.driveTo.setParams(-9.0 , .3 , 1_000)
+        _base.drivetrain.driveTo.runSequentially()
+        sleep(100)
+
+        _base.drivetrain.turnTo.setParams(145.0 , .75 , 3_000)
+        _base.drivetrain.turnTo.runSequentially()
+
+
+        if(vuMark == RelicRecoveryVuMark.RIGHT || vuMark == RelicRecoveryVuMark.UNKNOWN)
+        {
+            sleep(100)
+            _base.drivetrain.driveTo.setParams(-4.0 , .3 , 2_000)
+            _base.drivetrain.driveTo.runSequentially()
+        }
+
+        _base.drivetrain.setZeroPowerMode(DcMotor.ZeroPowerBehavior.FLOAT)
+
         telemetry.update()
     }
 }
