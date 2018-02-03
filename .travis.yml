@@ -9,3 +9,10 @@ android:
 
 before_install:
  - sudo chmod +x gradlew
+
+notifications:
+  email:
+    recipients:
+      - guberti@eastsideprep.org
+    on_success: never
+    on_failure: always
