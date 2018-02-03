@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.BlockLift;
-import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.ColumnDetection;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.Vision;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.RelicGrab;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
@@ -27,7 +27,7 @@ public class Robot {
     public DriveTrain driveTrain;
     public BlockLift blockLift;
     public RelicGrab relicGrab;
-    public ColumnDetection columnDetection;
+    public Vision vision;
 
     private DcMotor leftFront;
     private DcMotor rightFront;
@@ -90,7 +90,7 @@ public class Robot {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-        
+
         rightColor.setPosition(0);
         leftColor.setPosition(0.85);
 
@@ -100,7 +100,8 @@ public class Robot {
 
         relicGrab = new RelicGrab(relicLift, slideLift, relicTilt, relicClamp);
 
-        columnDetection = new ColumnDetection(vuforia, parameters, relicTrackables, relicTemplate);
+        vision = new Vision(vuforia, parameters, relicTrackables, relicTemplate);
+
     }
 
     public void setServos() {
