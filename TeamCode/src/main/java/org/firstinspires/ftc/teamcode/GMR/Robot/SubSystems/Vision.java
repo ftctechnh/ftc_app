@@ -43,4 +43,30 @@ public class Vision {
     public RelicRecoveryVuMark detectPictograph(){
         return RelicRecoveryVuMark.from(relicTemplate);
     }
+
+    public int keyColumnDetect(AllianceColor color){
+        RelicRecoveryVuMark column = detectPictograph();
+        int columnNum = 0;
+
+        if(column == RelicRecoveryVuMark.UNKNOWN){
+            columnNum = 0;
+        } else if(color == AllianceColor.RED){
+            if(column == RelicRecoveryVuMark.RIGHT){
+                columnNum = 1;
+            } else if(column == RelicRecoveryVuMark.CENTER){
+                columnNum = 2;
+            } else if(column == RelicRecoveryVuMark.LEFT){
+                columnNum = 3;
+            }
+        } else if(color == AllianceColor.BLUE){
+            if(column == RelicRecoveryVuMark.LEFT){
+                columnNum = 1;
+            } else if(column == RelicRecoveryVuMark.CENTER){
+                columnNum = 2;
+            } else if(column == RelicRecoveryVuMark.RIGHT){
+                columnNum = 3;
+            }
+        }
+        return columnNum;
+    }
 }
