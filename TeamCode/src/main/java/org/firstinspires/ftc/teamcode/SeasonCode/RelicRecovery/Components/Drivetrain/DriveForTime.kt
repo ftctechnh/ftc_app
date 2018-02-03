@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain
 
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 
 
@@ -28,11 +29,14 @@ class DriveForTime(private var _drivetrain: Drivetrain): RobotCommand()
 
 
     /**
-     * Drives to the defined distance on the main thread
+     * Drives for the defined time on the main thread
      */
     override fun runSequentially()
     {
-        _drivetrain.encoderOn()
+        if(_drivetrain.encoderMode() != DcMotor.RunMode.RUN_USING_ENCODER)
+        {
+            _drivetrain.encoderOn()
+        }
 
         // Freeze input to the drivetrain so that only the command can control it
         // Of course, the idea is that it can be overwritten
@@ -52,12 +56,11 @@ class DriveForTime(private var _drivetrain: Drivetrain): RobotCommand()
         _drivetrain.rightMotor().power = 0.0
 
         _drivetrain.allowInput()
-        _drivetrain.encoderStopReset()
     }
 
 
     /**
-     * Drives to the defined distance on a separate thread
+     * Drives for the defined time on a separate thread
      */
     override fun runParallel()
     {

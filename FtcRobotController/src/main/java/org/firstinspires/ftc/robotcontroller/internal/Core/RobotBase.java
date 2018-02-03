@@ -33,6 +33,9 @@ public abstract class RobotBase
     /** TelMet object for outputting messages to Telemetry */
     private TelMet _telMet = null;
 
+    /** OpMode for goodies such as telemetry and actually being able to stop robot code HAHA */
+    private OpMode _opmode = null;
+
 
     /**
      * Initializes the robot hardware and Telemetry logger. When overriding in a child class, be
@@ -52,15 +55,26 @@ public abstract class RobotBase
     {
         hardware = HW;
         _telMet = new TelMet(OPMODE.telemetry);
+        _opmode = OPMODE;
     }
 
 
     /**
+     * @deprecated Just use opMode().telemetry()
      * @return Returns the TelMet object for use
      */
     public final TelMet telMet()
     {
         return _telMet;
+    }
+
+
+    /**
+     * @return Returns the OpMode the robot is currently running in.
+     */
+    public final OpMode opMode()
+    {
+        return _opmode;
     }
 
 
