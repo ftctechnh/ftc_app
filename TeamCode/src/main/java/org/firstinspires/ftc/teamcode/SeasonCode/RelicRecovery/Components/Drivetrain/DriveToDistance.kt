@@ -71,8 +71,9 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
         _busy = true
 
 
+        var startTime = System.currentTimeMillis()
         while(!_interrupt && _drivetrain.leftMotor().isBusy && _drivetrain.rightMotor().isBusy &&
-                _drivetrain.base().opMode().opModeIsActive())
+                _drivetrain.base().opMode().opModeIsActive() && System.currentTimeMillis() - startTime < _timeout)
         {
             // Nothing HA I NEED SLEEP
         }
