@@ -2,6 +2,7 @@
 package org.directcurrent.season.relicrecovery.drivetrain
 
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.Drivetrain.Drivetrain
 
@@ -51,57 +52,36 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
     override fun runSequentially()
     {
         // Freeze input to the drivetrain so that only the command can control it
+        // This is so that the joystick at rest doesn't overwrite it and stop it instantly
         // Of course, the idea is that it can be overwritten
         _drivetrain.freezeInput()
 
-        _drivetrain.encoderStopReset()
-        _drivetrain.encoderToPos()
 
-        _drivetrain.leftMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt()
-        _drivetrain.rightMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt()
+        if(_drivetrain.encoderMode() != DcMotor.RunMode.RUN_TO_POSITION)
+        {
+            _drivetrain.encoderToPos()
+        }
 
-        var eta = Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
-                (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2)
+
+        // Adding because we're not resetting the encoders- for some reason resetting tends to break things
+        _drivetrain.leftMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt() + _drivetrain.leftMotor().currentPosition
+        _drivetrain.rightMotor().targetPosition = (_distance * _COUNTS_PER_INCH).toInt() + _drivetrain.rightMotor().currentPosition
+
 
         _busy = true
-        while(eta > _CLOSE_ENOUGH && !_interrupt)
+
+
+        while(!_interrupt && _drivetrain.leftMotor().isBusy && _drivetrain.rightMotor().isBusy)
         {
-            if(_distance > 0)
-            {
-                _drivetrain.leftMotor().power = _speed
-                _drivetrain.rightMotor().power = _speed
-            }
-            else
-            {
-                _drivetrain.leftMotor().power = -_speed
-                _drivetrain.rightMotor().power = -_speed
-            }
-
-            _drivetrain.base().telMet().tagWrite("Left Target" , _drivetrain.leftEncoderTarget())
-            _drivetrain.base().telMet().tagWrite("Right Target" , _drivetrain.rightEncoderTarget())
-            _drivetrain.base().telMet().tagWrite("Left Pos" , _drivetrain.leftEncoderCount())
-            _drivetrain.base().telMet().tagWrite("Right Pos" , _drivetrain.rightEncoderCount())
-            _drivetrain.base().telMet().tagWrite("Avg Distance" , eta)
-            _drivetrain.base().telMet().update()
-
-            // We've missed our stop
-            if(Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
-                    (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2) > eta)
-            {
-                break
-            }
-
-            eta = Math.abs((_drivetrain.leftEncoderCount() + _drivetrain.rightEncoderCount()) / 2 -
-                    (_drivetrain.leftEncoderTarget() + _drivetrain.rightEncoderTarget()) / 2)
-
-//            if(Math.abs(_drivetrain.leftMotor().power <= .2) || _drivetrain.rightMotor().power <= .2)
-//            {
-//                break
-//            }
+            // Nothing HA I NEED SLEEP
         }
 
         _drivetrain.leftMotor().power = 0.0
         _drivetrain.rightMotor().power = 0.0
+
+
+        _drivetrain.encoderOn()
+
 
         _busy = false
         _drivetrain.allowInput()

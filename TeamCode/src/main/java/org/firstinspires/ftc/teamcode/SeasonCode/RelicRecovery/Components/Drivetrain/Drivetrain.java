@@ -367,6 +367,15 @@ public class Drivetrain extends RobotComponent
 
 
     /**
+     * @return The current encoder mode of the drivetrain
+     */
+    public DcMotor.RunMode encoderMode()
+    {
+        return _leftMotor.getMode();
+    }
+
+
+    /**
      * Sets the zero power behavior of the drivetrain
      *
      * @param mode Zero power behavior to set to the drivetrain.
