@@ -98,7 +98,7 @@ public class Robot {
 
         blockLift = new BlockLift(liftMotor, leftGrab, rightGrab);
 
-        relicGrab = new RelicGrab(relicLift, slideLift, relicTilt, relicClamp);
+        relicGrab = new RelicGrab(relicLift, relicTilt, relicClamp);
 
         vision = new Vision(vuforia, parameters, relicTrackables, relicTemplate);
 

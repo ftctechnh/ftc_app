@@ -11,25 +11,21 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class RelicGrab {
 
     private DcMotor relicLift;
-    private Servo slideLift;
     private Servo relicTilt;
     private Servo relicClamp;
 
-    private double liftPosition; // Stored: 0.283, Upper Bound: 1
     private double tiltPosition; // Stored: 0.539, Upper Bound: 0.531, Lower Bound: 0.59
     private double clampPosition; // Stored: 0, Upper Bound: 0.55, Lower Bound: 0
 
-    public RelicGrab(DcMotor relicLift, Servo slideLift, Servo relicTilt, Servo relicClamp) {
+    public RelicGrab(DcMotor relicLift, Servo relicTilt, Servo relicClamp) {
         this.relicLift = relicLift;
-        this.slideLift = slideLift;
         this.relicTilt = relicTilt;
         this.relicClamp = relicClamp;
 
         this.relicLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        liftPosition = 0.504;
-        tiltPosition = 0.08;
-        clampPosition = 0.28;
+        tiltPosition = 0.36;
+        clampPosition = 0.40;
     }
 
     public void relicLift(boolean leftBumper, float leftTrigger) {
@@ -42,19 +38,11 @@ public class RelicGrab {
         }
     }
 
-    public void setSlide(boolean dpadUp, boolean dpadDown) {
-        if (dpadUp && liftPosition >= 0.4) {
-            liftPosition -= 0.0005;
-        } else if (dpadDown && liftPosition <= 0.577) {
-            liftPosition += 0.0005;
-        }
-        slideLift.setPosition(liftPosition);
-    }
 
     public void setTilt(boolean y, boolean a) {
-        if (y && tiltPosition <= 1) {
+        if (a && tiltPosition <= 0.44) {
             tiltPosition += 0.01;
-        } else if (a && tiltPosition >= 0) {
+        } else if (y && tiltPosition >= 0.36) {
             tiltPosition -= 0.01;
         }
         relicTilt.setPosition(tiltPosition);
@@ -63,7 +51,7 @@ public class RelicGrab {
     public void setClamp(boolean rightBumper, float rightTrigger) {
         if (rightBumper && clampPosition <= 1) {
             clampPosition += 0.008;
-        } else if (rightTrigger > 0 && clampPosition >= 0) {
+        } else if (rightTrigger > 0 && clampPosition >= 0.4) {
             clampPosition -= 0.008;
         }
         relicClamp.setPosition(clampPosition);
@@ -71,13 +59,11 @@ public class RelicGrab {
 
     public void relicGrab(boolean leftBumper, float leftTrigger, boolean dpadUp, boolean dpadDown, boolean y, boolean a, boolean rightBumper, float rightTrigger) {
         relicLift(leftBumper, leftTrigger);
-        setSlide(dpadUp, dpadDown);
         setTilt(y, a);
         setClamp(rightBumper, rightTrigger);
     }
 
     public void servoInfo(Telemetry telemetry) {
-        telemetry.addData("Lift Servo Position", liftPosition);
         telemetry.addData("Tilt Servo Position", tiltPosition);
         telemetry.addData("Clamp Servo Position", clampPosition);
     }
