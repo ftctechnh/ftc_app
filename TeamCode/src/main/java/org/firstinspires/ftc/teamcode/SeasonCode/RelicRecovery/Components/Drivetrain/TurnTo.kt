@@ -77,7 +77,7 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
         _drivetrain.setState(Drivetrain.State.FORWARD_FAST)
 
         while (Math.abs(error) > TOLERANCE && System.currentTimeMillis() - startTime < _timeout
-                && !_interrupted)
+                && !_interrupted && _drivetrain.base().opMode().opModeIsActive())
         {
             _imu.pull()
 

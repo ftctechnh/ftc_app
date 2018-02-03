@@ -13,6 +13,7 @@
 package org.firstinspires.ftc.robotcontroller.internal.Core;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -34,7 +35,7 @@ public abstract class RobotBase
     private TelMet _telMet = null;
 
     /** OpMode for goodies such as telemetry and actually being able to stop robot code HAHA */
-    private OpMode _opmode = null;
+    private LinearOpMode _opmode = null;
 
 
     /**
@@ -49,9 +50,9 @@ public abstract class RobotBase
      * @param HW The hardware mapping variable to use. In an OpMode, just typing in "hardwareMap"
      *           will do the trick.
      *
-     * @param OPMODE The OpMode that this base is running in
+     * @param OPMODE The OpMode that this base is running in. Make sure it's LinearOpMode
      */
-    public void init(final HardwareMap HW , final OpMode OPMODE)
+    public void init(final HardwareMap HW , final LinearOpMode OPMODE)
     {
         hardware = HW;
         _telMet = new TelMet(OPMODE.telemetry);
@@ -72,7 +73,7 @@ public abstract class RobotBase
     /**
      * @return Returns the OpMode the robot is currently running in.
      */
-    public final OpMode opMode()
+    public final LinearOpMode opMode()
     {
         return _opmode;
     }

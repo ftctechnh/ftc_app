@@ -29,7 +29,8 @@ class ActivateForTime(private var _glyphGrabber: GlyphGrabber): RobotCommand()
         _glyphGrabber.setState(_state)
         _busy = true
 
-        while(!_interrupt)
+        while(!_interrupt &&
+                _glyphGrabber.base().opMode().opModeIsActive())
         {
             if(System.currentTimeMillis() - startTime >= _activationTime)
             {

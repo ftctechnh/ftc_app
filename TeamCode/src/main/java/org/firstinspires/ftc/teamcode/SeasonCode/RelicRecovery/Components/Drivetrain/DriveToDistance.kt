@@ -71,7 +71,8 @@ class DriveToDistance(private var _drivetrain: Drivetrain): RobotCommand()
         _busy = true
 
 
-        while(!_interrupt && _drivetrain.leftMotor().isBusy && _drivetrain.rightMotor().isBusy)
+        while(!_interrupt && _drivetrain.leftMotor().isBusy && _drivetrain.rightMotor().isBusy &&
+                _drivetrain.base().opMode().opModeIsActive())
         {
             // Nothing HA I NEED SLEEP
         }

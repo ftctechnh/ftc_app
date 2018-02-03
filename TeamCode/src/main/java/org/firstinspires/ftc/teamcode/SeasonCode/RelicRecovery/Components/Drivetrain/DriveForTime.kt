@@ -47,7 +47,8 @@ class DriveForTime(private var _drivetrain: Drivetrain): RobotCommand()
         _drivetrain.leftMotor().power = _robotSpeed
         _drivetrain.rightMotor().power = _robotSpeed
 
-        while(System.currentTimeMillis() - startTime < _travelTime && !_interrupt)
+        while(System.currentTimeMillis() - startTime < _travelTime && !_interrupt &&
+                _drivetrain.base().opMode().opModeIsActive())
         {
             // Nothing
         }
