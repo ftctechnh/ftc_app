@@ -33,6 +33,9 @@ public class Delta_TeleOp_Main extends OpMode {
     Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
+    public int slidesBaseValue;
+    public int dif2Inch = 8;
+    public int dif7Inch =
 
 
 
@@ -86,7 +89,7 @@ public class Delta_TeleOp_Main extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
-
+        slidesBaseValue = slideMotor.getCurrentPosition();
         openGlyph();
         jewel_servo.setPosition(0.1);
 
@@ -242,6 +245,7 @@ public class Delta_TeleOp_Main extends OpMode {
    public void moveTo13Inch(){
 
    }
+
 
     public void glyphManipulator() {
        /* Boolean Right_Bumper = (gamepad1.right_bumper);
