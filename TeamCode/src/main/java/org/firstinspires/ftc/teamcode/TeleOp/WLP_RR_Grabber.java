@@ -30,12 +30,11 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -54,6 +53,7 @@ public class WLP_RR_Grabber {
     final double armClose = 0.0;
     final double stopPower = 0.0;
     final double stopPosition = 0.0;
+    final long  buttonDelay = 500;
 
 
     // Global variables to be initialized in init function
@@ -68,6 +68,13 @@ public class WLP_RR_Grabber {
     private DcMotor spinnerRight = null;
     private Servo armMover = null;
     private DcMotor slider = null;
+
+    private boolean spinIn = false;
+    private boolean spinOut = false;
+    private boolean clampOn = false;
+    ElapsedTime buttontime = new ElapsedTime();
+
+    private boolean  grabberClosed  = false;
 
     private boolean isInitialized = false;
 
@@ -115,27 +122,43 @@ public class WLP_RR_Grabber {
 
         // Calculate and set motor powers
 
-        // Spinner: A button toggles the spinner
-        if (gamepad2.a) {
-            double power = (spinnerLeft.getPower() == spinnerPower) ? stopPower : spinnerPower;
-            spinnerLeft.setPower(power);
-            spinnerRight.setPower(-power);
-        } else if (gamepad2.b) {
-            spinnerLeft.setPower(stopPower);
-            spinnerRight.setPower(stopPower);
-        }
+        if (buttontime.milliseconds() > buttonDelay) {
 
-        // Arm: X - open, Y - Close, B stop
-        if (gamepad2.x) {
-            pos =  armOpen;
-        } else if (gamepad2.y) {
-            pos =  armClose;
-        }
+            // Spinner: A button toggles the spinner inward
+            if (gamepad2.a) {
+                if (spinIn) {
+                    spinnerLeft.setPower(stopPower);
+                    spinnerRight.setPower(stopPower);
+                } else {
+                    spinnerLeft.setPower(spinnerPower);
+                    spinnerRight.setPower(-spinnerPower);
+                }
+                spinIn = !spinIn;
 
-        if (pos != armMover.getPosition())
-        {
+            }
 
-            armMover.setPosition(pos);
+            // Spinner: A button toggles the spinner outward
+            if (gamepad2.b) {
+                if (spinOut) {
+                    spinnerLeft.setPower(stopPower);
+                    spinnerRight.setPower(stopPower);
+                } else {
+                    spinnerLeft.setPower(-spinnerPower);
+                    spinnerRight.setPower(spinnerPower);
+                }
+                spinOut = !spinOut;
+            }
+
+            // Spinner: X button toggles the clamp
+            if (gamepad2.x) {
+                if (clampOn) {
+                    armMover.setPosition(armOpen);
+                } else {
+                    armMover.setPosition(armClose);
+                }
+                clampOn = !clampOn;
+            }
+            buttontime.reset();
         }
 
 /*

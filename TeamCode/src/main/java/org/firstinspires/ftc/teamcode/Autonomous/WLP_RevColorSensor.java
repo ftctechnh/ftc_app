@@ -71,7 +71,7 @@ public class WLP_RevColorSensor {
         RED, BLUE, GREEN, UNKNOWN
     }
 
-    public final int colorThreashold = 100;
+    static public final int COLOR_THRESHOLD = 5;
     // Global variables to be initialized in init function
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
@@ -102,26 +102,27 @@ public class WLP_RevColorSensor {
         telemetry.addData("Color Sensor", "Initialization succeeded");
 }
 
-    // Main method that return currently seen color name
+    // Main method that returns currently seen color name
     public ColorName getColor() {
 
+        int red = sensorColor.red();
+        int blue = sensorColor.blue();
 
-        telemetry.addData("Alpha", sensorColor.alpha());
-        telemetry.addData("Red  ", sensorColor.red());
-        telemetry.addData("Green", sensorColor.green());
-        telemetry.addData("Blue ", sensorColor.blue());
 
-        if (sensorColor.red() > sensorColor.blue() ) {
+        if (red >= COLOR_THRESHOLD && red > blue) {
             return ColorName.RED;
         }
 
-        return ColorName.BLUE;
+        if (blue >= COLOR_THRESHOLD && blue > red) {
+            return ColorName.BLUE;
+        }
+
+        return ColorName.UNKNOWN;
     }
 
     // Get distance of the object in cm
     public double getDistanceInCm() {
         return sensorDistance.getDistance(DistanceUnit.CM);
     }
-
 
 }
