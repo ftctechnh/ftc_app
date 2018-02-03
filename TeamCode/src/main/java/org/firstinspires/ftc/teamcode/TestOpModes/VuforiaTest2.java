@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 
 /**
  * Created by FTC 4316 on 1/14/2018.
@@ -33,7 +34,8 @@ public class VuforiaTest2 extends OpMode {
 
     @Override
     public void loop() {
-        telemetry.addData("Column:", robot.vision.detectPictograph());
+        telemetry.addData("Pictograph:", robot.vision.detectPictograph());
+        telemetry.addData("Column number (Red):", robot.vision.keyColumnDetect(AllianceColor.RED));
         telemetry.update();
     }
 }
