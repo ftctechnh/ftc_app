@@ -100,14 +100,25 @@ public class WLP_RevColorSensor {
 
         isInitialized = true;
         telemetry.addData("Color Sensor", "Initialization succeeded");
-}
+    }
 
     // Main method that returns currently seen color name
     public ColorName getColor() {
 
-        int red = sensorColor.red();
-        int blue = sensorColor.blue();
+        // Detect 10 times and get the average
+        int tryCount = 10;
 
+        int red = 0;
+        int blue = 0;
+
+        for (int i=0; i<tryCount; i++) {
+            red += sensorColor.red();
+            blue += sensorColor.blue();
+            sleep(20);
+        }
+
+        red = red/tryCount;
+        blue = blue/tryCount;
 
         if (red >= COLOR_THRESHOLD && red > blue) {
             return ColorName.RED;
@@ -125,4 +136,12 @@ public class WLP_RevColorSensor {
         return sensorDistance.getDistance(DistanceUnit.CM);
     }
 
+
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }

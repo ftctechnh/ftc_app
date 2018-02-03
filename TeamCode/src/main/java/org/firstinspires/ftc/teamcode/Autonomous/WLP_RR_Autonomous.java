@@ -93,46 +93,29 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         runtime.reset();
 
 
-
         telemetry.addData("WLP_RR_Autonomous", "autonomous period started ...");
 
-
-        /*
-        // Start with 500 ms sleep
-        telemetry.addData("WLP_RR_Autonomous", "going straight 20 cm");
-        telemetry.update();
-        sleep(1000);
-
-        drivetrain.moveStraightTime(0.4, 4000);
-
-        // Start with 500 ms sleep
-        telemetry.addData("WLP_RR_Autonomous", "going backward 20 cm");
-        telemetry.update();
-        sleep(1000);
-
-
-        drivetrain.moveStraightTime(-0.4, 4000);
-
-*/
 
         // Lower the ARM
         arm.lowerArm();
         telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
         telemetry.update();
-        sleep(1000);
+        if (!smallSleep(1000)) return;
 
 
         // Knock the Jewel
         WLP_RevColorSensor.ColorName jewelColor = colorSensor.getColor();
         telemetry.addData("WLP_RR_Autonomous", "JewelColor is " + jewelColor);
 
-        if (teamColor == jewelColor) {
-            jewelKnockTime = -JEWEL_KNOCK_DISTANCE_T;
+        if (jewelColor != WLP_RevColorSensor.ColorName.UNKNOWN) {
+
+            if (teamColor == jewelColor) {
+                jewelKnockTime = -JEWEL_KNOCK_DISTANCE_T;
+            }
+
+            drivetrain.moveStraightTime(SPEED_KNOCK, JEWEL_KNOCK_DISTANCE_T);
+            time_at_0 += jewelKnockTime;
         }
-
-
-        drivetrain.moveStraightTime(SPEED_KNOCK, JEWEL_KNOCK_DISTANCE_T);
-        time_at_0 += jewelKnockTime;
 
         // Raise the arm
         arm.raiseArm();
@@ -151,6 +134,7 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         drivetrain.moveStraightTime(SPEED_STRAIGHT, time_at_0);
 
 
+        /*
         telemetry.addData("WLP_RR_Autonomous", "Taking a trun ...");
         telemetry.update();
         drivetrain.gyroTurn(SPEED_TURN, -90);
@@ -158,13 +142,24 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         telemetry.addData("WLP_RR_Autonomous", "Streeing toward crypto ...");
         telemetry.update();
         drivetrain.moveStraightTime(SPEED_STRAIGHT, time_at_90);
+        */
 
         // Show the elapsed game time and wheel power.
-        // telemetry.addData("WLP_RR_Autonomous", "Completed in " + runtime.toString());
-        // telemetry.update();
-        sleep(10000);
+        telemetry.addData("WLP_RR_Autonomous", "Completed in " + runtime.toString());
+        telemetry.update();
+        if (!smallSleep(10000)) return;
+    }
 
+    boolean smallSleep(long ms) {
+        ElapsedTime sleeptime = new ElapsedTime();
 
+        sleeptime.reset();
+        while (sleeptime.milliseconds() < ms && opModeIsActive())
+        {
+            sleep(100);
+        }
+
+        return opModeIsActive();
     }
 
 }
