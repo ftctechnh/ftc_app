@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.Autonomous;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -15,8 +14,7 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
 
 
-@Autonomous(name = "Front Side Blue")
-public class AutoFrontSideBlue extends LinearOpMode
+public class AutoFrontSideRed extends LinearOpMode
 {
     private Base _base = new Base();
     private AutoStopper _autoStopper = new AutoStopper(this , _base);
@@ -86,11 +84,11 @@ public class AutoFrontSideBlue extends LinearOpMode
                 // It's backwards because the phone is upside down
                 else if (CVBridge.redJewelPoints.get(0).y() < CVBridge.blueJewelPoints.get(0).y())
                 {
-                    jewelStatus = JewelStatus.GO_FORWARD;
+                    jewelStatus = JewelStatus.GO_BACKWARD;
                 }
                 else
                 {
-                    jewelStatus = JewelStatus.GO_BACKWARD;
+                    jewelStatus = JewelStatus.GO_FORWARD;
                 }
 
                 break;
@@ -161,12 +159,8 @@ public class AutoFrontSideBlue extends LinearOpMode
         }   // End switch
 
 
-        _base.drivetrain.driveTo.setParams(-25.0 , 1.0 , 3_000);
+        _base.drivetrain.driveTo.setParams(25.0 , 1.0 , 3_000);
         _base.drivetrain.driveTo.runSequentially();
-        sleep(100);
-
-        _base.drivetrain.turnTo.setParams(270.0 , .65 , 2_000);
-        _base.drivetrain.turnTo.runSequentially();
         sleep(100);
 
         // Drive backwards into the stone for alignment and constant distance
@@ -178,7 +172,7 @@ public class AutoFrontSideBlue extends LinearOpMode
         _base.drivetrain.driveTo.runSequentially();
         sleep(100);
 
-        _base.drivetrain.turnTo.setParams(270.0 , .65 , 2_000);
+        _base.drivetrain.turnTo.setParams(90 , .65 , 2_000);
         _base.drivetrain.turnTo.runSequentially();
         sleep(100);
 
@@ -191,7 +185,7 @@ public class AutoFrontSideBlue extends LinearOpMode
 
         switch(vuMark)
         {
-            case LEFT:
+            case RIGHT:
                 _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE , .5 , 3_000);
                 break;
 
@@ -199,7 +193,7 @@ public class AutoFrontSideBlue extends LinearOpMode
                 _base.drivetrain.driveTo.setParams(NEAR_COL_DISTANCE + COL_SEPARATION , .5 , 3_000);
                 break;
 
-            case RIGHT:
+            case LEFT:
                 // Fall through intentional
 
             case UNKNOWN:

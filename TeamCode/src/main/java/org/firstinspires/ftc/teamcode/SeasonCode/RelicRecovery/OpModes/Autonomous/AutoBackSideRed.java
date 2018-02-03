@@ -51,7 +51,7 @@ public class AutoBackSideRed extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         RelicRecoveryVuMark vuMark;
-        JewelStatus jewelStatus = JewelStatus.UNCERTAIN;
+        JewelStatus jewelStatus;
 
 
         // Some boilerplate initialization
