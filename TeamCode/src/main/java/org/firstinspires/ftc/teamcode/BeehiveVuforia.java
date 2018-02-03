@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -24,7 +23,7 @@ public class BeehiveVuforia {
     private VuforiaTrackables relicTrackables;
     private ElapsedTime time;
     private Servo servo;
-    private final double LEFT_POSITION = 0;
+    private final double PICTOGRAPH_POSITION = 0;
     private final double RIGHT_POSITION = 1;
     private final double MIDDLE_POSITION = 0.5;
     public BeehiveVuforia(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -48,7 +47,7 @@ public class BeehiveVuforia {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
         if(time.getElapsedTime()<=3000) {
-          setServoPosition(LEFT_POSITION);
+          setServoPosition(PICTOGRAPH_POSITION);
           time.start();
           while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
