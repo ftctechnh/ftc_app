@@ -1,9 +1,14 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+
+import java.sql.Time;
 
 
 /**
@@ -11,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "Delta_TeleOp_main")
+@TeleOp(name = "Delta_TeleOp_Main")
 //@Disabled
 public class Delta_TeleOp_Main extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -33,9 +38,12 @@ public class Delta_TeleOp_Main extends OpMode {
     Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
+<<<<<<< HEAD
     public int slidesBaseValue;
     public int dif2Inch = 8;
     //public int dif7Inch =
+
+//>>>>>>> e61c696d6935f729077c37fff8c12172e5475585
 
 
 
@@ -89,7 +97,7 @@ public class Delta_TeleOp_Main extends OpMode {
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
-        slidesBaseValue = slideMotor.getCurrentPosition();
+
         openGlyph();
         jewel_servo.setPosition(0.1);
 
@@ -138,7 +146,7 @@ public class Delta_TeleOp_Main extends OpMode {
         // slideIncrement();
         incrementOpen();
         incrementClose();
-       slideIncrement();
+        slideIncrement();
 
         telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
@@ -224,29 +232,6 @@ public class Delta_TeleOp_Main extends OpMode {
         }
     }
 
-    public void slideIncrement() {
-        if (gamepad2.dpad_down){
-        moveTo2Inch();
-    }
-    else if (gamepad2.dpad_right){
-            moveTo7Inch();
-        }
-    else if (gamepad2.dpad_up){
-        moveTo13Inch();
-        }
-    }
-
-   public void moveTo2Inch(){
-
-   }
-   public void moveTo7Inch(){
-
-   }
-   public void moveTo13Inch(){
-
-   }
-
-
     public void glyphManipulator() {
        /* Boolean Right_Bumper = (gamepad1.right_bumper);
         Boolean Left_Bumper = (gamepad1.left_bumper);
@@ -258,10 +243,10 @@ public class Delta_TeleOp_Main extends OpMode {
 
 //opening the claw
 
-           openGlyph();
+            openGlyph();
         } else if (gamepad1.right_bumper) {
 
-          closeGlyph();
+            closeGlyph();
         }
 
 
@@ -272,6 +257,19 @@ public class Delta_TeleOp_Main extends OpMode {
         */
     }
 
+    public void slideIncrement() {
+
+        if(gamepad2.dpad_up){
+            moveUpInch(13);
+        }else if(gamepad2.dpad_right){
+            moveUpInch(7);
+        }else if(gamepad2.dpad_down){
+            moveUpInch(2);
+        }
+        else{
+
+        }
+    }
 
     public void incrementOpen(){
 
@@ -303,22 +301,20 @@ public class Delta_TeleOp_Main extends OpMode {
     }
 
 
-
-  /*  public void moveDownInch(double cm) {
+    public void moveUpInch(double inch) {
         double target_Position;
         double countsPerCM = 150;
-        double finalTarget = cm * countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+        double finalTarget = inch * countsPerCM * 2.54;
+        target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int) target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
-
+        slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy()) {
-            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
             telemetry.update();
 
         }
@@ -326,21 +322,44 @@ public class Delta_TeleOp_Main extends OpMode {
         slideMotor.setPower(0);
 
     }
-    */
-  public void openGlyph(){
+
+    /*  public void moveDownInch(double cm) {
+          double target_Position;
+          double countsPerCM = 150;
+          double finalTarget = cm * countsPerCM;
+          target_Position = slideMotor.getCurrentPosition() + finalTarget;
+
+          slideMotor.setTargetPosition((int) target_Position);
+
+          slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+          slideMotor.setPower(0.6);
+
+
+          while (slideMotor.isBusy()) {
+              telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+              telemetry.update();
+
+          }
+
+          slideMotor.setPower(0);
+
+      }
+      */
+    public void openGlyph(){
         glyphServoRight.setPosition(0.6);
         glyphServoLeft.setPosition(0.3);
-  }
+    }
 
-  public void closeGlyph(){
-      glyphServoRight.setPosition(0.8);
-      glyphServoLeft.setPosition(0.05);
-  }
+    public void closeGlyph(){
+        glyphServoRight.setPosition(0.8);
+        glyphServoLeft.setPosition(0.05);
+    }
 
-  public void middleGlyph(){
-      glyphServoRight.setPosition(0.75);
-      glyphServoLeft.setPosition(0.1);
+    public void middleGlyph(){
+        glyphServoRight.setPosition(0.75);
+        glyphServoLeft.setPosition(0.1);
 
-  }
+    }
 }
 
