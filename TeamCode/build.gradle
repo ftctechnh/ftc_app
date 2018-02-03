@@ -7,16 +7,9 @@
 // the build definitions, you can place those customizations in this file, but
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
+
+
 // Custom definitions may go here
+
 // Include common definitions from above.
 apply from: '../build.common.gradle'
-dependencies {
-    repositories {
-        maven { url 'http://repo1.maven.org/maven2' }
-    }
-    compile 'junit:junit:4.12'
-    compile 'org.mockito:mockito-core:1.10.19'
-}
-android {
-    buildToolsVersion '26.0.2'
-}
