@@ -2,6 +2,7 @@
 package org.directcurrent.season.relicrecovery.drivetrain
 
 
+import com.qualcomm.robotcore.hardware.DcMotor
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotCommand
 import org.firstinspires.ftc.robotcontroller.internal.Core.Sensors.REVIMU
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Util
@@ -53,7 +54,10 @@ class TurnTo(private val _drivetrain: Drivetrain , private val _imu: REVIMU): Ro
      */
     override fun runSequentially()
     {
-        _drivetrain.encoderOn()
+        if(_drivetrain.encoderMode() != DcMotor.RunMode.RUN_USING_ENCODER)
+        {
+            _drivetrain.encoderOn()
+        }
 
         _imu.pull()
 

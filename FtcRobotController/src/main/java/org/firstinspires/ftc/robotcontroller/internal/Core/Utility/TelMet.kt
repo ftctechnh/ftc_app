@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
  * Small Kotlin wrapper class for telemetry, allows non-OpMode classes to output telemetry
  */
 @Suppress("unused")
+@Deprecated("Robot base LinearOpModes can now be accessed- just use that instead")
 class TelMet(private val _telMet: Telemetry)
 {
     /**
