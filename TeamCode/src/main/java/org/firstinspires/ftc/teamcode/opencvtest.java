@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.detectors.GlyphDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.GlyphDetector;
 
 /**
  * Created by Peter on 1/25/2018.
  */
 @TeleOp(name = "cvtest", group = "linear OpMode")
-public class opencvtest extends OpMode{
+public class opencvtest extends OpMode {
 
     private GlyphDetector glyphDetector;
 
@@ -34,6 +34,10 @@ public class opencvtest extends OpMode{
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init();
 
+        //step 1: autonomous we already have
+        //step 2: rotate 90 degrees clockwise to face the camera towards the glyph pile
+        //step 3: this:
+
         //While the glyph is not within 10 pixels of the center:
         telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
         long precision = 10;
@@ -56,6 +60,8 @@ public class opencvtest extends OpMode{
         drive.driveTranslateRotate(0.5, 0, 0, 36);
         ForkLift.closeClaw();
     }
+
+    //step 5: put the glyph in the glyph box
     public void loop() {
         sleep(1000);
     }
