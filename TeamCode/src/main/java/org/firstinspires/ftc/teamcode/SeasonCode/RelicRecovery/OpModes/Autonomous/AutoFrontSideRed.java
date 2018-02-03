@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.Autonomous;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base;
 import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Components.GlyphGrabber.GlyphGrabber;
 
 
+@Autonomous(name = "Front Side Red")
 public class AutoFrontSideRed extends LinearOpMode
 {
     private Base _base = new Base();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.OpModes.Autonomous
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.directcurrent.core.AutoStopper
 import org.directcurrent.opencv.CVBridge
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.SeasonCode.RelicRecovery.Base
 
 
 @Autonomous(name = "Jewel")
+@Disabled
 class AutoJewel : LinearOpMode()
 {
     private val _base = Base()
