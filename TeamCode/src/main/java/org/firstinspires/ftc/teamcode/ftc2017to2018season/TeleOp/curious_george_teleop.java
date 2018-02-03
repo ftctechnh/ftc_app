@@ -178,12 +178,13 @@ public class curious_george_teleop extends OpMode {
         boolean rightButtonY = gamepad2.y;
         boolean rightButtonA = gamepad2.a;
 
-
         relicMotor.setPower(leftY_gp2);
 
         if(leftBumper){
             relicLeft.setPosition(0.75);
+            //relicLeft is in charge of moving the relic molds arm to grip onto the
             relicRight.setPosition(0.1);
+            //relicRight is in charge of moving the relic gripper
         }
 
         if (rightBumper){
@@ -193,6 +194,7 @@ public class curious_george_teleop extends OpMode {
 
         if (rightButtonY){
             relicMain.setPosition(0);
+            //relicMain is the servo that releases the relic arm out out
         }
 
         if(gamepad2.b){
