@@ -16,6 +16,7 @@ public class BlueFar extends LinearOpMode {
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
+
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
         telemetry.update();
@@ -30,15 +31,11 @@ public class BlueFar extends LinearOpMode {
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
-        JewelArm.up();
-        ForkLift.closeClaw();
-        sleep(200);
-        ForkLift.moveMotor(1, 400);
         JewelArm.findJewel(Color.BLUE);
         pictograph = vuforia.getMark();
         sleep(500);
         drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
-        drive.rightGyro(0,0, drive.SPIN_TO_CRYPTOBOX_SPEED, -178);
+        drive.rightGyro(drive.SPIN_TO_CRYPTOBOX_SPEED, -178);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
             drive.strafeRight(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }

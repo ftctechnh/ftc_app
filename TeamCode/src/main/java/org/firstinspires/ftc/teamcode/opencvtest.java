@@ -55,7 +55,7 @@ public class opencvtest extends OpMode {
         }
         //grab the glyph:
         drive.init();
-        drive.rightGyro(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED, -90);
+        drive.rightGyro(drive.SPIN_ON_BALANCE_BOARD_SPEED, -90);
         ForkLift.openClaw();
         drive.driveTranslateRotate(0.5, 0, 0, 36);
         ForkLift.closeClaw();

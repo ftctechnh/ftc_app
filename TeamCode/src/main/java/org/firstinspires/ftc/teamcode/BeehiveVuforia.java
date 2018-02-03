@@ -23,7 +23,7 @@ public class BeehiveVuforia {
     private VuforiaTrackables relicTrackables;
     private ElapsedTime time;
     private Servo servo;
-    private final double PICTOGRAPH_POSITION = 0;
+    private final double PICTOGRAPH_POSITION = 0.45;
     private final double RIGHT_POSITION = 1;
     private final double MIDDLE_POSITION = 0.5;
     public BeehiveVuforia(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -42,16 +42,28 @@ public class BeehiveVuforia {
     }
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
+        boolean tryAgain = false;
         time.start();
-        while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
+        while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        }
-        if(!time.getElapsedTime()<=3000) {
-          setServoPosition(PICTOGRAPH_POSITION);
-          time.start();
-          while(vuMark == RelicRecoveryVuMark.UNKNOWN && time.getElapsedTime()<=3000) {
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+          if(time.getElapsedTime()>2000) {
+              telemetry.addLine("tried again ");
+              telemetry.update();
+              tryAgain = true;
+              break;
           }
+        }
+        if(tryAgain) {
+            setServoPosition(PICTOGRAPH_POSITION);
+            time.resetTime();
+            while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
+                if(time.getElapsedTime()>3000) {
+                    telemetry.addLine("tried again and died again");
+                    telemetry.update();
+                    break;
+                }
+            }
         }
         setServoPosition(MIDDLE_POSITION);
         telemetry.addData("Pictograph", "%s visible", vuMark);

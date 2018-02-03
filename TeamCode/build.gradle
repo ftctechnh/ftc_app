@@ -14,8 +14,8 @@ android {
     lintOptions {
         abortOnError false
     }
-    buildToolsVersion '26.0.2'
-    compileSdkVersion 23
+    buildToolsVersion '27.0.3'
+    compileSdkVersion 27
 }
 dependencies {
     implementation project(':openCVLibrary320')

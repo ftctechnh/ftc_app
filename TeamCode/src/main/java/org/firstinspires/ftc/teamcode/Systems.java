@@ -29,7 +29,7 @@ public class Systems {
     }
     void pushInBlock() {
         ForkLift.openClaw();
-        AutoDrive.driveTranslateRotate(0, -AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,4);
+        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,4);
         ForkLift.closeClaw();
         ForkLift.moveUntilDown(0.75);
         AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,10);

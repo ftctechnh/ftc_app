@@ -32,10 +32,6 @@ public class RedFar extends LinearOpMode {
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
-        JewelArm.up();
-        ForkLift.closeClaw();
-        sleep(200);
-        ForkLift.moveMotor(1, 300);
         JewelArm.findJewel(Color.RED);
         pictograph = vuforia.getMark();
         sleep(500);

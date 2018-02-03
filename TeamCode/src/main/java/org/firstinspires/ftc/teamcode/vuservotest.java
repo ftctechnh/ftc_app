@@ -15,7 +15,6 @@ public class vuservotest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         BeehiveVuforia = new BeehiveVuforia(hardwareMap, telemetry);
         waitForStart();
-        telemetry.addData("the thing is", BeehiveVuforia.getMark());
-        Systems.sleep(50000);
+        BeehiveVuforia.getMark();
     }
 }

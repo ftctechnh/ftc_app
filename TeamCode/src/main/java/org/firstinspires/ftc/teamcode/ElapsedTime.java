@@ -16,8 +16,13 @@ public class ElapsedTime {
         currentTime = System.nanoTime();
         return currentTime;
     }
-    //returns elapssed time in MILLISECONDS
+    //returns elapsed time in MILLISECONDS
     double getElapsedTime() {
         return (getCurrentTime() - startTime)/1000000L;
+    }
+    void resetTime() {
+        long time = System.nanoTime();
+        this.startTime = time;
+        this.currentTime = time;
     }
 }

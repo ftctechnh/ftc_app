@@ -17,6 +17,7 @@ public class RedRecovery extends LinearOpMode {
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
+    private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY = 37.5;
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
@@ -32,26 +33,23 @@ public class RedRecovery extends LinearOpMode {
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
-        JewelArm.up();
-        ForkLift.closeClaw();
-        sleep(200);
-        ForkLift.moveMotor(1, 300);
         JewelArm.findJewel(Color.RED);
         pictograph = vuforia.getMark();
         sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY + drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION);
+            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
         }
-        drive.rightGyro(0, 0, drive.SPIN_TO_CRYPTOBOX_SPEED, -88);
-        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED,1);
+        ForkLift.moveMotor(-1,300);
+        drive.rightGyro(drive.SPIN_TO_CRYPTOBOX_SPEED, -90);
+        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
         Systems.pushInBlock();
-        drive.forward(drive.BACK_AWAY_FROM_BLOCK_SPEED,4);
+        drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
         //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
         ForkLift.moveUntilDown(0.75);

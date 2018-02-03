@@ -14,13 +14,12 @@ public class JewelArm {
     public Servo upDownServo;
     public Servo endServo;
     ColorSensor cs;
-    private final double DOWN_POSITION = 0.025;
+    private final double DOWN_POSITION = 0.0175;
     private final double UP_POSITION = 0.06;
     private final double RIGHT_POSITION = 1;
     private final double LEFT_POSITION = 0;
     private final double MIDDLE_POSITION = 0.5;
-    private final double TRY_AGAIN_POSITION = 0.35;
-    private final double MIN_COLOR_DETECTION_THRESHOLD = 5;
+    private final double MIN_COLOR_DETECTION_THRESHOLD = 20;
     private Telemetry telemetry;
 
     public JewelArm(Servo upDownServo, Servo endServo, ColorSensor cs, Telemetry telemetry) {
@@ -54,49 +53,41 @@ public class JewelArm {
     }
 
     public void findJewel(Color allianceColor) {
+        Color jewelColor = Color.UNKNOWN;
         setEndPosition(MIDDLE_POSITION);
         down();
         Systems.sleep(1500);
         ElapsedTime time = new ElapsedTime();
         time.start();
-        boolean tryAgain = false;
         while(cs.red() < MIN_COLOR_DETECTION_THRESHOLD && cs.blue() < MIN_COLOR_DETECTION_THRESHOLD) {
             if(time.getElapsedTime() > 3000) {
-                tryAgain = true;
-                break;
+                setEndPosition(MIDDLE_POSITION);
+                cs.enableLed(false);
+                up();
+                Systems.sleep(750);
+                left();
+                return;
             }
         }
-        if (tryAgain) {
-            //setEndPosition(TRY_AGAIN_POSITION);
-            time.start();
-            while (cs.red() < MIN_COLOR_DETECTION_THRESHOLD && cs.blue() < MIN_COLOR_DETECTION_THRESHOLD) {
-                if(time.getElapsedTime() > 3000) {
-                    return;
-                }
-            }
+        if (cs.red() > cs.blue()) {
+            jewelColor = Color.RED;
         }
-        int red = 0, blue = 0;
-        for (int i=0; i<5; i++) {
-            if (cs.red() > cs.blue()) {
-                red++;
-            }
-            else if (cs.blue()>cs.red()) {
-                blue++;
-            }
+        else if (cs.blue()>cs.red()) {
+            jewelColor = Color.BLUE;
         }
         if(allianceColor == Color.RED) {
-          if (red > blue) {
+          if (jewelColor == Color.RED) {
             right();
           }
-          else if (blue > red) {
+          else if (jewelColor == Color.BLUE) {
             left();
           }
         }
         if(allianceColor == Color.BLUE) {
-          if (blue > red) {
+          if (jewelColor == Color.BLUE) {
             right();
           }
-          else if (red > blue) {
+          else if (jewelColor == Color.RED) {
             left();
           }
         }

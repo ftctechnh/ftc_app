@@ -5,7 +5,7 @@ package org.firstinspires.ftc.teamcode;
  */
 
 public enum Color {
-    RED, BLUE;
+    RED, BLUE, UNKNOWN;
     Color not(Color target) {
         Color notTarget = null;
         switch (target) {

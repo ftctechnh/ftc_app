@@ -37,13 +37,16 @@ public class ForkLift {
 
     public void init() {
         openClaw();
-        moveUntilDown(0.75);
+        moveUntilDown();
     }
     public void autoInit() {
         openClaw();
         sleep(750);
         moveMotor(0.5, 200);
         init();
+        closeClaw();
+        sleep(200);
+        moveMotor(1, 400);
     }
 
     public void closeClaw() {
