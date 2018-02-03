@@ -73,7 +73,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         robot.closeBlockClaw();
         robot.raiseIntake();
         robot.setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.lift.setTargetPosition(200);
+        robot.lift.setTargetPosition(-400);
         robot.lift.setPower(1.0);
         robot.almostLowerWhipSnake();
 
@@ -86,6 +86,14 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) { // We have to make a guess
             vuMark = RelicRecoveryVuMark.CENTER;
+        }
+
+        if (robot.color == RED) {
+            if (vuMark == RelicRecoveryVuMark.LEFT) {
+                vuMark = RelicRecoveryVuMark.RIGHT;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                vuMark = RelicRecoveryVuMark.LEFT;
+            }
         }
 
         // Any time that we already spent looking for the pictograph can be discounted here
@@ -122,7 +130,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
             telemetry.log().add("Current left distance: " + currentDist);
             telemetry.log().add("Targeting a distance of " +  COLUMN_DISTANCES.get(vuMark)[0]);
-            double difference = COLUMN_DISTANCES.get(vuMark)[0] - currentDist;
+            double difference = (COLUMN_DISTANCES.get(vuMark)[0] - currentDist) * robot.color.getColorCode();
             telemetry.log().add("Off by " + difference + " inches");
 
             if (Math.abs(difference) < CM_TO_INCHES) {
@@ -145,11 +153,38 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
         // Turn around to get more blocks
         driveStraight(Math.PI/2, -0.6, 1000); // Back up
+
+        // Let's grab another block! It's OK to be a little more violent here, so we'll
+        // speed things up quite a bit
         turnToPos(Math.PI*1.5);
 
-        stopMoving();
+        /*
+        // Deploy the boys
+        robot.lowerIntake();
+        robot.closeBlockClaw();
+        robot.setIntakeSpeed(1); // Max power on intake
 
+        // Open the intake back up while driving forwards
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                robot.openBlockClaw();
+            }
+        }, 300);
 
+        // Align block
+        driveStraight(Math.PI*1.5, 1.0, 1000);
+        driveStraight(Math.PI*1.5, -1.0, 300);
+        driveStraight(Math.PI*1.5, 1.0, 500);
+
+        robot.closeBlockClaw();
+        robot.sleep(100);
+        robot.lift.setTargetPosition(-650);
+        turnToPos(Math.PI/2);
+
+        driveStraight(Math.PI/2, 1.0, 2000);
+        robot.openBlockClaw();
+        driveStraight(Math.PI/2, -1.0, 500);*/
     }
 
     public void driveSidewaysInches(double inches) { // How much to the right?

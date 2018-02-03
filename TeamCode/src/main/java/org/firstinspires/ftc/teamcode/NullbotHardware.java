@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -47,8 +48,8 @@ public class NullbotHardware {
 
     public PIDTestInterface[] driveInterface;
 
-    public DcMotor lift;
-    public DcMotor zType;
+    public DcMotorEx lift;
+    public DcMotorEx zType;
 
     public DcMotor intakeLeft;
     public DcMotor intakeRight;
@@ -124,8 +125,8 @@ public class NullbotHardware {
         colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
 
         if (!isTestChassis) {
-            lift = hwMap.dcMotor.get("lift");
-            zType = hwMap.dcMotor.get("zType");
+            lift = (DcMotorEx) hwMap.dcMotor.get("lift");
+            zType = (DcMotorEx) hwMap.dcMotor.get("zType");
 
             intakeLeft = hwMap.dcMotor.get("intakeLeft");
             intakeRight = hwMap.dcMotor.get("intakeRight");
@@ -436,8 +437,8 @@ public class NullbotHardware {
         lowerLeftWhipSnake();
     }
     public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(0.49);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(0.08);}
-    public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(0.12);}
+    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(0.02);}
+    public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(0.09);}
     public void almostLowerWhipSnake() {leftWhipSnake.setPosition(0.44);}
 
     public void crunchBlockClaw() {
@@ -456,8 +457,8 @@ public class NullbotHardware {
 
     }
 
-    public final double RELIC_CLAW_OPEN_POSITION = 0.34;
-    public final double RELIC_CLAW_CLOSED_POSITION = 0.06;
+    public final double RELIC_CLAW_OPEN_POSITION = 0.32;
+    public final double RELIC_CLAW_CLOSED_POSITION = 0;
     public boolean RELIC_CLAW_IS_OPEN = false;
 
     public void flattenRelicClaw() {relicClaw.setPosition(0.65); RELIC_CLAW_IS_OPEN = true;}
@@ -514,7 +515,7 @@ public class NullbotHardware {
     }
 
     public void raiseIntake() {
-        leftIntakeFlipper.setPosition(0.0); // Don't stress it
+        leftIntakeFlipper.setPosition(0.0);
         rightIntakeFlipper.setPosition(1.0);
         intakeTarget = IntakeTarget.RAISED;
     }

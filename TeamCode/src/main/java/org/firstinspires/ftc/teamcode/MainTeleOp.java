@@ -56,8 +56,8 @@ public class MainTeleOp extends LinearOpMode {
     public void runOpMode() {
         robot.init(hardwareMap, this, gamepad1, gamepad2);
 
-        lift = new ConstrainedPIDMotor(robot.lift, 100, 1.0, 0.5, 0, -2500, telemetry, 1.0);
-        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.4, 0, 12288, telemetry, 0.05);
+        lift = new ConstrainedPIDMotor(robot.lift, 100, 1.0, 0.5, 0, -2500, telemetry, false);
+        zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.4, 0, 12288, telemetry, true);
 
         waitForStart();
 
@@ -184,6 +184,7 @@ public class MainTeleOp extends LinearOpMode {
                 robot.setIntakeSpeed(0);
                 telemetry.addData("Spinning intake", false);
             }
+            telemetry.addData("Zarm lockpos", zType.lockPos);
 
             if (Math.abs(gamepad2.left_stick_y) > 0.5) {
                 if (Math.signum(gamepad2.left_stick_y) > 0) {
