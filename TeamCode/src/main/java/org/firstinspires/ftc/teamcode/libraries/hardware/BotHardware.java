@@ -81,8 +81,8 @@ public class BotHardware {
         public static final double backDropDown = 0.10;
         public static final double backDropUp = 0.82;
 
-        public static final double frontDropUp = 0.6;
-        public static final double frontDropDown = 0.23;
+        public static final double frontDropUp = 0.7;
+        public static final double frontDropDown = 0.2;
 
         private final String name;
         public Servo servo;
@@ -150,6 +150,8 @@ public class BotHardware {
     public void init() {
         //init all motors
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
+        Motor.liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Motor.liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //init motor shim array
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
         //liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };

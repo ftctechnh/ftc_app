@@ -76,9 +76,14 @@ public class Teleop extends OpMode {
         }
         */
 
-        else if(gamepad2.left_bumper && BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos > 0 && BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos > 0) bot.setLiftMotors(-1.0f);
-        else if(gamepad2.right_bumper && BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos < LIFT_COUNTS && BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos < LIFT_COUNTS) bot.setLiftMotors(1.0f);
-        else bot.setLiftMotors(0);
+        if(gamepad2.left_bumper /*&& BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos > 0 && BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos > 0 */) bot.setLiftMotors(-1.0f);
+        else if(gamepad2.right_bumper /*&& BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos < LIFT_COUNTS && BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos < LIFT_COUNTS*/) bot.setLiftMotors(1.0f);
+        else {
+            bot.setLiftMotors(0);
+            if(-((BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos)  - (BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos)) > 0) BotHardware.Motor.liftLeft.motor.setPower(0.1f);
+            else BotHardware.Motor.liftLeft.motor.setPower(-0.1f)
+            ;
+        }
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
