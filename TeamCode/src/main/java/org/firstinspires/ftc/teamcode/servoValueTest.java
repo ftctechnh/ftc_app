@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by anshnanda on 04/02/18.
  */
 
-@TeleOp (name = "Servo motor value test", group = "z tests")
+@TeleOp (name = "Servo motor value test", group = "test")
 
 public class servoValueTest extends LinearOpMode{
 
