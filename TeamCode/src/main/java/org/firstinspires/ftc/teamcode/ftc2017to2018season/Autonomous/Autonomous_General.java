@@ -66,7 +66,7 @@ public class Autonomous_General extends LinearOpMode {
     public static double COUNTS_PER_CM;
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
-    double P_TURN_COEFF = 0.1;
+    double P_TURN_COEFF = 1./180;
     double TURN_THRESHOLD = 2.5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
@@ -143,6 +143,7 @@ public class Autonomous_General extends LinearOpMode {
             // and named "imu".
             revGyro = hardwareMap.get(BNO055IMU.class, "revGyro");
             revGyro.initialize(parameters);
+            composeTelemetry();
         }
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");

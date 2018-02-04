@@ -170,7 +170,7 @@ public class curious_george_teleop extends OpMode {
     Functions go here
  */
 
-    public void relicManipulator(){
+    public void relicManipulator() {
 
         boolean rightBumper = gamepad2.right_bumper;
         boolean leftBumper = gamepad2.left_bumper;
@@ -181,29 +181,30 @@ public class curious_george_teleop extends OpMode {
 
         relicMotor.setPower(leftY_gp2);
 
-        if(leftBumper){
+        if (leftBumper) {
             relicLeft.setPosition(0.75);
             relicRight.setPosition(0.1);
         }
 
-        if (rightBumper){
+        if (rightBumper) {
             relicLeft.setPosition(0);
             relicRight.setPosition(1);
+            
         }
 
-        if (rightButtonY){
+        if (rightButtonY) {
             relicMain.setPosition(0);
         }
 
-        if(gamepad2.b){
+        if (gamepad2.b) {
             relicLeft.setPosition(0.75);
             relicRight.setPosition(0.25);
         }
 
-        if (rightButtonA){
+        if (rightButtonA) {
             relicMain.setPosition(1);
         }
-        if (gamepad2.x){
+        if (gamepad2.x) {
             relicMain.setPosition(0.45);
         }
     }
