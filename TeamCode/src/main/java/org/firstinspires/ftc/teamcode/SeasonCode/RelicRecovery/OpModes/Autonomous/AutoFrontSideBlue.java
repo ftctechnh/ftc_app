@@ -185,7 +185,7 @@ public class AutoFrontSideBlue extends LinearOpMode
 
 
 
-        final double NEAR_COL_DISTANCE = 3.75;
+        final double NEAR_COL_DISTANCE = 4.0;
         final double COL_SEPARATION = 8.5;
 
 

@@ -181,7 +181,7 @@ public class AutoFrontSideRed extends LinearOpMode
 
 
 
-        final double NEAR_COL_DISTANCE = 3.5;
+        final double NEAR_COL_DISTANCE = 4.0;
         final double COL_SEPARATION = 8.5;
 
 
