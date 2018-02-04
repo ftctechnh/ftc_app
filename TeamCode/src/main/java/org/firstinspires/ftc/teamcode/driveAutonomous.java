@@ -1,31 +1,4 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+
 
 package org.firstinspires.ftc.teamcode;
 
@@ -44,31 +17,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-/**
- * This file illustrates the concept of driving a path based on encoder counts.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
+/*
+This program contains all the autnomous programs. The varaible sign changes if it is red orr blue for the turns.
+You need to turn more on front / facing the crowd becuase it is too close to the glyph pit.
+All other programs extended driveAutonomous.
+Two deciding variables red or blue/alliance which decides what sign is and close to the crowd or not decides the front.
  */
 
 @Autonomous(name="Pushbot: Drive Autonomous" , group="Pushbot")
@@ -115,7 +68,7 @@ public abstract class driveAutonomous extends LinearOpMode {
         this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        relicTemplate.setName("relicVuMarkTemplate");
         relicTrackables.activate();
 
         // Send telemetry message to signify robot waiting;
@@ -139,7 +92,7 @@ public abstract class driveAutonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color"); // Uses the phone to find the color sensor named sensor_color
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "sensor_color");
 
         robot.ballArm.setPosition(ballArmDown);// lowers ballArm all the way down
 
@@ -163,6 +116,8 @@ public abstract class driveAutonomous extends LinearOpMode {
 
         NormalizedRGBA colors = colorSensor.getNormalizedColors(); // reads color sensor and puts it in the variable colors
 
+        //  checks if you are red or blue to decided sign
+        //when you turn you multiply by sign
         if (alliance == "Red") {
             sign = 1;
         }
@@ -170,7 +125,7 @@ public abstract class driveAutonomous extends LinearOpMode {
             sign = -1;
         }
 
-        if (colors.red < colors.blue){ //It checks if the ball is blue
+        if (colors.red < colors.blue){ //It checks if the ball is bluecthen turns to knock of the correct ball
 
             telemetry.addData("Status", "Sensed Blue ");    //
             telemetry.update();
@@ -193,15 +148,16 @@ public abstract class driveAutonomous extends LinearOpMode {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("VuMark", "%s visible", vuMark);
             telemetry.update();
-        }while (runtime.seconds() < 1);   // vuMark ==  RelicRecoveryVuMark.UNKNOWN)
+        }while (runtime.seconds() < 1);
         encoderDrive(TURN_SPEED, -1.5*sign, 1.5*sign, 5);
 
         if (position == "Front") {
             // drive to cryptobox
             encoderDrive(DRIVE_SPEED, -29, -29, 5);      // drives off balancing stone
             encoderDrive(TURN_SPEED, -14*sign, 14*sign, 30);
-            encoderDrive(DRIVE_SPEED, -18.5,  -18.5, 5);  //  drive that clears the balancing stone
+            encoderDrive(DRIVE_SPEED, -18.5,  -18.5, 5);  //  turns twice to avoid glyph  pit
 
+            //turns acording to pictograph reading
             if ((alliance == "Red" && vuMark == RelicRecoveryVuMark.RIGHT)|| (alliance == "Blue" && vuMark == RelicRecoveryVuMark.LEFT)){
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
@@ -222,6 +178,7 @@ public abstract class driveAutonomous extends LinearOpMode {
         }
         else {
             encoderDrive(DRIVE_SPEED, -32.5, -32.5, 5); // Drive off balance board
+            //turns acording to pictograph reading
             if ((alliance == "Red" && vuMark == RelicRecoveryVuMark.RIGHT )|| (alliance == "Blue" && vuMark == RelicRecoveryVuMark.LEFT ) ||  vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
