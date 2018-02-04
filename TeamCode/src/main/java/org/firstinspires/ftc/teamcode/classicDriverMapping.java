@@ -35,7 +35,7 @@ public class classicDriverMapping extends LinearOpMode
 
         while(opModeIsActive())
         {
-            if (gamepad1.left_stick_x<0.05 || gamepad1.left_stick_y<0.05) {
+            if (gamepad1.left_stick_x<0.05 && gamepad1.left_stick_y<0.05) {
                 deadzone = true;
             }
 
@@ -43,7 +43,7 @@ public class classicDriverMapping extends LinearOpMode
                 deadzone = false;
             }
 
-            if (gamepad1.right_stick_x<0.05 || gamepad1.right_stick_y<0.05) {
+            if (gamepad1.right_stick_x<0.05 && gamepad1.right_stick_y<0.05) {
                 deadzone2 = true;
             }
 
@@ -51,8 +51,71 @@ public class classicDriverMapping extends LinearOpMode
                 deadzone2 = false;
             }
 
+            //STOP
+            if (gamepad1.left_stick_x<0.05 && gamepad1.left_stick_y<0.05 && gamepad1.right_stick_x<0.05 && gamepad1.right_stick_y<0.05 ) {
+                motorFrontRight.setPower(0);
+                motorFrontLeft.setPower(0);
+                motorBackLeft.setPower(0);
+                motorBackRight.setPower(0);
+            }
+
+            //LEFT-STICK
             if (deadzone = false) {
-                //LEFT-STICK
+                //FORWARD
+                if (gamepad1.right_stick_x<0.38 && gamepad1.right_stick_x>-0.38 && gamepad1.right_stick_y>0.05) {
+                    motorFrontRight.setPower(gamepad1.right_trigger);
+                    motorFrontLeft.setPower(gamepad1.right_trigger);
+                    motorBackLeft.setPower(gamepad1.right_trigger);
+                    motorBackRight.setPower(gamepad1.right_trigger);
+                }
+                //BACKWARD
+                if (gamepad1.right_stick_x<0.38 && gamepad1.right_stick_x>-0.38 && gamepad1.right_stick_y<-0.05) {
+                    motorFrontRight.setPower(-gamepad1.right_trigger);
+                    motorFrontLeft.setPower(-gamepad1.right_trigger);
+                    motorBackLeft.setPower(-gamepad1.right_trigger);
+                    motorBackRight.setPower(-gamepad1.right_trigger);
+                }
+                //AXIS-LEFT
+                if (gamepad1.right_stick_y<0.38 && gamepad1.right_stick_y>-0.38 && gamepad1.right_stick_x<-0.05) {
+                    motorFrontRight.setPower(gamepad1.right_trigger);
+                    motorFrontLeft.setPower(-gamepad1.right_trigger);
+                    motorBackLeft.setPower(-gamepad1.right_trigger);
+                    motorBackRight.setPower(gamepad1.right_trigger);
+                }
+                //AXIS-RIGHT
+                if (gamepad1.right_stick_y<0.38 && gamepad1.right_stick_y>-0.38 && gamepad1.right_stick_x>0.05) {
+                    motorFrontRight.setPower(-gamepad1.right_trigger);
+                    motorFrontLeft.setPower(gamepad1.right_trigger);
+                    motorBackLeft.setPower(gamepad1.right_trigger);
+                    motorBackRight.setPower(-gamepad1.right_trigger);
+                }
+                /*
+                //FORWARD
+                if (gamepad1.right_stick_x<0.38 && gamepad1.right_stick_x>-0.38 && gamepad1.right_stick_y>0.05) {
+                    telemetry.clear();
+                    telemetry.addData("FWD", deadzone);
+                    telemetry.update();
+                }
+                //BACKWARD
+                if (gamepad1.right_stick_x<0.38 && gamepad1.right_stick_x>-0.38 && gamepad1.right_stick_y<-0.05) {
+                    telemetry.clear();
+                    telemetry.addData("BCK", deadzone);
+                    telemetry.update();
+                }
+                //AXIS-LEFT
+                if (gamepad1.right_stick_y<0.38 && gamepad1.right_stick_y>-0.38 && gamepad1.right_stick_x<-0.05) {
+                    telemetry.clear();
+                    telemetry.addData("LFT", deadzone);
+                    telemetry.update();
+                }
+                //AXIS-RIGHT
+                if (gamepad1.right_stick_y<0.38 && gamepad1.right_stick_y>-0.38 && gamepad1.right_stick_x>0.05) {
+                    telemetry.clear();
+                    telemetry.addData("RHT", deadzone);
+                    telemetry.update();
+                }
+                */
+                /*
                 //FORWARD
                 if ((gamepad1.left_stick_x<(Math.sqrt(2)/2)) && (gamepad1.left_stick_x>-(Math.sqrt(2)/2)) && (gamepad1.left_stick_y>0.05)) {
                     telemetry.clear();
@@ -77,32 +140,38 @@ public class classicDriverMapping extends LinearOpMode
                     telemetry.addData("RHT", deadzone);
                     telemetry.update();
                 }
+                */
             }
 
-            if (deadzone = false) {
+            //RIGHT-STICK
+            if (deadzone2 = false) {
                 //FORWARD
                 if (gamepad1.right_stick_x<0.38 && gamepad1.right_stick_x>-0.38 && gamepad1.right_stick_y>0.05) {
-                    telemetry.clear();
-                    telemetry.addData("rFWD", deadzone2);
-                    telemetry.update();
+                    motorFrontRight.setPower(gamepad1.right_trigger);
+                    motorFrontLeft.setPower(gamepad1.right_trigger);
+                    motorBackLeft.setPower(gamepad1.right_trigger);
+                    motorBackRight.setPower(gamepad1.right_trigger);
                 }
                 //BACKWARD
                 if (gamepad1.right_stick_x<0.38 && gamepad1.right_stick_x>-0.38 && gamepad1.right_stick_y<-0.05) {
-                    telemetry.clear();
-                    telemetry.addData("rBCK", deadzone2);
-                    telemetry.update();
+                    motorFrontRight.setPower(-gamepad1.right_trigger);
+                    motorFrontLeft.setPower(-gamepad1.right_trigger);
+                    motorBackLeft.setPower(-gamepad1.right_trigger);
+                    motorBackRight.setPower(-gamepad1.right_trigger);
                 }
                 //SWAY-LEFT
                 if (gamepad1.right_stick_y<0.38 && gamepad1.right_stick_y>-0.38 && gamepad1.right_stick_x<-0.05) {
-                    telemetry.clear();
-                    telemetry.addData("rSWAY-LEFT", deadzone2);
-                    telemetry.update();
+                    motorFrontRight.setPower(gamepad1.right_trigger);
+                    motorFrontLeft.setPower(-gamepad1.right_trigger);
+                    motorBackLeft.setPower(gamepad1.right_trigger);
+                    motorBackRight.setPower(-gamepad1.right_trigger);
                 }
                 //SWAY-RIGHT
                 if (gamepad1.right_stick_y<0.38 && gamepad1.right_stick_y>-0.38 && gamepad1.right_stick_x>0.05) {
-                    telemetry.clear();
-                    telemetry.addData("rSWAY-RIGHT", deadzone2);
-                    telemetry.update();
+                    motorFrontRight.setPower(-gamepad1.right_trigger);
+                    motorFrontLeft.setPower(gamepad1.right_trigger);
+                    motorBackLeft.setPower(-gamepad1.right_trigger);
+                    motorBackRight.setPower(gamepad1.right_trigger);
                 }
             }
 
