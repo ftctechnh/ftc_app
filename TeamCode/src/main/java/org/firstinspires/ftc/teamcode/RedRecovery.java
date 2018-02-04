@@ -35,24 +35,23 @@ public class RedRecovery extends LinearOpMode {
         ForkLift.autoInit();
         JewelArm.findJewel(Color.RED);
         pictograph = vuforia.getMark();
-        sleep(500);
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY + drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY + drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
             drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY - drive.CYRPTOBOX_COLUMNS_OFFSET);
+            drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY - drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
         }
-        ForkLift.moveMotor(-1,300);
+        ForkLift.moveMotor(-1,250);
         drive.rightGyro(drive.SPIN_TO_CRYPTOBOX_SPEED, -90);
-        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
+        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 5);
         Systems.pushInBlock();
         drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
         //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
-        ForkLift.moveUntilDown(0.75);
+        ForkLift.moveUntilDown();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }

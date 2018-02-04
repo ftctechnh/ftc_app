@@ -21,20 +21,18 @@ public class AutoDrive {
     public double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    static final double MIN_SPEED = 0.15;
+    static final double MIN_MOVE_SPEED = 0.2;
     static final double MIN_SPIN_SPEED = 0.2;
     static final double GYRO_OFFSET = 2.25;
     static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
-    static final double SPIN_ON_BALANCE_BOARD_DISTANCE = 3;
     static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
-    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.6;
-    static final double SPIN_TO_CRYPTOBOX_SPEED = 0.5;
+    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.8;
+    static final double SPIN_TO_CRYPTOBOX_SPEED = 0.75;
     static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
-    static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_RECOVERY_POSITION = 34.5;
-    static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 15.5;
-    static final double CYRPTOBOX_COLUMNS_OFFSET = 11;
+    static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 14;
+    static final double CRYPTOBOX_COLUMNS_OFFSET_RECOVERY = 11;
+    static final double CRYPTOBOX_COLUMNS_OFFSET_FAR = 11;
     static final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
-    static final double SPIN_TO_CENTER_SPEED = 0.75;
     static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -68,7 +66,11 @@ public class AutoDrive {
         driveSpeeds(fl, fr, rl, rr);
         ElapsedTime time = new ElapsedTime();
         time.start();
-        while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget))) && time.getElapsedTime() <= 1.2*clicks/420/highestSpeed*100){
+        while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget)))){
+            if(time.getElapsedTime() > 3*clicks/420/highestSpeed*100) {
+                telemetry.addLine("It timed out...");
+                telemetry.update();
+            }
             driveSpeeds(calculateSpeed(FrontLeft, flTarget, fl), calculateSpeed(FrontRight, frTarget, fr), calculateSpeed(RearLeft, rlTarget, rl), calculateSpeed(RearRight, rrTarget, rr));
         }
         stopMotors();
@@ -243,10 +245,10 @@ public class AutoDrive {
     }
     private double calculateSpeed(DcMotor motor, double targetClicks, double defaultSpeed) {
         if (defaultSpeed>0) {
-            return Range.clip(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks, MIN_SPEED, 1);
+            return Range.clip(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks, MIN_MOVE_SPEED, 1);
         }
         else if (defaultSpeed<0) {
-            return Range.clip(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks, -1, -MIN_SPEED);
+            return Range.clip(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks, -1, -MIN_MOVE_SPEED);
         }
         else {
             return 0;
