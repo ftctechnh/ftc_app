@@ -137,10 +137,9 @@ public class Delta_TeleOp extends OpMode {
         FourWheelDrive();
         slideMove();
         glyphManipulator();
-        // slideIncrement();
         incrementOpen();
         incrementClose();
-       slideIncrement();
+        slideIncrement();
 
         telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
