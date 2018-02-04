@@ -81,7 +81,7 @@ public class servo_valueRead extends OpMode {
         jewel_servo = hardwareMap.servo.get("jewelServo");
 
         glyphServoLeft.setPosition(0.5);
-        glyphServoRight.setPosition(0.5);
+        glyphServoRight.setPosition(1.0);
         jewel_servo.setPosition(0.5);
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -130,14 +130,14 @@ public class servo_valueRead extends OpMode {
         glyphRightPos = glyphServoRight.getPosition();
         jewelPos = jewel_servo.getPosition();
 
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
+        telemetry.addData("right stick is", gamepad1.right_stick_y);
+        telemetry.addData("left stick is", gamepad1.left_stick_y);
+       // telemetry.addData("jewel pos", jewel_servo.getPosition());
         telemetry.update();
 
     }
 
-    public void moveServos(){
+ /*   public void moveServos(){
 
 
 
@@ -168,7 +168,7 @@ public class servo_valueRead extends OpMode {
             sleep(500);
 
         }
-    }
+    }*/
 
     public void sleep(long time){
         long startTime = System.currentTimeMillis();

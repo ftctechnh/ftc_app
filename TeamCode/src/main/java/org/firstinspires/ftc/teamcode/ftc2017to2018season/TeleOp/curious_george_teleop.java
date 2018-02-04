@@ -94,8 +94,8 @@ public class curious_george_teleop extends OpMode {
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
 
 
-        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
-        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
 
@@ -146,6 +146,8 @@ public class curious_george_teleop extends OpMode {
         glyphManipulator();
         slideIncrement();
         relicManipulator();
+        incrementClose();
+        incrementOpen();
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -225,14 +227,14 @@ public class curious_george_teleop extends OpMode {
         //
         // run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.left_trigger > 0) {
+        if (gamepad1.right_trigger > 0) {
 
             leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
 
-        } else if (gamepad1.right_trigger > 0) {
+        } else if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
@@ -240,10 +242,10 @@ public class curious_george_teleop extends OpMode {
             rightWheelMotorBack.setPower(-1);
 
         } else {
-            leftWheelMotorFront.setPower(-leftY_gp1);
-            leftWheelMotorBack.setPower(-leftY_gp1);
-            rightWheelMotorFront.setPower(-rightY_gp1);
-            rightWheelMotorBack.setPower(-rightY_gp1);
+            leftWheelMotorFront.setPower(leftY_gp1);
+            leftWheelMotorBack.setPower(leftY_gp1);
+            rightWheelMotorFront.setPower(rightY_gp1);
+            rightWheelMotorBack.setPower(rightY_gp1);
         }
 
 
@@ -278,7 +280,7 @@ public class curious_george_teleop extends OpMode {
 
             closeGlyph();
         }
-        else if (gamepad1.x){
+        else if (gamepad1.right_bumper&&gamepad1.left_bumper){
             middleGlyph();
 
         }
@@ -289,7 +291,33 @@ public class curious_george_teleop extends OpMode {
 
         */
     }
+    public void wait(int mSec){
+        double startTime;
+        double endTime;
 
+        startTime = System.currentTimeMillis();
+        endTime = startTime+mSec;
+
+        while(endTime >= System.currentTimeMillis()){
+
+        }
+    }
+    public void incrementOpen(){
+
+        while (gamepad1.x){
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
+            wait(300);
+        }
+    }
+    public void incrementClose(){
+
+        while (gamepad1.y) {
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
+            wait(300);
+        }
+    }
     public void slideIncrement() {
 
         if (gamepad2.dpad_up) {
@@ -350,19 +378,18 @@ public class curious_george_teleop extends OpMode {
 
         //switching values with closeGlyph
         //reversed values
-        glyphServoRight.setPosition(0.3);
-        glyphServoLeft.setPosition(0.9);
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
     }
 
     public void closeGlyph(){
         //reversed values
-        glyphServoRight.setPosition(0.4);
-        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(0.7);
+        glyphServoLeft.setPosition(0.2);
     }
 
     public void middleGlyph(){
-        glyphServoRight.setPosition(0.7);
-        glyphServoLeft.setPosition(0.25);
+        glyphServoRight.setPosition(0.6);
+        glyphServoLeft.setPosition(0.3);
     }
 }
-
