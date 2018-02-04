@@ -54,47 +54,84 @@ public class servoValueTest extends LinearOpMode{
 
         while (opModeIsActive()){
 
+//            if(gamepad1.a)
+//            {
+//                currServo = 'a';
+//            }
+//            if(gamepad1.b)
+//            {
+//                currServo = 'b';
+//            }
+//            if(gamepad1.x)
+//            {
+//                currServo = 'x';
+//            }
+//            if(gamepad1.y)
+//            {
+//                currServo = 'y';
+//            }
+//
+//            switch(currServo)
+//            {
+//                case 'a':
+//                    grabTopLeft.setPosition(gamepad1.right_trigger);
+//                    telemetry.addData("Servo in use : ", "grab top left");
+//                    break;
+//                case 'b':
+//                    grabTopRight.setPosition(gamepad1.right_trigger);
+//                    telemetry.addData("Servo in use : ", "grab top right");
+//                    break;
+//                case 'x':
+//                    grabBottomLeft.setPosition(gamepad1.right_trigger);
+//                    telemetry.addData("Servo in use : ", "Grab bottom left");
+//                    break;
+//                case 'y':
+//                    grabBottomRight.setPosition(gamepad1.right_trigger);
+//                    telemetry.addData("Servo in use : ", "Grab bottom right");
+//                    break;
+//
+//                default:
+//
+//                    telemetry.addData("Servo in use : ", "none");
+//            }
+
             if(gamepad1.a)
             {
-                currServo = 'a';
+                grabBottomLeft.setPosition(0.6);
             }
             if(gamepad1.b)
             {
-                currServo = 'b';
+                grabBottomLeft.setPosition(0.8);
             }
             if(gamepad1.x)
             {
-                currServo = 'x';
+                grabBottomLeft.setPosition(1);
             }
             if(gamepad1.y)
             {
-                currServo = 'y';
+                grabBottomRight.setPosition(0.75);
+            }
+            if(gamepad1.dpad_up){
+                grabBottomRight.setPosition(1);
+            }
+            if (gamepad1.dpad_down){
+                grabBottomRight.setPosition(0.4);
+            }
+            if (gamepad1.dpad_left){
+                grabBottomRight.setPosition(0.8);
+            }
+            if (gamepad1.dpad_right){
+                grabBottomRight.setPosition(0.6);
             }
 
-            switch(currServo)
-            {
-                case 'a':
-                    grabTopLeft.setPosition(gamepad1.right_trigger);
-                    telemetry.addData("Servo in use : ", "grab top left");
-                    break;
-                case 'b':
-                    grabTopRight.setPosition(gamepad1.right_trigger);
-                    telemetry.addData("Servo in use : ", "grab top right");
-                    break;
-                case 'x':
-                    grabBottomLeft.setPosition(gamepad1.right_trigger);
-                    telemetry.addData("Servo in use : ", "Grab bottom left");
-                    break;
-                case 'y':
-                    grabBottomRight.setPosition(gamepad1.right_trigger);
-                    telemetry.addData("Servo in use : ", "Grab bottom right");
-                    break;
+            grabBottomLeft.setPosition(0.6);
+//            grabTopRight.setPosition(0);
+//            grabTopLeft.setPosition(0);
 
-                default:
-
-                    telemetry.addData("Servo in use : ", "none");
-            }
-
+            telemetry.addData("Grab bottom right ", grabBottomRight.getPosition());
+            telemetry.addData("Grab top right ", grabTopRight.getPosition());
+            telemetry.addData("grab bottom left ", grabBottomLeft.getPosition());
+            telemetry.addData("grab top left", grabTopLeft.getPosition());
             telemetry.addData("Position : " , gamepad1.right_trigger);
             telemetry.update();
             idle();
@@ -104,3 +141,6 @@ public class servoValueTest extends LinearOpMode{
     }
 
 }
+
+//grab servo values should be between 0.4 and 0.6
+//for the right side it should be 0.4 for tight grip while for the left 0.6 for the same
