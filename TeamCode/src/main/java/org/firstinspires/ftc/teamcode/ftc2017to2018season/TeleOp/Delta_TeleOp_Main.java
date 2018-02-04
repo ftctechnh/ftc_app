@@ -43,6 +43,7 @@ public class Delta_TeleOp_Main extends OpMode {
     //public int dif7Inch =
 
 
+
 /*
     ---------------------------------------------------------------------------------------------
 
@@ -139,7 +140,6 @@ public class Delta_TeleOp_Main extends OpMode {
         FourWheelDrive();
         slideMove();
         glyphManipulator();
-        // slideIncrement();
         incrementOpen();
         incrementClose();
         slideIncrement();
@@ -162,7 +162,42 @@ public class Delta_TeleOp_Main extends OpMode {
 
     Functions go here
  */
-
+    public void Drive(){
+        if (gamepad1.left_stick_x>0.2 && gamepad1.left_stick_y>0.2 && gamepad1.right_stick_y>0.2&&gamepad1.right_stick_x>0.2){
+            leftWheelMotorFront.setPower(0.7);
+            rightWheelMotorBack.setPower(1);
+        }
+        else if (gamepad1.left_stick_y>0.2&&gamepad1.left_stick_x<0.2&&gamepad1.right_stick_y>0.2&&gamepad1.right_stick_x<0.2){
+            rightWheelMotorFront.setPower(1);
+            leftWheelMotorBack.setPower(1);
+        }
+        else if (gamepad1.left_stick_y<0.2&&gamepad1.left_stick_x<0.2&&gamepad1.right_stick_x<0.2&&gamepad1.right_stick_y<0.2){
+            leftWheelMotorFront.setPower(-0.7);
+            rightWheelMotorBack.setPower(-1);
+        }
+        else if (gamepad1.left_stick_y<0.2&&gamepad1.left_stick_x>0.2&&gamepad1.right_stick_y<0.2&&gamepad1.right_stick_x>0.2){
+            rightWheelMotorFront.setPower(-1);
+            leftWheelMotorBack.setPower(-1);
+        }
+        else if (gamepad1.right_stick_x>0&&gamepad1.left_stick_x>0){
+            leftWheelMotorFront.setPower(0.7);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
+        }
+        else if (gamepad1.right_stick_x<0&&gamepad1.left_stick_x<0){
+            leftWheelMotorFront.setPower(-0.7);
+            leftWheelMotorBack.setPower(1);
+            rightWheelMotorFront.setPower(1);
+            rightWheelMotorBack.setPower(-1);
+        }
+        else{
+            leftWheelMotorFront.setPower(gamepad1.left_stick_y);
+            leftWheelMotorBack.setPower(gamepad1.left_stick_y);
+            rightWheelMotorFront.setPower(gamepad1.right_stick_y);
+            rightWheelMotorBack.setPower(gamepad1.right_stick_y);
+        }
+    }
     public void FourWheelDrive() {
         /*
 
