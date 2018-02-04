@@ -176,7 +176,7 @@ public class curious_george_teleop extends OpMode {
 
         relicMotor.setPower(gamepad2.left_stick_y);
 
-        if (gamepad2.left_bumper) {
+        if (gamepad2.left_bumper)  {
             relicLeft.setPosition(0.75);
             //relicLeft is in charge of moving the relic molds arm to grip onto the
             relicRight.setPosition(0.1);
