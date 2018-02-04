@@ -41,8 +41,11 @@ public class Delta_TeleOp_Main extends OpMode {
     public int slidesBaseValue;
     public int dif2Inch = 8;
     //public int dif7Inch =
+<<<<<<< HEAD
+=======
 
 //>>>>>>> e61c696d6935f729077c37fff8c12172e5475585
+>>>>>>> 7c1b2a08490b05e25cc58c4bbb6ab3016b27d405
 
 
 

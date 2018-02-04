@@ -4,7 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" filepath="$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" />
       <module fileurl="file://$PROJECT_DIR$/TeamCode/TeamCode.iml" filepath="$PROJECT_DIR$/TeamCode/TeamCode.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ftc_RelicRecovory.iml" filepath="$PROJECT_DIR$/ftc_RelicRecovory.iml" />
       <module fileurl="file://$PROJECT_DIR$/ftc_app.iml" filepath="$PROJECT_DIR$/ftc_app.iml" />
     </modules>
   </component>
