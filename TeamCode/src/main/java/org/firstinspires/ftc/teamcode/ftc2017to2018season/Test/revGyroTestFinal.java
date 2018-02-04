@@ -37,8 +37,8 @@ public class revGyroTestFinal extends LinearOpMode {
 
        Define the actuators we use in the robot here
     */
-    double P_TURN_COEFF = 0.05;
-    double TURN_THRESHOLD = 2.5;
+    double P_TURN_COEFF = 1./180;
+    double TURN_THRESHOLD = 5;
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
@@ -77,25 +77,25 @@ public class revGyroTestFinal extends LinearOpMode {
 
         waitForStart();
 
-        gyroTurnREV(0.4,90);
+        gyroTurnREV1(0.9,90);
     }
 
-    public void gyroTurnREV(double speed, double angle){
+    public void gyroTurnREV1(double speed, double angle){
 
         telemetry.addData("starting gyro turn","-----");
         telemetry.update();
 
-        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF)){
+        while(opModeIsActive() && !onTargetAngleREV1(speed, angle, P_TURN_COEFF)){
             telemetry.update();
             idle();
-            telemetry.addData("-->","inside while loop :-(");
-            telemetry.update();
+            //telemetry.addData("-->","inside while loop :-(");
+            //telemetry.update();
         }
         stopMotors();
         telemetry.addData("done with gyro turn","-----");
         telemetry.update();
     }
-    boolean onTargetAngleREV(double speed, double angle, double PCoeff){
+    boolean onTargetAngleREV1(double speed, double angle, double PCoeff){
         double error;
         double steer;
         boolean onTarget = false;
@@ -103,7 +103,7 @@ public class revGyroTestFinal extends LinearOpMode {
         double leftSpeed;
 
         //determine turm power based on error
-        error = getErrorREV(angle);
+        error = getErrorREV1(angle);
 
         if (Math.abs(error) <= TURN_THRESHOLD){
 
@@ -114,7 +114,7 @@ public class revGyroTestFinal extends LinearOpMode {
         }
         else{
 
-            steer = getSteerREV(error, PCoeff);
+            steer = getSteerREV1(error, PCoeff);
             rightSpeed = speed * steer;
             leftSpeed = -rightSpeed;
         }
@@ -141,7 +141,7 @@ public class revGyroTestFinal extends LinearOpMode {
 
         return onTarget;
     }
-    public double getErrorREV(double targetAngle){
+    public double getErrorREV1(double targetAngle){
 
         double robotError;
 
@@ -159,7 +159,7 @@ public class revGyroTestFinal extends LinearOpMode {
         return robotError;
 
     }
-    public double getSteerREV(double error , double PCoeff){
+    public double getSteerREV1(double error , double PCoeff){
         return Range.clip(error * PCoeff, -1 , 1);
     }
 

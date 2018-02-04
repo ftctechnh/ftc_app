@@ -123,8 +123,9 @@ public class servo_valueRead extends OpMode {
     @Override
     public void loop() {
 
-        moveServos();
-
+      //  moveServos();
+      incrementClose();
+      incrementOpen();
         glyphLeftPos = glyphServoLeft.getPosition();
         glyphRightPos = glyphServoRight.getPosition();
         jewelPos = jewel_servo.getPosition();
@@ -138,24 +139,19 @@ public class servo_valueRead extends OpMode {
 
     public void moveServos(){
 
-        if (gamepad1.dpad_up){
-
-            jewel_servo.setPosition(jewel_servo.getPosition() + 0.1);
-        }
-        else if (gamepad1.dpad_down){
-
-            jewel_servo.setPosition(jewel_servo.getPosition() -0.1);
-        }
-
 
 
         if (gamepad1.y){
 
             glyphServoRight.setPosition(glyphServoRight.getPosition() + 0.1);
+            sleep(500);
+
         }
         else if (gamepad1.a){
 
             glyphServoRight.setPosition(glyphServoRight.getPosition() -0.1);
+            sleep(500);
+
         }
 
 
@@ -163,10 +159,40 @@ public class servo_valueRead extends OpMode {
         if (gamepad1.left_bumper){
 
             glyphServoLeft.setPosition(glyphServoLeft.getPosition() + 0.1);
+            sleep(500);
+
         }
         else if (gamepad1.right_bumper){
 
             glyphServoLeft.setPosition(glyphServoLeft.getPosition() -0.1);
+            sleep(500);
+
+        }
+    }
+
+    public void sleep(long time){
+        long startTime = System.currentTimeMillis();
+        long  endTime = startTime + time;
+
+        while(startTime < endTime){
+
+        }
+
+    }
+    public void incrementOpen(){
+
+        while (gamepad1.x){
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
+            sleep(500);
+        }
+    }
+    public void incrementClose(){
+
+        while (gamepad1.y) {
+            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
+            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
+            sleep(500);
         }
     }
 }
