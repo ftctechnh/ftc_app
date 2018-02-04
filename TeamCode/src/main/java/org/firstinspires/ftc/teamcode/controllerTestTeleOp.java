@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by anshnanda on 30/12/17.
  */
 
-@TeleOp(name = "OpModeTest", group = "agroup")
+@TeleOp(name = "Old code", group = "agroup")
 
 public class controllerTestTeleOp extends LinearOpMode
 {
