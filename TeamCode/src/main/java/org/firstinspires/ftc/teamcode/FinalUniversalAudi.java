@@ -106,12 +106,12 @@ public class FinalUniversalAudi extends LinearOpMode
                         break;
                     case 'l':
                         newRobot.driveStraight_In(24 - adjustment,.6);
-                        newRobot.pivot(-45, .6);
+                        newRobot.pivot(-85, .6);
                         break;
                     case 'c':
                     default:
                         newRobot.driveStraight_In(18.5f - adjustment,.6);
-                        newRobot.pivot(-60, .6);
+                        newRobot.pivot(-85, .6);
                         break;
                 }
                 newRobot.oldMoveLift(-1);
