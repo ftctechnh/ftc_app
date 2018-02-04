@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 //10-28-17
 @Autonomous(name="Red Back No Gyro George")
 @Disabled
-public class redBack_NoGyro_George extends Autonomous_General {
+public class redBack_NoGyro_George extends Autonomous_General_George {
 
     DcMotor leftFront;
     DcMotor rightFront;

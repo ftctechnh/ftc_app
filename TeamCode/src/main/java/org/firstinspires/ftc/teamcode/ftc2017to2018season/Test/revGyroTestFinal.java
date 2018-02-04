@@ -77,7 +77,7 @@ public class revGyroTestFinal extends LinearOpMode {
 
         waitForStart();
 
-        gyroTurnREV1(0.9,90);
+        gyroTurnREV1(0.4,90);
     }
 
     public void gyroTurnREV1(double speed, double angle){
@@ -115,8 +115,9 @@ public class revGyroTestFinal extends LinearOpMode {
         else{
 
             steer = getSteerREV1(error, PCoeff);
-            rightSpeed = speed * steer;
-            leftSpeed = -rightSpeed;
+            leftSpeed = speed * steer;//normally, we would do rightspeed = speed*steer, and leftspeed = -rightspeed
+            rightSpeed = -leftSpeed;//for the echo robot, however, the values are reversed (a negative motor power makes the motor go forward,
+                                    //assuming that the forward direction is in the direction of the glyph manipulator
         }
 
         leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

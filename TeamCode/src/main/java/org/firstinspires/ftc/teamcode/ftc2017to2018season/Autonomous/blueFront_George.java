@@ -9,7 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 //10-28-17
 @Autonomous(group = "Blue Front No Gyro George")
 @Disabled
-public class blueFront_George extends Autonomous_General {
+public class blueFront_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
