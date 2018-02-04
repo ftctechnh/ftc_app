@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Delta;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
@@ -54,7 +53,7 @@ import java.util.Locale;
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
-public class Autonomous_General extends LinearOpMode {
+public class Autonomous_General_Delta extends LinearOpMode {
     //we attached a light to make it easier to see the target
     public DcMotor light;
     public double waitTime = 3;

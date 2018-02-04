@@ -1,17 +1,14 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Delta;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General;
 
 //10-28-17
 @Autonomous(name="Red Back No Gyro Delta")
-public class redBack_NoGyro_Delta extends Autonomous_General {
+public class redBack_NoGyro_Delta extends Autonomous_General_Delta {
 
     DcMotor leftFront;
     DcMotor rightFront;
