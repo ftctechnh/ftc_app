@@ -232,16 +232,16 @@ public class Delta_TeleOp extends OpMode {
         double left_claw = (glyphServoLeft.getPosition());
        */
 
-        if (gamepad1.left_bumper) {
-
-//opening the claw
+            if (gamepad1.left_bumper) {
 
            openGlyph();
         } else if (gamepad1.right_bumper) {
 
           closeGlyph();
         }
-
+          else if (gamepad1.left_bumper&&gamepad1.right_bumper){
+            middleGlyph();
+        }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
@@ -345,8 +345,8 @@ public class Delta_TeleOp extends OpMode {
   }
 
   public void closeGlyph(){
-      glyphServoRight.setPosition(0.8);
-      glyphServoLeft.setPosition(0.05);
+      glyphServoRight.setPosition(0.85);
+      glyphServoLeft.setPosition(0.0);
   }
 
   public void middleGlyph(){
