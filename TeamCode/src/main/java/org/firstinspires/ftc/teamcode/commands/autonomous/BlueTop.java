@@ -4,9 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.ColorSensorSystem;
-import org.firstinspires.ftc.teamcode.systems.Direction;
+import org.firstinspires.ftc.teamcode.systems.tools.Direction;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 
@@ -17,13 +16,11 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 @Autonomous(name = "blue alliance top", group = "blue alliance")
 public class BlueTop extends LinearOpMode {
     private MecanumDriveSystem mecanumDriveSystem;
-    private ArmSystem armSystem;
     private ColorSensorSystem colorSensorSystem;
     private ElapsedTime runtime = new ElapsedTime();
 
     private void initialize() {
         this.mecanumDriveSystem = new MecanumDriveSystem(hardwareMap);
-        this.armSystem          = new ArmSystem(hardwareMap);
         this.colorSensorSystem  = new ColorSensorSystem(hardwareMap);
         this.colorSensorSystem.setInitPosition();
     }

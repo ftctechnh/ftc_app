@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.ColorSensorSystem;
+import org.firstinspires.ftc.teamcode.systems.tools.Direction;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 /**
@@ -14,13 +14,11 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 @Autonomous(name = "red alliance top", group = "red alliance")
 public class RedTop extends LinearOpMode {
     private MecanumDriveSystem  mecanumDriveSystem;
-    private ArmSystem           armSystem;
     private ColorSensorSystem   colorSensorSystem;
     private ElapsedTime         runtime = new ElapsedTime();
 
     private void initialize() {
         this.mecanumDriveSystem = new MecanumDriveSystem(hardwareMap);
-        this.armSystem          = new ArmSystem(hardwareMap);
         this.colorSensorSystem  = new ColorSensorSystem(hardwareMap);
         this.colorSensorSystem.setInitPosition();
     }
@@ -29,10 +27,10 @@ public class RedTop extends LinearOpMode {
         this.colorSensorSystem.goDown();
         sleep(1500);
         if(colorSensorSystem.isBlue()) {
-            mecanumDriveSystem.driveBackwards(0.5, 0.5);
+            mecanumDriveSystem.drive(0.5, 0.5, Direction.REVERSE);
             sleep(250);
         } else if(colorSensorSystem.isRed()) {
-            mecanumDriveSystem.driveForward(0.5, 0.5);
+            mecanumDriveSystem.drive(0.5, 0.5, Direction.FORWARD);
             sleep(250);
         } else {
             mecanumDriveSystem.stop();
@@ -52,7 +50,7 @@ public class RedTop extends LinearOpMode {
             knockDownBlueJewel();
             mecanumDriveSystem.stop();
             sleep(1000);
-            this.mecanumDriveSystem.driveForward(0.3, 0.5);
+            this.mecanumDriveSystem.drive(0.3, 0.5, Direction.FORWARD);
             sleep(1000);
             mecanumDriveSystem.stop();
             count++;

@@ -4,9 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.ColorSensorSystem;
-import org.firstinspires.ftc.teamcode.systems.Direction;
+import org.firstinspires.ftc.teamcode.systems.tools.Direction;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 /**

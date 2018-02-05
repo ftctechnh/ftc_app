@@ -27,15 +27,15 @@ public class ArmSystem {
         this.leftClaw = hardwareMap.get(Servo.class, "left servo");
         this.rightClaw = hardwareMap.get(Servo.class, "right servo");
         this.jewelArmServo = hardwareMap.get(Servo.class, "jewel arm servo");
-        this.colorSensor = hardwareMap.colorSensor.get("color sensor");
+//        this.colorSensor = hardwareMap.colorSensor.get("color sensor");
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
         this.jewelArmServo.setDirection(Servo.Direction.REVERSE);
     }
 
     public void init() {
         this.jewelArmServo.setPosition(initialPosition);
-        this.colorSensor.enableLed(false);
-        this.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        this.colorSensor.enableLed(false);
+//        this.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
     public void goUp() {

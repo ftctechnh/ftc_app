@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.OldRobot.systems.DriveSystem;
  * Created by Mahim on 12/9/2017.
  */
 @Disabled
-@TeleOp(name = "TeleOP Drive: Urid", group = "TeleOP Drive")
+@TeleOp(name = "TeleOP Drive: Urid", group = "old robot")
 public class TankDrive extends OpMode {
     private DriveSystem driveSystem;
     private ArmSystem armSystem;
@@ -47,8 +47,8 @@ public class TankDrive extends OpMode {
         }
         telemetry.addData("left wheel", this.driveSystem.getLeftSpeed());
         telemetry.addData("right wheel", this.driveSystem.getRightSpeed());
-        telemetry.addData("jewel arm position", this.armSystem.getJewelArmPosition());
-        telemetry.addData("arm speed", this.armSystem.getArmMotorSpeed());
+        telemetry.addData("angle", this.driveSystem.getAngle());
+        telemetry.addLine("acceleration: " + this.driveSystem.getAcceleration());
     }
 
     @Override

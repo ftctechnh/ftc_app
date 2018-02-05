@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.systems;
+package org.firstinspires.ftc.teamcode.systems.tools;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 public class DriveSystem {
     private DcMotor frontRightMotor, rearRightMotor, frontLeftMotor, rearLeftMotor;
 
-    DriveSystem(DcMotor frontLeftMotor, DcMotor rearLeftMotor,
+    public DriveSystem(DcMotor frontLeftMotor, DcMotor rearLeftMotor,
                 DcMotor frontRightMotor, DcMotor rearRightMotor) {
         this.frontLeftMotor     = frontLeftMotor;
         this.rearLeftMotor      = rearLeftMotor;
@@ -17,7 +17,7 @@ public class DriveSystem {
         this.rearRightMotor     = rearRightMotor;
     }
 
-    void setMode(DcMotor.RunMode runMode) {
+    public void setMode(DcMotor.RunMode runMode) {
         this.frontLeftMotor.setMode(runMode);
         this.rearLeftMotor.setMode(runMode);
         this.frontRightMotor.setMode(runMode);
@@ -31,10 +31,8 @@ public class DriveSystem {
         this.rearRightMotor.setPower(0.0);
     }
 
-    boolean isBusy() {
+    public boolean isBusy() {
         return  this.frontLeftMotor.isBusy()    && this.rearLeftMotor.isBusy() &&
                 this.frontRightMotor.isBusy()   && this.rearRightMotor.isBusy();
     }
-
-
 }

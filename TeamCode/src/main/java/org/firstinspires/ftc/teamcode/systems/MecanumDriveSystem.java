@@ -1,12 +1,7 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-import android.graphics.drawable.GradientDrawable;
-import android.nfc.cardemulation.HostApduService;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,6 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.systems.tools.Direction;
+import org.firstinspires.ftc.teamcode.systems.tools.DriveSystem;
 
 
 /**
@@ -28,7 +25,6 @@ public class MecanumDriveSystem {
     private DcMotor                     rearRightMotor;
     private final double                X_COUNTS_PER_INCH = 0.0;
     private final double                Y_COUNTS_PER_INCH = 0.0;
-    private LinearOpMode                linearOpMode;
     private DriveSystem                 driveSystem;
     private BNO055IMU                   imu;
 
@@ -41,16 +37,15 @@ public class MecanumDriveSystem {
         this.rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
-//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-//        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
-//        parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-//        parameters.calibrationDataFile  = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-//        parameters.loggingEnabled       = true;
-//        parameters.loggingTag           = "IMU";
-//        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-//        imu = hardwareMap.get(BNO055IMU.class, "imu");
-//        imu.initialize(parameters);
-
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile  = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled       = true;
+        parameters.loggingTag           = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
     }
 
     public void resetEncoders() {
@@ -58,13 +53,13 @@ public class MecanumDriveSystem {
         this.driveSystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void encoderDriveY(double inches, double speed) {
+    public void encoderDriveY(double inches, double speed, boolean active) {
         int frontLeftMotorTargetPosition;
         int rearLeftMotorTargetPosition;
         int frontRightMotorTargetPosition;
         int rearRightMotorTargetPosition;
 
-        if(this.linearOpMode.opModeIsActive()) {
+        if(active) {
             frontLeftMotorTargetPosition    = frontLeftMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
             rearLeftMotorTargetPosition     = rearLeftMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
             frontRightMotorTargetPosition   = frontRightMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
@@ -78,7 +73,7 @@ public class MecanumDriveSystem {
 
             drive(speed, speed, speed, speed);
 
-            while (this.linearOpMode.opModeIsActive() && driveSystem.isBusy()) {
+            while (active && driveSystem.isBusy()) {
 
                 // does nothing while robot drives to position
 
@@ -87,13 +82,13 @@ public class MecanumDriveSystem {
         }
     }
 
-    public void encoderDriveX(double inches, double speed) {
+    public void encoderDriveX(double inches, double speed, boolean active) {
         int frontLeftMotorTargetPosition;
         int rearLeftMotorTargetPosition;
         int frontRightMotorTargetPosition;
         int rearRightMotorTargetPosition;
 
-        if(this.linearOpMode.opModeIsActive()) {
+        if(active) {
             frontLeftMotorTargetPosition    = frontLeftMotor.getCurrentPosition() - (int)(inches * X_COUNTS_PER_INCH);
             rearLeftMotorTargetPosition     = rearLeftMotor.getCurrentPosition() + (int)(inches * X_COUNTS_PER_INCH);
             frontRightMotorTargetPosition   = frontRightMotor.getCurrentPosition() + (int)(inches * X_COUNTS_PER_INCH);
@@ -171,7 +166,7 @@ public class MecanumDriveSystem {
     }
 
     private void driveForward(double leftSpeed, double rightSpeed) {
-        double left = Math.abs(leftSpeed);
+        double left  = Math.abs(leftSpeed);
         double right = Math.abs(rightSpeed);
         drive(-left, -right);
     }
@@ -182,10 +177,10 @@ public class MecanumDriveSystem {
         drive(left, right);
     }
 
-    public void drive(double leftSpeed,  double rightSpeed, Direction directions) {
-        if(directions == Direction.FORWARD) {
+    public void drive(double leftSpeed,  double rightSpeed, Direction direction) {
+        if(direction == Direction.FORWARD) {
             driveForward(leftSpeed, rightSpeed);
-        } else if(directions == Direction.REVERSE) {
+        } else if(direction == Direction.REVERSE) {
             driveBackwards(leftSpeed, rightSpeed);
         } else {
             stop();

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
+import org.firstinspires.ftc.teamcode.systems.tools.Direction;
 
 /**
  * Created by Mahim on 1/9/18.
@@ -30,7 +31,7 @@ public class TestEncoder extends OpMode {
     @Override
     public void loop() {
         if(gamepad1.dpad_up) {
-            this.mecanumDrive.driveForward(0.5, 0.5);
+            this.mecanumDrive.drive(0.5, 0.5, Direction.FORWARD);
         } else {
             this.mecanumDrive.stop();
         }

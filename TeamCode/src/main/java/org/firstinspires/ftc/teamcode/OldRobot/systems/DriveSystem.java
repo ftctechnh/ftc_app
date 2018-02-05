@@ -1,11 +1,21 @@
 package org.firstinspires.ftc.teamcode.OldRobot.systems;
 
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 /**
  * Created by Mahim on 11/4/2017.
@@ -15,7 +25,7 @@ public class DriveSystem {
     private DcMotor rightMotor, leftMotor;
     private HardwareMap hardwareMap;
     private Gamepad gamepad;
-    private OpMode opMode;
+    private BNO055IMU imu;
 
     public DriveSystem (HardwareMap hardwareMap, Gamepad gamepad) {
         this.hardwareMap = hardwareMap;
@@ -23,6 +33,17 @@ public class DriveSystem {
         this.rightMotor = hardwareMap.get(DcMotor.class, "right motor");
         this.leftMotor = hardwareMap.get(DcMotor.class, "left motor");
         this.leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit            = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit            = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile  = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled       = true;
+        parameters.loggingTag           = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
     public void drive(double leftSpeed, double rightSpeed) {
@@ -62,5 +83,27 @@ public class DriveSystem {
 
     public double getLeftSpeed() {
         return this.leftMotor.getPower();
+    }
+
+    public double getAngle() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return angles.firstAngle;
+    }
+
+    public double getAcceleration() {
+        Acceleration acceleration = imu.getLinearAcceleration();
+        return acceleration.xAccel;
+    }
+
+    public double getVelocity() {
+        Velocity velocity = imu.getVelocity();
+        velocity.toUnit(DistanceUnit.METER);
+        return  velocity.xVeloc;
+    }
+
+    public double getPosition() {
+        Position position = imu.getPosition();
+        position.toUnit(DistanceUnit.INCH);
+        return position.x;
     }
 }
