@@ -21,7 +21,7 @@ public class RelicClaw {
     private final double CLOSE_POSITION = 0.0;
     private final double OPEN_POSITION = 1.0;
     private final double STORAGE_POSITION = 1.0;
-    private final double PICKUP_POSITION = 0.69;
+    private final double PICKUP_POSITION = 0.67;
     private final double DRIVING_POSITION = 0.6;
     private final double UP_POSITION = 0.0;
 
