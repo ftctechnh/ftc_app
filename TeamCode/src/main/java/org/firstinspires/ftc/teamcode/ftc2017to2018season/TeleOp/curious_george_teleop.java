@@ -38,7 +38,6 @@ public class curious_george_teleop extends OpMode {
     Servo relicMain;
     Servo relicLeft;
     Servo relicRight;
-    //Initial value for slide motor
     public int IVFSM;
 
 
@@ -179,38 +178,69 @@ public class curious_george_teleop extends OpMode {
         float leftY_gp2 = (-gamepad2.left_stick_y);
         boolean rightButtonY = gamepad2.y;
         boolean rightButtonA = gamepad2.a;
+        boolean rightButtonX = gamepad2.x;
+
 
         relicMotor.setPower(leftY_gp2);
 
+        // this is what grabs the relic
         if (leftBumper) {
-            relicLeft.setPosition(0.75);
-            //relicLeft is in charge of moving the relic molds arm to grip onto the
-            relicRight.setPosition(0.1);
+            //relicLeft.setPosition(0.75);
+            relicLeft.setPosition(0.2);
+            telemetry.addData("bumper value",relicLeft.getPosition());
+            telemetry.update();
+
+            //relicRight.setPosition(0.1);
             //relicRight is in charge of moving the relic gripper
         }
 
+        // this is what releases the claw
         if (rightBumper) {
-            relicLeft.setPosition(0);
-            relicRight.setPosition(1);
+
+            relicLeft.setPosition(0.5);
+            telemetry.addData("bumper value",relicLeft.getPosition());
+            telemetry.update();
+
+
+            //relicRight.setPosition(1);
+            //relicRight.setPosition(0);
             
         }
-
+        // this is the most extended postion
         if (rightButtonY) {
-            relicMain.setPosition(0);
+            //change the value to make the srm move lower
+            relicMain.setPosition(0.3); //0.2
             //relicMain is the servo that releases the relic arm out out
+
+            //relicLeft.setPosition(0.75)
+            //this was the claw not all the way close
+            //relicLeft.setPosition(0.1);
+            telemetry.addData("button y pressed", relicMain.getPosition());
+            telemetry.update();
+        }
+        //below was the code for the old collector with two claw arms
+       // if (gamepad2.b) {
+       //     relicLeft.setPosition(1);
+       //     relicRight.setPosition(0.25);
+       // }
+
+        //below was the middle position
+        if (rightButtonX) {
+            relicMain.setPosition(0.45); //0.45
+
+            telemetry.addData("button x pressed", relicMain.getPosition());
+            telemetry.update();
         }
 
-        if (gamepad2.b) {
-            relicLeft.setPosition(0.75);
-            relicRight.setPosition(0.25);
-        }
-
+        // this is the stowed position
         if (rightButtonA) {
             relicMain.setPosition(1);
+            //adding this line to move relic up at most stowed position
+           // relicLeft.setPosition();
+
         }
-        if (gamepad2.x) {
-            relicMain.setPosition(0.45);
-        }
+
+
     }
 
     public void FourWheelDrive() {
