@@ -66,7 +66,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double COUNTS_PER_CM;
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
-    double P_TURN_COEFF = 1./90;
+    double P_TURN_COEFF = 0.05;
     double TURN_THRESHOLD = 2.5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
@@ -175,7 +175,7 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.update();
 
         jewelServo.setPosition(0);
-        allOpenGlyphManipulator();
+        //allOpenGlyphManipulator();
         light.setPower(0);
     }
 
@@ -1039,24 +1039,24 @@ public class Autonomous_General_George extends LinearOpMode {
         GLYPH MANIPULATOR METHODS
      */
     public void openGlyphManipulator(){
-        glyphServoRight.setPosition(0.4);
-        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
     }
     public void closeGlyphManipulator(){
-        glyphServoRight.setPosition(0.9);
-        glyphServoLeft.setPosition(0);
+        glyphServoRight.setPosition(0.7);
+        glyphServoLeft.setPosition(0.2);
 
     }
     public void middleGlyphManipulator(){
 
-        glyphServoRight.setPosition(0.65);
-        glyphServoLeft.setPosition(0.25);
+        glyphServoRight.setPosition(0.6);
+        glyphServoLeft.setPosition(0.3);
     }
     public void allOpenGlyphManipulator(){
         glyphServoRight.setPosition(0.1);
         glyphServoLeft.setPosition(0.8);
     }
-    public void moveUpGlyph(double cm) {
+    public void moveDownGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
@@ -1081,7 +1081,7 @@ public class Autonomous_General_George extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-    public void moveDownGlyph(double cm) {
+    public void moveUpGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
