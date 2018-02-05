@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
 
+import android.transition.Slide;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -140,13 +142,10 @@ public class curious_george_teleop extends OpMode {
 
     @Override
     public void loop() {
-        FourWheelDrive();
-        slideMove();
-        glyphManipulator();
-        slideIncrement();
-        relicManipulator();
-        incrementClose();
-        incrementOpen();
+       Glyph();
+       Relic();
+       Drive();
+       Slides();
 
         telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -170,7 +169,21 @@ public class curious_george_teleop extends OpMode {
 
     Functions go here
  */
-
+public void Slides(){
+    slideMove();
+    slideIncrement();
+}
+public void Drive(){
+    FourWheelDrive();
+}
+public void Relic() {
+    relicManipulator();
+}
+public void Glyph() {
+    glyphManipulator();
+    incrementOpen();
+    incrementClose();
+}
     public void relicManipulator() {
 
         boolean rightBumper = gamepad2.right_bumper;
@@ -300,8 +313,11 @@ public class curious_george_teleop extends OpMode {
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
+        if (gamepad1.right_bumper&&gamepad1.left_bumper){
+            middleGlyph();
 
-        if (gamepad1.left_bumper) {
+        }
+        else if (gamepad1.left_bumper) {
 
 //opening the claw
 
@@ -310,10 +326,7 @@ public class curious_george_teleop extends OpMode {
 
             closeGlyph();
         }
-        else if (gamepad1.right_bumper&&gamepad1.left_bumper){
-            middleGlyph();
 
-        }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
