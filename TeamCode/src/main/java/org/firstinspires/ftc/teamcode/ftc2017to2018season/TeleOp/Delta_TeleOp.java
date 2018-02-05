@@ -135,11 +135,10 @@ public class Delta_TeleOp extends OpMode {
     @Override
     public void loop() {
         FourWheelDrive();
-        slideMove();
+        Slides();
         glyphManipulator();
         incrementOpen();
         incrementClose();
-        slideIncrement();
 
         telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
@@ -159,7 +158,10 @@ public class Delta_TeleOp extends OpMode {
 
     Functions go here
  */
-
+    public void Slides(){
+        slideMove();
+        slideIncrement();
+    }
     public void FourWheelDrive() {
         /*
 
