@@ -85,7 +85,8 @@ public class Teleop extends OpMode {
     double relicspeed = .6;
 
     // file variables
-    public int elbowtime =1444;
+    public int elbowdowntime = 2000;
+    public double elbowclampposition =0.4;
 
     @Override
     public void init() {
@@ -99,6 +100,7 @@ public class Teleop extends OpMode {
 //        writeTeleDataToTxtFile(hardwareMap.appContext);
         readTeleDataFromTxtFile(hardwareMap.appContext);
 //       lastLoadTime = -10000;
+//        telemetry.addData("elbowmovetime", elbowdowntime);
     }
 
     @Override
@@ -112,7 +114,7 @@ public class Teleop extends OpMode {
 
         double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
         double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
-        telemetry.addData("ElbowTime from file",elbowtime);
+        telemetry.addData("ElbowTime from file",elbowdowntime);
         telemetry.addData("Sharp IR V ", sharpIRVoltage);
         telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
         RobotLog.ii("[Gromit] IR", Double.toString(IRdistance) );
@@ -255,7 +257,7 @@ public class Teleop extends OpMode {
                     gromit.glyphTrain.stopGlyphMotors();
                 } else {
                     trainon = true;
-                    gromit.glyphTrain.startGlyphMotors(-0.2);
+                    gromit.glyphTrain.startGlyphMotors(-0.4);
                 }
             }
         } else {
@@ -425,14 +427,15 @@ public class Teleop extends OpMode {
             if (rightbtn2IsReleased) {//IF CHANGE IN STATE
                 rightbtn2IsReleased = false;
                 onehitwonder = true;
-                gromit.relicArm.relicArmMotor.setPower(0.8);  // start powering out the arm
+                gromit.relicArm.relicArmMotor.setPower(0.9);  // start powering out the arm
 
                 //Begin ELbow movev
-                movetime = 2100;
+                movetime = elbowdowntime;
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();                            //Start time
-                elbowtarget = gromit.relicArm.elbowup + .05;                        // why the + 0.9???
+//                elbowtarget = gromit.relicArm.elbowup + .05;
+                elbowtarget = elbowclampposition;                     //value from text file
                 elbowtotalmove = elbowtarget - elbowstartpos;
             }
         } else {
@@ -523,7 +526,11 @@ public class Teleop extends OpMode {
 
                 while ((s = br.readLine()) != null) {                // no Loop, but this checks for the end of the file
 //                double elbowtime = Double.parseDouble(br.readLine());
-                    elbowtime = Integer.parseInt(br.readLine());          //read elbow time
+                    elbowdowntime = Integer.parseInt(br.readLine());          //read elbow time
+                }
+
+                while ((s = br.readLine()) != null) {                // no Loop, but this checks for the end of the file
+                    elbowclampposition = Double.parseDouble(br.readLine());          //read elbow time
                 }
 
 
@@ -550,7 +557,9 @@ public class Teleop extends OpMode {
         try {
             FileWriter fw = new FileWriter(teleOpFilePath);
                 fw.write(("Elbow Time (mseconds)" + "\n"));
-                fw.write((elbowtime + "\n"));
+                fw.write((elbowdowntime + "\n"));
+            fw.write(("Elbow clamp position" + "\n"));
+            fw.write((elbowclampposition + "\n"));
 
             fw.close();
             return true;

@@ -31,6 +31,8 @@ public class GlyphTrain {
     public DcMotor lift_motor = null;
     public Servo leftlower = null;
     public Servo rightlower = null;
+    public Servo leftupper = null;
+    public Servo rightupper = null;
 
     public DistanceSensor sensorDistance;
 
@@ -43,6 +45,8 @@ public class GlyphTrain {
 
         rightlower = hardwareMap.get(Servo.class, "right_lower");
         leftlower = hardwareMap.get(Servo.class, "left_lower");
+        rightupper = hardwareMap.get(Servo.class, "right_upper");
+        leftupper = hardwareMap.get(Servo.class, "left_upper");
 
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
@@ -107,6 +111,16 @@ public class GlyphTrain {
         } else if (moveto == "close") {
             leftlower.setPosition(0.05);
             rightlower.setPosition(0.9);
+        }
+    }
+    void glyphclampupper(String moveto) {
+        double clampRange = 0.4;
+        if (moveto == "open") {
+            leftupper.setPosition(0.50);
+            rightupper.setPosition(0.50); //glyph open
+        } else if (moveto == "close") {
+            leftupper.setPosition(0.9);
+            rightupper.setPosition(0.05);
         }
     }
 
