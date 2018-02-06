@@ -28,6 +28,7 @@ public class DriveEverythingFar extends OpMode {
 
     @Override
     public void loop() {
+        jewelArm.up();
         //drive
         if (Math.abs(gamepad1.left_stick_x) + Math.abs(gamepad1.left_stick_y) + Math.abs(gamepad1.right_stick_x) + Math.abs(gamepad1.right_stick_y) > Math.abs(gamepad2.left_stick_x) + Math.abs(gamepad2.left_stick_y) + Math.abs(gamepad2.right_stick_x) + Math.abs(gamepad2.right_stick_y)) {
             if (gamepad1.right_bumper || gamepad1.left_bumper) {

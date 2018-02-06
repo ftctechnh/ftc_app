@@ -7,6 +7,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -21,19 +22,20 @@ public class AutoDrive {
     public double heading;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    static final double MIN_MOVE_SPEED = 0.2;
+    static final double MIN_MOVE_SPEED = 0.25;
     static final double MIN_SPIN_SPEED = 0.2;
     static final double GYRO_OFFSET = 2.25;
     static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
     static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.8;
-    static final double SPIN_TO_CRYPTOBOX_SPEED = 0.75;
-    static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.4;
+    static final double SPIN_TO_CRYPTOBOX_SPEED = 1;
+    static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.6;
     static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 14;
-    static final double CRYPTOBOX_COLUMNS_OFFSET_RECOVERY = 11;
+    static final double CRYPTOBOX_COLUMNS_OFFSET_RECOVERY = 7;
     static final double CRYPTOBOX_COLUMNS_OFFSET_FAR = 11;
-    static final double BACK_AWAY_FROM_BLOCK_SPEED = -0.75;
+    static final double BACK_AWAY_FROM_BLOCK_SPEED = 0.75;
     static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
+    static final double DRIVE_EXPO = 3;
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
@@ -65,13 +67,13 @@ public class AutoDrive {
         double rrTarget = Math.abs(rr/highestSpeed*clicks);
         driveSpeeds(fl, fr, rl, rr);
         ElapsedTime time = new ElapsedTime();
-        time.start();
+        time.reset();
         while (!(isMotorAtTarget(FrontLeft, flTarget)) && (!(isMotorAtTarget(FrontRight, frTarget))) && (!(isMotorAtTarget(RearLeft, rlTarget))) && (!(isMotorAtTarget(RearRight, rrTarget)))){
-            if(time.getElapsedTime() > 3*clicks/420/highestSpeed*100) {
+            if(time.seconds() > 3*clicks/420/highestSpeed) {
                 telemetry.addLine("It timed out...");
                 telemetry.update();
             }
-            driveSpeeds(calculateSpeed(FrontLeft, flTarget, fl), calculateSpeed(FrontRight, frTarget, fr), calculateSpeed(RearLeft, rlTarget, rl), calculateSpeed(RearRight, rrTarget, rr));
+            driveSpeeds(calculateSpeedLinear(FrontLeft, flTarget, fl), calculateSpeedLinear(FrontRight, frTarget, fr), calculateSpeedLinear(RearLeft, rlTarget, rl), calculateSpeedLinear(RearRight, rrTarget, rr));
         }
         stopMotors();
     }
@@ -192,10 +194,10 @@ public class AutoDrive {
         double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
         if (adjustedTarget < heading) {
-          while(derivative >= 0) {
-            derivative = getHeading() - heading;
-            heading = getHeading();
-          }
+            while(derivative >= 0) {
+                derivative = getHeading() - heading;
+                heading = getHeading();
+            }
         }
         double start = heading;
         double distance = adjustedTarget-start;
@@ -243,16 +245,26 @@ public class AutoDrive {
         this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
-    private double calculateSpeed(DcMotor motor, double targetClicks, double defaultSpeed) {
+    private double calculateSpeedLog(DcMotor motor, double targetClicks, double defaultSpeed) {
+        double speed = 0;
+        double k = Math.abs(4/targetClicks);
         if (defaultSpeed>0) {
-            return Range.clip(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks, MIN_MOVE_SPEED, 1);
+            speed = clipMoveSpeed((Math.abs(k*motor.getCurrentPosition()*(1- motor.getCurrentPosition()/targetClicks))) * defaultSpeed);
         }
         else if (defaultSpeed<0) {
-            return Range.clip(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks, -1, -MIN_MOVE_SPEED);
+            speed = clipMoveSpeed((-Math.abs(k*motor.getCurrentPosition()*(1- motor.getCurrentPosition()/targetClicks))) * defaultSpeed);
+
         }
-        else {
-            return 0;
+        return speed;
+    }
+    private double calculateSpeedLinear(DcMotor motor, double targetClicks, double defaultSpeed) {
+        if (defaultSpeed>0) {
+            return clipMoveSpeed(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks);
         }
+        else if (defaultSpeed<0) {
+            return clipMoveSpeed(defaultSpeed*(targetClicks-Math.abs(motor.getCurrentPosition()))/targetClicks);
+        }
+        else {return 0;}
     }
     private double clipSpinSpeed(double speed) {
         if (speed>0) {
@@ -264,5 +276,14 @@ public class AutoDrive {
             return 0;
         }
     }
+    private double clipMoveSpeed(double speed) {
+        if (speed>0) {
+            return Range.clip(speed, MIN_MOVE_SPEED, 1);
+        }
+        else if (speed<0) {
+            return Range.clip(speed, -1, -MIN_MOVE_SPEED);
+        } else {
+            return 0;
+        }
+    }
 }
-

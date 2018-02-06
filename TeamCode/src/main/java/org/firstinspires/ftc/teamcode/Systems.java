@@ -30,9 +30,8 @@ public class Systems {
     void pushInBlock() {
         ForkLift.openClaw();
         AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,4);
-        ForkLift.closeClaw();
         ForkLift.moveUntilDown(0.75);
-        AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
+        AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,12);
     }
 
     public void grabSecondGlyph() {
