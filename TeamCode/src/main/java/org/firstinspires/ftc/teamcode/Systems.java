@@ -57,4 +57,9 @@ public class Systems {
         ForkLift.moveMotor(0);
         RelicClaw.moveMotor(0);
     }
+    public void pickUpGlyphAuto() {
+        //forklift up about 700ms
+        //drive forward
+        //close claw
+    }
 }
