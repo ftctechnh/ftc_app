@@ -33,6 +33,7 @@ public class GlyphTrain {
     public Servo rightlower = null;
     public Servo leftupper = null;
     public Servo rightupper = null;
+    public Servo glyphliftservo = null;
 
     public DistanceSensor sensorDistance;
 
@@ -42,7 +43,12 @@ public class GlyphTrain {
         right_glyph = hardwareMap.get(DcMotor.class, "right_glyph");
 
         lift_motor = hardwareMap.get(DcMotor.class, "lift_motor");
+//Servo Lift
+        glyphliftservo = hardwareMap.get(Servo.class, "servo_lift");
 
+
+
+        //Glyph Clamps
         rightlower = hardwareMap.get(Servo.class, "right_lower");
         leftlower = hardwareMap.get(Servo.class, "left_lower");
         rightupper = hardwareMap.get(Servo.class, "right_upper");
@@ -64,6 +70,8 @@ public class GlyphTrain {
 
         // Set all motors to zero power
         stopGlyphMotors();
+        //Set the lift down
+        glyphliftservo.setPosition(1.0);
         // reset encoder to zero for lift (assume you have it down)
         lift_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -73,20 +81,6 @@ public class GlyphTrain {
 
     public void startGlyphMotors(double glyphpower) {
         //speed change code
-//        double drive_direction = atan(toRadians(y/x));
-//        double speedMultiplier;
-//        switch (speedMode) {
-//            // lookup parameter for "fast mode"
-//            case FAST:
-//                speedMultiplier = 1.0;
-//                break;
-//            case SLOW:
-//                // lookup slow speed parameter
-//                speedMultiplier = 0.3;
-//                break;
-//            default:
-//                speedMultiplier = 1.0;
-//        }
         if (glyphpower > 0) {
             left_glyph.setPower(glyphpower - 0.0);//left facing forward on robot
             right_glyph.setPower(glyphpower - 0.12);
@@ -102,27 +96,44 @@ public class GlyphTrain {
     }
 
     void glyphclamp(String moveto) {
-        double clampRange = 0.4;
+        double clampRange = 0.25;
         if (moveto == "open") {
 //            leftlower.setPosition(0.45);
 //            rightlower.setPosition(0.50); //glyph open
-            leftlower.setPosition(0.45);
-            rightlower.setPosition(0.50); //glyph open
+            leftlower.setPosition(0.75);
+            rightlower.setPosition(0.3); //glyph open
         } else if (moveto == "close") {
-            leftlower.setPosition(0.05);
-            rightlower.setPosition(0.9);
+            leftlower.setPosition(0.46);//.25 Gap may be good
+            rightlower.setPosition(0.59);
+        }
+        else if (moveto == "wide"){
+            leftlower.setPosition(0.91);
+            rightlower.setPosition(0.17); //glyph open
         }
     }
     void glyphclampupper(String moveto) {
         double clampRange = 0.4;
         if (moveto == "open") {
-            leftupper.setPosition(0.50);
-            rightupper.setPosition(0.50); //glyph open
+            leftupper.setPosition(0.47);
+            rightupper.setPosition(0.55); //glyph open
         } else if (moveto == "close") {
-            leftupper.setPosition(0.9);
-            rightupper.setPosition(0.05);
+            leftupper.setPosition(0.6);
+            rightupper.setPosition(0.43);//Good
         }
     }
+    void glyphlifttop(String moveto) {
+        //height is encoder counts or ticks
+        // going up
+        if(moveto == "top"){
+            glyphliftservo.setPosition(0.0);
+        }
+        else{
+            glyphliftservo.setPosition(1.0);
+        }
+    }
+
+
+
 
     void liftGlyph(float height) {
         // clamp glyph

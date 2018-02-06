@@ -18,7 +18,7 @@ public class RelicArm {
     public double elbowdown = 0.0;
     public int    relicArmMotorMin = 0;
     public int    relicArmMotorMax = 5000;
-
+    public int    deploydistance = 150;//Distance before relic controls turn on
 
     public void init(HardwareMap hardwareMap) {
         relicClawServo = hardwareMap.servo.get("relic_claw");

@@ -54,6 +54,7 @@ public class Teleop extends OpMode {
     public boolean tristanmode = false;
     boolean onehitwonder = false;
     boolean out = true;                          // what the heck does out mean?
+    int blocks = 0;
 
     //SLOW SERVO
     public boolean elbowmoving = false;
@@ -86,7 +87,7 @@ public class Teleop extends OpMode {
 
     // file variables
     public int elbowdowntime = 2000;
-    public double elbowclampposition =0.4;
+    public double elbowclampposition = 0.4;
 
     @Override
     public void init() {
@@ -114,10 +115,10 @@ public class Teleop extends OpMode {
 
         double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
         double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
-        telemetry.addData("ElbowTime from file",elbowdowntime);
+        telemetry.addData("ElbowTime from file", elbowdowntime);
         telemetry.addData("Sharp IR V ", sharpIRVoltage);
         telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
-        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance) );
+        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance));
 //        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance), " Ticks " + Integer.toString(gromit.driveTrain.left_front.getCurrentPosition()));
 
         //------------------------------------------------------------------------------
@@ -135,20 +136,39 @@ public class Teleop extends OpMode {
         //------------------------------------------------------------------------------
         //Lift/lower glyph  x/a by increments,   y/b manually
         //------------------------------------------------------------------------------
+        if (gamepad1.start) {
+            gromit.glyphTrain.glyphlifttop("top");
+        } else if (gamepad1.left_stick_button) {
+            gromit.glyphTrain.glyphlifttop("bottom");
+
+        }
+
+/**
+ * NEW LIFT CODE
+ */
+        //RAISE LIFT
+        /////////////////
         if (gamepad1.x || gamepad2.x) {  // raise lift
             if (xIsReleased) {
-                gromit.glyphTrain.glyphclamp("close");
                 startclosetime = runtime.milliseconds();    // start timer  set boolean
-                delayLift = true;
+                delayLift = true;//Start the delay
                 xIsReleased = false;                                              // button toggle
-                gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
-//  check to see if you're lower than the next lower position by 400 ticks, stop there first.
-                if (gromit.glyphTrain.lift_motor.getCurrentPosition() + 200 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1]) {
-                    gromit.glyphTrain.liftIndex -= 1;
+                if (blocks == 0) {//LIFT FIRST SECTION
+                    gromit.glyphTrain.glyphclampupper("close");
+                    blocks = 0;
                 }
-                liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
+                //LIFT SECOND SECTION
+                else {
+                    gromit.glyphTrain.glyphclamp("close");
+                    gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
+//  check to see if you're lower than the next lower position by 400 ticks, stop there first.
+                    if (gromit.glyphTrain.lift_motor.getCurrentPosition() + 200 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1]) {
+                        gromit.glyphTrain.liftIndex -= 1;
+                    }
+                    liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
+                }
+
                 glyphLiftismoving = true;
-//                gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up  wait for a few loops to start lift to let clamp close
             }
         } else {
             xIsReleased = true;
@@ -159,25 +179,36 @@ public class Teleop extends OpMode {
             glyphSensedDelay = 0;
             startclamptime = runtime.milliseconds();            // start timer to make sure lift waits the right amount of time set boolean
             delayLift = true;
-            gromit.glyphTrain.glyphclamp("close");      //Clamp servo
+             if (blocks == 0) {
+                gromit.glyphTrain.glyphclampupper("close");
+            } else {
+                gromit.glyphTrain.glyphclamp("close");
+            }
         }
         if (delayLift && runtime.milliseconds() - startclamptime > manualLiftDelay) {     // this is the delay time in milliseconds
             delayLift = false;
             glyphSensedDelay = 0;
-            gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
+             if (blocks == 0) {
+                gromit.glyphTrain.glyphlifttop("top");
+                blocks = 1;
+            } else {
+                gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
+            }
         }
 
         if (gamepad1.a || gamepad2.a) {         //lower
             if (aIsReleased) {
+                gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+                gromit.glyphTrain.glyphclampupper("open");
                 aIsReleased = false;
-                //gromit.glyphTrain.lowerGlyph(6);
                 glyphLiftismoving = true;
                 gromit.glyphTrain.liftIndex = 0;  //down always goes to zero
                 liftTarget = 0;
-                gromit.glyphTrain.glyphclamp("open");   // might as well open when lowering
                 gromit.glyphTrain.lift_motor.setPower(-0.9);   // start the motor going down
+                gromit.glyphTrain.glyphlifttop("bottom");//Lower second Stage
 //                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
+                blocks = 0;
             }
         } else {
             aIsReleased = true;
@@ -186,21 +217,20 @@ public class Teleop extends OpMode {
         if (glyphLiftismoving) {
             if (liftTarget == 0) {  // going down
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition() <= liftTarget + 200) {  // slow down before overshooting zero
-                    gromit.glyphTrain.lift_motor.setPower(-0.4);
+                    gromit.glyphTrain.lift_motor.setPower(-0.3);
 
                 }
-                if (gromit.glyphTrain.lift_motor.getCurrentPosition() <= liftTarget) {
+                if (gromit.glyphTrain.lift_motor.getCurrentPosition() <= liftTarget) {//Cut the motor off at 0
                     gromit.glyphTrain.lift_motor.setPower(0.0);
                     glyphLiftismoving = false;
                 }
-            } else {
-                if (gromit.glyphTrain.lift_motor.getCurrentPosition() >= liftTarget) {
+            } else {//GOING UP
+                if (gromit.glyphTrain.lift_motor.getCurrentPosition() >= liftTarget) { //If it exceeds the target cut it off
                     gromit.glyphTrain.lift_motor.setPower(0.0);
                     glyphLiftismoving = false;
                 }
             }
         }
-
         //------------------------------------------------------------------------------
         // manual glyph lift
         if (gamepad1.y || gamepad2.y) {
@@ -280,31 +310,49 @@ public class Teleop extends OpMode {
 
             }
         }
+
+        //Second controller Clamps
         if (gamepad2.right_trigger > 0.1) {
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 150){
-                gromit.glyphTrain.glyphclamp("open");
-            }
-            else{
+            if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
+                if (blocks != 0) {
+                    gromit.glyphTrain.glyphclamp("open");
+                }
+            } else {
                 gromit.relicArm.clawOpen();
             }
         } else if (gamepad2.right_bumper) {
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 150){
-                gromit.glyphTrain.glyphclamp("close");
-            }
-            else{
+            if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
+                if (blocks != 0) {
+                    gromit.glyphTrain.glyphclamp("close");
+                }
+            } else {
                 gromit.relicArm.clawClose();
             }
         }
-
-        // glyph clamp
-        if (gamepad1.right_trigger > 0.1) {
-            gromit.glyphTrain.glyphclamp("open");
-        } else if (gamepad1.right_bumper) {
-            gromit.glyphTrain.glyphclamp("close");
+        if (gamepad2.left_trigger > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
+            //Open Top Clamps
+            gromit.glyphTrain.glyphclampupper("open");
+        }
+        else  if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
+            //Close top clamps
+            gromit.glyphTrain.glyphclampupper("close");
         }
 
 
-        if (gamepad1.back) {
+
+        // glyph clamp
+        if (gamepad1.right_trigger > 0.1) {
+            if (blocks != 0) {
+                gromit.glyphTrain.glyphclamp("open");
+            }
+        } else if (gamepad1.right_bumper) {
+            if (blocks != 0) {
+                gromit.glyphTrain.glyphclamp("close");
+            }
+        }
+
+        //Boolean Prototype
+        /*if (gamepad1.back) {
             if (backIsReleased) {
                 backIsReleased = false;
                 if (tristanmode) {
@@ -315,19 +363,19 @@ public class Teleop extends OpMode {
             }
         } else {
             backIsReleased = true;
-        }
+        }*/
 
 //        if (tristanmode) {
-           // gromit.driveTrain.drivevector(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
+        // gromit.driveTrain.drivevector(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
 //        } else {
-            gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
+        gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
 //        }
         /**
          * RELIC CONTROLS
          */
         //SLOW RELIC ELBOW
         //Zero position
-        if (gamepad2.start && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
+        if (gamepad2.start && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             if (start2IsReleased) {//IF CHANGE IN STATE
                 start2IsReleased = false;
                 movetime = 500;
@@ -341,17 +389,16 @@ public class Teleop extends OpMode {
             start2IsReleased = true;
         }
         //Middle Position
-        if (gamepad2.left_trigger > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
+        if (gamepad2.left_trigger > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             if (leftttriggerIsReleased) {//IF CHANGE IN STATE
                 leftttriggerIsReleased = false;
                 movetime = 500;
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();//Start time
-                if(gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMax-1000){
-                    elbowtarget = gromit.relicArm.elbowup+.09;
-                }
-                else {
+                if (gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMax - 1000) {
+                    elbowtarget = gromit.relicArm.elbowup + .09;
+                } else {
                     elbowtarget = gromit.relicArm.elbowup;
                 }
                 elbowtotalmove = elbowtarget - elbowstartpos;
@@ -360,7 +407,7 @@ public class Teleop extends OpMode {
             leftttriggerIsReleased = true;
         }
         //TOP POSITION
-        if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
+        if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             if (leftbumperIsReleased) {//IF CHANGE IN STATE
                 leftbumperIsReleased = false;
                 movetime = 700;
@@ -382,8 +429,8 @@ public class Teleop extends OpMode {
                 elbowmoving = false;
             }
         }
-        if(reliczeroing){
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() < 150){
+        if (reliczeroing) {
+            if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
                 gromit.relicArm.relicArmMotor.setPower(0.0);
                 reliczeroing = false;
             }
@@ -391,34 +438,30 @@ public class Teleop extends OpMode {
 
 
         //Clamp slowly
-        if(gamepad2.right_stick_y > 0.1){
-            gromit.relicArm.relicClawServo.setPosition(gromit.relicArm.relicClawServo.getPosition()+.005);
-        }
-        else if(gamepad2.right_stick_y < -0.1){
-            gromit.relicArm.relicClawServo.setPosition(gromit.relicArm.relicClawServo.getPosition()-.005);
+        if (gamepad2.right_stick_y > 0.1) {
+            gromit.relicArm.relicClawServo.setPosition(gromit.relicArm.relicClawServo.getPosition() + .005);
+        } else if (gamepad2.right_stick_y < -0.1) {
+            gromit.relicArm.relicClawServo.setPosition(gromit.relicArm.relicClawServo.getPosition() - .005);
         }
 
         //Elbow Slowly
-        if (gamepad2.left_stick_y < -0.1  && gromit.relicArm.relicArmMotor.getCurrentPosition() > 150) {
+        if (gamepad2.left_stick_y < -0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition() + 0.004);
-        } else if (gamepad2.left_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition()  > 150) {
+        } else if (gamepad2.left_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.relicElbowServo.getPosition() - 0.004);
         }
 
 
         // RELIC ARM IN/OUT
         if (gamepad1.dpad_up && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.relicArmMotorMax && !onehitwonder && !reliczeroing) {
-            if(gromit.relicArm.relicArmMotor.getCurrentPosition() > 150 && !glyphinit){
+            if (gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance && !glyphinit) {
                 glyphinit = true;
                 gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.elbowup);
             }
             gromit.relicArm.relicArmMotor.setPower(relicspeed);
-        }
-       else if(gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin && !onehitwonder && !reliczeroing){
+        } else if (gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin && !onehitwonder && !reliczeroing) {
             gromit.relicArm.relicArmMotor.setPower(-relicspeed);
-            }
-
-        else if (!onehitwonder && !reliczeroing){
+        } else if (!onehitwonder && !reliczeroing) {
             gromit.relicArm.relicArmMotor.setPower(0.0);
         }
 
@@ -441,37 +484,36 @@ public class Teleop extends OpMode {
         } else {
             rightbtn2IsReleased = true;
         }
-        if(onehitwonder){
-           if(gromit.relicArm.relicArmMotor.getCurrentPosition()> 4900 && out){
-               gromit.relicArm.relicArmMotor.setPower(0.0);                          // all the way out, stop the motor
-               out = false;
-               //gromit.relicArm.relicElbowServo.setPosition(elbowtarget);
-               // maybe a wait here to make sure the elbow is all the way down?
-               sleep(300);
-               gromit.relicArm.clawOpen();      // unclamp
-               sleep(500);
-               while( gromit.relicArm.relicClawServo.getPosition() > 0.45){           // wait for claw to open enough?
-               }
-               gromit.relicArm.relicArmMotor.setPower(-0.7);                          // rewind the arm
-               movetime = 700;
-               elbowmoving = true;
-               elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
-               elbowstarttime = runtime.milliseconds();//Start time
-               elbowtarget = gromit.relicArm.elbowtop;                                 // set elbow target
-               elbowtotalmove = elbowtarget - elbowstartpos;
-           }
-           else if(gromit.relicArm.relicArmMotor.getCurrentPosition()< 150 && !out){    // turn things off?
-               gromit.relicArm.relicArmMotor.setPower(0.0);
-               out = true;
-               onehitwonder = false;
-           }
+        if (onehitwonder) {
+            if (gromit.relicArm.relicArmMotor.getCurrentPosition() > 4900 && out) {
+                gromit.relicArm.relicArmMotor.setPower(0.0);                          // all the way out, stop the motor
+                out = false;
+                //gromit.relicArm.relicElbowServo.setPosition(elbowtarget);
+                // maybe a wait here to make sure the elbow is all the way down?
+                sleep(300);
+                gromit.relicArm.clawOpen();      // unclamp
+                sleep(500);
+                while (gromit.relicArm.relicClawServo.getPosition() > 0.45) {           // wait for claw to open enough?
+                }
+                gromit.relicArm.relicArmMotor.setPower(-0.7);                          // rewind the arm
+                movetime = 700;
+                elbowmoving = true;
+                elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
+                elbowstarttime = runtime.milliseconds();//Start time
+                elbowtarget = gromit.relicArm.elbowtop;                                 // set elbow target
+                elbowtotalmove = elbowtarget - elbowstartpos;
+            } else if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance && !out) {    // out changes if it is on the way out or in
+                gromit.relicArm.relicArmMotor.setPower(0.0);
+                out = true;
+                onehitwonder = false;
+            }
         }
         //Telemetry
         //telemetry.addLine("Time Left: " + timeLeft);
         //telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
         //telemetry.addData("liftPosition", gromit.glyphTrain.lift_motor.getCurrentPosition());
         telemetry.addData("glyph sensor", gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM));
-        telemetry.addData("relicArmTicks",gromit.relicArm.relicArmMotor.getCurrentPosition());
+        telemetry.addData("relicArmTicks", gromit.relicArm.relicArmMotor.getCurrentPosition());
 
 
     }
@@ -484,22 +526,18 @@ public class Teleop extends OpMode {
      *
      * @param sleepTime specifies sleep time in msec.
      */
-    public static void sleep(long sleepTime)
-    {
+    public static void sleep(long sleepTime) {
         long wakeupTime = System.currentTimeMillis() + sleepTime;
 
-        while (sleepTime > 0)
-        {
-            try
-            {
+        while (sleepTime > 0) {
+            try {
                 Thread.sleep(sleepTime);
-            }
-            catch (InterruptedException e)
-            {
+            } catch (InterruptedException e) {
             }
             sleepTime = wakeupTime - System.currentTimeMillis();
         }
     }   //sleep
+
     @Override
     public void stop() {
         gromit.driveTrain.stopMotors();
@@ -514,25 +552,22 @@ public class Teleop extends OpMode {
         //initializeValues();
 //    private String configFileName = "8045TeleOp.txt";
 //    private String directoryPath = "/sdcard/FIRST/";
-         String teleOpFilePath = "/sdcard/FIRST/8045TeleOp.txt";
-         File tmpDir = new File(teleOpFilePath);
+        String teleOpFilePath = "/sdcard/FIRST/8045TeleOp.txt";
+        File tmpDir = new File(teleOpFilePath);
 //        telemetry.addLine("Reading from file method");
 //        telemetry.update();
-        if (tmpDir.exists() ) {
+        if (tmpDir.exists()) {
             try {
                 FileReader fr = new FileReader(teleOpFilePath);
                 BufferedReader br = new BufferedReader(fr);
                 String s;
 
-                while ((s = br.readLine()) != null) {                // no Loop, but this checks for the end of the file
-//                double elbowtime = Double.parseDouble(br.readLine());
-                    elbowdowntime = Integer.parseInt(br.readLine());          //read elbow time
-                }
+                s = br.readLine();               // no Loop, but this checks for the end of the file
+                elbowdowntime = Integer.parseInt(br.readLine());          //read elbow time
 
-                while ((s = br.readLine()) != null) {                // no Loop, but this checks for the end of the file
-                    elbowclampposition = Double.parseDouble(br.readLine());          //read elbow time
-                }
 
+                s = br.readLine();               // no Loop, but this checks for the end of the file
+                elbowclampposition = Double.parseDouble(br.readLine());          //read elbow time
 
                 fr.close();                                            // close the file
 
@@ -540,7 +575,7 @@ public class Teleop extends OpMode {
                 System.err.println("Couldn't read this: " + teleOpFilePath);//idk where this is printing
 
             }
-        }else{
+        } else {
             writeTeleDataToTxtFile(context);
         }
     }
@@ -553,11 +588,11 @@ public class Teleop extends OpMode {
         new File("/sdcard/FIRST/").mkdir();        // Make sure that the directory exists
         String teleOpFilePath = "/sdcard/FIRST/8045TeleOp.txt";
 
-        int i=0;
+        int i = 0;
         try {
             FileWriter fw = new FileWriter(teleOpFilePath);
-                fw.write(("Elbow Time (mseconds)" + "\n"));
-                fw.write((elbowdowntime + "\n"));
+            fw.write(("Elbow Time (mseconds)" + "\n"));
+            fw.write((elbowdowntime + "\n"));
             fw.write(("Elbow clamp position" + "\n"));
             fw.write((elbowclampposition + "\n"));
 
@@ -565,7 +600,7 @@ public class Teleop extends OpMode {
             return true;
 
         } catch (IOException ex) {
-            System.err.println("Couldn't write this file: "+teleOpFilePath);
+            System.err.println("Couldn't write this file: " + teleOpFilePath);
             return false;
         }
         //telemetry.addData("ConfigFile saved to", filePath);
