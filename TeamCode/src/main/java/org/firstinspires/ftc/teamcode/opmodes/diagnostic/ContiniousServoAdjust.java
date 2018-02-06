@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 
+/*
 @TeleOp(name = "Cont Servo Calibrate", group = "Main")
 @Disabled
 public class ContiniousServoAdjust extends OpMode {
@@ -61,3 +62,4 @@ public class ContiniousServoAdjust extends OpMode {
         lastDPad = gamepad1.dpad_up || gamepad1.dpad_right || gamepad1.dpad_left || gamepad1.dpad_down;
     }
 }
+*/

@@ -34,7 +34,9 @@ public class BotHardware {
         frontLeft("fl", false),
         backLeft("bl", false),
         liftLeft("ll", true),
-        liftRight("lr", false);
+        liftRight("lr", false),
+        suckLeft("sl", false),
+        suckRight("sr", true);
 
         private final String name;
         private final boolean reverse;
@@ -107,6 +109,7 @@ public class BotHardware {
         }
     }
 
+    /*
     public enum ContiniuosServoE {
         SuckLeft("crl", false),
         SuckRight("crr", true),
@@ -131,6 +134,7 @@ public class BotHardware {
             }
         }
     }
+    */
 
     //opmode pointer
     private final OpMode mode;
@@ -157,7 +161,7 @@ public class BotHardware {
         //liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
-        for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
+        //for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
         ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
         ServoE.stick.servo.setPosition(ServoE.stickUp);
         //init IMU
@@ -242,14 +246,26 @@ public class BotHardware {
         return mSeq;
     }
 
+    /*
     public void setSuckLeft(double power) {
         ContiniuosServoE.SuckLeft.servo.setPower(power);
         ContiniuosServoE.FrontSuckLeft.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
     }
+    */
 
+    public void setSuckLeft(double power) {
+        Motor.suckLeft.motor.setPower(power);
+    }
+
+    /*
     public void setSuckRight(double power) {
         ContiniuosServoE.SuckRight.servo.setPower(power);
         ContiniuosServoE.FrontSuckRight.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
+    }
+    */
+
+    public void setSuckRight(double power) {
+        Motor.suckRight.motor.setPower(power);
     }
 
     public DcMotorEx getMotor(String name) {
