@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -108,14 +109,14 @@ public class WLP_RR_DriveByGyro {
     private Telemetry telemetry = null;
     private HardwareMap hardwareMap = null;
     private boolean isInitialized = false;
-    private WLP_RR_Autonomous parent = null;
+    private LinearOpMode parent = null;
 
 
     public WLP_RR_DriveByGyro() {
     }
 
     // Code to run ONCE when the driver hits INIT
-    public void init(Telemetry telemetry, HardwareMap hardwareMap, WLP_RR_Autonomous parent) {
+    public void init(Telemetry telemetry, HardwareMap hardwareMap, LinearOpMode parent) {
 
 
         // Initialize hardware devices passed from parent

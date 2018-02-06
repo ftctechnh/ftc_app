@@ -48,8 +48,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class WLP_RR_Grabber {
 
     // constants
-    final double spinnerPower = 0.5;
-    final double armOpen = 0.8;
+    final double spinnerPower = 0.8;
+    final double armOpen = 1.0;
     final double armClose = 0.0;
     final double stopPower = 0.0;
     final double stopPosition = 0.0;
@@ -150,7 +150,7 @@ public class WLP_RR_Grabber {
             }
 
             // Spinner: X button toggles the clamp
-            if (gamepad2.x) {
+           /* if (gamepad2.x) {
                 if (clampOn) {
                     armMover.setPosition(armOpen);
                 } else {
@@ -159,6 +159,12 @@ public class WLP_RR_Grabber {
                 clampOn = !clampOn;
             }
             buttontime.reset();
+            */
+            if(gamepad2.x) {
+                armMover.setPosition(armClose);
+            } else {
+                armMover.setPosition(armOpen);
+            }
         }
 
 /*

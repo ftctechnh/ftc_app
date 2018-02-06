@@ -46,13 +46,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *
  */
 
-@Autonomous(name= "WLP_RR_Autonomous", group = "We Love PI")
+@Autonomous(name= "WLP_RR_Autonomous_Red", group = "We Love PI")
 
-public class WLP_RR_Autonomous extends LinearOpMode {
+public class WLP_RR_AutonomousRed extends LinearOpMode {
     //me llamo malin
-    static final double     SPEED_STRAIGHT = 0.4;
-    static final double     SPEED_KNOCK = 0.3;
-    static final double     SPEED_TURN = 0.1;
+    static final double     SPEED_STRAIGHT = -0.4;
+    static final double     SPEED_KNOCK = -0.3;
+    static final double     SPEED_TURN = -0.1;
 
     static final double     BR_JEWEL_TO_CRYPTO_0    = -92 ;    // Go at 0 degree 92 CM from Jewel to Crypto Box
     static final double     BR_JEWEL_TO_CRYPTO_90   = 50 ;    // Go at 90 degree 61 CM from Jewel to Crypto Box
@@ -96,9 +96,9 @@ public class WLP_RR_Autonomous extends LinearOpMode {
 
         telemetry.addData("WLP_RR_Autonomous", "autonomous period started ...");
 
-
+        /*
         // Lower the ARM
-      /*  arm.lowerArm();
+        arm.lowerArm();
         telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
         telemetry.update();
         if (!smallSleep(1000)) return;
@@ -114,7 +114,8 @@ public class WLP_RR_Autonomous extends LinearOpMode {
 
             if (teamColor == jewelColor) {
                 jewelKnockTime = -JEWEL_KNOCK_DISTANCE_T;
-                jewelKnockSpeed = -jewelKnockSpeed;
+                //
+                // jewelKnockSpeed = -jewelKnockSpeed;
             }
 
             drivetrain.moveStraightTime(jewelKnockSpeed, JEWEL_KNOCK_DISTANCE_T);
@@ -130,8 +131,8 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         // Show the elapsed game time and wheel power.
         telemetry.addData("WLP_RR_Autonomous", "Arm Lowered at " + runtime.toString());
         telemetry.update();
-
         */
+
         // Move straight to crypto box
         telemetry.addData("WLP_RR_Autonomous", "Starting to drive forward");
         telemetry.update();
@@ -142,6 +143,9 @@ public class WLP_RR_Autonomous extends LinearOpMode {
         telemetry.addData("WLP_RR_Autonomous", "Taking a trun ...");
         telemetry.update();
         drivetrain.gyroTurn(SPEED_TURN, -90);
+
+        telemetry.addData("WLP_RR_Autonomous", "Streeing toward crypto ...");
+        telemetry.update();
         drivetrain.moveStraightTime(SPEED_STRAIGHT, time_at_90);
         */
 
