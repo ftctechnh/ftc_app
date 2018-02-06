@@ -4,11 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+
 /**
  * Created by shivaan on 20/1/18.
  */
 
-@TeleOp(name = "OpModeTest", group = "agroup")
+@TeleOp(name = "classic driver mapping", group = "agroup")
 
 public class classicDriverMapping extends LinearOpMode
 {
