@@ -180,7 +180,9 @@ public class APDS9960 {
 
     public double getLinearizedDistance(boolean redCorrect) {
         //linearize!
-        return GainLinearizationCoff.values()[this.config.gain.ordinal()].linearize(redCorrect ? getDist() - 60 : getDist());
+        double out = GainLinearizationCoff.values()[this.config.gain.ordinal()].linearize(getDist());
+        if(!redCorrect) out -= 15;
+        return out;
     }
 
     public double getLinearizedDistance(int dist, Config.DistGain gain, boolean redCorrect) {

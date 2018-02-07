@@ -109,8 +109,8 @@ public class ADPSAuto extends VuforiaBallLib {
     public void init() {
         initVuforia(true);
 
-        backDist = new APDS9960(backConfig, hardwareMap.get(I2cDeviceSynch.class, "reddist"), true, APDS9960.Config.DistGain.GAIN_4X);
-        frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"), true, APDS9960.Config.DistGain.GAIN_4X);
+        backDist = new APDS9960(backConfig, hardwareMap.get(I2cDeviceSynch.class, "reddist"));
+        frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"));
         //frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "fultra"), 100);
         //backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "bultra"), 100);
 
@@ -167,7 +167,7 @@ public class ADPSAuto extends VuforiaBallLib {
 
             if(!rear) {
                 findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 155.0f * mul, 600, true, -360.0f, 360.0f));
-                findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
+                findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 360.0f, motorPID, 0.5f, 10, true));
             }
             else {
                 //TODO: implement encoder count backup automatically
@@ -184,11 +184,11 @@ public class ADPSAuto extends VuforiaBallLib {
             final APDS9960 dist = red ? backDist : frontDist;
             //TODO: add camera fallback
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.65, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
-                    30, 10, path.skipCount, 30, this, red));
+                    50, 10, path.skipCount, 50, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
-            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 195.0f, 410, true));
+            findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 195.0f, 370, true));
             findPilliar.add(bot.getDropStep());
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
             DcMotor[] temp = bot.getMotorRay();
