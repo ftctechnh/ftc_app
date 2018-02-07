@@ -23,6 +23,7 @@ public class PengwinFin {
     Servo fin;
     ColorSensor colorSensor;
     DistanceSensor distanceSensor;
+    DistanceSensor distanceSensor2;
     /**
      * This is the constructor of the pengwin class.  It will find the servo controlling
      * the fin, called <b>fin</b>, and the color sensor, called <b>sitefy</b>.
@@ -35,6 +36,7 @@ public class PengwinFin {
         fin = hardwareMap.servo.get("fin");
         colorSensor = hardwareMap.get(ColorSensor.class, "sitefy");
         distanceSensor = hardwareMap.get(DistanceSensor.class, "sitefy");
+        distanceSensor2 = hardwareMap.get(DistanceSensor.class, "sitefy2");
     }
     /**
      * The command to move the fin down to the position {@value #FIN_DOWN}
@@ -54,8 +56,12 @@ public class PengwinFin {
         return colorSensor.blue() > colorSensor.red();
     }
     //
-    public boolean approachCrypt(){
-        return distanceSensor.getDistance(DistanceUnit.INCH) <= 5;
+    public boolean approachCrypt(int key){
+        if(key == 1){
+            return distanceSensor.getDistance(DistanceUnit.INCH) <= 10;
+        }else{
+            return distanceSensor2.getDistance(DistanceUnit.INCH) <= 10;
+        }
     }
 }
 

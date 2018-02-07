@@ -27,7 +27,7 @@ import java.util.Random;
 @TeleOp(name="RelicTelyOp",group="Jeff" )
 public class RelicTelyMode  extends MeccyMode{
     //
-    //PengwinFin pengwinFin;
+    PengwinFin pengwinFin;
     PengwinWing pengwinWing;
     //
     //<editor-fold desc="Startify">
@@ -42,6 +42,7 @@ public class RelicTelyMode  extends MeccyMode{
     DrivingAction drivingAction = DrivingAction.Driving;
     //
     boolean powered = false;
+    int armGo = 0;
     //
     //<editor-fold desc="Controls"
     //joysticks
@@ -65,23 +66,7 @@ public class RelicTelyMode  extends MeccyMode{
     //
     public void runOpMode() {
         //<editor-fold desc="Initialize">
-        //<editor-fold desc="Vuforia">
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        //
-        parameters.vuforiaLicenseKey = "AbxR5+T/////AAAAGR1YlvU/6EDzrJvG5EfPnXSFutoBr1aCusr0K3pKqPuWTBQsUb0mv5irjoX2Xf/GFvAvHyw8v1GBYgHwE+hNTcNj05kw3juX+Ur4l3HNnp5SfXV/8fave0xB7yVYZ/LBDraNnYXiuT+D/5iGfQ99PVVao3LI4uGUOvL9+3vbPqtTXLowqFJX5uE7R/W4iLmNqHgTCSzWcm/J1CzwWuOPD252FDE9lutdDVRri17DBX0C/D4mt6BdI5CpxhG6ZR0tm6Zh2uvljnCK6N42V5x/kXd+UrBgyP43CBAACQqgP6MEvQylUD58U4PeTUWe9Q4o6Xrx9QEwlr8v+pmi9nevKnmE2CrPPwQePkDUqradHHnU";
-        //
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;//set camera (front)
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        //
-        //Load ciphers:
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate");
-        //</editor-fold>
-        //
-        //<editor-fold desc="Other">
-        //pengwinFin = new PengwinFin(hardwareMap);
+        pengwinFin = new PengwinFin(hardwareMap);
         pengwinWing = new PengwinWing(hardwareMap);
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
         rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
@@ -93,13 +78,11 @@ public class RelicTelyMode  extends MeccyMode{
         Orientation angles;
         Acceleration gravity;
         //</editor-fold>
-        //</editor-fold>
         //
         waitForStartify();
         //
         //<editor-fold desc="Reset">
         telemetry.log().clear();
-        relicTrackables.activate();
         time.reset();
         //</editor-fold>
         //
@@ -116,8 +99,7 @@ public class RelicTelyMode  extends MeccyMode{
             right = !(gamepad2.right_trigger == 0);
             up = gamepad2.left_stick_y;
             extend = gamepad2.right_stick_y;
-            //
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            pengwinFin.moveFinUp();
             //</editor-fold>
             //
             setDegreePower();
@@ -126,7 +108,7 @@ public class RelicTelyMode  extends MeccyMode{
             //
             moveTheRobot();
             //
-            telemetryJazz(vuMark);
+            telemetryJazz();
             //
         }
     }
@@ -154,13 +136,22 @@ public class RelicTelyMode  extends MeccyMode{
         //
         if(gamepad2.dpad_right){
             grabberPosition = true;
-        }else{
+        }else if (gamepad2.dpad_left){
             grabberPosition = false;
+        }
+        if(armGo == 0){
+            if (gamepad2.x){
+                armGo = -1;
+            }else if (gamepad2.y){
+                armGo = 1;
+            }
+        }else if ((armGo == -1 && pengwinWing.armDown.getState()) || (armGo == 1 && !pengwinWing.armUp.getState())){
+            armGo = 0;
         }
     }
     //
     private void moveTheRobot() {
-        //<editor-fold desc="Chassy">
+        //<editor-fold desc="Chassis">
         switch (drivingAction){
             case Driving:
                     drive(-leftY * degreeOfRobotPower);
@@ -172,32 +163,29 @@ public class RelicTelyMode  extends MeccyMode{
                     strafe(leftX * degreeOfRobotPower, -leftY * degreeOfRobotPower);
                 break;
         }
-        //</editor-fold>
+        //</editor-fold
         //
         //<editor-fold desc="Grabber">
         if (left && right || grabberPosition){
-            pengwinWing.setServos(true, true);
+            pengwinWing.setServos(false, false);
             if (left || right){grabberPosition = false;}
         }else if(left){
             pengwinWing.setServos(true, false);
         }else if(right){
             pengwinWing.setServos(false, true);
-        }else {
-            pengwinWing.setServos(false, false);
+        }else if (!grabberPosition){
+            pengwinWing.setServos(true, true);
         }
         //</editor-fold>
         //
         //<editor-fold desc="Arm">
-        if (gamepad2.y){
-            pengwinWing.raiseArm();
-        }else if(gamepad2.x){
-            pengwinWing.lowerArm();
-        }
+        pengwinWing.up.setPower(.6 * armGo);
         //
-        pengwinWing.extendArm(gamepad2.right_stick_y);
+        pengwinWing.extendArm(-gamepad2.right_stick_y);
         //
         if (!(gamepad2.left_stick_y == 0) || powered){
-            pengwinWing.manualArm(gamepad2.left_stick_y);
+            pengwinWing.manualArm(-gamepad2.left_stick_y);
+            grabberPosition = true;
             if (gamepad2.left_stick_y == 0){
                 powered = false;
             }else {
@@ -207,16 +195,12 @@ public class RelicTelyMode  extends MeccyMode{
         //</editor-fold>
     }
     //
-    private void telemetryJazz(RelicRecoveryVuMark vuMark) {
+    private void telemetryJazz() {
         telemetry.addData("Unicorn Crossing", time.milliseconds());
         telemetry.addData("Motor", leftBackMotor.getCurrentPosition());
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-            //
-            telemetry.addData("VuMark", vuMark);
-            //
-        }else {
-            telemetry.addData("VuMark", "None");
-        }
+        telemetry.addData("armUp", pengwinWing.armUp.getState());
+        telemetry.addData("armDown", pengwinWing.armDown.getState());
+        telemetry.addData("armGo", armGo);
         telemetry.update();
     }
     //</editor-fold>

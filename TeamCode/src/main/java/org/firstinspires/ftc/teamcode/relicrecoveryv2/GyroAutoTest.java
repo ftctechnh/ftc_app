@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * IMPORTANT
  * DEFAULT IS RED
  */
-@Autonomous(name = "GyroAutoMode", group = "Auto")
+@Autonomous(name = "GyroAutoMode", group = "Autos")
 public class GyroAutoTest extends MeccyAutoMode {
     //PengwinFin pengwinFin;
     PengwinWing pengwinWing;
@@ -19,14 +19,22 @@ public class GyroAutoTest extends MeccyAutoMode {
     public void runOpMode() {
         startify();
         //
+        leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
+        rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
+        leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
+        rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
+        //
         telemetry.addData("Why?", "");
         telemetry.update();
+        //
+        initGyro();
         //
         waitForStartify();
         //
         telemetry.addLine("Working!");
         telemetry.update();
-        turnWithGyro(90, .4);
+        turnWithGyro(90, -.4);
+        sleep(10000);
         telemetry.addLine("Not Working!");
         telemetry.update();
     }

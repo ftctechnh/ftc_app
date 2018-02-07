@@ -51,13 +51,18 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         return leftBackMotor.getCurrentPosition();
     }
     //
-    public void autoNorth(int key){
+    public double startAuto(int key){
         //<editor-fold desc="Startify">
         //<editor-fold desc="Hardware Map">
+        initGyro();
+
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
         rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
         leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
         rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
+        //
+        pengwinWing = new PengwinWing(hardwareMap);
+        pengwinFin = new PengwinFin(hardwareMap);
         //</editor-fold>
         //
         //<editor-fold desc="Vuforia">
@@ -79,44 +84,59 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         //
         relicTrackables.activate();
         //
+        configureMotors();
+        //
         waitForStartify();
         //
-        //<editor-fold desc="Jewel">
-        pengwinFin.moveFinDown();
+        pengwinFin.moveFinUp();
         //
-        int blueJewel = (pengwinFin.doesColorSensorSeeBlueJewel()) ? 1 : -1 * key;
+        pengwinWing.setServos(false, false);
+        //
+        //<editor-fold desc="Jewel">
+        strafeToPosition(5, .5);
+        sleep(200);
+        //
+        pengwinFin.moveFinDown();
+        sleep(1000);
+        //
+        int blueJewel = ((pengwinFin.doesColorSensorSeeBlueJewel()) ? 1 : -1) * key;
         //
         turnWithGyro(15, .4 * blueJewel);
-        sleep(100);
+        sleep(1000);
         turnWithGyro(15, .4 * -blueJewel);
-        sleep(100);
+        sleep(1000);
         //
         pengwinFin.moveFinUp();
         //</editor-fold>
         //
         //<editor-fold desc="Vuforia">
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        drive(-.4 * key);
-        while (vuMark != RelicRecoveryVuMark.UNKNOWN){
+        drive(.4);
+        while (vuMark == RelicRecoveryVuMark.UNKNOWN){
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
         }
         drive(0);
         //
         double distance = 1;
         if (vuMark == RelicRecoveryVuMark.LEFT){
-            distance = 1;
+            distance = 5;
         }else if (vuMark == RelicRecoveryVuMark.CENTER){
-            distance = 2;
+            distance = 10;
         }else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            distance = 3;
+            distance = 15;
         }
+        return distance;
         //</editor-fold>
+    }
+    //
+    public void autoNorth(int key){
+        double distance = startAuto(key);
         //
         //<editor-fold desc="To CryptoBox">
         pengwinFin.moveFinSense();
         //
         drive(.4 * key);
-        while (!pengwinFin.approachCrypt()){}
+        while (!pengwinFin.approachCrypt(key)){}
         drive(0);
         sleep(100);
         //
@@ -134,7 +154,7 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         pengwinWing.lowerArm();
         sleep(200);
         //
-        pengwinWing.setServos(false, false);
+        pengwinWing.setServos(true, true);
         sleep(100);
         //
         toPosition(-3, .3);
@@ -145,66 +165,35 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     }
     //
     public void autoSouth(int key){
-        //<editor-fold desc="Startify">
-        //<editor-fold desc="Hardware Map">
-        leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
-        rightBackMotor = hardwareMap.dcMotor.get("rback"); //right back
-        leftFrontMotor = hardwareMap.dcMotor.get("lfront"); //left front
-        rightFrontMotor = hardwareMap.dcMotor.get("rfront"); //right front
-        //</editor-fold>
+        double distance = startAuto(key);
         //
-        //<editor-fold desc="Vuforia">
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        //
-        parameters.vuforiaLicenseKey = "AbxR5+T/////AAAAGR1YlvU/6EDzrJvG5EfPnXSFutoBr1aCusr0K3pKqPuWTBQsUb0mv5irjoX2Xf/GFvAvHyw8v1GBYgHwE+hNTcNj05kw3juX+Ur4l3HNnp5SfXV/8fave0xB7yVYZ/LBDraNnYXiuT+D/5iGfQ99PVVao3LI4uGUOvL9+3vbPqtTXLowqFJX5uE7R/W4iLmNqHgTCSzWcm/J1CzwWuOPD252FDE9lutdDVRri17DBX0C/D4mt6BdI5CpxhG6ZR0tm6Zh2uvljnCK6N42V5x/kXd+UrBgyP43CBAACQqgP6MEvQylUD58U4PeTUWe9Q4o6Xrx9QEwlr8v+pmi9nevKnmE2CrPPwQePkDUqradHHnU";
-        //
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;//set camera (front)
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        //
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate");
-        //</editor-fold>
-        //</editor-fold>
-        //
-        stopAndResetify();
-        //
-        relicTrackables.activate();
-        //
-        waitForStartify();
-        //
-        //<editor-fold desc="Jewel">
-        pengwinFin.moveFinDown();
-        //
-        int blueJewel = (pengwinFin.doesColorSensorSeeBlueJewel()) ? 1 : -1 * key;
-        //
-        turnWithGyro(15, .4 * blueJewel);
-        sleep(100);
-        turnWithGyro(15, .4 * -blueJewel);
-        sleep(100);
-        //
+        //<editor-fold desc="To CryptoBox">
         pengwinFin.moveFinUp();
+        sleep(100);
+        //
+        toPosition(10 * (-key/2 + .5), .4);
+        sleep(100);
+        //
+        strafeToPosition(-(10 + distance) * key, .4);
+        sleep(100);
         //</editor-fold>
         //
-        //<editor-fold desc="Vuforia">
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        drive(.4 * key);
-        while (vuMark != RelicRecoveryVuMark.UNKNOWN){
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        }
-        drive(0);
+        //<editor-fold desc="Place Glyph">
         //
-        double distance = 1;
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            distance = 1;
-        }else if (vuMark == RelicRecoveryVuMark.CENTER){
-            distance = 2;
-        }else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            distance = 3;
-        }
+        turnWithGyro(90 * ((-key/2) + .5), .4);
+        sleep(300);
+        //
+        pengwinWing.lowerArm();
+        sleep(200);
+        //
+        pengwinWing.setServos(true, true);
+        sleep(100);
+        //
+        toPosition(-3, .3);
+        sleep(100);
         //</editor-fold>
         //
+        telemetry.addLine("Done!");
     }
 }
 
