@@ -17,7 +17,7 @@ public class BlueRecovery extends LinearOpMode {
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
-    private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY = 41;
+    private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY = 38.5;
 
 
     public void runOpMode() throws InterruptedException {

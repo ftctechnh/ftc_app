@@ -36,10 +36,10 @@ public class RedFar extends LinearOpMode {
         pictograph = vuforia.getMark();
         drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CRYPTOBOX_COLUMNS_OFFSET_FAR);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + 2);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
             drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
