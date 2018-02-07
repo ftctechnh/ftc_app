@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 
+
 @TeleOp
 //@Disabled
 public class WestFinal extends OpMode
@@ -34,6 +35,8 @@ public class WestFinal extends OpMode
     private double sens = 0.5;
 
     private boolean dropped = false;
+
+
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -63,6 +66,7 @@ public class WestFinal extends OpMode
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+
 
     }
 
