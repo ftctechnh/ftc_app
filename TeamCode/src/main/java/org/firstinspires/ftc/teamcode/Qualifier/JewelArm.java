@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class JewelArm {
     public Servo jewelArmServo;
     public Servo jewelFlickerServo;
-    public ColorSensor sensorColor;
+   // public ColorSensor sensorColor;
 //    public DistanceSensor sensorDistance;
     public double BRRatio = 0;
     public double jewelarmup = 0.22;
@@ -32,7 +32,7 @@ public class JewelArm {
     public void init(HardwareMap hardwareMap) {
         jewelArmServo = hardwareMap.servo.get("jewel_arm");
         jewelFlickerServo = hardwareMap.servo.get("jewel_flicker");
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+      //  sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
         // get a reference to the distance sensor that shares the same name.
  //       sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
@@ -69,11 +69,11 @@ public class JewelArm {
           // sensor is facing the forward ball.
 
 //        // determine if Red to the left, the sensor reads in the left direction.
-        if (sensorColor.red() > sensorColor.blue()) {   //then RED is front
-            redjewelisfront = true;
-        } else {
-            redjewelisfront = false;
-        }
+//        if (sensorColor.red() > sensorColor.blue()) {   //then RED is front
+//            redjewelisfront = true;
+//        } else {
+//            redjewelisfront = false;
+//        }
 
         if (teamIsRED && redjewelisfront) {            //Red Team, red is in front
             jewelflickerBack();

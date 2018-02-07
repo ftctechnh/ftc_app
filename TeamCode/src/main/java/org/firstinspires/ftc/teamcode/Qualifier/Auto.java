@@ -363,6 +363,9 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.RedFrontHeading2,0);    // back up
 
 
+
+            if(menuFile.mode == 1){ goGetAnotherGlyphRedFront();}
+
         } else if (!menuFile.teamIsRed && menuFile.startPositionIsFront ){               /** BLUE Front  */
             double distance1 = menuFile.BlueFrontDistance1Right;
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -383,7 +386,7 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.BlueFrontHeading2,0);    // forward
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);    // back up
 
-            if(menuFile.mode == 1){ goGetAnotherGlyph();}
+            if(menuFile.mode == 1){ goGetAnotherGlyphBlueFront();}
 
 
         } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */    //  back  4, 14, 26
@@ -443,8 +446,55 @@ public class Auto extends LinearOpMode {
         }
 
     }
+    public void goGetAnotherGlyphRedFront(){
 
-    public void goGetAnotherGlyph(){
+        //glyph train on
+
+        gromit.glyphTrain.startGlyphMotors(0.7);
+
+        //Move back towards glyph pile (middle)
+
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 46,  menuFile.BlueFrontHeading2,0); //moves 46
+
+        //strafing to get glyph in
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.RedFrontHeading2, -90);  //strafe left 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.RedFrontHeading2, 90);   //strafe right 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 4, menuFile.RedFrontHeading2, 0);    //move forward 4
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.RedFrontHeading2, -90);  //strafe left 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.RedFrontHeading2, 90);   //strafe right 3
+
+        //drive back towards glyph box
+
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 40, menuFile.BlueFrontHeading2, 180); //move 50
+
+        //glyph train off
+
+        gromit.glyphTrain.stopGlyphMotors();                                                                      //glyph train off
+
+        //Grip Block
+
+        gromit.glyphTrain.glyphclamp("close");
+        sleep(100);
+
+        //Raise Block
+
+        gromit.glyphTrain.liftGlyph(7);
+
+        // drive the rest
+
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 10, menuFile.BlueFrontHeading2, 180); //move 50
+
+        //unclamp glyph
+
+        gromit.glyphTrain.glyphclamp("open");
+        sleep(200);
+
+        //drive back
+
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.BlueFrontHeading2, 0);    //move 5
+    }
+
+    public void goGetAnotherGlyphBlueFront(){
 
         //glyph train on
 

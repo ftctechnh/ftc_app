@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -12,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
@@ -52,7 +55,7 @@ public class DriveTrain {
 //    public AnalogInput maxbotixSensor;
 
     public AnalogInput sharpIRSensor;
-
+    public DistanceSensor sensorDistance;
 
 
     // The IMU sensor object
@@ -118,7 +121,7 @@ public class DriveTrain {
  //       maxbotixSensor = hardwareMap.analogInput.get("maxbotixsensor");
         //Sharp IR Sensors
         sharpIRSensor = hardwareMap.analogInput.get("sharpirsensor");
-
+        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
     }
 
@@ -496,10 +499,105 @@ public class DriveTrain {
         }
         stopMotors();
     }
+    /*public void mecanumDriveBlock(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
+        double max;
+        double multiplier;
+        int right_start;
+        int left_start;
+        int moveCounts;
+        boolean glyphSensed = false;
+        //int drive_direction = -90;
+        moveCounts = (int) (distance * COUNTS_PER_INCH);
+        right_start = right_rear.getCurrentPosition();
+        left_start = left_rear.getCurrentPosition();
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double lfbase;
+        double lrbase;
+        double rfbase;
+        double rrbase;
+        lfbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
+        lrbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
+        rfbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
+        rrbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
+        while ((abs(right_rear.getCurrentPosition() - right_start) + abs(left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts) ) {//Should we average all four motors?
+            //Determine correction
+            double correction = robot_orientation - getheading();
+            if (correction <= -180){
+                correction += 360; }
+            else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
+                correction -= 360;
+            }
+            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
+            lfpower = lfbase;
+            rrpower = rrbase;
+            rfpower = rfbase;
+            if (abs(correction) > drive_THRESHOLD) {//If you are off
+                //Apply power to one side of the robot to turn the robot back to the right heading
+                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
+                lrpower -= right_adjustment;
+                lfpower -= right_adjustment;
+                rrpower = rrbase + right_adjustment;
+                rfpower = rfbase + right_adjustment;
+
+            }//Otherwise you Are at the right orientation
+
+            //Determine largest power being applied in either direction
+            max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
+
+            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower *= multiplier;
+            lrpower *= multiplier;
+            rfpower *= multiplier;
+            rrpower *= multiplier;
+
+            left_front.setPower(lfpower);
+            left_rear.setPower(lrpower);
+            right_front.setPower(rfpower);
+            right_rear.setPower(rrpower);
+
+            if (sensorDistance.getDistance(DistanceUnit.CM) < 12 && !glyphSensed) {     // if block is sensed set boolean
+                glyphSensed = true;
+            } else if (glyphSensed && sensorDistance.getDistance(DistanceUnit.CM) > 12) {     // if block was already sensed (sense the back end)
+                glyphSensed = false;
+                sleep(200);
+                startclosetime = runtime.milliseconds();    // start timer  set boolean
+                //delayLift = true;                            // check for time to lift
+                delayClamp = true;
+                glyphSensedDelay = 300;
+                // set target  as 1 (assume we're at zero for now
+                liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
+                glyphLiftismoving = true;     // turn on manual override
+
+            }
+//            RobotLog.ii("[GromitIR] ", Double.toString(18.7754*Math.pow(sharpIRSensor.getVoltage(),-1.51)), Integer.toString(left_front.getCurrentPosition()));
+
+        }
+        stopMotors();
+    }*/
     void resetencoders() {
         left_rear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_rear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
+
+    public static void sleep(long sleepTime) {
+        long wakeupTime = System.currentTimeMillis() + sleepTime;
+
+        while (sleepTime > 0) {
+            try {
+                Thread.sleep(sleepTime);
+            } catch (InterruptedException e) {
+            }
+            sleepTime = wakeupTime - System.currentTimeMillis();
+        }
+    }   //sleep
 }
