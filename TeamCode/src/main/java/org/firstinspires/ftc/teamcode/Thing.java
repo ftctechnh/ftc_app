@@ -30,9 +30,8 @@ public class Thing extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         while (opModeIsActive()) {
-            encode(19, 1, MoveType.ROT);
-            wait(100);
-            encode(19, -1, MoveType.ROT);
+            telemetry.addData("Red: ", robot.color.red());
+            telemetry.update();
         }
     }
 }

@@ -40,7 +40,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         STRAIGHT, LATERALLY, ROT
     }
 
-    static final double CSENSOR_ARM_DOWN = .72;
+    static final double CSENSOR_ARM_DOWN = .78;
     static final double CSENSOR_ARM_UP   = .16;
 
     static final double VUF_DISTANCE = 10;

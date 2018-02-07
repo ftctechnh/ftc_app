@@ -33,7 +33,7 @@ public class MecanumRework extends OpMode {
     double lastRuntime;
     final double GRIPPER_POWER = .5;
     double cooldown = 0;
-    boolean clawState = false;
+    boolean clawState = true;
 
     @Override
     public void init() {
@@ -150,7 +150,7 @@ public class MecanumRework extends OpMode {
         }
 
         if(gamepad1.y){
-            robot.arm.setPosition(.72); // outwards
+            robot.arm.setPosition(.78); // outwards
         }
         if(gamepad1.x){
             robot.arm.setPosition(0.16); // back up towards robot
@@ -203,7 +203,7 @@ public class MecanumRework extends OpMode {
             robot.thiccClaw2.setPosition(OPEN_POS);
         }
 
-        final double extendoSpeed = 0.3;
+        final double extendoSpeed = 0.5;
 
         if(gamepad2.dpad_up) {
             robot.armExtender.setPower(extendoSpeed);
