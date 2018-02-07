@@ -113,7 +113,7 @@ public class MenuFileHandler {
             menuupperlimit[2] = 3;
             menuincrement[2] = 1;
             menuvaluetoken[2][0] = "Glyph";
-            menuvaluetoken[2][1] = "Relic";
+            menuvaluetoken[2][1] = "Extra Glyph";
             menuvaluetoken[2][2] = "Demo ";
             menuvaluetoken[2][3] = "Test ";
         }

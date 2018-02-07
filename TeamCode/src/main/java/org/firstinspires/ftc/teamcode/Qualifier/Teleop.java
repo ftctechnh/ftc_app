@@ -137,9 +137,9 @@ public class Teleop extends OpMode {
         //Lift/lower glyph  x/a by increments,   y/b manually
         //------------------------------------------------------------------------------
         if (gamepad1.start) {
-            gromit.glyphTrain.glyphlifttop("top");
+            gromit.glyphTrain.glyphliftupper("top");
         } else if (gamepad1.left_stick_button) {
-            gromit.glyphTrain.glyphlifttop("bottom");
+            gromit.glyphTrain.glyphliftupper("bottom");
 
         }
 
@@ -189,7 +189,7 @@ public class Teleop extends OpMode {
             delayLift = false;
             glyphSensedDelay = 0;
              if (blocks == 0) {
-                gromit.glyphTrain.glyphlifttop("top");
+                gromit.glyphTrain.glyphliftupper("top");
                 blocks = 1;
             } else {
                 gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
@@ -205,7 +205,7 @@ public class Teleop extends OpMode {
                 gromit.glyphTrain.liftIndex = 0;  //down always goes to zero
                 liftTarget = 0;
                 gromit.glyphTrain.lift_motor.setPower(-0.9);   // start the motor going down
-                gromit.glyphTrain.glyphlifttop("bottom");//Lower second Stage
+                gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
 //                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
                 blocks = 0;

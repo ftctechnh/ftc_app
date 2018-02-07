@@ -121,7 +121,7 @@ public class GlyphTrain {
             rightupper.setPosition(0.37);// closed
         }
     }
-    void glyphlifttop(String moveto) {
+    void glyphliftupper(String moveto) {
         //height is encoder counts or ticks
         // going up
         if(moveto == "top"){

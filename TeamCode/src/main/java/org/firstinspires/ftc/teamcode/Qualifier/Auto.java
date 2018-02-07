@@ -152,11 +152,15 @@ public class Auto extends LinearOpMode {
         //Activate Vuforia
         relicTrackables.activate();
 
+        // move first clamp up out of the way  (should move the clamps, but open is out of 18!
+        gromit.glyphTrain.glyphliftupper("top");
+
         //Run using encoders
         gromit.driveTrain.runUsingEncoders();
-        AutoTransitioner.transitionOnStop(this, "zMoo");   // get ready for teleop at the end of auto
 
         // AutoTransitioner used before waitForStart()
+        AutoTransitioner.transitionOnStop(this, "zMoo");   // get ready for teleop at the end of auto
+
         // Actual Init loop
         while (!opModeIsActive()) {
             telemetry.addData("IMU", "Heading: %4.2f ", gromit.driveTrain.getheading());
@@ -283,7 +287,6 @@ public class Auto extends LinearOpMode {
         //telemetry.addData("VuMark", "%s is where we're heading", vuMark);
         //telemetry.update();
 
-        relicTrackables.deactivate();
 
         if(menuFile.mode == 3){   //  test mode
 //            gromit.driveTrain.mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
@@ -336,6 +339,7 @@ public class Auto extends LinearOpMode {
         gromit.jewelArm.jewelArmUp();
 
 /**  ------------------------- Here are the vumark choices ----------------------------------------------------  */
+        relicTrackables.deactivate();
 
 
         if ( menuFile.teamIsRed && menuFile.startPositionIsFront ){                   /** RED Front  */
@@ -379,7 +383,7 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5,  menuFile.BlueFrontHeading2,0);    // forward
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5,  menuFile.BlueFrontHeading2,0);    // back up
 
-            gogetanotherglyph();
+            if(menuFile.mode == 1){ goGetAnotherGlyph();}
 
 
         } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront ) {                 /** RED  Back  */    //  back  4, 14, 26
@@ -440,7 +444,7 @@ public class Auto extends LinearOpMode {
 
     }
 
-    public void gogetanotherglyph(){
+    public void goGetAnotherGlyph(){
 
         //glyph train on
 
@@ -457,11 +461,13 @@ public class Auto extends LinearOpMode {
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueFrontHeading2, -90);  //strafe left 3
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3
 
+        //drive back towards glyph box
+
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 40, menuFile.BlueFrontHeading2, 180); //move 50
+
         //glyph train off
 
         gromit.glyphTrain.stopGlyphMotors();                                                                      //glyph train off
-
-        //auto clamp and lift glyph
 
         //Grip Block
 
@@ -472,9 +478,9 @@ public class Auto extends LinearOpMode {
 
         gromit.glyphTrain.liftGlyph(7);
 
-        //drive towards glyph box
+        // drive the rest
 
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 50, menuFile.BlueFrontHeading2, 180); //move 50
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 10, menuFile.BlueFrontHeading2, 180); //move 50
 
         //unclamp glyph
 
