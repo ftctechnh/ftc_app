@@ -37,16 +37,17 @@ public class FinalUniversalRef extends LinearOpMode
                         adjustment = 4;
                         newRobot.driveStraight_In(adjustment);
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(18 - adjustment);
+                        newRobot.driveStraight_In(19 - adjustment);
                         break;
                     case 'b':
                         adjustment = 2;
                         newRobot.driveStraight_In(0 - adjustment);
                         newRobot.moveWing(false);
                         newRobot.driveStraight_In(adjustment + 19);
+                        break;
                     default:
                         newRobot.moveWing(false);
-                        newRobot.driveStraight_In(18);
+                        newRobot.driveStraight_In(19);
                         break;
                 }
                 telemetry.addData("Cipherr = ", cipher);
@@ -57,35 +58,36 @@ public class FinalUniversalRef extends LinearOpMode
                         switch (colorOfJewel)
                         {
                             case 'r':
-                                newRobot.pivot(-86, .6);
+                                newRobot.pivot(-61, .6);
                                 break;
                             case 'b':
-                                newRobot.pivot(-58, .6);
+                                newRobot.pivot(-61, .6);
                                 break;
                             default:
-                                newRobot.pivot(-76, .6);
+                                newRobot.pivot(-61, .6);
                                 break;
                         }
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(15, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(18, .5, telemetry);
                         break;
 
                     case 'l':
                         newRobot.pivot(-22,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(5, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(18, .5, telemetry);
                         break;
                     case 'c':
                     default:
-                        newRobot.pivot(-57,.6);
+                        newRobot.pivot(-42,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(5, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(18, .5, telemetry);
                         break;
                 }
                 newRobot.driveStraight_In(-3,1);
+                newRobot.pivot(-30,.7);
                 newRobot.stopAllMotors();
                 break;
             case 'r':
@@ -117,21 +119,19 @@ public class FinalUniversalRef extends LinearOpMode
                 }
                 telemetry.addData("Cipherr = ", cipher);
                 telemetry.update();
-                /*newRobot.driveStraight_In(26);
-                newRobot.pivot_IMU(82, .25);*/
                 switch (cipher)
                 {
                     case 'l':
                         switch (colorOfJewel)
                         {
                             case 'r':
-                                newRobot.pivot(86, .6);
+                                newRobot.pivot(61, .6);
                                 break;
                             case 'b':
-                                newRobot.pivot(58, .6);
+                                newRobot.pivot(61, .6);
                                 break;
                             default:
-                                newRobot.pivot(76, .6);
+                                newRobot.pivot(61, .6);
                                 break;
                         }
                         newRobot.driveStraight_In(4, .5);
@@ -142,26 +142,18 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.pivot(22,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(5, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(15, .5, telemetry);
                         break;
                     case 'c':
                     default:
                         newRobot.pivot(57,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(5, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(15, .5, telemetry);
                         break;
                 }
-                /*newRobot.pivot_IMU(-80, .25);
-                newRobot.oldMoveLift(-1);
-                newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(16,.2);
-                newRobot.driveStraight_In(-5,1);
-                newRobot.driveStraight_In(20);
-                newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-5,1);
-                newRobot.stopAllMotors();*/
                 newRobot.driveStraight_In(-3);
+                newRobot.pivot(30,.7);
                 break;
             default:
                 newRobot.driveStraight_In(29, .4);

@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
  * Created by sahithithumuluri on 1/22/18.
  */
-@Autonomous (name = "FinalAudiAngles", group = "Auto")
+@Disabled
 public class FinalAudiAngles extends LinearOpMode
 {
     NewRobotFinal newRobot;
@@ -50,15 +51,21 @@ public class FinalAudiAngles extends LinearOpMode
             telemetry.update();
             switch (cipher)
             {
-                case 'r': newRobot.driveStraight_In(24 - adjustment,.6);
+                case 'l':
+                    newRobot.driveStraight_In(18f - adjustment,.6);
+                    newRobot.pivot(-90, .6);
                     break;
-                case 'l': newRobot.driveStraight_In(13.5f - adjustment,.6);
+                case 'r':
+                    newRobot.driveStraight_In(24 - adjustment,.6);
+                    newRobot.pivot(-45, .6);
                     break;
                 case 'c':
-                default: newRobot.driveStraight_In(18.5f - adjustment,.6);
+                default:
+                    newRobot.driveStraight_In(18.5f - adjustment,.6);
+                    newRobot.pivot(-45, .6);
                     break;
             }
-            newRobot.pivot(-45, .6);
+            newRobot.pivot(45, .6);
             //newRobot.pivot(80, .5); //86 degrees is almost perfect 90
             newRobot.oldMoveLift(-1);
             newRobot.openOrCloseDoor(false);
@@ -97,7 +104,7 @@ public class FinalAudiAngles extends LinearOpMode
             {
                 case 'r':
                     newRobot.driveStraight_In(18f - adjustment,.6);
-                    newRobot.pivot(-85, .6);
+                    newRobot.pivot(-90, .6);
                     break;
                 case 'l':
                     newRobot.driveStraight_In(24 - adjustment,.6);
@@ -112,7 +119,7 @@ public class FinalAudiAngles extends LinearOpMode
             newRobot.oldMoveLift(-1);
             newRobot.openOrCloseDoor(false);
             newRobot.driveStraight_In_Stall(13 ,.25);
-            newRobot.driveStraight_In(-3);
+            newRobot.driveStraight_In(-6);
                 /*newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-10,1);*/
             newRobot.stopAllMotors();
