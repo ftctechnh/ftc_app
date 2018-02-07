@@ -442,20 +442,20 @@ public class Auto extends LinearOpMode {
 
     public void gogetanotherglyph(){
 
-        //Move back towards glyph pile (middle)
-
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 46,  menuFile.BlueBackHeading3,0); //moves 46
-
         //glyph train on
 
-        gromit.glyphTrain.startGlyphMotors(0.6);                                                                                                            //glyph train on
+        gromit.glyphTrain.startGlyphMotors(0.7);
+
+        //Move back towards glyph pile (middle)
+
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 46,  menuFile.BlueFrontHeading2,0); //moves 46
 
         //strafing to get glyph in
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueBackHeading3, -90);  //strafe left 3
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueBackHeading3, 90);   //strafe right 3
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 4, menuFile.BlueBackHeading3, 0);    //move forward 4
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueBackHeading3, -90);  //strafe left 3
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueBackHeading3, 90);   //strafe right 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueFrontHeading2, -90);  //strafe left 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 4, menuFile.BlueFrontHeading2, 0);    //move forward 4
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueFrontHeading2, -90);  //strafe left 3
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3
 
         //glyph train off
 
@@ -474,7 +474,7 @@ public class Auto extends LinearOpMode {
 
         //drive towards glyph box
 
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 50, menuFile.BlueBackHeading3, 180); //move 50
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 50, menuFile.BlueFrontHeading2, 180); //move 50
 
         //unclamp glyph
 
@@ -483,7 +483,7 @@ public class Auto extends LinearOpMode {
 
         //drive back
 
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.BlueBackHeading3, 0);    //move 5
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed*0.6, 5, menuFile.BlueFrontHeading2, 0);    //move 5
     }
 
 

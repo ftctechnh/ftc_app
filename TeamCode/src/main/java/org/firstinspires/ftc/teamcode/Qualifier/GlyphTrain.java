@@ -103,8 +103,8 @@ public class GlyphTrain {
             leftlower.setPosition(0.75);
             rightlower.setPosition(0.3); //glyph open
         } else if (moveto == "close") {
-            leftlower.setPosition(0.46);//.25 Gap may be good
-            rightlower.setPosition(0.59);
+            leftlower.setPosition(0.45);//.25 Gap may be good
+            rightlower.setPosition(0.60);
         }
         else if (moveto == "wide"){
             leftlower.setPosition(0.91);
@@ -115,10 +115,10 @@ public class GlyphTrain {
         double clampRange = 0.4;
         if (moveto == "open") {
             leftupper.setPosition(0.47);
-            rightupper.setPosition(0.55); //glyph open
+            rightupper.setPosition(0.56); //clamp open
         } else if (moveto == "close") {
-            leftupper.setPosition(0.6);
-            rightupper.setPosition(0.43);//Good
+            leftupper.setPosition(0.64);
+            rightupper.setPosition(0.37);// closed
         }
     }
     void glyphlifttop(String moveto) {

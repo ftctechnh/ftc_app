@@ -13,9 +13,9 @@ public class RelicArm {
     public Servo relicElbowServo;
     public Servo relicClawServo;
     public DcMotor relicArmMotor  = null;
-    public double elbowtop = 1.0;
-    public double elbowup = 0.35;
-    public double elbowdown = 0.0;
+    public double elbowtop = 1.0;       //  up for transport
+    public double elbowup = 0.35;       //relic pickup position
+    public double elbowdown = 0.0;      // Stored in the robot
     public int    relicArmMotorMin = 0;
     public int    relicArmMotorMax = 5000;
     public int    deploydistance = 150;//Distance before relic controls turn on
@@ -26,7 +26,7 @@ public class RelicArm {
         //jawOpen();
         //jawClosed();
 
-        relicClawServo.setPosition(0.45);//For tucket into the robot
+        relicClawServo.setPosition(0.45);//For tucked into the robot
         relicElbowServo.setPosition(0.0);
 
         relicArmMotor = hardwareMap.get(DcMotor.class, "relic_arm");
