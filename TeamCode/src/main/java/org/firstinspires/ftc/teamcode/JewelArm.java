@@ -19,7 +19,7 @@ public class JewelArm {
     private final double RIGHT_POSITION = 1;
     private final double LEFT_POSITION = 0;
     private final double MIDDLE_POSITION = 0.5;
-    private final double MIN_COLOR_DETECTION_THRESHOLD = 20;
+    private final double MIN_COLOR_DETECTION_THRESHOLD = 30;
     private Telemetry telemetry;
 
     public JewelArm(Servo upDownServo, Servo endServo, ColorSensor cs, Telemetry telemetry) {

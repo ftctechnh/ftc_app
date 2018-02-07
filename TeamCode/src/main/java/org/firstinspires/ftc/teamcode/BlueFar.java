@@ -50,5 +50,6 @@ public class BlueFar extends LinearOpMode {
         drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 30);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
+        sleep(1000);
     }
 }

@@ -53,6 +53,7 @@ public class BlueRecovery extends LinearOpMode {
         drive.rightGyro(0,0, drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
+        sleep(1000);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
