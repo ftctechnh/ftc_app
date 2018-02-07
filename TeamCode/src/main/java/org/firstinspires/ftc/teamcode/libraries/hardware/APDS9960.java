@@ -71,8 +71,8 @@ public class APDS9960 {
 
     public void stopDevice() {
         sensor.write8(Regs.ENABLE.REG, 0);
-        sensor.disengage();
-        sensor.close();
+        //sensor.disengage();
+        //sensor.close();
     }
 
     public void updateGain() {

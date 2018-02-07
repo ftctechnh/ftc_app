@@ -111,22 +111,24 @@ public class ADPSAuto extends VuforiaBallLib {
 
         backDist = new APDS9960(backConfig, hardwareMap.get(I2cDeviceSynch.class, "reddist"), true, APDS9960.Config.DistGain.GAIN_4X);
         frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"), true, APDS9960.Config.DistGain.GAIN_4X);
-        frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "fultra"), 100);
-        backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "bultra"), 100);
+        //frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "fultra"), 100);
+        //backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "bultra"), 100);
 
         backDist.initDevice();
         frontDist.initDevice();
-        frontUltra.initDevice();
-        backUltra.initDevice();
+        //frontUltra.initDevice();
+        //backUltra.initDevice();
 
         bot.init();
+
+        bot.setDropPos(0.7);
     }
 
     public void start() {
         backDist.startDevice();
         frontDist.startDevice();
-        frontUltra.startDevice();
-        backUltra.startDevice();
+        //frontUltra.startDevice();
+        //backUltra.startDevice();
         startTracking();
     }
 
@@ -168,7 +170,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             }
             else {
-                //TODO: implement encoder count backup autonmatically
+                //TODO: implement encoder count backup automatically
                 findPilliar.add(new UltraHoneStep(this, red ? backUltra : frontUltra, 200, 5, 5, new SensorLib.PID(0.5f, 0.15f, 0, 10), step));
                 findPilliar.add(new AutoLib.GyroTurnStep(this, red ? 90 : -90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
             }
@@ -201,7 +203,7 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(oneSideSeq);
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 200, true));
 
-            mSeq.add(whack);
+            //mSeq.add(whack);
             mSeq.add(findPilliar);
 
             firstLoop = true;
