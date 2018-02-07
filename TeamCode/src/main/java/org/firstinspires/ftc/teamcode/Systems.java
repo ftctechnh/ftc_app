@@ -31,6 +31,7 @@ public class Systems {
         ForkLift.openClaw();
         AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,4);
         ForkLift.moveUntilDown(0.75);
+        ForkLift.setClawPositionPushInBlock();
         AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,12);
     }
 

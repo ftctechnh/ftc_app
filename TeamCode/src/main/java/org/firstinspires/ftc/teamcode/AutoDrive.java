@@ -35,6 +35,7 @@ public class AutoDrive {
     static final double CRYPTOBOX_COLUMNS_OFFSET_FAR = 11;
     static final double BACK_AWAY_FROM_BLOCK_SPEED = 0.75;
     static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
+    static final double SPIN_TO_CENTER_SPEED = 0.8;
     static final double DRIVE_EXPO = 3;
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {

@@ -47,7 +47,7 @@ public class BlueFar extends LinearOpMode {
         }
         Systems.pushInBlock();
         drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
-        //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 30);
+        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 30);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
     }

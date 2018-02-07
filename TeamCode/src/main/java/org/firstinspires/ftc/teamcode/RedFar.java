@@ -47,7 +47,7 @@ public class RedFar extends LinearOpMode {
         ForkLift.moveMotor(-1,250);
         Systems.pushInBlock();
         drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED,4);
-        //drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
+        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
