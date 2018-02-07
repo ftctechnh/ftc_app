@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -34,8 +35,12 @@ import java.util.Locale;
 public abstract class RelicAutoMode extends MeccyAutoMode {
     PengwinFin pengwinFin;
     PengwinWing pengwinWing;
+    ModernRoboticsI2cRangeSensor rangeSensor;
+
     //
     static double countify = 678;
+    double inches;
+    double speed;
     //
     VuforiaLocalizer vuforia;
     OpenGLMatrix lastLocation = null;
@@ -43,7 +48,34 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     public void startify() {
         pengwinFin = new PengwinFin(hardwareMap);
         pengwinWing = new PengwinWing(hardwareMap);
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
     }
+    //
+    public void goForward (double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+    }
+
+    public void strafeRight (double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + -move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + -move);
+    }
+
+    public void strafeLeft (double inches, double speed){
+        int move = (int)(Math.round(inches*countify));
+        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
+        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -move);
+        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + -move);
+        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
+    }
+
+
     //
     public int testOutMoving(double inchesYouThink){
         stopAndResetify();

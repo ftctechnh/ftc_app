@@ -183,7 +183,12 @@ public abstract class MeccyAutoMode extends MeccyMode{
         stopAndResetify();
         //
         //</editor-fold>
+
+
     }
     //</editor-fold>
     //
+
 }
+
+
