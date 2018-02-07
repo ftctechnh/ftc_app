@@ -138,9 +138,9 @@ public class NewRobotFinal
 
         grabberRotator = hardwareMap.get(Servo.class, "grabberRotator");
         //grabberRotator.scaleRange(0, 1f);
-        grabberRotator.setPosition(rotatorPos);
+        //grabberRotator.setPosition(rotatorPos);
         grabber = hardwareMap.get(Servo.class, "grabber");
-        grabber.setPosition(grabberPos);
+        //grabber.setPosition(grabberPos);
     }
 
     public void initAutoFunctions(HardwareMap hardwareMap, LinearOpMode opMode_IN)
