@@ -17,7 +17,7 @@ public class BlueRecovery extends LinearOpMode {
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
-    private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY = 36;
+    private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY = 37.5;
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");
@@ -46,10 +46,10 @@ public class BlueRecovery extends LinearOpMode {
         }
         ForkLift.moveMotor(-1,250);
         drive.rightGyro(drive.SPIN_TO_CRYPTOBOX_SPEED, -90);
-        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
+        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 5);
         Systems.pushInBlock();
         drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
-        drive.rightGyro(0,0, drive.SPIN_TO_CENTER_SPEED, 90);
+        drive.leftGyro(drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
         sleep(1000);

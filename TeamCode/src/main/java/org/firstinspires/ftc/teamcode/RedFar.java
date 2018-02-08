@@ -39,7 +39,7 @@ public class RedFar extends LinearOpMode {
             drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + 2);
+            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + 4);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
             drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
