@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Kaden on 2/3/18.
  */
-@Autonomous(name = "Testing strafing consistency", group = "test")
+@Autonomous(name = "Testing ramping", group = "test")
 @Disabled
 public class AutoTest extends LinearOpMode {
     AutoDrive drive;
@@ -15,6 +15,6 @@ public class AutoTest extends LinearOpMode {
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init();
         waitForStart();
-        drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, 24);
+        drive.forward(1, 100);
     }
 }
