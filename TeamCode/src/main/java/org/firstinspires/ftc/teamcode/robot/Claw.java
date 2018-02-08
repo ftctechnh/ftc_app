@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Derek on 10/24/2017.
  */
 
-public class Claw {
-    private Servo right,left;
+public class Claw {    private Servo right,left;
     public static final double CLAW_INCREMENT = 0.005;
     private double clawPos = 0;
 

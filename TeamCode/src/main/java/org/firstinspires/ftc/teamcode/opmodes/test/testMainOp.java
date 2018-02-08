@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.teleop;
+package org.firstinspires.ftc.teamcode.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -11,9 +11,8 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
  * Created by Derek on 11/14/2017.
  */
 
-@TeleOp(group = "teleop",name = "RelicTeleOp")
-public class RelicTeleOp extends OpMode{
-
+@TeleOp(group = "Test",name = "MainTest")
+public class testMainOp extends OpMode{
     private DcMotor A,B,C,D,arm;
     private Servo claw;
     private STATE clawState = STATE.OPEN;
