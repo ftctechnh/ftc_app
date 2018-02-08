@@ -201,6 +201,7 @@ public class WLP_RR_Grabber {
                 slider.setPower(stopPower);
             }
         }
+
         telemetry.addData("Gamepad2 ", "left trigger (%.2f)", gamepad2.left_trigger);
         telemetry.addData("Gamepad2 ", "right trigger (%.2f)", gamepad2.right_trigger);
         telemetry.addData("Gamepad2 ", "A (%b)", gamepad2.a);
@@ -211,6 +212,6 @@ public class WLP_RR_Grabber {
         telemetry.addData("Motor ", "Spinner Left (%.2f)", spinnerLeft.getPower());
         telemetry.addData("Motor ", "Spinner Right (%.2f)", spinnerRight.getPower());
         telemetry.addData("Servo ", "Arm Mover (%.2f)", armMover.getPosition());
-        // telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
+        telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
     }
 }

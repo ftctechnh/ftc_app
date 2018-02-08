@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Autonomous.WLP_RR_JewelArm;
 
 /**
  * This file provides necessary functionality for We Love Pi Team's 2017 Relic
