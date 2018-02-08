@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by shivaan on 08/02/18.
  */
 
-@TeleOp(name = "OpModeTest", group = "agroup")
+@TeleOp(name = "trigoDrive", group = "agroup")
 
 public class mecanumTrigo extends LinearOpMode
 {

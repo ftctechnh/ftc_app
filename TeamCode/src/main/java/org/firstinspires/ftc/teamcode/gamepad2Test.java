@@ -24,32 +24,30 @@ public class gamepad2Test extends LinearOpMode {
 
     //Relic
     private DcMotor relicMotor;
-    private Servo relicServo1;
-    private Servo relicServo2;
+    private Servo relicArm;
+    private Servo relicGrab;
 
-    //Ball
-    private Servo knockerServo;
-    private Servo armServo;
+    //Jewel
+    private Servo jewelArm;
 
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //Grabber
-        grabMotor = hardwareMap.get(DcMotor.class, "grabMotor");
-        grabTopLeft = hardwareMap.get(Servo.class, "grabTopLeft");
-        grabTopRight = hardwareMap.get(Servo.class, "grabTopRight");
-        grabBottomLeft = hardwareMap.get(Servo.class, "grabBottomLeft");
-        grabBottomRight = hardwareMap.get(Servo.class, "grabBottomRight");
+        grabMotor = hardwareMap.get(DcMotor.class, "GDC");
+        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
+        grabTopRight = hardwareMap.get(Servo.class, "GTR");
+        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
+        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
 
         //Relic
-        relicMotor = hardwareMap.get(DcMotor.class,"relic");
-        relicServo1 = hardwareMap.get(Servo.class, "relicServo1");
-        relicServo2 = hardwareMap.get(Servo.class, "relicServo2");
+        relicMotor = hardwareMap.get(DcMotor.class,"RDC");
+        relicArm = hardwareMap.get(Servo.class, "RA");
+        relicGrab = hardwareMap.get(Servo.class, "RG");
 
         //Ball
-        knockerServo = hardwareMap.get(Servo.class, "knockerServo");
-        armServo = hardwareMap.get(Servo.class, "armServo");
+        jewelArm = hardwareMap.get(Servo.class, "JA");
 
         waitForStart();
 
@@ -61,6 +59,10 @@ public class gamepad2Test extends LinearOpMode {
             }
 
             if (gamepad2.left_stick_button){
+                grabMotor.setPower(-gamepad2.right_trigger);
+            }
+
+            if (!gamepad2.right_stick_button && !gamepad2.left_stick_button){
                 grabMotor.setPower(0);
             }
 
@@ -84,20 +86,13 @@ public class gamepad2Test extends LinearOpMode {
 
             //Ball
             if (gamepad2.dpad_down){
-                armServo.setPosition(1);
+                jewelArm.setPosition(1);
             }
 
             if (gamepad2.dpad_up){
-                armServo.setPosition(0);
+                jewelArm.setPosition(0);
             }
 
-            if (gamepad2.dpad_right){
-                knockerServo.setPosition(1);
-            }
-
-            if (gamepad2.dpad_left){
-                knockerServo.setPosition(0);
-            }
 
             //Relic
             if (gamepad2.a){
@@ -105,17 +100,21 @@ public class gamepad2Test extends LinearOpMode {
             }
 
             if (gamepad2.b){
+                relicMotor.setPower(-gamepad2.left_trigger);
+            }
+
+            if (!gamepad2.a && !gamepad2.b){
                 relicMotor.setPower(0);
             }
 
             if (gamepad2.x){
-                relicServo1.setPosition(1);
-                relicServo2.setPosition(1);
+                relicArm.setPosition(1);
+                relicGrab.setPosition(1);
             }
 
             if (gamepad2.y){
-                relicServo1.setPosition(0);
-                relicServo2.setPosition(0);
+                relicArm.setPosition(0);
+                relicGrab.setPosition(0);
             }
 
 

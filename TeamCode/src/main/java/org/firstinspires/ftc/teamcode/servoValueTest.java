@@ -34,10 +34,10 @@ public class servoValueTest extends LinearOpMode{
 
         //Grabber
 //        grabMotor = hardwareMap.get(DcMotor.class, "grabMotor");
-        grabTopLeft = hardwareMap.get(Servo.class, "grabTopLeft");
-        grabTopRight = hardwareMap.get(Servo.class, "grabTopRight");
-        grabBottomLeft = hardwareMap.get(Servo.class, "grabBottomLeft");
-        grabBottomRight = hardwareMap.get(Servo.class, "grabBottomRight");
+        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
+        grabTopRight = hardwareMap.get(Servo.class, "GTR");
+        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
+        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
 
 //        //Relic
 //        relicMotor = hardwareMap.get(DcMotor.class,"relic");
@@ -49,6 +49,10 @@ public class servoValueTest extends LinearOpMode{
 //        armServo = hardwareMap.get(Servo.class, "armServo");
 
         char currServo = ' ';
+        double leftpos = 0;
+        double rightpos = 0;
+        double uleftpos = 0;
+        double urightpos = 0;
 
         waitForStart();
 
@@ -95,36 +99,42 @@ public class servoValueTest extends LinearOpMode{
 //                    telemetry.addData("Servo in use : ", "none");
 //            }
 
-            if(gamepad1.a)
-            {
-                grabBottomLeft.setPosition(0.6);
+            grabTopLeft.setPosition(uleftpos);
+            grabTopRight.setPosition(urightpos);
+
+            if(gamepad1.right_bumper){
+                uleftpos = uleftpos + 0.05;
             }
-            if(gamepad1.b)
-            {
-                grabBottomLeft.setPosition(0.8);
+            if(gamepad1.left_bumper){
+                uleftpos = uleftpos - 0.05;
             }
-            if(gamepad1.x)
-            {
-                grabBottomLeft.setPosition(1);
+            if(gamepad1.right_stick_button){
+                urightpos = urightpos + 0.05;
             }
-            if(gamepad1.y)
-            {
-                grabBottomRight.setPosition(0.75);
-            }
-            if(gamepad1.dpad_up){
-                grabBottomRight.setPosition(1);
-            }
-            if (gamepad1.dpad_down){
-                grabBottomRight.setPosition(0.4);
-            }
-            if (gamepad1.dpad_left){
-                grabBottomRight.setPosition(0.8);
-            }
-            if (gamepad1.dpad_right){
-                grabBottomRight.setPosition(0.6);
+            if(gamepad1.left_stick_button){
+                urightpos = urightpos - 0.05;
             }
 
-            grabBottomLeft.setPosition(0.6);
+            grabBottomLeft.setPosition(leftpos);
+            grabBottomRight.setPosition(rightpos);
+
+            if(gamepad1.dpad_right){
+                leftpos = leftpos + 0.05;
+            }
+            if(gamepad1.dpad_left){
+                leftpos = leftpos - 0.05;
+            }
+            if(gamepad1.dpad_up){
+                rightpos = rightpos + 0.05;
+            }
+            if(gamepad1.dpad_down){
+                rightpos = rightpos - 0.05;
+            }
+
+
+
+
+            //grabBottomLeft.setPosition(0.6);
 //            grabTopRight.setPosition(0);
 //            grabTopLeft.setPosition(0);
 

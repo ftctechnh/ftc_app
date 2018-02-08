@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,7 +9,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by shivaan on 06/02/18.
  */
 
-@TeleOp(name = "OpModeTest", group = "agroup")
+@TeleOp(name = "inequality", group = "agroup")
+@Disabled
 
 public class inequalityGamepad1 extends LinearOpMode
 {
