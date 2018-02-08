@@ -113,6 +113,9 @@ public class WLP_MecanumDriveTrain {
         double left_x = 0.0;
         double left_y = 0.0;
         double right_x = 0.0;
+        double left_toggle = 0.3;
+        double right_toggle = 0.5;
+
 
         // dpad overrides other joysticks
         if (gamepad1.dpad_left) {
@@ -127,6 +130,28 @@ public class WLP_MecanumDriveTrain {
             left_x = gamepad1.left_stick_x;
             left_y = gamepad1.left_stick_y;
             right_x = gamepad1.right_stick_x;
+        }
+
+        if(gamepad1.left_trigger > 0) {
+            left_x = gamepad1.left_stick_x * left_toggle;
+            left_y = gamepad1.left_stick_y * left_toggle;
+            right_x = gamepad1.right_stick_x * left_toggle;
+        } else if(gamepad1.right_trigger > 0){
+            left_x = gamepad1.left_stick_x * right_toggle;
+            left_y = gamepad1.left_stick_y * right_toggle;
+            right_x = gamepad1.right_stick_x * right_toggle;
+        } else {
+            left_x = gamepad1.left_stick_x;
+            left_y = gamepad1.left_stick_y;
+            right_x = gamepad1.right_stick_x;
+        }
+
+        if(gamepad1.right_bumper) {
+            left_x = -left_x;
+            left_y = -left_y;
+        } else {
+            left_x = +left_x;
+            left_y = +left_y;
         }
 
         // Update the joystick input to calculate  wheel powers

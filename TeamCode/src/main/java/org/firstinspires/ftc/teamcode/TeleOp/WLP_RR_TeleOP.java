@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
@@ -46,6 +47,7 @@ public class WLP_RR_TeleOP extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     WLP_RR_Grabber grabber = new WLP_RR_Grabber();
     WLP_MecanumDriveTrain drivetrain = new WLP_MecanumDriveTrain();
+    private Servo arm = null;
 
 
     /*
@@ -63,6 +65,9 @@ public class WLP_RR_TeleOP extends OpMode {
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("WLP_RR_TeleOp: ", "Initialization succeeded");
+
+        arm.setPosition(0.0);
+
 
     }
 

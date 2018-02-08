@@ -53,7 +53,7 @@ public class WLP_RR_Grabber {
     final double armClose = 0.0;
     final double stopPower = 0.0;
     final double stopPosition = 0.0;
-    final long  buttonDelay = 500;
+
 
 
     // Global variables to be initialized in init function
@@ -72,9 +72,13 @@ public class WLP_RR_Grabber {
     private boolean spinIn = false;
     private boolean spinOut = false;
     private boolean clampOn = false;
-    ElapsedTime buttontime = new ElapsedTime();
+    private boolean ignoreButtonA = false;
+    private boolean ignoreButtonB = false;
+    private boolean ignoreButtonX = false;
 
-    private boolean  grabberClosed  = false;
+
+
+    private boolean grabberClosed = false;
 
     private boolean isInitialized = false;
 
@@ -122,7 +126,7 @@ public class WLP_RR_Grabber {
 
         // Calculate and set motor powers
 
-        if (buttontime.milliseconds() > buttonDelay) {
+        if (!ignoreButtonA) {
 
             // Spinner: A button toggles the spinner inward
             if (gamepad2.a) {
@@ -134,41 +138,60 @@ public class WLP_RR_Grabber {
                     spinnerRight.setPower(-spinnerPower);
                 }
                 spinIn = !spinIn;
+                ignoreButtonA = true;
 
-            }
-
-            // Spinner: A button toggles the spinner outward
-            if (gamepad2.b) {
-                if (spinOut) {
-                    spinnerLeft.setPower(stopPower);
-                    spinnerRight.setPower(stopPower);
-                } else {
-                    spinnerLeft.setPower(-spinnerPower);
-                    spinnerRight.setPower(spinnerPower);
-                }
-                spinOut = !spinOut;
-            }
-
-            // Spinner: X button toggles the clamp
-           /* if (gamepad2.x) {
-                if (clampOn) {
-                    armMover.setPosition(armOpen);
-                } else {
-                    armMover.setPosition(armClose);
-                }
-                clampOn = !clampOn;
-            }
-            buttontime.reset();
-            */
-            if(gamepad2.x) {
-                armMover.setPosition(armClose);
             } else {
-                armMover.setPosition(armOpen);
+                if (!gamepad2.a) {
+                    ignoreButtonA = false;
+                }
+            }
+            if (!ignoreButtonB) {
+                // Spinner: A button toggles the spinner outward
+                if (gamepad2.b) {
+                    if (spinOut) {
+                        spinnerLeft.setPower(stopPower);
+                        spinnerRight.setPower(stopPower);
+                    } else {
+                        spinnerLeft.setPower(-spinnerPower);
+                        spinnerRight.setPower(spinnerPower);
+                    }
+                    spinOut = !spinOut;
+                    ignoreButtonB = false;
+                } else {
+                    if (!gamepad2.b) {
+                        ignoreButtonB = false;
+                    }
+                }
+            }
+
+            if (!ignoreButtonX) {
+
+                // Spinner: X button toggles the clamp
+                if (gamepad2.x) {
+                    if (clampOn) {
+                        armMover.setPosition(armOpen);
+                    } else {
+                        armMover.setPosition(armClose);
+                    }
+                    clampOn = !clampOn;
+                    ignoreButtonX = false;
+                } else {
+                    if (!gamepad2.x) {
+                        ignoreButtonX = false;
+                    }
+                }
             }
         }
 
-/*
-        // Slider: RT - up, LT - down
+
+        if (gamepad2.x) {
+            armMover.setPosition(armClose);
+        } else {
+            armMover.setPosition(armOpen);
+        }
+
+
+        //Slider: RT - up, LT - down
         if (gamepad2.left_trigger > 0.0) {
             slider.setPower(-gamepad2.left_trigger);
         } else if (gamepad2.right_trigger > 0.0) {
@@ -178,7 +201,6 @@ public class WLP_RR_Grabber {
                 slider.setPower(stopPower);
             }
         }
-*/
         telemetry.addData("Gamepad2 ", "left trigger (%.2f)", gamepad2.left_trigger);
         telemetry.addData("Gamepad2 ", "right trigger (%.2f)", gamepad2.right_trigger);
         telemetry.addData("Gamepad2 ", "A (%b)", gamepad2.a);
