@@ -55,7 +55,7 @@ public class DriveTrain {
 //    public AnalogInput maxbotixSensor;
 
     public AnalogInput sharpIRSensor;
-    public DistanceSensor sensorDistance;
+   // public DistanceSensor sensorDistance;
 
 
     // The IMU sensor object
@@ -121,7 +121,7 @@ public class DriveTrain {
  //       maxbotixSensor = hardwareMap.analogInput.get("maxbotixsensor");
         //Sharp IR Sensors
         sharpIRSensor = hardwareMap.analogInput.get("sharpirsensor");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
+        //sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
 
     }
 
