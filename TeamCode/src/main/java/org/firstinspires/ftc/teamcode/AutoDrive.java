@@ -27,7 +27,7 @@ public class AutoDrive {
     static final double GYRO_OFFSET = 2.25;
     static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
-    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.8;
+    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.7;
     static final double SPIN_TO_CRYPTOBOX_SPEED = 1;
     static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.6;
     static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 14;
