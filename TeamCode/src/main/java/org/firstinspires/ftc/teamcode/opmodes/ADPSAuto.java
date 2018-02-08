@@ -179,12 +179,12 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.85, 0.25, false));
 
             //reconstruct for saftey
-            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 360.0f);
-            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 360.0f);
+            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 150.0f, 55.0f, 200.0f);
+            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -150.0f, 55.0f, 200.0f);
             final APDS9960 dist = red ? backDist : frontDist;
             //TODO: add camera fallback
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.65, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
-                    50, 10, path.skipCount, 50, this, red));
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.64, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
+                    50, 5, path.skipCount, 90, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
@@ -253,7 +253,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private int foundCount = 0;
 
         private static final int APDS_FOUND_COUNT = 10;
-        private static final int COUNTS_BETWEEN_PILLIAR = 175;
+        private static final int COUNTS_BETWEEN_PILLIAR = 145;
 
         APDSFind(Servo stick, double stickDown, double stickUp, APDS9960 sens, SensorLib.PID errorPid,
                  GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode, boolean red) {
