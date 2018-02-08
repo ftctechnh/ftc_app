@@ -33,7 +33,7 @@ public class Systems {
         ForkLift.moveUntilDown(0.75);
         ForkLift.setClawPositionPushInBlock();
         sleep(250);
-        AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,10);
+        AutoDrive.driveTranslateRotate(0, AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,0,8);
     }
 
     public void grabSecondGlyph() {
