@@ -20,13 +20,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Preciousss: Red2wGyro", group="Preciousss")
+@Autonomous(name="Preciousss: Red2wGyroNewPivot", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Red2wGyro extends LinearOpMode {
+public class Red2wGyroNewPivot extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -95,7 +95,6 @@ public class Red2wGyro extends LinearOpMode {
         }
 
 
-
         // S t a r t
 
         waitForStart();
@@ -143,7 +142,6 @@ public class Red2wGyro extends LinearOpMode {
             telemetry.update();
         } else {
             iSeeBlue = true;
-
             iSeeRed = false;
         }
         telemetry.addLine()
@@ -161,18 +159,18 @@ public class Red2wGyro extends LinearOpMode {
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .25f);
+            pivotTo(-2);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, -.2f, .25f);
+            pivotTo(2);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .25f);
+            pivotTo(2);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, .2f, .25f);
+            pivotTo(-2);
         }
         telemetry.update();
 

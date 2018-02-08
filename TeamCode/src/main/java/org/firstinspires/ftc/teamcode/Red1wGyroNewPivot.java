@@ -20,13 +20,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Preciousss: Red2wGyro", group="Preciousss")
+@Autonomous(name="Preciousss: Red1wGyroNewPivot", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Red2wGyro extends LinearOpMode {
+public class Red1wGyroNewPivot extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -161,39 +161,46 @@ public class Red2wGyro extends LinearOpMode {
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .25f);
+            pivotTo(-2);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, -.2f, .25f);
+            pivotTo(2);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .25f);
+            pivotTo(2);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, .2f, .25f);
+            pivotTo(-2);
         }
         telemetry.update();
 
-        move(0f, -0.5f, .35f);
+        move(0f, -0.5f, .47f);
+
+        Wait(.5);
+
+        pivotTo(-90);
 
         Wait(1);
 
-        move(-.75f,0f,1.0f);
+        move(0f,-.25f,.3f);
 
         Wait(1);
 
         Conveyor(3f);
 
+        Wait(.5);
+
+        move(0f,.25f,.3f);
+
         Wait(1);
 
-        move(0f,-.25f,.5f);
+        move(0f,-.25f,.35f);
 
         Wait(1);
 
         move(0f,.25f,.25f);
-
     }
 
     void move(float posx, float posy, float waitTime) {

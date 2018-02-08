@@ -20,13 +20,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 
-@Autonomous(name="Preciousss: Red2wGyro", group="Preciousss")
+@Autonomous(name="Preciousss: Blue2wGyroNewWPivot", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Red2wGyro extends LinearOpMode {
+public class Blue2wGyroNewPivot extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -44,8 +44,8 @@ public class Red2wGyro extends LinearOpMode {
     Acceleration gravity;
     NormalizedColorSensor colorSensor;
     NormalizedRGBA colors;
-    boolean iAmBlue = false;
-    boolean iAmRed = true;
+    boolean iAmBlue = true;
+    boolean iAmRed = false;
     boolean isBoxSide = true;
 
 
@@ -67,7 +67,6 @@ public class Red2wGyro extends LinearOpMode {
 
 
         // V u f o r i a  s e t u p
-
 
 
         // H a r d w a r e   M a p p i n g
@@ -95,20 +94,20 @@ public class Red2wGyro extends LinearOpMode {
         }
 
 
-
         // S t a r t
 
         waitForStart();
 
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            colors = colorSensor.getNormalizedColors();
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity  = imu.getGravity();
-        }
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                colors = colorSensor.getNormalizedColors();
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                gravity = imu.getGravity();
+            }
         });
 
         // J e w e l s
@@ -125,15 +124,15 @@ public class Red2wGyro extends LinearOpMode {
         Wait(1.5f);
 
 
-            telemetry.update();
-            //colors = colorSensor.getNormalizedColors();
-            float redValue = colors.red * 10000;
-            float blueValue = colors.blue * 10000;
-            telemetry.addLine()
-                    .addData("r", "%.3f", colors.red*10000)
-                    .addData("b", "%.3f", colors.blue*10000);
+        telemetry.update();
+        //colors = colorSensor.getNormalizedColors();
+        float redValue = colors.red * 10000;
+        float blueValue = colors.blue * 10000;
+        telemetry.addLine()
+                .addData("r", "%.3f", colors.red * 10000)
+                .addData("b", "%.3f", colors.blue * 10000);
 
-            //telemetry.update();
+        //telemetry.update();
 
 
         if (colors.red > colors.blue) {
@@ -151,9 +150,9 @@ public class Red2wGyro extends LinearOpMode {
                 .addData("b", "%.3f", blueValue)
                 .addData("iSeeRed", "%b", iSeeRed)
                 .addData("iSeeBlue", "%b", iSeeBlue)
-                .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
-                .addData ( "iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
-                .addData ( "Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
+                .addData("iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
+                .addData("iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
+                .addData("Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
 
         telemetry.update();
 
@@ -161,26 +160,34 @@ public class Red2wGyro extends LinearOpMode {
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .25f);
+            pivotTo(-2);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, -.2f, .25f);
+            pivotTo(2);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .25f);
+            pivotTo(2);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, .2f, .25f);
+            pivotTo(-2);
         }
         telemetry.update();
 
-        move(0f, -0.5f, .35f);
+        move(0f, 0.5f, .23f);
 
         Wait(1);
 
-        move(-.75f,0f,1.0f);
+        move(-.7f, 0f, 1f);
+
+        Wait(1);
+
+        pivotTo(179);
+
+        Wait(1);
+
+        move(0f, -.25f, .2f);
 
         Wait(1);
 
@@ -188,12 +195,11 @@ public class Red2wGyro extends LinearOpMode {
 
         Wait(1);
 
-        move(0f,-.25f,.5f);
+        move(0f, .25f, .45f);
 
         Wait(1);
 
-        move(0f,.25f,.25f);
-
+        move(0f, -.25f, .5f);
     }
 
     void move(float posx, float posy, float waitTime) {

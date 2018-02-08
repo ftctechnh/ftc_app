@@ -160,18 +160,18 @@ public class Blue2wGyro extends LinearOpMode {
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            move(0f, .2f, .3f);
+            move(0f, .2f, .25f);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, -.2f, .3f);
+            move(0f, -.2f, .25f);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .3f);
+            move(0f, -.2f, .25f);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, .2f, .3f);
+            move(0f, .2f, .25f);
         }
         telemetry.update();
 
