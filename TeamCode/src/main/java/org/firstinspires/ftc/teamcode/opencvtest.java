@@ -41,7 +41,8 @@ public class opencvtest extends OpMode {
         //While the glyph is not within 10 pixels of the center:
         telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
         long precision = 10;
-        while(!(-precision < glyphDetector.getChosenGlyphOffset()) && (glyphDetector.getChosenGlyphOffset() < precision)) {
+        long cameraCenter = 180;
+        while(!(-precision+cameraCenter < glyphDetector.getChosenGlyphOffset()) && (glyphDetector.getChosenGlyphOffset() < precision+cameraCenter)) {
             if(glyphDetector.getChosenGlyphOffset() > 0) {//if the glyph is too far to the right:
                 drive.driveTranslateRotateNonstop(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED);
             }else {//if the glyph is too far to the left:
