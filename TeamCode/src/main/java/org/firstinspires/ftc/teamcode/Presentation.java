@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Autonomous(name = "Presentation Program", group = "Test")
+@Disabled
 public class Presentation extends OpMode {
     private ForkLift ForkLift;
     private RelicClaw RelicClaw;

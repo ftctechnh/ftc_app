@@ -7,6 +7,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 @Autonomous(name = "Red Far", group = "Autonomous")
@@ -35,19 +36,34 @@ public class RedFar extends LinearOpMode {
         JewelArm.findJewel(Color.RED);
         pictograph = vuforia.getMark();
         drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
+        sleep(2000);
+        boolean isDistanceSane = 12 < drive.getDistance() && drive.getDistance() < 19;
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
+            if(isDistanceSane){
+                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_LEFT_COLUMN);
+            } else {
+                drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
+            }
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + 2.5);
+            if (isDistanceSane) {
+                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_CENTER_COLUMN);
+            } else {
+                drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + 2.5);
+            }
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
-            drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED,drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
+            if (isDistanceSane) {
+                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_RIGHT_COLUMN);
+            } else {
+                drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
+            }
         }
         ForkLift.moveMotor(-1,250);
-        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 5);
+        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 6);
+        sleep(2000);
         Systems.pushInBlock();
-        drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED,4);
+        drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED,5);
         drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
