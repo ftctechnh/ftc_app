@@ -6,8 +6,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -43,10 +42,10 @@ public class BeehiveVuforia {
     public RelicRecoveryVuMark getMark() {
         relicTrackables.activate();
         boolean tryAgain = false;
-        time.start();
+        time.reset();
         while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
-          if(time.getElapsedTime()>2000) {
+          if(time.seconds()>2) {
               telemetry.addLine("tried again ");
               telemetry.update();
               tryAgain = true;
@@ -55,10 +54,10 @@ public class BeehiveVuforia {
         }
         if(tryAgain) {
             setServoPosition(PICTOGRAPH_POSITION);
-            time.resetTime();
+            time.reset();
             while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if(time.getElapsedTime()>3000) {
+                if(time.seconds()>3) {
                     telemetry.addLine("tried again and died again");
                     telemetry.update();
                     break;

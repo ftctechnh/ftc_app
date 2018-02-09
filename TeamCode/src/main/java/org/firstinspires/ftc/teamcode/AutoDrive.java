@@ -42,7 +42,7 @@ public class AutoDrive {
     static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
     static final double SPIN_TO_CENTER_SPEED = 1;
     static final double DRIVE_EXPO = 3;
-    static final double RAMP_LOG_EXPO = 0.2;
+    static final double RAMP_LOG_EXPO = 0.8;
     static final double DISTANCE_TO_LEFT_COLUMN = 33;
     static final double DISTANCE_TO_CENTER_COLUMN = 26;
     static final double DISTANCE_TO_RIGHT_COLUMN = 19;
@@ -273,7 +273,7 @@ public class AutoDrive {
         } else {
             return 0;
         }
-        double expo_speed = Math.pow(Math.abs(clipMoveSpeed(speed)), 1);
+        double expo_speed = Math.pow(Math.abs(clipMoveSpeed(speed)), RAMP_LOG_EXPO);
         if (speed > 0) {
             return expo_speed;
         } else {
