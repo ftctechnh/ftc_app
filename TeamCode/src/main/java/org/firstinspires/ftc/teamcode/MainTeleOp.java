@@ -78,7 +78,7 @@ public class MainTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             robot.updateReadings();
 
-            zType.forwardRunSpeed = (1 - gamepad2.left_trigger) * 0.35 + 0.05;
+            zType.forwardRunSpeed = (1 - gamepad2.left_trigger) * 0.20 + 0.20;
             zType.backwardRunSpeed = zType.forwardRunSpeed;
 
             scale = true;
@@ -240,7 +240,7 @@ public class MainTeleOp extends LinearOpMode {
                 if (turnRelevant) {
                     turnSpeed = gamepad1.right_stick_x;
                     if (gamepad1.left_trigger > triggerThreshold) {
-                        turnSpeed *= 0.2;
+                        turnSpeed *= 0.32;
                     }
                     timeTillHeadingLock.reset();
                 }
