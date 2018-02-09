@@ -31,12 +31,9 @@ public class RelicTelyMode  extends MeccyMode{
     PengwinWing pengwinWing;
     //
     //<editor-fold desc="Startify">
-    VuforiaLocalizer vuforia;
-    OpenGLMatrix lastLocation = null;
     //
     ElapsedTime time = new ElapsedTime();
     //
-    private Random randy = new Random();
     //
     double degreeOfRobotPower = 1;
     DrivingAction drivingAction = DrivingAction.Driving;
@@ -154,7 +151,7 @@ public class RelicTelyMode  extends MeccyMode{
         //<editor-fold desc="Chassis">
         switch (drivingAction){
             case Driving:
-                    drive(-leftY * degreeOfRobotPower);
+                    drive(-leftY);
                 break;
             case Turning:
                     turn(rightX * degreeOfRobotPower);
