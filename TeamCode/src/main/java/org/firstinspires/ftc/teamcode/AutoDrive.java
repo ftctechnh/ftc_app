@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -21,7 +20,7 @@ public class AutoDrive {
     private DcMotor RearLeft;
     private DcMotor RearRight;
     private REVGyro imu;
-    private ModernRoboticsI2cRangeSensor distanceSensor;
+    private ModernRoboticsI2cRangeSensor rangeSensor;
     static private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
     static private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit.
     public double heading;
@@ -44,9 +43,9 @@ public class AutoDrive {
     static final double SPIN_TO_CENTER_SPEED = 1;
     static final double DRIVE_EXPO = 3;
     static final double RAMP_LOG_EXPO = 0.8;
-    static final double DISTANCE_TO_LEFT_COLUMN = 33;
-    static final double DISTANCE_TO_CENTER_COLUMN = 26;
-    static final double DISTANCE_TO_RIGHT_COLUMN = 19;
+    static final double DISTANCE_TO_FAR_COLUMN = 32.75;
+    static final double DISTANCE_TO_CENTER_COLUMN = 25.5;
+    static final double DISTANCE_TO_CLOSE_COLUMN = 17.5;
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
@@ -56,7 +55,7 @@ public class AutoDrive {
         this.RearRight = hardwareMap.dcMotor.get("m4");
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
         this.imu = new REVGyro(hardwareMap.get(BNO055IMU.class, "imu"));
-        this.distanceSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "d1");
+        this.rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "d1");
         this.telemetry = telemetry;
         setBRAKE();
     }
@@ -68,8 +67,7 @@ public class AutoDrive {
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
-        double[] list = {fl, fr, rl, rr};
-        double highestSpeed = findHigh(list);
+        double highestSpeed = findHigh(new double[] {fl, fr, rl, rr});
         double flTarget = Math.abs(fl / highestSpeed * clicks);
         double frTarget = Math.abs(fr / highestSpeed * clicks);
         double rlTarget = Math.abs(rl / highestSpeed * clicks);
@@ -99,6 +97,7 @@ public class AutoDrive {
         }
         stopMotors();
     }
+
     public void driveTranslateRotate(double x, double y, double z) {
         double fl = clip(-y + -x - z);
         double fr = clip(-y + x + z);
@@ -130,7 +129,6 @@ public class AutoDrive {
     public void spinLeft(double speed, double distance) {
         driveTranslateRotate(0, 0, -Math.abs(speed), distance);
     }
-
 
     public void forwardTime(double speed, long miliseconds) {
         driveTranslateRotate(0, Math.abs(speed), 0, miliseconds);
@@ -341,6 +339,7 @@ public class AutoDrive {
             return 0;
         }
     }
+
     private double clipStrafeSpeed(double speed) {
         if (speed > 0) {
             return Range.clip(speed, Math.abs(MIN_STRAFE_SPEED), 1);
@@ -362,13 +361,19 @@ public class AutoDrive {
         double proportion;
         double derivative = 0;
         double distance = getDistance();
+        int ranTimes = 0;
+        int acceptedSensorValue = 0;
         while (distance < endDistance) {
             proportion = 1 - Math.abs((distance - start) / distanceToTravel + 0.0001);
             driveSpeeds(clipStrafeSpeed(fl * proportion), clipStrafeSpeed(fr * proportion), clipStrafeSpeed(rl * proportion), clipStrafeSpeed(rr * proportion));
             derivative = getDistance() - distance;
-            if(!(derivative>=0 && derivative<0.1)) {
+            if(derivative>=0 && derivative<3) {
                 distance = getDistance();
+                acceptedSensorValue++;
             }
+            ranTimes++;
+            telemetry.addData("Ran times", ranTimes);
+            telemetry.addData("Accepted Ratio", acceptedSensorValue/ranTimes);
             telemetrizeDistance();
             telemetry.update();
         }
@@ -382,9 +387,11 @@ public class AutoDrive {
     public void driveRightUntilDistance(double speed, double distance) {
         driveUntilDistance(Math.abs(speed), 0, 0, distance);
     }
+
     public double getDistance(DistanceUnit unit) {
-        return distanceSensor.getDistance(unit);
+        return rangeSensor.getDistance(unit);
     }
+
     public double getDistance() {
         return getDistance(DistanceUnit.INCH);
     }

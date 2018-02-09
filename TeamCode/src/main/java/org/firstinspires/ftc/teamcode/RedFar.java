@@ -7,7 +7,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 @Autonomous(name = "Red Far", group = "Autonomous")
@@ -40,7 +39,7 @@ public class RedFar extends LinearOpMode {
         boolean isDistanceSane = 12 < drive.getDistance() && drive.getDistance() < 19;
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
             if(isDistanceSane){
-                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_LEFT_COLUMN);
+                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_FAR_COLUMN);
             } else {
                 drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION + drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
             }
@@ -54,7 +53,7 @@ public class RedFar extends LinearOpMode {
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT) {
             if (isDistanceSane) {
-                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_RIGHT_COLUMN);
+                drive.driveLeftUntilDistance(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DISTANCE_TO_CLOSE_COLUMN);
             } else {
                 drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
             }
@@ -62,7 +61,7 @@ public class RedFar extends LinearOpMode {
         drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 6);
         Systems.pushInBlock();
         drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED,7);
-        drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
+        drive.leftGyro(-drive.SPIN_TO_CENTER_SPEED, 120);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
         sleep(1000);
