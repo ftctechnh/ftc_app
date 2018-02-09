@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode;
  */
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -22,8 +23,12 @@ public class REVGyro {
     }
     private void init() {isInitialized = imu.initialize(parameters);}
     public void calibrate() {
-
+        ElapsedTime time = new ElapsedTime();
+        time.reset();
         while(!isInitialized) {
+            if(time.seconds()>10) {
+                break;
+            }
             init();
         }
         heading = getHeading();

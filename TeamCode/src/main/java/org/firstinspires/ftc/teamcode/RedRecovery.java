@@ -17,7 +17,7 @@ public class RedRecovery extends LinearOpMode {
     private BeehiveVuforia vuforia;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
-    private final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY = 34;
+    private final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY = 32.5;
 
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET");

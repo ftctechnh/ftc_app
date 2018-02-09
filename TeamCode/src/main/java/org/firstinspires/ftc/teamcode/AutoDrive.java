@@ -86,16 +86,23 @@ public class AutoDrive {
         stopMotors();
     }
 
-    public void driveTranslateRotateNonstop(double x, double y, double z) {
+    public void driveTranslateRotate(double x, double y, double z, long miliseconds) {
         double fl = clip(-y + -x - z);
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
-        double flSpeed = fl;
-        double frSpeed = fr;
-        double rlSpeed = rl;
-        double rrSpeed = rr;
-
+        ElapsedTime runtime = new ElapsedTime();
+        runtime.reset();
+        while(runtime.milliseconds()<miliseconds) {
+            driveSpeeds(fl, fr, rl, rr);
+        }
+        stopMotors();
+    }
+    public void driveTranslateRotate(double x, double y, double z) {
+        double fl = clip(-y + -x - z);
+        double fr = clip(-y + x + z);
+        double rl = clip(-y + x - z);
+        double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
     }
 
@@ -121,7 +128,31 @@ public class AutoDrive {
 
     public void spinLeft(double speed, double distance) {
         driveTranslateRotate(0, 0, -Math.abs(speed), distance);
+    }
 
+
+    public void forwardTime(double speed, long miliseconds) {
+        driveTranslateRotate(0, Math.abs(speed), 0, miliseconds);
+    }
+
+    public void backwardTime(double speed, long miliseconds) {
+        driveTranslateRotate(0, -Math.abs(speed), 0, miliseconds);
+    }
+
+    public void strafeRightTime(double speed, long miliseconds) {
+        driveTranslateRotate(Math.abs(speed), 0, 0, miliseconds);
+    }
+
+    public void strafeLeftTime(double speed, long miliseconds) {
+        driveTranslateRotate(-Math.abs(speed), 0, 0, miliseconds);
+    }
+
+    public void spinRightTime(double speed, long miliseconds) {
+        driveTranslateRotate(0, 0, Math.abs(speed), miliseconds);
+    }
+
+    public void spinLeftTime(double speed, long miliseconds) {
+        driveTranslateRotate(0, 0, -Math.abs(speed), miliseconds);
     }
 
     private void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
@@ -177,18 +208,16 @@ public class AutoDrive {
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
-        if (heading < Adjustedtarget) {
+        if (heading < target) {
             while (derivative <= 0) {
                 derivative = getHeading() - heading;
                 heading = getHeading();
-                telemetrizeGyro();
             }
         }
-        double start = heading;
+        double start = getHeading();
         double distance = Adjustedtarget - start;
         while (heading >= Adjustedtarget) {
             heading = getHeading();
-            telemetrizeGyro();
             double proportion = 1 - (Math.abs((heading - start) / distance));
             driveSpeeds(clipSpinSpeed(fl * proportion), clipSpinSpeed(fr * proportion), clipSpinSpeed(rl * proportion), clipSpinSpeed(rr * proportion));
         }
@@ -332,8 +361,10 @@ public class AutoDrive {
     public void driveRightUntilDistance(double speed, double distance) {
         driveUntilDistance(Math.abs(speed), 0, 0, distance);
     }
-
+    public double getDistance(DistanceUnit unit) {
+        return distanceSensor.getDistance(unit);
+    }
     public double getDistance() {
-        return distanceSensor.getDistance(DistanceUnit.INCH);
+        return getDistance(DistanceUnit.INCH);
     }
 }
