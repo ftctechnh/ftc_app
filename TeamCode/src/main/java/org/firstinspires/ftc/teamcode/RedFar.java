@@ -36,7 +36,7 @@ public class RedFar extends LinearOpMode {
         JewelArm.findJewel(Color.RED);
         pictograph = vuforia.getMark();
         drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
-        sleep(2000);
+        ForkLift.moveMotor(-1,250);
         boolean isDistanceSane = 12 < drive.getDistance() && drive.getDistance() < 19;
         if (pictograph == RelicRecoveryVuMark.LEFT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
             if(isDistanceSane){
@@ -59,11 +59,9 @@ public class RedFar extends LinearOpMode {
                 drive.strafeLeft(drive.STRAFING_PAST_CRYPTOBOX_SPEED, drive.DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION - drive.CRYPTOBOX_COLUMNS_OFFSET_FAR + 3);
             }
         }
-        ForkLift.moveMotor(-1,250);
         drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 6);
-        sleep(2000);
         Systems.pushInBlock();
-        drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED,5);
+        drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED,7);
         drive.leftGyro(0,0,-drive.SPIN_TO_CENTER_SPEED, 120);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();

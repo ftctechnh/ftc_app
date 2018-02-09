@@ -29,10 +29,11 @@ public class AutoDrive {
     private Telemetry telemetry;
     static final double MIN_MOVE_SPEED = 0.25;
     static final double MIN_SPIN_SPEED = 0.2;
+    static final double MIN_STRAFE_SPEED = 0.35;
     static final double GYRO_OFFSET = 2.25;
     static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
-    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.7;
+    static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.75;
     static final double SPIN_TO_CRYPTOBOX_SPEED = 1;
     static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.6;
     static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 14;
@@ -268,7 +269,6 @@ public class AutoDrive {
 
     private void telemetrizeGyro() {
         telemetry.addData("Current heading: ", heading);
-        telemetry.update();
     }
 
     private void telemetrizeEncoders() {
@@ -284,6 +284,10 @@ public class AutoDrive {
         telemetry.addData("Front right motor", FrontRight.getPower());
         telemetry.addData("Back left motor", RearLeft.getPower());
         telemetry.addData("Back right motor", RearRight.getPower());
+    }
+
+    private void telemetrizeDistance() {
+        telemetry.addData("Distance", getDistance());
     }
 
     private void setBRAKE() {
@@ -337,19 +341,36 @@ public class AutoDrive {
             return 0;
         }
     }
+    private double clipStrafeSpeed(double speed) {
+        if (speed > 0) {
+            return Range.clip(speed, Math.abs(MIN_STRAFE_SPEED), 1);
+        } else if (speed < 0) {
+            return Range.clip(speed, -1, -Math.abs(MIN_STRAFE_SPEED);
+        } else {
+            return 0;
+        }
+    }
 
-    public void driveUntilDistance(double x, double y, double z, double distance) {
+    public void driveUntilDistance(double x, double y, double z, double endDistance) {
         double fl = clip(-y + -x - z);
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
         driveSpeeds(fl, fr, rl, rr);
-        double distanceToTravel = distance - getDistance();
         double start = getDistance();
-        double proportion = 1 - ((getDistance() - start) / distanceToTravel);
-        while (getDistance() < distance) {
-            proportion = 1 - ((getDistance() - start) / distanceToTravel);
-            driveSpeeds(clipMoveSpeed(fl * proportion), clipMoveSpeed(fr * proportion), clipMoveSpeed(rl * proportion), clipMoveSpeed(rr * proportion));
+        double distanceToTravel = endDistance - start;
+        double proportion;
+        double derivative = 0;
+        double distance = getDistance();
+        while (distance < endDistance) {
+            proportion = 1 - Math.abs((distance - start) / distanceToTravel + 0.0001);
+            driveSpeeds(clipStrafeSpeed(fl * proportion), clipStrafeSpeed(fr * proportion), clipStrafeSpeed(rl * proportion), clipStrafeSpeed(rr * proportion));
+            derivative = getDistance() - distance;
+            if(!(derivative>=0 && derivative<0.1)) {
+                distance = getDistance();
+            }
+            telemetrizeDistance();
+            telemetry.update();
         }
         stopMotors();
     }

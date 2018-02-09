@@ -18,7 +18,7 @@ public class JewelArm {
     private final double UP_POSITION = 0.06;
     private final double RIGHT_POSITION = 1;
     private final double LEFT_POSITION = 0;
-    private final double MIDDLE_POSITION = 0.5;
+    private final double MIDDLE_POSITION = 0.55;
     private final double MIN_COLOR_DETECTION_THRESHOLD = 30;
     private Telemetry telemetry;
 
