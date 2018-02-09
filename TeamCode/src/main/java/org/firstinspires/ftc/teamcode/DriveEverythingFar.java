@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- * Created by Kaden on 112/12/2017.
+ * Created by Kaden on 12/12/2017.
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -20,9 +20,7 @@ public class DriveEverythingFar extends OpMode {
         jewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         RelicClaw = new RelicClaw(hardwareMap, telemetry);
-        RelicClaw.init();
         drive = new DriveMecanum(hardwareMap, telemetry);
-        jewelArm.up();
         Systems = new Systems(drive, ForkLift, RelicClaw);
     }
 
@@ -45,31 +43,27 @@ public class DriveEverythingFar extends OpMode {
             }
         } else {
             if (gamepad1.dpad_up) {
-                drive.driveTranslateRotate(0, -drive.D_PAD_SLOW_SPEED, 0);
+                drive.forward(drive.D_PAD_SLOW_SPEED);
             }
             else if (gamepad1.dpad_left) {
-                drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
+                drive.strafeLeft(-drive.D_PAD_SLOW_SPEED);
             }
             else if (gamepad1.dpad_down) {
-                drive.driveTranslateRotate(0, drive.D_PAD_SLOW_SPEED, 0);
+                drive.backward(drive.D_PAD_SLOW_SPEED);
             }
             else if (gamepad1.dpad_right) {
-                drive.driveTranslateRotate(drive.D_PAD_SLOW_SPEED, 0, 0);
+                drive.strafeRight(drive.D_PAD_SLOW_SPEED);
             }
             else if(gamepad2.dpad_left) {
-                drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
+                drive.strafeLeft(drive.D_PAD_SLOW_SPEED);
             }
             else if (gamepad2.dpad_right) {
-                drive.driveTranslateRotate(drive.D_PAD_SLOW_SPEED, 0, 0);
+                drive.strafeRight(drive.D_PAD_SLOW_SPEED);
             }
             else {
                 drive.stop();
             }
         }
-        /*if (gamepad1.x) {
-            Systems.grabSecondGlyph();
-        }
-        */
         //ForkLift
         if (gamepad1.a) {
             ForkLift.closeClaw();

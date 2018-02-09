@@ -31,7 +31,6 @@ public class DriveMecanum {
     }
 
     public void driveTranslateRotate(double x, double y, double z) {
-        //Trust me, if you edit this next line you don't know what you're doing. Sorry but it's true. If you feel the need to edit this, please talk to me (Kaden) so I explain to you why it needs to not be edited. Thanks.
         //for positive values: x - strafe right, y - backward, z - spin right
         //for negative values: x - strafe left, y - forward, z - spin left
         driveSpeeds(
@@ -39,6 +38,30 @@ public class DriveMecanum {
                 y + x + z,
                 y + x - z,
                 y + -x + z);
+    }
+    public void forward(double speed) {
+        driveTranslateRotate(0, -Math.abs(speed), 0);
+    }
+
+    public void backward(double speed) {
+        driveTranslateRotate(0, Math.abs(speed), 0);
+    }
+
+    public void strafeRight(double speed) {
+        driveTranslateRotate(Math.abs(speed), 0, 0);
+    }
+
+    public void strafeLeft(double speed) {
+        driveTranslateRotate(-Math.abs(speed), 0, 0);
+    }
+
+    public void spinRight(double speed) {
+        driveTranslateRotate(0, 0, Math.abs(speed));
+    }
+
+    public void spinLeft(double speed) {
+        driveTranslateRotate(0, 0, -Math.abs(speed));
+
     }
     public void driveTranslateRotate(double x, double y, double z, long miliseconds) {
         driveTranslateRotate(x,y,z);

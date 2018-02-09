@@ -19,9 +19,7 @@ public class DriveEverythingRecovery extends OpMode {
         jewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         RelicClaw = new RelicClaw(hardwareMap, telemetry);
-        RelicClaw.init();
         drive = new DriveMecanum(hardwareMap, telemetry);
-        jewelArm.up();
         Systems = new Systems(drive, ForkLift, RelicClaw);
     }
 
@@ -54,7 +52,14 @@ public class DriveEverythingRecovery extends OpMode {
             }
             else if (gamepad1.dpad_right) {
                 drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
-            } else {
+            }
+            else if(gamepad2.dpad_left) {
+                drive.driveTranslateRotate(-drive.D_PAD_SLOW_SPEED, 0, 0);
+            }
+            else if (gamepad2.dpad_right) {
+                drive.driveTranslateRotate(drive.D_PAD_SLOW_SPEED, 0, 0);
+            }
+            else {
                 drive.stop();
             }
         }
