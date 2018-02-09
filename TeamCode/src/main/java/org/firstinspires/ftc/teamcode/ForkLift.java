@@ -62,11 +62,13 @@ public class ForkLift {
 
     public void moveMotor(double speed) {
         if (speed < 0 && !bottomButton.getState()) {
-                    speed = 0;
-            }
-            if (speed > 0 && !topButton.getState()) {
-                    speed = 0;
-            }
+            this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            speed = 0;
+        }
+        if (speed > 0 && !topButton.getState()) {
+            this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            speed = 0;
+        }
         motor.setPower(speed);
     }
 

@@ -44,9 +44,9 @@ public class opencvtest extends OpMode {
         long cameraCenter = 180;
         while(!(-precision+cameraCenter < glyphDetector.getChosenGlyphOffset()) && (glyphDetector.getChosenGlyphOffset() < precision+cameraCenter)) {
             if(glyphDetector.getChosenGlyphOffset() > 0) {//if the glyph is too far to the right:
-                drive.driveTranslateRotateNonstop(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED);
+                drive.driveTranslateRotate(0, 0, drive.SPIN_ON_BALANCE_BOARD_SPEED);
             }else {//if the glyph is too far to the left:
-                drive.driveTranslateRotateNonstop(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED);
+                drive.driveTranslateRotate(0, 0, -drive.SPIN_ON_BALANCE_BOARD_SPEED);
             }
 
             drive.stopMotors();
@@ -58,7 +58,7 @@ public class opencvtest extends OpMode {
         drive.init();
         drive.rightGyro(drive.SPIN_ON_BALANCE_BOARD_SPEED, -90);
         ForkLift.openClaw();
-        drive.driveTranslateRotate(0.5, 0, 0, 36);
+        drive.driveTranslateRotate(0.5, 0, 0, 36D);
         ForkLift.closeClaw();
     }
 

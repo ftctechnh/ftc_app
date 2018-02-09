@@ -28,6 +28,6 @@ public class TestAuto extends LinearOpMode {
 		telemetry.addLine("NOW YOU CAN PRESS PLAY");
 		telemetry.update();
 		waitForStart();
-		drive.driveTranslateRotate(0,0.2,0, 20);
+		drive.driveTranslateRotate(0,0.2,0, 20D);
 	}
 }

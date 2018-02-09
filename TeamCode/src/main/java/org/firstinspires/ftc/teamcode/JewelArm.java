@@ -7,7 +7,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
+import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class JewelArm {
@@ -58,9 +58,9 @@ public class JewelArm {
         down();
         Systems.sleep(500);
         ElapsedTime time = new ElapsedTime();
-        time.start();
+        time.reset();
         while(cs.red() < MIN_COLOR_DETECTION_THRESHOLD && cs.blue() < MIN_COLOR_DETECTION_THRESHOLD) {
-            if(time.getElapsedTime() > 3000) {
+            if(time.seconds() > 3) {
                 setEndPosition(MIDDLE_POSITION);
                 cs.enableLed(false);
                 up();
@@ -92,7 +92,7 @@ public class JewelArm {
             left();
           }
         }
-        Systems.sleep(750);
+        Systems.sleep(500);
         setEndPosition(MIDDLE_POSITION);
         cs.enableLed(false);
         up();
