@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Preciousss: AutoRed1", group="Preciousss")
 
-class autoRed1 extends superAuto {
+public class autoRed1 extends superAuto {
 
     public void runOpMode() {
 
