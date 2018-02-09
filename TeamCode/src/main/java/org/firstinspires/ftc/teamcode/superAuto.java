@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
 
-abstract class superAuto extends LinearOpMode {
+abstract public class superAuto extends LinearOpMode {
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
     DcMotor motorFL;
