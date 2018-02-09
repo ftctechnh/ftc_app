@@ -58,5 +58,7 @@ public abstract class MeccyMode extends LinearOpMode{
         rightBackMotor.setPower(power1 + (power2 / 2));
         rightFrontMotor.setPower(-power1 + (power2 / 2));
     }
-
+    //<editor-fold desc="Code Region">
+    //
+    //</editor-fold>
 }
