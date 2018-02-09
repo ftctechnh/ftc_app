@@ -143,7 +143,7 @@ public class curious_george_teleop extends OpMode {
     @Override
     public void loop() {
        Glyph();
-       Relic();
+       //Relic();
        Drive();
        Slides();
 
@@ -433,7 +433,7 @@ public void Glyph() {
 
     public void closeGlyph(){
         //reversed values
-        glyphServoRight.setPosition(0.7);
+        glyphServoRight.setPosition(0.8);
         glyphServoLeft.setPosition(0.2);
     }
 
