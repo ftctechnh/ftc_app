@@ -157,6 +157,9 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     public void autoSouth(int key){
         startAuto(key);
         double distance = 10;
+        if (key == -1){
+            distance = distance + 10.7;
+        }
         //
         //<editor-fold desc="To CryptoBox">
         pengwinFin.moveFinUp();
@@ -165,7 +168,7 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         if (key == 1) {
             toPosition(34 * key, .2);
         }else {
-            toPosition(40 * key, .2);
+            toPosition(43 * key, .2);
         }
         sleep(1000);
         //
@@ -202,10 +205,10 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         sleep(1000);
         //
         toPosition(-6, .3);
-        sleep(1000);
+        sleep(500);
         //
         toPosition(4, .3);
-        sleep(1000);
+        sleep(500);
         //
         toPosition(-2, .2);
         //</editor-fold>

@@ -151,7 +151,7 @@ public class RelicTelyMode  extends MeccyMode{
         //<editor-fold desc="Chassis">
         switch (drivingAction){
             case Driving:
-                    drive(-leftY);
+                    drive(-leftY * degreeOfRobotPower);
                 break;
             case Turning:
                     turn(rightX * degreeOfRobotPower);
