@@ -12,42 +12,67 @@ import java.util.Map;
  */
 
 public class Meccanum implements Drivetrain {
-    DcMotor A,B,C,D;
-    DriveMode driveMode = DriveMode.STATIC;
+    private DcMotor A,B,C,D;
+    private DriveMode driveMode = DriveMode.STATIC;
+    private Vec3 integrator;
+    private String name;
 
+    public Meccanum(String name,DcMotor A,DcMotor B,DcMotor C,DcMotor D) {
+        this.name = name;
+        this.A = A;
+        this.B = B;
+        this.C = C;
+        this.D = D;
+    }
 
     @Override
     public void update() {
+        double side = 0,angle = 0,forward = 0;
+        switch (driveMode) {
+            case STATIC:
+                forward = integrator.y;
+                side = integrator.x;
+                angle = integrator.z;
+                break;
+            case INTEGRATOR:
+                System.err.println("Not yet implemented, switching to static");
+                driveMode = DriveMode.STATIC;
+                break;
+        }
 
+        A.setPower((forward - side) + angle);
+        B.setPower((forward + side) + angle);
+        C.setPower((forward - side) - angle);
+        D.setPower((forward + side) - angle);
     }
 
     @Override
     public DriveMode getDriveMode() {
-        return null;
+        return driveMode;
     }
 
     @Override
-    public void setDriveMode() {
-
+    public void setDriveMode(DriveMode driveMode) {
+        this.driveMode = driveMode;
     }
 
     @Override
     public Vec3 getIntegrator() {
-        return null;
+        return new Vec3(integrator);
     }
 
     @Override
-    public void setIntegrator() {
-
+    public void setIntegrator(Vec3 integrator) {
+        this.integrator = integrator.clamp(1);
     }
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 
     @Override
     public boolean test() {
-        return false;
+        return (A != null) && (B!=null) && (C!=null) && (D!= null);
     }
 }

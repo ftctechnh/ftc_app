@@ -5,11 +5,15 @@ package org.firstinspires.ftc.teamcode.math.vector;
  */
 
 public class Vec3 extends Vec2 {
-    double z;
+    public double z;
 
     public Vec3(double x, double y,double z) {
         super(x, y);
         this.z = z;
+    }
+
+    public Vec3(Vec3 vec) {
+        this(vec.x,vec.y,vec.z);
     }
 
     public Vec3 clamp(double v) {

@@ -6,7 +6,8 @@ package org.firstinspires.ftc.teamcode.math.vector;
 
 public class Vec2 {
 
-    double x,y;
+    public double x;
+    public double y;
 
     public Vec2(double x,double y) {
         this.x = x;

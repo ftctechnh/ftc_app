@@ -13,9 +13,9 @@ public interface Drivetrain extends Peripheral {
 
     DriveMode getDriveMode();
 
-    void setDriveMode();
+    void setDriveMode(DriveMode driveMode);
 
     Vec3 getIntegrator();
 
-    void setIntegrator();
+    void setIntegrator(Vec3 integrator);
 }

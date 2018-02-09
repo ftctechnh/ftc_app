@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.general.Updatable;
+import org.firstinspires.ftc.teamcode.robot.locomotion.Meccanum;
 import org.firstinspires.ftc.teamcode.robot.peripherals.Peripheral;
 import org.firstinspires.ftc.teamcode.robot.peripherals.SingleServoGripper;
 
@@ -22,7 +23,11 @@ public class RelicBase extends OpMode {
     List<Peripheral> peripherals = new LinkedList<>();
     List<Updatable> updatables = new LinkedList<>();
 
+    //peripherals
     SingleServoGripper gripper;
+    Meccanum drivetrain;
+    Servo gripperServo;
+
     DcMotor A,B,C,D,arm;
 
 
@@ -33,18 +38,21 @@ public class RelicBase extends OpMode {
         C = hardwareMap.dcMotor.get("frontRight");
         A = hardwareMap.dcMotor.get("backLeft");
         D = hardwareMap.dcMotor.get("backRight");
-        arm = hardwareMap.dcMotor.get("arm");
-        Servo gripperServo = hardwareMap.servo.get("claw");
 
-        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        arm = hardwareMap.dcMotor.get("arm");
+        gripperServo = hardwareMap.servo.get("claw");
 
         C.setDirection(REVERSE);
         D.setDirection(REVERSE);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
 
         gripper = new SingleServoGripper("Main Arm Gripper",gripperServo);
         gripper.getClampPositions().OPEN.setPosition(1);
         gripper.getClampPositions().CLOSED.setPosition(0);
         gripper.getClampPositions().CENTER.setPosition(0.5);
+
+        drivetrain = new Meccanum("Meccanum Drivetrain",A,B,C,D);
 
         peripherals.add(gripper);
 
