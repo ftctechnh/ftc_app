@@ -8,7 +8,7 @@ import com.disnodeteam.dogecv.detectors.GlyphDetector;
 /**
  * Created by Peter on 1/25/2018.
  */
-@TeleOp(name = "cvtest", group = "linear OpMode")
+//@TeleOp(name = "cvtest", group = "linear OpMode")
 public class opencvtest extends OpMode {
 
     private GlyphDetector glyphDetector;

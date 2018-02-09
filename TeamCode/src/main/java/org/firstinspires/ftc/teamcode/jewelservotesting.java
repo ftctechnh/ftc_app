@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 /**
  * Created by aus on 1/30/18.
  */
-@TeleOp(name = "testingjewelservo", group = "test")
+//@TeleOp(name = "testingjewelservo", group = "test")
 public class jewelservotesting extends OpMode {
     Servo servo;
     public void init() {

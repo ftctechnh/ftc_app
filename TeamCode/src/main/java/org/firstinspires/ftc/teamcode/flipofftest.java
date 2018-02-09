@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
-@Autonomous(name = "flipofftest", group = "Concept")
+//@Autonomous(name = "flipofftest", group = "Concept")
 public class flipofftest extends LinearOpMode {
     JewelArm JewelArm;
     public void runOpMode() throws InterruptedException {
