@@ -6,22 +6,29 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "THIS ISN'T EVEN MY FINAL FORM", group = "xd")
 public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode {
 
-    private DcMotor leftMotor;
-    private DcMotor rightMotor;
+    private DcMotor leftWheel;
+    private DcMotor rightWheel;
+    private Servo leftClaw;
+    private Servo rightClaw;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
-        rightMotor = hardwareMap.dcMotor.get("rightMotor");
-        leftMotor = hardwareMap.dcMotor.get("leftMotor");
+        rightWheel = hardwareMap.dcMotor.get("rightMotor");
+        leftWheel = hardwareMap.dcMotor.get("leftMotor");
+        rightClaw = hardwareMap.servo.get("rightClaw");
+        leftClaw = hardwareMap.servo.get("leftClaw");
 
-        leftMotor.setDirection(DcMotor.Direction.FORWARD);
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        leftWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightWheel.setDirection(DcMotor.Direction.REVERSE);
+
+        leftClaw.setDirection(Servo.Direction.FORWARD);
+        rightClaw.setDirection(Servo.Direction.REVERSE);
 
         waitForStart();
 
@@ -39,12 +46,12 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode {
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            leftPower  = -gamepad1.left_stick_y ;
-            rightPower = -gamepad1.right_stick_y ;
+            leftPower  = -gamepad1.left_stick_y;
+            rightPower = -gamepad1.right_stick_y;
 
             // Send calculated power to wheels
-            leftMotor.setPower(leftPower);
-            rightMotor.setPower(rightPower);
+            leftWheel.setPower(leftPower);
+            rightWheel.setPower(rightPower);
         }
     }
 }
