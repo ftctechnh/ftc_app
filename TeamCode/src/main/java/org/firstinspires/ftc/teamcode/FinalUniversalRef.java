@@ -87,6 +87,7 @@ public class FinalUniversalRef extends LinearOpMode
                         break;
                 }
                 newRobot.driveStraight_In(-3,1);
+                newRobot.pivot(-30,.7);
                 newRobot.stopAllMotors();
                 break;
             case 'r':
@@ -118,8 +119,6 @@ public class FinalUniversalRef extends LinearOpMode
                 }
                 telemetry.addData("Cipherr = ", cipher);
                 telemetry.update();
-                /*newRobot.driveStraight_In(26);
-                newRobot.pivot_IMU(82, .25);*/
                 switch (cipher)
                 {
                     case 'l':
@@ -153,16 +152,8 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.driveStraight_In_Stall(15, .5, telemetry);
                         break;
                 }
-                /*newRobot.pivot_IMU(-80, .25);
-                newRobot.oldMoveLift(-1);
-                newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In(16,.2);
-                newRobot.driveStraight_In(-5,1);
-                newRobot.driveStraight_In(20);
-                newRobot.driveStraight_In(3,.2);
-                newRobot.driveStraight_In(-5,1);
-                newRobot.stopAllMotors();*/
                 newRobot.driveStraight_In(-3);
+                newRobot.pivot(30,.7);
                 break;
             default:
                 newRobot.driveStraight_In(29, .4);

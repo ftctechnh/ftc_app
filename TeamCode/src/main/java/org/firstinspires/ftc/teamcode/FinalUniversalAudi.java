@@ -68,8 +68,8 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In_Stall(14, .25);
-                //newRobot.driveStraight_In(3,.2);
                 newRobot.driveStraight_In(-6,1);
+                newRobot.pivot(-180,.7);
                 newRobot.stopAllMotors();
                 break;
             case 'r':
@@ -106,18 +106,19 @@ public class FinalUniversalAudi extends LinearOpMode
                         break;
                     case 'l':
                         newRobot.driveStraight_In(24 - adjustment,.6);
-                        newRobot.pivot(-45, .6);
+                        newRobot.pivot(-85, .6);
                         break;
                     case 'c':
                     default:
                         newRobot.driveStraight_In(18.5f - adjustment,.6);
-                        newRobot.pivot(-60, .6);
+                        newRobot.pivot(-85, .6);
                         break;
                 }
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In_Stall(16,.25);
                 newRobot.driveStraight_In(-6);
+                newRobot.pivot(180,.7);
                 newRobot.stopAllMotors();
                 break;
             default:
