@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -26,22 +26,30 @@ public class ServoStopWaving extends LinearOpMode {
 
         while(opModeIsActive()){
             right.setPosition(1); //closed
+            left.setPosition(-1);
             sleep(1000);
             telemetry.addData("Right Servo", right.getPosition());
+            telemetry.addData("Left Servo", left.getPosition());
             telemetry.update();
             right.setPosition(0); //open
+            left.setPosition(0);
             sleep(1000);
             telemetry.addData("Right Servo", right.getPosition());
+            telemetry.addData("left Servo", left.getPosition());
             telemetry.update();
-            left.setPosition(-1); //closed
+            left.setPosition(.5); //closed
+            right.setPosition(-.5); //closed
             sleep(1000);
             telemetry.addData("Left Servo", left.getPosition());
+            telemetry.addData("Right Servo", right.getPosition());
             telemetry.update();
-            left.setPosition(1); //open
+            left.setPosition(.25); //open
+            right.setPosition(-.25); //open
             sleep(1000);
             telemetry.addData("Left Servo", left.getPosition());
+            telemetry.addData("Right Servo", right.getPosition());
             telemetry.update();
-
+            sleep(2000);
             telemetry.addData("Right Servo", right.getPosition());
             telemetry.addData("Left Servo", left.getPosition());
             telemetry.addData("Nora is cool", number);

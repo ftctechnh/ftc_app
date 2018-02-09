@@ -1,6 +1,7 @@
 //TODO Dis i' da wight 1
 package org.firstinspires.ftc.teamcode.relicrecovery;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="WindMotor",group="mm" )
-
+@Disabled
 public class WindMotor extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

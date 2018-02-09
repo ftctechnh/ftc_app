@@ -53,7 +53,7 @@ public class RelicTelyMode  extends MeccyMode{
     boolean quarterPower;//j
     boolean left;//m*
     boolean right;
-    boolean grabberPosition = false;//true is closed
+    boolean grabberPosition = false;//True is closed
     boolean armPosition = true;//true is up  //*m
     //
     double switchify = 1;
@@ -125,7 +125,7 @@ public class RelicTelyMode  extends MeccyMode{
     private void switchs(){
         if (!(rightX == 0)){
             drivingAction = DrivingAction.Turning;
-        }else if(Math.abs(leftX) > .15){
+        }else if(Math.abs(leftX) > .5){
             drivingAction = DrivingAction.Strafing;
         }else{
             drivingAction = DrivingAction.Driving;
@@ -194,10 +194,9 @@ public class RelicTelyMode  extends MeccyMode{
     //
     private void telemetryJazz() {
         telemetry.addData("Unicorn Crossing", time.milliseconds());
-        telemetry.addData("Motor", leftBackMotor.getCurrentPosition());
-        telemetry.addData("armUp", pengwinWing.armUp.getState());
-        telemetry.addData("armDown", pengwinWing.armDown.getState());
-        telemetry.addData("armGo", armGo);
+        telemetry.addData("left", left);
+        telemetry.addData("right", right);
+        telemetry.addData("grabber position", grabberPosition);
         telemetry.update();
     }
     //</editor-fold>

@@ -1,6 +1,7 @@
 //TODO Dis i' da wight 1
 package org.firstinspires.ftc.teamcode.relicrecovery;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  */
 
 @TeleOp(name="JeffsRealRun",group="Jeff" )
-
+@Disabled
 public class JeffsRealRun extends LinearOpMode {
     //robot
     PengwinArm pengwinArm;

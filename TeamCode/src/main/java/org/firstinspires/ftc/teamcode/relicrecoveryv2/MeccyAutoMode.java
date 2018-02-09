@@ -44,14 +44,6 @@ public abstract class MeccyAutoMode extends MeccyMode{
         rightBackMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     //
-    public void configureMotorsYay(){
-        //
-        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-    //
     public void stopAndResetify(){
         leftFrontMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBackMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -83,6 +75,8 @@ public abstract class MeccyAutoMode extends MeccyMode{
     //
     //<editor-fold desc="Moving">
     public void toPosition(double inches, double speed){
+        configureMotors();
+        //
         int move = (int)(Math.round(inches*countify));
         //
         leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
@@ -96,6 +90,8 @@ public abstract class MeccyAutoMode extends MeccyMode{
     }
     //
     public void strafeToPosition(double inches, double speed){
+        configureMotors();
+        //
         int move = (int)(Math.round(inches*countify));
         //
         leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() - move);

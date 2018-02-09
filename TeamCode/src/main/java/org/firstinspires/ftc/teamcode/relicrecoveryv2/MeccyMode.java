@@ -46,6 +46,8 @@ public abstract class MeccyMode extends LinearOpMode{
     }
     //
     public void drive(double powerInput){
+        configureMotorsYay();
+        //
         leftBackMotor.setPower(powerInput);
         leftFrontMotor.setPower(powerInput);
         rightBackMotor.setPower(powerInput);
@@ -58,7 +60,12 @@ public abstract class MeccyMode extends LinearOpMode{
         rightBackMotor.setPower(power1 + (power2 / 2));
         rightFrontMotor.setPower(-power1 + (power2 / 2));
     }
-    //<editor-fold desc="Code Region">
     //
-    //</editor-fold>
+    public void configureMotorsYay(){
+        //
+        leftFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBackMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFrontMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 }

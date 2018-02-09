@@ -15,11 +15,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * @author Eric and Nora
  */
 public class PengwinFin {
-    public static final double FIN_UP = 0.5;
+    public static final double FIN_UP = 0.7;
     //
-    public static final double FIN_DOWN = 0.09;
+    public static final double FIN_DOWN = 0.12;
     //
-    public static final double FIN_SENSE = 0.2;
+    public static final double FIN_SENSE = 0.4;
     Servo fin;
     ColorSensor colorSensor;
     DistanceSensor distanceSensor;

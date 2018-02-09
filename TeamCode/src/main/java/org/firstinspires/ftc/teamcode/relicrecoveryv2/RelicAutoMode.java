@@ -6,6 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.vuforia.Trackable;
 import com.vuforia.Vuforia;
 
@@ -36,7 +37,7 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     PengwinFin pengwinFin;
     PengwinWing pengwinWing;
     ModernRoboticsI2cRangeSensor rangeSensor;
-
+    private ElapsedTime runtime = new ElapsedTime();
     //
     static double countify = 678;
     double inches;
@@ -51,41 +52,14 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
     }
     //
-    public void goForward (double inches, double speed){
-        int move = (int)(Math.round(inches*countify));
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
-        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
-        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
-        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
-    }
-
-    public void strafeRight (double inches, double speed){
-        int move = (int)(Math.round(inches*countify));
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + -move);
-        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + move);
-        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + move);
-        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + -move);
-    }
-
-    public void strafeLeft (double inches, double speed){
-        int move = (int)(Math.round(inches*countify));
-        leftFrontMotor.setTargetPosition(leftFrontMotor.getCurrentPosition() + move);
-        rightFrontMotor.setTargetPosition(rightFrontMotor.getCurrentPosition() + -move);
-        leftBackMotor.setTargetPosition(leftBackMotor.getCurrentPosition() + -move);
-        rightBackMotor.setTargetPosition(rightBackMotor.getCurrentPosition() + move);
-    }
-
-
-    //
     public int testOutMoving(double inchesYouThink){
         stopAndResetify();
         toPosition(inchesYouThink, .4);
         return leftBackMotor.getCurrentPosition();
     }
     //
-    public double startAuto(int key){
+    public void startAuto(int key){
         //<editor-fold desc="Startify">
-        //<editor-fold desc="Hardware Map">
         initGyro();
 
         leftBackMotor = hardwareMap.dcMotor.get("lback"); //left back
@@ -97,27 +71,15 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         pengwinFin = new PengwinFin(hardwareMap);
         //</editor-fold>
         //
-        //<editor-fold desc="Vuforia">
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        //
-        parameters.vuforiaLicenseKey = "AbxR5+T/////AAAAGR1YlvU/6EDzrJvG5EfPnXSFutoBr1aCusr0K3pKqPuWTBQsUb0mv5irjoX2Xf/GFvAvHyw8v1GBYgHwE+hNTcNj05kw3juX+Ur4l3HNnp5SfXV/8fave0xB7yVYZ/LBDraNnYXiuT+D/5iGfQ99PVVao3LI4uGUOvL9+3vbPqtTXLowqFJX5uE7R/W4iLmNqHgTCSzWcm/J1CzwWuOPD252FDE9lutdDVRri17DBX0C/D4mt6BdI5CpxhG6ZR0tm6Zh2uvljnCK6N42V5x/kXd+UrBgyP43CBAACQqgP6MEvQylUD58U4PeTUWe9Q4o6Xrx9QEwlr8v+pmi9nevKnmE2CrPPwQePkDUqradHHnU";
-        //
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;//set camera (front)
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        //
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate");
-        //</editor-fold>
-        //</editor-fold>
-        //
         stopAndResetify();
-        //
-        relicTrackables.activate();
         //
         configureMotors();
         //
+        pengwinWing.left.setPosition(.6);
+        //
+        pengwinFin.moveFinUp();
+        //
+        telemetry.update();
         waitForStartify();
         //
         pengwinFin.moveFinUp();
@@ -125,7 +87,7 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         pengwinWing.setServos(false, false);
         //
         //<editor-fold desc="Jewel">
-        strafeToPosition(5, .5);
+        strafeToPosition(3.5, .5);
         sleep(200);
         //
         pengwinFin.moveFinDown();
@@ -133,47 +95,37 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         //
         int blueJewel = ((pengwinFin.doesColorSensorSeeBlueJewel()) ? 1 : -1) * key;
         //
-        turnWithGyro(15, .4 * blueJewel);
-        sleep(1000);
-        turnWithGyro(15, .4 * -blueJewel);
-        sleep(1000);
-        //
+        toPosition(2.5 * blueJewel, .4);
         pengwinFin.moveFinUp();
-        //</editor-fold>
+        toPosition(2.5 * -blueJewel, .4);
+        sleep(1000);
         //
-        //<editor-fold desc="Vuforia">
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        drive(.4);
-        while (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        }
-        drive(0);
-        //
-        double distance = 1;
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            distance = 5;
-        }else if (vuMark == RelicRecoveryVuMark.CENTER){
-            distance = 10;
-        }else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            distance = 15;
-        }
-        return distance;
         //</editor-fold>
     }
     //
     public void autoNorth(int key){
-        double distance = startAuto(key);
+        startAuto(key);
+        //
+        double distance = 10;
+        if (key == -1){
+            distance = distance + 11;
+        }
+        //
+        telemetry.addLine("Distance: " + distance);
         //
         //<editor-fold desc="To CryptoBox">
         pengwinFin.moveFinSense();
         //
-        drive(.4 * key);
-        while (!pengwinFin.approachCrypt(key)){}
+        runtime.reset();
+        telemetry.addData("Off to find the box", key);
+        telemetry.update();
+        drive(.15 * key);
+        while (!pengwinFin.approachCrypt(key) && runtime.seconds() < 10){}
         drive(0);
         sleep(100);
         //
         pengwinFin.moveFinUp();
-        sleep(100);
+        sleep(1000);
         //</editor-fold>
         //
         //<editor-fold desc="Place Glyph">
@@ -183,46 +135,79 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
         turnWithGyro(90, .4);
         sleep(300);
         //
-        pengwinWing.lowerArm();
-        sleep(200);
+        pengwinWing.raiseArm();
+        sleep(2000);
         //
         pengwinWing.setServos(true, true);
-        sleep(100);
+        sleep(1000);
         //
-        toPosition(-3, .3);
-        sleep(100);
+        toPosition(-6, .3);
+        sleep(1000);
+        //
+        toPosition(4, .3);
+        sleep(1000);
+        //
+        toPosition(-2, .2);
         //</editor-fold>
         //
         telemetry.addLine("Done!");
+        sleep(1000);
     }
     //
     public void autoSouth(int key){
-        double distance = startAuto(key);
+        startAuto(key);
+        double distance = 10;
         //
         //<editor-fold desc="To CryptoBox">
         pengwinFin.moveFinUp();
+        sleep(1000);
+        //
+        if (key == 1) {
+            toPosition(34 * key, .2);
+        }else {
+            toPosition(40 * key, .2);
+        }
+        sleep(1000);
+        //
+        turnWithGyro(85, -.4 * key);
+        sleep(1000);
+        //
+        pengwinFin.moveFinSense();
+        sleep(1000);
+        //
+        runtime.reset();
+        telemetry.addData("Off to find the box", key);
+        telemetry.update();
+        drive(.15 * key);
+        while (!pengwinFin.approachCrypt(key) && runtime.seconds() < 5){}
+        drive(0);
         sleep(100);
         //
-        toPosition(10 * (-key/2 + .5), .4);
-        sleep(100);
-        //
-        strafeToPosition(-(10 + distance) * key, .4);
-        sleep(100);
+        pengwinFin.moveFinUp();
+        sleep(1000);
         //</editor-fold>
         //
         //<editor-fold desc="Place Glyph">
         //
-        turnWithGyro(90 * ((-key/2) + .5), .4);
-        sleep(300);
-        //
-        pengwinWing.lowerArm();
+        toPosition(distance * key, .5);
         sleep(200);
         //
-        pengwinWing.setServos(true, true);
-        sleep(100);
+        turnWithGyro(90, .4);
+        sleep(300);
         //
-        toPosition(-3, .3);
-        sleep(100);
+        pengwinWing.raiseArm();
+        sleep(2000);
+        //
+        pengwinWing.setServos(true, true);
+        sleep(1000);
+        //
+        toPosition(-6, .3);
+        sleep(1000);
+        //
+        toPosition(4, .3);
+        sleep(1000);
+        //
+        toPosition(-2, .2);
         //</editor-fold>
         //
         telemetry.addLine("Done!");

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.relicrecovery;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.relicrecovery.PengwinFin;
  */
 
 @Autonomous(name="SouthRed", group="Autonomisisisisis")
+@Disabled
 public class SouthRed extends LinearOpMode {
     PengwinArm pengwinArm;
     PengwinFin pengwinFin;

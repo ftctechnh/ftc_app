@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.HardwareSensorMap;
 import org.firstinspires.ftc.teamcode.TouchSensorCheck;
@@ -30,6 +31,8 @@ public class PengwinWing{
     DigitalChannel armDown;
     //
     PengwinFin pengwinFin;
+    //
+    ElapsedTime runtime = new ElapsedTime();
     //</editor-fold>
     //
     public PengwinWing(HardwareMap hardwareMap) {
@@ -45,7 +48,7 @@ public class PengwinWing{
     //
     public void setServos(boolean lefty, boolean righty){
         if (lefty){
-            left.setPosition(-1); //closed
+            left.setPosition(0); //closed
         }else {
             left.setPosition(1); //open
         }
@@ -58,8 +61,9 @@ public class PengwinWing{
     //
     //<editor-fold desc="Arm">
     public void raiseArm(){
+        runtime.reset();
         up.setPower(.4);
-        while (!armUp.getState()){}
+        while (armUp.getState() && runtime.seconds() < 3){}
         up.setPower(0);
     }
     //
