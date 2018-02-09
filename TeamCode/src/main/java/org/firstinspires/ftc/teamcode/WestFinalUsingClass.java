@@ -11,10 +11,11 @@ import org.firstinspires.ftc.teamcode.WestCoastRobot;
 public class WestFinalUsingClass extends OpMode
 {
 
-    private WestCoastRobot robot = new WestCoastRobot("Motor1","Motor2","Motor3","Motor4","Lift_Motor","Grabber_Motor","Grab1","Grab2","Drop","Color_Sensor");
+    private WestCoastRobot robot = new WestCoastRobot("Motor1","Motor2","Motor3","Motor4","Lift_Motor","Grabber_Motor",
+            "Grab1", "Grab2","Drop1","Drop2","Place","Color_Sensor");
 
     private boolean deployed = true;
-    private boolean opened = false;
+    private boolean opened = true;
     private double sens = 0.5;
 
     private boolean dropped = false;
@@ -30,9 +31,8 @@ public class WestFinalUsingClass extends OpMode
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
-
         robot.setUpEncoders();
+
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -54,11 +54,7 @@ public class WestFinalUsingClass extends OpMode
     public void start() {
 
         robot.collectBlock(true);
-        robot.grab1.setPosition(0);
-        robot.grab2.setPosition(1);
-        robot.drop.setPosition(1);
-
-        robot.setMotorPower(false,0,1,1,0);
+        robot.initServo();
 
     }
 
@@ -90,25 +86,26 @@ public class WestFinalUsingClass extends OpMode
             robot.liftToPosition(liftPos1);
         }
         if(gamepad1.x){
-            robot.liftToPosition(liftPos1);
+            robot.liftToPosition(liftPos2);
         }
+
         if(gamepad1.y){
-            robot.dropBlock(dropped);
+            robot.dropBlock(!dropped);
             dropped = !dropped;
         }
 
-        if ((gamepad1.left_trigger > 0) && deployed){
-            robot.collectBlock(false);
-            deployed = false;
-        }
-        if ((gamepad1.left_trigger > 0) && !deployed){
-            robot.collectBlock(true);
-            deployed = true;
+        if (gamepad1.left_trigger == 1){
+            robot.collectBlock(!deployed);
+            deployed = !deployed;
         }
 
-        if (gamepad1.right_trigger > 0){
-            robot.openServos(opened);
+        if (gamepad1.right_trigger == 1){
+            robot.openServos(!opened);
             opened = !opened;
+        }
+
+        if (gamepad1.dpad_up){
+            robot.placeFirstBlock();
         }
 
 

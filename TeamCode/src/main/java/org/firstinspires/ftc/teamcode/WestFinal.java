@@ -14,7 +14,7 @@ public class WestFinal extends OpMode
 {
 
     private DcMotor m1, m2,grabber,lift;
-    private Servo grab1,grab2,drop1,drop2;
+    private Servo grab1,grab2,drop1,drop2,place;
 
     private double rightPower = 0;
     private double leftPower = 0;
@@ -24,10 +24,18 @@ public class WestFinal extends OpMode
     private int liftPos2 = -735;
     private int placeBlockPos = -20;
 
-    private double grab1Max = 0.28;
-    private double grab2Min = 0.65;
-    private double drop1Min =0.5 ;
-    private double drop2Max = 0.5;
+    private double grab1Max = 0.5;
+    private double grab2Min = 0.5;
+    private double grab1Min = 0.25;
+    private double grab2Max = 0.75;
+
+    private double drop1Min = 0 ;
+    private double drop2Max = 1;
+    private double drop1Max = 0.5;
+    private double drop2Min = 0.5;
+    private double placeMin = 0.5;
+    private double placeMax = 1;
+
     private double interval = 0.01;
 
     private boolean deployed = true;
@@ -63,6 +71,7 @@ public class WestFinal extends OpMode
         grab2 = hardwareMap.get(Servo.class, "Grab2");
         drop1 = hardwareMap.get(Servo.class, "Drop1");
         drop2 = hardwareMap.get(Servo.class, "Drop2");
+        place = hardwareMap.get(Servo.class,"Place");
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -94,7 +103,7 @@ public class WestFinal extends OpMode
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop() {
+    public void loop(){
         rightPower = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x,-sens,sens);
         leftPower = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x,-sens,sens);
 
@@ -139,6 +148,16 @@ public class WestFinal extends OpMode
             opened = !opened;
         }
 
+        if (gamepad1.dpad_up){
+            place.setPosition(placeMax);
+            try {
+                Thread.sleep(500);
+            }catch(InterruptedException exceptin){
+
+            }
+            place.setPosition(placeMin);
+        }
+
 
 
 
@@ -168,51 +187,51 @@ public class WestFinal extends OpMode
         motor.setPower(0);
     }
 
-    private void openServos(boolean open){
+    public void openServos(boolean open){
         if (open){
             double current1 = grab1Max;
             double current2 = grab2Min;
-            while ((current1 > interval) || (current2 < 1)){
-                current1 = (current1 > 0)? current1 - interval:current1;
-                current2 = (current2 < 1)? current2 + interval:current2;
+            while ((current1 > grab1Min) || (current2 < grab2Max)){
+                current1 = (current1 > grab1Min)? current1 - interval:current1;
+                current2 = (current2 < grab2Max)? current2 + interval:current2;
                 grab1.setPosition(current1);
                 grab2.setPosition(current2);
             }
         }
         else{
-            double current1 = interval;
-            double current2 = 1;
+            double current1 = grab1Min;
+            double current2 = grab2Max;
 
-            while ((current1 < grab1Max) || (current2 > grab2Min)){
+            while ((current1 < grab1Max) || (current2 > grab2Max)){
                 current1 = (current1 < grab1Max)? current1 + interval:current1;
-                current2 = (current2 > grab2Min)? current2 - interval:current2;
+                current2 = (current2 > grab2Max)? current2 - interval:current2;
                 grab1.setPosition(current1);
                 grab2.setPosition(current2);
             }
         }
     }
 
-    private void dropBlock(boolean drop){
-        if (drop){
-            double current1 = 1;
-            double current2 = 0;
-            while ((current1 > drop1Min) || (current2 < drop2Max)){
-                current1 = (current1 > drop1Min)? current1 - interval:current1;
-                current2 = (current2 < drop2Max)? current2 + interval:current2;
-                drop1.setPosition(current1);
-                drop2.setPosition(current2);
-            }
-        }
-        else{
+    public void dropBlock(boolean dropBlock){
+        if (dropBlock){
             double current1 = drop1Min;
             double current2 = drop2Max;
-            while ((current1 < 1) || (current2 > 0)){
-                current1 = (current1 < 1)? current1 + interval:current1;
-                current2 = (current2 > 0)? current2 - interval:current2;
+            while ((current1 < drop1Max) || (current2 < drop2Min)){
+                current1 =  (current1 < drop1Max)?current1 + interval:current1;
+                current2 = (current2 < drop2Min)?current2 - interval:current2;
                 drop1.setPosition(current1);
                 drop2.setPosition(current2);
             }
         }
-    }
+        else{
+            double current1 = drop1Max;
+            double current2 = drop2Min;
+            while ((current1 > drop1Min) || (current2 < drop2Max)){
+                current1 =  (current1 > drop1Min)?current1 - interval:current1;
+                current2 = (current2 < drop2Max)?current2 + interval:current2;
+                drop1.setPosition(current1);
+                drop2.setPosition(current2);
 
+            }
+        }
+    }
 }
