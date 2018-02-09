@@ -61,7 +61,7 @@ public class ForkLift {
     public void setClawPositionPushInBlock() {setClawPosition(CLAW_PUSH_IN_BLOCK_POSITION);}
 
     public void moveMotor(double speed) {
-            if (speed < 0 && !bottomButton.getState()) {
+        if (speed < 0 && !bottomButton.getState()) {
                     speed = 0;
             }
             if (speed > 0 && !topButton.getState()) {
