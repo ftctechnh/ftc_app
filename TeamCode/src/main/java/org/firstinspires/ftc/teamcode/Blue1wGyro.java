@@ -3,44 +3,30 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import com.qualcomm.robotcore.hardware.CRServo;
 
 
-@Autonomous(name="Preciousss: Autonomous6217Red1", group="Preciousss")
+@Autonomous(name="Preciousss: Blue1wGyro", group="Preciousss")
 
 /*
  * Created by Josie and Ben on 11/4/17.
  *
  */
-public class Autonomous6217Red1 extends LinearOpMode {
+public class Blue1wGyro extends LinearOpMode {
 
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
     DcMotor motorFR;
@@ -52,17 +38,14 @@ public class Autonomous6217Red1 extends LinearOpMode {
     CRServo servoConR;
     DcMotor motorConL;
     DcMotor motorConR;
-
-
     BNO055IMU imu;
-    // State used for updating telemetry
-    ModernRoboticsI2cRangeSensor rangeSensor;
-    NormalizedColorSensor colorSensor;
-    NormalizedRGBA colors;
+
     Orientation angles;
     Acceleration gravity;
-    boolean iAmBlue = false;
-    boolean iAmRed = true;
+    NormalizedColorSensor colorSensor;
+    NormalizedRGBA colors;
+    boolean iAmBlue = true;
+    boolean iAmRed = false;
     boolean isBoxSide = true;
 
 
@@ -71,23 +54,21 @@ public class Autonomous6217Red1 extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // V u f o r i a  s e t u p
-
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+
+        // V u f o r i a  s e t u p
+
+
 
         // H a r d w a r e   M a p p i n g
 
@@ -113,9 +94,22 @@ public class Autonomous6217Red1 extends LinearOpMode {
             ((SwitchableLight) colorSensor).enableLight(true);
         }
 
+
+
         // S t a r t
 
         waitForStart();
+
+        telemetry.addAction(new Runnable() { @Override public void run()
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            colors = colorSensor.getNormalizedColors();
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+        }
+        });
 
         // J e w e l s
         boolean autoClear = false;
@@ -128,21 +122,42 @@ public class Autonomous6217Red1 extends LinearOpMode {
         servoTapper.setPosition(0.2d);
         Wait(.2f);
         servoTapper.setPosition(0.675d);
-        Wait(2f);
+        Wait(1.5f);
 
-        telemetry.update();
 
-        Wait ( 10f);
+            telemetry.update();
+            //colors = colorSensor.getNormalizedColors();
+            float redValue = colors.red * 10000;
+            float blueValue = colors.blue * 10000;
+            telemetry.addLine()
+                    .addData("r", "%.3f", colors.red*10000)
+                    .addData("b", "%.3f", colors.blue*10000);
+
+            //telemetry.update();
+
 
         if (colors.red > colors.blue) {
             iSeeRed = true;
             iSeeBlue = false;
+
+            telemetry.update();
         } else {
             iSeeBlue = true;
 
             iSeeRed = false;
         }
+        telemetry.addLine()
+                .addData("r", "%.3f", redValue)
+                .addData("b", "%.3f", blueValue)
+                .addData("iSeeRed", "%b", iSeeRed)
+                .addData("iSeeBlue", "%b", iSeeBlue)
+                .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
+                .addData ( "iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
+                .addData ( "Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
 
+        telemetry.update();
+
+        Wait(10f);
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
@@ -153,30 +168,19 @@ public class Autonomous6217Red1 extends LinearOpMode {
             move(0f, -.2f, .3f);
         } else {
             telemetry.addData("1", "move left");
-            move(0f, -.2f, .3f);
+            move(0f, -.2f, .25f);
             Wait(.2);
             servoTapper.setPosition(0.2d);
             Wait(.2);
-            move(0f, .2f, .3f);
+            move(0f, .2f, .25f);
         }
-
-        // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
         telemetry.update();
 
-        move(0f, -0.5f, .47f);
+        move(0f, 0.5f, .6f);
 
         Wait(.5);
 
-        pivotRight(.7f);
-
-        Wait(1);
-
-        move(0f,-.25f,.35f);
-
-        Wait(1);
-
-        Conveyor(3f);
+        pivotTo(-90);
 
         Wait(1);
 
@@ -184,10 +188,15 @@ public class Autonomous6217Red1 extends LinearOpMode {
 
         Wait(1);
 
+        Conveyor(3f);
+
+        Wait(1);
+
+        move(0f,-.25f,.35f);
+
+        Wait(1);
+
         move(0f,.25f,.25f);
-
-
-
     }
 
     void move(float posx, float posy, float waitTime) {
@@ -230,6 +239,36 @@ public class Autonomous6217Red1 extends LinearOpMode {
         Wait(waitTime);
     }
 
+    void pivotTo(int target) {
+        //Pivot to counterclockwise is positive.
+        //Pivot to clockwise is negative.
+        float fudgeFactor = .25f;
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double currentHeading = angles.firstAngle;
+        double wheelPower = .3;
+
+
+        while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            if (angles != null) {
+                currentHeading = angles.firstAngle;
+                if (target - currentHeading <                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                0) {
+                    motorFL.setPower(-wheelPower);
+                    motorBL.setPower(-wheelPower);
+                    motorFR.setPower(wheelPower);
+                    motorBR.setPower(wheelPower);
+                } else {
+                    motorFL.setPower(wheelPower);
+                    motorBL.setPower(wheelPower);
+                    motorFR.setPower(-wheelPower);
+                    motorBR.setPower(-wheelPower);
+                }
+            }
+        }
+
+        sR();
+    }
+
 
 
     void letsGo(float posx, float posy) {
@@ -258,32 +297,4 @@ public class Autonomous6217Red1 extends LinearOpMode {
             //telemetry.update();
         }
     }
-
-    double lightLevel(double odsVal) {
-        /*
-         * This method adjusts the light sensor input, read as an ODS,
-         * to obtain values that are large enough to use to drive
-         * the robot.  It does this by taking the third decimal values
-         * and beyond as the working values.
-         */
-        // LB = left bumper, RB = right bumper.
-        int prefix = (int) (odsVal * 10);
-        odsVal = Math.pow(10, odsVal) * prefix;
-
-        return (odsVal);
-    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
