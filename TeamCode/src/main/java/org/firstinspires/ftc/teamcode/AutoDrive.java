@@ -345,7 +345,7 @@ public class AutoDrive {
         if (speed > 0) {
             return Range.clip(speed, Math.abs(MIN_STRAFE_SPEED), 1);
         } else if (speed < 0) {
-            return Range.clip(speed, -1, -Math.abs(MIN_STRAFE_SPEED);
+            return Range.clip(speed, -1, -Math.abs(MIN_STRAFE_SPEED));
         } else {
             return 0;
         }
