@@ -15,7 +15,7 @@ android {
         abortOnError false
     }
     buildToolsVersion '27.0.3'
-    compileSdkVersion 27
+    compileSdkVersion 23
 }
 dependencies {
     implementation project(':openCVLibrary320')

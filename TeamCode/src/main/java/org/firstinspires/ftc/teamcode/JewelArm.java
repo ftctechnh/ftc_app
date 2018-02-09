@@ -75,6 +75,7 @@ public class JewelArm {
         else if (cs.blue()>cs.red()) {
             jewelColor = Color.BLUE;
         }
+        Systems.sleep(250);
         if(allianceColor == Color.RED) {
           if (jewelColor == Color.RED) {
             right();
