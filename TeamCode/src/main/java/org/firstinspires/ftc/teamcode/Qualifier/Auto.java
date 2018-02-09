@@ -508,52 +508,55 @@ public class Auto extends LinearOpMode {
         gromit.glyphTrain.startGlyphMotors(0.7);
 
         //Move back towards glyph pile (middle)
-
+        gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
         mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 54, menuFile.BlueFrontHeading2, 0); //moves 46
+        gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
         /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
 
         //gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, -90);  //strafe left 3
         //gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3
 
         //COnditional for where you are
-        if (vuMark == RelicRecoveryVuMark.CENTER) {
-            //Strafe right
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3
-        } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-            //Strafe Left
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 9, menuFile.BlueFrontHeading2, -90);  //strafe left 3
-        }
-        else{
-            //Strafe Right
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, 90);  //strafe right 3
-        }
+//        if (vuMark == RelicRecoveryVuMark.CENTER) {
+//            //Strafe right
+//            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3
+//        } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+//            //Strafe Left
+//            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 9, menuFile.BlueFrontHeading2, -90);  //strafe left 3
+//        }
+//        else{
+//            //Strafe Right
+//            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 9, menuFile.BlueFrontHeading2, -90);  //strafe right 3
+//        }
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 90);  //-90    strafe back to where you are
+        gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
         //drive back towards glyph box
-        mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -54, menuFile.BlueFrontHeading2, 0); //move back
-        gromit.glyphTrain.startGlyphMotors(0.5);
-        sleep(300);
+        mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -50, menuFile.BlueFrontHeading2, 0); //move back
+        gromit.glyphTrain.startGlyphMotors(0.7);
+        sleep(500);
+        gromit.glyphTrain.stopGlyphMotors();
+
         //Grip Block
         gromit.glyphTrain.glyphclamp("close");
-        sleep(100);
-
+        sleep(500);
+        gromit.glyphTrain.liftGlyphIndex(1);
         // Put the block into the box
         //WIGGLE?
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 8, menuFile.BlueFrontHeading2, 180); //move 50
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 10, menuFile.BlueFrontHeading2, 180); //move 50
         //unclamp glyph
         gromit.glyphTrain.glyphclamp("open");
         sleep(200);
 
         //Do the routine to push the block back into atleast one box //ROUTINE TO PUSH BLOCK INTO ATLEST INE COLUMN
         //drive forward
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 0);    // back up
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 5, menuFile.BlueFrontHeading2, 0);    // back up
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, -90);  //-90    strafe (strafe is never as long)
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5, menuFile.BlueFrontHeading2, 0);    // forward
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -3, menuFile.BlueFrontHeading2, 0);    // forward
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 0);    // back up
 
     }
 
     public void mecanumDriveBlock(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
-       // gromit.glyphTrain.startGlyphMotors(0.7);//START THE INTAKE!!!
-        //Intake is started before the loop
         double max;
         double multiplier;
         int right_start;

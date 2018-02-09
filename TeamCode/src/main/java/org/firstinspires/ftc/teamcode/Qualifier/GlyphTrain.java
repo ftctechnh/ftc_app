@@ -71,7 +71,7 @@ public class GlyphTrain {
         // Set all motors to zero power
         stopGlyphMotors();
         //Set the lift down
-        glyphliftservo.setPosition(1.0);
+        glyphliftupper("bottom");
         // reset encoder to zero for lift (assume you have it down)
         lift_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -125,10 +125,10 @@ public class GlyphTrain {
         //height is encoder counts or ticks
         // going up
         if(moveto == "top"){
-            glyphliftservo.setPosition(0.0);
+            glyphliftservo.setPosition(0.85);
         }
         else{
-            glyphliftservo.setPosition(1.0);
+            glyphliftservo.setPosition(0.03);
         }
     }
 
