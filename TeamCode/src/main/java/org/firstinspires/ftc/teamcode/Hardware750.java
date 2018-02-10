@@ -50,7 +50,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class Hardware750 {
     public enum Direction{
-        OUT, IN
+        OUT, IN, STOP
     }
     /* Public OpMode members. */
     public ModernRoboticsI2cRangeSensor rangeSensor      = null;
@@ -180,13 +180,18 @@ public class Hardware750 {
         if (direction == Direction.IN){
             blockServoL1.setPower(1);
             blockServoL2.setPower(1);
-            blockServoR1.setPower(-1);
-            blockServoR2.setPower(-1);
+            blockServoR1.setPower(1);
+            blockServoR2.setPower(1);
         } else if (direction == Direction.OUT){
             blockServoL1.setPower(-1);
             blockServoL2.setPower(-1);
-            blockServoR1.setPower(1);
-            blockServoR2.setPower(1);
+            blockServoR1.setPower(-1);
+            blockServoR2.setPower(-1);
+        } else if (direction == Direction.STOP){
+            blockServoL1.setPower(0);
+            blockServoL2.setPower(0);
+            blockServoR1.setPower(0);
+            blockServoR1.setPower(0);
         }
     }
 
