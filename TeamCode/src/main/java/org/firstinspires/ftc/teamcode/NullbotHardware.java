@@ -474,13 +474,13 @@ public class NullbotHardware {
         }
     }
 
-    public double relicFipperPosition = 80;
+    /*public double relicFipperPosition = 80;
     public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 83.0/255.0;
-    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;
+    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;*/
 
-    /*public double relicFipperPosition = 0.33;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 1.0;
-    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 0.333;*/
+    public double relicFipperPosition = 0.33;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 5.0/6.0;
+    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 0.12;
 
     public void extendFlipper() {
         relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_EXTENDED_POSITION);
@@ -515,8 +515,8 @@ public class NullbotHardware {
     }
 
     public void raiseIntake() {
-        leftIntakeFlipper.setPosition(0.0);
-        rightIntakeFlipper.setPosition(1.0);
+        leftIntakeFlipper.setPosition(0.7 - (1.0/3.0) - (32.0/270.0));
+        rightIntakeFlipper.setPosition((1.0/3.0) + (32.0/270.0));
         intakeTarget = IntakeTarget.RAISED;
     }
 
