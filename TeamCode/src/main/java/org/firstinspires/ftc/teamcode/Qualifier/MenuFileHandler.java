@@ -112,9 +112,9 @@ public class MenuFileHandler {
             menulowerlimit[2] = 0;
             menuupperlimit[2] = 3;
             menuincrement[2] = 1;
-            menuvaluetoken[2][0] = "Glyph";
-            menuvaluetoken[2][1] = "Extra Glyph";
-            menuvaluetoken[2][2] = "Demo ";
+            menuvaluetoken[2][0] = "Regular Glyph";
+            menuvaluetoken[2][1] = "SuperMode Column";
+            menuvaluetoken[2][2] = "Supermode Row";
             menuvaluetoken[2][3] = "Test ";
         }
         mode = menuvalue[2];

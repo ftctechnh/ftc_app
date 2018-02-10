@@ -102,6 +102,15 @@ public class Teleop extends OpMode {
         readTeleDataFromTxtFile(hardwareMap.appContext);
 //       lastLoadTime = -10000;
 //        telemetry.addData("elbowmovetime", elbowdowntime);
+
+        double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+//        double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+        telemetry.addData("ElbowTime from file", elbowdowntime);
+        telemetry.addData("Sharp IR V ", sharpIRVoltage);
+//        telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
+//        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance));
+//        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance), " Ticks " + Integer.toString(gromit.driveTrain.left_front.getCurrentPosition()));
+
     }
 
     @Override
@@ -113,12 +122,12 @@ public class Teleop extends OpMode {
     public void loop() {
         timeLeft = 120 - runtime.seconds();
 
-        double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
-        double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
-        telemetry.addData("ElbowTime from file", elbowdowntime);
-        telemetry.addData("Sharp IR V ", sharpIRVoltage);
-        telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
-        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance));
+//        double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+//        double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+//        telemetry.addData("ElbowTime from file", elbowdowntime);
+//        telemetry.addData("Sharp IR V ", sharpIRVoltage);
+//        telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
+//        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance));
 //        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance), " Ticks " + Integer.toString(gromit.driveTrain.left_front.getCurrentPosition()));
 
         //------------------------------------------------------------------------------
