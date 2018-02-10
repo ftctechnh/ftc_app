@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode.Deprecated;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="PixyCamTest", group="Nullbot")
 public class PixyCamTest extends OpMode
 {
 
