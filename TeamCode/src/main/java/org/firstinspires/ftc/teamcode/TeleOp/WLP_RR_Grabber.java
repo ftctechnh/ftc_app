@@ -124,46 +124,57 @@ public class WLP_RR_Grabber {
             return;
         }
 
-        // Calculate and set motor powers
 
-        if (!ignoreButtonA) {
+        //When button is not pressed, ignore variable is set to false cuz idgaf
+        if (!gamepad2.a) {
+            ignoreButtonA = false;
+        }
 
-            // Spinner: A button toggles the spinner inward
-            if (gamepad2.a) {
-                if (spinIn) {
-                    spinnerLeft.setPower(stopPower);
-                    spinnerRight.setPower(stopPower);
-                } else {
-                    spinnerLeft.setPower(spinnerPower);
-                    spinnerRight.setPower(-spinnerPower);
-                }
-                spinIn = !spinIn;
-                ignoreButtonA = true;
+        // If the button is pressed and its not being ignored then the power changes
+        if (gamepad2.a && !ignoreButtonA) {
 
-            } else {
-                if (!gamepad2.a) {
-                    ignoreButtonA = false;
-                }
-            }
-            if (!ignoreButtonB) {
-                // Spinner: A button toggles the spinner outward
-                if (gamepad2.b) {
-                    if (spinOut) {
-                        spinnerLeft.setPower(stopPower);
-                        spinnerRight.setPower(stopPower);
-                    } else {
-                        spinnerLeft.setPower(-spinnerPower);
-                        spinnerRight.setPower(spinnerPower);
-                    }
-                    spinOut = !spinOut;
-                    ignoreButtonB = false;
-                } else {
-                    if (!gamepad2.b) {
-                        ignoreButtonB = false;
-                    }
-                }
+            if (spinIn) {
+                spinnerLeft.setPower(stopPower);
+                spinnerRight.setPower(stopPower);
+                spinIn = false;
+
+            } else {  //(if spinning out or stopped)
+                spinnerLeft.setPower(spinnerPower);
+                spinnerRight.setPower(-spinnerPower);
+                spinOut = false;
+                spinIn = true;
+
             }
 
+            ignoreButtonA = true;
+
+        }
+
+
+        //When button is not pressed, ignore variable is set to false cuz idgaf
+        if (!gamepad2.b) {
+            ignoreButtonB = false;
+        }
+
+        // If the button is pressed and its not being ignored then the power changes
+        if (gamepad2.b && !ignoreButtonB) {
+            if (spinOut) {
+                spinnerLeft.setPower(stopPower);
+                spinnerRight.setPower(stopPower);
+                spinOut = false;
+            } else { // if (spinning in or stopped)
+                spinnerLeft.setPower(-spinnerPower);
+                spinnerRight.setPower(spinnerPower);
+                spinIn = false;
+                spinOut = true;
+            }
+            ignoreButtonB = true;
+
+
+        }
+
+
+        /*
             if (!ignoreButtonX) {
 
                 // Spinner: X button toggles the clamp
@@ -181,7 +192,7 @@ public class WLP_RR_Grabber {
                     }
                 }
             }
-        }
+
 
 
         if (gamepad2.x) {
@@ -189,6 +200,8 @@ public class WLP_RR_Grabber {
         } else {
             armMover.setPosition(armOpen);
         }
+
+        */
 
 
         //Slider: RT - up, LT - down
