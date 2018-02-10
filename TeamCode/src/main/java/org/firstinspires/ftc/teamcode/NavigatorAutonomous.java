@@ -25,8 +25,11 @@ import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 /*@Autonomous(name="Test Ultrasonic Nav", group="Demo")*/
 public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
+    public boolean placeSecondGlyph = false;
+
     double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45; // 1 degree
     final int GUESS_TIME = 2000; // Milliseconds
+    final int MAX_CORRECTIONS = 1;
 
     final int TICKS_PER_INCH = 100; // For sideways movement
     final double CM_TO_INCHES = 1/2.54;
@@ -34,7 +37,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
     final int INCHES_TO_DRIVE_OFF_STONE = 23;
     double TURN_MAX_SPEED = 0.6;
 
-    Map<RelicRecoveryVuMark, Double[]> COLUMN_DISTANCES;
+    public Map<RelicRecoveryVuMark, Double[]> COLUMN_DISTANCES;
 
     VuforiaLocalizer vuforia;
     VuforiaTrackable relicTemplate;
@@ -139,16 +142,19 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
         stopMoving();
 
+        int correctionsMade = 0;
+
         while (opModeIsActive()) {
             boolean atPosition = adjustPositionByUltrasonic(vuMark, 700);
-
-            if (atPosition) {break;}
-
             turnToPos(lockedHeading);
+            correctionsMade += 1;
+
+            if (atPosition || correctionsMade >= MAX_CORRECTIONS) {break;}
+
         }
 
 
-        driveStraight(lockedHeading, 0.6, 2000);
+        driveStraight(lockedHeading, 0.6, 1250);
         robot.openBlockClaw();
         robot.sleep(400); // Give time for claw to open
         robot.lift.setTargetPosition(0); // Bring lift back to ground
@@ -160,48 +166,73 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         // Turn around to get more blocks
         driveStraight(lockedHeading, -0.6, 1000); // Back up
 
+
         // Let's grab another block! It's OK to be a little more violent here, so we'll
         // speed things up quite a bit
         TURN_MAX_SPEED = 1.0;
 
-        turnToPos(lockedHeading + Math.PI);
+        if (robot.startingPad == StartingPosition.BACK) {
 
-        // Deploy the boys
-        robot.lowerIntake();
-        robot.closeBlockClaw();
-        robot.setIntakeSpeed(1); // Max power on intake
+            // Spin around 180 degrees
+            turnToPos(robot.normAngle(lockedHeading + Math.PI));
 
-        // Open the intake back up while driving forwards
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                robot.openBlockClaw();
-            }
-        }, 300);
+            // Deploy the boys
+            robot.lowerIntake();
+            robot.closeBlockClaw();
+            robot.setIntakeSpeed(1); // Max power on intake
 
-        // Align block
-        driveStraight(Math.PI*1.5, 1.0, 1000);
-        turnToPos(Math.PI/2);
-        robot.setIntakeSpeed(0);
-        driveStraight(Math.PI/2, -0.5, 200);
-        driveStraight(Math.PI/2, 0.5, 400);
+            // Open the intake back up while driving forwards
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    robot.openBlockClaw();
+                }
+            }, 300);
 
-        robot.closeBlockClaw();
-        robot.sleep(100);
-        robot.lift.setTargetPosition(-800);
-        robot.raiseIntake();
+            // Align block
+            driveStraight(lockedHeading + Math.PI, 1.0, 1000);
 
-        driveStraight(Math.PI/2, 1.0, 800);
-        turnToPos(Math.PI/2);
-        stopMoving();
+            turnToPos(lockedHeading);
+            robot.setIntakeSpeed(0);
+            driveStraight(lockedHeading, -0.5, 200);
+            driveStraight(lockedHeading, 0.5, 400);
+
+            robot.closeBlockClaw();
+            robot.sleep(100);
+            robot.lift.setTargetPosition(-800);
+            robot.raiseIntake();
+
+            driveStraight(lockedHeading, 1.0, 800);
+            turnToPos(lockedHeading);
+            stopMoving();
+        } else {
+            // For the front stone
+        }
+
+        // Place block in
+
         if (30000 - timeSinceStart.milliseconds() > 4000) {
             telemetry.log().add("Adjusting with sensor");
             adjustPositionByUltrasonic(vuMark, 500);
         }
         telemetry.log().add("Driving forward");
-        driveStraight(Math.PI/2, 1.0, 800);
+        for (DcMotor m : robot.motorArr) {
+            m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            m.setPower(0.7);
+        }
+        robot.sleep(1500);
         robot.openBlockClaw();
-        driveStraight(Math.PI/2, -1.0, 250);
+        robot.sleep(Math.min((long) (30*1000 - timeSinceStart.milliseconds() - 500), 1500));
+
+        for (DcMotor m : robot.motorArr) {
+            m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            m.setPower(0.7);
+            m.setTargetPosition(m.getCurrentPosition() - TICKS_PER_INCH * 3);
+        }
+        robot.sleep(150);
+        robot.lift.setTargetPosition(0);
+
+        robot.sleep((long) (30*1000 - timeSinceStart.milliseconds()));
     }
 
     public void driveSidewaysInches(double inches) { // How much to the right?
