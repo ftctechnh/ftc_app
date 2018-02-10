@@ -33,8 +33,8 @@ public class BotHardware {
         backRight("br", true),
         frontLeft("fl", false),
         backLeft("bl", false),
-        liftLeft("ll", true),
-        liftRight("lr", false);
+        liftLeft("ll", false),
+        liftRight("lr", true);
 
         private final String name;
         private final boolean reverse;

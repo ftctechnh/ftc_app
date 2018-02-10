@@ -17,7 +17,8 @@ public class UltraTest extends OpMode {
     private MatbotixUltra ultra;
 
     public void init() {
-        ultra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultra"), 100);
+        ultra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
+        ultra.initDevice();
     }
 
     public void start() {

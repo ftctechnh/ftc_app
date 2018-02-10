@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.AnalogInputController;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannelImpl;
  */
 
 @Autonomous(name="SPI Bitbang")
+@Disabled
 public class SPIBitbang extends OpMode {
     DigitalChannel SCK;
     DigitalChannel CS;

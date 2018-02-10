@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.pointer;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.opmodes.RedPilliar;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.opmodes.RedPilliar;
  */
 
 @Autonomous(name="Red No Block", group="test")
+@Disabled
 public class RedBallDrive extends RedPilliar {
     public void init(){
         this.justDrive = true;

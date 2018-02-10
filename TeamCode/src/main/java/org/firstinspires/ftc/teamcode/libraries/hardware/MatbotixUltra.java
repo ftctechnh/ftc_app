@@ -21,7 +21,8 @@ import java.util.concurrent.TimeUnit;
 public class MatbotixUltra {
     private enum Regs {
         RANGE_TAKE(0b01010001),
-        RANGE_READ(0b00000000);
+        RANGE_READ(0b00000000),
+        ADDR_UNLOCK(170);
 
 
         public final byte REG;
@@ -65,17 +66,19 @@ public class MatbotixUltra {
         if(waitNanos > 0) {
             long run = System.nanoTime();
             if(run - lastTime < waitNanos) {
-                try { wait(TimeUnit.NANOSECONDS.toMillis(waitNanos - (run - lastTime))); }
-                catch (InterruptedException e) { /* hmmmm */ }
+                try{
+                    TimeUnit.NANOSECONDS.sleep(waitNanos - (run - lastTime));
+                }
+                catch (Exception e) { /* HMMMMM */ }
             }
         }
         //get the reading (will generate NACK)
-        TimestampedData data = sensor.readTimeStamped(Regs.RANGE_READ.REG, 2);
+        TimestampedData data = sensor.readTimeStamped(Regs.ADDR_UNLOCK.REG, 2);
         //tell the sensor to start measuring again (another NACK)
         sensor.write8(Regs.RANGE_TAKE.REG, 0);
         //cache time and return
         if(waitNanos > 0) lastTime = data.nanoTime;
-        return data.data[0] << 8 | data.data[1];
+        return (data.data[0] & 0xFF) << 8 | (data.data[1] & 0xFF);
     }
 
     public void stopDevice() {
