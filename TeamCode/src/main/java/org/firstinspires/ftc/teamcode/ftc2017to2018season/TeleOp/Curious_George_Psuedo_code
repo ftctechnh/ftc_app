@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+Import all the pre-made funtoins into the program
 
 
 /**
@@ -17,7 +18,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
  */
 @TeleOp(name = "Curious George")
 public class curious_george_teleop extends OpMode {
-
+Begining of the program
 
     /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
@@ -40,46 +41,13 @@ public class curious_george_teleop extends OpMode {
     Servo relicMain;
     Servo relicLeft;
     Servo relicRight;
+    Declaring all the motors on the robot
     public int IVFSM;
+    Declaring an integer used later for slide increment
 
-
-
-/*
-    ---------------------------------------------------------------------------------------------
-
-   Define the sensors we use in the robot here
-*/
-
-
-    //  ColorSensor bColorSensorLeft;    // Hardware Device Object
-
-
-    /*
-
-         //----------------------------------------------------------------------------------------------
-        //Declare global variables here
-
-
-        org.firstinspires.ftc.teamcode.ftc2016to2017season.Main.charlieTeleOp.cap_ball_arm_state_type cap_ball_arm_state;
-
-        //static final int CYCLE_MS = 5000;     // period of each cycle(mili seconds)
-
-
-        //private ElapsedTime runtime = new ElapsedTime();
-        static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
-        static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
-        static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
-        static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
-                (DRIVE_GEAR_REDUCTION*WHEEL_PERIMETER_CM);
-        // Define class members
-        //   Servo right_servo;
-
-
-        /*---------------------------------------------------------------------------------------------
-                Get references to the hardware installed on the robot and name them here
-        */
     @Override
     public void init() {
+    This is the begining of the initialize phase
         leftWheelMotorFront = hardwareMap.dcMotor.get("leftWheelMotorFront");
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
@@ -93,99 +61,59 @@ public class curious_george_teleop extends OpMode {
         relicLeft = hardwareMap.servo.get("relicLeft");
         relicRight = hardwareMap.servo.get("relicRight");
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
+        Telling that the previously declared motors and servos are pieces of hardware
 
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        Reversing the left side so the robot moves forward when directed to
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
 
         openGlyph();
         jewel_servo.setPosition(0.1);
-
-        /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
-        telemetry.update();*/
-//This is closed-loop speed control. Encoders are required for this mode.
-// SetPower() in this mode is actually requesting a certain speed, based on the top speed of
-// encoder 4000 pulses per second.
-
-        // leftWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //leftWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightWheelMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //rightWheelMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Moving the robot into posttion for TeleOp
 
 
     }
-
-
-    /*
-    ---------------------------------------------------------------------------------------------
-
-          Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
-    */
-
-
-
-    /*
-     ---------------------------------------------------------------------------------------------
-
-          Code to run ONCE when the driver hits PLAY
-
-    */
-
-    /*
-    Code to run REPEATEDLY after the driver hit PLAY
-    Main code loop goes here
-     */
 
     @Override
     public void loop() {
+    This repeats over and over again after the play button is pressed
        Glyph();
-       //Relic();
+       Relic();
        Drive();
        Slides();
-
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-
-        //  telemetry.addData("jewel pos", jewel_servo.getPosition());
-
-        telemetry.update();
-
+       These are the four funtions used in the program
     }
 
-    /* Code to run ONCE after the driver hits STOP
-     */
+  The funtions go down here:
 
-
-/*
----------------------------------------------------------------------------------------------
- */
-
-/*
----------------------------------------------------------------------------------------------
-
-    Functions go here
- */
 public void Slides(){
+This controls the linear slides attached to the glyph manipulator
     slideMove();
     slideIncrement();
 }
 public void Drive(){
+This controls the chasis on the robot
     FourWheelDrive();
 }
 public void Relic() {
+This controls the relic manipulator
     relicManipulator();
 }
 public void Glyph() {
+This controls the glyph manipulator
     glyphManipulator();
     incrementOpen();
     incrementClose();
 }
-    public void relicManipulator() {
+We have organized our program into four diferent funtions moving the four different parts of the robot
 
+   The smaller funtions go down here:
+
+    public void relicManipulator() {
+The opens and closes the relic manipulatpor along with moving it outwards
         boolean rightBumper = gamepad2.right_bumper;
         boolean leftBumper = gamepad2.left_bumper;
         float leftY_gp2 = (-gamepad2.left_stick_y);
@@ -193,63 +121,43 @@ public void Glyph() {
         boolean rightButtonA = gamepad2.a;
         boolean rightButtonX = gamepad2.x;
 
-
+This moves the claw inwards and outwards
         relicMotor.setPower(leftY_gp2);
 
-        // this is what grabs the relic
+       This part below is the part dictating the grabbing of the relic:
         if (leftBumper) {
-            //relicLeft.setPosition(0.75);
             relicLeft.setPosition(0.2);
             telemetry.addData("bumper value",relicLeft.getPosition());
             telemetry.update();
 
-            //relicRight.setPosition(0.1);
-            //relicRight is in charge of moving the relic gripper
         }
 
-        // this is what releases the claw
+       This part dictates the releasing of the relic
         if (rightBumper) {
 
             relicLeft.setPosition(0.5);
             telemetry.addData("bumper value",relicLeft.getPosition());
             telemetry.update();
 
-
-            //relicRight.setPosition(1);
-            //relicRight.setPosition(0);
-            
         }
-        // this is the most extended postion
+        This moves to the most outward position
         if (rightButtonY) {
-            //change the value to make the srm move lower
-            relicMain.setPosition(0.3); //0.2
-            //relicMain is the servo that releases the relic arm out out
-
-            //relicLeft.setPosition(0.75)
-            //this was the claw not all the way close
-            //relicLeft.setPosition(0.1);
+            relicMain.setPosition(0.3);
             telemetry.addData("button y pressed", relicMain.getPosition());
             telemetry.update();
         }
-        //below was the code for the old collector with two claw arms
-       // if (gamepad2.b) {
-       //     relicLeft.setPosition(1);
-       //     relicRight.setPosition(0.25);
-       // }
 
-        //below was the middle position
+        This was the middle poition
         if (rightButtonX) {
-            relicMain.setPosition(0.45); //0.45
+            relicMain.setPosition(0.45);
 
             telemetry.addData("button x pressed", relicMain.getPosition());
             telemetry.update();
         }
 
-        // this is the stowed position
+      This is the closed or stowed position
         if (rightButtonA) {
             relicMain.setPosition(1);
-            //adding this line to move relic up at most stowed position
-           // relicLeft.setPosition();
 
         }
 
@@ -295,10 +203,6 @@ public void Glyph() {
             leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftWheelMotorFront.setPower(0);
-            leftWheelMotorBack.setPower(0);
-            rightWheelMotorFront.setPower(0);
-            rightWheelMotorBack.setPower(0);
         }
 
 
@@ -437,7 +341,7 @@ public void Glyph() {
 
     public void closeGlyph(){
         //reversed values
-        glyphServoRight.setPosition(0.8);
+        glyphServoRight.setPosition(0.7);
         glyphServoLeft.setPosition(0.2);
     }
 
