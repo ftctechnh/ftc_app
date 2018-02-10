@@ -21,14 +21,16 @@ public class okay extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.a){
-            spinnyBoi1.setPower(1);
-            spinnyBoi2.setPower(1);
+            spinTheBois(1);
         } else if (gamepad1.b) {
-            spinnyBoi1.setPower(-1);
-            spinnyBoi2.setPower(-1);
+            spinTheBois(-1);
         } else {
-            spinnyBoi1.setPower(0);
-            spinnyBoi2.setPower(0);
+            spinTheBois(0);
         }
-}
+    }
+
+    private void spinTheBois(double quickness){
+        spinnyBoi1.setPower(quickness);
+        spinnyBoi2.setPower(quickness);
+    }
 }
