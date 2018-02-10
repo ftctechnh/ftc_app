@@ -8,13 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp (name="wowee a test class", group="TeleOp")
 public class okay extends OpMode {
-    private CRServo spinnyBoi1 = null;
-    private CRServo spinnyBoi2 = null;
+    private CRServo blockServoL1, blockServoL2, blockServoR1, blockServoR2;
     @Override
     public void init() {
         telemetry.addData("Status", "Uninitialized...");
-        spinnyBoi1 = hardwareMap.get(CRServo.class, "spinnyBoi1");
-        spinnyBoi2 = hardwareMap.get(CRServo.class, "spinnyBoi2");
+        blockServoL1 = hardwareMap.get(CRServo.class, "blockServoL1");
+        blockServoL2 = hardwareMap.get(CRServo.class, "blockServoL2");
+        blockServoR1 = hardwareMap.get(CRServo.class, "blockServoR1");
+        blockServoR2 = hardwareMap.get(CRServo.class, "blockServoR2");
         telemetry.addData("Status", "Initialized");
     }
 
@@ -30,7 +31,10 @@ public class okay extends OpMode {
     }
 
     private void spinTheBois(double quickness){
-        spinnyBoi1.setPower(quickness);
-        spinnyBoi2.setPower(quickness);
+        // I'm not sure if they'll all need to spin the same direction.
+        blockServoL1.setPower(quickness);
+        blockServoL2.setPower(quickness);
+        blockServoR1.setPower(-quickness);
+        blockServoR2.setPower(-quickness);
     }
 }

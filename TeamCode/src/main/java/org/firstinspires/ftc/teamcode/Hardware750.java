@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -48,6 +49,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  *  owo
  */
 public class Hardware750 {
+    public enum Direction{
+        OUT, IN
+    }
     /* Public OpMode members. */
     public ModernRoboticsI2cRangeSensor rangeSensor      = null;
     public Servo                        arm              = null;
@@ -66,6 +70,10 @@ public class Hardware750 {
     public DigitalChannel               limitGripper     = null; // limit open switch for gripper
     public DcMotor                      clawMotor        = null; // rotator motor for relic claw
     //public Servo                        blockEjector     = null; // he eject but he also attac
+    public CRServo                      blockServoL1     = null;
+    public CRServo                      blockServoL2     = null;
+    public CRServo                      blockServoR1     = null;
+    public CRServo                      blockServoR2     = null;
 
     // vuforia license key ;)
     public static final String VUF_LIC = "AbQfkoj/////AAAAGURTD1LwoUjKk6qgxygb/6QTHah6F5/HMfF99SDO7C7wnhjBctp6i+bm/mX4El1OTHR8wW0gGjoM4qNsfM3cgFiMDHE4/IBhgpc2siB6nwrgEVZbo3PwJ0xImdXvTSEfWn8Fc6g+svSUFb97VAyjVAEsOvMC+sSqpjIKEQLoCdbCpLRmnX+9socxkX5qix9OVb0xREGbTtddp2fwtLleMXMHxUwhsTc3q7vqD5LDK7Q8GxOaV9jyB6/3Y3T65qaWOGjlGo39Ts394+WTp4hqwqvuu0Gkztlk2e6IeJbN9sN1+8xb2XQllnrHeBhIXxaoES1MRkyjMHliwQxbRJv8kwPeY9q/AsOA/dUy1x87iZLp";
@@ -107,6 +115,12 @@ public class Hardware750 {
             System.out.println("One or both of the relic claw servos isn't connected. " +
                     "Caught in HwMap.");
         }
+
+        blockServoL1 = hwMap.get(CRServo.class, "blockServoL1");
+        blockServoL2 = hwMap.get(CRServo.class, "blockServoL2");
+        blockServoR1 = hwMap.get(CRServo.class, "blockServoR1");
+        blockServoR2 = hwMap.get(CRServo.class, "blockServoR2");
+
 
         flDrive = hwMap.get(DcMotor.class, "flDrive");
         frDrive = hwMap.get(DcMotor.class, "frDrive");
@@ -157,6 +171,20 @@ public class Hardware750 {
         frDrive.setPower(requestedSpeed);
         rlDrive.setPower(requestedSpeed);
         rrDrive.setPower(requestedSpeed);
+    }
+
+    public void rotateBlockGrabber(Direction direction){
+        if (direction == Direction.IN){
+            blockServoL1.setPower(1);
+            blockServoL2.setPower(1);
+            blockServoR1.setPower(-1);
+            blockServoR2.setPower(-1);
+        } else if (direction == Direction.OUT){
+            blockServoL1.setPower(-1);
+            blockServoL2.setPower(-1);
+            blockServoR1.setPower(1);
+            blockServoR2.setPower(1);
+        }
     }
 
 
