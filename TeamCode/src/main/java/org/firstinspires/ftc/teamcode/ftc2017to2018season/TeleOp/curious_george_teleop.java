@@ -295,6 +295,10 @@ public void Glyph() {
             leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftWheelMotorFront.setPower(0);
+            leftWheelMotorBack.setPower(0);
+            rightWheelMotorFront.setPower(0);
+            rightWheelMotorBack.setPower(0);
         }
 
 
