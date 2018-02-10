@@ -93,7 +93,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
         robot.flDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.frDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        if(opModeIsActive()) {
+        if (opModeIsActive()) {
             robot.flDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.frDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             robot.rlDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);

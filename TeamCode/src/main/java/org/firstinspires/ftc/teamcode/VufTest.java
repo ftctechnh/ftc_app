@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="asVUFORIA FSTUFF bgk;hasd;j", group="Linear Auto")
+@Autonomous(name="Probably doesn't need its own program.", group="Linear Auto")
 
 public class VufTest extends AutoMaster {
     @Override
