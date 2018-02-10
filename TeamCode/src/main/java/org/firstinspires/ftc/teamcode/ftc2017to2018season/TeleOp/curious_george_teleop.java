@@ -380,10 +380,10 @@ public void Glyph() {
 
             moveUpInch(2.54);
 
-        } else if (gamepad2.dpad_down) {
-            moveDownInch(2.54);
-        } else {
-
+        } else if (gamepad2.dpad_right) {
+            moveUpInch(17.78);
+        } else if (gamepad2.dpad_down){
+            moveUpInch(33.02);
         }
     }
 
