@@ -9,6 +9,7 @@ public class NonRelRecSideBlue extends AutoMaster {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         double vufSpeed = 0;
+        typee = vu.getVuf(hardwareMap);
 
         robot.init(hardwareMap);
         waitForStart();
@@ -30,7 +31,6 @@ public class NonRelRecSideBlue extends AutoMaster {
         }
 
         //Finds Vuforia
-        typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             vufSpeed = 0.5;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -51,12 +51,10 @@ public class NonRelRecSideBlue extends AutoMaster {
         }
 
         //Final approach
-        encode(12, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
-        wait(500);
-        //TODO: add support for new block mover mechanism
-        //robot.gripper.setPower(-0.25);
-        wait(1000);
-        //robot.gripper.setPower(0);
+        encode(12, 0.5, MoveType.STRAIGHT);
+
+        //Place block
+
         encode(4, -0.25, MoveType.STRAIGHT);
     }
 }

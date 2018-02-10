@@ -62,6 +62,7 @@ public class Hardware750 {
     // removed!
     // public DcMotor                      gripper          = null;
     public DcMotor                      lift             = null;
+    public DigitalChannel               digitalTouch     = null;
     public DigitalChannel               limitTop         = null;
     public DigitalChannel               limitGripper     = null; // limit open switch for gripper
     public DcMotor                      clawMotor        = null; // rotator motor for relic claw
@@ -85,6 +86,7 @@ public class Hardware750 {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
+        digitalTouch = hwMap.get(DigitalChannel.class, "sensor_digital");
         rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "rangesensor");
         arm     = hwMap.get(Servo.class, "colorarm");
         color   = hwMap.get(ColorSensor.class, "color");
@@ -94,6 +96,7 @@ public class Hardware750 {
         limitTop.setMode(DigitalChannel.Mode.INPUT);
         limitGripper = hwMap.get(DigitalChannel.class, "limitGripper");
         limitGripper.setMode(DigitalChannel.Mode.INPUT);
+        digitalTouch.setMode(DigitalChannel.Mode.INPUT);
         try {
             clawMotor = hwMap.get(DcMotor.class, "relicClaw");
         } catch (Exception e){

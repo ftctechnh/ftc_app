@@ -9,6 +9,7 @@ public class RelRecSideBlue extends AutoMaster {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         double vufSpeed = 0;
+        typee = vu.getVuf(hardwareMap);
 
         robot.init(hardwareMap);
         waitForStart();
@@ -28,7 +29,6 @@ public class RelRecSideBlue extends AutoMaster {
         }
 
         //Finds Vuforia
-        typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             vufSpeed = 0.5;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -48,13 +48,9 @@ public class RelRecSideBlue extends AutoMaster {
 
         //Final approach
         encode(9, 0.5, MoveType.STRAIGHT);
-        // todo: replace
-        /*
-        wait(500);
-        robot.gripper.setPower(-0.25);
-        wait(1000);
-        robot.gripper.setPower(0);
-        */
+
+        //Place block
+
         encode(4, -0.25, MoveType.STRAIGHT);
     }
 }
