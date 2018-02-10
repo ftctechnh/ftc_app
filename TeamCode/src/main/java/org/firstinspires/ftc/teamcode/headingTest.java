@@ -3,16 +3,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 /**
- * Created by GJF on 1/28/2018.
+ * Created by Josie Miner on 2/9/2018.
  */
-@Autonomous(name="Preciousss: AutoRed1", group="Preciousss")
+@Autonomous(name="Preciousss: headingTest", group="Preciousss")
 
-public class autoRed1 extends superAuto {
+public class headingTest extends superAuto {
 
     public void runOpMode() {
-
-        iAmRed = true;
-
         configureGyro();
 
         mapHardware();
@@ -21,6 +18,6 @@ public class autoRed1 extends superAuto {
 
         waitForStart();
 
-        pivotTo(-90);
+        followHeading(10,3);
     }
 }

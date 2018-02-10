@@ -145,6 +145,45 @@ abstract public class superAuto extends LinearOpMode {
                     }
                 });
     }
+
+    void move(float posx, float posy, float waitTime) {
+        float FRBLPower = posy + posx;
+        float FLBRPower = posy - posx;
+        motorFR.setPower(FRBLPower);
+        motorFL.setPower(FLBRPower);
+        motorBR.setPower(FLBRPower);
+        motorBL.setPower(FRBLPower);
+        Wait(waitTime);
+        sR();
+    }
+
+    void followHeading(int targetHeading,double time) {
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double currentHeading = angles.firstAngle;
+        double basePower = .25f;
+        runtime.reset();
+        while (((runtime.seconds() < time))){
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            if (angles != null) {
+                double currentHeading = angles.firstAngle;
+                double addPower = (targetHeading - currentHeading) * .025;
+                /*if (currentHeading > targetHeading) {*/
+                    motorFL.setPower(-basePower + addPower);
+                    motorBL.setPower(-basePower + addPower);
+                    motorFR.setPower(-basePower - addPower);
+                    motorBR.setPower(-basePower - addPower);
+               /* }
+                else {
+                    motorFL.setPower(-basePower - addPower);
+                    motorBL.setPower(-basePower - addPower);
+                    motorFR.setPower(-basePower + addPower);
+                    motorBR.setPower(-basePower + addPower);
+                }*/
+            }
+        }
+        sR();
+    }
+
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
         //Pivot to clockwise is negative.
@@ -155,7 +194,7 @@ abstract public class superAuto extends LinearOpMode {
         double dif = target;
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double currentHeading = angles.firstAngle;
+       double currentHeading = angles.firstAngle;
         wheelPower = .3;
 
         while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
