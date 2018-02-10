@@ -11,8 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "classic driver mapping", group = "agroup")
 
-public class classicDriverMapping extends LinearOpMode
-{
+public class classicDriverMapping extends LinearOpMode{
     private DcMotor motorFrontLeft;
     private DcMotor motorBackLeft;
     private DcMotor motorFrontRight;
