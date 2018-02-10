@@ -166,6 +166,10 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         // Turn around to get more blocks
         driveStraight(lockedHeading, -0.6, 1000); // Back up
 
+        if (!placeSecondGlyph) {
+            turnToPos(robot.normAngle(lockedHeading + Math.PI));
+            return;
+        }
 
         // Let's grab another block! It's OK to be a little more violent here, so we'll
         // speed things up quite a bit
@@ -181,7 +185,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             robot.closeBlockClaw();
             robot.setIntakeSpeed(1); // Max power on intake
 
-            // Open the intake back up while driving forwards
+            // Open the claw back up while driving forwards
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -207,6 +211,52 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             stopMoving();
         } else {
             // For the front stone
+
+            // Drive to the pictogrpah closest to the middle
+            adjustPositionByUltrasonic(RelicRecoveryVuMark.RIGHT, 0);
+
+            // Then, turn so we diagonally face the glyph pit
+
+            double desiredDirection;
+            if (robot.color == Alliance.BLUE) {
+                desiredDirection = -(5.0/6.0) * Math.PI;
+            } else {
+                desiredDirection = -(1.0/6.0) * Math.PI;
+            }
+            desiredDirection = robot.normAngle(desiredDirection);
+            turnToPos(desiredDirection);
+
+            robot.lowerIntake();
+            robot.closeBlockClaw();
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    robot.openBlockClaw();
+                }
+            }, 300);
+
+            robot.setIntakeSpeed(1);
+            driveStraight(desiredDirection, 1, 1500);
+            turnToPos(robot.normAngle(desiredDirection + Math.PI));
+
+            robot.setIntakeSpeed(0);
+            driveStraight(lockedHeading, -0.5, 200);
+            driveStraight(lockedHeading, 0.5, 400);
+
+            robot.closeBlockClaw();
+            robot.sleep(100);
+
+            if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                robot.lift.setTargetPosition(-800);
+            } else {
+                robot.lift.setTargetPosition(-50); // Get us off the ground
+            }
+            robot.raiseIntake();
+
+            driveStraight(desiredDirection, 1, 1500);
+            turnToPos(lockedHeading); // Turn back to placement heading
+
+            vuMark = RelicRecoveryVuMark.RIGHT; // We'll always place in the right column
         }
 
         // Place block in
