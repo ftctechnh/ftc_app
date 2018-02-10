@@ -71,7 +71,7 @@ public class Teleop extends OpMode {
     public boolean delayLift = false;
     public boolean delayClamp = false;
     public boolean glyphSensed = false;
-    public int manualLiftDelay = 200;
+    public int manualLiftDelay = 50;
     public int glyphSensedDelay = 0;
     boolean glyphinit = false;
 
@@ -296,9 +296,9 @@ public class Teleop extends OpMode {
 
         //  check for incoming block  here
         if (trainon) {
-            if (gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) < 12 && !glyphSensed) {     // if block is sensed set boolean
+            if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
                 glyphSensed = true;
-            } else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 12) {     // if block was already sensed (sense the back end)
+            } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
                 glyphSensed = false;
                 startclosetime = runtime.milliseconds();    // start timer  set boolean
                 //delayLift = true;                            // check for time to lift

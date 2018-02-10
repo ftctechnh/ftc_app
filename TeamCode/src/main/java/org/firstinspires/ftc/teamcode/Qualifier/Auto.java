@@ -433,7 +433,7 @@ public class Auto extends LinearOpMode {
 
             gromit.glyphTrain.glyphclamp("open");
             sleep(400);
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueBackHeading3, 0);
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 6, menuFile.BlueBackHeading3, 0);
 
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueBackHeading3, -90);  //-90    strafe (strafe is never as long)
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5, menuFile.BlueBackHeading3, 0);    // forward
@@ -504,7 +504,7 @@ public class Auto extends LinearOpMode {
 
         //Do the routine to push the block back into atleast one box //ROUTINE TO PUSH BLOCK INTO ATLEST INE COLUMN
         //drive forward
-        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 5, menuFile.RedFrontHeading2, 0);    // back up
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 6, menuFile.RedFrontHeading2, 0);    // back up
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.RedFrontHeading2, -90);  //-90    strafe (strafe is never as long)
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -3, menuFile.RedFrontHeading2, 0);    // forward
         gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.RedFrontHeading2, 0);    // back up
@@ -521,10 +521,10 @@ public class Auto extends LinearOpMode {
             // COnditional for where you are
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, 90);   //strafe right 3//Move right (from our point of view)
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -5, menuFile.BlueFrontHeading2, 90);   //strafe right 3//Move right (from our point of view)
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 9, menuFile.BlueFrontHeading2, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -18, menuFile.BlueFrontHeading2, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
                 mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueFrontHeading2, 90);  //THe column to the left, Our and robot's roight
@@ -533,12 +533,13 @@ public class Auto extends LinearOpMode {
             mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 54, menuFile.BlueFrontHeading2, 0); //HEad to center
             gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -54, menuFile.BlueFrontHeading2, 0); //move back
-            gromit.glyphTrain.startGlyphMotors(0.7);
-            sleep(750);
-            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, -5, menuFile.BlueFrontHeading2, 0); //move 50
+            mecanumDriveBlock(menuFile.DriveSpeed * 0.7, -54, menuFile.BlueFrontHeading2, 0); //move back
+            //gromit.glyphTrain.startGlyphMotors(0.7);
+            //sleep(500);
+            //gromit.glyphTrain.glyphclamp("close");
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, -2, menuFile.BlueFrontHeading2, 0); //move 50
 
-            gromit.glyphTrain.stopGlyphMotors();
+            //gromit.glyphTrain.stopGlyphMotors();
             //unclamp glyph
             gromit.glyphTrain.glyphclamp("open");
             sleep(200);
@@ -637,11 +638,12 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.right_front.setPower(rfpower);
             gromit.driveTrain.right_rear.setPower(rrpower);
 
-            if (gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) < 12 && !glyphSensed) {     // if block is sensed set boolean
+            if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
                 glyphSensed = true;
-            } else if (glyphSensed && gromit.glyphTrain.sensorDistance.getDistance(DistanceUnit.CM) > 12) {     // if block was already sensed (sense the back end)
+            } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
                 glyphSensed = false;
                 gromit.glyphTrain.stopGlyphMotors();
+                gromit.glyphTrain.glyphclamp("close");
             }
         }
         gromit.driveTrain.stopMotors();
