@@ -30,6 +30,7 @@ public class gamepad2Test extends LinearOpMode {
     //Jewel
     private Servo jewelArm;
 
+    private int mode;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -49,73 +50,92 @@ public class gamepad2Test extends LinearOpMode {
         //Ball
         jewelArm = hardwareMap.get(Servo.class, "JA");
 
+        mode = 0;
+
         waitForStart();
 
         while (opModeIsActive()) {
 
-            //Grabber
-            if (gamepad2.right_stick_button){
-                grabMotor.setPower(gamepad2.right_trigger);
+
+            if (gamepad2.x) {
+                mode = 1;
+            }
+            if (gamepad2.y) {
+                mode = 2;
             }
 
-            if (gamepad2.left_stick_button){
-                grabMotor.setPower(-gamepad2.right_trigger);
+            if (mode == 1) {
+                //Code for grabber only mapping here
+
             }
 
-            if (!gamepad2.right_stick_button && !gamepad2.left_stick_button){
-                grabMotor.setPower(0);
+            if (mode == 2) {
+                //Code for endgame here (relic and jewel)
             }
 
-            //Outter grabber
-            if (gamepad2.left_bumper){
-                grabTopLeft.setPosition(1);
-                grabTopRight.setPosition(1);
-            }
-
-            if (gamepad2.right_bumper){
-                grabTopLeft.setPosition(0);
-                grabTopRight.setPosition(0);
-            }
-
-            //Inner grabber
-
-
-
-
-
-
-            //Ball
-            if (gamepad2.dpad_down){
-                jewelArm.setPosition(1);
-            }
-
-            if (gamepad2.dpad_up){
-                jewelArm.setPosition(0);
-            }
-
-
-            //Relic
-            if (gamepad2.a){
-                relicMotor.setPower(gamepad2.left_trigger);
-            }
-
-            if (gamepad2.b){
-                relicMotor.setPower(-gamepad2.left_trigger);
-            }
-
-            if (!gamepad2.a && !gamepad2.b){
-                relicMotor.setPower(0);
-            }
-
-            if (gamepad2.x){
-                relicArm.setPosition(1);
-                relicGrab.setPosition(1);
-            }
-
-            if (gamepad2.y){
-                relicArm.setPosition(0);
-                relicGrab.setPosition(0);
-            }
+//            //Grabber
+//            if (gamepad2.right_stick_button){
+//                grabMotor.setPower(gamepad2.right_trigger);
+//            }
+//
+//            if (gamepad2.left_stick_button){
+//                grabMotor.setPower(-gamepad2.right_trigger);
+//            }
+//
+//            if (!gamepad2.right_stick_button && !gamepad2.left_stick_button){
+//                grabMotor.setPower(0);
+//            }
+//
+//            //Outter grabber
+//            if (gamepad2.left_bumper){
+//                grabTopLeft.setPosition(1);
+//                grabTopRight.setPosition(1);
+//            }
+//
+//            if (gamepad2.right_bumper){
+//                grabTopLeft.setPosition(0);
+//                grabTopRight.setPosition(0);
+//            }
+//
+//            //Inner grabber
+//
+//
+//
+//
+//
+//
+//            //Ball
+//            if (gamepad2.dpad_down){
+//                jewelArm.setPosition(1);
+//            }
+//
+//            if (gamepad2.dpad_up){
+//                jewelArm.setPosition(0);
+//            }
+//
+//
+//            //Relic
+//            if (gamepad2.a){
+//                relicMotor.setPower(gamepad2.left_trigger);
+//            }
+//
+//            if (gamepad2.b){
+//                relicMotor.setPower(-gamepad2.left_trigger);
+//            }
+//
+//            if (!gamepad2.a && !gamepad2.b){
+//                relicMotor.setPower(0);
+//            }
+//
+//            if (gamepad2.x){
+//                relicArm.setPosition(1);
+//                relicGrab.setPosition(1);
+//            }
+//
+//            if (gamepad2.y){
+//                relicArm.setPosition(0);
+//                relicGrab.setPosition(0);
+//            }
 
 
 
