@@ -9,6 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import static org.firstinspires.ftc.teamcode.Alliance.BLUE;
+import static org.firstinspires.ftc.teamcode.Alliance.RED;
 import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
 /**
@@ -33,8 +35,6 @@ public class CompleteOldAutonomous extends NullbotGemOnlyAutonomous {
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
-        pixyCam = robot.leftPixyCam;
-
         telemetry.clearAll();
 
         telemetry.log().add("Complete autonomous mode");
@@ -43,19 +43,17 @@ public class CompleteOldAutonomous extends NullbotGemOnlyAutonomous {
         telemetry.log().add("--------------------------");
 
         while (!isStarted()) {
-            updateBlocks();
-            telemetry.addData("Red ball:", redBall.toString());
-            telemetry.addData("Blue ball:", blueBall.toString());
             telemetry.update();
         }
 
         telemetry.log().add("Robot started");
 
         robot.crunchBlockClaw();
-        updateBlocks();
         // Higher x-values are on the right
 
-        Alliance rightMostBall = getBallPositions();
+        robot.almostLowerWhipSnake();
+        robot.sleep(500);
+        Alliance rightMostBall = (robot.colorSensor.red() > robot.colorSensor.blue()) ? RED : BLUE;
 
         telemetry.addData("Rightmost ball:", rightMostBall);
         telemetry.update();
@@ -260,10 +258,6 @@ public class CompleteOldAutonomous extends NullbotGemOnlyAutonomous {
 
         relicTrackables.activate();
 
-    }
-
-    public boolean ballPositionsKnown() {
-        return redBall.isSeen() && blueBall.isSeen();
     }
 
     public void knockOffBalls(Alliance rightMostBall) {

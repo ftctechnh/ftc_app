@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Deprecated.PixyCam;
 import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestInterface;
 import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestMashupPID;
 
@@ -64,7 +65,6 @@ public class NullbotHardware {
     public Servo leftIntakeFlipper;
     public Servo rightIntakeFlipper;
 
-    public PixyCam leftPixyCam;
     public AnalogInput frontUltrasonic;
     public AnalogInput leftUltrasonic;
     public AnalogInput rightUltrasonic;
@@ -118,7 +118,6 @@ public class NullbotHardware {
 
         imu = hwMap.get(BNO055IMU.class, "primaryIMU");
 
-        leftPixyCam = hwMap.get(PixyCam.class, "leftPixy");
         frontUltrasonic = hwMap.get(AnalogInput.class, "frontUltrasonic");
         leftUltrasonic = hwMap.get(AnalogInput.class, "leftUltrasonic");
         rightUltrasonic = hwMap.get(AnalogInput.class, "rightUltrasonic");
