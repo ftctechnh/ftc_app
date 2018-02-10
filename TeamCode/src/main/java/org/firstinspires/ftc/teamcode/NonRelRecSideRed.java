@@ -19,13 +19,13 @@ public class NonRelRecSideRed extends AutoMaster {
         robot.arm.setPosition(CSENSOR_ARM_DOWN);
         wait(750);
         if (robot.color.red() > 0) {
-            encode(3, -0.25, MoveType.STRAIGHT);
+            encode(3, -0.25, MoveType.ROT);
             robot.arm.setPosition(CSENSOR_ARM_UP);
-            encode(3, 0.25, MoveType.STRAIGHT);
+            encode(3, 0.25, MoveType.ROT);
         } else {
-            encode(3, 0.25, MoveType.STRAIGHT);
+            encode(3, 0.25, MoveType.ROT);
             robot.arm.setPosition(CSENSOR_ARM_UP);
-            encode(3, -0.25, MoveType.STRAIGHT);
+            encode(3, -0.25, MoveType.ROT);
         }
 
         //Finds Vuforia
