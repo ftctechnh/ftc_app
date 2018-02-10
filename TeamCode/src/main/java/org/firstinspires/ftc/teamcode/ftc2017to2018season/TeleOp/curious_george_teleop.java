@@ -294,10 +294,10 @@ public void Glyph() {
             rightWheelMotorBack.setPower(rightY_gp1);
         }
         else{
-            leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             leftWheelMotorFront.setPower(0);
             leftWheelMotorBack.setPower(0);
             rightWheelMotorFront.setPower(0);
@@ -440,12 +440,12 @@ public void Glyph() {
 
     public void closeGlyph(){
         //reversed values
-        glyphServoRight.setPosition(0.8);
-        glyphServoLeft.setPosition(0.2);
+        glyphServoRight.setPosition(0.75);
+        glyphServoLeft.setPosition(0.15);
     }
 
     public void middleGlyph(){
-        glyphServoRight.setPosition(0.6);
-        glyphServoLeft.setPosition(0.3);
+        glyphServoRight.setPosition(0.65);
+        glyphServoLeft.setPosition(0.25);
     }
 }
