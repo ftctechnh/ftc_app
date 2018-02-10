@@ -143,11 +143,6 @@ public class MecanumRework extends OpMode {
         telemetry.addData("VM3", voltageMultiplier[2]);
         telemetry.addData("VM4", voltageMultiplier[3]);
         */
-        if (gamepad1.b) {
-            for (int i = 0; i < 4; i++) {
-                voltageMultiplier[i] = 0;
-            }
-        }
 
         if(gamepad1.y){
             robot.arm.setPosition(.78); // outwards
@@ -155,7 +150,20 @@ public class MecanumRework extends OpMode {
         if(gamepad1.x){
             robot.arm.setPosition(0.16); // back up towards robot
         }
-        // TODO: gripper implementation and locking setup
+
+        if(gamepad2.a){
+            robot.rotateBlockGrabber(Hardware750.Direction.IN);
+        } else if (gamepad2.b){
+            robot.rotateBlockGrabber(Hardware750.Direction.OUT);
+        } else if(gamepad2.left_bumper){
+            robot.halfSpinGrabber(Hardware750.Direction.IN, Hardware750.Side.LEFT);
+        } else if (gamepad2.right_bumper){
+            robot.halfSpinGrabber(Hardware750.Direction.IN, Hardware750.Side.RIGHT);
+        } else {
+            robot.rotateBlockGrabber(Hardware750.Direction.STOP);
+        }
+
+
 
 
 

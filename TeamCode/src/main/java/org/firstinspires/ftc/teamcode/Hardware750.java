@@ -52,6 +52,9 @@ public class Hardware750 {
     public enum Direction{
         OUT, IN, STOP
     }
+    public enum Side{
+        LEFT, RIGHT
+    }
     /* Public OpMode members. */
     public ModernRoboticsI2cRangeSensor rangeSensor      = null;
     public Servo                        arm              = null;
@@ -191,7 +194,27 @@ public class Hardware750 {
             blockServoL1.setPower(0);
             blockServoL2.setPower(0);
             blockServoR1.setPower(0);
-            blockServoR1.setPower(0);
+            blockServoR2.setPower(0);
+        }
+    }
+
+    public void halfSpinGrabber(Direction direction, Side side){
+        if(direction == Direction.IN){
+            if(side == Side.LEFT) {
+                blockServoL1.setPower(-1);
+                blockServoL2.setPower(-1);
+            } else if(side == Side.RIGHT){
+                blockServoR1.setPower(1);
+                blockServoR2.setPower(1);
+            }
+        } else if(direction == Direction.OUT){
+            if(side== Side.LEFT){
+                blockServoL1.setPower(1);
+                blockServoL1.setPower(1);
+            } else if (side == side.RIGHT){
+                blockServoR1.setPower(-1);
+                blockServoR2.setPower(-1);
+            }
         }
     }
 
