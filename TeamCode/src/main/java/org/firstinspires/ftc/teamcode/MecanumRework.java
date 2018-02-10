@@ -166,17 +166,8 @@ public class MecanumRework extends OpMode {
             robot.lift.setPower(0);
         }
 
-        // hold a to open gripper to limit.
-        // press b to unlock
-        if (gamepad2.a){
-            robot.gripper.setPower(-GRIPPER_POWER);
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        } else if (gamepad2.b){
-            robot.gripper.setPower(GRIPPER_POWER);
-            robot.gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        } else {
-            robot.gripper.setPower(0);
-        }
+
+
         try {
             if (gamepad2.dpad_left) {
                 robot.clawMotor.setPower(0.2);
@@ -197,10 +188,8 @@ public class MecanumRework extends OpMode {
 
         if(clawState){
             robot.thiccClaw1.setPosition(CLOSE_POS);
-            robot.thiccClaw2.setPosition(CLOSE_POS);
         } else if (!clawState) {
             robot.thiccClaw1.setPosition(OPEN_POS);
-            robot.thiccClaw2.setPosition(OPEN_POS);
         }
 
         final double extendoSpeed = 0.5;
@@ -213,7 +202,6 @@ public class MecanumRework extends OpMode {
             robot.armExtender.setPower(0);
         }
 
-        telemetry.addData("ZPB", robot.gripper.getZeroPowerBehavior());
         telemetry.addData("ZPB of Lift", robot.lift.getZeroPowerBehavior());
         telemetry.addData("Lift Encoder Value: ", robot.lift.getCurrentPosition());
         telemetry.addData("lift power", robot.lift.getPower());

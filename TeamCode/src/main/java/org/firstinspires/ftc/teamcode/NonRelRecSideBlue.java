@@ -53,9 +53,10 @@ public class NonRelRecSideBlue extends AutoMaster {
         //Final approach
         encode(12, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
         wait(500);
-        robot.gripper.setPower(-0.25);
+        //TODO: add support for new block mover mechanism
+        //robot.gripper.setPower(-0.25);
         wait(1000);
-        robot.gripper.setPower(0);
+        //robot.gripper.setPower(0);
         encode(4, -0.25, MoveType.STRAIGHT);
     }
 }

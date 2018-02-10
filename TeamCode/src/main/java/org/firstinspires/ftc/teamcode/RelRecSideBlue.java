@@ -48,10 +48,13 @@ public class RelRecSideBlue extends AutoMaster {
 
         //Final approach
         encode(9, 0.5, MoveType.STRAIGHT);
+        // todo: replace
+        /*
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
+        */
         encode(4, -0.25, MoveType.STRAIGHT);
     }
 }

@@ -52,19 +52,20 @@ public class Hardware750 {
     public ModernRoboticsI2cRangeSensor rangeSensor      = null;
     public Servo                        arm              = null;
     public Servo                        thiccClaw1       = null;
-    public Servo                        thiccClaw2       = null;
+    //public Servo                        thiccClaw2       = null;
     public DcMotor                      flDrive          = null;
     public DcMotor                      frDrive          = null;
     public DcMotor                      rlDrive          = null;
     public DcMotor                      rrDrive          = null;
     public DcMotor                      armExtender      = null;
     public ColorSensor                  color            = null;
-    public DcMotor                      gripper          = null;
+    // removed!
+    // public DcMotor                      gripper          = null;
     public DcMotor                      lift             = null;
     public DigitalChannel               limitTop         = null;
     public DigitalChannel               limitGripper     = null; // limit open switch for gripper
     public DcMotor                      clawMotor        = null; // rotator motor for relic claw
-    public Servo                        blockEjector     = null; // he eject but he also attac
+    //public Servo                        blockEjector     = null; // he eject but he also attac
 
     // vuforia license key ;)
     public static final String VUF_LIC = "AbQfkoj/////AAAAGURTD1LwoUjKk6qgxygb/6QTHah6F5/HMfF99SDO7C7wnhjBctp6i+bm/mX4El1OTHR8wW0gGjoM4qNsfM3cgFiMDHE4/IBhgpc2siB6nwrgEVZbo3PwJ0xImdXvTSEfWn8Fc6g+svSUFb97VAyjVAEsOvMC+sSqpjIKEQLoCdbCpLRmnX+9socxkX5qix9OVb0xREGbTtddp2fwtLleMXMHxUwhsTc3q7vqD5LDK7Q8GxOaV9jyB6/3Y3T65qaWOGjlGo39Ts394+WTp4hqwqvuu0Gkztlk2e6IeJbN9sN1+8xb2XQllnrHeBhIXxaoES1MRkyjMHliwQxbRJv8kwPeY9q/AsOA/dUy1x87iZLp";
@@ -85,7 +86,6 @@ public class Hardware750 {
 
         // Define and Initialize Motors
         rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "rangesensor");
-        gripper = hwMap.get(DcMotor.class, "gripper");
         arm     = hwMap.get(Servo.class, "colorarm");
         color   = hwMap.get(ColorSensor.class, "color");
         lift    = hwMap.get(DcMotor.class, "lift");
@@ -99,11 +99,10 @@ public class Hardware750 {
         } catch (Exception e){
             System.out.println("Relic claw not connected! Handled it...");
         }
-        blockEjector = hwMap.get(Servo.class, "blockEjector");
+        // blockEjector = hwMap.get(Servo.class, "blockEjector");
 
         try {
             thiccClaw1 = hwMap.get(Servo.class, "thiccClaw1");
-            thiccClaw2 = hwMap.get(Servo.class, "thiccClaw2");
         } catch (Exception e) {
             System.out.println("One or both of the relic claw servos isn't connected. " +
                     "Caught in HwMap.");
@@ -135,7 +134,6 @@ public class Hardware750 {
         rlDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rrDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        gripper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armExtender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // rem: this <i>may</i> cause issues with how the motor's speed
         // functions.
@@ -146,7 +144,6 @@ public class Hardware750 {
         // braking setting
         // FLOAT: do not actively resist external forces
         // BRAKE: actively resist external forces
-        gripper.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         // gravity-assisted. we want this to try and hold itself up.
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         try {

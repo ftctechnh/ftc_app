@@ -50,10 +50,13 @@ public class NonRelRecSideRed extends AutoMaster {
 
         //Final approach
         encode(10, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
+        //TODO: replace gripper code with code that works haha
+        /*
         wait(500);
         robot.gripper.setPower(-0.25);
         wait(1000);
         robot.gripper.setPower(0);
+        */
         encode(7, -0.25, MoveType.STRAIGHT);
     }
 }
