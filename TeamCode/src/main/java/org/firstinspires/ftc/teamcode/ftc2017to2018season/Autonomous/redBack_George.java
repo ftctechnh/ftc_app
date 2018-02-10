@@ -60,17 +60,17 @@ public class redBack_George extends Autonomous_General_George {
         telemetry.update();
         sleep(250);
 
-//        moveUpGlyph(0.25);
-//        sleep(250);
-//        middleGlyphManipulator();
-//        sleep(250);
-//        moveDownGlyph(0.3);
-//        sleep(250);
-//        closeGlyphManipulator();
-//        sleep(250);
-//        moveUpGlyph(0.35);
-//        sleep(250);
-//        jewelServo.setPosition(1);
+        moveUpGlyph(0.25);
+        sleep(250);
+        middleGlyphManipulator();
+        sleep(250);
+        moveDownGlyph(0.2);
+        sleep(250);
+        closeGlyphManipulator();
+        sleep(250);
+        moveUpGlyph(0.35);
+        sleep(250);
+        jewelServo.setPosition(1);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);

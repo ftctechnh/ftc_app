@@ -67,7 +67,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
     double P_TURN_COEFF = 0.05;
-    double TURN_THRESHOLD = 2.5;
+    double TURN_THRESHOLD = 5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
@@ -1043,8 +1043,8 @@ public class Autonomous_General_George extends LinearOpMode {
         glyphServoLeft.setPosition(0.4);
     }
     public void closeGlyphManipulator(){
-        glyphServoRight.setPosition(0.7);
-        glyphServoLeft.setPosition(0.2);
+        glyphServoRight.setPosition(0.8);
+        glyphServoLeft.setPosition(0.1);
 
     }
     public void middleGlyphManipulator(){
@@ -1067,7 +1067,7 @@ public class Autonomous_General_George extends LinearOpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(1);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
@@ -1092,7 +1092,7 @@ public class Autonomous_General_George extends LinearOpMode {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(-0.6);
+        slideMotor.setPower(-1);
 
         while (slideMotor.isBusy() && opModeIsActive()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
