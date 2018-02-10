@@ -30,9 +30,10 @@ public class Thing extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         long startTime = System.currentTimeMillis();
+        robot.rotateBlockGrabber(Hardware750.Direction.OUT);
+        encodeInd(-0.15, MoveType.STRAIGHT);
         while (System.currentTimeMillis() < (startTime + 2000)) {
-            encodeInd(0.15, MoveType.STRAIGHT);
-            robot.rotateBlockGrabber(Hardware750.Direction.OUT);
+
         }
         robot.setAllDriveMotors(0);
         robot.rotateBlockGrabber(Hardware750.Direction.STOP);
