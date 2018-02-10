@@ -54,7 +54,13 @@ public class NonRelRecSideBlue extends AutoMaster {
         encode(12, 0.5, MoveType.STRAIGHT);
 
         //Place block
-
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() < (startTime + 2000)) {
+            encodeInd(0.15, MoveType.STRAIGHT);
+            robot.rotateBlockGrabber(Hardware750.Direction.OUT);
+        }
+        robot.setAllDriveMotors(0);
+        robot.rotateBlockGrabber(Hardware750.Direction.STOP);
         encode(4, -0.25, MoveType.STRAIGHT);
     }
 }

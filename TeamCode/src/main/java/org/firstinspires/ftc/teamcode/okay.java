@@ -32,8 +32,8 @@ public class okay extends OpMode {
 
     private void spinTheBois(double quickness){
         // I'm not sure if they'll all need to spin the same direction.
-        blockServoL1.setPower(quickness);
-        blockServoL2.setPower(quickness);
+        blockServoL1.setPower(-quickness);
+        blockServoL2.setPower(-quickness);
         blockServoR1.setPower(quickness);
         blockServoR2.setPower(quickness);
     }

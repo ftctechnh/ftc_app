@@ -178,13 +178,13 @@ public class Hardware750 {
 
     public void rotateBlockGrabber(Direction direction){
         if (direction == Direction.IN){
-            blockServoL1.setPower(1);
-            blockServoL2.setPower(1);
+            blockServoL1.setPower(-1);
+            blockServoL2.setPower(-1);
             blockServoR1.setPower(1);
             blockServoR2.setPower(1);
         } else if (direction == Direction.OUT){
-            blockServoL1.setPower(-1);
-            blockServoL2.setPower(-1);
+            blockServoL1.setPower(1);
+            blockServoL2.setPower(1);
             blockServoR1.setPower(-1);
             blockServoR2.setPower(-1);
         } else if (direction == Direction.STOP){
