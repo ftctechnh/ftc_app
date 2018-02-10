@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
 
-@Autonomous(name="FJSKLADFSDKLJFKLSDGHZSDJKLG bgk;hasd;j", group="Linear Auto")
+@Autonomous(name="The thing I use to test stuff.", group="Linear Auto")
 
 public class Thing extends AutoMaster {
     @Override
