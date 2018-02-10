@@ -31,7 +31,7 @@ public class redFront_NoGyro_George extends Autonomous_General_George {
 //reseting gyro sensor
 
         //toggleLight(false);
-        light.setPower(0.5);
+        //light.setPower(0.5);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
@@ -106,7 +106,7 @@ public class redFront_NoGyro_George extends Autonomous_General_George {
             }
         }
 
-        light.setPower(0);
+        //light.setPower(0);
 
         encoderMecanumDrive(0.9, -25, -25, 5000, 0);
 

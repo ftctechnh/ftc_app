@@ -37,7 +37,7 @@ public class redBack_NoGyro_George extends Autonomous_General_George {
 
 
         //toggleLight(true);
-        light.setPower(1);
+        //light.setPower(1);
         startTracking();
         telemetry.addData("", "READY TO TRACK");
         telemetry.update();
@@ -68,7 +68,7 @@ public class redBack_NoGyro_George extends Autonomous_General_George {
         sleep(1000);
         readColor();
         sleep(1500);
-        light.setPower(0);
+        //light.setPower(0);
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
 

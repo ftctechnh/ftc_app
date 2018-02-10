@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
 @Autonomous(group = "Blue Front No Gyro George")
-@Disabled
+//@Disabled
 public class blueFront_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
@@ -22,7 +22,7 @@ public class blueFront_George extends Autonomous_General_George {
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
-        initiate(true);
+        initiate(false);
         sleep(500);
         telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
@@ -30,8 +30,8 @@ public class blueFront_George extends Autonomous_General_George {
         waitForStart();
 //reseting gyro sensor
 
-        //toggleLight(false);
-        light.setPower(0.5);
+        toggleLight(true);
+        //light.setPower(0.5);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
@@ -41,27 +41,29 @@ public class blueFront_George extends Autonomous_General_George {
 
 
         }
-        //toggleLight(false);
+        toggleLight(false);
 
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
         sleep(250);
 
-        moveUpGlyph(0.5);
+        moveUpGlyph(0.9);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        moveDownGlyph(0.9);
-        sleep(200);
+        moveDownGlyph(1.5);
+        sleep(250);
         closeGlyphManipulator();
-        sleep(200);
-        moveUpGlyph(0.7);
-        jewelServo.setPosition(1);
+        sleep(250);
+        moveUpGlyph(1.5);
+        sleep(250);
+        jewelServo.setPosition(0.9);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
         readColor();
         sleep(1500);
+        //light.setPower(0);
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
         //returnImage();
@@ -83,7 +85,7 @@ public class blueFront_George extends Autonomous_General_George {
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(0);
             sleep(1500);
-            jewelServo.setPosition(1);
+            jewelServo.setPosition(0.9);
             sleep(500);
             readColor();
             sleep(1000);
@@ -106,23 +108,23 @@ public class blueFront_George extends Autonomous_General_George {
             }
         }
 
-        light.setPower(0);
+        //light.setPower(0);
 
         //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
         encoderMecanumDrive(0.3,15,15,5000,0);
         sleep(250);
 
-        encoderTurn(-87, 0.5);
-        sleep(1000);
+        gyroTurnREV(0.8, -87);
+        sleep(100);
 
         encoderMecanumDrive(0.9, -60, -60, 5000, 0);
 
 
-        if (vuMark == RelicRecoveryVuMark.CENTER){
+        if (vuMark == RelicRecoveryVuMark.LEFT){
             encoderMecanumDrive(0.9, 68, 68, 5000, 0);
         }
-        else if (vuMark == RelicRecoveryVuMark.LEFT){
+        else if (vuMark == RelicRecoveryVuMark.CENTER){
             encoderMecanumDrive(0.9, 83, 83, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
@@ -131,14 +133,14 @@ public class blueFront_George extends Autonomous_General_George {
         }
 
         else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            encoderMecanumDrive(0.9, 72, 72, 5000, 0);
+            encoderMecanumDrive(0.9, 83, 83, 5000, 0);
 
         }
 
 
         sleep(1000);
 
-        encoderTurn(90, 0.5);
+        gyroTurnREV(0.8, 90);
 
         sleep(750);
 

@@ -21,22 +21,22 @@ public class redFront_George extends Autonomous_General_George {
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
-        initiate(true);
-        telemetry.addData("--->", "Gyro Calibrating");
-        telemetry.update();
-        gyro.calibrate();
+        initiate(false);
+//        telemetry.addData("--->", "Gyro Calibrating");
+//        telemetry.update();
+//        gyro.calibrate();
 
 
-        telemetry.addData("---->","Gyro Calibrated. Good to go...");
+        telemetry.addData("---->","Good to go...");
         telemetry.update();
 
         waitForStart();
 
-        gyro.resetZAxisIntegrator();
+//        gyro.resetZAxisIntegrator();
 
 
         toggleLight(true);
-        light.setPower(1);
+        //light.setPower(1);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
@@ -49,62 +49,96 @@ public class redFront_George extends Autonomous_General_George {
         toggleLight(false);
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
+        sleep(250);
 
-        jewelServo.setPosition(0);
+        moveUpGlyph(0.9);//change distances once we lower the stress of the glyph manipulator
+        sleep(250);
+        middleGlyphManipulator();
+        sleep(250);
+        moveDownGlyph(1.5);
+        sleep(250);
+        closeGlyphManipulator();
+        sleep(250);
+        moveUpGlyph(1.5);
+        sleep(250);
+        jewelServo.setPosition(0.9);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
         readColor();
-        light.setPower(0);
-        //returnImage();
-        closeGlyphManipulator();
-        sleep(1000);
-        //moveUpGlyph(2.54);
-        sleep(1000);
+        sleep(1500);
+        //light.setPower(0);
+        telemetry.addData("right jewel color", ballColor);
+        telemetry.update();
 
         if(ballColor.equals("blue")){
             encoderMecanumDrive(0.9, 10,10,5000,0);
-            jewelServo.setPosition(0.9);
+            jewelServo.setPosition(0);
             sleep(1000);
-            encoderMecanumDrive(0.9,-65,-65,5000,0);
+            encoderMecanumDrive(0.9,-35,-35,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("red")){
-            encoderMecanumDrive(0.9,-65,-65,5000,0);
-            jewelServo.setPosition(0.9);
+            encoderMecanumDrive(0.9,-25,-25,5000,0);
+            jewelServo.setPosition(0);
             sleep(1000);
         }
         else{
+            jewelServo.setPosition(0);
+            sleep(1500);
             jewelServo.setPosition(0.9);
+            sleep(500);
+            readColor();
             sleep(1000);
-            encoderMecanumDrive(0.9,-65,-65,5000,0);
+            if(ballColor.equals("blue")){
+                encoderMecanumDrive(0.9, 10,10,5000,0);
+                jewelServo.setPosition(0);
+                sleep(1000);
+                encoderMecanumDrive(0.9,-35,-35,5000,0);
+                sleep(1000);
+            }
+            else if(ballColor.equals("red")){
+                encoderMecanumDrive(0.9,-25,-25,5000,0);
+                jewelServo.setPosition(0);
+                sleep(1000);
+            }
+            else {
+                jewelServo.setPosition(0);
+                sleep(1000);
+                encoderMecanumDrive(0.9, -25, -25, 5000, 0);
+            }
         }
 
-
-        gyroTurn(0.3,-90);
-        sleep(1000);
+        encoderMecanumDrive(0.9, -21, -21, 5000, 0);
+        gyroTurnREV(0.9,-90);
+        sleep(400);
+        encoderMecanumDrive(0.4,-75,-75,5000,0);
 
         if (vuMark == RelicRecoveryVuMark.CENTER){
-            simpleRangeDistance(59, 0.6, rsBuffer);
-        }
-        else if (vuMark == RelicRecoveryVuMark.LEFT){
-            simpleRangeDistance(76, 0.6, rsBuffer);
+            encoderMecanumDrive(0.9, 57, 57, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            simpleRangeDistance(42, 0.6, rsBuffer);
+            encoderMecanumDrive(0.9, 37, 37, 5000, 0);
+        }
+        else if (vuMark == RelicRecoveryVuMark.LEFT){
+            encoderMecanumDrive(0.9, 77, 77, 5000, 0);
+
+        }
+
+        else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
+            encoderMecanumDrive(0.9, 57, 57, 5000, 0);
 
         }
 
 
         sleep(1000);
 
-        gyroTurn(0.3,180);
+        gyroTurnREV(0.3,180);
+        sleep(250);
 
-        sleep(750);
-
-        openGlyphManipulator();
-
-        encoderMecanumDrive(0.3,30,30,1000,0);
+        encoderMecanumDrive(0.3,35,35,1000,0);
+        sleep(500);
+        encoderMecanumDrive(0.3, -5, -5, 1000, 0);
     }
 
 

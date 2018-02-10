@@ -17,7 +17,7 @@ import java.sql.Time;
 
 
 @TeleOp(name = "gyroTestOp")
-//@Disabled
+@Disabled
 public class gyroTestOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for

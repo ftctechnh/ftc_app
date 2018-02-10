@@ -261,8 +261,11 @@ public void Glyph() {
 
         read the gamepad values and put into variables
          */
+        double threshold = 0.2;
         float leftY_gp1 = (-gamepad1.left_stick_y);
         float rightY_gp1 = (-gamepad1.right_stick_y);
+        telemetry.addData("right power input", rightY_gp1);
+        telemetry.addData("left power input", leftY_gp1);
         //
         //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
         // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
@@ -284,17 +287,17 @@ public void Glyph() {
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
-        } else if (gamepad1.left_stick_x != 0 || gamepad1.left_stick_y != 0 || gamepad1.right_stick_x !=0 || gamepad1.right_stick_y!=0){
+        } else if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
         else{
-            leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             leftWheelMotorFront.setPower(0);
             leftWheelMotorBack.setPower(0);
             rightWheelMotorFront.setPower(0);

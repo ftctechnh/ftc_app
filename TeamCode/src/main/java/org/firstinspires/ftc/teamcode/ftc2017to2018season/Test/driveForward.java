@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Inspiration Team on 2/3/2018.
  */
 @Autonomous(name = "driveForward")
+@Disabled
 public class driveForward extends LinearOpMode {
     DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;

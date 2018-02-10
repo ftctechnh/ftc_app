@@ -18,6 +18,6 @@ public class rangeTest extends Autonomous_General_George {
 
         waitForStart();
 
-        simpleRangeDistance(50,0.5,4);
+        //simpleRangeDistance(50,0.5,4);
     }
 }

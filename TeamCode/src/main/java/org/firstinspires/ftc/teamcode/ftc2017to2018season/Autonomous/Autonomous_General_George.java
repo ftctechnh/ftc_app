@@ -56,7 +56,7 @@ import java.util.Locale;
 @Disabled
 public class Autonomous_General_George extends LinearOpMode {
     //we attached a light to make it easier to see the target
-    public DcMotor light;
+    //public DcMotor light;
     public double waitTime = 3;
 
     public static double RobotWidth = 41.91;
@@ -82,7 +82,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public Servo glyphServoLeft;
 
     public ModernRoboticsI2cGyro gyro;
-    public ModernRoboticsI2cRangeSensor rangeSensor;
+    //public ModernRoboticsI2cRangeSensor rangeSensor;
     public ModernRoboticsI2cColorSensor colorSensor;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
@@ -119,7 +119,7 @@ public class Autonomous_General_George extends LinearOpMode {
         back_left_motor = hardwareMap.dcMotor.get("leftWheelMotorBack");
         back_right_motor = hardwareMap.dcMotor.get("rightWheelMotorBack");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
-        light = hardwareMap.dcMotor.get("light");
+        //light = hardwareMap.dcMotor.get("light");
         idle();
 
         jewelServo = hardwareMap.servo.get("jewelServo");
@@ -145,7 +145,7 @@ public class Autonomous_General_George extends LinearOpMode {
             revGyro.initialize(parameters);
             composeTelemetry();
         }
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");
         //rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
 
@@ -175,8 +175,9 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.update();
 
         jewelServo.setPosition(0);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //allOpenGlyphManipulator();
-        light.setPower(0);
+        //light.setPower(0);
     }
 
 
@@ -893,7 +894,15 @@ public class Autonomous_General_George extends LinearOpMode {
 
     }
     public double getSteerREV(double error , double PCoeff){
-        return Range.clip(error * PCoeff, -1 , 1);
+        if((error*PCoeff) > 0) {
+            return Range.clip(error * PCoeff, 0.2, 1);
+        }
+        else if(error*PCoeff< 0){
+            return Range.clip(error * PCoeff, -1, -0.2);
+        }
+        else{
+            return 0;
+        }
     }
 
 
@@ -1056,7 +1065,7 @@ public class Autonomous_General_George extends LinearOpMode {
         glyphServoRight.setPosition(0.1);
         glyphServoLeft.setPosition(0.8);
     }
-    public void moveDownGlyph(double cm) {
+    public void moveUpGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
@@ -1081,7 +1090,7 @@ public class Autonomous_General_George extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-    public void moveUpGlyph(double cm) {
+    public void moveDownGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
@@ -1113,11 +1122,9 @@ public class Autonomous_General_George extends LinearOpMode {
      * uses range sensor by reading distance and then driving that distance
         int leftFrontPos;
         int rightFrontPos;
-     * @param distInCM
-     * @param speed
-     * @param rsBufffer
+
      */
-    public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
+    /*public void simpleRangeDistance(double distInCM, double speed, double rsBufffer) {
 
 
             double distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
@@ -1126,7 +1133,7 @@ public class Autonomous_General_George extends LinearOpMode {
             distancetoDrive = (distInCM) - rangeSensor.getDistance(DistanceUnit.CM);
             encoderMecanumDrive(0.1,distancetoDrive,distancetoDrive,500,0);
 
-    }
+    }*/
 
 
 

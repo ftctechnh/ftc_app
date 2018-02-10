@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -25,6 +26,7 @@ import java.util.Locale;
  * Created by Team Inspiration on 1/21/18.
  */
 @Autonomous(name = "Curious George REV Gyro Test")
+@Disabled
 public class revGyroTestFinal extends LinearOpMode {
 
 

@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
  * Created by Inspiration Team on 1/7/2018.
  */
 @Autonomous(name = "revGyro")
+
 public class revGyro extends Autonomous_General_George {
 
 
