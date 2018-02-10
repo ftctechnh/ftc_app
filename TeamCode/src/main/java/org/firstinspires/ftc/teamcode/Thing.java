@@ -30,7 +30,11 @@ public class Thing extends AutoMaster {
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
         while (opModeIsActive()) {
-            telemetry.addData("Red: ", robot.color.red());
+            if (!robot.digitalTouch.getState()) {
+                telemetry.addData("The thing: ", "is not pressed");
+            } else {
+                telemetry.addData("The thing: ", "is pressed");
+            }
             telemetry.update();
         }
     }

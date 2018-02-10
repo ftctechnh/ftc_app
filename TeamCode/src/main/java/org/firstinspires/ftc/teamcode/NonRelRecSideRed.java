@@ -9,6 +9,7 @@ public class NonRelRecSideRed extends AutoMaster {
         VuforiaPlagiarism vu = new VuforiaPlagiarism();
         VuforiaPlagiarism.type typee = VuforiaPlagiarism.type.ERROR;
         double vufSpeed = 0;
+        typee = vu.getVuf(hardwareMap);
 
         robot.init(hardwareMap);
         waitForStart();
@@ -28,7 +29,6 @@ public class NonRelRecSideRed extends AutoMaster {
         }
 
         //Finds Vuforia
-        typee = vu.getVuf(hardwareMap);
         if (typee == VuforiaPlagiarism.type.RIGHT) {
             vufSpeed = 0.5;
         } else if (typee == VuforiaPlagiarism.type.CENTER) {
@@ -49,14 +49,10 @@ public class NonRelRecSideRed extends AutoMaster {
         }
 
         //Final approach
-        encode(10, 0.5, MoveType.STRAIGHT); // Ryan is dumb for making me do this for no reason
-        //TODO: replace gripper code with code that works haha
-        /*
-        wait(500);
-        robot.gripper.setPower(-0.25);
-        wait(1000);
-        robot.gripper.setPower(0);
-        */
+        encode(10, 0.5, MoveType.STRAIGHT);
+
+        //Place block
+
         encode(7, -0.25, MoveType.STRAIGHT);
     }
 }
