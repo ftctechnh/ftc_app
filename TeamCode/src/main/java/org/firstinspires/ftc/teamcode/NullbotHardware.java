@@ -515,8 +515,8 @@ public class NullbotHardware {
     }
 
     public void raiseIntake() {
-        leftIntakeFlipper.setPosition(0.7 - (1.0/3.0) - (32.0/270.0));
-        rightIntakeFlipper.setPosition((1.0/3.0) + (32.0/270.0));
+        leftIntakeFlipper.setPosition(0.7 - (1.0/3.0) - (27.0/270.0));
+        rightIntakeFlipper.setPosition((1.0/3.0) + (27.0/270.0));
         intakeTarget = IntakeTarget.RAISED;
     }
 
