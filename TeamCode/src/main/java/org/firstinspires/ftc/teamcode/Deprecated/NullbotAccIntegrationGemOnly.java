@@ -8,7 +8,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.teamcode.NullbotHardware;
-import org.firstinspires.ftc.teamcode.PixyCam;
 
 /**
  * Created by guberti on 10/17/2017.
