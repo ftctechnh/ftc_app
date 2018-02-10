@@ -20,7 +20,7 @@ public class NullbotGemOnlyAutonomous extends LinearOpMode {
     final int MS_TO_GATHER_PIXYCAM_DATA = 3000;
     final double CERTAINTY_THRESHOLD = 10;
 
-    int directionMultiplier;
+    public int directionMultiplier;
 
     PixyCam pixyCam;
     PixyCam.Block redBall;

@@ -3,13 +3,13 @@ package org.firstinspires.ftc.teamcode.Demos;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.CompleteAutonomous;
+import org.firstinspires.ftc.teamcode.CompleteOldAutonomous;
 
 /**
  * Created by guberti on 1/16/2018.
  */
 @TeleOp(name="Test Ultrasonic Sensors", group="Demo")
-public class ReadUltrasonicSensors extends CompleteAutonomous {
+public class ReadUltrasonicSensors extends CompleteOldAutonomous {
 
     @Override
     public void runOpMode() {

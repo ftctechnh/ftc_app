@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.CompBlueGemOnlyAutonomous;
-
 import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
 /**

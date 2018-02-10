@@ -1,16 +1,19 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.AutonomousEndpoints.SoloGlyph;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.Alliance;
+import org.firstinspires.ftc.teamcode.NavigatorAutonomous;
+import org.firstinspires.ftc.teamcode.StartingPosition;
 
 import java.util.HashMap;
 
 /**
  * Created by guberti on 12/2/2017.
  */
-@Autonomous(name="Ultrasonic FRONT RED autonomous", group="Autonomous")
-public class CompRedFrontFull extends NavigatorAutonomous {
+@Autonomous(name="Solo-glyph FRONT RED autonomous", group="B_SingleGlyph")
+public class CompRedFront extends NavigatorAutonomous {
 
     @Override
     public void runOpMode() {

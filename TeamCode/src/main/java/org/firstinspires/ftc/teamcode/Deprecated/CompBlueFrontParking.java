@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.Deprecated;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.CompBlueGemOnlyAutonomous;
-
 /**
  * Created by guberti on 11/4/2017.
  */

@@ -3,14 +3,14 @@ package org.firstinspires.ftc.teamcode.Demos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.CompleteAutonomous;
+import org.firstinspires.ftc.teamcode.CompleteOldAutonomous;
 import org.firstinspires.ftc.teamcode.NullbotHardware;
 
 /**
  * Created by guberti on 1/9/2018.
  */
 @Autonomous(name="DEMO Drive off stone", group="Demo")
-public class TestDrivingOffBalancingStone extends CompleteAutonomous {
+public class TestDrivingOffBalancingStone extends CompleteOldAutonomous {
     NullbotHardware robot = new NullbotHardware();
 
     @Override
