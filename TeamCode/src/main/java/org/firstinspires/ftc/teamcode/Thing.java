@@ -29,14 +29,13 @@ public class Thing extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        while (opModeIsActive()) {
-            if (!robot.digitalTouch.getState()) {
-                telemetry.addData("The thing: ", "is not pressed");
-            } else {
-                telemetry.addData("The thing: ", "is pressed");
-            }
-            telemetry.update();
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() < (startTime + 2000)) {
+            encodeInd(0.15, MoveType.STRAIGHT);
+            robot.rotateBlockGrabber(Hardware750.Direction.OUT);
         }
+        robot.setAllDriveMotors(0);
+        robot.rotateBlockGrabber(Hardware750.Direction.STOP);
+        encode(4, -0.25, MoveType.STRAIGHT);
     }
 }
-

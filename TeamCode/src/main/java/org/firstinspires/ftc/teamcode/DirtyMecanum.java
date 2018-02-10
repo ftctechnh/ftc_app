@@ -119,7 +119,7 @@ public class DirtyMecanum extends OpMode
             robot.frDrive.setPower(speed);
             robot.rlDrive.setPower(-1 * speed);
             robot.rrDrive.setPower(speed);
-        } else if (gamepad1.a){
+        } /*else if (gamepad1.a){
             robot.flDrive.setPower(speed);
         } else if (gamepad1.b){
             robot.frDrive.setPower(speed);
@@ -127,9 +127,16 @@ public class DirtyMecanum extends OpMode
             robot.rlDrive.setPower(speed);
         } else if (gamepad1.y){
             robot.rrDrive.setPower(speed);
-        } else {
+        } else */{
 
             robot.setAllDriveMotors(0);
+        }
+        if (gamepad1.a){
+            robot.rotateBlockGrabber(Hardware750.Direction.IN);
+        } else if (gamepad1.b) {
+            robot.rotateBlockGrabber(Hardware750.Direction.OUT);
+        } else {
+            robot.rotateBlockGrabber(Hardware750.Direction.STOP);
         }
 
 
