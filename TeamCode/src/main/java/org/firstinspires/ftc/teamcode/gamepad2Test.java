@@ -31,6 +31,9 @@ public class gamepad2Test extends LinearOpMode {
     private Servo jewelArm;
 
     private int mode;
+    private int grabberTop;
+    private int grabberMiddle;
+    private int grabberRest;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,6 +54,9 @@ public class gamepad2Test extends LinearOpMode {
         jewelArm = hardwareMap.get(Servo.class, "JA");
 
         mode = 0;
+        grabberTop = 3500;
+        grabberMiddle = 1500;
+        grabberRest= 0;
 
         waitForStart();
 
@@ -64,13 +70,66 @@ public class gamepad2Test extends LinearOpMode {
                 mode = 2;
             }
 
+
+
             if (mode == 1) {
                 //Code for grabber only mapping here
+                if (gamepad2.dpad_up) {
+                    while(grabMotor.getCurrentPosition() < grabberTop){
+                        grabMotor.setPower(0.7);
+                    }
 
+                }
+                telemetry.addData("Encoder value: ", grabMotor.getCurrentPosition());
+                if (gamepad2.dpad_down) {
+                    while(grabMotor.getCurrentPosition() < grabberMiddle){
+                        grabMotor.setPower(0.7);
+                    }
+                }
+                telemetry.addData("Encoder value: ", grabMotor.getCurrentPosition());
+
+                if (gamepad2.a) {
+                    while(grabMotor.getCurrentPosition() < grabberRest){
+                        grabMotor.setPower(0.7);
+                    }
+                }
+
+                if (gamepad2.dpad_left) {
+                    grabTopLeft.setPosition(0.4);
+                    grabTopRight.setPosition(0.35);
+                }
+                if (gamepad2.dpad_right) {
+                    grabTopLeft.setPosition(0.6);
+                    grabTopRight.setPosition(0.35);
+                }
+
+                if (gamepad2.left_bumper) {
+                    grabBottomLeft.setPosition(0.25);
+                    grabBottomRight.setPosition(0.55);
+                }
+                if (gamepad2.right_bumper) {
+                    grabBottomLeft.setPosition(0.6);
+                    grabBottomRight.setPosition(0.4);
+                }
             }
 
             if (mode == 2) {
                 //Code for endgame here (relic and jewel)
+                if (gamepad2.a) {
+                    relicMotor.setPower(0);
+                }
+
+                if (gamepad2.dpad_up) {
+                    relicMotor.setPower(gamepad2.right_trigger);
+                }
+
+                if (gamepad2.dpad_down) {
+                    relicMotor.setPower(-gamepad2.right_trigger);
+                }
+
+
+
+                telemetry.addData("Encoder value (relic dc): ", grabMotor.getCurrentPosition());
             }
 
 //            //Grabber
@@ -137,7 +196,7 @@ public class gamepad2Test extends LinearOpMode {
 //                relicGrab.setPosition(0);
 //            }
 
-
+        telemetry.update();
 
         }
     }
