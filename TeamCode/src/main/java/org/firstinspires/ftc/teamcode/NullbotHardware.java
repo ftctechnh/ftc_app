@@ -262,7 +262,7 @@ public class NullbotHardware {
      */
     public final void sleep(long milliseconds) {
         try {
-            Thread.sleep(milliseconds);
+            Thread.sleep(Math.abs(milliseconds));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -478,7 +478,7 @@ public class NullbotHardware {
     public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;*/
 
     public double relicFipperPosition = 0.33;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 5.0/6.0;
+    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 0.79;
     public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 0.12;
 
     public void extendFlipper() {
