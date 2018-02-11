@@ -29,16 +29,9 @@ public class Thing extends AutoMaster {
         robot.init(hardwareMap);
         waitForStart();
         telemetry.addData("skatin fast,", "eatin' ass");
-        long startTime = System.currentTimeMillis();
-        robot.rotateBlockGrabber(Hardware750.Direction.OUT);
-        robot.rlDrive.setPower(-0.15);
-        robot.rrDrive.setPower(-0.15);
-        robot.flDrive.setPower(-0.15);
-        robot.frDrive.setPower(-0.15);
-        while (System.currentTimeMillis() < (startTime + 2000)) {
-
+        while (opModeIsActive()) {
+            encode(19, 0.5, MoveType.ROT);
+            encode(19, -0.5, MoveType.ROT);
         }
-        robot.setAllDriveMotors(0);
-        robot.rotateBlockGrabber(Hardware750.Direction.STOP);
     }
 }

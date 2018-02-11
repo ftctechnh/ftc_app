@@ -17,15 +17,18 @@ public class RelRecSideBlue extends AutoMaster {
 
         //Knocks off the right ball
         robot.arm.setPosition(CSENSOR_ARM_DOWN);
+        robot.rotateBlockGrabber(Hardware750.Direction.STOP);
         wait(750);
         if (robot.color.red() > 0) {
-            encode(5, 0.25, MoveType.ROT);
+            encode(3, 0.2, MoveType.STRAIGHT);
             robot.arm.setPosition(CSENSOR_ARM_UP);
-            encode(5, -0.25, MoveType.ROT);
+            robot.rotateBlockGrabber(Hardware750.Direction.STOP);
+            encode(3, -0.2, MoveType.STRAIGHT);
         } else {
-            encode(5, -0.25, MoveType.ROT);
+            encode(3, -0.2, MoveType.STRAIGHT);
             robot.arm.setPosition(CSENSOR_ARM_UP);
-            encode(5, 0.25, MoveType.ROT);
+            robot.rotateBlockGrabber(Hardware750.Direction.STOP);
+            encode(3, 0.2, MoveType.STRAIGHT);
         }
 
         //Finds Vuforia
@@ -61,6 +64,7 @@ public class RelRecSideBlue extends AutoMaster {
         }
         robot.setAllDriveMotors(0);
         robot.rotateBlockGrabber(Hardware750.Direction.STOP);
-        encode(4, 0.2, MoveType.STRAIGHT);
+        encode(5.5, 1, MoveType.STRAIGHT);
+        encode(3, -1, MoveType.STRAIGHT);
     }
 }
