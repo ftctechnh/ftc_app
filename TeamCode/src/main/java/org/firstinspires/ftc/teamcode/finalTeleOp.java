@@ -7,12 +7,18 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 /**
- * Created by anshnanda on 03/02/18.
+ * Created by anshnanda and shivaan on 11/02/18.
  */
 
-@TeleOp(name = "gamepad 2 test", group = "test")
+@TeleOp(name = "final tele op", group = "final")
 
-public class gamepad2Test extends LinearOpMode {
+public class finalTeleOp extends LinearOpMode{
+
+    //Gamepad 1
+    private DcMotor motorFrontLeft;
+    private DcMotor motorBackLeft;
+    private DcMotor motorFrontRight;
+    private DcMotor motorBackRight;
 
     //GamePad 2
     //Grabber
@@ -40,8 +46,17 @@ public class gamepad2Test extends LinearOpMode {
     private double relicGrabPosition;
     private double relicGrabDelta;
 
+
+
     @Override
     public void runOpMode() throws InterruptedException {
+        motorFrontLeft = hardwareMap.dcMotor.get("MC1M1");
+        motorBackLeft = hardwareMap.dcMotor.get("MC1M2");
+        motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
+        motorBackRight = hardwareMap.dcMotor.get("MC2M2");
+        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+
 
         //Grabber
         grabMotor = hardwareMap.get(DcMotor.class, "GDC");
@@ -71,7 +86,28 @@ public class gamepad2Test extends LinearOpMode {
 
         waitForStart();
 
-        while (opModeIsActive()) {
+        while (opModeIsActive()){
+
+            //GamePad 1
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            telemetry.addData("r = ", r);
+            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            telemetry.addData("robotAngle = ", robotAngle);
+            double rightX = gamepad1.right_stick_x;
+            telemetry.addData("rightX = ", rightX);
+            final double v1 = r * Math.cos(robotAngle) + rightX;
+            telemetry.addData("front left power = ", v1);
+            final double v2 = r * Math.sin(robotAngle) - rightX;
+            telemetry.addData("front right power = ", v2);
+            final double v3 = r * Math.sin(robotAngle) + rightX;
+            telemetry.addData("back left power = ", v3);
+            final double v4 = r * Math.cos(robotAngle) - rightX;
+            telemetry.addData("back right power = ", v4);
+
+            motorFrontLeft.setPower(v1);
+            motorFrontRight.setPower(v2);
+            motorBackLeft.setPower(v3);
+            motorBackRight.setPower(v4);
 
 
             if (gamepad2.x) {
@@ -83,46 +119,77 @@ public class gamepad2Test extends LinearOpMode {
 
 
 
+
+
+
+
+
+
+
+
+            //Gamepad 2
             if (mode == 1) {
                 //Code for grabber only mapping here
-                if (gamepad2.dpad_up) {
-                    while(grabMotor.getCurrentPosition() < grabberTop){
-                        grabMotor.setPower(0.7);
-                    }
-                    grabMotor.setPower(0);
+                if (gamepad2.dpad_up && !gamepad2.dpad_down){
+                    grabMotor.setPower(gamepad2.right_trigger);
                 }
 
-                if (gamepad2.dpad_down) {
-                    while(grabMotor.getCurrentPosition() < grabberMiddle){
-                        grabMotor.setPower(0.7);
-                    }
-                    grabMotor.setPower(0);
+                if (!gamepad2.dpad_up && gamepad2.dpad_down) {
+                    grabMotor.setPower(-gamepad2.right_trigger);
                 }
 
+                if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+                    grabMotor.setPower(0);
+                }
+//                if (gamepad2.dpad_up) {
+//                    while(grabMotor.getCurrentPosition() < grabberTop){
+//                        grabMotor.setPower(0.7);
+//                    }
+//                    grabMotor.setPower(0);
+//                }
+//
+//                if (gamepad2.dpad_down) {
+//                    while(grabMotor.getCurrentPosition() > grabberMiddle){
+//                        grabMotor.setPower(0.7);
+//                    }
+//                    grabMotor.setPower(0);
+//                }
+//
+//
+//                if (gamepad2.a) {
+//
+//                    while(grabMotor.getCurrentPosition() > grabberRest){
+//                        grabMotor.setPower(0.7);
+//                    }
+//                    grabMotor.setPower(0);
+//                }
 
+                //GT CLOSE
                 if (gamepad2.a) {
-                    while(grabMotor.getCurrentPosition() < grabberRest){
-                        grabMotor.setPower(0.7);
-                    }
-                    grabMotor.setPower(0);
+                    grabTopLeft.setPosition(0.3);
+                    grabTopRight.setPosition(0.4);
                 }
-
-                if (gamepad2.dpad_left) {
+                //GT OPEN
+                if (gamepad2.b) {
                     grabTopLeft.setPosition(0.4);
-                    grabTopRight.setPosition(0.35);
+                    grabTopRight.setPosition(0.3);
                 }
-                if (gamepad2.dpad_right) {
-                    grabTopLeft.setPosition(0.6);
-                    grabTopRight.setPosition(0.35);
-                }
-
+                //GB OPEN
                 if (gamepad2.left_bumper) {
                     grabBottomLeft.setPosition(0.25);
                     grabBottomRight.setPosition(0.55);
                 }
+                //GB CLOSE
                 if (gamepad2.right_bumper) {
-                    grabBottomLeft.setPosition(0.6);
+                    grabBottomLeft.setPosition(0.4);
                     grabBottomRight.setPosition(0.4);
+                }
+
+                if (gamepad2.left_stick_button){
+                    grabBottomLeft.setPosition(0.8);
+                }
+                if (gamepad2.right_stick_button){
+                    grabBottomRight.setPosition(0.1);
                 }
 
 
@@ -133,9 +200,6 @@ public class gamepad2Test extends LinearOpMode {
                 //Code for endgame here (relic and jewel)
 
                 //Relic DC Motor
-                if (gamepad2.dpad_left) {
-                    relicMotor.setPower(0);
-                }
 
                 if (gamepad2.dpad_up) {
                     relicMotor.setPower(0.7);
@@ -144,6 +208,11 @@ public class gamepad2Test extends LinearOpMode {
                 if (gamepad2.dpad_down) {
                     relicMotor.setPower(-0.7);
                 }
+
+                if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+                    grabMotor.setPower(0);
+                }
+
 
                 //Relic Arm Servo Manual Mode
                 if (gamepad2.a) {
@@ -184,69 +253,6 @@ public class gamepad2Test extends LinearOpMode {
                 telemetry.addData("Relic DC Encoder: ", grabMotor.getCurrentPosition());
             }
 
-//            //Grabber
-//            if (gamepad2.right_stick_button){
-//                grabMotor.setPower(gamepad2.right_trigger);
-//            }
-//
-//            if (gamepad2.left_stick_button){
-//                grabMotor.setPower(-gamepad2.right_trigger);
-//            }
-//
-//            if (!gamepad2.right_stick_button && !gamepad2.left_stick_button){
-//                grabMotor.setPower(0);
-//            }
-//
-//            //Outter grabber
-//            if (gamepad2.left_bumper){
-//                grabTopLeft.setPosition(1);
-//                grabTopRight.setPosition(1);
-//            }
-//
-//            if (gamepad2.right_bumper){
-//                grabTopLeft.setPosition(0);
-//                grabTopRight.setPosition(0);
-//            }
-//
-//            //Inner grabber
-//
-//
-//
-//
-//
-//
-//            //Ball
-//            if (gamepad2.dpad_down){
-//                jewelArm.setPosition(1);
-//            }
-//
-//            if (gamepad2.dpad_up){
-//                jewelArm.setPosition(0);
-//            }
-//
-//
-//            //Relic
-//            if (gamepad2.a){
-//                relicMotor.setPower(gamepad2.left_trigger);
-//            }
-//
-//            if (gamepad2.b){
-//                relicMotor.setPower(-gamepad2.left_trigger);
-//            }
-//
-//            if (!gamepad2.a && !gamepad2.b){
-//                relicMotor.setPower(0);
-//            }
-//
-//            if (gamepad2.x){
-//                relicArm.setPosition(1);
-//                relicGrab.setPosition(1);
-//            }
-//
-//            if (gamepad2.y){
-//                relicArm.setPosition(0);
-//                relicGrab.setPosition(0);
-//            }
 
             telemetry.update();
 

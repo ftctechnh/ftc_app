@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by shivaan on 10/02/18.
@@ -36,13 +35,16 @@ public class grabTest extends LinearOpMode {
             telemetry.update();
 
             if (gamepad1.dpad_up && !gamepad1.dpad_down){
-                grabMotor.setPower(0.2);
+                grabMotor.setPower(gamepad1.right_trigger);
             }
 
             if (!gamepad1.dpad_up && gamepad1.dpad_down) {
-                grabMotor.setPower(-0.2);
+                grabMotor.setPower(-gamepad1.right_trigger);
             }
 
+            if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+                grabMotor.setPower(0);
+            }
         }
     }
 }
