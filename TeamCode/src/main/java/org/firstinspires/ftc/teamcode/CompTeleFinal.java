@@ -66,7 +66,6 @@ public class CompTeleFinal extends OpMode
         else
         {
             newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
-            telemetry.addData("Fine move lift", null);
         }
 
         if (gamepad2.left_bumper)
@@ -74,12 +73,14 @@ public class CompTeleFinal extends OpMode
         else if (gamepad2.left_trigger > .2)
             newRobot.fineAdjDoors(.16f);
 
-        if (gamepad2.right_bumper)
+        if (gamepad2.right_bumper) //Retracts tail in
         {
             if (newRobot.getTailRelease().getCurrentPosition() > 150)
                 newRobot.getTailRelease().setPower(-1);
+            else
+                newRobot.getTailRelease().setPower(0);
         }
-        else if (gamepad2.right_trigger > .2f)
+        else if (gamepad2.right_trigger > .2f) //Extends tail
             newRobot.getTailRelease().setPower(1);
         else
             newRobot.getTailRelease().setPower(0f);
@@ -89,11 +90,11 @@ public class CompTeleFinal extends OpMode
         else if (gamepad2.b)
             newRobot.fineAdjGrabber(-.028f);
 
-        if (gamepad2.x)
+        if (gamepad2.x) // angle grabber towards front.
         {
             newRobot.fineAdjGrabberRotator(.004f);
         }
-        else if (gamepad2.y)
+        else if (gamepad2.y) //Angle the grabber rotator away from the front
         {
             newRobot.fineAdjGrabberRotator(-.004f);
         }
