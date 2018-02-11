@@ -2,7 +2,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 /**
  * Created by anshnanda on 04/02/18.
@@ -14,45 +17,44 @@ public class servoValueTest extends LinearOpMode{
 
     //GamePad 2
     //Grabber
-//    private DcMotor grabMotor;
-    private Servo grabTopLeft;
-    private Servo grabTopRight;
-    private Servo grabBottomLeft;
-    private Servo grabBottomRight;
+    //private DcMotor grabMotor;
+    //private Servo grabTopLeft;
+    //private Servo grabTopRight;
+    //private Servo grabBottomLeft;
+    //private Servo grabBottomRight;
 
     //Relic
-//    private DcMotor relicMotor;
-//    private Servo relicServo1;
-//    private Servo relicServo2;
-//
-//    //Ball
-//    private Servo knockerServo;
-//    private Servo armServo;
+    private DcMotor relicDC;
+    private Servo relicArm;
+    private Servo relicGrab;
+
+    //Ball
+    private Servo jewelArm;
+    private Servo jewelKnock;
 
     @Override
     public void runOpMode() throws InterruptedException{
 
         //Grabber
-//        grabMotor = hardwareMap.get(DcMotor.class, "grabMotor");
-        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
-        grabTopRight = hardwareMap.get(Servo.class, "GTR");
-        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
-        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
+        //grabMotor = hardwareMap.get(DcMotor.class, "grabMotor");
+        //grabTopLeft = hardwareMap.get(Servo.class, "GTL");
+        //grabTopRight = hardwareMap.get(Servo.class, "GTR");
+        //grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
+        //grabBottomRight = hardwareMap.get(Servo.class, "GBR");
 
-//        //Relic
-//        relicMotor = hardwareMap.get(DcMotor.class,"relic");
-//        relicServo1 = hardwareMap.get(Servo.class, "relicServo1");
-//        relicServo2 = hardwareMap.get(Servo.class, "relicServo2");
-//
-//        //Ball
-//        knockerServo = hardwareMap.get(Servo.class, "knockerServo");
-//        armServo = hardwareMap.get(Servo.class, "armServo");
+        //Relic
+        relicDC = hardwareMap.get(DcMotor.class,"RDC");
+        relicArm = hardwareMap.get(Servo.class, "RA");
+        relicGrab = hardwareMap.get(Servo.class, "RG");
 
-        char currServo = ' ';
-        double leftpos = 0;
-        double rightpos = 0;
-        double uleftpos = 0;
-        double urightpos = 0;
+        //JEWEL
+        jewelArm = hardwareMap.get(Servo.class, "JA");
+        jewelKnock = hardwareMap.get(Servo.class, "JK");
+
+        telemetry.clear();
+
+        relicGrab.setPosition(0.4);
+        relicArm.setPosition(0.1);
 
         waitForStart();
 
@@ -99,50 +101,36 @@ public class servoValueTest extends LinearOpMode{
 //                    telemetry.addData("Servo in use : ", "none");
 //            }
 
-            grabTopLeft.setPosition(uleftpos);
-            grabTopRight.setPosition(urightpos);
-
-            if(gamepad1.right_bumper){
-                uleftpos = uleftpos + 0.05;
-            }
-            if(gamepad1.left_bumper){
-                uleftpos = uleftpos - 0.05;
-            }
-            if(gamepad1.right_stick_button){
-                urightpos = urightpos + 0.05;
-            }
-            if(gamepad1.left_stick_button){
-                urightpos = urightpos - 0.05;
+            if (gamepad1.a){
+                relicArm.setPosition(relicArm.getPosition() + 0.1);
             }
 
-            grabBottomLeft.setPosition(leftpos);
-            grabBottomRight.setPosition(rightpos);
-
-            if(gamepad1.dpad_right){
-                leftpos = leftpos + 0.05;
-            }
-            if(gamepad1.dpad_left){
-                leftpos = leftpos - 0.05;
-            }
-            if(gamepad1.dpad_up){
-                rightpos = rightpos + 0.05;
-            }
-            if(gamepad1.dpad_down){
-                rightpos = rightpos - 0.05;
+            if (gamepad1.b){
+                relicArm.setPosition(relicArm.getPosition() - 0.1);
             }
 
+            if (gamepad1.x){
+                relicGrab.setPosition(relicArm.getPosition() + 0.1);
+            }
 
+            if (gamepad1.y){
+                relicGrab.setPosition(relicArm.getPosition() - 0.1);
+            }
 
+            if (gamepad1.dpad_up && !gamepad1.dpad_down){
+                relicDC.setPower(gamepad1.right_trigger);
+            }
 
-            //grabBottomLeft.setPosition(0.6);
-//            grabTopRight.setPosition(0);
-//            grabTopLeft.setPosition(0);
+            if (!gamepad1.dpad_up && gamepad1.dpad_down){
+                relicDC.setPower(-gamepad1.right_trigger);
+            }
 
-            telemetry.addData("Grab bottom right ", grabBottomRight.getPosition());
-            telemetry.addData("Grab top right ", grabTopRight.getPosition());
-            telemetry.addData("grab bottom left ", grabBottomLeft.getPosition());
-            telemetry.addData("grab top left", grabTopLeft.getPosition());
-            telemetry.addData("Position : " , gamepad1.right_trigger);
+            if (!gamepad1.dpad_up && !gamepad1.dpad_down){
+                relicDC.setPower(0);
+            }
+
+            telemetry.addData("Relic arm: ", relicArm.getPosition());
+            telemetry.addData("relic grabber: ", relicGrab.getPosition());
             telemetry.update();
             idle();
 
