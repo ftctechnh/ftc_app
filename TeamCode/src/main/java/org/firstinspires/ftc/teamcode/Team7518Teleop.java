@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,42 +11,55 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "7518Teleop", group = "7518")
 public class Team7518Teleop extends LinearOpMode{
 
-    private DcMotor  leftFront, rightFront, leftRear, rightRear, absoluteRight, absoluteLeft, yAxis, rotationMotor;
-    private Servo colorSensorServo;
-    DigitalChannel upperLimitSwitch;
-    DigitalChannel lowerLimitSwitch;
-    DeviceInterfaceModule cdi;
+    private DcMotor  leftFront, rightFront, leftRear, rightRear, rightLift, leftLift, rightIntake, leftIntake;
+    private Servo rightFlip, leftFlip, colorSensorServo;
+
+    boolean lift;
 
     @Override
     public void runOpMode() throws InterruptedException
     {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
         //Declare hardwareMap here, example below
         leftFront = hardwareMap.dcMotor.get("leftFront");
         rightFront = hardwareMap.dcMotor.get("rightFront");
         leftRear = hardwareMap.dcMotor.get("leftRear");
         rightRear = hardwareMap.dcMotor.get("rightRear");
-        absoluteRight=hardwareMap.dcMotor.get("absoluteRight");
-        absoluteLeft=hardwareMap.dcMotor.get("absoluteLeft");
-        yAxis=hardwareMap.dcMotor.get("yAxis");
-        rotationMotor=hardwareMap.dcMotor.get("rotationMotor");
-        colorSensorServo=hardwareMap.servo.get("colorSensorServo");
-        upperLimitSwitch=hardwareMap.digitalChannel.get("upperLimitSwitch");
-        lowerLimitSwitch=hardwareMap.digitalChannel.get("lowerLimitSwitch");
-        cdi=hardwareMap.deviceInterfaceModule.get("Device Interface Module 1");
+        rightLift = hardwareMap.dcMotor.get("rightLift");
+        leftLift = hardwareMap.dcMotor.get("leftLift");
+        rightIntake = hardwareMap.dcMotor.get("rightIntake");
+        leftIntake = hardwareMap.dcMotor.get("leftIntake");
+
+        rightFlip = hardwareMap.servo.get("rightFlip");
+        leftFlip = hardwareMap.servo.get("leftFlip");
+        colorSensorServo = hardwareMap.servo.get("colorSensorServo");
+
 
         //Include any code to run only once here
         waitForStart();
 
+        leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftLift.setPower(.25);
+
+        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightLift.setPower(.25);
+
+        int flipIteration = 0;
+
 
         while(opModeIsActive())
         {
-                colorSensorServo.setPosition(1); //lock color sensor arm so it doesn't fall over as it is not in use during TeleOp
 
 
 
-                        //Include commands to run on controller presses here
+
+                       //Keep Color Sensor Upright
+                        colorSensorServo.setPosition(0);
+
 
                         //Mecanum Drive
                         double h = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
@@ -61,53 +75,109 @@ public class Team7518Teleop extends LinearOpMode{
                         leftRear.setPower(leftRearPower);
                         rightRear.setPower(-rightRearPower);
 
-                        //green wheels
+
+                        //Intake Wheels
                         if (gamepad1.left_trigger>0){
-                            absoluteLeft.setPower(gamepad1.left_trigger);
-                            absoluteRight.setPower(-gamepad1.left_trigger);
+                            leftIntake.setPower(gamepad1.left_trigger);
+                            rightIntake.setPower(-gamepad1.left_trigger);
                         }//end if
                         else if (gamepad1.right_trigger>0){
-                            absoluteLeft.setPower(-gamepad1.right_trigger);
-                            absoluteRight.setPower(gamepad1.right_trigger);
+                            leftIntake.setPower(-gamepad1.right_trigger);
+                            rightIntake.setPower(gamepad1.right_trigger);
                         }//end else if
                         else{
-                            absoluteLeft.setPower(0);
-                            absoluteRight.setPower(0);
+                            leftIntake.setPower(0);
+                            rightIntake.setPower(0);
                         }//end else
-           
 
 
-
-                        //rotation motor
-                        if (gamepad1.dpad_up)
-                            rotationMotor.setPower(.25);
-                        else if (gamepad1.dpad_down)
-                            rotationMotor.setPower(-.25);
-                        else
-                            rotationMotor.setPower(0);
-
-
-
-            telemetry.addData("bottom", upperLimitSwitch.getState()); //get limit switch state (upper)
-            for (int i = 0; i < 8; i++){
-                telemetry.addData("Digital " + i, cdi.getDigitalChannelState(i));
-            }
-          boolean up = upperLimitSwitch.getState();
-          boolean down = lowerLimitSwitch.getState();
-
-                        //y-axis motor. We need to add another condition for the if statement: read the limit switch
-                        if ((gamepad1.y) && !up)  //and the upper limit switch is not pressed. this way if the upper limit switch is pressed we can't go up any more
-                            yAxis.setPower(.75);
-                        else if ((gamepad1.x) && !down) //and the lower limit switch is not pressed. this way if the lower limit switch is pressed we can't go down any more
-                            yAxis.setPower(-.75);
-                        else
-                            yAxis.setPower(0);
-
+                        //lift
+                        if(gamepad1.left_bumper==true){
+                            lift=false;
+                            sleep(250);
+                        }//end if
+                        else if (gamepad1.right_bumper==true){
+                            lift=true;
+                            sleep(250);
+                        }//end else if
+                        setLift(lift);
+                        telemetry.addData("rightLift:\t", rightLift.getCurrentPosition());
+                        telemetry.addData("leftLift:\t", leftLift.getCurrentPosition());
                         telemetry.update();
-                        idle();
+
+//                        while(gamepad1.dpad_up){
+//                            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                            rightLift.setPower(.25);
+//                        }
+//                        while(gamepad1.dpad_down){
+//                            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                            rightLift.setPower(-.25);
+//                        }
+//                        while(gamepad1.dpad_right){
+//                            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                            leftLift.setPower(.25);
+//                        }
+//                        while(gamepad1.dpad_left){
+//                            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//                            leftLift.setPower(-.25);
+//                        }
+//                        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                        leftLift.setPower(.25);
+//
+//                        rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//                        rightLift.setPower(.25);
+
+
+                        //manual flipper adjustment
+                        if(gamepad1.x){
+                            setFlip(0);
+                            flipIteration=0;
+                        }//end if
+                        else if(gamepad1.y){
+                            setFlip(0.64);
+                            flipIteration=2;
+                        }//end else if
+                        else if(gamepad1.a){
+                            setFlip(0.75);
+                            flipIteration=1;
+                        }//end else if
+
+
+                        //automatic flipper adjustment
+                        if(gamepad1.b && flipIteration==0){
+                            setFlip(0.75);
+                            flipIteration++;
+                        }//end if
+                        else if (gamepad1.b && flipIteration==1){
+                            setFlip(0.64);
+                            flipIteration++;
+                        }//end else if
+                        else if (gamepad1.b && flipIteration==2){
+                            setFlip(0);
+                            flipIteration = 0;
+                        }//end else if
 
         }//end while(opModeIsActive)
 
 
     }//end runOpMode
+
+    public void setFlip(double position){
+        rightFlip.setPosition(1-position);
+        leftFlip.setPosition(position);
+        sleep(250);
+    }//end setFlip
+
+    public void setLift(boolean up){
+        if(up){
+            rightLift.setTargetPosition(-11000);
+            leftLift.setTargetPosition(-11000);
+        }//end if
+        else{
+            rightLift.setTargetPosition(0);
+            leftLift.setTargetPosition(0);
+        }//end else
+    }//end setLift
+
+
 }//end class

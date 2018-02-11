@@ -70,7 +70,7 @@ public class Team7518AutonomousRed extends LinearOpMode {
 
             if (count==1)
                 timer.reset();
-            while(opModeIsActive() && rColor>0){
+            while(opModeIsActive() && rColor>bColor){
                 sleep(500);
                 while(opModeIsActive() && timer.seconds()<1.5){
                     leftFront.setPower(speed);
@@ -85,7 +85,7 @@ public class Team7518AutonomousRed extends LinearOpMode {
                 rightRear.setPower(0);
 
             }//end while
-            while(opModeIsActive() && bColor>0) {
+            while(opModeIsActive() && bColor>rColor) {
                 sleep(500);
                 while(opModeIsActive() && timer.seconds()<1.5){
                     leftFront.setPower(-speed);
