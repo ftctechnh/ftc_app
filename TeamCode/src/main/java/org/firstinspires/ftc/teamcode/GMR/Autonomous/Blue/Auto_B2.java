@@ -160,7 +160,7 @@ public class Auto_B2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5 )) {
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5)) {
                         state = States.STRAFE;
                         completedStates += "OFFSTONE - ";
                     }

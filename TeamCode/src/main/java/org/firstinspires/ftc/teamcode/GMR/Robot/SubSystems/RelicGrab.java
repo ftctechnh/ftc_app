@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Created by pston on 12/14/2017
  */
 
-public class RelicGrab {
+public class  RelicGrab {
 
     private DcMotor relicLift;
     private Servo relicTilt;

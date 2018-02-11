@@ -109,6 +109,7 @@ public class Robot {
         leftColor.setPosition(0.85);
     }
 
+
     public int rawUltrasonic() {
         return rangeSensor.rawUltrasonic();
     }
