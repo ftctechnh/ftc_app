@@ -65,7 +65,7 @@ public class Robot {
     private VuforiaLocalizer.Parameters parameters;
 
 
-    public Robot (HardwareMap hardwareMap, Telemetry telemetry) {
+    public Robot (HardwareMap hardwareMap, Telemetry telemetry, Boolean enableVuforia) {
 
         gyro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         leftFront = hardwareMap.dcMotor.get("leftfront");
@@ -100,8 +100,7 @@ public class Robot {
 
         relicGrab = new RelicGrab(relicLift, relicTilt, relicClamp);
 
-        vision = new Vision(vuforia, parameters, relicTrackables, relicTemplate);
-
+        if(enableVuforia){vision = new Vision(vuforia, parameters, relicTrackables, relicTemplate);}
     }
 
     public void setServos() {
