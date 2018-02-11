@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.GMR.Autonomous.States;
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
+import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
 /**
@@ -57,6 +58,8 @@ public class Auto_R1 extends OpMode {
     private double currentSeconds;
     private double goalSeconds;
 
+    private int keyColumn;
+
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -85,6 +88,8 @@ public class Auto_R1 extends OpMode {
 
         isFinished = false;
 
+        keyColumn = 0;
+
         //Starts the timer WORKING
         time.reset();
 
@@ -98,9 +103,15 @@ public class Auto_R1 extends OpMode {
                     state = States.GRAB;
                     break;
                 case GRAB:
-                    state = States.ARMDOWN;
-                    goalSeconds = currentSeconds += 0.4;
+                    state = States.SCAN;
+                    goalSeconds = currentSeconds += 5.0;
                     break;
+                case SCAN:
+                    keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
+                    if(keyColumn != 0 || currentSeconds >= goalSeconds){
+                        goalSeconds = currentSeconds += 0.4;
+                        state = States.ARMDOWN;
+                    } break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);

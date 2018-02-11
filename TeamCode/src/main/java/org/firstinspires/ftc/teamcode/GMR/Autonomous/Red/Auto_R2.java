@@ -54,6 +54,8 @@ public class Auto_R2 extends OpMode {
 
     private float endUltrasonic;
 
+    private int keyColumn;
+
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -80,6 +82,8 @@ public class Auto_R2 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
+        keyColumn = 0;
+
         time.reset();
 
     }
@@ -94,9 +98,15 @@ public class Auto_R2 extends OpMode {
                     time.reset();
                     break;
                 case GRAB:
-                    state = States.ARMDOWN;
-                    goalSeconds = currentSeconds + 0.4;
+                    state = States.SCAN;
+                    goalSeconds = currentSeconds + 5.0;
                     break;
+                case SCAN:
+                    keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
+                    if(keyColumn != 0 || currentSeconds >= goalSeconds){
+                        state = States.ARMDOWN;
+                        goalSeconds = currentSeconds += 0.5;
+                    } break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
@@ -120,7 +130,7 @@ public class Auto_R2 extends OpMode {
                         telemetry.update();
 
                         state = States.RIGHTKNOCK;
-                    } time.reset();
+                    }
                     break;
 
                 case LEFTKNOCK:
@@ -181,7 +191,6 @@ public class Auto_R2 extends OpMode {
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
-
                     } break;
                 case DRIVEBOX:
                     if(!isFinished){
