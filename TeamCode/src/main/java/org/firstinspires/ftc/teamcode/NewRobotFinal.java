@@ -35,16 +35,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 public class NewRobotFinal
 {
-    final int liftLevels[] = {0, 250, 769, 1500, 1538};
-    private short currentLvl = 0;
+    //This block is currently used for our lift
+    final int liftLevels[] = {0, 250, 769, 1500, 1538}; //Specifies heights at where the robot should stop
+    private short currentLvl = 0;//0 represents the first level and init at first level
     private short liftTargetPos;
     private short liftDir;
-    private final short UP_L = 1;
-    private final short DOWN_L = 2;
-    private final short STOP_L = 0;
-    final double defaultTurnPow = .5;
+    private final static short UP_L = 1; //We use final shorts with variable names to help with specifying direction as we use numbers
+    private final static short DOWN_L = 2;
+    private final static short STOP_L = 0;
+
+    final double defaultTurnPow = .5; //Default powers for motors
     final double defaultDrivePow = .75;
     final double defaultLiftSpeed = 1;
+    public double balPow = .25;
 
     private ColorSensor floorColorSens;
     private ColorSensor rightWingColorSens;
@@ -64,11 +67,13 @@ public class NewRobotFinal
     private Servo grabber;
     private Servo grabberRotator;
 
-    public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key used for Vuforia.
+    //Vuforia variables
+    public static final String VUFORIA_KEY = "AepnoMf/////AAAAGWsPSj5vh0WQpMc0OEApBsgbZVwduMSeEZFjXMlBPW7WiZRgwGXsOTLiGMxL4qjU0MYpZitHxs4E/nOUHseMX+SW0oopu6BnWL3cAqFIptSrdMpy4y6yB3N6l+FPcGFZxzadvRoiOfAuYIu5QMHSeulfQ1XApDhBQ79lNUXv9LZ7bngBI3BEYVB+slmTGHKhRW2NI5fUtF+rLRiou4ZcNir2eZh0OxEW4zAnTnciVB2R28yyHkYz8xJtACm+4heWLdpw/zf66LRpvTGLwkASci7ZkGJp4NrG5Of4C0b3+iq/EeEmX2PiY5lq2fkUE0dejdztmkFWYBW7c/Y+bIYGER/3gt6I8UhAB78cR7p2mOaY"; //Key for Vuforia; need it for it to work
     private VuforiaLocalizer vuforia;
     private RelicRecoveryVuMark vuMark;
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
+
     private static final double rotatorDown =0.91;
     private static final double rotatorUp = 0.00;
     private double rotatorPos = rotatorDown;
@@ -84,18 +89,17 @@ public class NewRobotFinal
     DigitalChannel bottomLiftMagSwitch;
     DigitalChannel topLiftMagSwitch;
 
-    private boolean touchedBottomMag = false;
+    private boolean touchedBottomMag = false; //used for stopping lift w/ mag switch
 
-    private LinearOpMode opMode;
+    private LinearOpMode opMode;//used to stop autonomous functions when stopped
 
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
     public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
     public final float wheelCircIn = (float) (Math.PI * 4); //Circumference of wheels used
-    public final float wheelCircCm = (float) (10.168 * Math.PI);
-    public double balPow = .25;
+    public final float wheelCircCm = (float) (10.168 * Math.PI);//Converted to CM
 
-    public NewRobotFinal(HardwareMap hardwareMap)
+    public NewRobotFinal(HardwareMap hardwareMap) //Initialize or set values to instance variables or give each variable a speicfic sensor/motor
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
         imu = (hardwareMap.get(BNO055IMU.class, "imu"));
@@ -108,23 +112,21 @@ public class NewRobotFinal
         wingMotor = hardwareMap.get(DcMotorImplEx.class, "wingMotor");
 
         leftDoorWall = hardwareMap.servo.get("leftDoorWall");
-        leftDoorWall.scaleRange(.56f, .91f);
+        leftDoorWall.scaleRange(.56f, .91f); //Set range of whhere the servo goes
         rightDoorWall = hardwareMap.servo.get("rightDoorWall");
         rightDoorWall.scaleRange(.11f, .51f);
 
         wingTouchSens = hardwareMap.digitalChannel.get("wingTouchSens");
         bottomLiftMagSwitch = hardwareMap.digitalChannel.get("bottomLiftMagSwitch");
         topLiftMagSwitch = hardwareMap.digitalChannel.get("topLiftMagSwitch");
-        wingTouchSens.setMode(DigitalChannel.Mode.INPUT);
+        wingTouchSens.setMode(DigitalChannel.Mode.INPUT);//Have those touch sensors take in info
         bottomLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
         topLiftMagSwitch.setMode(DigitalChannel.Mode.INPUT);
 
         resetDriveEncoders();
-        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //When power is 0, motor will brake to stop drag
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
-        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -135,8 +137,8 @@ public class NewRobotFinal
     public void initEndGame(HardwareMap hardwareMap)
     {
         tailRelease = hardwareMap.get(DcMotorImplEx.class, "tailRelease");
-        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        tailRelease.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER); //Resets and stop motor
+        tailRelease.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER); //Use this after stop and reset encoders to make it run
         tailRelease.setZeroPowerBehavior(DcMotorImplEx.ZeroPowerBehavior.BRAKE);
         tailRelease.setDirection(DcMotorImplEx.Direction.FORWARD);
 
@@ -147,7 +149,7 @@ public class NewRobotFinal
         //grabber.setPosition(grabberPos);
     }
 
-    public void initAutoFunctions(HardwareMap hardwareMap, LinearOpMode opMode_IN)
+    public void initAutoFunctions(HardwareMap hardwareMap, LinearOpMode opMode_IN) //Initializes and gives variables values needed for autonomous
     {
         opMode = opMode_IN;
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -185,7 +187,7 @@ public class NewRobotFinal
         leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
 
-    public void initIMU()
+    public void initIMU() //Gives IMU of what to read
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -197,8 +199,8 @@ public class NewRobotFinal
         imu.initialize(parameters);
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
-
-
+    //Since we use angles and gravity to get angles, we refresh the values by setting them equal to imu's values
+    //Use this wehn using IMU as the values won't change
     public void updateIMUValues()
     {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -211,6 +213,7 @@ public class NewRobotFinal
         double y = gravity.yAccel;
         double z = gravity.zAccel;
         double angle = Math.atan(y/z) * 180/Math.PI;
+        //Find angle perpendicular to gravity
 
         if(angle> 4)
         {
@@ -230,8 +233,10 @@ public class NewRobotFinal
 
     public char getGlyphCipher()
     {
+        //Get current value or picture of what vuforia is seeing
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
+        //Check if it equals a glyph
         if (vuMark.equals(RelicRecoveryVuMark.CENTER))
             return 'c';
         else if (vuMark.equals(RelicRecoveryVuMark.LEFT))
@@ -242,10 +247,12 @@ public class NewRobotFinal
             return '?';
     }
 
+    //Use this as a reference http://www.tadpolewebworks.com/web/atomic/images/H02-HSV.jpg
     public float getHueValue(ColorSensor in_ColorSens)
     {
         float hsvValues[] = {0F, 0F, 0F};
         Color.RGBToHSV(in_ColorSens.red(), in_ColorSens.green(), in_ColorSens.blue(), hsvValues);
+        //Above function is used to conert from RGB to HSV
         return hsvValues[0];
     }
 
@@ -291,9 +298,9 @@ public class NewRobotFinal
 
     private void resetDriveEncoders()
     {
-        driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);//Also stops the motor
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
-        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);//Allows motor to run after stop
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
@@ -301,23 +308,26 @@ public class NewRobotFinal
     {
         stopDriveMotors();
         float encTarget = neverrestEncCountsPerRev / wheelCircIn * inches;
+        //We calc encoder target by calculating how many encoder counts are needed per inch
 
         float absPow = (float) Math.abs(pow);
         resetDriveEncoders();
 
-        if (pow < 0)
+        if (pow < 0) //Check pow is neg
         {
-            inches *= -1;
+            inches *= -1; //negate inches
         }
-        if (inches < 0)
-        {
-            driveMotorsAuto(-absPow, -absPow);
 
+        if (inches < 0)//Check if distance is negative
+        {
+            driveMotorsAuto(-absPow, -absPow); //set power to go backwards
+            //Have it check when it reaches encoder target
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget && !opMode.isStopRequested())
             {
 
             }
-        } else
+        }
+        else
         {
             driveMotorsAuto(absPow, absPow);
 
