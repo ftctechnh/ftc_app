@@ -163,51 +163,7 @@ public class WLP_RR_Grabber {
         pastStateB = gamepad2.b;
 
 
-        // If the button is pressed and its not being ignored then the power changes
-  /*      if (gamepad2.a && !ignoreButtonA) {
-
-            if (spinIn) {
-                spinnerLeft.setPower(stopPower);
-                spinnerRight.setPower(stopPower);
-                spinIn = false;
-
-            } else {  //(if spinning out or stopped)
-                spinnerLeft.setPower(spinnerPower);
-                spinnerRight.setPower(-spinnerPower);
-                spinOut = false;
-                spinIn = true;
-
-            }
-
-            ignoreButtonA = true;
-
-        }
-*/
-
-        //When button is not pressed, ignore variable is set to false cuz idgaf
- /*       if (!gamepad2.b) {
-            ignoreButtonB = false;
-        }
-
-        // If the button is pressed and its not being ignored then the power changes
-        if (gamepad2.b && !ignoreButtonB) {
-            if (spinOut) {
-                spinnerLeft.setPower(stopPower);
-                spinnerRight.setPower(stopPower);
-                spinOut = false;
-            } else { // if (spinning in or stopped)
-                spinnerLeft.setPower(-spinnerPower);
-                spinnerRight.setPower(spinnerPower);
-                spinIn = false;
-                spinOut = true;
-            }
-            ignoreButtonB = true;
-
-
-        }
-
-*/
-
+ 
 
 
         //Slider: RT - up, LT - down
