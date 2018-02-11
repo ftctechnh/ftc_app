@@ -91,10 +91,12 @@ public class Auto_R2 extends OpMode {
             switch(state){
                 case TIME:
                     state = States.GRAB;
+                    time.reset();
                     break;
                 case GRAB:
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds + 0.4;
+                    break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
@@ -118,14 +120,15 @@ public class Auto_R2 extends OpMode {
                         telemetry.update();
 
                         state = States.RIGHTKNOCK;
-                    } break;
+                    } time.reset();
+                    break;
 
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;
-                        time.reset();
+                        goalSeconds = currentSeconds += 1.0;
                     } break;
 
                 case RIGHTKNOCK:
@@ -133,7 +136,6 @@ public class Auto_R2 extends OpMode {
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.RIGHTARMUP;
-                        goalSeconds = currentSeconds += 1.0;
                     } break;
 
                 case LEFTARMUP:
@@ -167,7 +169,7 @@ public class Auto_R2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5)) {
+                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.5)) {
                         state = States.STRAFE;
                         isFinished = false;
                     }
@@ -178,19 +180,27 @@ public class Auto_R2 extends OpMode {
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 4.5);
                     } else{
                         isFinished = false;
+                        state = States.DRIVEBOX;
+
+                    } break;
+                case DRIVEBOX:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, 1);
+                    } else{
+                        isFinished = false;
                         state = States.DROP;
                         goalSeconds = currentSeconds += 2.0;
                     } break;
                 case DROP:
-                    robot.blockLift.grab(false, 1);
-                    if (goalSeconds >= currentSeconds) {
+                    robot.blockLift.grab(true, 0);
+                    if (currentSeconds >= goalSeconds) {
                         state = States.DRIVEBACK;
                         robot.blockLift.grab(false, 0);
                     }
                     break;
                 case DRIVEBACK:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1);
                     } else{
                         isFinished = false;
                         state = States.END;

@@ -37,17 +37,19 @@ public class BlockLift {
 
     }
 
-    public void slideHeight(boolean dpadUp, boolean dpadDown, Telemetry telemetry) {
+    public void slideHeight(boolean a, boolean b, boolean y, Telemetry telemetry) {
 
-        if ((dpadUp || dpadDown) && ((dpadUp || dpadDown) != buttonPressed)) {
-            if (dpadUp && !(slidePosition > 3)) {
-                slidePosition++;
-            } else if (!(slidePosition < 1)) {
-                slidePosition--;
+        if ((a || b || y) && ((a || b || y) != buttonPressed)) {
+            if (a) {
+                slidePosition = 1;
+            } else if (b) {
+                slidePosition = 2;
+            } else if (y) {
+                slidePosition = 3;
             }
         }
 
-        buttonPressed = (dpadUp || dpadDown);
+        buttonPressed = (a || b || y);
 
         if (slidePosition == 1) {
             liftMotor.setTargetPosition(0);

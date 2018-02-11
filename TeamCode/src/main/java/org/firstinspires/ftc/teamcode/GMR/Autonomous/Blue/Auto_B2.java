@@ -86,10 +86,12 @@ public class Auto_B2 extends OpMode {
             switch(state){
                 case TIME:
                     state = States.GRAB;
+                    time.reset();
                     break;
                 case GRAB:
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds + 0.4;
+                    break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     leftArm.setPosition(goalPosition);
@@ -113,14 +115,14 @@ public class Auto_B2 extends OpMode {
                         telemetry.update();
 
                         state = States.RIGHTKNOCK;
-                    } break;
+                    } time.reset();
+                    break;
 
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;
-                        time.reset();
                     } break;
 
                 case RIGHTKNOCK:
@@ -134,6 +136,9 @@ public class Auto_B2 extends OpMode {
                 case LEFTARMUP:
                     //Lifts arm up after knocking left ball WORKING
                     leftArm.setPosition(0.85);
+                    telemetry.addData("currentSeconds", currentSeconds);
+                    telemetry.addData("goalSeconds", goalSeconds);
+                    telemetry.update();
                     if(currentSeconds >= goalSeconds){
                         state = States.LEFTZONE;
                     } break;
@@ -160,28 +165,26 @@ public class Auto_B2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5)) {
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.5 )) {
                         state = States.STRAFE;
                         completedStates += "OFFSTONE - ";
                     }
-
                     break;
                 case STRAFE:
                     //Turns left to face CryptoBox. WORKING
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 4.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 4.5);
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
                         completedStates += "STRAFE - ";
                     }
-
                     break;
                 case COLUMNMOVE:
-                    if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
+                    /*if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
                         state = States.DRIVEBOX;
-                        completedStates += "CLOUMNMOVE - ";
-                    }
+                        completedStates += "COLUMNMOVE - ";
+                    }*/
                     break;
                 case DRIVEBOX:
                     //Drives into CryptoBox
@@ -196,8 +199,8 @@ public class Auto_B2 extends OpMode {
 
                     break;
                 case DROP:
-                    robot.blockLift.grab(false, 1);
-                    if (goalSeconds >= currentSeconds) {
+                    robot.blockLift.grab(true, 0);
+                    if (currentSeconds >= goalSeconds) {
                         state = States.DRIVEBACK;
                         robot.blockLift.grab(false, 0);
                     }
