@@ -72,7 +72,7 @@ public class Auto_R1 extends OpMode {
 
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
-        robot = new Robot(hardwareMap, telemetry);
+        robot = new Robot(hardwareMap, telemetry, true);
 
         goalPosition = 0.5;
         position = 0;
