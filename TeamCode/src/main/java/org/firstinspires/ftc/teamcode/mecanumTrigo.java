@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
- * Created by shivaan on 08/02/18.
+ * Created by Manav on 08/02/18.
  */
 
 @TeleOp(name = "trigoDrive", group = "agroup")
@@ -25,7 +25,6 @@ public class mecanumTrigo extends LinearOpMode
         motorBackLeft = hardwareMap.dcMotor.get("MC1M2");
         motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
-
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
