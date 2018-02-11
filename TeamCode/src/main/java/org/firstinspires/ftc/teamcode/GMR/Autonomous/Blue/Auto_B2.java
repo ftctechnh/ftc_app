@@ -48,10 +48,17 @@ public class Auto_B2 extends OpMode {
     private double currentSeconds;
     private double goalSeconds;
 
+    private boolean scanInit;
+    private boolean armdownInit;
+    private boolean rightarmupInit;
+    private boolean dropInit;
+
     private String completedStates = "";
 
     private int turnRadius = 20;
     private double turnPower = 0.15;
+
+    private int keyColumn;
 
     @Override
     public void init() {
@@ -79,6 +86,13 @@ public class Auto_B2 extends OpMode {
 
         state = States.TIME;
         isFinished = false;
+
+        scanInit = true;
+        armdownInit = true;
+        rightarmupInit = true;
+        dropInit = true;
+
+        keyColumn = 0;
     }
         @Override
         public void loop(){
@@ -89,8 +103,13 @@ public class Auto_B2 extends OpMode {
                     time.reset();
                     break;
                 case GRAB:
-                    state = States.ARMDOWN;
-                    goalSeconds = currentSeconds + 0.4;
+                    goalSeconds = currentSeconds += 5;
+                case SCAN:
+                    keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);
+                    if(keyColumn != 0 || currentSeconds >= goalSeconds){
+                        state = States.ARMDOWN;
+                        goalSeconds = currentSeconds += 0.5;
+                    }
                     break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
@@ -115,7 +134,7 @@ public class Auto_B2 extends OpMode {
                         telemetry.update();
 
                         state = States.RIGHTKNOCK;
-                    } time.reset();
+                    }
                     break;
 
                 case LEFTKNOCK:
@@ -136,12 +155,8 @@ public class Auto_B2 extends OpMode {
                 case LEFTARMUP:
                     //Lifts arm up after knocking left ball WORKING
                     leftArm.setPosition(0.85);
-                    telemetry.addData("currentSeconds", currentSeconds);
-                    telemetry.addData("goalSeconds", goalSeconds);
-                    telemetry.update();
-                    if(currentSeconds >= goalSeconds){
-                        state = States.LEFTZONE;
-                    } break;
+                    state = States.LEFTZONE;
+                    break;
 
                 case RIGHTARMUP:
                     //Lifts arm up after knocking right ball WORKING
@@ -194,7 +209,7 @@ public class Auto_B2 extends OpMode {
                         isFinished = false;
                         state = States.DROP;
                         completedStates += "DRIVEBOX";
-                        goalSeconds = currentSeconds += 2;
+                        goalSeconds = currentSeconds += 2.0;
                     }
 
                     break;

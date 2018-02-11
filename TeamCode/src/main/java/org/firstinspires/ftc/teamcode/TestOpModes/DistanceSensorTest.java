@@ -26,7 +26,7 @@ public class DistanceSensorTest extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry);
+        robot = new Robot(hardwareMap, telemetry, false);
 
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
 
