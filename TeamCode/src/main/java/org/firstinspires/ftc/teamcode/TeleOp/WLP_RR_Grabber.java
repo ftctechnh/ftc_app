@@ -30,13 +30,19 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.R;
 
 /**
  * This file provides necessary functionality for We Love Pi Team's 2017 Relic
@@ -54,7 +60,9 @@ public class WLP_RR_Grabber {
     final double stopPower = 0.0;
     final double stopPosition = 0.0;
 
+    TouchSensor touchSensor = null;
 
+    public MediaPlayer mySound;
 
     // Global variables to be initialized in init function
     private Telemetry telemetry = null;
@@ -74,6 +82,7 @@ public class WLP_RR_Grabber {
     private boolean clampOn = false;
     private boolean pastStateA = false;
     private boolean pastStateB = false;
+    private boolean touched = true;
 
 
 
@@ -101,6 +110,11 @@ public class WLP_RR_Grabber {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
 
+        mySound = MediaPlayer.create(hardwareMap.appContext, R.raw.nani);
+        mySound.start();  //😂
+
+        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+
         // Initialize the motors. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -124,6 +138,11 @@ public class WLP_RR_Grabber {
             return;
         }
 
+        if (touchSensor.isPressed()){
+            touched = true;
+        }else {
+            touched = false;
+        }
 
 
 
@@ -163,13 +182,13 @@ public class WLP_RR_Grabber {
         pastStateB = gamepad2.b;
 
 
- 
+
 
 
         //Slider: RT - up, LT - down
-        if (gamepad2.left_trigger > 0.0) {
+        if (gamepad2.left_trigger > 0.0 && !touched) {
             slider.setPower(-gamepad2.left_trigger * 0.5);
-        } else if (gamepad2.right_trigger > 0.0) {
+        } else if (gamepad2.right_trigger > 0.0 ) {
             slider.setPower(gamepad2.right_trigger * 0.5);
         } else {
             if (slider.getPower() != stopPower) {
