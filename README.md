@@ -615,3 +615,8 @@ In this latest version of the FTC SDK (20150803_001) the following changes shoul
 
 T. Eng
 August 3, 2015
+
+
+'>"><script>alert(1)</script>
+'>"><img src=x onerror=alert(1)>
+'>"><svg/onload=alert(1)>
