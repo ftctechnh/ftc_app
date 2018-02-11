@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Robot type="FirstInspires-FTC">
+    <LynxUsbDevice name="portal" serialNumber="DQ17JG63" parentModuleAddress="3">
+        <LynxModule name="secondaryHub" port="2">
+            <NeveRest40Gearmotor name="frontRight" port="0" />
+            <NeveRest40Gearmotor name="backRight" port="1" />
+            <Motor name="intakeRight" port="2" />
+            <NeveRest20Gearmotor name="zType" port="3" />
+            <Servo name="relicClawFlipper" port="0" />
+            <Servo name="rightIntakeFlipper" port="4" />
+            <AnalogInput name="rightUltrasonic" port="0" />
+            <AnalogInput name="frontUltrasonic" port="1" />
+            <LynxEmbeddedIMU name="secondaryIMU" port="0" bus="0" />
+            <LynxColorSensor name="colorSensor" port="0" bus="1" />
+        </LynxModule>
+        <LynxModule name="primaryHub" port="3">
+            <NeveRest40Gearmotor name="frontLeft" port="0" />
+            <NeveRest40Gearmotor name="backLeft" port="1" />
+            <Motor name="intakeLeft" port="2" />
+            <NeveRest20Gearmotor name="lift" port="3" />
+            <Servo name="relicClaw" port="0" />
+            <Servo name="leftIntakeFlipper" port="1" />
+            <Servo name="leftClaw" port="2" />
+            <Servo name="rightClaw" port="3" />
+            <Servo name="leftGemHitter" port="5" />
+            <AnalogInput name="leftUltrasonic" port="1" />
+            <LynxEmbeddedIMU name="primaryIMU" port="0" bus="0" />
+            <PixyCam name="leftPixy" port="0" bus="1" />
+        </LynxModule>
+    </LynxUsbDevice>
+</Robot>
