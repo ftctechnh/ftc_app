@@ -24,15 +24,16 @@ public class WestFinal extends OpMode
     private int liftPos2 = -735;
     private int placeBlockPos = -20;
 
-    private double grab1Max = 0.5;
-    private double grab2Min = 0.5;
-    private double grab1Min = 0.25;
-    private double grab2Max = 0.75;
+    private double grab1Max = 0.5; //change
+    private double grab2Min = 0.3; //change
+    private double grab1Min = 0.25; //change
+    private double grab2Max = 0.75; //change
 
-    private double drop1Min = 0 ;
-    private double drop2Max = 1;
-    private double drop1Max = 0.5;
-    private double drop2Min = 0.5;
+    private double drop1Min = 0.5;
+    private double drop2Max = 0.95;
+    private double drop1Max = 1;
+    private double drop2Min = 0.43;
+
     private double placeMin = 0.5;
     private double placeMax = 1;
 
@@ -92,10 +93,10 @@ public class WestFinal extends OpMode
     @Override
     public void start() {
         moveMotor(grabber,deployedPos);
-        grab1.setPosition(0);
-        grab2.setPosition(1);
-        drop1.setPosition(1);
-        drop2.setPosition(0);
+        grab1.setPosition(grab1Max);
+        grab2.setPosition(grab1Min);
+        drop1.setPosition(drop1Min);
+        drop2.setPosition(drop2Max);
 
     }
 
@@ -172,12 +173,12 @@ public class WestFinal extends OpMode
 
     private void moveMotor(DcMotor motor,int new_encoder){
         int current = motor.getCurrentPosition();
-        double power = 0;
+        double power;
         if (current < new_encoder){
-            power = -0.2;
+            power = 0.2;
         }
         else{
-            power = 0.2;
+            power = -0.2;
         }
         motor.setTargetPosition(new_encoder);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -213,21 +214,21 @@ public class WestFinal extends OpMode
 
     public void dropBlock(boolean dropBlock){
         if (dropBlock){
-            double current1 = drop1Min;
-            double current2 = drop2Max;
-            while ((current1 < drop1Max) || (current2 < drop2Min)){
-                current1 =  (current1 < drop1Max)?current1 + interval:current1;
-                current2 = (current2 < drop2Min)?current2 - interval:current2;
-                drop1.setPosition(current1);
-                drop2.setPosition(current2);
-            }
-        }
-        else{
             double current1 = drop1Max;
             double current2 = drop2Min;
             while ((current1 > drop1Min) || (current2 < drop2Max)){
                 current1 =  (current1 > drop1Min)?current1 - interval:current1;
                 current2 = (current2 < drop2Max)?current2 + interval:current2;
+                drop1.setPosition(current1);
+                drop2.setPosition(current2);
+            }
+        }
+        else{
+            double current1 = drop1Min;
+            double current2 = drop2Max;
+            while ((current1 < drop1Max) || (current2 > drop2Min)){
+                current1 =  (current1 < drop2Max)?current1 + interval:current1;
+                current2 = (current2 > drop2Max)?current2 - interval:current2;
                 drop1.setPosition(current1);
                 drop2.setPosition(current2);
 

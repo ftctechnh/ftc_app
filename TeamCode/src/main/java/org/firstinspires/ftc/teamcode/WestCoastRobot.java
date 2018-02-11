@@ -1,44 +1,42 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by josesulaimanmanzur on 2/7/18.
  */
 
-public class WestCoastRobot extends LinearOpMode{
+public class WestCoastRobot {
     public DcMotor m1,m2,m3,m4,lift,grabber;
     public Servo grab1, grab2, drop1,drop2,place;
-    public ColorSensor cs;
 
-    private int deployedPos = -111;
-    private int placeBlockPos = 0;
-    private double deployPower = 0.2;
+    private double deployPower = 0.6;
 
     private double liftPower = 0.4;
 
-    private double grab1Max = 0.5;
-    private double grab2Min = 0.5;
-    private double grab1Min = 0.25;
-    private double grab2Max = 0.75;
+    double grab1Max = 0.2;
+    double grab2Min = 0.7;
+    double grab1Min = 0.1;
+    double grab2Max = 0.8;
 
     private double drop1Min = 0 ;
     private double drop2Max = 1;
     private double drop1Max = 0.5;
     private double drop2Min = 0.5;
 
-    private double placeMin = 0.5;
-    private double placeMax = 1;
+    private double placeMin = 0.45;
+    private double placeMax = 0.75;
+
+
 
     private double interval = 0.01;
 
 
-    public WestCoastRobot(String motor1, String motor2,String motor3,String motor4,String liftName,String grabberName,String grab1Name,String grab2Name, String drop1Name,String drop2Name,String placeName,String csName){
+    public void  make(HardwareMap hardwareMap,String motor1, String motor2,String motor3,String motor4,String liftName,String grabberName,String grab1Name,String grab2Name, String drop1Name,String drop2Name,String placeName){
         m1 = hardwareMap.get(DcMotor.class,motor1);
         m2 = hardwareMap.get(DcMotor.class,motor2);
         m3 = hardwareMap.get(DcMotor.class,motor3);
@@ -52,7 +50,7 @@ public class WestCoastRobot extends LinearOpMode{
         drop1 = hardwareMap.get(Servo.class,drop1Name);
         drop2 = hardwareMap.get(Servo.class,drop2Name);
         place = hardwareMap.get(Servo.class,placeName);
-        cs = hardwareMap.get(ColorSensor.class,csName);
+
 
     }
 
@@ -78,18 +76,20 @@ public class WestCoastRobot extends LinearOpMode{
     }
 
     public void initServo(){
-        grab1.setPosition(grab1Min);
-        grab2.setPosition(grab2Max);
+        grab1.setPosition(grab1Max);
+        grab2.setPosition(grab2Min);
         drop1.setPosition(drop1Min);
         drop2.setPosition(drop2Max);
+
+
     }
 
     public void setUpEncoders(){
-        this.m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       // this.m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //this.m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        this.m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //this.m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //this.m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         this.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -107,8 +107,8 @@ public class WestCoastRobot extends LinearOpMode{
         this.m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.m2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        double p1 = (encoderPos1 > 0)? power:-power;
-        double p2 = (encoderPos2 > 0)? power:-power;
+        double p1 = (encoderPos1 > m1.getCurrentPosition())? power:-power;
+        double p2 = (encoderPos2 > m2.getCurrentPosition())? power:-power;
 
         while (m1.isBusy() || m2.isBusy()){
             setMotorPower(false,p1,p2,p1,p2);
@@ -136,10 +136,10 @@ public class WestCoastRobot extends LinearOpMode{
 
         double power = 0;
         if (liftingPos > lift.getCurrentPosition()){
-            power = liftPower;
+            power = -liftPower;
         }
         else{
-            power = -liftPower;
+            power = liftPower;
         }
 
         while (lift.isBusy()){
@@ -151,42 +151,37 @@ public class WestCoastRobot extends LinearOpMode{
     public void collectBlock(boolean deploy){
         double power;
         if (deploy){
-            power = deployPower;
-            grabber.setTargetPosition(deployedPos);
+            power = -deployPower;
         }
         else{
-            power = -deployPower;
-            grabber.setTargetPosition(placeBlockPos);
+            power = deployPower;
+
         }
 
-        grabber.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (grabber.isBusy()){
-            grabber.setPower(power);
-        }
+        grabber.setPower(power);
 
-        grabber.setPower(0);
 
 
     }
 
     public void openServos(boolean open){
         if (open){
-            double current1 = grab1Max;
-            double current2 = grab2Min;
-            while ((current1 > grab1Min) || (current2 < grab2Max)){
-                current1 = (current1 > grab1Min)? current1 - interval:current1;
-                current2 = (current2 < grab2Max)? current2 + interval:current2;
+            double current1 = grab1Min;
+            double current2 = grab2Max;
+
+            while ((current1 < grab1Max) || (current2 > grab2Min)){
+                current1 = (current1 < grab1Max)? current1 + interval:current1;
+                current2 = (current2 > grab2Min)? current2 - interval:current2;
                 grab1.setPosition(current1);
                 grab2.setPosition(current2);
             }
         }
         else{
-            double current1 = grab1Min;
-            double current2 = grab2Max;
-
-            while ((current1 < grab1Max) || (current2 > grab2Max)){
-                current1 = (current1 < grab1Max)? current1 + interval:current1;
-                current2 = (current2 > grab2Max)? current2 - interval:current2;
+            double current1 = grab1Max;
+            double current2 = grab2Min;
+            while ((current1 > grab1Min) || (current2 < grab2Max)){
+                current1 = (current1 > grab1Min)? current1 - interval:current1;
+                current2 = (current2 < grab2Max)? current2 + interval:current2;
                 grab1.setPosition(current1);
                 grab2.setPosition(current2);
             }
@@ -197,9 +192,9 @@ public class WestCoastRobot extends LinearOpMode{
         if (dropBlock){
             double current1 = drop1Min;
             double current2 = drop2Max;
-            while ((current1 < drop1Max) || (current2 < drop2Min)){
+            while ((current1 < drop1Max) || (current2 > drop2Min)){
                 current1 =  (current1 < drop1Max)?current1 + interval:current1;
-                current2 = (current2 < drop2Min)?current2 - interval:current2;
+                current2 = (current2 > drop2Min)?current2 - interval:current2;
                 drop1.setPosition(current1);
                 drop2.setPosition(current2);
             }
@@ -218,15 +213,28 @@ public class WestCoastRobot extends LinearOpMode{
     }
 
     public void placeFirstBlock(){
-        place.setPosition(placeMax);
-        sleep(500);
         place.setPosition(placeMin);
+        try{
+            Thread.sleep(50);
+        }catch(InterruptedException exception){
+
+        }
+        place.setPosition(placeMax);
     }
 
-    @Override
-    public void runOpMode(){
+    public void assistBlock(){
+        place.setPosition(placeMin + 0.1);
+        try{
+            Thread.sleep(50);
+        }catch(InterruptedException exception){
 
+        }
+        place.setPosition(placeMax);
     }
+
+
+
+
 
 
 

@@ -28,15 +28,14 @@ public class WestAutonomous1 extends OpMode
 {
 
     private DcMotor m1, m2;
-    private Servo drop1,drop2,arm;
-    private ColorSensor cs;
+    private Servo drop1,drop2;
+
 
 
     private double drop1Min =0.5 ;
     private double drop2Max = 0.5;
     private double interval = 0.01;
 
-    private double extendedArm = 0.5;
 
 
 
@@ -77,9 +76,7 @@ public class WestAutonomous1 extends OpMode
 
         drop1 = hardwareMap.get(Servo.class, "Drop1");
         drop2 = hardwareMap.get(Servo.class, "Drop2");
-        arm = hardwareMap.get(Servo.class,"Arm");
 
-        cs  =hardwareMap.get(ColorSensor.class,"Color_Sensor");
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -113,30 +110,7 @@ public class WestAutonomous1 extends OpMode
      */
     @Override
     public void start() {
-        arm.setPosition(extendedArm);
         boolean done = false;
-
-        while (!done) {
-            double l = cs.alpha();
-            double[] colors = {cs.red(), cs.green(), cs.blue()};
-
-            if (l >= 2) {
-                if ((colors[0] >= 2) && (colors[1] <= 5) && (colors[2] <= 5)){
-                    rotate(true);
-                    rotate(false);
-                    done = true;
-                }
-                else if ((colors[0] <= 5) && (colors[1] <= 5) && (colors[2] >= 2)){
-                    rotate(false);
-                    rotate(true);
-                    done = true;
-                }
-
-            }
-        }
-
-        arm.setPosition(0);
-        done = false;
 
         while (!done){
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
