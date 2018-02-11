@@ -75,9 +75,12 @@ public class CompTeleFinal extends OpMode
             newRobot.fineAdjDoors(.16f);
 
         if (gamepad2.right_bumper)
-            newRobot.getTailRelease().setPower(-1);//release
+        {
+            if (newRobot.getTailRelease().getCurrentPosition() > 150)
+                newRobot.getTailRelease().setPower(-1);
+        }
         else if (gamepad2.right_trigger > .2f)
-            newRobot.getTailRelease().setPower(1);//retract
+            newRobot.getTailRelease().setPower(1);
         else
             newRobot.getTailRelease().setPower(0f);
 
