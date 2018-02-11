@@ -42,8 +42,8 @@ public class Auto_B1 extends OpMode {
     private double position;
     private double goalPosition;
 
-
-
+    private int turnRadius = 20;
+    private double turnPower = 0.15;
 
     private ElapsedTime time = new ElapsedTime();
 
@@ -91,19 +91,12 @@ public class Auto_B1 extends OpMode {
                     //Starts the timer
                     state = States.GRAB;
                     stageCheck += "Time - ";
+                    time.reset();
                     break;
                 case GRAB:
-                    state = States.LIFT;
-                    goalSeconds = currentSeconds + 0.5;
+                    state = States.ARMDOWN;
+                    goalSeconds = currentSeconds + 0.4;
                     stageCheck += "Grab - ";
-                    break;
-                case LIFT:
-                    if (currentSeconds >= goalSeconds) {
-                        robot.blockLift.setLift(500);
-                        state = States.ARMDOWN;
-                        goalSeconds = currentSeconds += 1.0;
-                        stageCheck += "Lift - ";
-                    }
                     break;
                 case ARMDOWN:
                     //Lowers left arm
@@ -133,65 +126,57 @@ public class Auto_B1 extends OpMode {
                     }
                     break;
                 case LEFTKNOCK:
-                    //Knocks the left ball off of the pedestal
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.25, 1);
-                    } else{
+                    //Knocks the left ball off of the pedestal WORKING
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;
-                        time.reset();
-                        stageCheck += "Left Knock - ";
-                    }
-                    break;
+                    } break;
+
                 case RIGHTKNOCK:
-                    //Knocks the right ball off of the pedestal
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1);
-                    } else{
+                    //Knocks the right ball off of the pedestal WORKING
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.RIGHTARMUP;
-                        time.reset();
-                        stageCheck += "Right Knock - ";
-                    }
-                    break;
+                        goalSeconds = currentSeconds += 1.0;
+                    } break;
+
                 case LEFTARMUP:
-                    //Lifts arm up after knocking left ball
+                    //Lifts arm up after knocking left ball WORKING
                     leftArm.setPosition(0.85);
-                    if(time.seconds() >= 1){
+                    telemetry.addData("currentSeconds", currentSeconds);
+                    telemetry.addData("goalSeconds", goalSeconds);
+                    telemetry.update();
+                    if(currentSeconds >= goalSeconds){
                         state = States.LEFTZONE;
-                        stageCheck += "Left Arm Up - ";
-                    }
-                    break;
+                    } break;
+
                 case RIGHTARMUP:
-                    //Lifts arm up after knocking right ball
+                    //Lifts arm up after knocking right ball WORKING
                     leftArm.setPosition(0.85);
-                    if(time.seconds() >= 1){
+                    if(currentSeconds >= goalSeconds){
                         state = States.RIGHTZONE;
-                        stageCheck += "Right Arm Up - ";
-                    }
-                    break;
+                    } break;
+
                 case LEFTZONE:
-                    //Returns to original position from knocking left ball
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 10 );
-                    } else{
+                    //Returns to original position from knocking left ball WORKING
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
-                        state = States.TURNBOX;
-                        time.reset();
-                        stageCheck += "Left Zone - ";
-                    }
-                    break;
+                        state = States.OFFSTONE;
+                    } break;
+
                 case RIGHTZONE:
-                    //Returns to original position from knocking right ball
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 5);
-                    } else{
+                    //Returns to original position from knocking right ball WORKING
+                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
+                        state = States.OFFSTONE;
+                    } break;
+
+                case OFFSTONE:
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5 )) {
                         state = States.TURNBOX;
-                        time.reset();
-                        stageCheck += "Right Zone - ";
                     }
                     break;
+
                 case TURNBOX:
                     //Turns left to face CryptoBox. UNTESTED
                     if(!isFinished){
@@ -209,52 +194,26 @@ public class Auto_B1 extends OpMode {
                         isFinished = false;
                         state = States.DROP;
                         stageCheck += "Drive Box - ";
+                        goalSeconds = currentSeconds += 2.0;
                     }
                     break;
                 case DROP:
-                    state = States.DRIVEBACK;
+                    robot.blockLift.grab(true, 0);
+                    if (currentSeconds >= goalSeconds) {
+                        state = States.DRIVEBACK;
+                        robot.blockLift.grab(false, 0);
+                    }
                     break;
                 case DRIVEBACK:
                     if(!isFinished){
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
                     } else{
                         isFinished = false;
-                        state = States.CLOSE;
+                        state = States.END;
                         stageCheck += "DriveBack - ";
                         stageCheck += "End";
-                        goalSeconds = currentSeconds += 0.4;
                     }
                     break;
-                case CLOSE:
-                    if (currentSeconds >= goalSeconds) {
-                        state = States.DRIVEFORWARD;
-                    }
-                case DRIVEFORWARD:
-                    if (!isFinished) {
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, 1.5);
-                    } else {
-                        isFinished = false;
-                        state = States.OPEN;
-                        goalSeconds = currentSeconds += 0.4;
-                    }
-                case OPEN:
-                    if (currentSeconds >= goalSeconds) {
-                        state = States.BACKUPFROMBLOCK;
-                    }
-                case BACKUPFROMBLOCK:
-                    if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
-                    } else{
-                        isFinished = false;
-                        state = States.ROTATE;
-                    }
-                case ROTATE:
-                    if (!isFinished) {
-                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
-                    } else {
-                        isFinished = false;
-                        state = States.END;
-                    }
                 case END:
                     robot.driveTrain.stop();
                     break;

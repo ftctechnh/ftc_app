@@ -169,7 +169,7 @@ public class Auto_R2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5)) {
+                    if (robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.5)) {
                         state = States.STRAFE;
                         isFinished = false;
                     }
@@ -178,6 +178,14 @@ public class Auto_R2 extends OpMode {
                     //Strafes left to face CryptoBox. UNTESTED/DEACTIVATED
                     if(!isFinished){
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 4.5);
+                    } else{
+                        isFinished = false;
+                        state = States.DRIVEBOX;
+
+                    } break;
+                case DRIVEBOX:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, 1);
                     } else{
                         isFinished = false;
                         state = States.DROP;
@@ -192,7 +200,7 @@ public class Auto_R2 extends OpMode {
                     break;
                 case DRIVEBACK:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1);
                     } else{
                         isFinished = false;
                         state = States.END;
