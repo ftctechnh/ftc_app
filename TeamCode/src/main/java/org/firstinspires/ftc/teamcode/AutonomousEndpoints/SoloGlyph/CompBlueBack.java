@@ -22,7 +22,7 @@ public class CompBlueBack extends NavigatorAutonomous {
 
         COLUMN_DISTANCES = new HashMap<>();
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.LEFT, new Double[] {46.9, 27.0});
-        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {54.2, 34.0});
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {55.1, 34.0});
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.RIGHT, new Double[] {62.4, 41.0});
 
         super.runOpMode();

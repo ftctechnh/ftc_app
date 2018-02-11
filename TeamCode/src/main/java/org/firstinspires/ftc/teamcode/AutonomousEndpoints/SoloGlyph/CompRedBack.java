@@ -22,7 +22,7 @@ public class CompRedBack extends NavigatorAutonomous {
 
         COLUMN_DISTANCES = new HashMap<>();
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.LEFT, new Double[] {46.9, 25.0});
-        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {54.7, 33.0});
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {54.2, 33.0});
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.RIGHT, new Double[] {62.2, 39.0});
 
         super.runOpMode();

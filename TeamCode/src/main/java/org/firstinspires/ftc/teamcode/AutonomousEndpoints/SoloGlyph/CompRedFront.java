@@ -22,7 +22,7 @@ public class CompRedFront extends NavigatorAutonomous {
 
         COLUMN_DISTANCES = new HashMap<>();
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.LEFT, new Double[] {22.6, 2.0});
-        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {30.6, 8.0});
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {30.4, 8.0});
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.RIGHT, new Double[] {37.65, 14.0});
 
         super.runOpMode();
