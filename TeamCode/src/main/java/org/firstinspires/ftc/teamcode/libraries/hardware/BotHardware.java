@@ -233,6 +233,10 @@ public class BotHardware {
 
     public AutoLib.Sequence getDropStep() {
         AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
+        AutoLib.ConcurrentSequence raiseLift = new AutoLib.ConcurrentSequence();
+        raiseLift.add(new AutoLib.EncoderMotorStep(Motor.liftLeft.motor, 1.0f, 400, true));
+        raiseLift.add(new AutoLib.EncoderMotorStep(Motor.liftRight.motor, 1.0f, 400, true));
+        mSeq.add(raiseLift);
         AutoLib.Sequence drop = new AutoLib.ConcurrentSequence();
         drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 1.0, false));
         drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 1.0, false));
@@ -241,6 +245,10 @@ public class BotHardware {
         lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 1.0, false));
         lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropUp, 1.0, false));
         mSeq.add(lift);
+        AutoLib.ConcurrentSequence lowerLift = new AutoLib.ConcurrentSequence();
+        lowerLift.add(new AutoLib.EncoderMotorStep(Motor.liftLeft.motor, -1.0f, 300, true));
+        lowerLift.add(new AutoLib.EncoderMotorStep(Motor.liftRight.motor, -1.0f, 300, true));
+        mSeq.add(lowerLift);
         return mSeq;
     }
 

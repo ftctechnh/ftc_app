@@ -181,12 +181,12 @@ public class ADPSAuto extends VuforiaBallLib {
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.85, 0.25, false));
 
             //reconstruct for saftey
-            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 150.0f, 55.0f, 150.0f);
-            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -150.0f, 55.0f, 150.0f);
+            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 25.0f, 150.0f);
+            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 25.0f, 150.0f);
             final APDS9960 dist = red ? backDist : frontDist;
             //TODO: add camera fallback
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.64, dist, new SensorLib.PID(0.5f, 0.15f, 0, 10), step,
-                    60, 5, path.skipCount, 90, this, red));
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.64, dist, new SensorLib.PID(1.0f, 0.15f, 0, 10), step,
+                    60, 8, path.skipCount, 100, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
@@ -195,12 +195,12 @@ public class ADPSAuto extends VuforiaBallLib {
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
             DcMotor[] temp = bot.getMotorRay();
             if(path.turnAmount > 55) {
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.2f, 2.0, true));
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.2f, 2.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.5f, 1.5, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.5f, 2.0, true));
             }
             else {
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.2f, 2.0, true));
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.2f, 2.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.5f, 1.5, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.5f, 2.0, true));
             }
             findPilliar.add(oneSideSeq);
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 200, true));
