@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Josie Miner on 2/9/2018.
  */
-@Autonomous(name="Preciousss: headingTest", group="Preciousss")
+@Autonomous(name="Preciousss: translateTest", group="Preciousss")
 
 public class headingTest extends superAuto {
 
@@ -18,6 +18,6 @@ public class headingTest extends superAuto {
 
         waitForStart();
 
-        followHeading(10,3);
+        translateFollow(0,4,0f,.25f);
     }
 }

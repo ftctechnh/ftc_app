@@ -157,6 +157,28 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
+    void translateFollow(int targetHeading, double time, float basePosx, float basePosy ){
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double currentHeading = angles.firstAngle;
+        runtime.reset();
+        while (((runtime.seconds() < time))){
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            if (angles != null) {
+                double currentHeading = angles.firstAngle;
+                double adjustPower =  (targetHeading - currentHeading) * .025;
+                float addPower =(float) adjustPower;
+
+                float FRBLPower = basePosy + addPower - basePosx;
+                float FLBRPower = basePosy - addPower + basePosx;
+                motorFR.setPower( FRBLPower );
+                motorFL.setPower( FLBRPower );
+                motorBR.setPower( FLBRPower );
+                motorBL.setPower( FRBLPower );
+            }
+        }
+        sR();
+    }
+
     void followHeading(int targetHeading,double time) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
