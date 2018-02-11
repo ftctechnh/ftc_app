@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
-import com.qualcomm.robotcore.hardware.ServoControllerEx;
 
 /**
  * Created by anshnanda on 04/02/18.
@@ -32,6 +30,9 @@ public class servoValueTest extends LinearOpMode{
     private Servo jewelArm;
     private Servo jewelKnock;
 
+
+    private double pos;
+
     @Override
     public void runOpMode() throws InterruptedException{
 
@@ -52,9 +53,12 @@ public class servoValueTest extends LinearOpMode{
         jewelKnock = hardwareMap.get(Servo.class, "JK");
 
         telemetry.clear();
+        
+        jewelArm.setPosition(0.55);
 
-        relicGrab.setPosition(0.4);
-        relicArm.setPosition(0.1);
+
+        pos = 0;
+
 
         waitForStart();
 
@@ -101,36 +105,57 @@ public class servoValueTest extends LinearOpMode{
 //                    telemetry.addData("Servo in use : ", "none");
 //            }
 
+//            if (gamepad1.a){
+//                relicArm.setPosition(relicArm.getPosition() + 0.1);
+//            }
+//
+//            if (gamepad1.b){
+//                relicArm.setPosition(relicArm.getPosition() - 0.1);
+//            }
+//
+//            if (gamepad1.x){
+//                relicGrab.setPosition(relicArm.getPosition() + 0.1);
+//            }
+//
+//            if (gamepad1.y){
+//                relicGrab.setPosition(relicArm.getPosition() - 0.1);
+//            }
+//
+//            if (gamepad1.dpad_up && !gamepad1.dpad_down){
+//                relicDC.setPower(gamepad1.right_trigger);
+//            }
+//
+//            if (!gamepad1.dpad_up && gamepad1.dpad_down){
+//                relicDC.setPower(-gamepad1.right_trigger);
+//            }
+//
+//            if (!gamepad1.dpad_up && !gamepad1.dpad_down){
+//                relicDC.setPower(0);
+//            }
+
+            jewelArm.setPosition(0.55);
+
             if (gamepad1.a){
-                relicArm.setPosition(relicArm.getPosition() + 0.1);
+                pos += 0.05;
             }
 
             if (gamepad1.b){
-                relicArm.setPosition(relicArm.getPosition() - 0.1);
+                pos -= 0.05;
             }
+            jewelArm.setPosition(pos);
 
             if (gamepad1.x){
-                relicGrab.setPosition(relicArm.getPosition() + 0.1);
+                jewelKnock.setPosition(0.55);
             }
 
             if (gamepad1.y){
-                relicGrab.setPosition(relicArm.getPosition() - 0.1);
+                jewelKnock.setPosition(0);
             }
 
-            if (gamepad1.dpad_up && !gamepad1.dpad_down){
-                relicDC.setPower(gamepad1.right_trigger);
-            }
 
-            if (!gamepad1.dpad_up && gamepad1.dpad_down){
-                relicDC.setPower(-gamepad1.right_trigger);
-            }
 
-            if (!gamepad1.dpad_up && !gamepad1.dpad_down){
-                relicDC.setPower(0);
-            }
-
-            telemetry.addData("Relic arm: ", relicArm.getPosition());
-            telemetry.addData("relic grabber: ", relicGrab.getPosition());
+            telemetry.addData("Jewel Arm: ", jewelArm.getPosition());
+            telemetry.addData("JewelKnowck: ", jewelKnock.getPosition());
             telemetry.update();
             idle();
 
