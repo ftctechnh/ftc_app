@@ -69,8 +69,12 @@ public class NewRobotFinal
     private RelicRecoveryVuMark vuMark;
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
-    private double rotatorPos = .91;
-    private double grabberPos = 1;
+    private static final double rotatorDown =0.91;
+    private static final double rotatorUp = 0.00;
+    private double rotatorPos = rotatorDown;
+    private static final double grabberOpen = 0.5;
+    private static final double grabberClosed = 1.00;
+    private double grabberPos = grabberClosed;
 
     private BNO055IMU imu;
     Orientation angles;
@@ -659,10 +663,10 @@ public class NewRobotFinal
     public void fineAdjGrabber(float in)
     {
         grabberPos += in;
-        if (grabberPos > 1)
-            grabberPos = 1;
-        else if (grabberPos < 0)
-            grabberPos = 0;
+        if (grabberPos > grabberClosed)
+            grabberPos = grabberClosed;
+        else if (grabberPos < grabberOpen)
+            grabberPos = grabberOpen;
 
         grabber.setPosition(grabberPos);
     }
@@ -670,10 +674,10 @@ public class NewRobotFinal
     public void fineAdjGrabberRotator(double in)
     {
         rotatorPos += in;
-        if (rotatorPos > .91 )
-            rotatorPos = .91;
-        else if (rotatorPos < 0)
-            rotatorPos =0;
+        if (rotatorPos > rotatorDown )
+            rotatorPos = rotatorDown;
+        else if (rotatorPos < rotatorUp)
+            rotatorPos = rotatorUp;
 
         grabberRotator.setPosition(rotatorPos);
     }
