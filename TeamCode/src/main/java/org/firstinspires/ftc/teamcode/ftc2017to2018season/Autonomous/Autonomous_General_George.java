@@ -176,7 +176,7 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(0.05);
+        jewelServo.setPosition(0.1);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //allOpenGlyphManipulator();
         //light.setPower(0);

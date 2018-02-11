@@ -116,7 +116,7 @@ public class redBack_George extends Autonomous_General_George {
         }
 
         //gyroTurnREV(0.3, 180);
-        encoderMecanumDrive(0.4, -5, -5, 1000, 0);
+        //encoderMecanumDrive(0.4, -5, -5, 1000, 0);
         sleep(100);
         //encoderMecanumDrive(0.3, 26, 25, 5000, 0);
 
@@ -127,15 +127,15 @@ public class redBack_George extends Autonomous_General_George {
             telemetry.update();
             sleep(250);
             //robot should end up 100 cm away from the wall, based on this and experiments
-            if (vuMark == RelicRecoveryVuMark.CENTER) {
+            if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 //this method uses encoders to drive a specified distance
                 encoderMecanumDrive(0.7, -10, -10, 500, 0);
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                encoderMecanumDrive(0.7, -30, -30, 500, 0);
-            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                encoderMecanumDrive(0.7, -2, -2, 500, 0);
+                encoderMecanumDrive(0.7, -35, -35, 500, 0);
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                encoderMecanumDrive(0.7, -25, -25, 500, 0);
             } else {
-                encoderMecanumDrive(0.7, -10, -10, 500, 0);
+                encoderMecanumDrive(0.7, -25, -25, 500, 0);
             }
 //        }else {
 //            //enter this section of code if the range sensor is working
@@ -157,7 +157,7 @@ public class redBack_George extends Autonomous_General_George {
 //        }
 
             sleep(1000);
-            gyroTurnREV(0.5, 90);
+            gyroTurnREV(0.5, 88);
             sleep(750);
             moveDownGlyph(0.3);
             sleep(500);

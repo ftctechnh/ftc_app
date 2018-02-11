@@ -117,7 +117,7 @@ public class blueBack_George extends Autonomous_General_George {
                 encoderMecanumDrive(0.9, 10, 10, 5000, 0);
             }
         }
-        encoderMecanumDrive(0.4, 15, 15, 1000, 0);
+        //encoderMecanumDrive(0.4, 15, 15, 1000, 0);
         gyroTurnREV(0.8, 0);
         //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
