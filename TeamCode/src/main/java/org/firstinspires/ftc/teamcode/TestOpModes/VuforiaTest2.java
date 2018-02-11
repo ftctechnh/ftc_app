@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 
 /**
- * Created by FTC 4316 on 1/14/2018.
+ * Created by FTC 4316 on 1/14/2018
  */
 @TeleOp(name = "Vuforia Test 2", group = "Test")
 public class VuforiaTest2 extends OpMode {
@@ -26,7 +26,7 @@ public class VuforiaTest2 extends OpMode {
 
     @Override
     public void init() {
-        robot = new Robot(hardwareMap, telemetry);
+        robot = new Robot(hardwareMap, telemetry, true);
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);

@@ -69,7 +69,7 @@ public class Auto_B2 extends OpMode {
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
 
-        robot = new Robot(hardwareMap, telemetry);
+        robot = new Robot(hardwareMap, telemetry, true);
 
         goalPosition = 0.25;
         position = 0.85;
@@ -166,7 +166,7 @@ public class Auto_B2 extends OpMode {
 
                 case OFFSTONE:
                     if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.5 )) {
-                        state = States.STRAFE;
+                        state = States.END;
                         completedStates += "OFFSTONE - ";
                     }
                     break;

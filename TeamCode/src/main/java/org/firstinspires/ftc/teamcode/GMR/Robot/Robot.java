@@ -18,6 +18,9 @@ import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by pston on 11/12/2017
  */
@@ -48,14 +51,12 @@ public class Robot {
     private Servo rightColor;
     private Servo leftColor;
 
-    private ModernRoboticsI2cRangeSensor rangeSensor;
-
     private int ultraRange = 0;
-    private int distanceThreshold = 4;
+    private int distanceThreshold = 7;
     private int columnPassed = 0;
     private boolean distanceChange = false;
     private RelicRecoveryVuMark currentColumn;
-    private double strafePower = .25;
+    private double strafePower = .10;
     private int strafetimes = 0;
 
     private OpenGLMatrix lastLocation = null;
@@ -63,6 +64,11 @@ public class Robot {
     private VuforiaTrackables relicTrackables;
     private VuforiaTrackable relicTemplate;
     private VuforiaLocalizer.Parameters parameters;
+
+    private ModernRoboticsI2cRangeSensor rangeSensor;
+
+    private List<Integer> rangeList;
+    private boolean canChange = true;
 
 
     public Robot (HardwareMap hardwareMap, Telemetry telemetry, Boolean enableVuforia) {
@@ -90,6 +96,7 @@ public class Robot {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
+        rangeList = new ArrayList<>(22);
 
         rightColor.setPosition(0);
         leftColor.setPosition(0.85);
@@ -182,19 +189,41 @@ public class Robot {
         }
     }
 
+    private double average(List<Integer> list) {
+        int total = 0;
+        for (int item: list) {
+            total += item;
+        }
+        return total/list.size();
+    }
+
     public boolean columnDrive(AllianceColor color, Telemetry telemetry, int goalColumn) {
 
-        if (ultraRange - rawUltrasonic() >= distanceThreshold && ultraRange != 0) {
+        if (goalColumn == 0) {
+            goalColumn = 2;
+        }
+
+        if (rangeList.size() == 22) {
+            rangeList.remove(0);
+        }
+
+        rangeList.add(rangeSensor.rawUltrasonic());
+
+        if ((Math.abs(ultraRange - average(rangeList))) >= distanceThreshold && ultraRange != 0 && canChange) {
             columnPassed += 1;
+            canChange = false;
+        } else if ((Math.abs(ultraRange - average(rangeList))) <= distanceThreshold) {
+            canChange = true;
         }
 
         ultraRange = rawUltrasonic();
 
         telemetry.addData("Column Passed", columnPassed);
         telemetry.addData("Raw Ultrasonic", rawUltrasonic());
+        telemetry.addData("Can Change", canChange);
 
         if (columnPassed >= goalColumn) {
-            return(driveTrain.encoderDrive(columnAlignDirection(color), strafePower, .9));
+            return(driveTrain.encoderDrive(columnAlignDirection(color), strafePower, .8));
         } else {
             driveDirection(color);
             return false;
