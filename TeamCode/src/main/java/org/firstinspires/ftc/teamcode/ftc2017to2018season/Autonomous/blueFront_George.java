@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(group = "Blue Front No Gyro George")
+@Autonomous(group = "Blue Front  George")
 //@Disabled
 public class blueFront_George extends Autonomous_General_George {
 
@@ -47,15 +47,15 @@ public class blueFront_George extends Autonomous_General_George {
         telemetry.update();
         sleep(250);
 
-        moveUpGlyph(0.9);//change distances once we lower the stress of the glyph manipulator
+        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        moveDownGlyph(1.5);
+        moveDownGlyph(1.45);
         sleep(250);
         closeGlyphManipulator();
         sleep(250);
-        moveUpGlyph(1.5);
+        moveUpGlyph(1.25);
         sleep(250);
         jewelServo.setPosition(0.9);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
@@ -71,40 +71,40 @@ public class blueFront_George extends Autonomous_General_George {
 
 
         if(ballColor.equals("blue")){
-            encoderMecanumDrive(0.9, -10,-10,5000,0);
+            encoderMecanumDrive(0.6, -10,-10,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
-            encoderMecanumDrive(0.9,35,35,5000,0);
+            encoderMecanumDrive(0.6,46,46,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("red")){
-            encoderMecanumDrive(0.9,25,25,5000,0);
+            encoderMecanumDrive(0.6,40,40,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
         }
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(0);
             sleep(1500);
-            jewelServo.setPosition(0.9);
+            jewelServo.setPosition(0.6);
             sleep(500);
             readColor();
             sleep(1000);
             if(ballColor.equals("blue")){
-                encoderMecanumDrive(0.9, -10,-10,5000,0);
+                encoderMecanumDrive(0.6, -10,-10,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9,35,35,5000,0);
+                encoderMecanumDrive(0.6,46,46,5000,0);
                 sleep(1000);
             }
             else if(ballColor.equals("red")){
-                encoderMecanumDrive(0.9,25,25,5000,0);
+                encoderMecanumDrive(0.6,40,40,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
             }
             else {
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9, 25, 25, 5000, 0);
+                encoderMecanumDrive(0.6, 40, 40, 5000, 0);
             }
         }
 
@@ -112,35 +112,35 @@ public class blueFront_George extends Autonomous_General_George {
 
         //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
-        encoderMecanumDrive(0.3,15,15,5000,0);
-        sleep(250);
+        //encoderMecanumDrive(0.3,5,5,5000,0);
+        //sleep(250);
 
-        gyroTurnREV(0.8, -87);
+        gyroTurnREV(0.5, -82);
         sleep(100);
 
-        encoderMecanumDrive(0.9, -60, -60, 5000, 0);
+        encoderMecanumDrive(0.3, -30, -30, 5000, 0);
 
 
         if (vuMark == RelicRecoveryVuMark.LEFT){
-            encoderMecanumDrive(0.9, 68, 68, 5000, 0);
+            encoderMecanumDrive(0.5, 20, 20, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
-            encoderMecanumDrive(0.9, 83, 83, 5000, 0);
+            encoderMecanumDrive(0.5, 37, 37, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            encoderMecanumDrive(0.9, 103, 103, 5000, 0);
+            encoderMecanumDrive(0.5, 52, 52, 5000, 0);
 
         }
 
         else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            encoderMecanumDrive(0.9, 83, 83, 5000, 0);
+            encoderMecanumDrive(0.5, 37, 37, 5000, 0);
 
         }
 
 
         sleep(1000);
 
-        gyroTurnREV(0.8, 90);
+        gyroTurnREV(0.5, 1);
 
         sleep(750);
 

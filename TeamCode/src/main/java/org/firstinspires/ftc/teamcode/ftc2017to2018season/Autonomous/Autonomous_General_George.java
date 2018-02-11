@@ -66,7 +66,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double COUNTS_PER_CM;
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
-    double P_TURN_COEFF = 0.05;
+    double P_TURN_COEFF = 0.08;
     double TURN_THRESHOLD = 5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
@@ -126,6 +126,8 @@ public class Autonomous_General_George extends LinearOpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
 
+        jewelServo.setDirection(Servo.Direction.REVERSE);
+
         if (modernRobotics) {
             gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         }
@@ -174,7 +176,7 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(0);
+        jewelServo.setPosition(0.05);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //allOpenGlyphManipulator();
         //light.setPower(0);

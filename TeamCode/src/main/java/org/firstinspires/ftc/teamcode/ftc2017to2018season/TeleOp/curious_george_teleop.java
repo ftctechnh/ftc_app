@@ -101,7 +101,7 @@ public class curious_george_teleop extends OpMode {
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
 
         openGlyph();
-        jewel_servo.setPosition(0.1);
+        jewel_servo.setPosition(0.9);
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
