@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by guberti on 11/3/2017.
  */
-@Autonomous(name="Pictograph seer", group="Autonomous")
+@Autonomous(name="Pictograph seer", group="Diagnostics")
 public class PictographSeer extends CompleteOldAutonomous {
 
     @Override

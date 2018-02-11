@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Deprecated;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,7 +13,8 @@ import org.firstinspires.ftc.teamcode.NullbotHardware;
 /**
  * Created by guberti on 10/17/2017.
  */
-@Autonomous(name="FRONT BLUE acc integration test", group="Autonomous")
+@Disabled
+@Autonomous(name="FRONT BLUE acc integration test", group="D_Autonomous")
 public class NullbotAccIntegrationGemOnly extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();

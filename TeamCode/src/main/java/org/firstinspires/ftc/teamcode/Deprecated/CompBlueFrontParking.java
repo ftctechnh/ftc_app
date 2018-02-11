@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by guberti on 11/4/2017.
  */
-
+@Disabled
 @Autonomous(name="FRONT BLUE parking", group="Autonomous")
 public class CompBlueFrontParking extends CompBlueGemOnlyAutonomous {
     @Override
