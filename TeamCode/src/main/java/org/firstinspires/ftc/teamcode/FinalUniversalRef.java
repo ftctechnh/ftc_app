@@ -57,25 +57,25 @@ public class FinalUniversalRef extends LinearOpMode
                     case 'r':
                         newRobot.driveStraight_In(3, .5);
                         newRobot.pivot(-90, .6);
-                        newRobot.driveStraight_In(8,.5);
-                        newRobot.pivot(32,.6);
+                        newRobot.driveStraight_In(6,.5);
+                        newRobot.pivot(45,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(18, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(10, .5, telemetry);
                         break;
 
                     case 'l':
                         newRobot.pivot(-22,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(18, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(10, .5, telemetry);
                         break;
                     case 'c':
                     default:
                         newRobot.pivot(-42,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(18, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(10, .5, telemetry);
                         break;
                 }
                 newRobot.driveStraight_In(-5,1);
