@@ -27,7 +27,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
     public boolean placeSecondGlyph = false;
 
-    double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45; // 1 degree
+    double ACCEPTABLE_HEADING_VARIATION = Math.PI / 90; // 1 degree
     final int GUESS_TIME = 2000; // Milliseconds
     final int MAX_CORRECTIONS = 1;
 
@@ -134,7 +134,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
         if (robot.startingPad == StartingPosition.BACK) {
             lockedHeading = Math.PI/2;
-            turnToPos(Math.PI / 2);
+            turnToPos(Math.PI / 2, robot.color.getColorCode());
         } else if (robot.color == Alliance.RED ) { // Front stone, red team
             lockedHeading = Math.PI;
             turnToPos(Math.PI);
@@ -216,7 +216,6 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             adjustPositionByUltrasonic(RelicRecoveryVuMark.RIGHT, 0);
 
             // Then, turn so we diagonally face the glyph pit
-
             double desiredDirection;
             if (robot.color == Alliance.BLUE) {
                 desiredDirection = -(5.0/6.0) * Math.PI;
@@ -226,6 +225,8 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             desiredDirection = robot.normAngle(desiredDirection);
             turnToPos(desiredDirection);
 
+            // Close the block claw so we can lower the intake,
+            // and then open it up a little later. We'll drive the intake forward too
             robot.lowerIntake();
             robot.closeBlockClaw();
             new Timer().schedule(new TimerTask() {
@@ -234,26 +235,35 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
                     robot.openBlockClaw();
                 }
             }, 300);
-
             robot.setIntakeSpeed(1);
+
+            // Drive into the glyph pit
             driveStraight(desiredDirection, 1, 1500);
-            turnToPos(robot.normAngle(desiredDirection + Math.PI));
 
+            double reversedDirection = robot.normAngle(desiredDirection + Math.PI);
+            // Spin around to grab a block
+            turnToPos(reversedDirection, robot.color.getColorCode());
+
+            // Turn off the intake, and then drive forwards and back to align the blockc
             robot.setIntakeSpeed(0);
-            driveStraight(lockedHeading, -0.5, 200);
-            driveStraight(lockedHeading, 0.5, 400);
+            driveStraight(reversedDirection, -0.5, 200);
+            driveStraight(reversedDirection, 0.5, 400);
 
+            // Grab the block, and give give time for the claw to close
             robot.closeBlockClaw();
             robot.sleep(100);
 
+            // If we've already placed a block where we're going to place this one,
+            // lift our lift higher
             if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 robot.lift.setTargetPosition(-800);
             } else {
                 robot.lift.setTargetPosition(-50); // Get us off the ground
             }
+            // Put up the intake at the same time
             robot.raiseIntake();
 
-            driveStraight(desiredDirection, 1, 1500);
+            driveStraight(reversedDirection, 1, 1500);
             turnToPos(lockedHeading); // Turn back to placement heading
 
             vuMark = RelicRecoveryVuMark.RIGHT; // We'll always place in the right column
@@ -277,10 +287,16 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             m.setPower(0.7);
-            m.setTargetPosition(m.getCurrentPosition() - TICKS_PER_INCH * 3);
+            m.setTargetPosition(m.getCurrentPosition() - TICKS_PER_INCH * 14);
         }
-        robot.sleep(150);
+        robot.sleep(800);
         robot.lift.setTargetPosition(0);
+        robot.closeBlockClaw();
+        robot.lowerIntake();
+
+        /*if ((long) (30*1000 - timeSinceStart.milliseconds()) > 2000) {
+            turnToPos(robot.normAngle(lockedHeading + Math.PI));
+        }*/
 
         robot.sleep((long) (30*1000 - timeSinceStart.milliseconds()));
     }
@@ -338,6 +354,10 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
     }
 
     public void turnToPos(double pos) {
+        turnToPos(pos, 0);
+    }
+
+    public void turnToPos(double pos, int direction) {
         double difference = Double.MAX_VALUE;
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -347,7 +367,14 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             difference = robot.getSignedAngleDifference(robot.normAngle(pos), robot.getGyroHeading());
             double turnSpeed = Math.max(-TURN_MAX_SPEED, Math.min(TURN_MAX_SPEED, difference));
 
-            turnSpeed = Math.copySign(Math.max(0.2, Math.abs(turnSpeed)), turnSpeed);
+            double unsigned = Math.max(0.2, Math.abs(turnSpeed));
+
+
+            if (direction == 0) {
+                turnSpeed = Math.copySign(Math.max(0.2, Math.abs(turnSpeed)), turnSpeed);
+            } else {
+                turnSpeed = Math.copySign(unsigned, direction);
+            }
 
             telemetry.addData("Turn rate: ", turnSpeed);
             telemetry.update();
