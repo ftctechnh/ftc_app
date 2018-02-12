@@ -36,8 +36,6 @@ import android.provider.MediaStore;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -55,12 +53,8 @@ public class WLP_RR_Grabber {
 
     // constants
     final double spinnerPower = 0.8;
-    final double armOpen = 1.0;
-    final double armClose = 0.0;
     final double stopPower = 0.0;
     final double stopPosition = 0.0;
-
-    TouchSensor touchSensor = null;
 
     public MediaPlayer mySound;
 
@@ -74,20 +68,15 @@ public class WLP_RR_Grabber {
     //  Declar Motors as private members
     private DcMotor spinnerLeft = null;
     private DcMotor spinnerRight = null;
-    private Servo armMover = null;
+
     private DcMotor slider = null;
 
     private boolean spinIn = false;
     private boolean spinOut = false;
-    private boolean clampOn = false;
     private boolean pastStateA = false;
     private boolean pastStateB = false;
-    private boolean touched = true;
 
 
-
-
-    private boolean grabberClosed = false;
 
     private boolean isInitialized = false;
 
@@ -113,7 +102,7 @@ public class WLP_RR_Grabber {
         mySound = MediaPlayer.create(hardwareMap.appContext, R.raw.nani);
         mySound.start();  //😂
 
-        touchSensor = hardwareMap.get(TouchSensor.class, "touchSensor");
+
 
         // Initialize the motors. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -121,7 +110,6 @@ public class WLP_RR_Grabber {
 
         spinnerLeft = hardwareMap.get(DcMotor.class, "spinnerLeft");
         spinnerRight = hardwareMap.get(DcMotor.class, "spinnerRight");
-        armMover = hardwareMap.get(Servo.class, "armMover");
         // slider = hardwareMap.get(DcMotor.class, "slider");
 
         isInitialized = true;
@@ -132,16 +120,10 @@ public class WLP_RR_Grabber {
 
     // During teleop, this function will be called repeatedly
     public void loop() {
-        double pos = armMover.getPosition();
+
 
         if (isInitialized == false) {
             return;
-        }
-
-        if (touchSensor.isPressed()){
-            touched = true;
-        }else {
-            touched = false;
         }
 
 
@@ -186,7 +168,7 @@ public class WLP_RR_Grabber {
 
 
         //Slider: RT - up, LT - down
-        if (gamepad2.left_trigger > 0.0 && !touched) {
+        if (gamepad2.left_trigger > 0.0 ) {
             slider.setPower(-gamepad2.left_trigger * 0.5);
         } else if (gamepad2.right_trigger > 0.0 ) {
             slider.setPower(gamepad2.right_trigger * 0.5);
@@ -205,7 +187,6 @@ public class WLP_RR_Grabber {
 
         telemetry.addData("Motor ", "Spinner Left (%.2f)", spinnerLeft.getPower());
         telemetry.addData("Motor ", "Spinner Right (%.2f)", spinnerRight.getPower());
-        telemetry.addData("Servo ", "Arm Mover (%.2f)", armMover.getPosition());
         telemetry.addData("Motor ", "Slider  (%.2f)", slider.getPower());
     }
 }

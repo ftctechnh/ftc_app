@@ -47,7 +47,8 @@ public class WLP_RR_TeleOP extends OpMode {
     ElapsedTime runtime = new ElapsedTime();
     WLP_RR_Grabber grabber = new WLP_RR_Grabber();
     WLP_MecanumDriveTrain drivetrain = new WLP_MecanumDriveTrain();
-    private Servo arm = null;
+
+
 
 
     /*
@@ -56,6 +57,9 @@ public class WLP_RR_TeleOP extends OpMode {
 
     @Override
     public void init() {
+        telemetry.addData("WLP_RR_TeleOp: ", "habib");
+        telemetry.update();
+
 
         // Initialize the grabber
         grabber.init(telemetry, hardwareMap, gamepad1, gamepad2);
@@ -63,10 +67,11 @@ public class WLP_RR_TeleOP extends OpMode {
         //Initialize Drivetrain
         drivetrain.init(telemetry, hardwareMap, gamepad1, gamepad2);
 
+
         // Send telemetry message to signify robot waiting;
         telemetry.addData("WLP_RR_TeleOp: ", "Initialization succeeded");
 
-        arm.setPosition(0.0);
+
 
 
     }
