@@ -143,9 +143,11 @@ public class ADPSAuto extends VuforiaBallLib {
             //init whacky stick code here
             AutoLib.Sequence whack = new AutoLib.LinearSequence();
 
-            if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
-            else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
-            whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
+            if(color == BallColor.LeftBlue || color == BallColor.LeftRed) {
+                if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
+                else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
+                whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
+            }
             //hmmmmm
             final AutoLib.Step whackLeft;
             if(red) whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed - BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
@@ -153,9 +155,20 @@ public class ADPSAuto extends VuforiaBallLib {
             final AutoLib.Step whackRight;
             if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
             else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 1.0, false);
-            whack.add(new APDSBallFind(red, frontDist, backDist, color, whackLeft, whackRight, this));
-            whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
-            whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
+            //whack.add(new APDSBallFind(red, frontDist, backDist, color, whackLeft, whackRight, this));
+            if(red) {
+                if(color == BallColor.LeftBlue) whack.add(whackLeft);
+                else if(color == BallColor.LeftRed) whack.add(whackRight);
+            }
+            else {
+                if(color == BallColor.LeftBlue) whack.add(whackRight);
+                else if(color == BallColor.LeftRed) whack.add(whackLeft);
+            }
+
+            if(color == BallColor.LeftRed || color == BallColor.LeftBlue) {
+                whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
+                whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
+            }
 
             final int mul = red ? -1 : 1;
 
@@ -489,6 +502,7 @@ public class ADPSAuto extends VuforiaBallLib {
         public boolean loop() {
             super.loop();
             //check detection
+            /*
             if(color == BallColor.Indeterminate || color == BallColor.Undefined) {
                 //get colors
                 int[] backColor;
@@ -511,6 +525,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 }
                 else color = BallColor.Undefined;
             }
+            */
             //run appropriete sewunce
             if(color == BallColor.LeftBlue) {
                 if(red) return whackLeft.loop();

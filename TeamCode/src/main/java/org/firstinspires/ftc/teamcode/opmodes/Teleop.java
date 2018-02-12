@@ -50,8 +50,8 @@ public class Teleop extends OpMode {
 
         if(gamepad1.b || gamepad2.b) bot.setDropPos(0.7);
 
-        if(gamepad2.left_trigger > 0) bot.setFrontDrop(Range.clip(bot.getFrontDrop() - Range.scale(gamepad2.left_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
-        else if(gamepad2.right_trigger > 0) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + Range.scale(gamepad2.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
+        if(gamepad1.left_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() - SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
+        else if(gamepad1.right_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
 
         if(gamepad2.left_bumper && BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos > 0 && BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos > 0) bot.setLiftMotors(-1.0f);
         else if(gamepad2.right_bumper && BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos < LIFT_COUNTS && BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos < LIFT_COUNTS) bot.setLiftMotors(1.0f);

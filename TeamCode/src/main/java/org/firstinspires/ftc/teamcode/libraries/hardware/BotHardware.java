@@ -73,7 +73,7 @@ public class BotHardware {
         public static final double stick0 = 0.95;
 
         public static final double stickBaseCenterBlue = 0.53;
-        public static final double stickBaseCenterRed = 0.51;
+        public static final double stickBaseCenterRed = 0.55;
         public static final double stickBaseCenter = 0.56;
         public static final double stickBaseSwingSize = 0.2;
         public static final double stickBaseHidden = 0.95;
