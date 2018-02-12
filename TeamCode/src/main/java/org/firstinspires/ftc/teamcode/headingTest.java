@@ -18,6 +18,15 @@ public class headingTest extends superAuto {
 
         waitForStart();
 
-        translateFollow(0,4,0f,.25f);
+        followHeading(0, .5, 0f, -0.35f);
+
+        Wait(.2d);
+
+        pivotTo(-90);
+
+        Wait(.2d);
+
+        followHeading(-90, 1, -.5f, 0f);
+
     }
 }

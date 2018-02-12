@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import java.util.Locale;
@@ -37,6 +39,7 @@ abstract public class superAuto extends LinearOpMode {
     Orientation angles;
     Acceleration gravity;
 
+    ModernRoboticsI2cRangeSensor rangeSensor;
     NormalizedColorSensor colorSensor;
 
     boolean iAmRed;
@@ -58,6 +61,7 @@ abstract public class superAuto extends LinearOpMode {
 
         imu =hardwareMap.get(BNO055IMU.class,"imu");
         imu.initialize(parameters);
+        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
         motorFR =hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
@@ -157,54 +161,56 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
-    void translateFollow(int targetHeading, double time, float basePosx, float basePosy ){
+    void findCrypto(int targetHeading, double time, float basePosx, float basePosy ){
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
         while (((runtime.seconds() < time))){
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
             if (angles != null) {
                 double currentHeading = angles.firstAngle;
                 double adjustPower =  (targetHeading - currentHeading) * .025;
                 float addPower =(float) adjustPower;
 
-                float FRBLPower = basePosy + addPower - basePosx;
-                float FLBRPower = basePosy - addPower + basePosx;
-                motorFR.setPower( FRBLPower );
-                motorFL.setPower( FLBRPower );
-                motorBR.setPower( FLBRPower );
-                motorBL.setPower( FRBLPower );
+                float FRBLPower = basePosy + basePosx;
+                float FLBRPower = basePosy - basePosx;
+                motorFR.setPower( FRBLPower - addPower);
+                motorFL.setPower( FLBRPower + addPower);
+                motorBR.setPower( FLBRPower - addPower );
+                motorBL.setPower( FRBLPower + addPower );
+            }
+            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+            telemetry.update();
+        }
+        sR();
+    }
+
+
+    void followHeading(int targetHeading, double time, float basePosx, float basePosy ){
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double currentHeading = angles.firstAngle;
+        runtime.reset();
+        while (((runtime.seconds() < time))){
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+            if (angles != null) {
+                double currentHeading = angles.firstAngle;
+                double adjustPower =  (targetHeading - currentHeading) * .025;
+                float addPower =(float) adjustPower;
+
+                float FRBLPower = basePosy + basePosx;
+                float FLBRPower = basePosy - basePosx;
+                motorFR.setPower( FRBLPower - addPower);
+                motorFL.setPower( FLBRPower + addPower);
+                motorBR.setPower( FLBRPower - addPower );
+                motorBL.setPower( FRBLPower + addPower );
             }
         }
         sR();
     }
 
-    void followHeading(int targetHeading,double time) {
-        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        //double currentHeading = angles.firstAngle;
-        double basePower = .25f;
-        runtime.reset();
-        while (((runtime.seconds() < time))){
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            if (angles != null) {
-                double currentHeading = angles.firstAngle;
-                double addPower = (targetHeading - currentHeading) * .025;
-                /*if (currentHeading > targetHeading) {*/
-                    motorFL.setPower(-basePower + addPower);
-                    motorBL.setPower(-basePower + addPower);
-                    motorFR.setPower(-basePower - addPower);
-                    motorBR.setPower(-basePower - addPower);
-               /* }
-                else {
-                    motorFL.setPower(-basePower - addPower);
-                    motorBL.setPower(-basePower - addPower);
-                    motorFR.setPower(-basePower + addPower);
-                    motorBR.setPower(-basePower + addPower);
-                }*/
-            }
-        }
-        sR();
-    }
+
 
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
