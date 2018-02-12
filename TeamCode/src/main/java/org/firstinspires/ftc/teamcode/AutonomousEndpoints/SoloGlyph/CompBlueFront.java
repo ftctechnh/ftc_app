@@ -21,7 +21,7 @@ public class CompBlueFront extends NavigatorAutonomous {
         robot.startingPad = StartingPosition.FRONT;
 
         COLUMN_DISTANCES = new HashMap<>();
-        COLUMN_DISTANCES.put(RelicRecoveryVuMark.LEFT, new Double[] {23.3, 2.0});
+        COLUMN_DISTANCES.put(RelicRecoveryVuMark.LEFT, new Double[] {23.5, 2.0});
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.CENTER, new Double[] {30.6, 8.0});
         COLUMN_DISTANCES.put(RelicRecoveryVuMark.RIGHT, new Double[] {38.8, 14.0});
 
