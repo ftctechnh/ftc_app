@@ -48,6 +48,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         // Initialize variables
 
         robot.init(hardwareMap, this, gamepad1, gamepad2);
+        robot.raiseWhipSnake();
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             if (m instanceof DcMotorEx) {
@@ -134,10 +135,10 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
 
         if (robot.startingPad == StartingPosition.BACK) {
             lockedHeading = Math.PI/2;
-            turnToPos(Math.PI / 2, robot.color.getColorCode());
+            turnToPos(Math.PI / 2);
         } else if (robot.color == Alliance.RED ) { // Front stone, red team
             lockedHeading = Math.PI;
-            turnToPos(Math.PI);
+            turnToPos(Math.PI, 1); // Turn clockwise
         }
 
         stopMoving();
@@ -241,7 +242,9 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
             driveStraight(desiredDirection, 1, 1500);
 
             double reversedDirection = robot.normAngle(desiredDirection + Math.PI);
+
             // Spin around to grab a block
+            // Clockwise if blue, counterclockwise if red
             turnToPos(reversedDirection, robot.color.getColorCode());
 
             // Turn off the intake, and then drive forwards and back to align the blockc
@@ -291,7 +294,7 @@ public class NavigatorAutonomous extends NullbotGemOnlyAutonomous {
         }
         robot.sleep(800);
         robot.lift.setTargetPosition(0);
-        robot.closeBlockClaw();
+        robot.openBlockClaw();
         robot.lowerIntake();
 
         /*if ((long) (30*1000 - timeSinceStart.milliseconds()) > 2000) {
