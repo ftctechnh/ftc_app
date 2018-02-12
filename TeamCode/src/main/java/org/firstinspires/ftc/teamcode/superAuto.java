@@ -161,13 +161,14 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
-    void findCrypto(int targetHeading, double time, float basePosx, float basePosy ){
+    void findCrypto(int targetHeading, float ridgeDepth, float basePosx, float basePosy ){
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
-        while (((runtime.seconds() < time))){
+        float currentDist = rangeSensor.rawUltrasonic();
+        float previousDist = currentDist;
+        while ((currentDist-previousDist) < ridgeDepth){
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
             if (angles != null) {
                 double currentHeading = angles.firstAngle;
                 double adjustPower =  (targetHeading - currentHeading) * .025;
@@ -180,6 +181,8 @@ abstract public class superAuto extends LinearOpMode {
                 motorBR.setPower( FLBRPower - addPower );
                 motorBL.setPower( FRBLPower + addPower );
             }
+            currentDist = rangeSensor.rawUltrasonic();
+            previousDist = currentDist;
             telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
             telemetry.update();
         }

@@ -17,7 +17,7 @@
             <Servo name="Jack" port="3" />
             <ContinuousRotationServo name="servoConL" port="4" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
-            <ModernRoboticsI2cRangeSensor name="rangeSensor" port="0" bus="2" />
+            <ModernRoboticsI2cRangeSensor name="rangeSensor" port="0" bus="3" />
             <LynxColorSensor name="colorSensor" port="1" bus="1" />
         </LynxModule>
     </LynxUsbDevice>

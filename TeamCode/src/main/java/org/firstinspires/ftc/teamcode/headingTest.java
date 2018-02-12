@@ -18,15 +18,7 @@ public class headingTest extends superAuto {
 
         waitForStart();
 
-        followHeading(0, .5, 0f, -0.35f);
-
-        Wait(.2d);
-
-        pivotTo(-90);
-
-        Wait(.2d);
-
-        followHeading(-90, 1, -.5f, 0f);
+        findCrypto(0, 10,-.5f, 0f);
 
     }
 }
