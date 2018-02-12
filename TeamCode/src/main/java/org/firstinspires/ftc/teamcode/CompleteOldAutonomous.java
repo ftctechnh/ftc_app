@@ -30,6 +30,7 @@ public class CompleteOldAutonomous extends NullbotGemOnlyAutonomous {
     public void runOpMode() {
 
         robot.init(hardwareMap, this, gamepad1, gamepad2);
+        robot.raiseWhipSnake();
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_TO_POSITION);

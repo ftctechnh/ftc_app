@@ -60,6 +60,7 @@ public class MainTeleOp extends LinearOpMode {
         zType = new ConstrainedPIDMotor(robot.zType, 100, 0.4, 0.4, 0, 12288, telemetry, true);
 
         waitForStart();
+        robot.raiseWhipSnake();
 
         initialHeading = robot.getGyroHeading() + Math.PI;
         desiredHeading = initialHeading;

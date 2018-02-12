@@ -143,7 +143,7 @@ public class NullbotHardware {
             leftIntakeFlipper = hwMap.servo.get("leftIntakeFlipper");
             rightIntakeFlipper = hwMap.servo.get("rightIntakeFlipper");
 
-            raiseWhipSnake();
+            //raiseWhipSnake();
             openBlockClaw();
             flattenRelicClaw();
             relicFipperPosition = 80;
