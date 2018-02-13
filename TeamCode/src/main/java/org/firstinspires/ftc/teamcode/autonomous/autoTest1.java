@@ -11,7 +11,11 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
 /**
@@ -47,13 +51,6 @@ public class autoTest1 extends LinearOpMode{
     //SENSORS
     private static ColorSensor jColor;
 
-    private static int redBallValR = 1; /**change*/
-    private static int redBallValB = 1; /**change*/
-    private static int redBallValG = 1; /**change*/
-    private static int blueBallValR = 1; /**change*/
-    private static int blueBallValB = 1; /**change*/
-    private static int blueBallValG = 1; /**change*/
-
     private static double gtlOPEN = 0.4;
     private static double gtlCLOSE = 0.6;
 
@@ -68,19 +65,22 @@ public class autoTest1 extends LinearOpMode{
     private static double gbrCLOSE = 0.4;
     private static double gbrEXCLOSE = 0.1;
 
-    private static double jaUP = 0; /**change*/
-    private static double jaDOWN = 0; /**change*/
+    private static double jaUP = 0.73;
+    private static double jaDOWN = 0.2;
 
-    private static double jkINITIAL = 0;
-    private static double jkCENTER = 0.55;
+    private static double jkCENTER = 0.44;
     private static double jkRIGHT = 0;
     private static double jkLEFT = 1;
 
     private static double raOPEN = 0; /**change*/
     private static double raCLOSE = 0; /**change*/
+    private static double raINITIAL = 0; /**change*/
 
-    private static double rgOPEN = 0; /**change*/
+    private static double rgOPEN = 1;
     private static double rgCLOSE = 0; /**change*/
+    private static double rgINTITIAL = 0; /**change*/
+
+    private double jaPos = jaUP;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -88,10 +88,10 @@ public class autoTest1 extends LinearOpMode{
     public void runOpMode() throws  InterruptedException{
 
         //DRIVE
-        motorFrontLeft = hardwareMap.dcMotor.get("FL");
-        motorBackLeft = hardwareMap.dcMotor.get("BL");
-        motorFrontRight = hardwareMap.dcMotor.get("FR");
-        motorBackRight = hardwareMap.dcMotor.get("BR");
+        motorFrontLeft = hardwareMap.dcMotor.get("MC1M1");
+        motorBackLeft = hardwareMap.dcMotor.get("MC1M2");
+        motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
+        motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
         //GRAB
         grabDC = hardwareMap.dcMotor.get("GDC");
@@ -122,23 +122,61 @@ public class autoTest1 extends LinearOpMode{
         motorBackLeft.setDirection(REVERSE);
 
         //SENSORS
-        jColor = hardwareMap.colorSensor.get("colorFloor");
-        jColor.setI2cAddress(I2cAddr.create8bit(0x3c));  /**check I2c address*/
+        jColor = hardwareMap.colorSensor.get("colF");
+        //jColor.setI2cAddress(I2cAddr.create8bit(0x3c));  /**check I2c address*/
         jColor.enableLed(true);
 
         //STARTING VALUES
-        grabTopLeft.setPosition(gtlCLOSE);
         grabBottomLeft.setPosition(gblEXCLOSE);
-        grabTopRight.setPosition(gtrCLOSE);
+        grabTopLeft.setPosition(gtlOPEN);
+        grabTopRight.setPosition(gtrOPEN);
         grabBottomRight.setPosition(gbrEXCLOSE);
 
-        //relicArm.setPosition(0);
-        //relicGrab.setPosition(0);
+        relicArm.setPosition(raINITIAL);
+        relicGrab.setPosition(rgINTITIAL);
 
-        //jewelArm.setPosition(0.71);
-        //jewelKnock.setPosition(0);
+        jewelArm.setPosition(jaUP);
+        jewelKnock.setPosition(jkRIGHT);
 
-    waitForStart();
+        waitForStart();
+        telemetry.addData("JA:", jewelArm.getPosition());
+        telemetry.update();
+
+    //JEWEL KNOCK FOR BLUE SIDE
+    jewelKnock.setPosition(jkCENTER);
+
+    do{
+        jaPos -= 0.02;
+        jewelArm.setPosition(jaPos);
+        telemetry.addData("JA:", jewelArm.getPosition());
+        telemetry.update();
+    } while (jewelArm.getPosition() > jaDOWN);
+
+    Thread.sleep(800);
+
+    telemetry.addData("blue: ", jColor.blue());
+    telemetry.update();
+
+    if (jColor.blue() < 3){
+        jewelKnock.setPosition(jkRIGHT);
+    }
+    else {
+        jewelKnock.setPosition(jkLEFT);
+    }
+
+    Thread.sleep(500);
+
+    jewelArm.setPosition(0.4);
+    jewelKnock.setPosition(jkRIGHT);
+
+    do{
+        jaPos += 0.03;
+        jewelArm.setPosition(jaPos);
+        telemetry.addData("JA:", jewelArm.getPosition());
+        telemetry.update();
+    } while (jewelArm.getPosition() < jaUP);
+
+    Thread.sleep(1000);
 
     }
     public static void FORWARD(int degrees) {
@@ -163,10 +201,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(degrees);
         motorFrontLeft.setTargetPosition(degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -199,10 +237,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(-degrees);
         motorFrontLeft.setTargetPosition(-degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -236,10 +274,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(degrees);
         motorFrontRight.setTargetPosition(degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -271,10 +309,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(-degrees);
         motorFrontRight.setTargetPosition(-degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -306,10 +344,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(degrees);
         motorFrontLeft.setTargetPosition(degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
         //motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -342,8 +380,8 @@ public class autoTest1 extends LinearOpMode{
         //motorFrontLeft.setTargetPosition(degrees);
 
         //motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
         //motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
@@ -376,10 +414,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(-degrees);
         motorFrontLeft.setTargetPosition(-degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
         //motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -412,8 +450,8 @@ public class autoTest1 extends LinearOpMode{
         //motorFrontLeft.setTargetPosition(degrees);
 
         //motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
         //motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
@@ -446,10 +484,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setTargetPosition(-degrees);
         motorFrontLeft.setTargetPosition(-degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -482,10 +520,10 @@ public class autoTest1 extends LinearOpMode{
         motorFrontRight.setTargetPosition(-degrees);
         motorBackRight.setTargetPosition(degrees);
 
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(RUN_TO_POSITION);
+        motorBackLeft.setMode(RUN_TO_POSITION);
+        motorFrontRight.setMode(RUN_TO_POSITION);
+        motorBackRight.setMode(RUN_TO_POSITION);
 
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
@@ -495,4 +533,104 @@ public class autoTest1 extends LinearOpMode{
         motorFrontRight.setPower(0);
         motorBackRight.setPower(0);
     }
+    public static void GRABUP(int degrees) {
+        grabDC.setMode(STOP_AND_RESET_ENCODER);
+        grabDC.setMode(RUN_USING_ENCODER);
+
+        grabDC.setPower(0.75);
+
+        grabDC.setTargetPosition(degrees);
+
+        grabDC.setMode(RUN_TO_POSITION);
+
+        while (grabDC.isBusy()) {
+            //wait till motors done doing its thing
+        }
+
+        grabDC.setPower(0);
+    }
+/**
+    public static void GYROTOZERO() throws InterruptedException
+    {
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        if (gyro.getHeading() >= 357 || gyro.getHeading() <= 3) {
+        } else {
+
+            if (gyro.getHeading() > 180 && gyro.getHeading() < 357) {
+
+                motorFrontLeft.setPower(0.2);
+                motorBackLeft.setPower(0.2);
+                motorFrontRight.setPower(-0.2);
+                motorBackRight.setPower(-0.2);
+            }
+            if (gyro.getHeading() <= 180 && gyro.getHeading() > 3) {
+
+                motorFrontLeft.setPower(-0.2);
+                motorBackLeft.setPower(-0.2);
+                motorFrontRight.setPower(0.2);
+                motorBackRight.setPower(0.2
+                );
+            }
+
+            while (((gyro.getHeading() > 3) && (gyro.getHeading() < 357))) {
+
+            }
+
+            if (((gyro.getHeading() < 3) && (gyro.getHeading() > 357))) {
+                motorFrontLeft.setPower(0);
+                motorBackLeft.setPower(0);
+                motorFrontRight.setPower(0);
+                motorBackRight.setPower(0);
+            }
+        }
+    }
+
+    public static void GYROAXISRIGHT(int targetVal) {
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motorFrontLeft.setPower(1);
+        motorBackLeft.setPower(1);
+        motorFrontRight.setPower(-1);
+        motorBackRight.setPower(-1);
+
+        while (!(gyro.getHeading() > (targetVal - 2)) && (gyro.getHeading() < (targetVal + 2))) {
+            // wait till value is reached
+        }
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+
+    }
+
+    public static void GYROAXISLEFT(int targetVal) {
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motorFrontLeft.setPower(-1);
+        motorBackLeft.setPower(-1);
+        motorFrontRight.setPower(1);
+        motorBackRight.setPower(1);
+
+        while (!(gyro.getHeading() < (-targetVal - 3) && (gyro.getHeading() > -(targetVal + 3)))) {
+            // wait till value is reached
+        }
+
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
+    }
+ */
+
+
 }

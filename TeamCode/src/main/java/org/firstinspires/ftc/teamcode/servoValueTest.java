@@ -54,8 +54,8 @@ public class servoValueTest extends LinearOpMode{
 
         telemetry.clear();
         
-        jewelArm.setPosition(0.55);
-
+        jewelKnock.setPosition(0.55);
+        jewelArm.setPosition(0.71);
 
         pos = 0;
 
@@ -133,7 +133,6 @@ public class servoValueTest extends LinearOpMode{
 //                relicDC.setPower(0);
 //            }
 
-            jewelArm.setPosition(0.55);
 
             if (gamepad1.a){
                 pos += 0.05;
@@ -142,17 +141,12 @@ public class servoValueTest extends LinearOpMode{
             if (gamepad1.b){
                 pos -= 0.05;
             }
-            jewelArm.setPosition(pos);
 
             if (gamepad1.x){
-                jewelKnock.setPosition(0.55);
+                pos = 0.71;
             }
 
-            if (gamepad1.y){
-                jewelKnock.setPosition(0);
-            }
-
-
+            jewelKnock.setPosition(pos);
 
             telemetry.addData("Jewel Arm: ", jewelArm.getPosition());
             telemetry.addData("JewelKnowck: ", jewelKnock.getPosition());
