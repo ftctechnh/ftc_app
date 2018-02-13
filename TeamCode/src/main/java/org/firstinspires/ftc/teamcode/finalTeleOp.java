@@ -35,6 +35,7 @@ public class finalTeleOp extends LinearOpMode{
 
     //Jewel
     private Servo jewelArm;
+    private Servo jewelKnock;
 
     //Variables
     private int mode;
@@ -70,8 +71,9 @@ public class finalTeleOp extends LinearOpMode{
         relicArm = hardwareMap.get(Servo.class, "RA");
         relicGrab = hardwareMap.get(Servo.class, "RG");
 
-        //Ball
+        //Jewewl
         jewelArm = hardwareMap.get(Servo.class, "JA");
+        jewelKnock = hardwareMap.get(Servo.class, "JK");
 
         //Varibales
         mode = 0;
@@ -82,6 +84,10 @@ public class finalTeleOp extends LinearOpMode{
         relicArmPosition = 0.1;
         relicGrabDelta = 0.01;
         relicArmPosition = 0;
+
+
+        jewelArm.setPosition(0.73);
+        jewelKnock.setPosition(0);
 
 
         waitForStart();

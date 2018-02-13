@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.I2cAddr;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
@@ -50,6 +45,7 @@ public class autoTest1 extends LinearOpMode{
 
     //SENSORS
     private static ColorSensor jColor;
+    private static ModernRoboticsI2cGyro gyro;
 
     private static double gtlOPEN = 0.4;
     private static double gtlCLOSE = 0.6;
@@ -81,6 +77,8 @@ public class autoTest1 extends LinearOpMode{
     private static double rgINTITIAL = 0; /**change*/
 
     private double jaPos = jaUP;
+
+    private static int zAccumulated;
 
     ElapsedTime timer = new ElapsedTime();
 
@@ -125,6 +123,8 @@ public class autoTest1 extends LinearOpMode{
         jColor = hardwareMap.colorSensor.get("colF");
         //jColor.setI2cAddress(I2cAddr.create8bit(0x3c));  /**check I2c address*/
         jColor.enableLed(true);
+        gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        gyro.calibrate();
 
         //STARTING VALUES
         grabBottomLeft.setPosition(gblEXCLOSE);
@@ -176,10 +176,43 @@ public class autoTest1 extends LinearOpMode{
         telemetry.update();
     } while (jewelArm.getPosition() < jaUP);
 
+
+
+    //Grip the block and lift
+    grabTopLeft.setPosition(0.3);
+    grabTopRight.setPosition(0.4);
+    GRABUP(1600);
+
+
+    //Move forward
+    FORWARD(4000, 0.5);
+    gyro.calibrate();
+    telemetry.addData("Gyro val:", gyro.getHeading());
+    telemetry.update();
+
+    //Turn towards safe zone
+    //turnAbsolute(90, 0.07);
+    AXISRIGHT(2500);
+    telemetry.addData("Gyro val:", gyro.getHeading());
+    telemetry.update();
+
+    //Move towards safezone
+    FORWARD(1200, 0.5);
+
+    //Drop glyph
+    grabTopLeft.setPosition(0.4);
+    grabTopRight.setPosition(0.3);
+
+    BACKWARD(1200);
+
+
     Thread.sleep(1000);
 
     }
-    public static void FORWARD(int degrees) {
+
+
+
+    public static void FORWARD(int degrees, double power) {
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -191,10 +224,10 @@ public class autoTest1 extends LinearOpMode{
         motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        motorFrontRight.setPower(1);
-        motorBackRight.setPower(1);
-        motorFrontLeft.setPower(1);
-        motorBackLeft.setPower(1);
+        motorFrontRight.setPower(power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(power);
+        motorBackLeft.setPower(power);
 
         motorBackLeft.setTargetPosition(degrees);
         motorFrontRight.setTargetPosition(degrees);
@@ -549,7 +582,23 @@ public class autoTest1 extends LinearOpMode{
 
         grabDC.setPower(0);
     }
-/**
+    public static void GRABDOWN(int degrees) {
+        grabDC.setMode(STOP_AND_RESET_ENCODER);
+        grabDC.setMode(RUN_USING_ENCODER);
+
+        grabDC.setPower(-0.75);
+
+        grabDC.setTargetPosition(degrees);
+
+        grabDC.setMode(RUN_TO_POSITION);
+
+        while (grabDC.isBusy()) {
+            //wait till motors done doing its thing
+        }
+
+        grabDC.setPower(0);
+    }
+
     public static void GYROTOZERO() throws InterruptedException
     {
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -589,48 +638,77 @@ public class autoTest1 extends LinearOpMode{
         }
     }
 
-    public static void GYROAXISRIGHT(int targetVal) {
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public static void turnAbsolute(int target, double turnSpeed) {
 
-        motorFrontLeft.setPower(1);
-        motorBackLeft.setPower(1);
-        motorFrontRight.setPower(-1);
-        motorBackRight.setPower(-1);
+        zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
+        //turnSpeed = 0.07;
 
-        while (!(gyro.getHeading() > (targetVal - 2)) && (gyro.getHeading() < (targetVal + 2))) {
-            // wait till value is reached
-        }
-        motorFrontLeft.setPower(0);
-        motorBackLeft.setPower(0);
-        motorFrontRight.setPower(0);
-        motorBackRight.setPower(0);
+        while (Math.abs(zAccumulated - target) > 1) {  //Continue while the robot direction is further than three degrees from the target
+            if (zAccumulated > target) {  //if gyro is positive, we will turn right
+                motorBackLeft.setPower(turnSpeed);
+                motorFrontLeft.setPower(turnSpeed);
+                motorBackRight.setPower(-turnSpeed);
+                motorFrontRight.setPower(-turnSpeed);
+            }
 
-    }
+            if (zAccumulated < target) {  //if gyro is positive, we will turn left
+                motorBackLeft.setPower(-turnSpeed);
+                motorFrontLeft.setPower(-turnSpeed);
+                motorBackRight.setPower(turnSpeed);
+                motorFrontRight.setPower(turnSpeed);
+            }
 
-    public static void GYROAXISLEFT(int targetVal) {
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        motorFrontLeft.setPower(-1);
-        motorBackLeft.setPower(-1);
-        motorFrontRight.setPower(1);
-        motorBackRight.setPower(1);
-
-        while (!(gyro.getHeading() < (-targetVal - 3) && (gyro.getHeading() > -(targetVal + 3)))) {
-            // wait till value is reached
+            zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
         }
 
-        motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
-        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
         motorBackRight.setPower(0);
+        motorFrontRight.setPower(0);
+
     }
- */
+//    public static void GYROAXISRIGHT(int targetVal) {
+//        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        motorFrontLeft.setPower(1);
+//        motorBackLeft.setPower(1);
+//        motorFrontRight.setPower(-1);
+//        motorBackRight.setPower(-1);
+//
+//        while (!(gyro.getHeading() > (targetVal - 2)) && (gyro.getHeading() < (targetVal + 2))) {
+//            // wait till value is reached
+//        }
+//        motorFrontLeft.setPower(0);
+//        motorBackLeft.setPower(0);
+//        motorFrontRight.setPower(0);
+//        motorBackRight.setPower(0);
+//
+//    }
+//
+//    public static void GYROAXISLEFT(int targetVal) {
+//        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        motorFrontLeft.setPower(-1);
+//        motorBackLeft.setPower(-1);
+//        motorFrontRight.setPower(1);
+//        motorBackRight.setPower(1);
+//
+//        while (!(gyro.getHeading() < (-targetVal - 3) && (gyro.getHeading() > -(targetVal + 3)))) {
+//            // wait till value is reached
+//        }
+//
+//        motorFrontLeft.setPower(0);
+//        motorBackLeft.setPower(0);
+//        motorFrontRight.setPower(0);
+//        motorBackRight.setPower(0);
+//    }
+
 
 
 }
