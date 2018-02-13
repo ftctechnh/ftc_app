@@ -181,8 +181,8 @@ abstract public class superAuto extends LinearOpMode {
                 motorBR.setPower( FLBRPower - addPower );
                 motorBL.setPower( FRBLPower + addPower );
             }
-            currentDist = rangeSensor.rawUltrasonic();
             previousDist = currentDist;
+            currentDist = rangeSensor.rawUltrasonic();
             telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
             telemetry.update();
         }
