@@ -48,6 +48,11 @@ public class Teleop extends OpMode {
     public boolean rightbtnIsReleased = true;
     public boolean rightbtn2IsReleased = true;
     public boolean xIsReleased = true;
+    public boolean startIsReleased = true;
+
+    public boolean leftIsReleased = true;
+    public boolean rightIsReleased = true;
+
     //public boolean aIsReleased = true;
     public boolean start2IsReleased = true;
     public boolean righttriggerIsReleased = true;
@@ -70,6 +75,7 @@ public class Teleop extends OpMode {
     public boolean glyphLiftismoving = false;
     public boolean delayLift = false;
     public boolean delayClamp = false;
+    public boolean frontglyphSensed = false;
     public boolean glyphSensed = false;
     public int manualLiftDelay = 50;
     public int glyphSensedDelay = 0;
@@ -318,6 +324,15 @@ public class Teleop extends OpMode {
                 glyphLiftismoving = true;     // turn on manual override
 
             }
+            //Front glyph sensor trigger lights
+            /*if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !frontglyphSensed) {     // if block is sensed set boolean
+                frontglyphSensed = true;
+                //Turn on lights you have a block
+            } else if (frontglyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
+                frontglyphSensed = false;
+                //Second edge of block passed turn off lights
+
+            }*/
         }
 
         //Second controller Clamps
@@ -361,19 +376,49 @@ public class Teleop extends OpMode {
         }
 
         //Boolean Prototype
-        /*if (gamepad1.back) {
-            if (backIsReleased) {
-                backIsReleased = false;
-                if (tristanmode) {
-                    tristanmode = false;
-                } else {
-                    tristanmode = true;
-                }
+        if (gamepad1.start) {
+            if (startIsReleased) {
+                startIsReleased = false;
+                gromit.glyphTrain.leftupper.setPosition(0.64+0.15);
+                gromit.glyphTrain.rightupper.setPosition(0.37+0.15);// closed
             }
         } else {
-            backIsReleased = true;
-        }*/
-
+            startIsReleased = true;
+        }
+        if (gamepad2.left_stick_x > 0.5 && blocks ==1) {
+            if (leftIsReleased) {
+                leftIsReleased = false;
+                gromit.glyphTrain.leftupper.setPosition(0.64-0.15);
+                gromit.glyphTrain.rightupper.setPosition(0.37-0.15);// closed
+            }
+        }
+        else if (gamepad2.left_stick_x < -0.5&& blocks ==1){
+            if (leftIsReleased) {
+                leftIsReleased = false;
+                gromit.glyphTrain.leftupper.setPosition(0.64+0.15);
+                gromit.glyphTrain.rightupper.setPosition(0.37+0.15);// closed
+            }
+        }
+        else {
+            leftIsReleased = true;
+        }
+        if (gamepad2.right_stick_x > 0.5&& blocks ==1) {
+            if (leftIsReleased) {
+                leftIsReleased = false;
+                gromit.glyphTrain.leftlower.setPosition(0.45-0.15);
+                gromit.glyphTrain.rightlower.setPosition(0.60-0.15);// closed
+            }
+        }
+        else if (gamepad2.right_stick_x < -0.5 && blocks ==1){
+            if (rightIsReleased) {
+                rightIsReleased = false;
+                gromit.glyphTrain.leftlower.setPosition(0.45+0.15);
+                gromit.glyphTrain.rightlower.setPosition(0.60+0.15);// closed
+            }
+        }
+        else {
+            rightIsReleased = true;
+        }
 //        if (tristanmode) {
         // gromit.driveTrain.drivevector(gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
 //        } else {
@@ -427,7 +472,7 @@ public class Teleop extends OpMode {
                 elbowtotalmove = elbowtarget - elbowstartpos;
                 //Start relic arm in to zero it for easy driving
                 reliczeroing = true;
-                gromit.relicArm.relicArmMotor.setPower(-0.6);
+                gromit.relicArm.relicArmMotor.setPower(-0.9);
             }
         } else {
             leftbumperIsReleased = true;
@@ -447,9 +492,9 @@ public class Teleop extends OpMode {
 
 
         //Clamp slowly
-        if (gamepad2.right_stick_y > 0.1) {
+        if (gamepad2.right_stick_y > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             gromit.relicArm.relicClawServo.setPosition(gromit.relicArm.relicClawServo.getPosition() + .005);
-        } else if (gamepad2.right_stick_y < -0.1) {
+        } else if (gamepad2.right_stick_y < -0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             gromit.relicArm.relicClawServo.setPosition(gromit.relicArm.relicClawServo.getPosition() - .005);
         }
 
@@ -474,7 +519,7 @@ public class Teleop extends OpMode {
             gromit.relicArm.relicArmMotor.setPower(0.0);
         }
 
-        ///ONE BUTTON RELIC RECOVERY
+        //ONE BUTTON RELIC RECOVERY
         if (gamepad2.right_stick_button) {
             if (rightbtn2IsReleased) {//IF CHANGE IN STATE
                 rightbtn2IsReleased = false;
