@@ -515,7 +515,7 @@ public class NewRobotFinal
 
     public void CalcLiftTarget(int adjLevels)
     {
-        final int liftLevels[] = {0, 100, 769, 1500, 1538};
+        final int liftLevels[] = {0, 150, 769, 1500, 1538};
         final int liftDeadzone = 0;
 
         if (adjLevels + currentLvl < 0)
