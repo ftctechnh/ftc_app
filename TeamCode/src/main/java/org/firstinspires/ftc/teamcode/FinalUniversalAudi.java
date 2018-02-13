@@ -38,9 +38,9 @@ public class FinalUniversalAudi extends LinearOpMode
                         newRobot.driveStraight_In(adjustment);
                         break;
                     case 'b':
-                        adjustment = -3;
+                        adjustment = -2;
                         newRobot.driveStraight_In(adjustment);
-                        adjustment = -6;
+                        adjustment = -7;
                         break;
                     default:
                         adjustment = -2;
@@ -52,23 +52,23 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.driveStraight_In(18f - adjustment,.6);
+                        newRobot.driveStraight_In(22f - adjustment,.6);
                         newRobot.pivot(85, .6);
                         break;
                     case 'r':
-                        newRobot.driveStraight_In(30 - adjustment,.6);
+                        newRobot.driveStraight_In(34 - adjustment,.6);
                         newRobot.pivot(85, .6);
                         break;
                     case 'c':
                     default:
-                        newRobot.driveStraight_In(24 - adjustment,.6);
+                        newRobot.driveStraight_In(28 - adjustment,.6);
                         newRobot.pivot(85, .6);
                         break;
                 }
-                newRobot.oldMoveLift(-1);
+               // newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
-                newRobot.driveStraight_In_Stall(14, .25);
-                newRobot.driveStraight_In(-6,1);
+                newRobot.driveStraight_In_Stall(12, .25);
+                newRobot.driveStraight_In(-8,1);
                 //newRobot.pivot(-180,.7);
                 newRobot.stopAllMotors();
                 break;
@@ -84,7 +84,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (colorOfJewel)
                 {
                     case 'r':
-                        adjustment = -3;
+                        adjustment = -2;
                         newRobot.driveStraight_In(adjustment);
                         adjustment = -7;
                         break;
