@@ -30,36 +30,38 @@ public class  RelicGrab {
 
     public void relicLift(boolean leftBumper, float leftTrigger) {
         if (leftBumper) {
-            relicLift.setPower(0.5);
+            relicLift.setPower(1);
         } else if (leftTrigger > 0) {
-            relicLift.setPower(-0.5);
+            relicLift.setPower(-1);
         } else {
             relicLift.setPower(0);
         }
     }
 
 
-    public void setTilt(boolean y, boolean a) {
-        if (a && tiltPosition <= 0.44) {
+    public void setTilt(boolean y, boolean a, boolean b) {
+        if (a && tiltPosition <= 1) {
             tiltPosition += 0.01;
-        } else if (y && tiltPosition >= 0.36) {
+        } else if (y && tiltPosition >= 0) {
             tiltPosition -= 0.01;
+        } else if (b) {
+            tiltPosition = 0.9;
         }
         relicTilt.setPosition(tiltPosition);
     }
 
     public void setClamp(boolean rightBumper, float rightTrigger) {
         if (rightBumper && clampPosition <= 1) {
-            clampPosition += 0.008;
-        } else if (rightTrigger > 0 && clampPosition >= 0.4) {
-            clampPosition -= 0.008;
+            clampPosition += 0.015;
+        } else if (rightTrigger > 0 && clampPosition >= 0.45) {
+            clampPosition -= 0.015;
         }
         relicClamp.setPosition(clampPosition);
     }
 
-    public void relicGrab(boolean leftBumper, float leftTrigger, boolean dpadUp, boolean dpadDown, boolean y, boolean a, boolean rightBumper, float rightTrigger) {
+    public void relicGrab(boolean leftBumper, float leftTrigger, boolean dpadUp, boolean dpadDown, boolean y, boolean a, boolean rightBumper, float rightTrigger, boolean b) {
         relicLift(leftBumper, leftTrigger);
-        setTilt(y, a);
+        setTilt(y, a, b);
         setClamp(rightBumper, rightTrigger);
     }
 
