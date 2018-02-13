@@ -152,7 +152,7 @@ public class GlyphTrain {
 
     }
 
-    void liftGlyphIndex(int newindex) {
+    void liftGlyphIndex(int newindex, double speed) {
 
         //height is encoder counts or ticks
         // going up
@@ -172,7 +172,7 @@ public class GlyphTrain {
         } else {                           // going down
             while (lift_motor.getCurrentPosition() > liftPosition[newindex] &&
                     lift_motor.getCurrentPosition() > lowerLiftLimit) {
-                lift_motor.setPower(-0.7);
+                lift_motor.setPower(-speed);
             }
 
         }
