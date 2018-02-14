@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 
+import java.util.Random;
+
 /**
  * Created by Noah on 10/27/2017.
  * Teleop!
@@ -15,6 +17,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 @TeleOp(name="Teleop")
 public class Teleop extends OpMode {
     private static final float slowFactor = 0.5f;
+    private static final double SERVO_INC_SHAKE = 0.1;
     private static final double SERVO_INC_MAX = 0.02;
     private static final double SERVO_INC_MIN = 0.001;
     private static final int LIFT_COUNTS = 2800; //4250
@@ -26,6 +29,8 @@ public class Teleop extends OpMode {
 
     private int leftPos;
     private int rightPos;
+
+    private boolean servoSet = false;
 
     public void init() {
         bot.init();
@@ -71,6 +76,13 @@ public class Teleop extends OpMode {
         }
         */
         else bot.setLiftMotors(0);
+
+        if(gamepad2.x || gamepad1.x) {
+            if(servoSet) bot.setDropPos(Range.clip(bot.getDropPos() - SERVO_INC_MAX, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+            else bot.setDropPos(Range.clip(bot.getDropPos() + SERVO_INC_MAX, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+            servoSet = !servoSet;
+        }
+        else servoSet = false;
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
