@@ -327,14 +327,17 @@ public class Teleop extends OpMode {
 
             }
             //Front glyph sensor trigger lights
-            /*if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !frontglyphSensed) {     // if block is sensed set boolean
+            if (gromit.glyphTrain.seeFrontBlock.getState() && !frontglyphSensed) {     // if block is sensed set boolean
                 frontglyphSensed = true;
                 //Turn on lights you have a block
-            } else if (frontglyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
+                gromit.glyphTrain.sensorColor.enableLed(true);
+
+            } else if (frontglyphSensed && !gromit.glyphTrain.seeFrontBlock.getState()) {     // if block was already sensed (sense the back end)
                 frontglyphSensed = false;
                 //Second edge of block passed turn off lights
+                gromit.glyphTrain.sensorColor.enableLed(false);//turn off led
 
-            }*/
+            }
         }
 
         //Second controller Clamps

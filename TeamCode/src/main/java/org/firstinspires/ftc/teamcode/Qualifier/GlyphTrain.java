@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 
 import android.app.ListFragment;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -36,6 +38,9 @@ public class GlyphTrain {
     public Servo glyphliftservo = null;
 
     public DistanceSensor sensorDistance;
+    public ColorSensor sensorColor;//for LED
+    public DigitalChannel seeFrontBlock;
+    //GLYPHTRAIN SENSORS
 
 
     public void init(HardwareMap hardwareMap) {
@@ -56,6 +61,11 @@ public class GlyphTrain {
 
         // get a reference to the distance sensor that shares the same name.
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
+        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
+
+        //Glyphtrain Sensors
+        //seeFrontBlock = hardwareMap.digitalChannel.get("glyphfront");
+        //seeFrontBlock.setMode(DigitalChannel.Mode.INPUT);
 
 //      Neverest Motors
         left_glyph.setDirection(DcMotor.Direction.REVERSE);

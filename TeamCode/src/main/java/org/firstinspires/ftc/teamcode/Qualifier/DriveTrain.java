@@ -54,7 +54,10 @@ public class DriveTrain {
 
 //    public AnalogInput maxbotixSensor;
 
+    //MOVE TO GLYPHTRAIN
     public AnalogInput sharpIRSensor;
+    public AnalogInput sharpIRSensorFront;//Add other front sensor for glyphs
+     //?????????//Middle sensor Color hopefully
    // public DistanceSensor sensorDistance;
 
 
