@@ -8,18 +8,35 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+//VUFORIA
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
+import static com.sun.tools.javac.util.Constants.format;
 
 /**
- * Created by shiva on 10-02-2018.
+ * Created by shiva on 14-02-2018.
  */
 
-@Autonomous(name = "test1", group = "auto")
+@Autonomous(name = "Red side position 2", group = "auto")
 
-public class autoTest1 extends LinearOpMode{
+public class Red2 extends LinearOpMode{
 
     //DRIVE
     private static DcMotor motorFrontLeft;
@@ -69,18 +86,22 @@ public class autoTest1 extends LinearOpMode{
     private static double jkLEFT = 1;
 
     private static double raOPEN = 0; /**change*/
-    private static double raCLOSE = 0; /**change*/
-    private static double raINITIAL = 0; /**change*/
-
-    private static double rgOPEN = 1;
-    private static double rgCLOSE = 0; /**change*/
     private static double rgINTITIAL = 0; /**change*/
+    private static double raINITIAL = 0; /**change*/
+    private static double rgOPEN = 1;
+    private static double raCLOSE = 0; /**change*/
+    private static double rgCLOSE = 0; /**change*/
 
-    private double jaPos = jaUP;
+    private int gridColum = 0;
 
     private static int zAccumulated;
 
+    private double jaPos = jaUP;
+
     ElapsedTime timer = new ElapsedTime();
+
+    OpenGLMatrix lastLocation = null;
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() throws  InterruptedException{
@@ -138,76 +159,144 @@ public class autoTest1 extends LinearOpMode{
         jewelArm.setPosition(jaUP);
         jewelKnock.setPosition(jkRIGHT);
 
+        /**<VUFORIA>*/
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        /**</VUFORIA>*/
+
         waitForStart();
-        telemetry.addData("JA:", jewelArm.getPosition());
-        telemetry.update();
 
-    //JEWEL KNOCK FOR BLUE SIDE
-    jewelKnock.setPosition(jkCENTER);
+        //VUFORIA
+        relicTrackables.activate();
 
-    do{
-        jaPos -= 0.02;
-        jewelArm.setPosition(jaPos);
-        telemetry.addData("JA:", jewelArm.getPosition());
-        telemetry.update();
-    } while (jewelArm.getPosition() > jaDOWN);
+//        telemetry.addData("JA:", jewelArm.getPosition());
+        //      telemetry.update();
 
-    Thread.sleep(800);
 
-    telemetry.addData("blue: ", jColor.blue());
-    telemetry.update();
+        //JEWEL KNOCK FOR BLUE SIDE
+        jewelKnock.setPosition(jkCENTER);
 
-    if (jColor.blue() < 3){
+        do{
+            jaPos -= 0.02;
+            jewelArm.setPosition(jaPos);
+            // telemetry.addData("JA:", jewelArm.getPosition());
+            // telemetry.update();
+        } while (jewelArm.getPosition() > jaDOWN);
+
+        Thread.sleep(800);
+
+        //telemetry.addData("blue: ", jColor.blue());
+        //telemetry.update();
+
+        if (jColor.blue() < 3){
+            jewelKnock.setPosition(jkLEFT);
+        }
+        else {
+            jewelKnock.setPosition(jkRIGHT);
+        }
+
+        Thread.sleep(500);
+
+        jewelArm.setPosition(0.4);
         jewelKnock.setPosition(jkRIGHT);
-    }
-    else {
-        jewelKnock.setPosition(jkLEFT);
-    }
 
-    Thread.sleep(500);
+        do {
+            jaPos += 0.03;
+            jewelArm.setPosition(jaPos);
+            //telemetry.addData("JA:", jewelArm.getPosition());
+            //telemetry.update();
+        } while (jewelArm.getPosition() < jaUP);
 
-    jewelArm.setPosition(0.4);
-    jewelKnock.setPosition(jkRIGHT);
+        Thread.sleep(1000);
 
-    do{
-        jaPos += 0.03;
-        jewelArm.setPosition(jaPos);
-        telemetry.addData("JA:", jewelArm.getPosition());
+        //Grip the block and lift
+        grabTopLeft.setPosition(0.3);
+        grabTopRight.setPosition(0.4);
+        GRABUP(1700);
+
+        FORWARD(2800, 0.5);
+        SWAYLEFT(2000);
+
+        //Move towards safezone
+        FORWARD(650, 0.5);
+
+        //Drop glyph
+        grabTopLeft.setPosition(0.4);
+        grabTopRight.setPosition(0.3);
+
+        BACKWARD(580);
+
+        /**<VUFORIA>*//*
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            if (vuMark == RelicRecoveryVuMark.CENTER){
+                gridColum = 2;
+            }
+            else if (vuMark == RelicRecoveryVuMark.RIGHT){
+                gridColum = 1;
+            }
+            else if (vuMark == RelicRecoveryVuMark.LEFT){
+                gridColum = 3;
+            }
+            else {
+                telemetry.addData("error", gridColum);
+            }
+        }
+        else {
+            telemetry.addData("VuMark", "not visible");
+        }
         telemetry.update();
-    } while (jewelArm.getPosition() < jaUP);
+        *//**</VUFORIA>*//*
 
+        //Grip the block and lift
+        grabTopLeft.setPosition(0.3);
+        grabTopRight.setPosition(0.4);
+        GRABUP(1600);
 
+        if (gridColum == 2){
+            //Move forward: MIDDLE
 
-    //Grip the block and lift
-    grabTopLeft.setPosition(0.3);
-    grabTopRight.setPosition(0.4);
-    GRABUP(1600);
+            //Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
 
+            BACKWARD(500);
+        }
 
-    //Move forward
-    FORWARD(4000, 0.5);
-    gyro.calibrate();
-    telemetry.addData("Gyro val:", gyro.getHeading());
-    telemetry.update();
+        if (gridColum == 1){
+            //Move forward: RIGHT
 
-    //Turn towards safe zone
-    //turnAbsolute(90, 0.07);
-    AXISRIGHT(2500);
-    telemetry.addData("Gyro val:", gyro.getHeading());
-    telemetry.update();
+            // Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
 
-    //Move towards safezone
-    FORWARD(1200, 0.5);
+            BACKWARD(500);
 
-    //Drop glyph
-    grabTopLeft.setPosition(0.4);
-    grabTopRight.setPosition(0.3);
+            //FOR RIGHT SIDE
+            SWAYLEFT(600);
+        }
 
-    BACKWARD(1200);
+        if (gridColum == 3){
+            //Move forward: LEFT
 
+            //Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
 
-    Thread.sleep(1000);
+            BACKWARD(500);
 
+            //FOR LEFT SIDE
+            SWAYRIGHT(600);
+        }
+
+        Thread.sleep(5000);*/
     }
 
 
@@ -708,7 +797,5 @@ public class autoTest1 extends LinearOpMode{
 //        motorFrontRight.setPower(0);
 //        motorBackRight.setPower(0);
 //    }
-
-
 
 }
