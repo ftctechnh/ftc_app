@@ -52,17 +52,19 @@ public class FinalUniversalAudi extends LinearOpMode
                 switch (cipher)
                 {
                     case 'l':
-                        newRobot.driveStraight_In(22f - adjustment,.6);
-                        newRobot.pivot(85, .6);
+                        newRobot.driveStraight_In(18.5f - adjustment,.6);
+                        newRobot.pivot(70, .6);
                         break;
                     case 'r':
-                        newRobot.driveStraight_In(34 - adjustment,.6);
-                        newRobot.pivot(85, .6);
+                    //    if (colorOfJewel == 'b')
+                      //      adjustment = -1;
+                        newRobot.driveStraight_In(31 - adjustment,.6);
+                        newRobot.pivot(70, .6);
                         break;
                     case 'c':
                     default:
-                        newRobot.driveStraight_In(28 - adjustment,.6);
-                        newRobot.pivot(85, .6);
+                        newRobot.driveStraight_In(25 - adjustment,.6);
+                        newRobot.pivot(70, .6);
                         break;
                 }
                // newRobot.oldMoveLift(-1);
