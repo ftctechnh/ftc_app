@@ -17,7 +17,7 @@ public class RelicArm {
     public double elbowup = 0.35;       //relic pickup position
     public double elbowdown = 0.0;      // Stored in the robot
     public int    relicArmMotorMin = 0;
-    public int    relicArmMotorMax = 5000;
+    public int    relicArmMotorMax = 3000; //5000;
     public int    deploydistance = 150;//Distance before relic controls turn on
 
     public void init(HardwareMap hardwareMap) {
