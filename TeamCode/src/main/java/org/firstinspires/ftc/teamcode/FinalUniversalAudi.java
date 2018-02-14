@@ -56,8 +56,6 @@ public class FinalUniversalAudi extends LinearOpMode
                         newRobot.pivot(70, .6);
                         break;
                     case 'r':
-                    //    if (colorOfJewel == 'b')
-                      //      adjustment = -1;
                         newRobot.driveStraight_In(31 - adjustment,.6);
                         newRobot.pivot(70, .6);
                         break;
