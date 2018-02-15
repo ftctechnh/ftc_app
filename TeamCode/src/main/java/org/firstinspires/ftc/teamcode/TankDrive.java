@@ -54,8 +54,8 @@ public class TankDrive extends OpMode {
         m2 = hardwareMap.get(DcMotor.class, "Motor2");
         //m3 = hardwareMap.get(DcMotor.class,"Motor3");
         //m4 = hardwareMap.get(DcMotor.class,"Motor4");
-        rightPower = Range.clip(gamepad1.right_stick_y,-0.8,0.8);
-        leftPower = Range.clip(gamepad1.left_stick_y,-0.8,0.8);
+        rightPower = Range.clip(gamepad1.right_stick_y,-0.5,0.5);
+        leftPower = Range.clip(gamepad1.left_stick_y,-0.5,0.5);
         
         double trigger = gamepad1.right_trigger;
         double trigger2 = gamepad1.left_trigger;

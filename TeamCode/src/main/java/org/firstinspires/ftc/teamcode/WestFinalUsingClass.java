@@ -18,7 +18,9 @@ public class WestFinalUsingClass extends OpMode
     private boolean opened = true;
     private boolean dropped = false;
 
-    private double sens = 0.6;
+    private double sens = 0.7;
+
+    private double right = 0.4;
 
     private double rightPower,leftPower;
 
@@ -66,8 +68,8 @@ public class WestFinalUsingClass extends OpMode
             rightPower = Range.clip(gamepad1.left_stick_y + gamepad1.left_stick_x, -sens, sens);
             leftPower = Range.clip(gamepad1.left_stick_y - gamepad1.left_stick_x, -sens, sens);
         }else{
-            rightPower = Range.clip(gamepad1.right_stick_y + gamepad1.right_stick_x,-0.4,0.4);
-            leftPower = Range.clip(gamepad1.right_stick_y - gamepad1.right_stick_x,-0.4,0.4);
+            rightPower = Range.clip(gamepad1.right_stick_y + gamepad1.right_stick_x,-right,right);
+            leftPower = Range.clip(gamepad1.right_stick_y - gamepad1.right_stick_x,-right,right);
             }
 
 
