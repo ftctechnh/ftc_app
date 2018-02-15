@@ -25,6 +25,7 @@ public class CompTeleFinal extends OpMode
 
     public void start ()
     {
+
     }
 
     public void loop ()
@@ -82,9 +83,9 @@ public class CompTeleFinal extends OpMode
             newRobot.getTailRelease().setPower(0f);
 
         if (gamepad2.a)
-            newRobot.fineAdjGrabber(.028f);
+            newRobot.fineAdjGrabber(.028f);   //closing
         else if (gamepad2.b)
-            newRobot.fineAdjGrabber(-.028f);
+            newRobot.fineAdjGrabber(-.028f);  //opening
 
         if (gamepad2.x)
         {
