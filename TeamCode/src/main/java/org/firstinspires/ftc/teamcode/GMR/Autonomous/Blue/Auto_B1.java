@@ -70,7 +70,7 @@ public class Auto_B1 extends OpMode {
 
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
-        robot = new Robot(hardwareMap, telemetry, true);
+        robot = new Robot(hardwareMap, telemetry, false);
 
         goalPosition = 0.25;
         position = 0.85;
@@ -93,9 +93,8 @@ public class Auto_B1 extends OpMode {
             switch(state){
                 case TIME:
                     //Starts the timer
-                    state = States.GRAB;
-                    stageCheck += "Time - ";
-                    time.reset();
+                    state = States.ARMDOWN;
+                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:
                     state = States.SCAN;
@@ -204,7 +203,7 @@ public class Auto_B1 extends OpMode {
                         isFinished = false;
                         state = States.DROP;
                         stageCheck += "Drive Box - ";
-                        goalSeconds = currentSeconds += 2.0;
+                        goalSeconds = currentSeconds += 1.0;
                     }
                     break;
                 case DROP:

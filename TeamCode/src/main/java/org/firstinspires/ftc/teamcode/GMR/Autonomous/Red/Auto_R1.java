@@ -75,7 +75,7 @@ public class Auto_R1 extends OpMode {
 
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
-        robot = new Robot(hardwareMap, telemetry, true);
+        robot = new Robot(hardwareMap, telemetry, false);
 
         goalPosition = 0.5;
         position = 0;
@@ -100,7 +100,8 @@ public class Auto_R1 extends OpMode {
             switch(state){
                 case TIME:
                     time.reset();
-                    state = States.GRAB;
+                    state = States.ARMDOWN;
+                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:
                     state = States.SCAN;
@@ -109,7 +110,6 @@ public class Auto_R1 extends OpMode {
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
-                        goalSeconds = currentSeconds += 0.4;
                         state = States.ARMDOWN;
                     } break;
                 case ARMDOWN:
@@ -199,7 +199,7 @@ public class Auto_R1 extends OpMode {
                     } else{
                         isFinished = false;
                         state = States.DROP;
-                        goalSeconds = currentSeconds += 2.0;
+                        goalSeconds = currentSeconds += 1.0;
                     } break;
                 case DROP:
                     robot.blockLift.grab(true, 0);
