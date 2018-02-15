@@ -65,8 +65,10 @@ public class SensorLib {
         public float loop(float error, float dt) {
             if (Math.abs(error) < mKiCutoff)      // only integrate small errors (< 3 degrees for now)
                 mIntegral += error*dt;
-            float derivative = (dt > 0) ? (error - mPrevError)/dt : 0;
-            float output = mKp*error + mKi*mIntegral + mKd*derivative;
+            float derivative = (dt > 0) ? Math.abs(error - mPrevError)/dt : 0;
+            float output = mKp*error + mKi*mIntegral;
+            if(output >= 0) output += mKd*derivative;
+            else output -= mKd*derivative;
             mPrevError = error;
             return output;
         }

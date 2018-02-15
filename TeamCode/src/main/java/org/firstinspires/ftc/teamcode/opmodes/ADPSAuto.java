@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
+import org.firstinspires.ftc.teamcode.opmodes.diagnostic.UltraHoneDebug;
 
 import java.util.Arrays;
 
@@ -65,19 +66,19 @@ public class ADPSAuto extends VuforiaBallLib {
     private static final double MM_PER_ENCODE = 13.298;
 
     private enum AutoPath {
-        RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, 1, 125, 370),
-        RED_FRONT_CENTER(true, false, RelicRecoveryVuMark.CENTER, 0, 125, 350),
-        RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, 2, 55, 370),
-        RED_REAR_LEFT(true, true, RelicRecoveryVuMark.LEFT, 1, 125, 370),
-        RED_REAR_CENTER(true, true, RelicRecoveryVuMark.CENTER, 2, 55, 370),
-        RED_REAR_RIGHT(true, true, RelicRecoveryVuMark.RIGHT, 1, 55, 370),
+        RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, 1, 125, 370, 32),
+        RED_FRONT_CENTER(true, false, RelicRecoveryVuMark.CENTER, 0, 125, 350, 32),
+        RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, 2, 55, 370, 32),
+        RED_REAR_LEFT(true, true, RelicRecoveryVuMark.LEFT, 1, 125, 325, 32),
+        RED_REAR_CENTER(true, true, RelicRecoveryVuMark.CENTER, 0, 125, 325, 32),
+        RED_REAR_RIGHT(true, true, RelicRecoveryVuMark.RIGHT, 2, 55, 325, 32),
 
-        BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 125, 370),
-        BLUE_FRONT_CENTER(false, false, RelicRecoveryVuMark.CENTER, 1, 55, 350),
-        BLUE_FRONT_RIGHT(false, false, RelicRecoveryVuMark.RIGHT, 2, 55, 340),
-        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 125, 370),
-        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55, 370),
-        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55, 370);
+        BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 125, 370, 32),
+        BLUE_FRONT_CENTER(false, false, RelicRecoveryVuMark.CENTER, 1, 55, 350, 32),
+        BLUE_FRONT_RIGHT(false, false, RelicRecoveryVuMark.RIGHT, 2, 55, 340, 32),
+        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 125, 370, 32),
+        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55, 370, 32),
+        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55, 370, 32);
 
         public RelicRecoveryVuMark vuMark;
         public boolean red;
@@ -85,13 +86,15 @@ public class ADPSAuto extends VuforiaBallLib {
         public int skipCount;
         public float turnAmount;
         public int driveCounts;
-        AutoPath(boolean red, boolean rear, RelicRecoveryVuMark mark, int skipCount, float turnAmount, int driveCounts) {
+        public int ultraDist;
+        AutoPath(boolean red, boolean rear, RelicRecoveryVuMark mark, int skipCount, float turnAmount, int driveCounts, int ultraDist) {
             this.red = red;
             this.rear = rear;
             this.vuMark = mark;
             this.skipCount = skipCount;
             this.turnAmount = turnAmount;
             this.driveCounts = driveCounts;
+            this.ultraDist = ultraDist;
         }
 
         static AutoPath getPath(boolean red, boolean rear, RelicRecoveryVuMark mark) {
@@ -121,16 +124,24 @@ public class ADPSAuto extends VuforiaBallLib {
         frontUltra.initDevice();
         backUltra.initDevice();
 
+        backDist.startDevice();
+        frontDist.startDevice();
+        frontUltra.startDevice();
+        backUltra.startDevice();
+
         bot.init();
 
         bot.setDropPos(0.7);
     }
 
+    public void init_loop() {
+        telemetry.addData("Front Ultra", frontUltra.getReading());
+        telemetry.addData("Back Ultra", backUltra.getReading());
+        telemetry.addData("Front Infrared", frontDist.getDist());
+        telemetry.addData("Back Infrared", backDist.getDist());
+    }
+
     public void start() {
-        backDist.startDevice();
-        frontDist.startDevice();
-        frontUltra.startDevice();
-        backUltra.startDevice();
         startTracking();
     }
 
@@ -177,8 +188,10 @@ public class ADPSAuto extends VuforiaBallLib {
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
 
             GyroCorrectStep step;
-            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 360.0f);
-            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 360.0f);
+            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 400.0f);
+            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 400.0f);
+
+            int heading = rear ? (red ? 90 : -90) : 0;
 
             if(!rear) {
                 findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 155.0f * mul, 600, true, -360.0f, 360.0f));
@@ -186,23 +199,24 @@ public class ADPSAuto extends VuforiaBallLib {
             }
             else {
                 //TODO: implement encoder count backup automatically
-                findPilliar.add(new UltraHoneStep(this, red ? frontUltra : backUltra, 45, 2, 5, new SensorLib.PID(0.5f, 0.15f, 0, 10), step));
-                findPilliar.add(new AutoLib.GyroTurnStep(this, red ? 90 : -90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 45.0f, 360.0f, motorPID, 0.5f, 10, true));
+                findPilliar.add(new UltraHoneStep(this, frontUltra, path.ultraDist, 0, 5, new SensorLib.PID(15f * -mul, 0.15f * -mul, 0, 10), step));
+                //findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 520.0f, motorPID, 0.5f, 10, true));
+                findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorRay(), 0.1f, 0.4f, new SensorLib.PID(0.002f, 0, 0, 0), 0.5f, 10, true));
             }
 
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.85, 0.25, false));
 
             //reconstruct for saftey
-            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 25.0f, 150.0f);
-            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 25.0f, 150.0f);
+            if(!red) step = new GyroCorrectStep(this, heading, bot.getHeadingSensor(), new SensorLib.PID(-30, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 25.0f, 150.0f);
+            else step = new GyroCorrectStep(this, heading, bot.getHeadingSensor(), new SensorLib.PID(-30, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 25.0f, 150.0f);
             final APDS9960 dist = red ? backDist : frontDist;
             //TODO: add camera fallback
-            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.64, dist, new SensorLib.PID(1.0f, 0.15f, 0, 10), step,
+            findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.62, dist, new SensorLib.PID(1.0f, 0.15f, 0, 10), step,
                     60, 8, path.skipCount, 100, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
-            findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 65.0f, 520.0f, motorPID, 2.0f, 10, true));
+            findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount + heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 520.0f, motorPID, 2.0f, 10, true));
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 195.0f, path.driveCounts, true));
             findPilliar.add(bot.getDropStep());
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
@@ -320,7 +334,8 @@ public class ADPSAuto extends VuforiaBallLib {
                 else power = Range.clip(pError - gyroStep.getMinPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
                 //if(pError >= 0) power = Range.clip(pError, 0, gyroStep.getMaxPower());
                 //else power = Range.clip(pError, -gyroStep.getMaxPower(), 0);
-                setMotorsWithoutGyro(-power);
+                gyroStep.setPower(-power);
+                gyroStep.loop();
                 //telem
                 mode.telemetry.addData("APDS dist", error);
                 //return
@@ -547,12 +562,12 @@ public class ADPSAuto extends VuforiaBallLib {
         private final int error;
         private final int count;
         private final SensorLib.PID errorPid;
-        private final GyroCorrectStep gyroStep;
+        private final ADPSAuto.GyroCorrectStep gyroStep;
 
         private double lastTime = 0;
         private int currentCount = 0;
 
-        UltraHoneStep(OpMode mode, MatbotixUltra ultra, int dist, int error, int count, SensorLib.PID errorPid, GyroCorrectStep gyroStep) {
+        UltraHoneStep(OpMode mode, MatbotixUltra ultra, int dist, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep) {
             this.mode = mode;
             this.ultra = ultra;
             this.dist = dist;
@@ -564,31 +579,48 @@ public class ADPSAuto extends VuforiaBallLib {
 
         public boolean loop() {
             super.loop();
-            if(lastTime == 0) lastTime = mode.getRuntime() - 1;
+            if(firstLoopCall()) lastTime = mode.getRuntime() - 1;
             //get the distance and error
-            int curError = dist - ultra.getReading();
+            final int read = ultra.getReading();
+            final int curError = dist - read;
             //if we found it, stop
             //if the peak is within stopping margin, stop
             if(Math.abs(curError) <= error) {
-                gyroStep.setPower(0);
+                setMotorsWithoutGyro(0);
                 return ++currentCount >= count;
             }
             else currentCount = 0;
             //PID
-            double time = mode.getRuntime();
-            float pError = errorPid.loop(curError, (float)(time - lastTime));
+            final double time = mode.getRuntime();
+            final float pError = errorPid.loop(curError, (float)(time - lastTime));
             lastTime = time;
             mode.telemetry.addData("power error", pError);
             //cut out a middle range, but handle positive and negative
-            float power;
-            if(pError >= 0) power = Range.clip(gyroStep.getStartPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
-            else power = Range.clip(pError - gyroStep.getStartPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
-            gyroStep.setPower(-power);
+            final float power;
+            if(pError >= 0) power = Range.clip(pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
+            else power = Range.clip(pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+            /*
+            if(gyroStep.getStartPower() >= 0){
+                if(pError >= 0) power = Range.clip(gyroStep.getStartPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
+                else power = Range.clip(pError - gyroStep.getStartPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+            }
+            else {
+                if(pError >= 0) power = Range.clip(gyroStep.getStartPower() - pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+                else power = Range.clip(Math.abs(gyroStep.getStartPower() + pError), gyroStep.getMinPower(), gyroStep.getMaxPower());
+            }
+            */
+            gyroStep.setPower(power);
             gyroStep.loop();
             //telem
+            mode.telemetry.addData("Power", -power);
             mode.telemetry.addData("Ultra error", curError);
+            mode.telemetry.addData("Ultra", read);
             //return
             return false;
+        }
+
+        private void setMotorsWithoutGyro(float power) {
+            for(DcMotor motor : gyroStep.getMotors()) motor.setPower(power);
         }
     }
 }

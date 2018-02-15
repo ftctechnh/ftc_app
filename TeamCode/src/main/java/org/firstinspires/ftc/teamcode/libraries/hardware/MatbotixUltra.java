@@ -83,6 +83,6 @@ public class MatbotixUltra {
 
     public void stopDevice() {
         sensor.disengage();
-        sensor.close();
+        //sensor.close();
     }
 }

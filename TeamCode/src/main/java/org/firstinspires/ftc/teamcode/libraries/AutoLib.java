@@ -566,7 +566,7 @@ public class AutoLib {
 
             if(lastTime == 0) lastTime = mOpMode.getRuntime();
             double time = mOpMode.getRuntime();
-            float pError = errorPid.loop(error, (float)(time - lastTime));
+            float pError = errorPid.loop(error, (float)Math.abs(time - lastTime));
             lastTime = time;
             mOpMode.telemetry.addData("power error", pError);
             //cut out a middle range, but handle positive and negative
