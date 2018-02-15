@@ -363,7 +363,7 @@ public class NewRobotFinal
 
             while ((driveLeftOne.getCurrentPosition() < -encTarget) && (driveRightOne.getCurrentPosition() > encTarget) && !opMode.isStopRequested())
             {
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                if (loops > 5 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
         }
@@ -373,7 +373,7 @@ public class NewRobotFinal
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget && !opMode.isStopRequested())
             {
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                if (loops > 5 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
 
@@ -383,6 +383,9 @@ public class NewRobotFinal
 
     public void driveStraight_In_Stall(float inches, double pow, Telemetry telemetry)
     {
+        if(pow < .5)
+            pow = .5;
+
         double velocitiesR = 0;
         double velocitiesL = 0;
         int loops = 0;
@@ -411,7 +414,7 @@ public class NewRobotFinal
                 telemetry.addData("LAvg ",velocitiesL/loops);
                 telemetry.addData("RAvg ",velocitiesR/loops);
                 telemetry.update();
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                if (loops > 5 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
         }
@@ -432,7 +435,7 @@ public class NewRobotFinal
                 telemetry.addData("LAvg ",velocitiesL/loops);
                 telemetry.addData("RAvg ",velocitiesR/loops);
                 telemetry.update();
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                if (loops > 5 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
 
