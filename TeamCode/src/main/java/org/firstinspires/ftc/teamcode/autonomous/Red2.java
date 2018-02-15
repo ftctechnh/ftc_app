@@ -215,24 +215,7 @@ public class Red2 extends LinearOpMode{
 
         Thread.sleep(1000);
 
-        //Grip the block and lift
-        grabTopLeft.setPosition(0.3);
-        grabTopRight.setPosition(0.4);
-        GRABUP(1700);
-
-        FORWARD(2800, 0.5);
-        SWAYLEFT(2000);
-
-        //Move towards safezone
-        FORWARD(650, 0.5);
-
-        //Drop glyph
-        grabTopLeft.setPosition(0.4);
-        grabTopRight.setPosition(0.3);
-
-        BACKWARD(580);
-
-        /**<VUFORIA>*//*
+        /**<VUFORIA>*/
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -253,50 +236,63 @@ public class Red2 extends LinearOpMode{
             telemetry.addData("VuMark", "not visible");
         }
         telemetry.update();
-        *//**</VUFORIA>*//*
+        /**</VUFORIA>*/
 
         //Grip the block and lift
         grabTopLeft.setPosition(0.3);
         grabTopRight.setPosition(0.4);
-        GRABUP(1600);
+        GRABUP(1700);
 
         if (gridColum == 2){
-            //Move forward: MIDDLE
+
+            FORWARD(2800, 0.5);
+            //middle
+            SWAYLEFT(2000);
+
+            //Move towards safezone
+            FORWARD(650, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
             grabTopRight.setPosition(0.3);
 
-            BACKWARD(500);
+            BACKWARD(580);
+
         }
 
         if (gridColum == 1){
-            //Move forward: RIGHT
+            FORWARD(2800, 0.5);
+            //right
+            SWAYLEFT(1000);
 
-            // Drop glyph
+            //Move towards safezone
+            FORWARD(650, 0.5);
+
+            //Drop glyph
             grabTopLeft.setPosition(0.4);
             grabTopRight.setPosition(0.3);
 
-            BACKWARD(500);
-
-            //FOR RIGHT SIDE
+            BACKWARD(580);
             SWAYLEFT(600);
         }
 
         if (gridColum == 3){
-            //Move forward: LEFT
+            FORWARD(2800, 0.5);
+            //left
+            SWAYLEFT(3100);
+
+            //Move towards safezone
+            FORWARD(650, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
             grabTopRight.setPosition(0.3);
 
-            BACKWARD(500);
-
-            //FOR LEFT SIDE
+            BACKWARD(580);
             SWAYRIGHT(600);
         }
 
-        Thread.sleep(5000);*/
+        Thread.sleep(5000);
     }
 
 
