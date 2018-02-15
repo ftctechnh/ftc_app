@@ -107,6 +107,7 @@ public class FinalUniversalAudi extends LinearOpMode
                     case 'l':
                         newRobot.driveStraight_In(32 - adjustment,.6);
                         newRobot.pivot(-70, .6);
+                        break;
                     case 'c':
                     default:
                         newRobot.driveStraight_In(18.5f - adjustment,.6);
