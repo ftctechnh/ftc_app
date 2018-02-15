@@ -25,6 +25,7 @@ public class CompTeleFinal extends OpMode
 
     public void start ()
     {
+
     }
 
     public void loop ()
