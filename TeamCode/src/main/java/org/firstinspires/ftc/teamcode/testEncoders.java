@@ -55,49 +55,55 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name="Test Encoders", group="Linear Opmode")  // @Autonomous(...) is the other common choice
 //@Disabled
 public class testEncoders extends LinearOpMode {
+    DcMotor                 frontLeftMotor;
+    DcMotor                 backLeftMotor;
+    DcMotor                 frontRightMotor;
+    DcMotor                 backRightMotor;
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
     // DcMotor leftMotor = null;
     // DcMotor rightMotor = null;
 
-    /* Use the HardwareBACONbot */
-    MasterHardwareClass robot = new MasterHardwareClass();
-
     @Override
     public void runOpMode() {
 
             /* This runs the init in the hardware map! */
-        robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        robot.verticalArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /* Find all hardware in configuration */
+        frontLeftMotor = hardwareMap.dcMotor.get("FL");
+        backLeftMotor = hardwareMap.dcMotor.get("BL");
+        frontRightMotor = hardwareMap.dcMotor.get("FR");
+        backRightMotor = hardwareMap.dcMotor.get("BR");
+
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+         frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(100);
-        robot.verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+         frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
 
-        robot.verticalArmMotor.setPower(.5);
+        frontLeftMotor.setPower(.2);
+        frontRightMotor.setPower(.2);
+        backLeftMotor.setPower(.2);
+        backRightMotor.setPower(.2);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("VerticalArm: ", robot.verticalArmMotor.getCurrentPosition());
-            telemetry.addData("Front Right: ", robot.frontLeftMotor.getCurrentPosition());
-            telemetry.addData("Front Left: ", robot.frontRightMotor.getCurrentPosition());
-            telemetry.addData("Back Right: ", robot.backLeftMotor.getCurrentPosition());
-            telemetry.addData("Back Left: ", robot.backRightMotor.getCurrentPosition());
+            telemetry.addData("Front Right: ",  frontLeftMotor.getCurrentPosition());
+            telemetry.addData("Front Left: ",  frontRightMotor.getCurrentPosition());
+            telemetry.addData("Back Right: ",  backLeftMotor.getCurrentPosition());
+            telemetry.addData("Back Left: ",  backRightMotor.getCurrentPosition());
             telemetry.update();
         }
     }
