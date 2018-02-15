@@ -327,7 +327,7 @@ public class Teleop extends OpMode {
 
             }
             //Front glyph sensor trigger lights
-            if (gromit.glyphTrain.seeFrontBlock.getState() && !frontglyphSensed) {     // if block is sensed set boolean
+            /*if (gromit.glyphTrain.seeFrontBlock.getState() && !frontglyphSensed) {     // if block is sensed set boolean
                 frontglyphSensed = true;
                 //Turn on lights you have a block
                 gromit.glyphTrain.sensorColor.enableLed(true);
@@ -337,7 +337,7 @@ public class Teleop extends OpMode {
                 //Second edge of block passed turn off lights
                 gromit.glyphTrain.sensorColor.enableLed(false);//turn off led
 
-            }
+            }*/
         }
 
         //Second controller Clamps
@@ -469,7 +469,7 @@ public class Teleop extends OpMode {
         if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance) {
             if (leftbumperIsReleased) {//IF CHANGE IN STATE
                 leftbumperIsReleased = false;
-                movetime = 700;
+                movetime = 100;
                 elbowmoving = true;
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();//Start time
@@ -529,7 +529,7 @@ public class Teleop extends OpMode {
             if (rightbtn2IsReleased) {//IF CHANGE IN STATE
                 rightbtn2IsReleased = false;
                 onehitwonder = true;
-                gromit.relicArm.relicArmMotor.setPower(0.9);  // start powering out the arm
+                gromit.relicArm.relicArmMotor.setPower(1.0);  // start powering out the arm
 
                 //Begin ELbow movev
                 movetime = elbowdowntime;

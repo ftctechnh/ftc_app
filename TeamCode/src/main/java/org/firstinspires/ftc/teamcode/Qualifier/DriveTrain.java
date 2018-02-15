@@ -39,9 +39,9 @@ public class DriveTrain {
     public final double GEAR_RATIO = 32/24;
     public final double TICKS_REV = 537.6;
     public final double COUNTS_PER_INCH = (TICKS_REV * GEAR_RATIO) / (WHEEL_DIAMETER * 3.1415);
-    public static final double turn_THRESHOLD = 1.0;
+    public static final double turn_THRESHOLD = 2.0;
     public static final double drive_THRESHOLD = 1.0;
-    public static final double turn_MIN_SPEED = 0.2;
+    public static final double turn_MIN_SPEED = 0.15;
     public static final double turn_COEF = 0.90;
     public static final double drive_COEF = 1.0; //Maximum additional speed to add to a motor during a gyro drive
 

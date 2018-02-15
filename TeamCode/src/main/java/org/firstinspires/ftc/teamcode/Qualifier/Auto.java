@@ -440,6 +440,10 @@ public class Auto extends LinearOpMode {
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -5, menuFile.BlueBackHeading3, 0);    // forward
             gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueBackHeading3, 0);    // back up
 
+            if (menuFile.mode == 1 || menuFile.mode == 2) {
+                goGetAnotherGlyphBlueBack(vuMark);
+            }
+
         }
         //ZERO THE REAR LIFT
         gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
@@ -582,6 +586,71 @@ public class Auto extends LinearOpMode {
 
     }
 
+    public void goGetAnotherGlyphBlueBack(RelicRecoveryVuMark vuMark) {
+    double driveangle = -160;
+//Re-align
+
+        /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
+
+        if (menuFile.mode == 2) {//Align to a different box to do a row
+            // COnditional for where you are
+            if (vuMark == RelicRecoveryVuMark.CENTER) {
+                //Strafe right
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -5, menuFile.BlueBackHeading3, 90);   //strafe right 3//Move right (from our point of view)
+            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+                //Strafe Left
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -18, menuFile.BlueBackHeading3, -90);  //strafe left 3 //Move left if you are on the certain edge
+            } else {///THIS IS DEFAULT CASE OF VUMARK
+                //Strafe Right
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueBackHeading3, 90);  //THe column to the left, Our and robot's roight
+            }
+            gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, driveangle);
+            gromit.glyphTrain.startGlyphMotors(0.7);
+            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 54, driveangle, 0); //HEad to center
+            gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, driveangle);
+            //drive back towards glyph box
+            mecanumDriveBlock(menuFile.DriveSpeed * 0.7, -54,driveangle, 0); //move back
+            //gromit.glyphTrain.startGlyphMotors(0.7);
+            //sleep(500);
+            //gromit.glyphTrain.glyphclamp("close");
+            gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.BlueBackHeading3);
+            //Drive to separate box
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, -3, menuFile.BlueBackHeading3, 0); //move 50
+
+            //gromit.glyphTrain.stopGlyphMotors();
+            //unclamp glyph
+            gromit.glyphTrain.glyphclamp("open");
+            sleep(200);
+
+
+        } /*else {//Put it on top
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 90);  //-90    strafe back to where you are
+            gromit.driveTrain.mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
+            //drive back towards glyph box
+            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -50, menuFile.BlueFrontHeading2, 0); //move back
+            gromit.glyphTrain.startGlyphMotors(0.7);
+            sleep(500);
+            gromit.glyphTrain.stopGlyphMotors();
+
+            //Grip Block
+            gromit.glyphTrain.glyphclamp("close");
+            sleep(500);
+            gromit.glyphTrain.liftGlyphIndex(1, 0.3);
+            // Put the block into the box
+            //WIGGLE?
+            gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 10, menuFile.BlueFrontHeading2, 180); //move 50
+            //unclamp glyph
+            gromit.glyphTrain.glyphclamp("open");
+            sleep(200);
+        }*/
+        //Do the routine to push the block back into atleast one box //ROUTINE TO PUSH BLOCK INTO ATLEST INE COLUMN
+        //drive forward
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.3, 5, menuFile.BlueFrontHeading2, 0);    // back up
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, -90);  //-90    strafe (strafe is never as long)
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, -3, menuFile.BlueFrontHeading2, 0);    // forward
+        gromit.driveTrain.mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 0);    // back up
+
+    }
     public void mecanumDriveBlock(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
         double max;
         double multiplier;
