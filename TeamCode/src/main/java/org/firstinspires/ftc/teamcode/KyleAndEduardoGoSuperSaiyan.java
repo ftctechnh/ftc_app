@@ -29,77 +29,107 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.Range;
 
 /**
- * This is NOT an opmode.
+ * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
+ * All device access is managed through the HardwarePushbot class.
+ * The code is structured as a LinearOpMode
  *
- * This class can be used to define all the specific hardware for a single robot.
- * In this case that robot is a Pushbot.
- * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
+ * This particular OpMode executes a POV Game style Teleop for a PushBot
+ * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
+ * It raises and lowers the claw using the Gampad Y and A buttons respectively.
+ * It also opens and closes the claws slowly using the left and right Bumper buttons.
  *
- * This hardware class assumes the following device names have been configured on the robot:
- * Note:  All names are lower case and some have single spaces between words.
- *
- * Motor channel:  Left  drive motor:        "left_drive"
- * Motor channel:  Right drive motor:        "right_drive"
- * Motor channel:  Manipulator drive motor:  "left_arm"
- * Servo channel:  Servo to open left claw:  "left_hand"
- * Servo channel:  Servo to open right claw: "right_hand"
+ * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
+ * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-public class HardwarePushbot
-{
-    /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  leftArm     = null;
-    public Servo    leftClaw    = null;
-    public Servo    rightClaw   = null;
 
-    public static final double MID_SERVO       =  0.5 ;
-    public static final double ARM_UP_POWER    =  0.45 ;
-    public static final double ARM_DOWN_POWER  = -0.45 ;
+@TeleOp(name="kyle just copy pasted", group="Pushbot")
 
-    /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
-    /* Constructor */
-    public HardwarePushbot(){
+    /* Declare OpMode members. */
+    HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
+    // could also use HardwarePushbotMatrix class.
+    double          clawOffset      = 0;                       // Servo mid position
+    final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
 
-    }
+    @Override
+    public void runOpMode() {
+        double left;
+        double right;
+        double drive;
+        double turn;
+        double max;
 
-    /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
-        // Save reference to Hardware map
-        hwMap = ahwMap;
+        /* Initialize the hardware variables.
+         * The init() method of the hardware class does all the work here
+         */
+        robot.init(hardwareMap);
 
-        // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftArm    = hwMap.get(DcMotor.class, "left_arm");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Say", "Hello Driver");    //
+        telemetry.update();
 
-        // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        leftArm.setPower(0);
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        // run until the end of the match (driver presses STOP)
+        while (opModeIsActive()) {
 
-        // Define and initialize ALL installed servos.
-        leftClaw  = hwMap.get(Servo.class, "left_hand");
-        rightClaw = hwMap.get(Servo.class, "right_hand");
-        leftClaw.setPosition(MID_SERVO);
-        rightClaw.setPosition(MID_SERVO);
+            // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
+            // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
+            // This way it's also easy to just drive straight, or just turn.
+            drive = -gamepad1.left_stick_y;
+            turn  =  gamepad1.right_stick_x;
+
+            // Combine drive and turn for blended motion.
+            left  = drive + turn;
+            right = drive - turn;
+
+            // Normalize the values so neither exceed +/- 1.0
+            max = Math.max(Math.abs(left), Math.abs(right));
+            if (max > 1.0)
+            {
+                left /= max;
+                right /= max;
+            }
+
+            // Output the safe vales to the motor drives.
+            robot.leftDrive.setPower(left);
+            robot.rightDrive.setPower(right);
+
+            // Use gamepad left & right Bumpers to open and close the claw
+            if (gamepad1.right_bumper)
+                clawOffset += CLAW_SPEED;
+            else if (gamepad1.left_bumper)
+                clawOffset -= CLAW_SPEED;
+
+            // Move both servos to new position.  Assume servos are mirror image of each other.
+            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
+            robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
+            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
+
+            // Use gamepad buttons to move arm up (Y) and down (A)
+            if (gamepad1.y)
+                robot.leftArm.setPower(robot.ARM_UP_POWER);
+            else if (gamepad1.a)
+                robot.leftArm.setPower(robot.ARM_DOWN_POWER);
+            else
+                robot.leftArm.setPower(0.0);
+
+            // Send telemetry message to signify robot running;
+            telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+            telemetry.addData("left",  "%.2f", left);
+            telemetry.addData("right", "%.2f", right);
+            telemetry.update();
+
+            // Pace this loop so jaw action is reasonable speed.
+            sleep(50);
+        }
     }
 }
-
