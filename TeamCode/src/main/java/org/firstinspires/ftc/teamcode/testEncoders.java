@@ -92,19 +92,48 @@ public class testEncoders extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        frontLeftMotor.setPower(.2);
-        frontRightMotor.setPower(.2);
-        backLeftMotor.setPower(.2);
-        backRightMotor.setPower(.2);
-
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            telemetry.addLine("A = FrontLeft");
+            telemetry.addLine("B = FrontRight");
+            telemetry.addLine("X = BackLeft");
+            telemetry.addLine("Y = BackRight");
+
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front Right: ",  frontLeftMotor.getCurrentPosition());
-            telemetry.addData("Front Left: ",  frontRightMotor.getCurrentPosition());
-            telemetry.addData("Back Right: ",  backLeftMotor.getCurrentPosition());
-            telemetry.addData("Back Left: ",  backRightMotor.getCurrentPosition());
+            telemetry.addData("Front Left: ",  frontLeftMotor.getCurrentPosition());
+            telemetry.addData("Front Right: ",  frontRightMotor.getCurrentPosition());
+            telemetry.addData("Back Left: ",  backLeftMotor.getCurrentPosition());
+            telemetry.addData("Back Right: ",  backRightMotor.getCurrentPosition());
             telemetry.update();
+
+            if(gamepad1.a) {
+                frontLeftMotor.setPower(.2);
+            }
+            else{
+                frontLeftMotor.setPower(0);
+            }
+
+            if(gamepad1.b) {
+                frontRightMotor.setPower(.2);
+            }
+            else{
+                frontRightMotor.setPower(0);
+            }
+
+            if (gamepad1.x) {
+                backLeftMotor.setPower(.2);
+            }
+            else{
+                backLeftMotor.setPower(0);
+            }
+
+            if(gamepad1.y) {
+                backRightMotor.setPower(.2);
+            }
+            else{
+                backRightMotor.setPower(0);
+            }
+
         }
     }
 }
