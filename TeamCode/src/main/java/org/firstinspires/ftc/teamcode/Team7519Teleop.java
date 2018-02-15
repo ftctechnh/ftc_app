@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Ryan Gniadek and Ben Bernstein
  */
 @TeleOp(name = "7519Teleop", group = "7519")
+@Disabled
 public class Team7519Teleop extends LinearOpMode{
 
     private CRServo testServo;

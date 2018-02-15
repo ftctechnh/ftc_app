@@ -36,14 +36,16 @@ public class EncoderTest extends LinearOpMode{
         waitForStart();
 
         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftLift.setTargetPosition(0);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftLift.setPower(.25);
-        leftLift.setTargetPosition(0);
+
 
         rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightLift.setTargetPosition(0);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightLift.setPower(.25);
-        rightLift.setTargetPosition(0);
+
 
 
         while(opModeIsActive())

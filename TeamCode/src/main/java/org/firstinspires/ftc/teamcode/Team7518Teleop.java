@@ -42,13 +42,14 @@ public class Team7518Teleop extends LinearOpMode{
 
         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftLift.setPower(.25);
+        leftLift.setPower(1);
 
         rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLift.setPower(.25);
+        rightLift.setPower(1);
 
         int flipIteration = 0;
+        boolean speed = true;
 
 
         while(opModeIsActive())
@@ -58,7 +59,7 @@ public class Team7518Teleop extends LinearOpMode{
 
 
                        //Keep Color Sensor Upright
-                        colorSensorServo.setPosition(0);
+                        colorSensorServo.setPosition(.5);
 
 
                         //Mecanum Drive
@@ -70,11 +71,15 @@ public class Team7518Teleop extends LinearOpMode{
                         final double leftRearPower = h * Math.cos(robotAngle) - gamepad1.right_stick_x;
                         final double rightRearPower = h * Math.sin(robotAngle) + gamepad1.right_stick_x;
 
-                        leftFront.setPower(leftFrontPower);
-                        rightFront.setPower(-rightFrontPower);
-                        leftRear.setPower(leftRearPower);
-                        rightRear.setPower(-rightRearPower);
-
+                        if(gamepad1.dpad_up){
+                            speed=true;
+                            sleep(200);
+                        }//end if
+                        else if(gamepad1.dpad_down){
+                            speed=false;
+                            sleep(200);
+                        }//end else if
+                        drivetrain(speed, leftFrontPower, rightFrontPower, leftRearPower, rightRearPower);
 
                         //Intake Wheels
                         if (gamepad1.left_trigger>0){
@@ -101,31 +106,7 @@ public class Team7518Teleop extends LinearOpMode{
                             sleep(250);
                         }//end else if
                         setLift(lift);
-                        telemetry.addData("rightLift:\t", rightLift.getCurrentPosition());
-                        telemetry.addData("leftLift:\t", leftLift.getCurrentPosition());
-                        telemetry.update();
 
-//                        while(gamepad1.dpad_up){
-//                            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                            rightLift.setPower(.25);
-//                        }
-//                        while(gamepad1.dpad_down){
-//                            rightLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                            rightLift.setPower(-.25);
-//                        }
-//                        while(gamepad1.dpad_right){
-//                            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                            leftLift.setPower(.25);
-//                        }
-//                        while(gamepad1.dpad_left){
-//                            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-//                            leftLift.setPower(-.25);
-//                        }
-//                        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                        leftLift.setPower(.25);
-//
-//                        rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                        rightLift.setPower(.25);
 
 
                         //manual flipper adjustment
@@ -134,28 +115,40 @@ public class Team7518Teleop extends LinearOpMode{
                             flipIteration=0;
                         }//end if
                         else if(gamepad1.y){
-                            setFlip(0.64);
+                            setFlip(0.6);
                             flipIteration=2;
                         }//end else if
                         else if(gamepad1.a){
-                            setFlip(0.75);
+                            setFlip(0.8);
                             flipIteration=1;
                         }//end else if
 
 
                         //automatic flipper adjustment
                         if(gamepad1.b && flipIteration==0){
-                            setFlip(0.75);
+                            setFlip(0.8);
                             flipIteration++;
                         }//end if
                         else if (gamepad1.b && flipIteration==1){
-                            setFlip(0.64);
+                            setFlip(0.6);
                             flipIteration++;
                         }//end else if
                         else if (gamepad1.b && flipIteration==2){
                             setFlip(0);
                             flipIteration = 0;
                         }//end else if
+
+
+                        //telemetry
+                        telemetry.addData("speed:\t", speed);
+                        telemetry.addData("rightLift:\t", rightLift.getCurrentPosition());
+                        telemetry.addData("leftLift:\t", leftLift.getCurrentPosition());
+                        telemetry.addLine();
+                        telemetry.addData("leftFront:\t", leftFront.getCurrentPosition());
+                        telemetry.addData("rightFront:\t", rightFront.getCurrentPosition());
+                        telemetry.addData("leftRear:\t", leftRear.getCurrentPosition());
+                        telemetry.addData("rightRear:\t", rightRear.getCurrentPosition());
+                        telemetry.update();
 
         }//end while(opModeIsActive)
 
@@ -170,14 +163,29 @@ public class Team7518Teleop extends LinearOpMode{
 
     public void setLift(boolean up){
         if(up){
-            rightLift.setTargetPosition(-11000);
-            leftLift.setTargetPosition(-11000);
+            rightLift.setTargetPosition(5000);
+            leftLift.setTargetPosition(-5000);
         }//end if
         else{
             rightLift.setTargetPosition(0);
             leftLift.setTargetPosition(0);
         }//end else
     }//end setLift
+
+    public void drivetrain (boolean speed , double leftFrontPower, double rightFrontPower, double leftRearPower, double rightRearPower){
+        if(speed){
+            leftFront.setPower(leftFrontPower);
+            rightFront.setPower(-rightFrontPower);
+            leftRear.setPower(leftRearPower);
+            rightRear.setPower(-rightRearPower);
+        }//end if
+        else{
+            leftFront.setPower(leftFrontPower/2);
+            rightFront.setPower(-rightFrontPower/2);
+            leftRear.setPower(leftRearPower/2);
+            rightRear.setPower(-rightRearPower/2);
+        }//end else
+    }//end drivetrain
 
 
 }//end class
