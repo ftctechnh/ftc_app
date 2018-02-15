@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9930;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -64,6 +65,7 @@ public class ADPSAuto extends VuforiaBallLib {
     SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
 
     private static final double MM_PER_ENCODE = 13.298;
+    private static final int APDS_DIST = 60;
 
     private enum AutoPath {
         RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, 1, 125, 370, 32),
@@ -80,13 +82,21 @@ public class ADPSAuto extends VuforiaBallLib {
         BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55, 370, 32),
         BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55, 370, 32);
 
-        public RelicRecoveryVuMark vuMark;
-        public boolean red;
-        public boolean rear;
-        public int skipCount;
-        public float turnAmount;
-        public int driveCounts;
-        public int ultraDist;
+        //robot and field constants (in cm)
+        private final double REAR_PILLAR_WALL_DIST = DistanceUnit.INCH.toCm(24);
+        private final double FRONT_PILLAR_WALL_DIST = DistanceUnit.INCH.toCm(48);
+        private final double PILLAR_COL_DIST = DistanceUnit.INCH.toCm(7.63);
+        private final double RED_WHACKY_TO_ULTRA = 12.265;
+        private final double BLUE_WHACKY_TO_ULTRA = 30.591;
+
+        public final RelicRecoveryVuMark vuMark;
+        public final boolean red;
+        public final boolean rear;
+        public final int skipCount;
+        public final float turnAmount;
+        public final int driveCounts;
+        public final int ultraDist;
+        public final int apdsFailUltra;
         AutoPath(boolean red, boolean rear, RelicRecoveryVuMark mark, int skipCount, float turnAmount, int driveCounts, int ultraDist) {
             this.red = red;
             this.rear = rear;
@@ -95,6 +105,11 @@ public class ADPSAuto extends VuforiaBallLib {
             this.turnAmount = turnAmount;
             this.driveCounts = driveCounts;
             this.ultraDist = ultraDist;
+            //calculate the fallback ultrasonic distance based on known values on the robot and field
+            double fieldDist = this.rear ? REAR_PILLAR_WALL_DIST : FRONT_PILLAR_WALL_DIST;
+            double whackyUltra = this.red ? RED_WHACKY_TO_ULTRA : BLUE_WHACKY_TO_ULTRA;
+            double skipDist = this.skipCount * PILLAR_COL_DIST;
+            this.apdsFailUltra = (int)Math.round(fieldDist + skipDist*skipCount - DistanceUnit.MM.toCm(APDS_DIST) - whackyUltra);
         }
 
         static AutoPath getPath(boolean red, boolean rear, RelicRecoveryVuMark mark) {
@@ -213,7 +228,7 @@ public class ADPSAuto extends VuforiaBallLib {
             final APDS9960 dist = red ? backDist : frontDist;
             //TODO: add camera fallback
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.62, dist, new SensorLib.PID(1.0f, 0.15f, 0, 10), step,
-                    60, 8, path.skipCount, 100, this, red));
+                    APDS_DIST, 8, path.skipCount, 100, this, red));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount + heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 520.0f, motorPID, 2.0f, 10, true));
