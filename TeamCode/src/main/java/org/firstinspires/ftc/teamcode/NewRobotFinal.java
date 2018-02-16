@@ -383,9 +383,13 @@ public class NewRobotFinal
 
     public void driveStraight_In_Stall(float inches, double pow, Telemetry telemetry)
     {
-        if(pow < .5)
-            pow = .5;
-
+        if(Math.abs(pow) < .5)
+        {
+            if(pow >= 0)
+                pow = .5;
+            else
+                pow = -.5;
+        }
         double velocitiesR = 0;
         double velocitiesL = 0;
         int loops = 0;
