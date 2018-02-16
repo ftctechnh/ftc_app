@@ -42,7 +42,7 @@ public class DriveTrain {
     public static final double turn_THRESHOLD = 2.0;
     public static final double drive_THRESHOLD = 1.0;
     public static final double turn_MIN_SPEED = 0.15;
-    public static final double turn_COEF = 0.90;
+    public static final double turn_COEF = 1.0;
     public static final double drive_COEF = 1.0; //Maximum additional speed to add to a motor during a gyro drive
 
 
@@ -56,7 +56,6 @@ public class DriveTrain {
 
     //MOVE TO GLYPHTRAIN
     public AnalogInput sharpIRSensor;
-    public AnalogInput sharpIRSensorFront;//Add other front sensor for glyphs
      //?????????//Middle sensor Color hopefully
    // public DistanceSensor sensorDistance;
 

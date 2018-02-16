@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Qualifier;
 
 import android.app.ListFragment;
 
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -37,11 +38,17 @@ public class GlyphTrain {
     public Servo rightupper = null;
     public Servo glyphliftservo = null;
 
-    public DistanceSensor sensorDistance;
-    public ColorSensor sensorColor;//for LED
-    public DigitalChannel seeFrontBlock;
-    //GLYPHTRAIN SENSORS
+    public DistanceSensor sensorDistanceR;
+    public DistanceSensor sensorDistanceL;
 
+    public ColorSensor sensorColorL;//for LEDpublic
+    public ColorSensor sensorColorR;//for LED
+
+    //public DigitalChannel seeFrontBlock;
+    //public DigitalChannel seeMiddleBlock;
+    //GLYPHTRAIN SENSORS
+    public AnalogInput seeFrontBlock;
+    public AnalogInput seeMiddleBlock;
 
     public void init(HardwareMap hardwareMap) {
         left_glyph = hardwareMap.get(DcMotor.class, "left_glyph");
@@ -60,12 +67,20 @@ public class GlyphTrain {
         leftupper = hardwareMap.get(Servo.class, "left_upper");
 
         // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color");
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color");
-
+        sensorDistanceL = hardwareMap.get(DistanceSensor.class, "sensor_color");
+        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color");
+        sensorDistanceR = hardwareMap.get(DistanceSensor.class, "sensor_color1");
+        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color1");
+        sensorColorR.enableLed(false);//turn off led
+        sensorColorL.enableLed(false);//turn off led
         //Glyphtrain Sensors
-        //seeFrontBlock = hardwareMap.digitalChannel.get("glyphfront");
-        //seeFrontBlock.setMode(DigitalChannel.Mode.INPUT);
+//        seeFrontBlock = hardwareMap.digitalChannel.get("glyphfront");
+//        seeFrontBlock.setMode(DigitalChannel.Mode.INPUT);
+//        seeMiddleBlock = hardwareMap.digitalChannel.get("glyphmiddle");
+//        seeMiddleBlock.setMode(DigitalChannel.Mode.INPUT);
+
+        seeFrontBlock = hardwareMap.analogInput.get("glyphfront");
+        seeMiddleBlock = hardwareMap.analogInput.get("glyphmiddle");
 
 //      Neverest Motors
         left_glyph.setDirection(DcMotor.Direction.REVERSE);
