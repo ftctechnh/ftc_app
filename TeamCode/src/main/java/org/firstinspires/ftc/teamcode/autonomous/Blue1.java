@@ -254,7 +254,7 @@ public class Blue1 extends LinearOpMode{
         }
 
         if (gridColum == 3){
-            //Move forward: RIGHT
+            //Move forward: LEFT
             BACKWARD(3080, 0.5);
             gyro.calibrate();
             telemetry.addData("Gyro val:", gyro.getHeading());
@@ -278,7 +278,7 @@ public class Blue1 extends LinearOpMode{
         }
 
         if (gridColum == 1){
-            //Move forward: LEFT
+            //Move forward: RIGHT
             BACKWARD(4700, 0.5);
             gyro.calibrate();
             telemetry.addData("Gyro val:", gyro.getHeading());

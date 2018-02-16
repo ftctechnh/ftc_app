@@ -236,13 +236,16 @@ public class Blue2 extends LinearOpMode {
         if (gridColum == 2){
 
             BACKWARD(2800, 0.5);
-            //middle
-            SWAYLEFT(2000);
 
             //Turn 180 degrees
-            AXISRIGHT(5000);
+            AXISLEFT(4950);
+
+            //middle
+            SWAYRIGHT(2000);
+
+
             //Move towards safezone
-            FORWARD(650, 0.5);
+            FORWARD(850, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
@@ -252,15 +255,18 @@ public class Blue2 extends LinearOpMode {
 
         }
 
-        if (gridColum == 1){
+        if (gridColum == 3){
             BACKWARD(2800, 0.5);
-            //right
-            SWAYLEFT(1000);
 
             //Turn 180 degrees
-            AXISRIGHT(5000);
+            AXISLEFT(4950);
+
+            //left
+            SWAYRIGHT(1000);
+
+
             //Move towards safezone
-            FORWARD(650, 0.5);
+            FORWARD(850, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
@@ -270,15 +276,18 @@ public class Blue2 extends LinearOpMode {
             SWAYLEFT(600);
         }
 
-        if (gridColum == 3){
+        if (gridColum == 1){
             BACKWARD(2800, 0.5);
-            //left
-            SWAYLEFT(3100);
 
             //Turn 180 degrees
-            AXISRIGHT(5000);
+            AXISLEFT(4950);
+
+            //right
+            SWAYRIGHT(3100);
+
+
             //Move towards safezone
-            FORWARD(650, 0.5);
+            FORWARD(850, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
@@ -624,10 +633,10 @@ public class Blue2 extends LinearOpMode {
         motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        motorFrontLeft.setPower(0.7);
-        motorBackLeft.setPower(-0.7);
-        motorFrontRight.setPower(-0.7);
-        motorBackRight.setPower(0.7);
+        motorFrontLeft.setPower(1);
+        motorBackLeft.setPower(-1);
+        motorFrontRight.setPower(-1);
+        motorBackRight.setPower(1);
 
         motorFrontLeft.setTargetPosition(degrees);
         motorBackLeft.setTargetPosition(-degrees);
@@ -719,12 +728,12 @@ public class Blue2 extends LinearOpMode {
         }
     }
 
-    public static void turnAbsolute(int target, double turnSpeed) {
+    public void turnAbsolute(int target, double turnSpeed) {
 
         zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
         //turnSpeed = 0.07;
 
-        while (Math.abs(zAccumulated - target) > 1) {  //Continue while the robot direction is further than three degrees from the target
+        while (Math.abs(zAccumulated - target) > 2) {  //Continue while the robot direction is further than three degrees from the target
             if (zAccumulated > target) {  //if gyro is positive, we will turn right
                 motorBackLeft.setPower(turnSpeed);
                 motorFrontLeft.setPower(turnSpeed);
@@ -740,6 +749,8 @@ public class Blue2 extends LinearOpMode {
             }
 
             zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
+            telemetry.addData("accu", String.format("%03d", zAccumulated));
+            telemetry.update();
         }
 
         motorBackLeft.setPower(0);
