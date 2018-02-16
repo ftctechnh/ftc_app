@@ -346,11 +346,14 @@ public class Teleop extends OpMode {
                 frontglyphSensed = true;
                 //Turn on lights you have a block
                 gromit.glyphTrain.LED1.setState(true);
+                gromit.glyphTrain.LED2.setState(true);
+
                 //gromit.jewelArm.jewelflickerCenter();
 
             } else if (frontglyphSensed && gromit.glyphTrain.seeFrontBlock.getState()) {     // if block was already sensed (sense the back end)
                 frontglyphSensed = false;
                 gromit.glyphTrain.LED1.setState(false);
+                gromit.glyphTrain.LED2.setState(false);
                 //Second edge of block passed turn off lights
                 //gromit.jewelArm.jewelflickerForward();
 

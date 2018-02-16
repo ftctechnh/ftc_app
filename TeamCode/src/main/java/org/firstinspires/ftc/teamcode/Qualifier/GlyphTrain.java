@@ -47,6 +47,7 @@ public class GlyphTrain {
     public DigitalChannel seeFrontBlock;
     public DigitalChannel seeMiddleBlock;
     public DigitalChannel LED1;
+    public DigitalChannel LED2;
     //GLYPHTRAIN SENSORS
     //public AnalogInput seeFrontBlock;
     //public AnalogInput seeMiddleBlock;
@@ -81,6 +82,8 @@ public class GlyphTrain {
         seeMiddleBlock.setMode(DigitalChannel.Mode.INPUT);
         LED1 = hardwareMap.digitalChannel.get("LED1");
         LED1.setMode(DigitalChannel.Mode.OUTPUT);
+        LED2 = hardwareMap.digitalChannel.get("LED2");
+        LED2.setMode(DigitalChannel.Mode.OUTPUT);
 
 //        seeFrontBlock = hardwareMap.analogInput.get("glyphfront");
 //        seeMiddleBlock = hardwareMap.analogInput.get("glyphmiddle");

@@ -13,7 +13,6 @@
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <DigitalDevice name="glyphfrontIR" port="0"/>
             <DigitalDevice name="glyphmiddleIR" port="1"/>
-            <DigitalDevice name="LED1" port="5"/>
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2">
             <NeveRest60Gearmotor name="left_glyph" port="0" />
@@ -27,6 +26,8 @@
             <Servo name="right_upper" port="4" />
             <Servo name="servo_lift" port="5" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+            <DigitalDevice name="LED1" port="6"/>
+            <DigitalDevice name="LED2" port="7"/>
 
         </LynxModule>
     </LynxUsbDevice>
