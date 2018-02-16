@@ -85,9 +85,10 @@ public class finalTeleOp extends LinearOpMode{
         relicGrabDelta = 0.01;
         relicArmPosition = 0;
 
-
+        //Initial positions
         jewelArm.setPosition(0.73);
         jewelKnock.setPosition(0);
+        relicArm.setPosition(0.1);
 
 
         waitForStart();
