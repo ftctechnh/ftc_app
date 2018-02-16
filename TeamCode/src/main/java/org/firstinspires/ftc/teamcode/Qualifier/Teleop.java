@@ -114,8 +114,8 @@ public class Teleop extends OpMode {
 //        double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
         telemetry.addData("ElbowTime from file", elbowdowntime);
         telemetry.addData("Sharp IR V ", sharpIRVoltage);
-        telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getVoltage());
-        telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getVoltage());
+//        telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getVoltage());
+//        telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getVoltage());
 
 //        telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);
 //        RobotLog.ii("[Gromit] IR", Double.toString(IRdistance));
@@ -185,9 +185,10 @@ public class Teleop extends OpMode {
                         gromit.glyphTrain.liftIndex -= 1;
                     }
                     liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
+                    glyphLiftismoving = true;
                 }
 
-                glyphLiftismoving = true;
+
             }
         } else {
             xIsReleased = true;
@@ -209,9 +210,13 @@ public class Teleop extends OpMode {
             glyphSensedDelay = 0;
              if (blocks == 0) {
                 gromit.glyphTrain.glyphliftupper("top");
+                 gromit.glyphTrain.glyphclamp("open");
                 blocks = 1;
             } else {
                  //liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
+                 glyphLiftismoving = true;
+
+
                 gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
             }
         }
@@ -328,26 +333,26 @@ public class Teleop extends OpMode {
                     //delayLift = true;                            // check for time to lift
                     delayClamp = true;
                     glyphSensedDelay = 300;
-                    // set target  as 1 (assume we're at zero for now
-
-                    glyphLiftismoving = true;     // turn on manual override
+                    //glyphLiftismoving = true;     // turn on manual override
+                    if(blocks != 0) {
+                        gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
+                        liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];
+                    }
                 }
                 glyphSensed = false;
             }
             //Front glyph sensor trigger lights
-            if (gromit.glyphTrain.seeFrontBlock.getVoltage() < 1 && !frontglyphSensed) {     // if block is sensed set boolean
+            if (!gromit.glyphTrain.seeFrontBlock.getState()  && !frontglyphSensed) {     // if block is sensed set boolean
                 frontglyphSensed = true;
                 //Turn on lights you have a block
-                gromit.jewelArm.jewelflickerCenter();
-                gromit.glyphTrain.sensorColorR.enableLed(true);
-                gromit.glyphTrain.sensorColorL.enableLed(true);
+                gromit.glyphTrain.LED1.setState(true);
+                //gromit.jewelArm.jewelflickerCenter();
 
-            } else if (frontglyphSensed && gromit.glyphTrain.seeFrontBlock.getVoltage() > 1) {     // if block was already sensed (sense the back end)
+            } else if (frontglyphSensed && gromit.glyphTrain.seeFrontBlock.getState()) {     // if block was already sensed (sense the back end)
                 frontglyphSensed = false;
+                gromit.glyphTrain.LED1.setState(false);
                 //Second edge of block passed turn off lights
-                gromit.glyphTrain.sensorColorR.enableLed(false);//turn off led
-                gromit.glyphTrain.sensorColorL.enableLed(false);//turn off led
-                gromit.jewelArm.jewelflickerForward();
+                //gromit.jewelArm.jewelflickerForward();
 
             }
         }
@@ -603,14 +608,14 @@ public class Teleop extends OpMode {
         //telemetry.addLine("Time Left: " + timeLeft);
         //telemetry.addData("liftindex", gromit.glyphTrain.liftIndex);
         //telemetry.addData("liftPosition", gromit.glyphTrain.lift_motor.getCurrentPosition());
-        telemetry.addData("R Color sensor", gromit.glyphTrain.sensorDistanceR.getDistance(DistanceUnit.CM));
-        telemetry.addData("L Color sensor", gromit.glyphTrain.sensorDistanceL.getDistance(DistanceUnit.CM));
+//        telemetry.addData("R Color sensor", gromit.glyphTrain.sensorDistanceR.getDistance(DistanceUnit.CM));
+//        telemetry.addData("L Color sensor", gromit.glyphTrain.sensorDistanceL.getDistance(DistanceUnit.CM));
         telemetry.addData("relicArmTicks", gromit.relicArm.relicArmMotor.getCurrentPosition());
-        telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getVoltage());
-        telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getVoltage());
-
+        telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getState());
+        telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getState());
+        telemetry.update();
     }
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * This method puts the current thread to sleep for the given time in msec.

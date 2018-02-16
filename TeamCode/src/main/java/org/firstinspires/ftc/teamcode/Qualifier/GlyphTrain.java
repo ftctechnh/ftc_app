@@ -38,17 +38,18 @@ public class GlyphTrain {
     public Servo rightupper = null;
     public Servo glyphliftservo = null;
 
-    public DistanceSensor sensorDistanceR;
-    public DistanceSensor sensorDistanceL;
+//    public DistanceSensor sensorDistanceR;
+//    public DistanceSensor sensorDistanceL;
 
-    public ColorSensor sensorColorL;//for LEDpublic
-    public ColorSensor sensorColorR;//for LED
+//    public ColorSensor sensorColorL;//for LEDpublic
+//    public ColorSensor sensorColorR;//for LED
 
-    //public DigitalChannel seeFrontBlock;
-    //public DigitalChannel seeMiddleBlock;
+    public DigitalChannel seeFrontBlock;
+    public DigitalChannel seeMiddleBlock;
+    public DigitalChannel LED1;
     //GLYPHTRAIN SENSORS
-    public AnalogInput seeFrontBlock;
-    public AnalogInput seeMiddleBlock;
+    //public AnalogInput seeFrontBlock;
+    //public AnalogInput seeMiddleBlock;
 
     public void init(HardwareMap hardwareMap) {
         left_glyph = hardwareMap.get(DcMotor.class, "left_glyph");
@@ -67,20 +68,22 @@ public class GlyphTrain {
         leftupper = hardwareMap.get(Servo.class, "left_upper");
 
         // get a reference to the distance sensor that shares the same name.
-        sensorDistanceL = hardwareMap.get(DistanceSensor.class, "sensor_color");
-        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color");
-        sensorDistanceR = hardwareMap.get(DistanceSensor.class, "sensor_color1");
-        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color1");
-        sensorColorR.enableLed(false);//turn off led
-        sensorColorL.enableLed(false);//turn off led
+//        sensorDistanceL = hardwareMap.get(DistanceSensor.class, "sensor_color");
+//        sensorColorL = hardwareMap.get(ColorSensor.class, "sensor_color");
+//        sensorDistanceR = hardwareMap.get(DistanceSensor.class, "sensor_color1");
+//        sensorColorR = hardwareMap.get(ColorSensor.class, "sensor_color1");
+//        sensorColorR.enableLed(false);//turn off led
+//        sensorColorL.enableLed(false);//turn off led
         //Glyphtrain Sensors
-//        seeFrontBlock = hardwareMap.digitalChannel.get("glyphfront");
-//        seeFrontBlock.setMode(DigitalChannel.Mode.INPUT);
-//        seeMiddleBlock = hardwareMap.digitalChannel.get("glyphmiddle");
-//        seeMiddleBlock.setMode(DigitalChannel.Mode.INPUT);
+        seeFrontBlock = hardwareMap.digitalChannel.get("glyphfrontIR");
+        seeFrontBlock.setMode(DigitalChannel.Mode.INPUT);
+        seeMiddleBlock = hardwareMap.digitalChannel.get("glyphmiddleIR");
+        seeMiddleBlock.setMode(DigitalChannel.Mode.INPUT);
+        LED1 = hardwareMap.digitalChannel.get("LED1");
+        LED1.setMode(DigitalChannel.Mode.OUTPUT);
 
-        seeFrontBlock = hardwareMap.analogInput.get("glyphfront");
-        seeMiddleBlock = hardwareMap.analogInput.get("glyphmiddle");
+//        seeFrontBlock = hardwareMap.analogInput.get("glyphfront");
+//        seeMiddleBlock = hardwareMap.analogInput.get("glyphmiddle");
 
 //      Neverest Motors
         left_glyph.setDirection(DcMotor.Direction.REVERSE);
