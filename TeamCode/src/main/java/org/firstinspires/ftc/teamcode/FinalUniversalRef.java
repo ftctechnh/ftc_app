@@ -55,13 +55,13 @@ public class FinalUniversalRef extends LinearOpMode
                 switch (cipher)
                 {
                     case 'r':
-                        newRobot.driveStraight_In(3, .5);
+                        newRobot.driveStraight_In(3, .6);
                         newRobot.pivot(-90, .6);
-                        newRobot.driveStraight_In(6,.5);
+                        newRobot.driveStraight_In(6,.6);
                         newRobot.pivot(45,.6);
-                        newRobot.driveStraight_In(4, .5);
+                        newRobot.driveStraight_In(4, .6);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(10, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(10, .6, telemetry);
                         break;
 
                     case 'l':
@@ -119,20 +119,20 @@ public class FinalUniversalRef extends LinearOpMode
                         newRobot.pivot(-32,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(15, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(15, .6, telemetry);
                         break;
                     case 'r':
                         newRobot.pivot(22,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(15, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(15, .6, telemetry);
                         break;
                     case 'c':
                     default:
                         newRobot.pivot(57,.6);
                         newRobot.driveStraight_In(4, .5);
                         newRobot.openOrCloseDoor(false);
-                        newRobot.driveStraight_In_Stall(15, .5, telemetry);
+                        newRobot.driveStraight_In_Stall(15, .6, telemetry);
                         break;
                 }
                 newRobot.driveStraight_In(-5);
