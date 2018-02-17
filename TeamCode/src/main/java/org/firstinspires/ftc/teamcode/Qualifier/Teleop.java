@@ -94,7 +94,7 @@ public class Teleop extends OpMode {
 
     // file variables
     public int elbowdowntime = 2000;
-    public double elbowclampposition = 0.4;
+    public double elbowclampposition = 0.38;
 
     @Override
     public void init() {
@@ -288,7 +288,7 @@ public class Teleop extends OpMode {
             relicspeed = 0.2;
         } else {
             gromit.driveTrain.setSpeedMode(MID);
-            relicspeed = 0.6;
+            relicspeed = 0.7;
         }
 //on and off glyph intake
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
