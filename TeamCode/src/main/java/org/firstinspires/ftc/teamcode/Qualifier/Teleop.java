@@ -210,7 +210,7 @@ public class Teleop extends OpMode {
             glyphSensedDelay = 0;
              if (blocks == 0) {
                 gromit.glyphTrain.glyphliftupper("top");
-                 gromit.glyphTrain.glyphclamp("open");
+                 //gromit.glyphTrain.glyphclamp("open");
                 blocks = 1;
             } else {
                  //liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
@@ -322,7 +322,7 @@ public class Teleop extends OpMode {
         }
 
         /**
-         * GLYH SENSING
+         * GLYH SENSING && CHECK JAMS
          */
         if (trainon) {
             if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
