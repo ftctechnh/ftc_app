@@ -72,15 +72,15 @@ public class ADPSAuto extends VuforiaBallLib {
         RED_FRONT_CENTER(true, false, RelicRecoveryVuMark.CENTER, 0, 125, 350, 32),
         RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, 2, 55, 370, 32),
         RED_REAR_LEFT(true, true, RelicRecoveryVuMark.LEFT, 1, 125, 325, 32),
-        RED_REAR_CENTER(true, true, RelicRecoveryVuMark.CENTER, 0, 125, 325, 32),
+        RED_REAR_CENTER(true, true, RelicRecoveryVuMark.CENTER, 0, 125, 300, 32),
         RED_REAR_RIGHT(true, true, RelicRecoveryVuMark.RIGHT, 2, 55, 325, 32),
 
         BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 125, 370, 32),
         BLUE_FRONT_CENTER(false, false, RelicRecoveryVuMark.CENTER, 1, 55, 350, 32),
         BLUE_FRONT_RIGHT(false, false, RelicRecoveryVuMark.RIGHT, 2, 55, 340, 32),
-        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 125, 370, 32),
-        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55, 370, 32),
-        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55, 370, 32);
+        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 2, 125, 320, 32),
+        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 1, 55, 300, 32),
+        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 2, 55, 325, 32);
 
         //robot and field constants (in cm)
         private final double REAR_PILLAR_WALL_DIST = DistanceUnit.INCH.toCm(24);
@@ -203,8 +203,8 @@ public class ADPSAuto extends VuforiaBallLib {
             AutoLib.Sequence findPilliar = new AutoLib.LinearSequence();
 
             GyroCorrectStep step;
-            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 400.0f);
-            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 400.0f);
+            if(!red) step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 55.0f, 400.0f);
+            else step = new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 55.0f, 400.0f);
 
             int heading = rear ? (red ? 90 : -90) : 0;
 
@@ -214,9 +214,10 @@ public class ADPSAuto extends VuforiaBallLib {
             }
             else {
                 //TODO: implement encoder count backup automatically
-                findPilliar.add(new UltraHoneStep(this, frontUltra, path.ultraDist, 0, 5, new SensorLib.PID(15f * -mul, 0.15f * -mul, 0, 10), step));
+                findPilliar.add(new UltraHoneStep(this, red ? frontUltra : backUltra, path.ultraDist, 0, 5, new SensorLib.PID(15f, 0.15f, 0, 10), step));
                 //findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 520.0f, motorPID, 0.5f, 10, true));
-                findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorRay(), 0.1f, 0.4f, new SensorLib.PID(0.002f, 0, 0, 0), 0.5f, 10, true));
+                findPilliar.add(new AutoLib.GyroTurnStep(this, heading, bot.getHeadingSensor(), bot.getMotorRay(), 0.05f, 0.4f, new SensorLib.PID(0.005f, 0, 0, 0), 0.5f, 10, true));
+                if(!red) findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, heading, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), -360.0f, 100, true, -500.0f, 500.0f));
             }
 
             findPilliar.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
@@ -237,12 +238,12 @@ public class ADPSAuto extends VuforiaBallLib {
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
             DcMotor[] temp = bot.getMotorRay();
             if(path.turnAmount > 55) {
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.5f, 1.5, true));
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.5f, 2.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.5f, 1.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.5f, 1.0, true));
             }
             else {
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.5f, 1.5, true));
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.5f, 2.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.5f, 1.0, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.5f, 1.0, true));
             }
             findPilliar.add(oneSideSeq);
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -135.0f, 200, true));
@@ -611,9 +612,11 @@ public class ADPSAuto extends VuforiaBallLib {
             lastTime = time;
             mode.telemetry.addData("power error", pError);
             //cut out a middle range, but handle positive and negative
-            final float power;
+            float power;
             if(pError >= 0) power = Range.clip(pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
             else power = Range.clip(pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+            //reverse if necessary
+            if(gyroStep.getStartPower() < 0) power = -power;
             /*
             if(gyroStep.getStartPower() >= 0){
                 if(pError >= 0) power = Range.clip(gyroStep.getStartPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());

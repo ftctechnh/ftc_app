@@ -238,8 +238,12 @@ public class BotHardware {
         raiseLift.add(new AutoLib.EncoderMotorStep(Motor.liftRight.motor, 1.0f, 400, true));
         mSeq.add(raiseLift);
         AutoLib.Sequence drop = new AutoLib.ConcurrentSequence();
+        //drop the block
         drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 1.0, false));
         drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 1.0, false));
+        //also drop the intake
+        drop.add(new AutoLib.TimedServoStep(ServoE.frontDropLeft.servo, ServoE.frontDropDown, 0, false));
+        drop.add(new AutoLib.TimedServoStep(ServoE.frontDropRight.servo, ServoE.frontDropDown, 0, false));
         mSeq.add(drop);
         AutoLib.Sequence lift = new AutoLib.ConcurrentSequence();
         lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 1.0, false));
