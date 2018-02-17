@@ -76,6 +76,7 @@ public class testMainOp extends OpMode{
         if (gamepad2.dpad_right) {
             clawState = STATE.CLOSED;
         }
+
         claw.setPosition(clawState.value);
     }
 }

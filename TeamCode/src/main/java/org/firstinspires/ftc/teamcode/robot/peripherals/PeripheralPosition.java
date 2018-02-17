@@ -4,10 +4,10 @@ package org.firstinspires.ftc.teamcode.robot.peripherals;
  * Created by Derek on 2/6/2018.
  */
 
-public class Position {
+public class PeripheralPosition {
     private double position;
 
-    public Position(double position) {
+    public PeripheralPosition(double position) {
         this.position = position;
     }
 

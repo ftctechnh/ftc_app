@@ -26,7 +26,16 @@ public class Vec2 {
     //if (p > v) p = v;
     //if (p < -v) p = -v;
     //return p
+
+
+    @Override
+    public String toString() {
+        return "" + this.x + ", " +this.y;
+    }
+
     double clamp1(double v, double p) {
-        return (v > 0) ? (p > v) ? v : ((p < -v) ? -v : p) : p;
+        if (v > 0) if (p > v) return v;
+        else return (p < -v) ? -v : p;
+        else return p;
     }
 }

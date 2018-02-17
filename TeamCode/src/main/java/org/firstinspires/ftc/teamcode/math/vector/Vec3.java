@@ -16,6 +16,11 @@ public class Vec3 extends Vec2 {
         this(vec.x,vec.y,vec.z);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() + ", " + this.z;
+    }
+
     public Vec3 clamp(double v) {
         super.clamp(v);
         this.z = super.clamp1(v,this.z);

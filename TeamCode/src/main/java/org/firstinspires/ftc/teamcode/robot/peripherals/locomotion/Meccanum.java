@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.robot.locomotion;
+package org.firstinspires.ftc.teamcode.robot.peripherals.locomotion;
+
+import android.util.Log;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.math.vector.Vec3;
-import org.firstinspires.ftc.teamcode.robot.peripherals.Drivetrain;
-
-import java.util.Map;
 
 /**
  * Created by Derek on 12/7/2017.
@@ -19,6 +18,7 @@ public class Meccanum implements Drivetrain {
 
     public Meccanum(String name,DcMotor A,DcMotor B,DcMotor C,DcMotor D) {
         this.name = name;
+        integrator = new Vec3(0,0,0);
         this.A = A;
         this.B = B;
         this.C = C;
@@ -27,6 +27,7 @@ public class Meccanum implements Drivetrain {
 
     @Override
     public void update() {
+        Log.e("Teamcode","Mec Update int: " + integrator.toString());
         double side = 0,angle = 0,forward = 0;
         switch (driveMode) {
             case STATIC:
@@ -57,13 +58,39 @@ public class Meccanum implements Drivetrain {
     }
 
     @Override
+    public void setZeroPowerBehaivor(DcMotor.ZeroPowerBehavior powerBehavior) {
+        A.setZeroPowerBehavior(powerBehavior);
+        B.setZeroPowerBehavior(powerBehavior);
+        C.setZeroPowerBehavior(powerBehavior);
+        D.setZeroPowerBehavior(powerBehavior);
+    }
+
+    @Override
     public Vec3 getIntegrator() {
         return new Vec3(integrator);
     }
 
     @Override
+    public void stop() {
+        integrator = new Vec3(0,0,0);
+    }
+
+    @Override
     public void setIntegrator(Vec3 integrator) {
-        this.integrator = integrator.clamp(1);
+        this.integrator = integrator;
+    }
+
+    @Override
+    public void setRunMode(DcMotor.RunMode runMode) {
+        A.setMode(runMode);
+        B.setMode(runMode);
+        C.setMode(runMode);
+        D.setMode(runMode);
+    }
+
+    @Override
+    public boolean isBusy() {
+        return (A.isBusy() || B.isBusy() || C.isBusy() || D.isBusy());
     }
 
     @Override

@@ -1,82 +1,79 @@
 package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
-import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
+import org.firstinspires.ftc.teamcode.math.vector.Vec3;
+import org.firstinspires.ftc.teamcode.opmodes.base.RelicBase;
+
+import static org.firstinspires.ftc.teamcode.robot.peripherals.locomotion.Drivetrain.DriveMode.STATIC;
 
 /**
- * Created by Derek on 11/14/2017.
+ * Created by Derek on 2/9/2018.
+ *
+ * TeleOp for the RelicRecovery Game
  */
 
-@TeleOp(group = "teleop",name = "RelicTeleOp")
-public class RelicTeleOp extends OpMode{
-
-    private DcMotor A,B,C,D,arm;
-    private Servo claw;
-    private STATE clawState = STATE.OPEN;
-
-    private enum STATE {
-        OPEN(1),CENTER(0.75),CLOSED(0.4);
-
-        public double value;
-
-        STATE(double value) {
-            this.value = value;
-        }
-    }
+@TeleOp(name="RelicTeleOp",group = "Relic")
+public class RelicTeleOp extends RelicBase {
 
     @Override
     public void init() {
-        try {
-            B = hardwareMap.dcMotor.get("frontLeft");
-            C = hardwareMap.dcMotor.get("frontRight");
-            A = hardwareMap.dcMotor.get("backLeft");
-            D = hardwareMap.dcMotor.get("backRight");
-            arm = hardwareMap.dcMotor.get("arm");
-            claw = hardwareMap.servo.get("claw");
-
-            arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-            C.setDirection(REVERSE);
-            D.setDirection(REVERSE);
-
-
-
-
-        } catch (Exception e) {
-            telemetry.addData("",e.getLocalizedMessage());
-        }
-
-
+        super.init();
+        super.drivetrain.setDriveMode(STATIC);
     }
 
     @Override
     public void loop() {
-        double side = - gamepad1.left_stick_x/2;
-        double angle = gamepad1.right_stick_x / 4;
-        double foreward = gamepad1.left_stick_y/2 ;
-
-        A.setPower((foreward - side) + angle);
-        B.setPower((foreward + side) + angle);
-        C.setPower((foreward - side) - angle);
-        D.setPower((foreward + side) - angle);
-
-        arm.setPower(gamepad2.right_stick_y / 2);
-
-        if (gamepad2.dpad_left) {
-            clawState = STATE.OPEN;
+        //Controls for the gripper
+        if (gamepad2.dpad_right || gamepad2.dpad_left) {
+            gripper.setPosition(gamepad2.dpad_right ? gripper.getPosition() + clawIncrement : gripper.getPosition() - clawIncrement);
         }
 
-        if (gamepad2.dpad_up) {
-            clawState = STATE.CENTER;
+        check:
+        {
+            if (wrapper2.X.isPressed()) {
+                gripper.setPosition(gripper.getClampPositions().OPEN);
+                break check;
+            }
+
+            if (wrapper2.Y.isPressed()) {
+                gripper.setPosition(gripper.getClampPositions().CENTER);
+                break check;
+            }
+
+            if (wrapper2.B.isPressed()) {
+                gripper.setPosition(gripper.getClampPositions().CLOSED);
+            }
         }
 
-        if (gamepad2.dpad_right) {
-            clawState = STATE.CLOSED;
+        //controls the main arm
+        double armPower;
+        if (gamepad2.left_stick_y >= 0) {
+            armPower = gamepad2.right_stick_y * boomUpFactor;
+        } else {
+            armPower = gamepad2.right_stick_y * boomDownFactor;
         }
-        claw.setPosition(clawState.value);
+
+        arm.setPower(armPower);
+        Vec3 movement;
+
+        if (gamepad1.right_trigger >= 0.6) {
+            movement = new Vec3(
+                    - gamepad1.left_stick_x, //Strafe Movement
+                    gamepad1.left_stick_y,   //Forward Movement
+                    gamepad1.right_stick_x   //Angle of rotation
+            );
+        } else {
+            movement = new Vec3(
+                    - gamepad1.left_stick_x * strafeFactor,  //Strafe Movement
+                    gamepad1.left_stick_y * straightFactor,  //Forward Movement
+                    gamepad1.right_stick_x * turnFactor      //Angle of rotation
+            );
+        }
+
+
+        drivetrain.setIntegrator(movement);
+        super.loop();
     }
+
 }

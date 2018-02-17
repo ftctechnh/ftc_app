@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode.robot.peripherals;
+package org.firstinspires.ftc.teamcode.robot.peripherals.gripper;
 
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.robot.peripherals.PeripheralPosition;
 
 /**
  * Created by Derek on 2/6/2018.
  */
 
-public class SingleServoGripper implements Claw {
-    ClawPositions positions = new ClawPositions();
+public class SingleServoGripper implements Gripper {
+    GripperClampPositions positions = new GripperClampPositions();
 
     double position;
     Servo servo;
@@ -19,18 +21,16 @@ public class SingleServoGripper implements Claw {
     }
 
     @Override
-    public Claw setPosition(double position) {
+    public Gripper setPosition(double position) {
         this.position = position;
         return this;
     }
 
-/*    @Override
-    public Claw setPosition(ClawPositions.Position position) {
+    @Override
+    public Gripper setPosition(PeripheralPosition position) {
         this.position = position.getPosition();
         return this;
-    }*/
-
-
+    }
 
     @Override
     public double getPosition() {
@@ -38,7 +38,7 @@ public class SingleServoGripper implements Claw {
     }
 
     @Override
-    public ClawPositions getClampPositions() {
+    public GripperClampPositions getClampPositions() {
         return positions;
     }
 

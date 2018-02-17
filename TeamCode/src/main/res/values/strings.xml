@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+    <string-array name="PREFS">
+        <item>clawIncrement</item>
+        <item>straightMultiplier</item>
+        <item>turnMultiplier</item>
+        <item>strafeMultiplier</item>
+        <item>overallMultiplier</item>
+        <item>boomDownMultiplier</item>
+        <item>boomUpMultiplier</item>
+    </string-array>
 </resources>
