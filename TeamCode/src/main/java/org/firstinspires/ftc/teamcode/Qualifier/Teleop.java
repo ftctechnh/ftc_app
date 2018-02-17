@@ -213,6 +213,7 @@ public class Teleop extends OpMode {
                  //gromit.glyphTrain.glyphclamp("open");
                 blocks = 1;
             } else {
+                 gromit.glyphTrain.stopGlyphMotors();
                  //liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
                  glyphLiftismoving = true;
 
@@ -336,7 +337,11 @@ public class Teleop extends OpMode {
                     //glyphLiftismoving = true;     // turn on manual override
                     if(blocks != 0) {
                         gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
-                        liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];
+//  check to see if you're lower than the next lower position by 400 ticks, stop there first.
+                        if (gromit.glyphTrain.lift_motor.getCurrentPosition() + 200 < gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex - 1]) {
+                            gromit.glyphTrain.liftIndex -= 1;
+                        }
+                        liftTarget = gromit.glyphTrain.liftPosition[gromit.glyphTrain.liftIndex];  // set the new Target
                     }
                 }
                 glyphSensed = false;
