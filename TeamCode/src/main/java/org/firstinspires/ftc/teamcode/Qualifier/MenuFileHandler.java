@@ -147,8 +147,8 @@ public class MenuFileHandler {
         RedFrontDistance1Center = menuvalue[5];
 
         if (init) {
-            menulabel[6] = "RED Front Distance 1 LEFT (-53.5)";
-            menuvalue[6] = -53.5;
+            menulabel[6] = "RED Front Distance 1 LEFT (-52.5)";
+            menuvalue[6] = -52.5;
             menulowerlimit[6] = -70;
             menuupperlimit[6] =  70;
             menuincrement[6] = 0.5;
