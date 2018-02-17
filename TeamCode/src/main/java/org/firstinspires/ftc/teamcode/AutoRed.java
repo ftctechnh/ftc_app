@@ -2,28 +2,19 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DeviceInterfaceModule;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "DrivetrainTest", group = "7518")
-public class DrivetrainTest extends LinearOpMode {
+@Autonomous(name = "AutoRed", group = "7518")
+public class AutoRed extends LinearOpMode {
 
     private DcMotor leftFront, rightFront, leftRear, rightRear, rightLift, leftLift, rightIntake, leftIntake;
     private Servo rightFlip, leftFlip, colorSensorServo;
@@ -55,14 +46,16 @@ public class DrivetrainTest extends LinearOpMode {
         colorSensorServo = hardwareMap.servo.get("colorSensorServo");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
-        initVuforia();
+
         waitForStart(); //Wait for the user to press the play button
 
+        setFlip(0.6);
+        colorSensorInit();
 
-        driveForward(0.5, 24);
-        driveForward(-0.5, 24);
-        rotateLeft(0.5);
-        rotateRight(0.5);
+
+
+
+
 
     }//end runOpMode
 
@@ -83,7 +76,7 @@ public class DrivetrainTest extends LinearOpMode {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         timer.reset();
-        while(timer.seconds()<setTimer){
+        while(opModeIsActive() && timer.seconds()<setTimer){
             //set the power of the drivetrain
             leftFront.setPower(-power);
             rightFront.setPower(-power);
@@ -107,7 +100,7 @@ public class DrivetrainTest extends LinearOpMode {
     }//end driveForward
 
     public void rotateRight(double power) {
-        int inches = 20;
+        int inches = 36;
         double rpm = Math.abs(160*power);
         int ticks = 1120;
         double circ = 4*Math.PI;
@@ -124,7 +117,7 @@ public class DrivetrainTest extends LinearOpMode {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         timer.reset();
-        while(timer.seconds()<setTimer){
+        while(opModeIsActive()&& timer.seconds()<setTimer){
             //set the power of the drivetrain
             leftFront.setPower(power);
             leftRear.setPower(power);
@@ -144,7 +137,7 @@ public class DrivetrainTest extends LinearOpMode {
     }//end rotateRight
 
     public void rotateLeft(double power) {
-        int inches = 20 ;
+        int inches = 36;
         double rpm = Math.abs(160*power);
         int ticks = 1120;
         double circ = 4*Math.PI;
@@ -161,7 +154,7 @@ public class DrivetrainTest extends LinearOpMode {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         timer.reset();
-        while(timer.seconds()<setTimer){
+        while(opModeIsActive() && timer.seconds()<setTimer){
             //set the power of the drivetrain
             rightFront.setPower(power);
             rightRear.setPower(power);
@@ -185,7 +178,7 @@ public class DrivetrainTest extends LinearOpMode {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
 
-        parameters.vuforiaLicenseKey = "ATsODcD/////AAAAAVw2lR...d45oGpdljdOh5LuFB9nDNfckoxb8COxKSFX";
+        parameters.vuforiaLicenseKey = "AUDOm1//////AAAAmYRD0DwDlkCfkN/MLRGkWboIkVqm7w4Tg14VGZ1yOg9IaCxhuVC5f7mC06pmasIBu00vcQV+dP0V/OCVifRDhX2J3T/QITkOB/6NKDC/mgwkREr8xQ28nSXaN6GgCraEurPUBMlyruRxlS2yvu6nKtfCdIXy8wbs7AwnVLxthq4bI22Rk2x7Lp5AkwVZMfQK2oIRiVSioc+pqi6XJVn7vVggOjaDBtYCcmX5N8jPAzP0BPXXCVvJf0qkSXuNSp0HZUBH+1Z/q/0szsxlK8fgCLGVBuw1cM6ZnMSUTmgg7D415kgP7ZrknS/6Id/Cj6pzf8HmqhM4gfZrab8pC5eByqWyADwP17+lyRLNzxyheYJ2";
 
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
@@ -221,6 +214,42 @@ public class DrivetrainTest extends LinearOpMode {
             telemetry.update();
         }//end while
     }//end initVuforia
+
+    public void colorSensorInit(){
+        timer.reset();
+        while(opModeIsActive()&& timer.seconds()<3){
+            colorSensorServo.setPosition(.225);
+        }//end while
+        sleep(250);
+        int rColor = colorSensor.red();
+        int bColor = colorSensor.blue();
+        boolean readColor = false;
+
+        if(rColor<bColor){
+            driveForward(.5,4);
+            readColor=true;
+        }//end if
+        else if (bColor<rColor) {
+            driveForward(-.5, 4);
+            readColor=true;
+        }//end else if
+
+        colorSensorServo.setPosition(1);
+        sleep(1000);
+
+        if(readColor){
+            if(rColor>bColor)
+                driveForward(-.5,4);
+            else
+                driveForward(.5,5);
+        }//end if
+    }//end colorSensor
+
+    public void setFlip(double position){
+        rightFlip.setPosition(1-position);
+        leftFlip.setPosition(position);
+        sleep(250);
+    }//end setFlip
 
 
 }//end class
