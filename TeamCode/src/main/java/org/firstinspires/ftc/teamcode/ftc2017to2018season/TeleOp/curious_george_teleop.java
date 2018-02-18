@@ -143,7 +143,7 @@ public class curious_george_teleop extends OpMode {
     @Override
     public void loop() {
        Glyph();
-       //Relic();
+       Relic();
        Drive();
        Slides();
 
