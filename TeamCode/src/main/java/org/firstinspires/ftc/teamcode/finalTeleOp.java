@@ -78,7 +78,7 @@ public class finalTeleOp extends LinearOpMode{
         jewelKnock = hardwareMap.get(Servo.class, "JK");
 
         //Varibales
-        mode = 0;
+        mode = 1;
         grabberTop = 3500;
         grabberMiddle = 1500;
         grabberRest= 0;
@@ -91,6 +91,7 @@ public class finalTeleOp extends LinearOpMode{
         jewelArm.setPosition(0.73);
         jewelKnock.setPosition(0);
         relicArm.setPosition(0.1);
+
 
 
         waitForStart();
