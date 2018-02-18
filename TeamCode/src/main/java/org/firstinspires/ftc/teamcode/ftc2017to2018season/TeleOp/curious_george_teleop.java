@@ -204,13 +204,16 @@ public void IncrementMain(){
             relicMain.setPosition(1);
         }
         else if (gamepad2.left_bumper){
-            relicClaw.setPosition(0.8);
+            relicClaw.setPosition(1.0);
         }
         else if (gamepad2.right_bumper){
-            relicClaw.setPosition(0.0);
+            relicClaw.setPosition(0.2);
+        }
+        else if (gamepad2.b){
+            relicMain.setPosition(0.3);
         }
         else{
-            relicMotor.setPower(-gamepad2.left_stick_y);
+            relicMotor.setPower(gamepad2.left_stick_y*0.6);
         }
     }
 
