@@ -210,7 +210,7 @@ public void IncrementMain(){
             relicClaw.setPosition(0.2);
         }
         else if (gamepad2.b){
-            relicMain.setPosition(0.3);
+            relicClaw.setPosition(0.5);
         }
         else{
             relicMotor.setPower(gamepad2.left_stick_y*0.6);
@@ -271,6 +271,7 @@ public void IncrementMain(){
     public void slideMove() {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
