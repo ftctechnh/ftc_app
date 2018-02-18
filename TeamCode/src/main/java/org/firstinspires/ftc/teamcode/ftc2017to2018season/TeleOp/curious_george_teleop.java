@@ -170,18 +170,30 @@ public class curious_george_teleop extends OpMode {
  */
 public void Slides(){
     slideMove();
-    slideIncrement();
+    //slideIncrement();
 }
 public void Drive(){
     FourWheelDrive();
 }
 public void Relic() {
     relicManipulator();
+    IncrementMain();
 }
 public void Glyph() {
     glyphManipulator();
     incrementOpen();
     incrementClose();
+}
+
+public void IncrementMain(){
+    if(gamepad2.dpad_down){
+        double relicMainPos = relicMain.getPosition()-0.05;
+        relicMain.setPosition(relicMainPos);
+    }
+    else if (gamepad2.dpad_up){
+        double relicMainPosition = relicMain.getPosition()+0.05;
+        relicMain.setPosition(relicMainPosition);
+    }
 }
     public void relicManipulator() {
         if (gamepad2.a){
