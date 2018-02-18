@@ -21,7 +21,7 @@ public class ArmSystem {
         this.leftArmServo   = hardwareMap.get(Servo.class, "left arm servo");
         this.rightArmServo  = hardwareMap.get(Servo.class, "right arm servo");
         this.armMotor       = hardwareMap.get(DcMotor.class, "arm motor");
-        this.leftArmServo.setDirection(Servo.Direction.REVERSE);
+        this.rightArmServo.setDirection(Servo.Direction.REVERSE);
     }
 
     public void goUp() {

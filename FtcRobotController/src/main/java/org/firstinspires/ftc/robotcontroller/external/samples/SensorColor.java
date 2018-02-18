@@ -161,16 +161,6 @@ public class SensorColor extends LinearOpMode {
               .addData("g", "%02x", Color.green(color))
               .addData("b", "%02x", Color.blue(color));
 
-      // Balance the colors. The values returned by getColors() are normalized relative to the
-      // maximum possible values that the sensor can measure. For example, a sensor might in a
-      // particular configuration be able to internally measure color intensity in a range of
-      // [0, 10240]. In such a case, the values returned by getColors() will be divided by 10240
-      // so as to return a value it the range [0,1]. However, and this is the point, even so, the
-      // values we see here may not get close to 1.0 in, e.g., low light conditions where the
-      // sensor measurements don't approach their maximum limit. In such situations, the *relative*
-      // intensities of the colors are likely what is most interesting. Here, for example, we boost
-      // the signal on the colors while maintaining their relative balance so as to give more
-      // vibrant visual feedback on the robot controller visual display.
       float max = Math.max(Math.max(Math.max(colors.red, colors.green), colors.blue), colors.alpha);
       colors.red   /= max;
       colors.green /= max;
@@ -184,12 +174,8 @@ public class SensorColor extends LinearOpMode {
               .addData("b", "%02x", Color.blue(color));
       telemetry.update();
 
-      // convert the RGB values to HSV values.
       Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), hsvValues);
 
-      // change the background color to match the color detected by the RGB sensor.
-      // pass a reference to the hue, saturation, and value array as an argument
-      // to the HSVToColor method.
       relativeLayout.post(new Runnable() {
         public void run() {
           relativeLayout.setBackgroundColor(Color.HSVToColor(0xff, values));

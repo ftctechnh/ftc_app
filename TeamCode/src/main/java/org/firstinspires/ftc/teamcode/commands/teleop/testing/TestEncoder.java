@@ -39,10 +39,6 @@ public class TestEncoder extends OpMode {
     }
 
     private void telemetry() {
-        telemetry.addData("front left motor tick", this.mecanumDrive.getFrontLeftMotorEncoderTick());
-        telemetry.addData("rear left motor tick", this.mecanumDrive.getRearLeftMotorEncoderTick());
-        telemetry.addData("front right motor tick", this.mecanumDrive.getFrontRightMotorEncoderTick());
-        telemetry.addData("rear right motor tick", this.mecanumDrive.getRearRightMotorEncoderTick());
     }
 
     @Override

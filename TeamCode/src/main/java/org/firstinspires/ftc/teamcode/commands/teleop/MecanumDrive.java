@@ -61,7 +61,7 @@ public class MecanumDrive extends OpMode {
         telemetry.addData("rear right speed", mecanumDriveSystem.getRearRightSpeed());
         telemetry.addData("left servo", armSystem.getLeftServoPosition());
         telemetry.addData("right servo", armSystem.getRightServoPosition());
-//        telemetry.addData("angle", mecanumDriveSystem.getAngle());
+        telemetry.addData("angle", mecanumDriveSystem.getAngle());
     }
 
     @Override

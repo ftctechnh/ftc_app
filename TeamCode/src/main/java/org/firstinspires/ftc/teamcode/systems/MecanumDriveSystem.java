@@ -23,9 +23,6 @@ public class MecanumDriveSystem {
     private DcMotor                     rearLeftMotor;
     private DcMotor                     frontRightMotor;
     private DcMotor                     rearRightMotor;
-    private final double                X_COUNTS_PER_INCH = 0.0;
-    private final double                Y_COUNTS_PER_INCH = 0.0;
-    private DriveSystem                 driveSystem;
     private BNO055IMU                   imu;
 
     public MecanumDriveSystem(HardwareMap hardwareMap) {
@@ -33,7 +30,6 @@ public class MecanumDriveSystem {
         this.rearLeftMotor              = hardwareMap.get(DcMotor.class,"rear left motor");
         this.frontRightMotor            = hardwareMap.get(DcMotor.class,"front right motor");
         this.rearRightMotor             = hardwareMap.get(DcMotor.class,"rear right motor");
-        this.driveSystem                = new DriveSystem(frontLeftMotor, rearLeftMotor, frontRightMotor, rearRightMotor);
         this.rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -46,62 +42,6 @@ public class MecanumDriveSystem {
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-    }
-
-    public void resetEncoders() {
-        this.driveSystem.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        this.driveSystem.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    public void encoderDriveY(double inches, double speed, boolean active) {
-        int frontLeftMotorTargetPosition;
-        int rearLeftMotorTargetPosition;
-        int frontRightMotorTargetPosition;
-        int rearRightMotorTargetPosition;
-
-        if(active) {
-            frontLeftMotorTargetPosition    = frontLeftMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
-            rearLeftMotorTargetPosition     = rearLeftMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
-            frontRightMotorTargetPosition   = frontRightMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
-            rearRightMotorTargetPosition    = rearRightMotor.getCurrentPosition() + (int)(inches * Y_COUNTS_PER_INCH);
-            frontLeftMotor.setTargetPosition(frontLeftMotorTargetPosition);
-            rearLeftMotor.setTargetPosition(rearLeftMotorTargetPosition);
-            frontRightMotor.setTargetPosition(frontRightMotorTargetPosition);
-            rearRightMotor.setTargetPosition(rearRightMotorTargetPosition);
-
-            this.driveSystem.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            drive(speed, speed, speed, speed);
-
-            while (active && driveSystem.isBusy()) {
-
-                // does nothing while robot drives to position
-
-            }
-            stop();
-        }
-    }
-
-    public void encoderDriveX(double inches, double speed, boolean active) {
-        int frontLeftMotorTargetPosition;
-        int rearLeftMotorTargetPosition;
-        int frontRightMotorTargetPosition;
-        int rearRightMotorTargetPosition;
-
-        if(active) {
-            frontLeftMotorTargetPosition    = frontLeftMotor.getCurrentPosition() - (int)(inches * X_COUNTS_PER_INCH);
-            rearLeftMotorTargetPosition     = rearLeftMotor.getCurrentPosition() + (int)(inches * X_COUNTS_PER_INCH);
-            frontRightMotorTargetPosition   = frontRightMotor.getCurrentPosition() + (int)(inches * X_COUNTS_PER_INCH);
-            rearRightMotorTargetPosition    = rearRightMotor.getCurrentPosition() - (int)(inches * X_COUNTS_PER_INCH);
-            frontLeftMotor.setTargetPosition(frontLeftMotorTargetPosition);
-            rearLeftMotor.setTargetPosition(rearLeftMotorTargetPosition);
-            frontRightMotor.setTargetPosition(frontRightMotorTargetPosition);
-            rearRightMotor.setTargetPosition(rearRightMotorTargetPosition);
-
-            this.driveSystem.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            drive(speed, 0.0, 0.0);
-        }
     }
 
     public void drive(double x, double y, double turn) {
@@ -147,22 +87,6 @@ public class MecanumDriveSystem {
 
     public double getRearLeftSpeed() {
         return  this.rearLeftMotor.getPower();
-    }
-
-    public int getFrontLeftMotorEncoderTick() {
-        return frontLeftMotor.getCurrentPosition();
-    }
-
-    public int getRearLeftMotorEncoderTick() {
-        return rearLeftMotor.getCurrentPosition();
-    }
-
-    public int getFrontRightMotorEncoderTick() {
-        return frontRightMotor.getCurrentPosition();
-    }
-
-    public int getRearRightMotorEncoderTick() {
-        return rearRightMotor.getCurrentPosition();
     }
 
     private void driveForward(double leftSpeed, double rightSpeed) {

@@ -33,14 +33,14 @@ public class BlueAllianceDriveBackwardsLeft extends LinearOpMode {
 
         while (opModeIsActive() && (count < 1)) {
             armSystem.setDownPosition();
-            sleep(1000);
+            sleep(100);
             knockDownRedJewel();
             driveSystem.stop();
             sleep(1000);
             this.armSystem.setInitialPosition();
-            sleep(2000);
-            this.driveSystem.drive(1.0, 0.8); // turn left backwards
-            sleep(2000);
+            sleep(2100);
+            this.driveSystem.drive(.4, 0.2); // turn left backwards
+            sleep(2100);
             count++;
         }
     }
@@ -48,10 +48,10 @@ public class BlueAllianceDriveBackwardsLeft extends LinearOpMode {
     private void knockDownRedJewel() {
         this.armSystem.enableColorSensor();
         if(armSystem.isRed()) {
-            this.driveSystem.driveForward(1.0);
+            this.driveSystem.driveForward(.4);
             sleep(500);
         } else if (armSystem.isBlue()) {
-            this.driveSystem.driveBackwards(1.0);
+            this.driveSystem.driveBackwards(.4);
             sleep(500);
         }
     }
