@@ -186,14 +186,12 @@ public void Glyph() {
 }
 
 public void IncrementMain(){
-    if(gamepad2.dpad_down){
-        double relicMainPos = relicMain.getPosition()-0.05;
-        relicMain.setPosition(relicMainPos);
-    }
-    else if (gamepad2.dpad_up){
-        double relicMainPosition = relicMain.getPosition()+0.05;
-        relicMain.setPosition(relicMainPosition);
-    }
+   while (gamepad2.dpad_up){
+       relicMain.setPosition(relicMain.getPosition()+0.05);
+   }
+   while (gamepad2.dpad_down){
+       relicMain.setPosition(relicMain.getPosition()-0.05);
+   }
 }
     public void relicManipulator() {
         if (gamepad2.a){
