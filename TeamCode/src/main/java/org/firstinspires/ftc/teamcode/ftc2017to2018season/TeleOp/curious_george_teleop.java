@@ -99,9 +99,10 @@ public class curious_george_teleop extends OpMode {
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
         openGlyph();
-        jewel_servo.setPosition(0.9);
+        jewel_servo.setPosition(0.6);
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());

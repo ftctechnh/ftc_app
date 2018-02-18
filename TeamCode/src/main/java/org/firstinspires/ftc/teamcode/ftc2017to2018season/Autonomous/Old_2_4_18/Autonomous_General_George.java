@@ -1,18 +1,13 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_2_4_18;
 
-import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
@@ -25,7 +20,6 @@ import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -85,12 +79,8 @@ public class Autonomous_General_George extends LinearOpMode {
     public Servo glyphServoLeft;
 
     public ModernRoboticsI2cGyro gyro;
-    public ModernRoboticsI2cRangeSensor wallAlignFront;
-    public ModernRoboticsI2cRangeSensor wallAlignBack;
+    //public ModernRoboticsI2cRangeSensor rangeSensor;
     public ModernRoboticsI2cColorSensor colorSensor;
-    public ColorSensor revColorSensor;
-    public DistanceSensor revJewelRangeSensor;
-    public DistanceSensor glyphBlockRangeSensor;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
     public String ballColor;
@@ -132,13 +122,7 @@ public class Autonomous_General_George extends LinearOpMode {
         jewelServo = hardwareMap.servo.get("jewelServo");
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
-        wallAlignFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "wallAlignFront");
-        wallAlignBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "wallAlignBack");
 
-
-        revColorSensor = hardwareMap.get(ColorSensor.class, "revColorSensor");
-        revJewelRangeSensor = hardwareMap.get(DistanceSensor.class, "revJewelRangeSensor");
-        glyphBlockRangeSensor = hardwareMap.get(DistanceSensor.class, "glyphBlockRangeSensor");
         jewelServo.setDirection(Servo.Direction.REVERSE);
 
         if (modernRobotics) {
@@ -664,86 +648,6 @@ public class Autonomous_General_George extends LinearOpMode {
     }
 
 
-    public void wallAlign(double speed, double distance, int front){
-        telemetry.addData("starting wall align", "");
-        telemetry.update();
-
-        while(opModeIsActive() && !onTargetDistance(speed, distance, P_TURN_COEFF, front)){
-            telemetry.update();
-            idle();
-            telemetry.addData("-->","inside while loop :-(");
-            telemetry.update();
-        }
-
-        stopMotors();
-        telemetry.addData("done with gyro turn","-----");
-        telemetry.update();
-    }
-    boolean onTargetDistance(double speed, double distance, double PCoeff, int frontSensor){
-        double errorDistance;
-        double steer;
-        boolean onTarget = false;
-        double finalSpeed;
-
-        //determine turm power based on error
-        errorDistance = getErrorDistance(distance, frontSensor);
-
-        if (Math.abs(errorDistance) <= TURN_THRESHOLD){
-
-            steer = 0.0;
-            finalSpeed = 0.0;
-            onTarget = true;
-        }
-        else{
-
-            steer = getSteerError(errorDistance, PCoeff);
-            finalSpeed = -speed * steer;
-        }
-
-        front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        back_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        front_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        back_right_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        front_left_motor.setPower(finalSpeed);
-        front_right_motor.setPower(finalSpeed);
-        back_left_motor.setPower(finalSpeed);
-        back_right_motor.setPower(finalSpeed);
-
-        telemetry.addData("Target distance","%5.2f",distance);
-        telemetry.addData("Error/Steer", "%5.2f/%5.2f", errorDistance, steer);
-        telemetry.addData("speed", "%5.2f/%5.2f", finalSpeed, finalSpeed);
-
-        return onTarget;
-    }
-    public double getErrorDistance(double targetDistance, int front){
-
-        double robotError;
-
-        if (front == 0) {
-            robotError = targetDistance - wallAlignFront.cmUltrasonic();
-        }
-        else if (front == 1) {
-            robotError = targetDistance - wallAlignBack.cmUltrasonic();
-        }
-        else {
-            robotError = targetDistance - glyphBlockRangeSensor.getDistance(DistanceUnit.CM);
-        }
-
-        telemetry.addData("Robot Error","%5.2f",robotError);
-        telemetry.update();
-
-        return robotError;
-
-    }
-    public double getSteerError(double error , double PCoeff){
-        return Range.clip(error * PCoeff, -1 , 1);
-    }
-
-
-
-
-
-
     /**
         GYRO TURN USING MODERN ROBOTICS GYRO
      */
@@ -1138,37 +1042,10 @@ public class Autonomous_General_George extends LinearOpMode {
         //sleep(5000);
     }
 
-    public void readColorRev() {
-
-        ballColor = "blank";
-
-        if (revColorSensor.red() > revColorSensor.blue()) {
-            ballColor = "red";
-            /*telemetry.addData("current color is red", bColorSensorLeft.red());
-            telemetry.update();*/
-        } else if (revColorSensor.red() < revColorSensor.blue()) {
-            ballColor = "blue";
-            /*telemetry.addData("current color is blue", bColorSensorLeft.blue());
-            telemetry.update();*/
-        } else {
-            ballColor = "blank";
-        }
-        //sleep(5000);
-    }
 
     /*
         GLYPH MANIPULATOR METHODS
      */
-
-    public void columnAlign(){
-
-        jewelServo.setPosition(0.4);
-        sleep(75);
-        wallAlign(0.3, 14, 3);
-        sleep(75);
-        jewelServo.setPosition(0);
-
-    }
     public void openGlyphManipulator(){
         glyphServoRight.setPosition(0.5);
         glyphServoLeft.setPosition(0.4);
