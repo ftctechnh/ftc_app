@@ -18,7 +18,7 @@ public class headingTest extends superAuto {
 
         waitForStart();
 
-        findCrypto(0, 10,-.5f, 0f);
+        findCrypto(0, 6,-.5f, 0f);
 
     }
 }
