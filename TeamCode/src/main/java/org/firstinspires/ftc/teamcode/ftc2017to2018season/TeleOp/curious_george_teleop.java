@@ -184,18 +184,18 @@ public void Glyph() {
 }
     public void relicManipulator() {
         if (gamepad2.a){
-            relicMain.setPosition(0.0);
+            relicMain.setPosition(0.1);
         }
         else if (gamepad2.x){
-            relicMain.setPosition(0.7);
+            relicMain.setPosition(0.6);
         }
         else if (gamepad2.y){
             relicMain.setPosition(1);
         }
-        else if (gamepad2.right_bumper){
+        else if (gamepad2.left_bumper){
             relicClaw.setPosition(0.8);
         }
-        else if (gamepad2.left_bumper){
+        else if (gamepad2.right_bumper){
             relicClaw.setPosition(0.0);
         }
         else{
