@@ -219,7 +219,7 @@ public class finalTeleOp extends LinearOpMode{
                 }
 
                 if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
-                    grabMotor.setPower(0);
+                    relicMotor.setPower(0);
                 }
 
 
@@ -242,7 +242,7 @@ public class finalTeleOp extends LinearOpMode{
                 if (gamepad2.b) {
                     relicArmPosition -= relicArmDelta;
                 }
-                relicArmPosition = Range.clip(relicArmPosition, 0.1, 0.9);
+                relicArmPosition = Range.clip(relicArmPosition, 0, 1);
                 relicArm.setPosition(relicArmPosition);
                 telemetry.addData("Relic Arm Servo: ", relicArm.getPosition());
 
@@ -268,3 +268,4 @@ public class finalTeleOp extends LinearOpMode{
         }
     }
 }
+//arm closed = 0.26
