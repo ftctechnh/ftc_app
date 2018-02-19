@@ -32,10 +32,11 @@ public class MasterHardwareClass {
     public DcMotor backRightMotor = null;
     public DcMotor verticalArmMotor = null;
     public DcMotor clawMotor = null;
+    public DcMotor slowMotor = null;
+    public DcMotor fastMotor = null;
+    public Servo   trayServo = null;
     public Servo gemServo;
     public BNO055IMU imu;
-    ModernRoboticsI2cRangeSensor sideRangeSensor;
-    ModernRoboticsI2cRangeSensor frontRangeSensor;
 
     /* Give place holder values for the motors and the grabber servo */
     double FrontLeftPower = 0;
@@ -45,10 +46,14 @@ public class MasterHardwareClass {
     double VerticalArmPower = 0;
     double ClawPower = 0;
 
-    /* Define values used in commanding the claw */
-    static double clawClose = .25;
-    static double clawOpen = -.25;
-    static double clawStill = 0;
+    /*These values are used for the drive*/
+    double verticalMax = 5900;
+    double verticalMin = 300;
+    double slowPower = 1;
+    double fastPower = 1;
+    double trayOut = 0;
+    double trayIn = 1;
+    boolean up;
 
     /* Define values for teleop bumper control */
     static double nobumper = 1.5;
@@ -81,8 +86,6 @@ public class MasterHardwareClass {
         verticalArmMotor = hwMap.dcMotor.get("VAM");
         clawMotor = hwMap.dcMotor.get("CM");
         gemServo = hwMap.servo.get("gemservo");
-        sideRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "SRS");
-        frontRangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "FRS");
         imu = hwMap.get(BNO055IMU.class, "imu");
 
         // Set all hardware to default position

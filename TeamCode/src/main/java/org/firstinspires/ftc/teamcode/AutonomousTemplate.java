@@ -89,22 +89,16 @@ public class AutonomousTemplate extends LinearOpMode
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
         clawServo =  hardwareMap.crservo.get("CS");
-        sideRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "SRS");
-        frontRangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "FRS");
 
     /* Reverse the direction of the front right and back right motors */
         frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         backRightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-    /* When robot is off remove the brake on the wheel motors */
+    /* Set wheels to brake mode */
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-    /* Init the range sensor */
-        sideRangeSensor.initialize();
-        frontRangeSensor.initialize();
 
     /* Set parameters for the gyro (imu)*/
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
@@ -119,7 +113,7 @@ public class AutonomousTemplate extends LinearOpMode
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
 
-    /* Initialize all motors and servoes to their starting positions */
+    /* Initialize all motors and servos to their starting positions */
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
         backLeftMotor.setPower(0);
@@ -140,8 +134,7 @@ public class AutonomousTemplate extends LinearOpMode
             idle();
         }
 
-        telemetry.addLine("Um...waiting for start");
-        telemetry.addData("Imu calibration?", imu.getCalibrationStatus().toString());
+        telemetry.addLine("Alright...waiting for start");
         telemetry.update();
 
         // wait for start button.
@@ -152,12 +145,6 @@ public class AutonomousTemplate extends LinearOpMode
         /* Let the team know wassup */
         telemetry.addLine("Ayyy, I'm running");
         telemetry.update();
-
-        /* Power the claw to have a grip on the block */
-        clawServo.setPower(clawClose);
-
-        /* Move the claw up so it doesn't dig into the ground coming off the balance board */
-        moveclawbytime(500,.5,"Up");
 
         /* Put the servo color arm down */
         gemServo.setPosition(xPosDown);
@@ -204,7 +191,7 @@ public class AutonomousTemplate extends LinearOpMode
         switch (teamColorPosition) {
             case "BlueRight":
                 movebytime(1200, .3, "Forward");
-                rotate(87, .2);
+                rotate(43, .2);
                 break;
             case "BlueLeft":
                 movePowerDistanceDirectionSensor(.3, 20, "Forward", "Front" );
