@@ -9,12 +9,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
- * ☺ Hi! This is the perfect teleop code for December 16, 2017! ☺
+ * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
 @TeleOp(name = "El Teleop", group = "Our Teleop")
 //@Disabled
 public class testNewbot extends LinearOpMode {
 
+    /* Declare all objects */
     DcMotor frontLeftMotor = null;
     DcMotor frontRightMotor = null;
     DcMotor backLeftMotor = null;
@@ -28,29 +29,24 @@ public class testNewbot extends LinearOpMode {
     DigitalChannel topTouch;
     DigitalChannel bottomTouch;
 
-    /* Give place holder values for the motors and the grabber servo */
+    /* Give place holder values for the motors*/
     double FrontLeftPower = 0;
     double FrontRightPower = 0;
     double BackRightPower = 0;
     double BackLeftPower = 0;
-    double VerticalArmPower = 0;
-    double ClawPower = 0;
 
     /*These values are used for collection and tray control*/
     double frontLeft;
     double frontRight;
     double backLeft;
     double backRight;
-    double verticalMax = 5900;
-    double verticalMin = 300;
     double P1Power = -.7;
     double P2Power = .7;
     int trayOut = -400;
     int trayIn = 0;
     boolean up;
     boolean xPush;
-    boolean aPush;
-    boolean trigger;
+    boolean bumper;
 
     /* Define values for teleop bumper control */
     static double nobumper = 1.5;
@@ -64,7 +60,7 @@ public class testNewbot extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        // Define and Initialize Hardware
+        /* Define and Initialize Hardware */
         frontLeftMotor = hardwareMap.dcMotor.get("FL");
         frontRightMotor = hardwareMap.dcMotor.get("FR");
         backLeftMotor = hardwareMap.dcMotor.get("BL");
@@ -78,25 +74,25 @@ public class testNewbot extends LinearOpMode {
         topTouch = hardwareMap.get(DigitalChannel.class, "TT");
         bottomTouch = hardwareMap.get(DigitalChannel.class, "BT");
 
-//        /* Initialize the vertical arm encoder */
+        /* Initialize the tray's encoder */
         trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(100);
         trayMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // set the digital channel to input.
+        /* Set the digital channel to input. */
         topTouch.setMode(DigitalChannel.Mode.INPUT);
         bottomTouch.setMode(DigitalChannel.Mode.INPUT);
 
-        // Wait for the start button
-        telemetry.addLine("!☻ Ready to Run ☻!");
+        /* Wait for the start button */
+        telemetry.addLine("!☺ Ready to Run ☺!");
         telemetry.update();
         waitForStart();
 
         while (opModeIsActive()) {
 
-            // Display the current value
+            /* Talk to the drivers & coach */
             telemetry.addLine("Hi~♪");
-            telemetry.addData("Wheel Control", "Hold X to start, release to stop");
+            telemetry.addData("Wheel Control", "X is the toggle");
             telemetry.addData("Tray Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
             telemetry.addData("Tray Flipping Controls", "Hold A for out, release for in");
             telemetry.addData("Vertical Arm Power", verticalArmMotor.getPower());
@@ -107,6 +103,7 @@ public class testNewbot extends LinearOpMode {
             /* Put the servo arm up */
             gemServo.setPosition(xPosUp);
 
+            /* Move the vertical arm up & read the top touch sensor */
             if (gamepad1.dpad_up && topTouch.getState()) {
                 verticalArmMotor.setPower(1);
                 up = true;
@@ -122,6 +119,7 @@ public class testNewbot extends LinearOpMode {
                 }
             }
 
+            /* Move the vertical arm down & read the bottom touch sensor */
             if (!up) {
                 if (gamepad1.dpad_down && bottomTouch.getState()) {
                     verticalArmMotor.setPower(-.5);
@@ -139,7 +137,7 @@ public class testNewbot extends LinearOpMode {
                 }
             }
 
-
+            /* Toggle the collection system */
             if (gamepad1.x) {
                 if (Math.abs(P1Motor.getPower()) == 0 && !xPush) {
                     P1Motor.setPower(P1Power);
@@ -155,6 +153,8 @@ public class testNewbot extends LinearOpMode {
                 xPush = false;
             }
 
+
+            /* Move the tray in and out */
             if (gamepad1.a) {
                 trayMotor.setTargetPosition(trayOut);
                 trayMotor.setPower(-.4);
@@ -163,11 +163,27 @@ public class testNewbot extends LinearOpMode {
                 trayMotor.setPower(.4);
             }
 
-            if (!trigger) {
-            /* Rotational Drive Control */
-                if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
+            /* Rotational Control */
+            if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
-                    double GRX = gamepad1.right_stick_x / bumperSlowest;
+                double GRX = gamepad1.right_stick_x / bumperSlowest;
+
+                final double v1 = +GRX;
+                final double v2 = -GRX;
+                final double v3 = +GRX;
+                final double v4 = -GRX;
+
+                frontLeft = -v1;
+                frontRight = v2;
+                backLeft = -v3;
+                backRight = v4;
+
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            } else {
+
+                if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_bumper && gamepad1.right_stick_x > 0) {
+
+                    double GRX = gamepad1.right_stick_x / bumperFastest;
 
                     final double v1 = +GRX;
                     final double v2 = -GRX;
@@ -180,46 +196,46 @@ public class testNewbot extends LinearOpMode {
                     backRight = v4;
 
                     setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
                 } else {
 
-                    if (gamepad1.right_bumper && gamepad1.right_stick_x < 0 || gamepad1.right_bumper && gamepad1.right_stick_x > 0) {
+                    double GRX = gamepad1.right_stick_x / nobumper;
 
-                        double GRX = gamepad1.right_stick_x / bumperFastest;
+                    final double v1 = +GRX;
+                    final double v2 = -GRX;
+                    final double v3 = +GRX;
+                    final double v4 = -GRX;
 
-                        final double v1 = +GRX;
-                        final double v2 = -GRX;
-                        final double v3 = +GRX;
-                        final double v4 = -GRX;
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
 
-                        frontLeft = -v1;
-                        frontRight = v2;
-                        backLeft = -v3;
-                        backRight = v4;
-
-                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                    } else {
-
-                        double GRX = gamepad1.right_stick_x / nobumper;
-
-                        final double v1 = +GRX;
-                        final double v2 = -GRX;
-                        final double v3 = +GRX;
-                        final double v4 = -GRX;
-
-                        frontLeft = -v1;
-                        frontRight = v2;
-                        backLeft = -v3;
-                        backRight = v4;
-
-                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
-                    }
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
                 }
+            }
         /* Drive Control */
-                if (gamepad1.left_bumper) {
-                    double GLY = -gamepad1.left_stick_y / bumperSlowest;
-                    double GRX = gamepad1.right_stick_x / bumperSlowest;
-                    double GLX = gamepad1.left_stick_x / bumperSlowest;
+            if (gamepad1.left_bumper) {
+                double GLY = -gamepad1.left_stick_y / bumperSlowest;
+                double GRX = gamepad1.right_stick_x / bumperSlowest;
+                double GLX = gamepad1.left_stick_x / bumperSlowest;
+
+                final double v1 = GLY + GRX + GLX;
+                final double v2 = GLY - GRX - GLX;
+                final double v3 = GLY + GRX - GLX;
+                final double v4 = GLY - GRX + GLX;
+
+                frontLeft = -v1;
+                frontRight = v2;
+                backLeft = -v3;
+                backRight = v4;
+
+                setWheelPower(frontLeft, frontRight, backLeft, backRight);
+            } else {
+                if (gamepad1.right_bumper) {
+                    double GLY = -gamepad1.left_stick_y / bumperFastest;
+                    double GRX = gamepad1.right_stick_x / bumperFastest;
+                    double GLX = gamepad1.left_stick_x / bumperFastest;
 
                     final double v1 = GLY + GRX + GLX;
                     final double v2 = GLY - GRX - GLX;
@@ -232,81 +248,64 @@ public class testNewbot extends LinearOpMode {
                     backRight = v4;
 
                     setWheelPower(frontLeft, frontRight, backLeft, backRight);
+
                 } else {
-                    if (gamepad1.right_bumper) {
-                        double GLY = -gamepad1.left_stick_y / bumperFastest;
-                        double GRX = gamepad1.right_stick_x / bumperFastest;
-                        double GLX = gamepad1.left_stick_x / bumperFastest;
+                    double GLY = -gamepad1.left_stick_y / nobumper;
+                    double GRX = gamepad1.right_stick_x / nobumper;
+                    double GLX = gamepad1.left_stick_x / nobumper;
 
-                        final double v1 = GLY + GRX + GLX;
-                        final double v2 = GLY - GRX - GLX;
-                        final double v3 = GLY + GRX - GLX;
-                        final double v4 = GLY - GRX + GLX;
+                    final double v1 = GLY + GRX + GLX;
+                    final double v2 = GLY - GRX - GLX;
+                    final double v3 = GLY + GRX - GLX;
+                    final double v4 = GLY - GRX + GLX;
 
-                        frontLeft = -v1;
-                        frontRight = v2;
-                        backLeft = -v3;
-                        backRight = v4;
+                    frontLeft = -v1;
+                    frontRight = v2;
+                    backLeft = -v3;
+                    backRight = v4;
 
-                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
+                    setWheelPower(frontLeft, frontRight, backLeft, backRight);
 
-                    } else {
-                        double GLY = -gamepad1.left_stick_y / nobumper;
-                        double GRX = gamepad1.right_stick_x / nobumper;
-                        double GLX = gamepad1.left_stick_x / nobumper;
-
-                        final double v1 = GLY + GRX + GLX;
-                        final double v2 = GLY - GRX - GLX;
-                        final double v3 = GLY + GRX - GLX;
-                        final double v4 = GLY - GRX + GLX;
-
-                        frontLeft = -v1;
-                        frontRight = v2;
-                        backLeft = -v3;
-                        backRight = v4;
-
-                        setWheelPower(frontLeft, frontRight, backLeft, backRight);
-
-                    }
                 }
             }
         }
     }
-/***********************************************************************************************
- * These are all of the methods used in the Teleop*
- ***********************************************************************************************/
+
+    /***********************************************************************************************
+     * These are all of the methods used in the Teleop*
+     ***********************************************************************************************/
 
     /* This method powers each wheel to whichever power is desired */
-    public void setWheelPower ( double fl, double fr, double bl, double br){
+    public void setWheelPower(double fl, double fr, double bl, double br) {
 
         /* Create power variables */
-                double frontLeft;
-                double frontRight;
-                double backLeft;
-                double backRight;
+        double frontLeft;
+        double frontRight;
+        double backLeft;
+        double backRight;
 
         /* Initialize the powers with the values input whenever this method is called */
-                frontLeft = fl;
-                frontRight = fr;
-                backLeft = bl;
-                backRight = br;
+        frontLeft = fl;
+        frontRight = fr;
+        backLeft = bl;
+        backRight = br;
 
         /* set each wheel to the power indicated whenever this method is called */
-                if (FrontLeftPower != frontLeft) {
-                    frontLeftMotor.setPower(fl);
-                    FrontLeftPower = frontLeft;
-                }
-                if (FrontRightPower != frontRight) {
-                    frontRightMotor.setPower(fr);
-                    FrontRightPower = frontRight;
-                }
-                if (BackLeftPower != backLeft) {
-                    backLeftMotor.setPower(bl);
-                    BackLeftPower = backLeft;
-                }
-                if (BackRightPower != backRight)
-                    backRightMotor.setPower(br);
-                BackRightPower = backRight;
-            }
+        if (FrontLeftPower != frontLeft) {
+            frontLeftMotor.setPower(fl);
+            FrontLeftPower = frontLeft;
         }
+        if (FrontRightPower != frontRight) {
+            frontRightMotor.setPower(fr);
+            FrontRightPower = frontRight;
+        }
+        if (BackLeftPower != backLeft) {
+            backLeftMotor.setPower(bl);
+            BackLeftPower = backLeft;
+        }
+        if (BackRightPower != backRight)
+            backRightMotor.setPower(br);
+        BackRightPower = backRight;
+    }
+}
 
