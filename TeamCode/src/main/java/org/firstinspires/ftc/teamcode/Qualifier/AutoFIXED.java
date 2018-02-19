@@ -355,6 +355,7 @@ public class AutoFIXED extends LinearOpMode {
             mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.RedFrontDistance2, menuFile.RedFrontHeading2, 0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(400);
+            gromit.glyphTrain.startGlyphMotors(0.8);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
                 //goGetAnotherGlyphRedFront(vuMark);
                 goGetAnotherGlyphBlueFront(vuMark,menuFile.RedFrontHeading2 );
@@ -374,7 +375,7 @@ public class AutoFIXED extends LinearOpMode {
             mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.BlueFrontDistance2, menuFile.BlueFrontHeading2, 0);
             gromit.glyphTrain.glyphclamp("open");
             sleep(400);
-
+            gromit.glyphTrain.startGlyphMotors(0.8);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
                 goGetAnotherGlyphBlueFront(vuMark,menuFile.BlueFrontHeading2 );
             }
@@ -415,6 +416,7 @@ public class AutoFIXED extends LinearOpMode {
             mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.BlueBackDistance3, menuFile.BlueBackHeading3, 0);  // 0
 
             gromit.glyphTrain.glyphclamp("open");
+            gromit.glyphTrain.startGlyphMotors(0.8);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
                 goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, -150);
             }
@@ -476,7 +478,7 @@ public class AutoFIXED extends LinearOpMode {
                 mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.6, 7.5, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
 //if you have two blocks, lift
-            if(!gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() < 1){
+            /*if(!gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() < 1){
 
                 //Spit out second block
                 gromit.glyphTrain.startGlyphMotors(1.0);
@@ -487,15 +489,16 @@ public class AutoFIXED extends LinearOpMode {
                 gromit.glyphTrain.stopGlyphMotors();
                 //No clamps to close
                 //gromit.glyphTrain.glyphclamp("close");
-            }
+            }*/
             //You are in front of the Box
             //Drive into the box
+            gromit.glyphTrain.startGlyphMotors(1.0);
             mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
-            gromit.glyphTrain.startGlyphMotors(0.7);
+
             gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
             gromit.glyphTrain.glyphclampupper("open");
             sleep(500);
-            gromit.glyphTrain.stopGlyphMotors();
+
 
         } else {//Put it on top
             mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 90);  //-90    strafe back to where you are
@@ -530,6 +533,7 @@ public class AutoFIXED extends LinearOpMode {
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, -90);  //-90    strafe (strafe is never as long)
         mecanumDrive(menuFile.DriveSpeed * 0.6, -11, menuFile.BlueFrontHeading2, 0);    // into box
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 0);    // don't touch the block
+        gromit.glyphTrain.stopGlyphMotors();
 
     }
     public void goGetAnotherGlyphBlueBack(RelicRecoveryVuMark vuMark, double headingcrypto, double driveangle) {
@@ -538,11 +542,11 @@ public class AutoFIXED extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.CENTER) {
             //Strafe right
             strafe = -3;//strafe right
-        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+        } else if (vuMark == RelicRecoveryVuMark.LEFT) {
             //Strafe Right
-            strafe = 3;//strafe right
+            strafe = -3;//strafe right
         } else {///THIS IS DEFAULT CASE OF VUMARK/LEFT
-            strafe = -3;//left
+            strafe = 3;//left
         }
 
         //Push in first block
@@ -621,11 +625,11 @@ public class AutoFIXED extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.CENTER) {
             //Strafe right
             strafe = 3;//strafe right
-        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+        } else if (vuMark == RelicRecoveryVuMark.LEFT) {
             //Strafe Right
-            strafe = 3;//strafe right
+            strafe = -3;//strafe right
         } else {///THIS IS DEFAULT CASE OF VUMARK/LEFT
-            strafe = -3;//left
+            strafe = 3;//left
         }
 
         //Push in first block
@@ -640,7 +644,7 @@ public class AutoFIXED extends LinearOpMode {
 
         //double driveangle = -150;
 //Re-align
-        double drivedistance = 60;
+        double drivedistance = 70;
         /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
 
         if (menuFile.mode == 2) {//Align to a different box to do a row
