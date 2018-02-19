@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 /**
  * Created by Noah on 12/20/2017.
+ * Take a guess
  */
 
 @Autonomous(name="Blue Front Auto", group="test")
@@ -145,8 +146,12 @@ public class ADPSAuto extends VuforiaBallLib {
         backUltra.startDevice();
 
         bot.init();
-
+        bot.start();
         bot.setDropPos(0.7);
+
+        telemetry.update();
+
+        startTracking();
     }
 
     public void init_loop() {
@@ -157,7 +162,7 @@ public class ADPSAuto extends VuforiaBallLib {
     }
 
     public void start() {
-        startTracking();
+
     }
 
     public void loop() {

@@ -160,8 +160,6 @@ public class BotHardware {
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
         for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
-        ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
-        ServoE.stick.servo.setPosition(ServoE.stickUp);
         //init IMU
         BNO055IMU.Parameters par = new BNO055IMU.Parameters();
         par.mode = BNO055IMU.SensorMode.IMU;
@@ -169,6 +167,12 @@ public class BotHardware {
         imu = mode.hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(par);
         heading = new IMUHeading(imu);
+    }
+
+    public void start() {
+        ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
+        ServoE.stick.servo.setPosition(ServoE.stickUp);
+        setDropPos(ServoE.frontDropUp);
     }
 
     public void setLeftDrive(double power) {

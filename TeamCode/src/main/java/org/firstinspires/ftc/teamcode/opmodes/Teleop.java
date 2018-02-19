@@ -39,11 +39,12 @@ public class Teleop extends OpMode {
         DcMotor[] ray = bot.getMotorRay();
         for(DcMotor motor : ray)
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bot.setFrontDrop(0.34);
-        bot.setDropPos(BotHardware.ServoE.backDropUp);
     }
 
     public void start() {
+        bot.start();
+        bot.setFrontDrop(0.34);
+        bot.setDropPos(BotHardware.ServoE.backDropUp);
         leftPos = BotHardware.Motor.liftLeft.motor.getCurrentPosition();
         rightPos = BotHardware.Motor.liftRight.motor.getCurrentPosition();
     }
