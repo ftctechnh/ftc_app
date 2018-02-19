@@ -71,6 +71,8 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double ENCODERSPER360;
     double P_TURN_COEFF = 0.08;
     double TURN_THRESHOLD = 5;
+    double P_WALL_COEFF = 0.08;
+    double ALIGN_THRESHOLD = 5;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
@@ -161,7 +163,7 @@ public class Autonomous_General_George extends LinearOpMode {
             composeTelemetry();
         }
         //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
-        colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");
+        //colorSensor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "colorSensor");
         //rangeSensor2 = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor2");
 
 
@@ -668,7 +670,7 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.addData("starting wall align", "");
         telemetry.update();
 
-        while(opModeIsActive() && !onTargetDistance(speed, distance, P_TURN_COEFF, front)){
+        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front)){
             telemetry.update();
             idle();
             telemetry.addData("-->","inside while loop :-(");
@@ -688,7 +690,7 @@ public class Autonomous_General_George extends LinearOpMode {
         //determine turm power based on error
         errorDistance = getErrorDistance(distance, frontSensor);
 
-        if (Math.abs(errorDistance) <= TURN_THRESHOLD){
+        if (Math.abs(errorDistance) <= ALIGN_THRESHOLD){
 
             steer = 0.0;
             finalSpeed = 0.0;
@@ -725,8 +727,11 @@ public class Autonomous_General_George extends LinearOpMode {
         else if (front == 1) {
             robotError = targetDistance - wallAlignBack.cmUltrasonic();
         }
-        else {
+        else if (front == 2){
             robotError = targetDistance - glyphBlockRangeSensor.getDistance(DistanceUnit.CM);
+        }
+        else {
+            robotError = targetDistance - wallAlignFront.cmUltrasonic();
         }
 
         telemetry.addData("Robot Error","%5.2f",robotError);
@@ -740,7 +745,46 @@ public class Autonomous_General_George extends LinearOpMode {
     }
 
 
-
+//    public void wallAlign(double speed, double distance, int sensor){
+//
+//        if (sensor == 1){
+//            if(wallAlignFront.cmUltrasonic() < distance){
+//                while (wallAlignFront.cmUltrasonic() < distance) {
+//                    straightDrive(-speed);
+//                }
+//            }
+//            if(wallAlignFront.cmUltrasonic() > distance){
+//                while (wallAlignFront.cmUltrasonic() > distance) {
+//                    straightDrive(speed);
+//                }
+//            }
+//        }
+//        else if (sensor == 2){
+//            if(wallAlignBack.cmUltrasonic() < distance){
+//                while (wallAlignBack.cmUltrasonic() < distance) {
+//                    straightDrive(-speed);
+//                }
+//            }
+//            if(wallAlignBack.cmUltrasonic() > distance){
+//                while (wallAlignBack.cmUltrasonic() > distance) {
+//                    straightDrive(speed);
+//                }
+//            }
+//        }
+//        else if (sensor == 3){
+//            if(revJewelRangeSensor.getDistance(DistanceUnit.CM) < distance){
+//                while (revJewelRangeSensor.getDistance(DistanceUnit.CM) < distance) {
+//                    straightDrive(-speed);
+//                }
+//            }
+//            if(revJewelRangeSensor.getDistance(DistanceUnit.CM) > distance){
+//                while (revJewelRangeSensor.getDistance(DistanceUnit.CM) > distance) {
+//                    straightDrive(speed);
+//                }
+//            }
+//        }
+//
+//    }
 
 
 
@@ -1162,10 +1206,10 @@ public class Autonomous_General_George extends LinearOpMode {
 
     public void columnAlign(){
 
-        jewelServo.setPosition(0.4);
-        sleep(75);
-        wallAlign(0.3, 14, 3);
-        sleep(75);
+        jewelServo.setPosition(0.85);
+        sleep(500);
+        wallAlign(0.4, 11, 2);
+        sleep(500);
         jewelServo.setPosition(0);
 
     }
