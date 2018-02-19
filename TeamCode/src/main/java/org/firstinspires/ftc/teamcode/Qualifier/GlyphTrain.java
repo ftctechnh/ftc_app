@@ -156,16 +156,12 @@ public class GlyphTrain {
         //height is encoder counts or ticks
         // going up
         if(moveto == "top"){
-            glyphliftservo.setPosition(0.85);
+            glyphliftservo.setPosition(0.9);
         }
         else{
             glyphliftservo.setPosition(0.03);
         }
     }
-
-
-
-
     void liftGlyph(float height) {
         // clamp glyph
         //glyphclamp("close");

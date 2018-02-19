@@ -81,6 +81,7 @@ public class Teleop extends OpMode {
     public int manualLiftDelay = 50;
     public int glyphSensedDelay = 0;
     boolean glyphinit = false;
+    boolean waitforglyph = false;
 
 
     public boolean padupIsReleased = true;
@@ -325,9 +326,22 @@ public class Teleop extends OpMode {
         /**
          * GLYH SENSING && CHECK JAMS
          */
+        if(waitforglyph){//If you have a block waiting in the train
+            if( abs(gamepad1.right_stick_x) < .1 && abs(gamepad1.right_stick_y) < .1 &&  abs(gamepad1.left_stick_x) < .1){
+                waitforglyph = false;
+                gromit.glyphTrain.startGlyphMotors(1.0);
+                trainon = true;
+            }
+        }
         if (trainon) {
             if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
                 glyphSensed = true;
+                if(blocks != 0){
+                    //Stop the Train, you saw the first edge
+                    trainon = false;
+                    gromit.glyphTrain.stopGlyphMotors();
+                    waitforglyph = true;
+                }
             } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
                 if(!gamepad1.dpad_right && !gamepad2.dpad_right){
                     startclosetime = runtime.milliseconds();    // start timer  set boolean
@@ -347,24 +361,20 @@ public class Teleop extends OpMode {
                 glyphSensed = false;
             }
             //Front glyph sensor trigger lights
-            if (!gromit.glyphTrain.seeFrontBlock.getState()  && !frontglyphSensed) {     // if block is sensed set boolean
-                frontglyphSensed = true;
+            if (!gromit.glyphTrain.seeFrontBlock.getState() || !gromit.glyphTrain.seeMiddleBlock.getState()){ //  && !frontglyphSensed) {     // if block is sensed set boolean
+                //frontglyphSensed = true;
                 //Turn on lights you have a block
                 gromit.glyphTrain.LED1.setState(true);
                 gromit.glyphTrain.LED2.setState(true);
 
                 //gromit.jewelArm.jewelflickerCenter();
 
-            } else if (frontglyphSensed && gromit.glyphTrain.seeFrontBlock.getState()) {     // if block was already sensed (sense the back end)
-                frontglyphSensed = false;
+            }else if (gromit.glyphTrain.seeFrontBlock.getState() && gromit.glyphTrain.seeMiddleBlock.getState()) {     // if block was already sensed (sense the back end)
+                //frontglyphSensed = false;
                 gromit.glyphTrain.LED1.setState(false);
                 gromit.glyphTrain.LED2.setState(false);
-                //Second edge of block passed turn off lights
-                //gromit.jewelArm.jewelflickerForward();
-
             }
         }
-
         /**
          * BLOCK CLAMPS AND RELIC CLAW CLAMPS
          */
