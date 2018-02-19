@@ -170,18 +170,28 @@ public class curious_george_teleop extends OpMode {
  */
 public void Slides(){
     slideMove();
-    slideIncrement();
+    //slideIncrement();
 }
 public void Drive(){
     FourWheelDrive();
 }
 public void Relic() {
     relicManipulator();
+    IncrementMain();
 }
 public void Glyph() {
     glyphManipulator();
     incrementOpen();
     incrementClose();
+}
+
+public void IncrementMain(){
+   while (gamepad2.dpad_up){
+       relicMain.setPosition(relicMain.getPosition()+0.05);
+   }
+   while (gamepad2.dpad_down){
+       relicMain.setPosition(relicMain.getPosition()-0.05);
+   }
 }
     public void relicManipulator() {
         if (gamepad2.a){
@@ -194,13 +204,16 @@ public void Glyph() {
             relicMain.setPosition(1);
         }
         else if (gamepad2.left_bumper){
-            relicClaw.setPosition(0.8);
+            relicClaw.setPosition(1.0);
         }
         else if (gamepad2.right_bumper){
-            relicClaw.setPosition(0.0);
+            relicClaw.setPosition(0.2);
+        }
+        else if (gamepad2.b){
+            relicClaw.setPosition(0.5);
         }
         else{
-            relicMotor.setPower(-gamepad2.left_stick_y);
+            relicMotor.setPower(gamepad2.left_stick_y*0.6);
         }
     }
 
@@ -258,6 +271,7 @@ public void Glyph() {
     public void slideMove() {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
