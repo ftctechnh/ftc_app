@@ -213,7 +213,7 @@ public void IncrementMain(){
             relicClaw.setPosition(0.5);
         }
         else{
-            relicMotor.setPower(gamepad2.left_stick_y*0.6);
+            relicMotor.setPower(gamepad2.left_stick_y);
         }
     }
 
