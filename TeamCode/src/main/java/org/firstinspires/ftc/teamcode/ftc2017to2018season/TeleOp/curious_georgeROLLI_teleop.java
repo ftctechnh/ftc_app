@@ -1,22 +1,19 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
 
-import android.transition.Slide;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 
 /**
  * Created by Team Inspiration on 1/21/18.
  */
-@TeleOp(name = "Curious George")
-public class curious_george_teleop extends OpMode {
+@TeleOp(name = "Curious George Roll-y collector")
+public class curious_georgeROLLI_teleop extends OpMode {
 
 
     /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -36,6 +33,8 @@ public class curious_george_teleop extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
+    CRServo intakeLeft;
+    CRServo intakeRight;
     DcMotor relicMotor;
     Servo relicMain;
     Servo relicClaw;
@@ -91,10 +90,13 @@ public class curious_george_teleop extends OpMode {
         relicMain = hardwareMap.servo.get("relicMain");
         relicClaw = hardwareMap.servo.get("relicClaw");
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
+        intakeLeft = hardwareMap.crservo.get("intakeLeft");
+        intakeRight = hardwareMap.crservo.get("intakeRight");
 
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        intakeLeft.setDirection(CRServo.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
@@ -184,6 +186,7 @@ public void Glyph() {
     incrementOpen();
     incrementClose();
 }
+
 
 public void IncrementMain(){
    while (gamepad2.dpad_up){
@@ -288,18 +291,22 @@ public void IncrementMain(){
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
-        if (gamepad1.right_bumper&&gamepad1.left_bumper){
-            middleGlyph();
 
+        if (gamepad1.left_bumper) {
+
+            intakeBlock();
         }
-        else if (gamepad1.left_bumper) {
-
 //opening the claw
 
-            openGlyph();
-        } else if (gamepad1.right_bumper) {
 
-            closeGlyph();
+        else if (gamepad1.right_bumper){
+
+            outtakeBlock();
+        }
+
+        else{
+            intakeLeft.setPower(0);
+            intakeRight.setPower(0);
         }
 
 
@@ -309,6 +316,17 @@ public void IncrementMain(){
 
         */
     }
+
+    public void intakeBlock(){
+        intakeLeft.setPower(1);
+        intakeRight.setPower(1);
+    }
+
+    public void outtakeBlock(){
+        intakeLeft.setPower(-1);
+        intakeRight.setPower(-1);
+    }
+
     public void wait(int mSec){
         double startTime;
         double endTime;

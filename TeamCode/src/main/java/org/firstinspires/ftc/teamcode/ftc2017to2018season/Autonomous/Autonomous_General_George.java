@@ -191,8 +191,12 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(0.1);
+        jewelServo.setPosition(0.2);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        front_left_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        front_right_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        back_left_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        back_right_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //allOpenGlyphManipulator();
         //light.setPower(0);
     }
@@ -699,7 +703,7 @@ public class Autonomous_General_George extends LinearOpMode {
         else{
 
             steer = getSteerError(errorDistance, PCoeff);
-            finalSpeed = -speed * steer;
+            finalSpeed = speed * steer;
         }
 
         front_left_motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -722,13 +726,18 @@ public class Autonomous_General_George extends LinearOpMode {
         double robotError;
 
         if (front == 0) {
-            robotError = targetDistance - wallAlignFront.cmUltrasonic();
+            robotError = wallAlignFront.cmUltrasonic() - targetDistance;//if we want to go forward, that means the
+                                                                        //front of the robot's current distance from the wall is greater than target distance
         }
         else if (front == 1) {
-            robotError = targetDistance - wallAlignBack.cmUltrasonic();
+            robotError = targetDistance - wallAlignBack.cmUltrasonic();//if we want to go forward, that means the
+                                                                        //back of the robot's current distance from the wall is less than the target distance
         }
         else if (front == 2){
             robotError = targetDistance - glyphBlockRangeSensor.getDistance(DistanceUnit.CM);
+        }
+        else if (front == 3){
+            robotError = targetDistance - revJewelRangeSensor.getDistance(DistanceUnit.CM);
         }
         else {
             robotError = targetDistance - wallAlignFront.cmUltrasonic();
@@ -1251,7 +1260,7 @@ public class Autonomous_General_George extends LinearOpMode {
             telemetry.update();
 
         }
-
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setPower(0);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -1276,7 +1285,7 @@ public class Autonomous_General_George extends LinearOpMode {
             telemetry.update();
 
         }
-
+        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         slideMotor.setPower(0);
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
