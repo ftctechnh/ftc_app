@@ -1,3 +1,6 @@
 [submodule "DogeCV"]
 	path = DogeCV
 	url = https://github.com/GTHSRobotics/DogeCV
+[submodule "Library"]
+	path = Library
+	url = https://github.com/KadenGordon/Library
