@@ -7,4 +7,5 @@ import com.disnodeteam.dogecv.detectors.GlyphDetector;
  */
 
 public class AutoGlyphs extends GlyphDetector {
+    
 }
