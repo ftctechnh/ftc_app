@@ -71,43 +71,34 @@ public class blueFront_George extends Autonomous_General_George {
 
 
         if(ballColor.equals("blue")){
-            encoderMecanumDrive(0.6, -10,-10,5000,0);
             jewelServo.setPosition(0);
-            sleep(1000);
-            encoderMecanumDrive(0.6,46,46,5000,0);
             sleep(1000);
         }
         else if(ballColor.equals("red")){
-            encoderMecanumDrive(0.6,40,40,5000,0);
             jewelServo.setPosition(0);
             sleep(1000);
         }
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(0);
             sleep(1500);
-            jewelServo.setPosition(0.6);
+            jewelServo.setPosition(1);
             sleep(500);
             readColorRev();
             sleep(1000);
             if(ballColor.equals("blue")){
-                encoderMecanumDrive(0.6, -10,-10,5000,0);
                 jewelServo.setPosition(0);
-                sleep(1000);
-                encoderMecanumDrive(0.6,46,46,5000,0);
                 sleep(1000);
             }
             else if(ballColor.equals("red")){
-                encoderMecanumDrive(0.6,40,40,5000,0);
                 jewelServo.setPosition(0);
                 sleep(1000);
             }
             else {
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.6, 40, 40, 5000, 0);
             }
         }
-
+        encoderMecanumDrive(0.6,40,40,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
         sleep(100);
@@ -122,7 +113,7 @@ public class blueFront_George extends Autonomous_General_George {
 
         if (vuMark == RelicRecoveryVuMark.LEFT){//should be 20 cm away from wall for left
             wallAlign(0.4, 20, 1);
-            //encoderMecanumDrive(0.5, 16, 16, 5000, 0);
+            encoderMecanumDrive(0.3, -12, -12, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
             wallAlign(0.4, 20, 1);

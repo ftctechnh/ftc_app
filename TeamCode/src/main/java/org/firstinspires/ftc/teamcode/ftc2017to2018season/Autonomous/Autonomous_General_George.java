@@ -72,7 +72,7 @@ public class Autonomous_General_George extends LinearOpMode {
     double P_TURN_COEFF = 0.08;
     double TURN_THRESHOLD = 5;
     double P_WALL_COEFF = 0.08;
-    double ALIGN_THRESHOLD = 5;
+    double ALIGN_THRESHOLD = 3;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
@@ -83,6 +83,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public boolean gyroFail = false;
 
     public Servo jewelServo;
+    public Servo jewelServoRotate;
     public Servo glyphServoRight;
     public Servo glyphServoLeft;
 
@@ -132,6 +133,9 @@ public class Autonomous_General_George extends LinearOpMode {
         idle();
 
         jewelServo = hardwareMap.servo.get("jewelServo");
+        jewelServoRotate = hardwareMap.servo.get("jewelServoRotate");
+
+
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         wallAlignFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "wallAlignFront");
@@ -191,7 +195,8 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(0.2);
+        jewelServo.setPosition(1);
+        jewelServoRotate.setPosition(0.74);//0.74 for it to be in the middle, 0.9 to knock off ball in front of color sensor, 0.6 to knock off ball behind color sensor
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_left_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -1240,7 +1245,7 @@ public class Autonomous_General_George extends LinearOpMode {
         glyphServoRight.setPosition(0.1);
         glyphServoLeft.setPosition(0.8);
     }
-    public void moveUpGlyph(double cm) {
+    public void moveDownGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
@@ -1265,7 +1270,7 @@ public class Autonomous_General_George extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-    public void moveDownGlyph(double cm) {
+    public void moveUpGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;

@@ -62,21 +62,21 @@ public class blueBack_George extends Autonomous_General_George {
         telemetry.update();
         sleep(250);
 
-        moveUpGlyph(0.9);//change distances once we lower the stress of the glyph manipulator
+        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        moveDownGlyph(1.5);
+        moveDownGlyph(1.45);
         sleep(250);
         closeGlyphManipulator();
         sleep(250);
-        moveUpGlyph(1.5);
+        moveUpGlyph(1.45);
         sleep(250);
-        jewelServo.setPosition(0.9);
+        jewelServo.setPosition(1);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
-        readColor();
+        readColorRev();
         sleep(1500);
         //light.setPower(0);
         telemetry.addData("right jewel color", ballColor);
@@ -85,39 +85,30 @@ public class blueBack_George extends Autonomous_General_George {
 
 
         if (ballColor.equals("blue")) {
-            encoderMecanumDrive(0.9, -10, -10, 5000, 0);
             jewelServo.setPosition(0);
             sleep(1000);
-            encoderMecanumDrive(0.9, 20, 20, 5000, 0);
-            sleep(1000);
         } else if (ballColor.equals("red")) {
-            encoderMecanumDrive(0.9, 10, 10, 5000, 0);
             jewelServo.setPosition(0);
             sleep(1000);
         } else if (ballColor.equals("blank")) { //this means the color sensor didn't see the color of the jewel
             jewelServo.setPosition(0);//raising the jewel manipulator
             sleep(1500);
-            jewelServo.setPosition(0.9);//putting the jewel manipulator back down
+            jewelServo.setPosition(1);//putting the jewel manipulator back down
             sleep(500);
-            readColor();
+            readColorRev();
             sleep(1000);
             if (ballColor.equals("blue")) {
-                encoderMecanumDrive(0.9, -10, -10, 5000, 0);
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9, 20, 20, 5000, 0);
-                sleep(1000);
             } else if (ballColor.equals("red")) {
-                encoderMecanumDrive(0.9, 10, 10, 5000, 0);
                 jewelServo.setPosition(0);
                 sleep(1000);
             } else {//if the jewel manipulator doesn't see it a second time
                 jewelServo.setPosition(0);
                 sleep(1000);
-                encoderMecanumDrive(0.9, 10, 10, 5000, 0);
             }
         }
-        //encoderMecanumDrive(0.4, 15, 15, 1000, 0);
+        encoderMecanumDrive(0.4, 15, 15, 1000, 0);
         gyroTurnREV(0.8, 0);
         //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
         sleep(100);
@@ -134,7 +125,7 @@ public class blueBack_George extends Autonomous_General_George {
                 //this method uses encoders to drive a specified distance
                 encoderMecanumDrive(0.7, 20, 20, 500, 0);
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                encoderMecanumDrive(0.7, 2, 2, 500, 0);
+                encoderMecanumDrive(0.7, 0, 0, 500, 0);
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 encoderMecanumDrive(0.7, 40, 40, 500, 0);
             } else {
@@ -160,7 +151,7 @@ public class blueBack_George extends Autonomous_General_George {
 //        }
 
             sleep(1000);
-            gyroTurnREV(0.5, 90);
+            gyroTurnREV(0.5, -55);
             sleep(750);
             moveDownGlyph(0.3);
             sleep(500);
