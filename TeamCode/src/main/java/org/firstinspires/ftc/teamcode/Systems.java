@@ -61,6 +61,8 @@ public class Systems {
         RelicClaw.moveMotor(0);
     }
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
-        
+        ForkLift.moveMotor(1, 1000);
+        ForkLift.closeClaw();
+
     }
 }

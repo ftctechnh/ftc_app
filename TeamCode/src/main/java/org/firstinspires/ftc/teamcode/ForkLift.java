@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class ForkLift {
@@ -83,11 +85,13 @@ public class ForkLift {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-    public void moveMotor(double speed, long time) {
+    public void moveMotor(double speed, long miliseconds) {
         moveMotor(speed);
-        try {
-            Thread.sleep(time);
-        } catch (InterruptedException e) {}
+        ElapsedTime runTime = new ElapsedTime();
+        runTime.reset();
+        while(runTime.milliseconds()<=miliseconds){
+            moveMotor(speed);
+        }
         stop();
     }
     public void moveUntilDown(double speed) {
