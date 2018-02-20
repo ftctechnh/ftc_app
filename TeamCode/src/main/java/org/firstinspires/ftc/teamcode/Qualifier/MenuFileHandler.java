@@ -41,7 +41,7 @@ public class MenuFileHandler {
 
     // all data here
     public boolean teamIsRed;
-    public boolean startPositionIsFront;
+    public boolean startPositionIsFront, DoTheWrongJewel;
     public double DriveSpeed;
 
     public double mode,distance1,distance2;
@@ -51,7 +51,7 @@ public class MenuFileHandler {
     public double BlueBackDistance1,BlueBackHeading1,BlueBackDistance2Right,BlueBackDistance2Center,BlueBackDistance2Left,BlueBackHeading2,BlueBackTurn3,BlueBackDistance3,BlueBackHeading3 ;
     public double RedBackDistance1,RedBackHeading1,RedBackDistance2Right,RedBackDistance2Center,RedBackDistance2Left,RedBackHeading2,RedBackDistance3,RedBackHeading3 ;
 
-    public double RedFrontDistance3,BlueFrontDistance3,RedBackDistance4,RedBackHeading4,BlueBackDistance4,BlueBackHeading4;
+    public double RedBlueFrontDistance3,BlueFrontDistance3,RedBackDistance4,RedBackHeading4,BlueBackDistance4,BlueBackHeading4;
 
     //    //Menu Variables
     public int      nitems = 41;    //
@@ -410,58 +410,69 @@ public class MenuFileHandler {
         BlueBackHeading3 = menuvalue[34];
 
         if (init) {
-            menulabel[35] = "SM RED Front Distance 3 (54)";
+            menulabel[35] = "SM RED&BLUE Front Distance 3 (54)";
             menuvalue[35] = 54;
             menulowerlimit[35] = -70;
             menuupperlimit[35] =  70;
             menuincrement[35] = 0.5;
         }
-        RedFrontDistance3 = menuvalue[35];
+        RedBlueFrontDistance3 = menuvalue[35];
 
         if (init) {
-            menulabel[36] = "SM BLUE Front Distance 3 (54)";
-            menuvalue[36] =  54;
-            menulowerlimit[36] = -70;
-            menuupperlimit[36] =  70;
+            menulabel[36] = "SM RED Back Distance 4 (70)";
+            menuvalue[36] = 70;
+            menulowerlimit[36] = -80;
+            menuupperlimit[36] =  80;
             menuincrement[36] = 0.5;
         }
-        BlueFrontDistance3 = menuvalue[36];
+        RedBackDistance4 = menuvalue[36];
 
         if (init) {
-            menulabel[37] = "SM RED Back Distance 4 (54)";
-            menuvalue[37] = 54;
-            menulowerlimit[37] = -70;
-            menuupperlimit[37] =  70;
-            menuincrement[37] = 0.5;
+            menulabel[37] = "SM RED Back  Heading 4 (-30)";
+            menuvalue[37] = -30 ;
+            menulowerlimit[37] = -180;
+            menuupperlimit[37] =  180;
+            menuincrement[37] = 1.0;
         }
-        RedBackDistance4 = menuvalue[37];
+        RedBackHeading4 = menuvalue[37];
 
         if (init) {
-            menulabel[38] = "SM RED Back  Heading 4 ()";
-            menuvalue[38] = 160 ;
-            menulowerlimit[38] = -180;
-            menuupperlimit[38] =  180;
-            menuincrement[38] = 1.0;
+            menulabel[38] = "SM Blue Back Distance 4 (60)";
+            menuvalue[38] = 60;
+            menulowerlimit[38] = -80;
+            menuupperlimit[38] =  80;
+            menuincrement[38] = 0.5;
         }
-        RedBackHeading4 = menuvalue[38];
+        BlueBackDistance4 = menuvalue[38];
 
         if (init) {
-            menulabel[39] = "SM Blue Back Distance 4 (54)";
-            menuvalue[39] = 54;
-            menulowerlimit[39] = -70;
-            menuupperlimit[39] =  70;
-            menuincrement[39] = 0.5;
+            menulabel[39] = "SM Blue Back Heading 4 (-150)";
+            menuvalue[39] = -150;
+            menulowerlimit[39] = -180;
+            menuupperlimit[39] =  180;
+            menuincrement[39] = 1.0;
         }
-        BlueBackDistance4 = menuvalue[39];
+        BlueBackHeading4 = menuvalue[39];
 
         if (init) {
-            menulabel[40] = "SM Blue Back Heading 4 ()";
-            menuvalue[40] = -160;
-            menulowerlimit[40] = -180;
-            menuupperlimit[40] =  180;
-            menuincrement[40] = 1.0;
+            menulabel[40] = "Ranking Points";
+            menuvalue[40] =  54;
+            menulowerlimit[40] = -70;
+            menuupperlimit[40] =  70;
+            menuincrement[40] = 0.5;
         }
-        BlueBackHeading4 = menuvalue[40];
+        BlueFrontDistance3 = menuvalue[40];
+        if (init) {
+            menulabel[40] = "Jewel 4 Ranking Points";
+            menuvalue[40] = 0;
+            menulowerlimit[40] = 0;
+            menuupperlimit[40] = 1;
+            menuincrement[40] = 1;
+            menuvaluetoken[40][0] = "Do the correct Jewel";
+            menuvaluetoken[40][1] = "Do the WRONG Jewel";
+        }
+        DoTheWrongJewel = (menuvalue[1] == 1);
+
 
     }
 

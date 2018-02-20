@@ -334,6 +334,7 @@ public class AutoFIXED extends LinearOpMode {
         sleep(1000);
 //        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
         gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
+//        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
         sleep(1000);
         gromit.jewelArm.jewelArmUp();
 
@@ -398,6 +399,7 @@ public class AutoFIXED extends LinearOpMode {
             sleep(400);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
                 goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, -30);
+//                goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, menuFile.RedBackHeading4);
             }
         } else if (!menuFile.teamIsRed && !menuFile.startPositionIsFront) {                 /** BLUE Back  */     //  back  4, 14, 26
             mecanumDrive(menuFile.DriveSpeed * 0.6, menuFile.BlueBackDistance1, menuFile.BlueBackHeading1, 0);  // drive off stone
@@ -419,6 +421,7 @@ public class AutoFIXED extends LinearOpMode {
             gromit.glyphTrain.startGlyphMotors(0.8);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
                 goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, -150);
+//               goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, menuFile.BlueBackHeading4);
             }
         }
         //ZERO THE REAR LIFT
@@ -437,7 +440,8 @@ public class AutoFIXED extends LinearOpMode {
 
     }
     public void goGetAnotherGlyphBlueFront(RelicRecoveryVuMark vuMark, double headingcrypto) {
-        double drivedistance = 54;
+//        double drivedistance = 54;
+        double drivedistance = menuFile.RedBlueFrontDistance3;
 //Re-align
         double strafe = 0;
         if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -560,7 +564,9 @@ public class AutoFIXED extends LinearOpMode {
 
         //double driveangle = -150;
 //Re-align
-        double drivedistance = 60;
+//        double drivedistance = 60;
+        double drivedistance = menuFile.BlueBackDistance4;
+
         /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
 
         if (menuFile.mode == 2) {//Align to a different box to do a row
@@ -644,7 +650,8 @@ public class AutoFIXED extends LinearOpMode {
 
         //double driveangle = -150;
 //Re-align
-        double drivedistance = 70;
+//        double drivedistance = 70;
+        double drivedistance = menuFile.RedBackDistance4;
         /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
 
         if (menuFile.mode == 2) {//Align to a different box to do a row

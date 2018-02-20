@@ -91,29 +91,53 @@ public class JewelArm {
 
 
     }
+
     public void solveJewelPuzzleCamera(boolean teamIsRED,boolean blueJewelIsLeft) {
 
         // sensor is facing the forward ball.
 
-//        // determine if Red to the left, the sensor reads in the left direction.
-//        if (sensorColor.red() > sensorColor.blue()) {   //then RED is front
-//            redjewelisfront = true;
-//       } else {
-//            redjewelisfront = false;
-//        }
-
         if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front
             jewelflickerForward();
-            //while( jewelFlickerServo.getPosition() > 0.05) { }
         } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
             jewelflickerBack();
-            //while( jewelFlickerServo.getPosition() < 0.95) { }
         } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
             jewelflickerBack();
-            //while( jewelFlickerServo.getPosition() < 0.95) { }
         } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
             jewelflickerForward();
-            //while( jewelFlickerServo.getPosition() > 0.05) { }
+        }
+
+
+    }
+    public void solveJewelPuzzleCameraRP(boolean teamIsRED,boolean blueJewelIsLeft,boolean DoWrongJewel) {
+
+        // sensor is facing the forward ball.
+
+        // do the opposite if you want to gain Ranking Points.
+
+        if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front
+            if(!DoWrongJewel) {
+                jewelflickerForward();
+            } else{
+                jewelflickerBack();
+            }
+        } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
+            if(!DoWrongJewel) {
+                jewelflickerBack();
+            }else{
+                jewelflickerForward();
+            }
+        } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
+            if(!DoWrongJewel) {
+                jewelflickerBack();
+            }else{
+                jewelflickerForward();
+            }
+        } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
+            if(!DoWrongJewel) {
+                jewelflickerForward();
+            }else{
+                jewelflickerBack();
+            }
         }
 
 
