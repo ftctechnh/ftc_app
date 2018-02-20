@@ -67,7 +67,7 @@ public class AutoDrive {
         double fr = clip(-y + x + z);
         double rl = clip(-y + x - z);
         double rr = clip(-y + -x + z);
-        double highestSpeed = findHigh(new double[] {fl, fr, rl, rr});
+        double highestSpeed = findHigh(new double[]{fl, fr, rl, rr});
         double flTarget = Math.abs(fl / highestSpeed * clicks);
         double frTarget = Math.abs(fr / highestSpeed * clicks);
         double rlTarget = Math.abs(rl / highestSpeed * clicks);
@@ -92,7 +92,7 @@ public class AutoDrive {
         double rr = clip(-y + -x + z);
         ElapsedTime runtime = new ElapsedTime();
         runtime.reset();
-        while(runtime.milliseconds()<miliseconds) {
+        while (runtime.milliseconds() < miliseconds) {
             driveSpeeds(fl, fr, rl, rr);
         }
         stopMotors();
@@ -367,13 +367,13 @@ public class AutoDrive {
             proportion = 1 - Math.abs((distance - start) / distanceToTravel + 0.0001);
             driveSpeeds(clipStrafeSpeed(fl * proportion), clipStrafeSpeed(fr * proportion), clipStrafeSpeed(rl * proportion), clipStrafeSpeed(rr * proportion));
             derivative = getDistance() - distance;
-            if(derivative>=0 && derivative<3) {
+            if (derivative >= 0 && derivative < 6) {
                 distance = getDistance();
                 acceptedSensorValue++;
             }
             ranTimes++;
             telemetry.addData("Ran times", ranTimes);
-            telemetry.addData("Accepted Ratio", acceptedSensorValue/ranTimes);
+            telemetry.addData("Accepted Ratio", acceptedSensorValue / ranTimes);
             telemetrizeDistance();
             telemetry.update();
         }
@@ -394,5 +394,9 @@ public class AutoDrive {
 
     public double getDistance() {
         return getDistance(DistanceUnit.INCH);
+    }
+
+    public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
+
     }
 }
