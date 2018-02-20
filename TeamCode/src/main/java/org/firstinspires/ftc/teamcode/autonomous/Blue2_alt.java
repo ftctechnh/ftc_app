@@ -69,7 +69,7 @@ public class Blue2_alt extends LinearOpMode {
     private static double gbrEXCLOSE = 0.1;
 
     private static double jaUP = 0.73;
-    private static double jaDOWN = 0.22;
+    private static double jaDOWN = 0.23;
 
     private static double jkCENTER = 0.44;
     private static double jkRIGHT = 0;
@@ -184,11 +184,11 @@ public class Blue2_alt extends LinearOpMode {
         //telemetry.addData("blue: ", jColor.blue());
         //telemetry.update();
 
-        if (jColor.blue() < 2){
-            jewelKnock.setPosition(jkRIGHT);
+        if (jColor.red() < 3){
+            jewelKnock.setPosition(jkLEFT);
         }
         else {
-            jewelKnock.setPosition(jkLEFT);
+            jewelKnock.setPosition(jkRIGHT);
         }
 
         Thread.sleep(500);
@@ -240,13 +240,13 @@ public class Blue2_alt extends LinearOpMode {
 
             BACKWARD(2700,0.3);
 
-            FORWARD(3200, 0.5);
+            FORWARD(3250, 0.5);
 
-            AXISLEFT(2500);
+            AXISLEFT(2400);
 
-//            //Move towards safezone
-//            FORWARD(850, 0.5);
-//
+        //Move towards safezone
+        FORWARD(700, 0.5);
+
 //            //Drop glyph
 //            grabTopLeft.setPosition(0.4);
 //            grabTopRight.setPosition(0.3);
