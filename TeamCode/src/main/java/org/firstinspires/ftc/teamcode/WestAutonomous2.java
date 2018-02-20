@@ -17,6 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.CENTER;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.LEFT;
 import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark.RIGHT;
+
+import org.firstinspires.ftc.teamcode.WestCoastRobot;
+
 //blue alliance,drive forward, turn
 
 @Autonomous
@@ -24,17 +27,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryV
 public class WestAutonomous2 extends OpMode
 {
 
-    private DcMotor m1, m2;
-    private Servo drop1,drop2;
+    private WestCoastRobot robot = new WestCoastRobot();
 
-
-    private double drop1Min =0.5 ;
-    private double drop2Max = 0.5;
-    private double interval = 0.01;
-
-    private double extendedArm = 0.5;
-
-
+    private boolean done;
 
     private int leftPos = 200;
     private int centerPos = 400;
@@ -65,14 +60,8 @@ public class WestAutonomous2 extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
 
-        m1 = hardwareMap.get(DcMotor.class, "Motor1");
-        m2 = hardwareMap.get(DcMotor.class, "Motor2");
-
-        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        drop1 = hardwareMap.get(Servo.class, "Drop1");
-        drop2 = hardwareMap.get(Servo.class, "Drop2");
+        robot.make(hardwareMap,"Motor1","Motor2","Motor3","Motor4","Lift_Motor","Grabber_Motor","Grab1","Grab2","Drop1","Drop2","Place");
+        robot.setUpEncoders();
 
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -107,7 +96,7 @@ public class WestAutonomous2 extends OpMode
      */
     @Override
     public void start() {
-        boolean done = false;
+
         done = false;
 
         while (!done){
@@ -127,33 +116,27 @@ public class WestAutonomous2 extends OpMode
             }
         }
 
-        move(movePos1);
+        robot.goToPosition(movePos1,movePos1,0.5);
 
-        rotate(true);
+        robot.rotate(true,rotatePos,0.2);
 
-        move(target);
+        robot.goToPosition(target,target,0.2);
 
-        rotate(false);
+        robot.rotate(false,rotatePos,0.2);
 
-        move(movePos2);
+        robot.goToPosition(movePos2,movePos2,0.5);
 
-        dropBlock();
+        robot.dropBlock(true);
 
-        move(-movePos2);
+        robot.goToPosition(-movePos2,-movePos2,0.5);
 
-        rotate(false);
+        robot.rotate(false,rotatePos,0.2);
 
-        move(target);
+        robot.goToPosition(target,target,0.2);
 
-        rotate(false);
+        robot.rotate(false,rotatePos,0.2);
 
-        move(movePos1);
-
-
-
-
-
-
+        robot.goToPosition(movePos1,movePos1,0.5);
 
     }
 
@@ -172,78 +155,6 @@ public class WestAutonomous2 extends OpMode
      */
     @Override
     public void stop() {
-    }
-
-    private void rotate(boolean right){
-        double power = 0.0;
-        if (right) {
-            m1.setTargetPosition(rotatePos);
-            m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            power = 0.2;
-
-        }
-        else{
-            m1.setTargetPosition(-rotatePos);
-            m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        }
-
-        while (m1.isBusy()) {
-            m1.setPower(power);
-            m2.setPower(-power);
-        }
-        m1.setPower(0);
-        m2.setPower(0);
-        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
-
-    private void move(int encoder){
-        double power = 0;
-        m1.setTargetPosition(encoder);
-        m1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        int current = m1.getCurrentPosition();
-
-        if (encoder > current){
-            power = 0.5;
-        }
-        else{
-            power  = -0.5;
-        }
-
-        while (m1.isBusy()){
-            m1.setPower(power);
-            m2.setPower(power);
-        }
-
-        m1.setPower(0);
-        m2.setPower(0);
-        m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    private void dropBlock(){
-        double current1 = 1;
-        double current2 = 0;
-
-        while ((current1 >= drop1Min) || (current2 <= drop2Max)){
-            current1 = (current1 > drop1Min)? current1 - interval:current1;
-            current2 = (current2 < drop2Max)? current2 + interval:current2;
-            drop1.setPosition(current1);
-            drop2.setPosition(current2);
-        }
-
-        for (int i = 0; i <= 1000000;i++){
-            i = i;
-        }
-
-        while ((current1 <= 1) || (current2 >= 0)){
-            current1 = (current1 < 1)? current1 + interval:current1;
-            current2 = (current2 > 0)? current2 - interval:current2;
-            drop1.setPosition(current1);
-            drop2.setPosition(current2);
-        }
     }
 
 

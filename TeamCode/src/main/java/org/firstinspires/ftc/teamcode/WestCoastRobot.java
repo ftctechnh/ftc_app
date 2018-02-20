@@ -36,7 +36,8 @@ public class WestCoastRobot {
     private double interval = 0.01;
 
 
-    public void  make(HardwareMap hardwareMap,String motor1, String motor2,String motor3,String motor4,String liftName,String grabberName,String grab1Name,String grab2Name, String drop1Name,String drop2Name,String placeName){
+    public void  make(HardwareMap hardwareMap,String motor1, String motor2,String motor3,String motor4,String liftName,
+                      String grabberName,String grab1Name,String grab2Name, String drop1Name,String drop2Name,String placeName){
         m1 = hardwareMap.get(DcMotor.class,motor1);
         m2 = hardwareMap.get(DcMotor.class,motor2);
         m3 = hardwareMap.get(DcMotor.class,motor3);
@@ -85,11 +86,11 @@ public class WestCoastRobot {
     }
 
     public void setUpEncoders(){
-       // this.m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //this.m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.m1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.m1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //this.m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //this.m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.m2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.m2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         this.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
