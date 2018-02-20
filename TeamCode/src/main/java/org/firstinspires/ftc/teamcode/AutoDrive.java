@@ -395,8 +395,4 @@ public class AutoDrive {
     public double getDistance() {
         return getDistance(DistanceUnit.INCH);
     }
-
-    public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
-
-    }
 }
