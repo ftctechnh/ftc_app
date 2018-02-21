@@ -100,7 +100,7 @@ public class curious_george_teleop extends OpMode {
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
         openGlyph();
-        jewel_servo.setPosition(0.6);
+        jewel_servo.setPosition(0.05);
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
