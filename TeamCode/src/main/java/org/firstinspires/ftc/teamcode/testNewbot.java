@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 /**
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
-@TeleOp(name = "El Teleop", group = "Our Teleop")
+@TeleOp(name = "El Teleop", group = "bacon")
 //@Disabled
 public class testNewbot extends LinearOpMode {
 
@@ -42,11 +42,17 @@ public class testNewbot extends LinearOpMode {
     double backRight;
     double P1Power = -.7;
     double P2Power = .7;
-    int trayOut = -400;
-    int trayIn = 0;
+    int trayOut = -390;
+    int trayIn = 10;
+    int trayPos = 0;
+    int yPos = 0;
+    int topPushed = 0;
+    int bottomPushed = 0;
     boolean up;
     boolean xPush;
-    boolean bumper;
+    boolean aPush = false;
+    boolean yPush;
+
 
     /* Define values for teleop bumper control */
     static double nobumper = 1.5;
@@ -83,6 +89,8 @@ public class testNewbot extends LinearOpMode {
         topTouch.setMode(DigitalChannel.Mode.INPUT);
         bottomTouch.setMode(DigitalChannel.Mode.INPUT);
 
+        /*yerp*/
+
         /* Wait for the start button */
         telemetry.addLine("!☺ Ready to Run ☺!");
         telemetry.update();
@@ -92,50 +100,18 @@ public class testNewbot extends LinearOpMode {
 
             /* Talk to the drivers & coach */
             telemetry.addLine("Hi~♪");
-            telemetry.addData("Wheel Control", "X is the toggle");
-            telemetry.addData("Tray Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
-            telemetry.addData("Tray Flipping Controls", "Hold A for out, release for in");
-            telemetry.addData("Vertical Arm Power", verticalArmMotor.getPower());
+//            telemetry.addData("Wheel Control", "X is the toggle");
+//            telemetry.addData("Tray Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
+//            telemetry.addData("Tray Flipping Controls", "Hold A for out, release for in");
+            telemetry.addData("topPushed", topPushed);
+            telemetry.addData("bottomPushed", bottomPushed);
             telemetry.addData("Top Touch", topTouch.getState());
             telemetry.addData("Bottom Touch", bottomTouch.getState());
+            telemetry.addData("yPos", yPos);
             telemetry.update();
 
             /* Put the servo arm up */
             gemServo.setPosition(xPosUp);
-
-            /* Move the vertical arm up & read the top touch sensor */
-            if (gamepad1.dpad_up && topTouch.getState()) {
-                verticalArmMotor.setPower(1);
-                up = true;
-            } else {
-                if (gamepad1.dpad_up && !topTouch.getState()) {
-                    verticalArmMotor.setPower(0);
-                    up = true;
-                } else {
-                    if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
-                        verticalArmMotor.setPower(0);
-                        up = false;
-                    }
-                }
-            }
-
-            /* Move the vertical arm down & read the bottom touch sensor */
-            if (!up) {
-                if (gamepad1.dpad_down && bottomTouch.getState()) {
-                    verticalArmMotor.setPower(-.5);
-                    up = false;
-                }
-            } else {
-                if (gamepad1.dpad_down && !bottomTouch.getState()) {
-                    verticalArmMotor.setPower(0);
-                    up = false;
-                } else {
-                    if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
-                        verticalArmMotor.setPower(0);
-                        up = false;
-                    }
-                }
-            }
 
             /* Toggle the collection system */
             if (gamepad1.x) {
@@ -153,14 +129,75 @@ public class testNewbot extends LinearOpMode {
                 xPush = false;
             }
 
-
-            /* Move the tray in and out */
+            /* Function to toggle tray at bottom-most position */
             if (gamepad1.a) {
-                trayMotor.setTargetPosition(trayOut);
-                trayMotor.setPower(-.4);
+                if (trayPos == 0 & !aPush) {
+                    trayMotor.setTargetPosition(trayOut);
+                    trayMotor.setPower(-.4);
+                    aPush = true;
+                    trayPos++;
+                } else {
+                    if (trayPos == 1 && !aPush) {
+                        trayMotor.setTargetPosition(trayIn);
+                        trayMotor.setPower(.4);
+                        aPush = true;
+                        trayPos--;
+                    }
+                }
             } else {
-                trayMotor.setTargetPosition(trayIn);
-                trayMotor.setPower(.4);
+                aPush = false;
+            }
+
+            /*** Int Toggle ***/
+            if (gamepad1.y) {
+                if (yPos == 0 && !yPush) {
+                    yPos++;
+                    yPush = true;
+                } else {
+                    if (yPos == 1 && !yPush) {
+                        yPos--;
+                        yPush = true;
+                    }
+                }
+            } else {
+                yPush = false;
+            }
+
+            /* Function to toggle tray at upper-most position */
+            if (yPos == 1) {
+                if (topPushed == 0) {
+                    verticalArmMotor.setPower(1);
+                    if (!topTouch.getState()) {
+                        verticalArmMotor.setPower(0);
+                        setTrayPosition("Out");
+                        topPushed = 1;
+                        bottomPushed = 0;
+                    }
+                }
+            }
+
+            if (yPos == 0) {
+                if (bottomPushed == 0) {
+                    verticalArmMotor.setPower(-.7);
+                    if (!bottomTouch.getState()) {
+                        verticalArmMotor.setPower(0);
+                        setTrayPosition("In");
+                        bottomPushed = 1;
+                        topPushed = 0;
+                    }
+                }
+            }
+
+            if (yPos == 0 && topTouch.getState() && bottomTouch.getState() && getRuntime() < 5) {
+                if (bottomPushed == 0) {
+                    verticalArmMotor.setPower(-.2);
+                    if (!bottomTouch.getState()) {
+                        verticalArmMotor.setPower(0);
+                        setTrayPosition("In");
+                        bottomPushed = 1;
+                        topPushed = 0;
+                    }
+                }
             }
 
             /* Rotational Control */
@@ -274,6 +311,20 @@ public class testNewbot extends LinearOpMode {
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*
      ***********************************************************************************************/
+
+    /* This method moves the tray to position */
+    public void setTrayPosition(String position) {
+        switch (position) {
+            case "Out":
+                trayMotor.setTargetPosition(trayOut);
+                trayMotor.setPower(-.4);
+                break;
+            case "In":
+                trayMotor.setTargetPosition(trayIn);
+                trayMotor.setPower(.4);
+                break;
+        }
+    }
 
     /* This method powers each wheel to whichever power is desired */
     public void setWheelPower(double fl, double fr, double bl, double br) {
