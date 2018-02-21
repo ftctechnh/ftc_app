@@ -246,6 +246,7 @@ public class Teleop extends OpMode {
         // check if target is reached yet
         if (glyphLiftismoving) {
             if (liftTarget == 0) {  // going down
+                gromit.glyphTrain.resetkickGlyph();//Make sure the kicker isn't in the way
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition() <= liftTarget + 200) {  // slow down before overshooting zero
                     gromit.glyphTrain.lift_motor.setPower(-0.3);
 
@@ -382,6 +383,10 @@ public class Teleop extends OpMode {
         if (gamepad2.right_trigger > 0.1) {
             if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
                 if (blocks != 0) {
+                    if(gromit.glyphTrain.liftIndex == 2) {
+                        gromit.glyphTrain.kickGlyph();
+                        sleep(0);
+                    }
                     gromit.glyphTrain.glyphclamp("open");
                 }
             } else {
@@ -579,7 +584,7 @@ public class Teleop extends OpMode {
          * ONE HIT WONDER
          */
         //ONE BUTTON RELIC RECOVERY
-        if (gamepad2.right_stick_button) {
+        if (gamepad2.right_stick_button && elbowtarget == gromit.relicArm.elbowtop) {
             if (rightbtn2IsReleased) {//IF CHANGE IN STATE
                 rightbtn2IsReleased = false;
                 onehitwonder = true;
