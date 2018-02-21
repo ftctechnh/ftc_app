@@ -88,7 +88,7 @@ public class finalTeleOp extends LinearOpMode{
         relicArmPosition = 0;
 
         //Initial positions
-        jewelArm.setPosition(0.73);
+        jewelArm.setPosition(0.74);
         jewelKnock.setPosition(0);
         relicArm.setPosition(0.1);
 
@@ -181,8 +181,8 @@ public class finalTeleOp extends LinearOpMode{
                 }
                 //GT OPEN
                 if (gamepad2.b) {
-                    grabTopLeft.setPosition(0.4);
-                    grabTopRight.setPosition(0.3);
+                    grabTopLeft.setPosition(0.395);
+                    grabTopRight.setPosition(0.305);
                 }
                 //GB OPEN
                 if (gamepad2.left_bumper) {

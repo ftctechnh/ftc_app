@@ -68,7 +68,7 @@ public class Blue1 extends LinearOpMode{
     private static double gbrCLOSE = 0.4;
     private static double gbrEXCLOSE = 0.1;
 
-    private static double jaUP = 0.73;
+    private static double jaUP = 0.74;
     private static double jaDOWN = 0.2;
 
     private static double jkCENTER = 0.44;
@@ -172,8 +172,6 @@ public class Blue1 extends LinearOpMode{
         do{
             jaPos -= 0.02;
             jewelArm.setPosition(jaPos);
-            // telemetry.addData("JA:", jewelArm.getPosition());
-            // telemetry.update();
         } while (jewelArm.getPosition() > jaDOWN);
 
         Thread.sleep(800);
