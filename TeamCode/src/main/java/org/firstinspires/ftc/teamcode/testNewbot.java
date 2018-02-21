@@ -89,7 +89,6 @@ public class testNewbot extends LinearOpMode {
         topTouch.setMode(DigitalChannel.Mode.INPUT);
         bottomTouch.setMode(DigitalChannel.Mode.INPUT);
 
-        /*yerp*/
 
         /* Wait for the start button */
         telemetry.addLine("!☺ Ready to Run ☺!");
@@ -188,12 +187,12 @@ public class testNewbot extends LinearOpMode {
                 }
             }
 
-            if (yPos == 0 && topTouch.getState() && bottomTouch.getState() && getRuntime() < 5) {
+            if (yPos == 0 && bottomTouch.getState() && getRuntime() < 5) {
                 if (bottomPushed == 0) {
                     verticalArmMotor.setPower(-.2);
                     if (!bottomTouch.getState()) {
                         verticalArmMotor.setPower(0);
-                        setTrayPosition("In");
+                        trayMotor.setPower(.1);
                         bottomPushed = 1;
                         topPushed = 0;
                     }
