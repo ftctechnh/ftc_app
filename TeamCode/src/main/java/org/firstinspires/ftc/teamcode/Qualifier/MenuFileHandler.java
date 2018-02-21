@@ -437,8 +437,8 @@ public class MenuFileHandler {
         RedBackHeading4 = menuvalue[37];
 
         if (init) {
-            menulabel[38] = "SM Blue Back Distance 4 (60)";
-            menuvalue[38] = 60;
+            menulabel[38] = "SM Blue Back Distance 4 (65)";
+            menuvalue[38] = 65;
             menulowerlimit[38] = -80;
             menuupperlimit[38] =  80;
             menuincrement[38] = 0.5;
@@ -454,14 +454,6 @@ public class MenuFileHandler {
         }
         BlueBackHeading4 = menuvalue[39];
 
-        if (init) {
-            menulabel[40] = "Ranking Points";
-            menuvalue[40] =  54;
-            menulowerlimit[40] = -70;
-            menuupperlimit[40] =  70;
-            menuincrement[40] = 0.5;
-        }
-        BlueFrontDistance3 = menuvalue[40];
         if (init) {
             menulabel[40] = "Jewel 4 Ranking Points";
             menuvalue[40] = 0;

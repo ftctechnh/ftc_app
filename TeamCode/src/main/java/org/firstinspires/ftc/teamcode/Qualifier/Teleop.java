@@ -52,6 +52,7 @@ public class Teleop extends OpMode {
 
     public boolean leftIsReleased = true;
     public boolean rightIsReleased = true;
+    public boolean jamButton=false;
 
     //public boolean aIsReleased = true;
     public boolean start2IsReleased = true;
@@ -404,21 +405,21 @@ public class Teleop extends OpMode {
             //Close top clamps
             gromit.glyphTrain.glyphclampupper("close");
         }
-        //FIRST PERSOSON CONTROLS COULD GO AWAY!!!!!!!!!!
-        // glyph clamp
-        if (gamepad1.right_trigger > 0.1) {
-            if (blocks != 0) {
-                gromit.glyphTrain.glyphclamp("open");
-            }
-        } else if (gamepad1.right_bumper) {
-            if (blocks != 0) {
-                gromit.glyphTrain.glyphclamp("close");
-            }
-        }
 
+        // jam buttons,  rotate one side of  chains opposite directions
         /**
          * Rotate the blocks
          */
+        if (gamepad1.right_trigger > 0.1) {
+            gromit.glyphTrain.right_glyph.setPower(-0.3);
+            jamButton=true;
+        } else if (gamepad1.right_bumper) {
+            gromit.glyphTrain.left_glyph.setPower(-0.3);
+            jamButton=true;
+        } else if (jamButton){
+            jamButton=false;
+            gromit.glyphTrain.startGlyphMotors(1.0);
+        }
         //They might need to be switched left to right
         if (gamepad1.start) {
             if (startIsReleased) {

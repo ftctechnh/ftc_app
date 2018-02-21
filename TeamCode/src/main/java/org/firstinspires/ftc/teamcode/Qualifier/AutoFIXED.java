@@ -333,8 +333,8 @@ public class AutoFIXED extends LinearOpMode {
         // while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
         sleep(1000);
 //        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
-        gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
-//        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
+//        gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
+        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
         sleep(1000);
         gromit.jewelArm.jewelArmUp();
 
@@ -398,8 +398,8 @@ public class AutoFIXED extends LinearOpMode {
             gromit.glyphTrain.startGlyphMotors(0.8);
             sleep(400);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
-                goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, -30);
-//                goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, menuFile.RedBackHeading4);
+//                goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, -30);
+                goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, menuFile.RedBackHeading4);
             }
         } else if (!menuFile.teamIsRed && !menuFile.startPositionIsFront) {                 /** BLUE Back  */     //  back  4, 14, 26
             mecanumDrive(menuFile.DriveSpeed * 0.6, menuFile.BlueBackDistance1, menuFile.BlueBackHeading1, 0);  // drive off stone
@@ -420,8 +420,8 @@ public class AutoFIXED extends LinearOpMode {
             gromit.glyphTrain.glyphclamp("open");
             gromit.glyphTrain.startGlyphMotors(0.8);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
-                goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, -150);
-//               goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, menuFile.BlueBackHeading4);
+//                goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, -150);
+               goGetAnotherGlyphBlueBack(vuMark, menuFile.BlueBackHeading3, menuFile.BlueBackHeading4);
             }
         }
         //ZERO THE REAR LIFT
@@ -596,7 +596,7 @@ public class AutoFIXED extends LinearOpMode {
             mecanumTurn(menuFile.DriveSpeed, headingcrypto);
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -17, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -12, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -17, menuFile.BlueBackHeading3, -90);  //strafe left 3 //Move left if you are on the certain edge
