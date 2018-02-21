@@ -187,19 +187,19 @@ public class finalTeleOp extends LinearOpMode{
                 //GB OPEN
                 if (gamepad2.left_bumper) {
                     grabBottomLeft.setPosition(0.25);
-                    grabBottomRight.setPosition(0.55);
+                    grabBottomRight.setPosition(0.25); //0.5
                 }
                 //GB CLOSE
                 if (gamepad2.right_bumper) {
-                    grabBottomLeft.setPosition(0.4);
-                    grabBottomRight.setPosition(0.4);
+                    grabBottomLeft.setPosition(0.38);
+                    grabBottomRight.setPosition(0.35); //0.4
                 }
 
                 if (gamepad2.left_stick_button){
                     grabBottomLeft.setPosition(0.8);
                 }
                 if (gamepad2.right_stick_button){
-                    grabBottomRight.setPosition(0.1);
+                    grabBottomRight.setPosition(0.73); //0.01
                 }
 
 
