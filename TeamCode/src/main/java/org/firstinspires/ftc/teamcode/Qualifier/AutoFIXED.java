@@ -333,8 +333,13 @@ public class AutoFIXED extends LinearOpMode {
         // while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
         sleep(1000);
 //        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
-//        gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
-        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
+        if (menuFile.DoTheWrongJewel){
+            gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
+        }else{
+            gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
+        }
+//        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,true);//menuFile.DoTheWrongJewel);
+//        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
         sleep(1000);
         gromit.jewelArm.jewelArmUp();
 

@@ -383,11 +383,14 @@ public class Teleop extends OpMode {
         if (gamepad2.right_trigger > 0.1) {
             if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
                 if (blocks != 0) {
-                    if(gromit.glyphTrain.liftIndex == 2) {
+                    if(gromit.glyphTrain.liftIndex >= 1) {
+                        gromit.glyphTrain.glyphclampupper("open");
                         gromit.glyphTrain.kickGlyph();
-                        sleep(0);
+                        sleep(350);
+                        gromit.glyphTrain.resetkickGlyph();
                     }
                     gromit.glyphTrain.glyphclamp("open");
+
                 }
             } else {
                 gromit.relicArm.clawOpen();
@@ -405,6 +408,9 @@ public class Teleop extends OpMode {
         if (gamepad2.left_trigger > 0.1 && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
             //Open Top Clamps
             gromit.glyphTrain.glyphclampupper("open");
+            if (blocks != 0) {
+                gromit.glyphTrain.glyphclamp("open");
+            }
         }
         else  if (gamepad2.left_bumper && gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
             //Close top clamps
@@ -413,16 +419,19 @@ public class Teleop extends OpMode {
 
         // jam buttons,  rotate one side of  chains opposite directions
         /**
-         * Rotate the blocks
+         * Rotate the blocks JAM BUTTONS
          */
         if (gamepad1.right_trigger > 0.1) {
             gromit.glyphTrain.right_glyph.setPower(-0.3);
             jamButton=true;
+            trainon = true;
         } else if (gamepad1.right_bumper) {
             gromit.glyphTrain.left_glyph.setPower(-0.3);
             jamButton=true;
+            trainon = true;
         } else if (jamButton){
             jamButton=false;
+            trainon = true;
             gromit.glyphTrain.startGlyphMotors(1.0);
         }
         //They might need to be switched left to right

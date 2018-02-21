@@ -105,10 +105,26 @@ public class JewelArm {
         } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
             jewelflickerForward();
         }
-
-
     }
-    public void solveJewelPuzzleCameraRP(boolean teamIsRED,boolean blueJewelIsLeft,boolean DoWrongJewel) {
+
+    public void solveJewelPuzzleCameraRP(boolean teamIsRED,boolean blueJewelIsLeft) {
+
+        // sensor is facing the forward ball.  This should so the WRONG jewel
+
+        if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front
+            jewelflickerBack();
+        } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
+            jewelflickerForward();
+        } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
+            jewelflickerForward();
+        } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
+            jewelflickerBack();
+        }
+    }
+
+
+
+    public void solveJewelPuzzleCameraRP2(boolean teamIsRED,boolean blueJewelIsLeft,boolean DoWrongJewel) {
 
         // sensor is facing the forward ball.
 

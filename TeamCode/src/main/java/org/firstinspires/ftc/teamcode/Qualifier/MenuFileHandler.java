@@ -455,13 +455,13 @@ public class MenuFileHandler {
         BlueBackHeading4 = menuvalue[39];
 
         if (init) {
-            menulabel[40] = "Jewel 4 Ranking Points";
+            menulabel[40] = "Jewel 4 RP";
             menuvalue[40] = 0;
             menulowerlimit[40] = 0;
             menuupperlimit[40] = 1;
             menuincrement[40] = 1;
-            menuvaluetoken[40][0] = "Do the correct Jewel";
-            menuvaluetoken[40][1] = "Do the WRONG Jewel";
+            menuvaluetoken[40][0] = "Do correct Jewel";
+            menuvaluetoken[40][1] = "Do WRONG Jewel";
         }
         DoTheWrongJewel = (menuvalue[1] == 1);
 
@@ -653,7 +653,8 @@ public class MenuFileHandler {
             }
 
         }
-
+        // wrong jewel
+        telemetry.addLine().addData(menulabel[40], menuvalue[40] + "  " + menuvaluetoken[40][(int)menuvalue[40]] );
 
 
 
