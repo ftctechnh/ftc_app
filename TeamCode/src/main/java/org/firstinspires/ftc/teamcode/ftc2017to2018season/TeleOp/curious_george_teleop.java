@@ -170,14 +170,13 @@ public class curious_george_teleop extends OpMode {
  */
 public void Slides(){
     slideMove();
-    //slideIncrement();
+    slideIncrement();
 }
 public void Drive(){
     FourWheelDrive();
 }
 public void Relic() {
     relicManipulator();
-    IncrementMain();
 }
 public void Glyph() {
     glyphManipulator();
