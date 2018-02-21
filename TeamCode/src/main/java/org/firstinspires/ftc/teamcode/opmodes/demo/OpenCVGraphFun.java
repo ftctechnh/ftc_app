@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
-
+/*
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.ViewGroup;
@@ -24,7 +24,7 @@ import java.util.LinkedList;
 
 /**
  * Created by Robotics on 10/28/2016.
- */
+ *
 
 @Autonomous(name = "Line Follow Algorithm + Graph Demo", group = "Test")
 @Disabled
@@ -148,3 +148,4 @@ public class OpenCVGraphFun extends OpenCVLib {
         layout.getHandler().post(hideChart);
     }
 }
+*/

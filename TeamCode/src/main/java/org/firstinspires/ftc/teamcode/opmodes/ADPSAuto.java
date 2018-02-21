@@ -76,7 +76,7 @@ public class ADPSAuto extends VuforiaBallLib {
         RED_REAR_CENTER(true, true, RelicRecoveryVuMark.CENTER, 0, 125, 300, 32),
         RED_REAR_RIGHT(true, true, RelicRecoveryVuMark.RIGHT, 2, 55, 325, 32),
 
-        BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 125, 370, 32),
+        BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 130, 370, 32),
         BLUE_FRONT_CENTER(false, false, RelicRecoveryVuMark.CENTER, 1, 55, 350, 32),
         BLUE_FRONT_RIGHT(false, false, RelicRecoveryVuMark.RIGHT, 2, 55, 340, 32),
         BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 115, 180, 34),
@@ -214,7 +214,7 @@ public class ADPSAuto extends VuforiaBallLib {
             int heading = rear ? (red ? 90 : -90) : 0;
 
             if(!rear) {
-                findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 155.0f * mul, 600, true, -360.0f, 360.0f));
+                findPilliar.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), drivePID, bot.getMotorVelocityShimArray(), 250.0f * mul, 600, true, -360.0f, 360.0f));
                 findPilliar.add(new AutoLib.GyroTurnStep(this, 0, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 360.0f, motorPID, 0.5f, 10, true));
             }
             else {
@@ -234,7 +234,7 @@ public class ADPSAuto extends VuforiaBallLib {
             final APDS9960 dist = red ? backDist : frontDist;
             //TODO: add camera fallback
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.55, dist, new SensorLib.PID(1.0f, 0, 0, 10), step,
-                    APDS_DIST, 8, path.skipCount, 100, this, red));
+                    APDS_DIST, 8, path.skipCount, 100, this, red, rear));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             findPilliar.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             //findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount + heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 520.0f, motorPID, 2.0f, 5, true));
@@ -296,6 +296,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private final Servo stick;
         private final int pilliarDist;
         private final boolean red;
+        private final boolean rear;
         private int[] encoderCache = new int[4];
         private int[] startEncoderCache = new int[4];
         private int pilliarCount;
@@ -309,10 +310,11 @@ public class ADPSAuto extends VuforiaBallLib {
 
         private static final int APDS_FOUND_COUNT = 4;
         private static final int COUNTS_BETWEEN_PILLIAR = 155;
-        private static final int COUNT_OH_SHIT = COUNTS_BETWEEN_PILLIAR * 7;
+        private static final int COUNT_OH_SHIT_REAR = COUNTS_BETWEEN_PILLIAR * 7;
+        private static final int COUNT_OH_SHIT_FRONT = COUNT_OH_SHIT_REAR * 9;
 
         APDSFind(Servo stick, double stickDown, double stickUp, APDS9960 sens, SensorLib.PID errorPid,
-                 GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode, boolean red) {
+                 GyroCorrectStep correctIt, int dist, int error, int pilliarSkipCount, int skipDist, OpMode mode, boolean red, boolean rear) {
             this.errorPid = errorPid;
             this.sens = sens;
             this.gyroStep = correctIt;
@@ -325,6 +327,7 @@ public class ADPSAuto extends VuforiaBallLib {
             this.stickDown = stickDown;
             this.stickUp = stickUp;
             this.red = red;
+            this.rear = rear;
         }
 
         public boolean loop() {
@@ -342,7 +345,7 @@ public class ADPSAuto extends VuforiaBallLib {
             //if any of the encoders are past the OH SHIT threshold, abort
             boolean shit = false;
             for(int i = 0; i < 4; i++) {
-                shit |= Math.abs(gyroStep.getMotors()[i].getCurrentPosition() - startEncoderCache[i]) >= COUNT_OH_SHIT;
+                shit |= Math.abs(gyroStep.getMotors()[i].getCurrentPosition() - startEncoderCache[i]) >= (rear ? COUNT_OH_SHIT_REAR : COUNT_OH_SHIT_FRONT);
                 mode.telemetry.addData("Motor " + i, Math.abs(gyroStep.getMotors()[i].getCurrentPosition() - startEncoderCache[i]));
             }
             if(shit) {

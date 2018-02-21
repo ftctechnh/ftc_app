@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
+/*(
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.ViewGroup;
@@ -16,12 +17,13 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 
 import java.util.LinkedList;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+*/
 
 /**
  * Created by Noah on 10/16/2017.
  * Opmode demonstrating the APDS distance sensor with a graph
  */
-
+/*
 
 @Autonomous(name = "APDS", group = "Line Follow")
 @Disabled
@@ -95,3 +97,4 @@ public class APDSGrapher extends OpMode{
         layout.getHandler().post(postData);
     }
 }
+*/
