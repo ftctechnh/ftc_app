@@ -16,9 +16,9 @@ import java.sql.Time;
  */
 
 
-@TeleOp(name = "Delta_TeleOp")
+@TeleOp(name = "General_Delta_TeleOp")
 //@Disabled
-public class Delta_TeleOp extends OpMode {
+public class General_Delta_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -153,14 +153,14 @@ public class Delta_TeleOp extends OpMode {
 ---------------------------------------------------------------------------------------------
  */
 
-/*
----------------------------------------------------------------------------------------------
+    /*
+    ---------------------------------------------------------------------------------------------
 
-    Functions go here
- */
+        Functions go here
+     */
     public void Slides(){
         slideMove();
-       // slideIncrement();
+        slideIncrement();
     }
     public void FourWheelDrive() {
         /*
@@ -234,14 +234,14 @@ public class Delta_TeleOp extends OpMode {
         double left_claw = (glyphServoLeft.getPosition());
        */
 
-            if (gamepad1.left_bumper) {
+        if (gamepad1.left_bumper) {
 
-           openGlyph();
+            openGlyph();
         } else if (gamepad1.right_bumper) {
 
-          closeGlyph();
+            closeGlyph();
         }
-          else if (gamepad1.left_bumper&&gamepad1.right_bumper){
+        else if (gamepad1.left_bumper&&gamepad1.right_bumper){
             middleGlyph();
         }
 
@@ -296,10 +296,10 @@ public class Delta_TeleOp extends OpMode {
     }
 
 
-    public void moveUpInch(double inch) {
+    public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 150;
-        double finalTarget = inch * countsPerCM * 2.54;
+        double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int) target_Position);
@@ -318,43 +318,43 @@ public class Delta_TeleOp extends OpMode {
 
     }
 
-  /*  public void moveDownInch(double cm) {
-        double target_Position;
-        double countsPerCM = 150;
-        double finalTarget = cm * countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+    /*  public void moveDownInch(double cm) {
+          double target_Position;
+          double countsPerCM = 150;
+          double finalTarget = cm * countsPerCM;
+          target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
-        slideMotor.setTargetPosition((int) target_Position);
+          slideMotor.setTargetPosition((int) target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+          slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        slideMotor.setPower(0.6);
+          slideMotor.setPower(0.6);
 
 
-        while (slideMotor.isBusy()) {
-            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
-            telemetry.update();
+          while (slideMotor.isBusy()) {
+              telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+              telemetry.update();
 
-        }
+          }
 
-        slideMotor.setPower(0);
+          slideMotor.setPower(0);
 
-    }
-    */
-  public void openGlyph(){
+      }
+      */
+    public void openGlyph(){
         glyphServoRight.setPosition(0.6);
         glyphServoLeft.setPosition(0.3);
-  }
+    }
 
-  public void closeGlyph(){
-      glyphServoRight.setPosition(0.85);
-      glyphServoLeft.setPosition(0.0);
-  }
+    public void closeGlyph(){
+        glyphServoRight.setPosition(0.85);
+        glyphServoLeft.setPosition(0.0);
+    }
 
-  public void middleGlyph(){
-      glyphServoRight.setPosition(0.75);
-      glyphServoLeft.setPosition(0.1);
+    public void middleGlyph(){
+        glyphServoRight.setPosition(0.75);
+        glyphServoLeft.setPosition(0.1);
 
-  }
+    }
 }
 
