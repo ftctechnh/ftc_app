@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Noah on 10/27/2017.
@@ -23,6 +24,7 @@ public class Teleop extends OpMode {
     private static final double SERVO_INC_MIN = 0.001;
     private static final int LIFT_COUNTS = 2800; //4250
     private static final int LIFT_BOTTOM_COUNTS = 730;
+    private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
 
     BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
@@ -33,6 +35,7 @@ public class Teleop extends OpMode {
     private int rightPos;
 
     private boolean servoSet = false;
+    private double lastTime = 0;
 
     public void init() {
         bot.init();
@@ -45,8 +48,8 @@ public class Teleop extends OpMode {
         bot.start();
         bot.setFrontDrop(0.34);
         bot.setDropPos(BotHardware.ServoE.backDropUp);
-        leftPos = BotHardware.Motor.liftLeft.motor.getCurrentPosition();
-        rightPos = BotHardware.Motor.liftRight.motor.getCurrentPosition();
+        leftPos = BotHardware.Motor.liftLeft.motor.getCurrentPosition() + 50;
+        rightPos = BotHardware.Motor.liftRight.motor.getCurrentPosition() + 50;
     }
 
     public void loop() {
@@ -86,12 +89,15 @@ public class Teleop extends OpMode {
             else bot.setDropPos(Range.clip(bot.getDropPos() - Range.scale(gamepad1.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
         }
 
-        if(gamepad2.x || gamepad1.x) {
-            if(servoSet) bot.setDropPos(Range.clip(bot.getDropPos() - SERVO_INC_MAX, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
-            else bot.setDropPos(Range.clip(bot.getDropPos() + SERVO_INC_MAX, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+        double time = getRuntime();
+        if((gamepad2.x || gamepad1.x) && time - lastTime >= BUCKET_SHAKE_INTERVAL) {
+            telemetry.addData("Interval", time - lastTime);
+            lastTime = time;
+            if(servoSet) bot.setDropPos(Range.clip(bot.getDropPos() - 0.1, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+            else bot.setDropPos(Range.clip(bot.getDropPos() + 0.1, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
             servoSet = !servoSet;
         }
-        else servoSet = false;
+        else if(!gamepad2.x && !gamepad1.x) servoSet = false;
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
