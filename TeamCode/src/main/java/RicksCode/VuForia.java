@@ -78,7 +78,7 @@ import java.io.FileOutputStream;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Vuforia", group ="zRick")
+@Autonomous(name="VuforiaImageGrabber", group ="zRick")
 //@Disabled
 public class VuForia extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();

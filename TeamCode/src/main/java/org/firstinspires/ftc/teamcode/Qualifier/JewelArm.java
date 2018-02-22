@@ -165,13 +165,36 @@ public class JewelArm {
     public boolean blueIsOnLeft(Bitmap rgbImage) {
         // play images are 1280x720 w x h  origin is lower right looking at vuforia image,  Lower Left from camera pov
         // x is vertical, y is horizontal (for portrait orientation)
+        // Ball was about inscribed in a 300x300 box
+
+
+
+/**
+                 <---------  X  --------------->
+
+     (0,0)     +----------------------------------+   (1280,0)         ^
+               |                        BaLL      |                    |
+               |                                  |                    |
+               |                                  |                    |   Y
+               |                                  |                    |
+               |                                  |                    |
+               |                                  |                    |
+     (0,720)   +----------------------------------+   (1280,720)
+*/
+
+
 
         // go for a square that is inside the ball (ball is about 350x 350,  sample 250x250;
 
         int XStart = 1280-300;
         int XEnd =1280-50;
-        int yStart =0;
+        int yStart =50;
         int yEnd = 300-50;
+// moved the phone up, the ball down (X)
+//        int XStart = 1280-200;
+//        int XEnd =1280-0;
+//        int yStart =50;
+//        int yEnd = 300-50;
 
         int RedValue = 0;
         int BlueValue = 0;
