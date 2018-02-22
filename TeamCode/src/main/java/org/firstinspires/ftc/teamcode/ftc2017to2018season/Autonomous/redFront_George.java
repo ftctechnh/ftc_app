@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 //10-28-17
 @Autonomous(name = "Red Front George HIGH CONTROL")
 //@Disabled
+//revision 2/21/18 by Steven Chen: I am testing if the robot can accurately put the glyph in the right(not as in correct but the right one) column
 public class redFront_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
@@ -124,7 +125,7 @@ public class redFront_George extends Autonomous_General_George {
         sleep(100);
         gyroTurnREV(0.4,0);
         sleep(100);
-        wallAlign(0.5,28, 1);//since the columns of the cryptobox are protruding,
+        wallAlign(0.3,28, 1);//since the columns of the cryptobox are protruding,
                                                     // the range sensor is actually using the distance from the protruding columns
                                                     //the last value is 0 for the blue auto and 1 for the red auto
         sleep(200);
@@ -133,22 +134,22 @@ public class redFront_George extends Autonomous_General_George {
 
 
 
-        /*if (vuMark == RelicRecoveryVuMark.RIGHT){//should be 20 cm away from wall for left
+        if (vuMark == RelicRecoveryVuMark.RIGHT){//should be 20 cm away from wall for left
             //goes to given distance away from the wall
-            wallAlign(0.4, 15, 1);
-           // encoderMecanumDrive(0.3, -12, -12, 5000, 0);
+            wallAlign(0.3, 35, 1);
+            encoderMecanumDrive(0.3, -15, -15, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
             wallAlign(0.4, 35, 1);
             //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
         }
-        else*/ if (true){//vuMark == RelicRecoveryVuMark.LEFT){
+        else if(vuMark == RelicRecoveryVuMark.LEFT){
             wallAlign(0.4, 50, 1);
             //encoderMecanumDrive(0.5, 48, 48, 5000, 0);
 
         }
         //if we didn't detect the image, automatically put the glyph in the center
-        else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
+        else if(vuMark == RelicRecoveryVuMark.UNKNOWN){
             wallAlign(0.4, 35, 1);
             //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
 

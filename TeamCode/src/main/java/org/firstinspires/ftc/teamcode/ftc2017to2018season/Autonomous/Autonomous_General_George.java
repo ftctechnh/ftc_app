@@ -71,7 +71,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double ENCODERSPER360;
     double P_TURN_COEFF = 0.08;
     double TURN_THRESHOLD = 5;
-    double P_WALL_COEFF = 0.08;
+    double P_WALL_COEFF = 0.07;
     double ALIGN_THRESHOLD = 3;
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
@@ -682,8 +682,9 @@ public class Autonomous_General_George extends LinearOpMode {
         while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front)){
             telemetry.update();
             idle();
-            telemetry.addData("-->","inside while loop :-(");
-            telemetry.update();
+//            telemetry.addData("-->","inside while loop :-(");
+//            telemetry.update();
+            sleep(200);
         }
 
         stopMotors();
@@ -1245,7 +1246,7 @@ public class Autonomous_General_George extends LinearOpMode {
         glyphServoRight.setPosition(0.1);
         glyphServoLeft.setPosition(0.8);
     }
-    public void moveDownGlyph(double cm) {
+    public void moveUpGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
@@ -1270,7 +1271,7 @@ public class Autonomous_General_George extends LinearOpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
-    public void moveUpGlyph(double cm) {
+    public void moveDownGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;

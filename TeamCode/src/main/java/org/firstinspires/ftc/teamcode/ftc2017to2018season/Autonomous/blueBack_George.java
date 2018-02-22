@@ -1,64 +1,48 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Blue Back George")
+@Autonomous(name = "Blue Back George HIGH CONTROL")
+//@Disabled
 public class blueBack_George extends Autonomous_General_George {
 
-    DcMotor leftFront;
-    DcMotor rightFront;
-    DcMotor leftBack;
-    DcMotor rightBack;
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
+
 
     @Override
     public void runOpMode() {
 
 
         vuforiaInit(true, true);
-        telemetry.addData("", "Vuforia Initiated");
+        telemetry.addData("","Vuforia Initiated");
         telemetry.update();
         initiate(false);
-//        telemetry.addData("--->", "Gyro Calibrating");
-//        telemetry.update();
-        //gyro.calibrate();
-
-
-//        while(gyro.isCalibrating()){
-//            sleep(50);
-//            idle();
-//
-//        }
-
-        telemetry.addData("---->", "Gyro Calibrated. Good to go...");
+        sleep(500);
+        telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
 
         waitForStart();
 //reseting gyro sensor
-//        gyro.resetZAxisIntegrator();
 
         toggleLight(true);
-        //light.setPower(1);
+        //light.setPower(0.5);
         startTracking();
-        telemetry.addData("", "READY TO TRACK");
+        telemetry.addData("","READY TO TRACK");
         telemetry.update();
 
-        double begintime = runtime.seconds();
-        while (!vuMarkFound() && runtime.seconds() - begintime <= waitTime) {
+        double begintime= runtime.seconds();
+        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
 
 
         }
         toggleLight(false);
 
-        telemetry.addData("Vumark", vuMark);
+        telemetry.addData("Vumark" , vuMark);
         telemetry.update();
         sleep(250);
 
@@ -84,84 +68,102 @@ public class blueBack_George extends Autonomous_General_George {
         //returnImage();
 
 
-        if (ballColor.equals("blue")) {
+
+        if(ballColor.equals("blue")){
+            jewelServoRotate.setPosition(0.6);
+            sleep(300);
+            jewelServoRotate.setPosition(0.74);
+            sleep(1000);
             jewelServo.setPosition(0);
             sleep(1000);
-        } else if (ballColor.equals("red")) {
+        }
+        else if(ballColor.equals("red")){
+            jewelServoRotate.setPosition(0.9);
+            sleep(300);
+            jewelServoRotate.setPosition(0.74);
+            sleep(1000);
             jewelServo.setPosition(0);
             sleep(1000);
-        } else if (ballColor.equals("blank")) { //this means the color sensor didn't see the color of the jewel
-            jewelServo.setPosition(0);//raising the jewel manipulator
+        }
+        else if (ballColor.equals("blank")){
+            jewelServo.setPosition(0);
             sleep(1500);
-            jewelServo.setPosition(1);//putting the jewel manipulator back down
+            jewelServo.setPosition(1);
             sleep(500);
             readColorRev();
             sleep(1000);
-            if (ballColor.equals("blue")) {
+            if(ballColor.equals("blue")){
+                jewelServoRotate.setPosition(0.6);
+                sleep(300);
+                jewelServoRotate.setPosition(0.74);
+                sleep(1000);
                 jewelServo.setPosition(0);
                 sleep(1000);
-            } else if (ballColor.equals("red")) {
+            }
+            else if(ballColor.equals("red")){
+                jewelServoRotate.setPosition(0.9);
+                sleep(300);
+                jewelServoRotate.setPosition(0.74);
+                sleep(1000);
                 jewelServo.setPosition(0);
                 sleep(1000);
-            } else {//if the jewel manipulator doesn't see it a second time
+            }
+            else {
                 jewelServo.setPosition(0);
                 sleep(1000);
             }
         }
-        encoderMecanumDrive(0.4, 15, 15, 1000, 0);
-        gyroTurnREV(0.8, 0);
-        //encoderMecanumDrive(0.4, 55, 55, 1000, 0);
+        encoderMecanumDrive(0.6,50,50,5000,0);
         sleep(100);
-        //encoderMecanumDrive(0.3, 26, 25, 5000, 0);
+        gyroTurnREV(0.4,0);
+        sleep(100);
 
 
-        //if the range sensor gives a value less than 90 or greater than 200, it is most likely wrong
-        if (true) {
-            telemetry.addData("", "rangeSensor malfunctioned");
-            telemetry.update();
-            sleep(250);
-            //robot should end up 100 cm away from the wall, based on this and experiments
-            if (vuMark == RelicRecoveryVuMark.CENTER) {
-                //this method uses encoders to drive a specified distance
-                encoderMecanumDrive(0.7, 20, 20, 500, 0);
-            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                encoderMecanumDrive(0.7, 0, 0, 500, 0);
-            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                encoderMecanumDrive(0.7, 40, 40, 500, 0);
-            } else {
-                encoderMecanumDrive(0.7, 20, 20, 500, 0);
-            }
-//        }else {
-//            //enter this section of code if the range sensor is working
-//            gyroTurnREV(0.3, 0);
-//
-//            sleep(250);
-//
-//            if (vuMark == RelicRecoveryVuMark.CENTER) {
-//                //this method uses the range sensors to end a certain distance away from the wall
-//                simpleRangeDistance(87, 0.35, rsBuffer);
-//            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-//                simpleRangeDistance(79, 0.35, rsBuffer);
-//            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-//                simpleRangeDistance(98, 0.35, rsBuffer);
-//            }
-//            else{
-//                simpleRangeDistance(87,0.35,rsBuffer);
-//            }
-//        }
 
-            sleep(1000);
-            gyroTurnREV(0.5, -55);
-            sleep(750);
-            moveDownGlyph(0.3);
-            sleep(500);
-            openGlyphManipulator();
 
-            encoderMecanumDrive(0.3, 35, 35, 1000, 0);
-            sleep(250);
-            encoderMecanumDrive(0.65,-5,-5,1000,0);
+        if (vuMark == RelicRecoveryVuMark.LEFT){//should be 20 cm away from wall for left
+            //encoderMecanumDrive(0.3, -12, -12, 5000, 0);
+        }
+        else if (vuMark == RelicRecoveryVuMark.CENTER){
+
+            encoderMecanumDrive(0.5, 15, 15, 5000, 0);
+        }
+        else if (vuMark == RelicRecoveryVuMark.RIGHT){
+            encoderMecanumDrive(0.4, 35, 35,5000,0);
+            //encoderMecanumDrive(0.5, 48, 48, 5000, 0);
+
         }
 
+        else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
+            encoderMecanumDrive(0.5, 15, 15, 5000, 0);
+            //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
 
+        }
+
+        //columnAlign();
+
+        sleep(100);
+
+        gyroTurnREV(0.5, 50);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+
+        sleep(750);
+
+        moveDownGlyph(1.05);
+        sleep(100);
+        /*encoderMecanumDrive(0.3, 5, 5, 1000, 0);
+        sleep(250);*/
+        openGlyphManipulator();
+        sleep(250);
+
+        encoderMecanumDrive(0.3,35,35,1000,0);
+        sleep(250);
+        encoderMecanumDrive(0.3,15,-15,1000,0);
+        sleep(500);
+        encoderMecanumDrive(0.3, -10, -10, 1000, 0);
+        /*sleep(100);
+        gyroTurnREV(0.3, 179);
+        sleep(100);*/
     }
+
+
 }

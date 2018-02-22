@@ -36,6 +36,7 @@ public class curious_george_teleop extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
+    Servo jewel_servo_rotate;
     DcMotor relicMotor;
     Servo relicMain;
     Servo relicClaw;
@@ -87,6 +88,7 @@ public class curious_george_teleop extends OpMode {
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
+        jewel_servo_rotate = hardwareMap.servo.get("jewelServoRotate");
         IVFSM = slideMotor.getCurrentPosition();
         relicMain = hardwareMap.servo.get("relicMain");
         relicClaw = hardwareMap.servo.get("relicClaw");
@@ -100,7 +102,10 @@ public class curious_george_teleop extends OpMode {
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
         openGlyph();
-        jewel_servo.setPosition(0.05);
+        jewel_servo.setPosition(0.1);
+        jewel_servo_rotate.setPosition(0.74);
+        relicMain.setPosition(1);
+
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());

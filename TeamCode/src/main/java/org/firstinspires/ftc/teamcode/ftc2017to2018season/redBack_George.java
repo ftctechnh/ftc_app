@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
-@Autonomous(name = "Blue Front George HIGH CONTROL")
+@Autonomous(name = "Red Back George HIGH CONTROL")
 //@Disabled
-public class blueFront_George extends Autonomous_General_George {
+public class redBack_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
@@ -70,7 +70,7 @@ public class blueFront_George extends Autonomous_General_George {
 
 
 
-        if(ballColor.equals("blue")){
+        if(ballColor.equals("red")){
             jewelServoRotate.setPosition(0.6);
             sleep(300);
             jewelServoRotate.setPosition(0.74);
@@ -78,7 +78,7 @@ public class blueFront_George extends Autonomous_General_George {
             jewelServo.setPosition(0);
             sleep(1000);
         }
-        else if(ballColor.equals("red")){
+        else if(ballColor.equals("blue")){
             jewelServoRotate.setPosition(0.9);
             sleep(300);
             jewelServoRotate.setPosition(0.74);
@@ -93,7 +93,7 @@ public class blueFront_George extends Autonomous_General_George {
             sleep(500);
             readColorRev();
             sleep(1000);
-            if(ballColor.equals("blue")){
+            if(ballColor.equals("red")){
                 jewelServoRotate.setPosition(0.6);
                 sleep(300);
                 jewelServoRotate.setPosition(0.74);
@@ -101,7 +101,7 @@ public class blueFront_George extends Autonomous_General_George {
                 jewelServo.setPosition(0);
                 sleep(1000);
             }
-            else if(ballColor.equals("red")){
+            else if(ballColor.equals("blue")){
                 jewelServoRotate.setPosition(0.9);
                 sleep(300);
                 jewelServoRotate.setPosition(0.74);
@@ -114,35 +114,29 @@ public class blueFront_George extends Autonomous_General_George {
                 sleep(1000);
             }
         }
-        encoderMecanumDrive(0.6,40,40,5000,0);
+        encoderMecanumDrive(0.6,-50,-50,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
         sleep(100);
-        wallAlign(0.5,28, 0);//since the columns of the cryptobox are protruding,
-                                                    // the range sensor is actually using the distance from the protruding columns
-                                                    //the last value is 0 for the blue auto and 1 for the red auto
-        sleep(200);
-        gyroTurnREV(0.5, -84);
-        sleep(100);
 
 
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){//should be 20 cm away from wall for left
-            wallAlign(0.4, 20, 1);
-            encoderMecanumDrive(0.3, -12, -12, 5000, 0);
+
+        if (vuMark == RelicRecoveryVuMark.RIGHT){//should be 20 cm away from wall for left
+            encoderMecanumDrive(0.3, -20, -20, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
-            wallAlign(0.4, 20, 1);
-            //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
+
+            encoderMecanumDrive(0.5, -30, -30, 5000, 0);
         }
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            wallAlign(0.4, 40, 1);
+        else if (vuMark == RelicRecoveryVuMark.LEFT){
+            encoderMecanumDrive(0.4, -35, -35,5000,0);
             //encoderMecanumDrive(0.5, 48, 48, 5000, 0);
 
         }
 
         else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            wallAlign(0.4, 20, 1);
+            encoderMecanumDrive(0.5, 15, 15, 5000, 0);
             //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
 
         }
@@ -151,7 +145,11 @@ public class blueFront_George extends Autonomous_General_George {
 
         sleep(100);
 
-        gyroTurnREV(0.5, -45);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+        if(vuMark == RelicRecoveryVuMark.RIGHT){
+            gyroTurnREV(0.5,70);
+        }else {
+            gyroTurnREV(0.5, 50);
+        }
 
         sleep(750);
 
@@ -164,7 +162,7 @@ public class blueFront_George extends Autonomous_General_George {
 
         encoderMecanumDrive(0.3,35,35,1000,0);
         sleep(250);
-        encoderMecanumDrive(0.3,15,-15,1000,0);
+        encoderMecanumDrive(0.3,-15,15,1000,0);
         sleep(500);
         encoderMecanumDrive(0.3, -10, -10, 1000, 0);
         /*sleep(100);
