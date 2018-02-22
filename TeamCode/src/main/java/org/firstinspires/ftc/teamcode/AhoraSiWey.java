@@ -145,61 +145,61 @@ public class AhoraSiWey extends LinearOpMode {
             telemetry.addData("angles", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES));
         }
 
-        /* Put the servo color arm down */
-        gemServo.setPosition(xPosDown);
-        sleep(1500);
-
-        /* Knock off the jewel */
-        switch (teamColorPosition) {
-            case "BlueRight":
-                knockjewelBlue();
-                break;
-            case "BlueLeft":
-                knockjewelBlue();
-                break;
-            case "RedRight":
-                knockjewelRed();
-                break;
-            case "RedLeft":
-                knockjewelRed();
-                break;
-        }
-
-        /* Rotate so the phone can see the Vuforia Key */
-        rotate(10, .2);
-
-        /* Tells vuforia to look for relic templates, if it finds something, then it returns
-        LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
-        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-
-        /* If "vuMark" is something other than UNKNOWN */
-        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-            /* Send telemetry saying what vuforia sees */
-            telemetry.addData("I see...", vuMark);
-        }
-        telemetry.update();
-
-        /* Return to starting position */
-        rotate(-10, .2);
-
-        /* Wait a moment and let vuforia do its work and for the robot to realign properly */
-        sleep(500);
-
-        //////////////////* Move and face cryptobox. Claw is in front of center position center *\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        switch (teamColorPosition) {
-            case "BlueRight":
-                movebytime(1200, .3, "Forward");
-                rotate(43, .2);
-                break;
-            case "BlueLeft":
-                break;
-            case "RedRight":
-                break;
-            case "RedLeft":
-                break;
-        }
-
+//        /* Put the servo color arm down */
+//        gemServo.setPosition(xPosDown);
+//        sleep(1500);
+//
+//        /* Knock off the jewel */
+//        switch (teamColorPosition) {
+//            case "BlueRight":
+//                knockjewelBlue();
+//                break;
+//            case "BlueLeft":
+//                knockjewelBlue();
+//                break;
+//            case "RedRight":
+//                knockjewelRed();
+//                break;
+//            case "RedLeft":
+//                knockjewelRed();
+//                break;
+//        }
+//
+//        /* Rotate so the phone can see the Vuforia Key */
+//        rotate(10, .2);
+//
+//        /* Tells vuforia to look for relic templates, if it finds something, then it returns
+//        LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
+//        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+//
+//        /* If "vuMark" is something other than UNKNOWN */
+//        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+//            /* Send telemetry saying what vuforia sees */
+//            telemetry.addData("I see...", vuMark);
+//        }
+//        telemetry.update();
+//
+//        /* Return to starting position */
+//        rotate(-10, .2);
+//
+//        /* Wait a moment and let vuforia do its work and for the robot to realign properly */
+//        sleep(500);
+//
+//        //////////////////* Move and face cryptobox. Claw is in front of center position center *\\\\\\\\\\\\\\\\\\\\\\\\\\\
+//
+//        switch (teamColorPosition) {
+//            case "BlueRight":
+//                movebytime(1200, .3, "Forward");
+//                rotate(43, .2);
+//                break;
+//            case "BlueLeft":
+//                break;
+//            case "RedRight":
+//                break;
+//            case "RedLeft":
+//                break;
+//        }
+/*************PAUSE***********************/
 //        /////////////////* move to the column in the cryptobox specified by vuMark *\\\\\\\\\\\\\\\\\\\\\\\
 //
 //        /* Switch case based on what vuMark we see */
@@ -450,7 +450,7 @@ public class AhoraSiWey extends LinearOpMode {
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        double deltaAngle = angles.secondAngle - lastAngles.secondAngle;
+        double deltaAngle = angles.thirdAngle - lastAngles.thirdAngle;
 
         if (deltaAngle < -180)
             deltaAngle += 360;
