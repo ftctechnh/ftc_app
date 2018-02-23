@@ -56,7 +56,7 @@ public class blueBack_George extends Autonomous_General_George {
         sleep(250);
         moveUpGlyph(1.45);
         sleep(250);
-        jewelServo.setPosition(1);
+        jewelServo.setPosition(0);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
@@ -74,21 +74,21 @@ public class blueBack_George extends Autonomous_General_George {
             sleep(300);
             jewelServoRotate.setPosition(0.74);
             sleep(1000);
-            jewelServo.setPosition(0);
-            sleep(1000);
+            jewelServo.setPosition(1);
+            sleep(2000);
         }
         else if(ballColor.equals("red")){
             jewelServoRotate.setPosition(0.9);
             sleep(300);
             jewelServoRotate.setPosition(0.74);
             sleep(1000);
-            jewelServo.setPosition(0);
-            sleep(1000);
+            jewelServo.setPosition(1);
+            sleep(2000);
         }
         else if (ballColor.equals("blank")){
-            jewelServo.setPosition(0);
-            sleep(1500);
             jewelServo.setPosition(1);
+            sleep(1500);
+            jewelServo.setPosition(0);
             sleep(500);
             readColorRev();
             sleep(1000);
@@ -97,20 +97,20 @@ public class blueBack_George extends Autonomous_General_George {
                 sleep(300);
                 jewelServoRotate.setPosition(0.74);
                 sleep(1000);
-                jewelServo.setPosition(0);
-                sleep(1000);
+                jewelServo.setPosition(1);
+                sleep(2000);
             }
             else if(ballColor.equals("red")){
                 jewelServoRotate.setPosition(0.9);
                 sleep(300);
                 jewelServoRotate.setPosition(0.74);
                 sleep(1000);
-                jewelServo.setPosition(0);
-                sleep(1000);
+                jewelServo.setPosition(1);
+                sleep(2000);
             }
             else {
-                jewelServo.setPosition(0);
-                sleep(1000);
+                jewelServo.setPosition(1);
+                sleep(2000);
             }
         }
         encoderMecanumDrive(0.6,50,50,5000,0);
@@ -121,21 +121,19 @@ public class blueBack_George extends Autonomous_General_George {
 
 
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){//should be 20 cm away from wall for left
-            //encoderMecanumDrive(0.3, -12, -12, 5000, 0);
+        if (true/*vuMark == RelicRecoveryVuMark.LEFT*/){
+
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
-
-            encoderMecanumDrive(0.5, 15, 15, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            encoderMecanumDrive(0.4, 35, 35,5000,0);
+            encoderMecanumDrive(0.4, 15, 15,5000,0);
             //encoderMecanumDrive(0.5, 48, 48, 5000, 0);
 
         }
 
         else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            encoderMecanumDrive(0.5, 15, 15, 5000, 0);
+            //encoderMecanumDrive(0.5, 15, 15, 5000, 0);
             //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
 
         }
@@ -144,8 +142,12 @@ public class blueBack_George extends Autonomous_General_George {
 
         sleep(100);
 
-        gyroTurnREV(0.5, 50);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
-
+        if (true /*vuMark != RelicRecoveryVuMark.LEFT*/) {
+            gyroTurnREV(0.5, 70);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+        }
+        else{
+            gyroTurnREV(0.5,50);//since the left is closer, need to turn more to reach it
+        }
         sleep(750);
 
         moveDownGlyph(1.05);
