@@ -79,7 +79,7 @@ public class Teleop extends OpMode {
     public boolean delayClamp = false;
     public boolean frontglyphSensed = false;
     public boolean glyphSensed = false;
-    public int manualLiftDelay = 50;
+    public int manualLiftDelay = 100;
     public int glyphSensedDelay = 0;
     boolean glyphinit = false;
     boolean waitforglyph = false;
