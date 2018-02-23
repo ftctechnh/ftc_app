@@ -70,7 +70,7 @@ public class Red1 extends LinearOpMode{
     private static double gbrCLOSE = 0.4;
     private static double gbrEXCLOSE = 0.73; //0.1
 
-    private static double jaUP = 0.7;
+    private static double jaUP = 0.77;
     private static double jaDOWN = 0.23;
 
     private static double jkCENTER = 0.44;

@@ -88,9 +88,9 @@ public class finalTeleOp extends LinearOpMode{
         relicArmPosition = 0;
 
         //Initial positions
-        jewelArm.setPosition(0.74);
+        jewelArm.setPosition(0.77);
         jewelKnock.setPosition(0);
-        relicArm.setPosition(0.1);
+        relicArm.setPosition(0);
 
 
 
@@ -231,11 +231,11 @@ public class finalTeleOp extends LinearOpMode{
                 //Relic DC Motor
 
                 if (gamepad2.dpad_up) {
-                    relicMotor.setPower(0.7);
+                    relicMotor.setPower(-0.7);
                 }
 
                 if (gamepad2.dpad_down) {
-                    relicMotor.setPower(-0.7);
+                    relicMotor.setPower(0.8);
                 }
 
                 if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
@@ -250,21 +250,13 @@ public class finalTeleOp extends LinearOpMode{
                 if (gamepad2.b) {
                     relicArmPosition -= relicArmDelta;
                 }
-                relicArmPosition = Range.clip(relicArmPosition, 0.2, 0.9);
+                if (gamepad2.left_stick_button) {
+                    relicArmPosition = 0.25;
+                }
+                relicArmPosition = Range.clip(relicArmPosition, 0, 0.9);
                 relicArm.setPosition(relicArmPosition);
                 telemetry.addData("Relic Arm Servo: ", relicArm.getPosition());
 
-
-                //Relic Arm Servo Manual Mode
-                if (gamepad2.a) {
-                    relicArmPosition += relicArmDelta;
-                }
-                if (gamepad2.b) {
-                    relicArmPosition -= relicArmDelta;
-                }
-                relicArmPosition = Range.clip(relicArmPosition, 0, 1);
-                relicArm.setPosition(relicArmPosition);
-                telemetry.addData("Relic Arm Servo: ", relicArm.getPosition());
 
 
                 //Relic Grab Servo Manual Mode
@@ -273,6 +265,9 @@ public class finalTeleOp extends LinearOpMode{
                 }
                 if (gamepad2.right_bumper) {
                     relicGrabPosition -= relicGrabDelta;
+                }
+                if (gamepad2.right_stick_button) {
+                    relicGrabPosition = 0.7;
                 }
                 relicGrabPosition = Range.clip(relicGrabPosition, 0, 1);
                 relicGrab.setPosition(relicGrabPosition);

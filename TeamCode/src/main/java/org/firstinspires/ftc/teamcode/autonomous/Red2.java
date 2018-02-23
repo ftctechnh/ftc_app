@@ -70,7 +70,7 @@ public class Red2 extends LinearOpMode{
     private static double gbrCLOSE = 0.4;
     private static double gbrEXCLOSE = 0.73; //0.1
 
-    private static double jaUP = 0.7;
+    private static double jaUP = 0.77;
     private static double jaDOWN = 0.23;
 
     private static double jkCENTER = 0.44;
@@ -249,7 +249,7 @@ public class Red2 extends LinearOpMode{
             SWAYLEFT(2000);
 
             //Move towards safezone
-            FORWARD(650, 0.5);
+            FORWARD(750, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
@@ -270,7 +270,7 @@ public class Red2 extends LinearOpMode{
             SWAYLEFT(1000);
 
             //Move towards safezone
-            FORWARD(650, 0.5);
+            FORWARD(750, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
@@ -292,7 +292,7 @@ public class Red2 extends LinearOpMode{
             SWAYLEFT(3100);
 
             //Move towards safezone
-            FORWARD(650, 0.5);
+            FORWARD(750, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);

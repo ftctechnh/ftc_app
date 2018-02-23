@@ -64,7 +64,7 @@ public class Blue2_alt extends LinearOpMode {
     private static double gbrCLOSE = 0.4;
     private static double gbrEXCLOSE = 0.73; //0.1
 
-    private static double jaUP = 0.73;
+    private static double jaUP = 0.77;
     private static double jaDOWN = 0.23;
 
     private static double jkCENTER = 0.44;
@@ -227,7 +227,7 @@ public class Blue2_alt extends LinearOpMode {
         //Grip the block and lift
         grabTopLeft.setPosition(0.3);
         grabTopRight.setPosition(0.4);
-        GRABUP(1700);
+        GRABUP(1500);
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
@@ -239,20 +239,23 @@ public class Blue2_alt extends LinearOpMode {
             BACKWARD(2750, 0.5);
 
             //Turn 180 degrees
-            AXISLEFT(2700);
+            AXISLEFT(2500);
 
             BACKWARD(2700,0.3);
 
-            FORWARD(3250, 0.5);
+            FORWARD(3350, 0.5);
 
-            AXISLEFT(2400);
+            AXISLEFT(2300);
 
         //Move towards safezone
         FORWARD(700, 0.5);
+        //Drop glyph
+        grabTopLeft.setPosition(0.4);
+        grabTopRight.setPosition(0.3);
+
         BACKWARD(700, 0.5);
-        FORWARD(700,0.5);
-        BACKWARD(700, 0.5);
-        FORWARD(700,0.5);
+        FORWARD(850,0.5);
+
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
