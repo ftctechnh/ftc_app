@@ -8,12 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
@@ -66,7 +62,7 @@ public class Blue2_alt extends LinearOpMode {
 
     private static double gbrOPEN = 0.55;
     private static double gbrCLOSE = 0.4;
-    private static double gbrEXCLOSE = 0.1;
+    private static double gbrEXCLOSE = 0.73; //0.1
 
     private static double jaUP = 0.73;
     private static double jaDOWN = 0.23;
@@ -233,6 +229,13 @@ public class Blue2_alt extends LinearOpMode {
         grabTopRight.setPosition(0.4);
         GRABUP(1700);
 
+        //Degrees travlled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
+
             BACKWARD(2750, 0.5);
 
             //Turn 180 degrees
@@ -246,7 +249,17 @@ public class Blue2_alt extends LinearOpMode {
 
         //Move towards safezone
         FORWARD(700, 0.5);
+        BACKWARD(700, 0.5);
+        FORWARD(700,0.5);
+        BACKWARD(700, 0.5);
+        FORWARD(700,0.5);
 
+        //Degrees travlled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
 //            //Drop glyph
 //            grabTopLeft.setPosition(0.4);
 //            grabTopRight.setPosition(0.3);

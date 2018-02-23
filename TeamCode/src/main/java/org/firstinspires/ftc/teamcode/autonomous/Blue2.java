@@ -66,7 +66,7 @@ public class Blue2 extends LinearOpMode {
 
     private static double gbrOPEN = 0.55;
     private static double gbrCLOSE = 0.4;
-    private static double gbrEXCLOSE = 0.1;
+    private static double gbrEXCLOSE = 0.73; //0.1
 
     private static double jaUP = 0.73;
     private static double jaDOWN = 0.2;

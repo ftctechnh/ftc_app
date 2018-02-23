@@ -8,27 +8,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-//VUFORIA
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
-import static com.sun.tools.javac.util.Constants.format;
+
+//VUFORIA
 
 /**
  * Created by shiva on 14-02-2018.
@@ -76,10 +68,10 @@ public class Red2 extends LinearOpMode{
 
     private static double gbrOPEN = 0.55;
     private static double gbrCLOSE = 0.4;
-    private static double gbrEXCLOSE = 0.1;
+    private static double gbrEXCLOSE = 0.73; //0.1
 
-    private static double jaUP = 0.73;
-    private static double jaDOWN = 0.2;
+    private static double jaUP = 0.7;
+    private static double jaDOWN = 0.23;
 
     private static double jkCENTER = 0.44;
     private static double jkRIGHT = 0;
@@ -243,6 +235,13 @@ public class Red2 extends LinearOpMode{
         grabTopRight.setPosition(0.4);
         GRABUP(1700);
 
+        //Degrees travlled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
+
         if (gridColum == 2){
 
             FORWARD(2800, 0.5);
@@ -257,6 +256,11 @@ public class Red2 extends LinearOpMode{
             grabTopRight.setPosition(0.3);
 
             BACKWARD(580);
+
+            FORWARD(580, 0.5);
+            BACKWARD(580);
+
+            FORWARD(500, 0.5);
 
         }
 
@@ -273,7 +277,13 @@ public class Red2 extends LinearOpMode{
             grabTopRight.setPosition(0.3);
 
             BACKWARD(580);
+
+            FORWARD(500, 0.5);
+            BACKWARD(580);
+
             SWAYLEFT(600);
+
+            FORWARD(450, 0.5);
         }
 
         if (gridColum == 3){
@@ -289,10 +299,30 @@ public class Red2 extends LinearOpMode{
             grabTopRight.setPosition(0.3);
 
             BACKWARD(580);
+
+            FORWARD(500, 0.5);
+            BACKWARD(580);
+
             SWAYRIGHT(600);
+
+            FORWARD(450, 0.5);
         }
 
+        //Degrees travlled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
+
         Thread.sleep(5000);
+
+        //Degrees travlled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
     }
 
 

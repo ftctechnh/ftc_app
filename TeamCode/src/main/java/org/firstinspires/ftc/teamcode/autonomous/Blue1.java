@@ -66,10 +66,10 @@ public class Blue1 extends LinearOpMode{
 
     private static double gbrOPEN = 0.55;
     private static double gbrCLOSE = 0.4;
-    private static double gbrEXCLOSE = 0.1;
+    private static double gbrEXCLOSE = 0.7; //0.1
 
-    private static double jaUP = 0.74;
-    private static double jaDOWN = 0.2;
+    private static double jaUP = 0.71;
+    private static double jaDOWN = 0.23;
 
     private static double jkCENTER = 0.44;
     private static double jkRIGHT = 0;
@@ -228,10 +228,17 @@ public class Blue1 extends LinearOpMode{
         GRABUP(1600);
 
 
+        //Degrees travlled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
+
         //Placement of block according to Vuforia
         if (gridColum == 2){
             //Move forward: MIDDLE
-            BACKWARD(4000, 0.5);
+            BACKWARD(4100, 0.5);
             gyro.calibrate();
             telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
@@ -249,6 +256,10 @@ public class Blue1 extends LinearOpMode{
             grabTopRight.setPosition(0.3);
 
             BACKWARD(500, 0.5);
+
+            FORWARD(500, 0.5);
+            BACKWARD(500,0.5);
+            FORWARD(450,0.5);
         }
 
         if (gridColum == 3){
@@ -271,13 +282,18 @@ public class Blue1 extends LinearOpMode{
 
             BACKWARD(500, 0.5);
 
+            FORWARD(500, 0.5);
+            BACKWARD(500,0.5);
+
             //FOR RIGHT SIDE
             SWAYRIGHT(600);
+
+            FORWARD(450, 0.1);
         }
 
         if (gridColum == 1){
             //Move forward: RIGHT
-            BACKWARD(4700, 0.5);
+            BACKWARD(4920, 0.5);
             gyro.calibrate();
             telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
@@ -295,12 +311,29 @@ public class Blue1 extends LinearOpMode{
 
             BACKWARD(500, 0.5);
 
+            FORWARD(500, 0.5);
+            BACKWARD(500,0.5);
+
             //FOR LEFT SIDE
             SWAYLEFT(600);
+
+            FORWARD(450,0.5);
         }
 
+        //Degrees travllled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
         Thread.sleep(5000);
 
+        //Degrees travllled at this point
+        telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+        telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+        telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+        telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+        telemetry.update();
 
 
 

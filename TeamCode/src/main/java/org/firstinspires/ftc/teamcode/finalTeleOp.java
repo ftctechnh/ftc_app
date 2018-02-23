@@ -104,20 +104,39 @@ public class finalTeleOp extends LinearOpMode{
             double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
             telemetry.addData("robotAngle = ", robotAngle);
             double rightX = gamepad1.right_stick_x;
-            telemetry.addData("rightX = ", rightX);
+            //telemetry.addData("rightX = ", rightX);
             final double v1 = r * Math.cos(robotAngle) + rightX;
-            telemetry.addData("front left power = ", v1);
+            //telemetry.addData("front left power = ", v1);
             final double v2 = r * Math.sin(robotAngle) - rightX;
-            telemetry.addData("front right power = ", v2);
+            //telemetry.addData("front right power = ", v2);
             final double v3 = r * Math.sin(robotAngle) + rightX;
-            telemetry.addData("back left power = ", v3);
+            //telemetry.addData("back left power = ", v3);
             final double v4 = r * Math.cos(robotAngle) - rightX;
-            telemetry.addData("back right power = ", v4);
+            //telemetry.addData("back right power = ", v4);
 
             motorFrontLeft.setPower(v1);
             motorFrontRight.setPower(v2);
             motorBackLeft.setPower(v3);
             motorBackRight.setPower(v4);
+
+            //Degrees travlled at this point
+            telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+            telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+            telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+            telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
+            telemetry.update();
+
+            if (gamepad1.a){
+                motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
 
 
             if (gamepad2.x) {
@@ -194,12 +213,12 @@ public class finalTeleOp extends LinearOpMode{
                     grabBottomLeft.setPosition(0.38);
                     grabBottomRight.setPosition(0.35); //0.4
                 }
-
+                //EXTREME CLOSE
                 if (gamepad2.left_stick_button){
                     grabBottomLeft.setPosition(0.8);
                 }
                 if (gamepad2.right_stick_button){
-                    grabBottomRight.setPosition(0.73); //0.01
+                    grabBottomRight.setPosition(0.73); //0.1
                 }
 
 
