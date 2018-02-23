@@ -101,6 +101,8 @@ public class GlyphTrain {
         left_glyph.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right_glyph.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+
+
         // Set all motors to zero power
         stopGlyphMotors();
         //Set the lift down

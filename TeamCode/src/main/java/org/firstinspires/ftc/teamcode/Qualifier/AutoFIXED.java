@@ -333,11 +333,11 @@ public class AutoFIXED extends LinearOpMode {
         // while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
         sleep(1000);
 //        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
-        if (menuFile.DoTheWrongJewel){
-            gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
-        }else{
+        //if (menuFile.DoTheWrongJewel){
+        //    gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
+        //}else{
             gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
-        }
+        //}
 //        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,true);//menuFile.DoTheWrongJewel);
 //        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
         sleep(1000);
@@ -614,7 +614,6 @@ public class AutoFIXED extends LinearOpMode {
             //Drive to separate box
             mecanumDrive(menuFile.DriveSpeed * 0.3, -7, headingcrypto, 0); //move 50
 
-            gromit.glyphTrain.stopGlyphMotors();
             //unclamp glyph
             gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
             gromit.glyphTrain.glyphclampupper("open");
@@ -624,6 +623,7 @@ public class AutoFIXED extends LinearOpMode {
         //Do the routine to push the block back into atleast one box //ROUTINE TO PUSH BLOCK INTO ATLEST INE COLUMN
         //drive forward
         mecanumDrive(menuFile.DriveSpeed * 0.3, 5, headingcrypto, 0);    // back up
+        gromit.glyphTrain.stopGlyphMotors();
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, headingcrypto, -90);  //-90    strafe (strafe is never as long)
         mecanumDrive(menuFile.DriveSpeed * 0.6, -3, headingcrypto, 0);    // forward
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, headingcrypto, 0);    // back up
@@ -649,8 +649,6 @@ public class AutoFIXED extends LinearOpMode {
         mecanumDrive(menuFile.DriveSpeed * 0.6, strafe, headingcrypto, -90);  //-90    strafe (strafe is never as long)
         mecanumDrive(menuFile.DriveSpeed * 0.6, -6, headingcrypto, 0);    // forward
         mecanumDrive(menuFile.DriveSpeed * 0.6, 4, headingcrypto, 0);    // back up
-
-
 
 
         //double driveangle = -150;
@@ -695,9 +693,11 @@ public class AutoFIXED extends LinearOpMode {
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueBackHeading3, 90);  //THe column to the left, Our and robot's roight
             }
             mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.3, -7, headingcrypto, 0); //move 50
-            gromit.glyphTrain.glyphclamp("open");
             gromit.glyphTrain.startGlyphMotors(0.8);
-            sleep(700);
+            sleep(1000);
+            gromit.glyphTrain.glyphclamp("open");
+
+
             //unclamp glyph
             gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
             gromit.glyphTrain.glyphclampupper("open");
