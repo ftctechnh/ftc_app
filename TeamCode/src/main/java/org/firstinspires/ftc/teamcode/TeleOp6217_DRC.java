@@ -41,7 +41,6 @@ public class TeleOp6217_DRC extends OpMode
     DcMotor motorRocker2;
     Servo Jack;
     Servo servoTapper;
-
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
 
@@ -90,7 +89,6 @@ public class TeleOp6217_DRC extends OpMode
 
         // Tapper
         servoTapper = hardwareMap.servo.get("tapper");
-
 
        /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
@@ -204,11 +202,6 @@ public class TeleOp6217_DRC extends OpMode
             motorRocker1.setPower(posyR);
             motorRocker2.setPower(posyR);
         }
-        else if (x)  {
-            motorRocker1.setPower(.15);
-            motorRocker2.setPower(-.15);
-        }
-
         else    {
             motorRocker1.setPower(0);
             motorRocker2.setPower(0);

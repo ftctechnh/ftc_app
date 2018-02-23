@@ -3,39 +3,33 @@
     2016 - 2017 Velocity Vortex Robot Code */
 
 package org.firstinspires.ftc.teamcode;
-import com.qualcomm.robotcore.hardware.PWMOutput;
-import com.qualcomm.robotcore.hardware.PWMOutputController;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.util.Range;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import java.lang.Math;
+import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Math.abs;
 
-@TeleOp(name="Preciousss: JuryRiggedTeleOp", group="Preciousss")
+@TeleOp(name="Preciousss: TeleOp6217_DRC 1654", group="Preciousss")
 
-public class JuryRiggedTeleOp
-        extends OpMode
+public class TeleOp6217Flip extends OpMode
 {
-    /*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2*/
+/*FR = Front Right Wheel, FL = Front Left Wheel, BR = Back Righ Wheelt, BL = Back Left Wheel, Con1= Conveyor 1, Con2= Conveyor 2*/
     DcMotor motorFR;
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-
+    DcMotor motorConL;
+    DcMotor motorConR;
+    DcMotor motorRocker1;
     Servo servoTapper;
+    DcMotor motorSlide;
+    Servo servoClaw;
+    Servo servoWrist;
 
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
@@ -47,7 +41,7 @@ public class JuryRiggedTeleOp
     private boolean RunLauncher = false;
     private int DelayCounter = 0;
     private int DelayTimer = 400 ;
-    public JuryRiggedTeleOp() {}
+    public TeleOp6217Flip() {}
 
     @Override
     public void init()
@@ -66,18 +60,26 @@ public class JuryRiggedTeleOp
 
         // Conveyor
 
+        motorConL = hardwareMap.dcMotor.get("motorConL");
+        motorConL.setDirection(DcMotor.Direction.FORWARD);
+        motorConR = hardwareMap.dcMotor.get("motorConR");
+        motorConR.setDirection(DcMotor.Direction.FORWARD);
+
+
+        // Rocker Motors
+
+        motorRocker1 = hardwareMap.dcMotor.get("motorRocker1");
+        motorRocker1.setDirection(DcMotor.Direction.FORWARD);
+
 
         // Tapper
         servoTapper = hardwareMap.servo.get("tapper");
 
-
-       /* modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
-       telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update()
-        telemetry.addData("WBG",  "Starting at %7d",
-               // motorWBT1.getCurrentPosition());
-        telemetry.update());*/
+        //Relic Arm
+        motorSlide = hardwareMap.dcMotor.get("motorSlide");
+        motorSlide.setDirection(DcMotor.Direction.FORWARD);
+        servoWrist = hardwareMap.servo.get("servoWrist");
+        servoClaw = hardwareMap.servo.get("servoClaw");
     }
 
     /*
@@ -130,8 +132,8 @@ public class JuryRiggedTeleOp
 
         posx = Range.clip(posx, -1, 1);
         posy = Range.clip(posy, -1, 1);
-        posxR = Range.clip(posxR, -1,1);
-        posyR = Range.clip(posyR, -1,1);
+        posxR = Range.clip(posxR, -1, 1);
+        posyR = Range.clip(posyR, -1, 1);
 
         posx = (float) powerCurve(posx);
         posy = (float) powerCurve(posy);
@@ -144,13 +146,30 @@ public class JuryRiggedTeleOp
 
         //  Loading Glyphs
         // Directions will require testing
+        if (dpad_up) {
+            motorConL.setPower(-.7);
+            motorConR.setPower(.7);
 
+        } else if (dpad_down) {
+            motorConL.setPower(.7);
+            motorConR.setPower(-.7);
 
+        } else {
+            motorConL.setPower(0);
+            motorConR.setPower(0);
 
+        }
 
+        // Rocker
+        if (posyR <= -.2) {
+            motorRocker1.setPower(posyR);
+        } else if (posyR >= .2) {
+            motorRocker1.setPower(posyR);
+        } else {
+            motorRocker1.setPower(0);
+        }
 
-//  pivot left
-
+        //  pivot left
         if (LT != 0)  {
 
             motorFL.setPower(LT);
@@ -159,10 +178,8 @@ public class JuryRiggedTeleOp
             motorBR.setPower(-LT);
         }
 
-        //
 
         //  pivot right
-
         else if (RT != 0)  {
 
             motorFL.setPower(-RT);
@@ -170,9 +187,33 @@ public class JuryRiggedTeleOp
             motorFR.setPower(RT);
             motorBR.setPower(RT);
         }
-        //  Driving
 
-        else if ( ( posy != 0) || ( posx != 0 ) ) {
+        // Relic
+        if (y) {
+            motorSlide.setPower(1);
+        }
+        else if (a) {
+            motorSlide.setPower(-1);
+        }
+        else {
+            motorSlide.setPower(0);
+        }
+
+        if (a && dpad_up ){
+            servoClaw.setPosition(0);
+        }
+        else if (a && dpad_down){
+            servoClaw.setPosition(0);
+        }
+        if(a && leftPad){
+            servoWrist.setPosition(1.0);
+        }
+        else if (a && rightPad){
+            servoWrist.setPosition(.52);
+        }
+
+        //  Driving
+        if ( ( posy != 0) || ( posx != 0 ) ) {
 
             FRBLPower = posy - posx;
             FLBRPower = posy + posx;
@@ -234,43 +275,43 @@ public class JuryRiggedTeleOp
     public void stop() {
     }
 
-    double powerCurve ( float dVal ) {
+   double powerCurve ( float dVal ) {
     /*
      * This method adjusts the joystick input to apply a power curve that
      * is less than linear.  This is to make it easier to drive
      * the robot more precisely at slower speeds.
      */
-// LB = left bumper, RB = right bumper.
-        boolean LB = gamepad1.left_bumper;
-        boolean RB = gamepad1.right_bumper;
+    // LB = left bumper, RB = right bumper.
+       boolean LB = gamepad1.left_bumper;
+       boolean RB = gamepad1.right_bumper;
 
 
-        double dead = .2;
+       double dead = .2;
 
-        // Regular
-        double max = .5;
-        if (LB == true && RB == false){
-            // Turbo with left bumper
-            max = 1;
-        } else if (LB == false && RB == true){
-            // Turtle with right bumper
-            max = .3;
-        }
+       // Regular
+       double max = .5;
+       if (LB == true && RB == false){
+           // Turbo with left bumper
+           max = 1;
+       } else if (LB == false && RB == true){
+           // Turtle with right bumper
+           max = .3;
+       }
 
-        int direction = 1;
-        if (dVal < 0) {
-            direction = -1;
-        }
+       int direction = 1;
+       if (dVal < 0) {
+           direction = -1;
+       }
 
-        double dScale = 0.0;
-        if (abs(dVal) < dead) {
-            dScale = 0.0;
-        } else {
-            dScale = ((dVal * dVal) * max) * direction;
-        }
+       double dScale = 0.0;
+       if (abs(dVal) < dead) {
+           dScale = 0.0;
+       } else {
+           dScale = ((dVal * dVal) * max) * direction;
+       }
 
-        return (dScale);
-    }
+       return (dScale);
+   }
 
     double pCurve ( float dVal ) {
     /*
@@ -278,7 +319,7 @@ public class JuryRiggedTeleOp
      * is less than linear.  This is to make it easier to drive
      * the robot more precisely at slower speeds.
      */
-// LB = left bumper, RB = right bumper.
+    // LB = left bumper, RB = right bumper.
 
 
 
