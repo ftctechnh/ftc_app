@@ -331,16 +331,14 @@ public class AutoFIXED extends LinearOpMode {
 //sleep(3000);
         gromit.jewelArm.jewelArmDown();
         // while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
-        sleep(1000);
+        sleep(900);
 //        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
-        //if (menuFile.DoTheWrongJewel){
-        //    gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
-        //}else{
+        if (menuFile.DoTheWrongJewel){      // knock the wrong one off
+            gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
+        }else{                              // do the correct jewel
             gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
-        //}
-//        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,true);//menuFile.DoTheWrongJewel);
-//        gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft,menuFile.DoTheWrongJewel);
-        sleep(1000);
+        }
+        sleep(750);
         gromit.jewelArm.jewelArmUp();
 
 /**  ------------------------- Here are the vumark choices ----------------------------------------------------  */
@@ -596,7 +594,7 @@ public class AutoFIXED extends LinearOpMode {
             mecanumDriveBlock(menuFile.DriveSpeed * 0.6, drivedistance/2, driveangle, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive back towards glyph box
-            mecanumDriveBlock(menuFile.DriveSpeed * 1.5, -(drivedistance),driveangle, 0); //move back
+            mecanumDriveBlock(menuFile.DriveSpeed * 1.5, -(drivedistance-1),driveangle, 0); //move back
             //gromit.glyphTrain.glyphclamp("close");
             mecanumTurn(menuFile.DriveSpeed, headingcrypto);
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -650,7 +648,7 @@ public class AutoFIXED extends LinearOpMode {
         mecanumDrive(menuFile.DriveSpeed * 0.6, -6, headingcrypto, 0);    // forward
         mecanumDrive(menuFile.DriveSpeed * 0.6, 4, headingcrypto, 0);    // back up
 
-
+        // now try to go get some more.
         //double driveangle = -150;
 //Re-align
 //        double drivedistance = 70;
@@ -661,15 +659,15 @@ public class AutoFIXED extends LinearOpMode {
             // COnditional for where you are
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 9, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.7, 9, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
                 //telemetry.addLine("ITS LEFT");
                 //telemetry.update();
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, -3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.7, -3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 8, headingcrypto, -90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.7, 8, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive fast without glyphtrain
@@ -678,8 +676,8 @@ public class AutoFIXED extends LinearOpMode {
             gromit.glyphTrain.startGlyphMotors(0.7);
             mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.6, drivedistance/2, driveangle, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, driveangle);
-            //drive back towards glyph box
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, -(drivedistance+1),driveangle, 0); //move back
+            //drive back towards glyph box  try going back a bit shorter.
+            mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, -(drivedistance-1),driveangle, 0); //move back
             //gromit.glyphTrain.glyphclamp("close");
             mecanumTurn(menuFile.DriveSpeed, headingcrypto);
             if (vuMark == RelicRecoveryVuMark.CENTER) {

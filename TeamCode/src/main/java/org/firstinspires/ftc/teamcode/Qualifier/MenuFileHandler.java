@@ -419,8 +419,8 @@ public class MenuFileHandler {
         RedBlueFrontDistance3 = menuvalue[35];
 
         if (init) {
-            menulabel[36] = "SM RED Back Distance 4 (70)";
-            menuvalue[36] = 70;
+            menulabel[36] = "SM RED Back Distance 4 (63)";
+            menuvalue[36] = 63;
             menulowerlimit[36] = -80;
             menuupperlimit[36] =  80;
             menuincrement[36] = 0.5;
@@ -460,10 +460,10 @@ public class MenuFileHandler {
             menulowerlimit[40] = 0;
             menuupperlimit[40] = 1;
             menuincrement[40] = 1;
-            menuvaluetoken[40][0] = "Do correct Jewel";
+            menuvaluetoken[40][0] = "Do RIGHT Jewel";
             menuvaluetoken[40][1] = "Do WRONG Jewel";
         }
-        DoTheWrongJewel = (menuvalue[1] == 1);
+        DoTheWrongJewel = (menuvalue[40] == 1);
 
 
     }

@@ -124,40 +124,6 @@ public class JewelArm {
 
 
 
-    public void solveJewelPuzzleCameraRP2(boolean teamIsRED,boolean blueJewelIsLeft,boolean DoWrongJewel) {
-
-        // sensor is facing the forward ball.
-
-        // do the opposite if you want to gain Ranking Points.
-
-        if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front
-            if(!DoWrongJewel) {
-                jewelflickerForward();
-            } else{
-                jewelflickerBack();
-            }
-        } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
-            if(!DoWrongJewel) {
-                jewelflickerBack();
-            }else{
-                jewelflickerForward();
-            }
-        } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
-            if(!DoWrongJewel) {
-                jewelflickerBack();
-            }else{
-                jewelflickerForward();
-            }
-        } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
-            if(!DoWrongJewel) {
-                jewelflickerForward();
-            }else{
-                jewelflickerBack();
-            }
-        }
-
-
-    }
 
     /** -----------------------------------------------------------------------------------
     |  Grab a frame from Vuforia, check out where the jewel should be, see if it's red or Blue.
@@ -173,10 +139,10 @@ public class JewelArm {
                  <---------  X  --------------->
 
      (0,0)     +----------------------------------+   (1280,0)         ^
-               |                        BaLL      |                    |
-               |                                  |                    |
-               |                                  |                    |   Y
-               |                                  |                    |
+               |                            Ball x|                    |
+               |                            xxxxxx|                    |
+               |                            xxxxxx|                    |   Y
+               |                            xxxxxx|                    |
                |                                  |                    |
                |                                  |                    |
      (0,720)   +----------------------------------+   (1280,720)
@@ -186,10 +152,10 @@ public class JewelArm {
 
         // go for a square that is inside the ball (ball is about 350x 350,  sample 250x250;
 
-        int XStart = 1280-300;
-        int XEnd =1280-50;
-        int yStart =50;
-        int yEnd = 300-50;
+        int XStart = 1280-200;
+        int XEnd =1279;
+        int yStart =0;
+        int yEnd = 300;
 // moved the phone up, the ball down (X)
 //        int XStart = 1280-200;
 //        int XEnd =1280-0;

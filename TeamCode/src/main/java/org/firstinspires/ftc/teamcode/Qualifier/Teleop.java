@@ -96,7 +96,7 @@ public class Teleop extends OpMode {
 
     // file variables
     public int elbowdowntime = 2000;
-    public double elbowclampposition = 0.38;
+    public double elbowclampposition = 0.37;
 
     @Override
     public void init() {
