@@ -218,7 +218,7 @@ public class finalTeleOp extends LinearOpMode{
                     grabBottomLeft.setPosition(0.8);
                 }
                 if (gamepad2.right_stick_button){
-                    grabBottomRight.setPosition(0.73); //0.1
+                    grabBottomRight.setPosition(0.7); //0.1
                 }
 
 
@@ -231,11 +231,11 @@ public class finalTeleOp extends LinearOpMode{
                 //Relic DC Motor
 
                 if (gamepad2.dpad_up) {
-                    relicMotor.setPower(-0.7);
+                    relicMotor.setPower(0.7);
                 }
 
                 if (gamepad2.dpad_down) {
-                    relicMotor.setPower(0.8);
+                    relicMotor.setPower(-0.7);
                 }
 
                 if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
