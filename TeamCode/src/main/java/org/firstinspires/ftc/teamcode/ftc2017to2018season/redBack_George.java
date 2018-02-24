@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
-@Autonomous(name = "Red Back George HIGH CONTROL")
-//@Disabled
+@Autonomous(name = "Red Back George test")
+@Disabled
 public class redBack_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;

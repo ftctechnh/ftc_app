@@ -19,12 +19,16 @@ public class blueBack_George extends Autonomous_General_George {
 
 
         vuforiaInit(true, true);
+        //intiates the vuforia sdk and camera
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
+        //tell driver that vuforia is ready
         initiate(false);
+        //intiate hardware
         sleep(500);
         telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
+        //tell driver that we are good to go
 
         waitForStart();
 //reseting gyro sensor
@@ -58,6 +62,7 @@ public class blueBack_George extends Autonomous_General_George {
         sleep(250);
         moveUpGlyph(1.45);
         sleep(250);
+
         jewelServo.setPosition(0.2);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
@@ -75,20 +80,18 @@ public class blueBack_George extends Autonomous_General_George {
             jewelServoRotate.setPosition(0.5);
             sleep(300);
             jewelServoRotate.setPosition(0.74);
-            sleep(100);
-            jewelServo.setPosition(0.2);
+
         }
         else if(ballColor.equals("red")){
             jewelServoRotate.setPosition(1);
             sleep(300);
             jewelServoRotate.setPosition(0.74);
-            sleep(100);
-            jewelServo.setPosition(0.2);
+            sleep(1000);
         }
         else if (ballColor.equals("blank")){
-            jewelServo.setPosition(0.8);
-            sleep(500);
-            jewelServo.setPosition(0.2);
+            jewelServo.setPosition(1);
+            sleep(1500);
+            jewelServo.setPosition(0);
             sleep(500);
             readColorRev();
             sleep(1000);
@@ -96,23 +99,17 @@ public class blueBack_George extends Autonomous_General_George {
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
                 jewelServoRotate.setPosition(0.74);
-                sleep(100);
-                jewelServo.setPosition(0.2);
+                sleep(1000);
             }
-            else if(ballColor.equals("red")){
+            else if(ballColor.equals("red")) {
                 jewelServoRotate.setPosition(1);
                 sleep(300);
                 jewelServoRotate.setPosition(0.74);
-                sleep(100);
-                jewelServo.setPosition(0.2);
-            }
-            else {
-                jewelServo.setPosition(1);
                 sleep(1000);
             }
         }
         jewelServo.setPosition(1);
-        sleep(750);
+        sleep(1000);
         encoderMecanumDrive(0.6,50,50,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
@@ -130,8 +127,6 @@ public class blueBack_George extends Autonomous_General_George {
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
             encoderMecanumDrive(0.4,9.25,9.25,5000,0);
-
-
         }
 
 

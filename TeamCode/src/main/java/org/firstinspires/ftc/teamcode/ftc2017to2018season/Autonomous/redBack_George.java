@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Red Back George")
+@Autonomous(name="Red Back George HIGH CONTROL final")
 public class redBack_George extends Autonomous_General_George {
 
     DcMotor leftFront;
@@ -20,153 +20,173 @@ public class redBack_George extends Autonomous_General_George {
     @Override
     public void runOpMode() {
 
-
+        //enable vuforia and load its sdk and camera
         vuforiaInit(true, true);
+        //tell driver that it loaded
         telemetry.addData("", "Vuforia Initiated");
         telemetry.update();
+        //ititiate the hardware for rev robotics
         initiate(false);
-//        telemetry.addData("--->", "Gyro Calibrating");
-//        telemetry.update();
-//        gyro.calibrate();
-
-
-//        while(gyro.isCalibrating()){
-//            sleep(50);
-//            idle();
-//        }
-
-        telemetry.addData("---->", "Gyro Calibrated. Good to go...");
+        //tell robot that robot is ready to go
+        telemetry.addData("The robot is loaded","You are ready to go! :D");
         telemetry.update();
-
+        //wait for driver to click play
         waitForStart();
-//reseting gyro sensor
-//        gyro.resetZAxisIntegrator();
 
+        //turn on the phone flashlight
         toggleLight(true);
-        //light.setPower(1);
+        //start looking for the image and tell the driver that the phone is tracking the image
         startTracking();
         telemetry.addData("", "READY TO TRACK");
         telemetry.update();
 
+        //FAIL-OVER for the vuforia image; if not found within waitTime (5 sec.) default to center column
         double begintime = runtime.seconds();
         while (!vuMarkFound() && runtime.seconds() - begintime <= waitTime) {
 
 
         }
+        //turn off the phone light
         toggleLight(false);
 
+        //tell the driver the column
         telemetry.addData("Vumark", vuMark);
         telemetry.update();
         sleep(250);
 
-        moveUpGlyph(0.9);//change distances once we lower the stress of the glyph manipulator
+        //the next functions are used to grab the block
+        //we move up the manipulator a few cm
+        moveUpGlyph(0.9);
         sleep(250);
+        //we move the servos to the middle position
         middleGlyphManipulator();
         sleep(250);
+        //move the glyph servos to middle position
         moveDownGlyph(1.5);
+        //move down the glyph manipulator
         sleep(250);
         closeGlyphManipulator();
+        //grab the block
         sleep(250);
         moveUpGlyph(1.5);
+        //move the block up
         sleep(250);
-        jewelServo.setPosition(0.9);
+        jewelServo.setPosition(0.2);
+        //move down the jewel arm
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
-        readColor();
+        //read the color of the ball to the right of the arm
+        readColorRev();
         sleep(1500);
-        //light.setPower(0);
+        //tell the driver what the color of the ball is
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
-        //returnImage();
 
 
-        if (ballColor.equals("blue")) {
-            encoderMecanumDrive(0.9, 10, 10, 5000, 0);
-            jewelServo.setPosition(0);
+
+
+        if(ballColor.equals("blue")){
+            //move the jewel manipulator to the right to knock off the ball
+            jewelServoRotate.setPosition(0.5);
+            sleep(300);
+            //move it back to the original posititon
+            jewelServoRotate.setPosition(0.74);
+
+        }
+        else if(ballColor.equals("red")){
+            //move the jewel manipulator to the left to knock off the ball
+            jewelServoRotate.setPosition(1);
+            sleep(300);
+            //move the jewel manipulator to the original position
+            jewelServoRotate.setPosition(0.74);
             sleep(1000);
-            encoderMecanumDrive(0.9, -20, -20, 5000, 0);
-            sleep(1000);
-        } else if (ballColor.equals("red")) {
-            encoderMecanumDrive(0.9, -10, -10, 5000, 0);
-            jewelServo.setPosition(0);
-            sleep(1000);
-        } else if (ballColor.equals("blank")) { //this means the color sensor didn't see the color of the jewel
-            jewelServo.setPosition(0);//raising the jewel manipulator
+        }
+        //redo what was done before in the case that the ball was unable to be read
+        else if (ballColor.equals("blank")){
+            jewelServo.setPosition(1);
             sleep(1500);
-            jewelServo.setPosition(0.9);//putting the jewel manipulator back down
+            jewelServo.setPosition(0);
             sleep(500);
-            readColor();
+            readColorRev();
             sleep(1000);
-            if (ballColor.equals("blue")) {
-                encoderMecanumDrive(0.9, 10, 10, 5000, 0);
-                jewelServo.setPosition(0);
+            if(ballColor.equals("blue")){
+                jewelServoRotate.setPosition(0.5);
+                sleep(300);
+                jewelServoRotate.setPosition(0.74);
                 sleep(1000);
-                encoderMecanumDrive(0.9, -20, -20, 5000, 0);
+            }
+            else if(ballColor.equals("red")) {
+                jewelServoRotate.setPosition(1);
+                sleep(300);
+                jewelServoRotate.setPosition(0.74);
                 sleep(1000);
-            } else if (ballColor.equals("red")) {
-                encoderMecanumDrive(0.9, -10, -10, 5000, 0);
-                jewelServo.setPosition(0);
-                sleep(1000);
-            } else {//if the jewel manipulator doesn't see it a second time
-                jewelServo.setPosition(0);
-                sleep(1000);
-                encoderMecanumDrive(0.9, -10, -10, 5000, 0);
             }
         }
+        //move the jewel servi back up
+        jewelServo.setPosition(1);
+        sleep(750);
+        //drive off the plate (we drive backwards since robot was backwards)
+        encoderMecanumDrive(0.5, -50,-50,5000,0);
+        sleep(1000);
+        //move robot back to original angle so that when we drive it is going straight
+        gyroTurnREV(0.5, 0);
 
-        //gyroTurnREV(0.3, 180);
-        //encoderMecanumDrive(0.4, -5, -5, 1000, 0);
+
+        if (vuMark == RelicRecoveryVuMark.RIGHT){
+            //if the right image was read we move back 4.25 cm
+            encoderMecanumDrive(0.4,-4.25,-4.25,5000,0);
+        }
+        else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
+            //if the center or unkown image was read we move forward 4 cm
+            encoderMecanumDrive(0.4,4,4,5000,0);
+
+        }
+        else if (vuMark == RelicRecoveryVuMark.LEFT){
+            //if the left image was read we move back 9.25 cm
+            encoderMecanumDrive(0.4,-9.25,-9.25,5000,0);
+        }
+
+
         sleep(100);
-        //encoderMecanumDrive(0.3, 26, 25, 5000, 0);
 
+        if (vuMark == RelicRecoveryVuMark.RIGHT){
+            //if the image was right we turn to 60º counterclockwise from origin angle to push block in angled
+            gyroTurnREV(0.5, 60);
 
-        //if the range sensor gives a value less than 90 or greater than 200, it is most likely wrong
-        if (true) {
-            telemetry.addData("", "rangeSensor malfunctioned");
-            telemetry.update();
-            sleep(250);
-            //robot should end up 100 cm away from the wall, based on this and experiments
-            if (vuMark == RelicRecoveryVuMark.RIGHT) {
-                //this method uses encoders to drive a specified distance
-                encoderMecanumDrive(0.7, -10, -10, 500, 0);
-            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-                encoderMecanumDrive(0.7, -35, -35, 500, 0);
-            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
-                encoderMecanumDrive(0.7, -25, -25, 500, 0);
-            } else {
-                encoderMecanumDrive(0.7, -25, -25, 500, 0);
-            }
-//        }else {
-//            //enter this section of code if the range sensor is working
-//            gyroTurnREV(0.3, 0);
-//
-//            sleep(250);
-//
-//            if (vuMark == RelicRecoveryVuMark.CENTER) {
-//                //this method uses the range sensors to end a certain distance away from the wall
-//                simpleRangeDistance(87, 0.35, rsBuffer);
-//            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-//                simpleRangeDistance(79, 0.35, rsBuffer);
-//            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-//                simpleRangeDistance(98, 0.35, rsBuffer);
-//            }
-//            else{
-//                simpleRangeDistance(87,0.35,rsBuffer);
-//            }
-//        }
-
-            sleep(1000);
-            gyroTurnREV(0.5, 88);
-            sleep(750);
-            moveDownGlyph(0.3);
-            sleep(500);
-            openGlyphManipulator();
-
-            encoderMecanumDrive(0.3, 35, 35, 1000, 0);
-            sleep(250);
-            encoderMecanumDrive(0.65,-5,-5,1000,0);
         }
+        else {
+            //if the image was right we turn to 102º counterclockwise from origin angle to push block in angled
+            gyroTurnREV(0.5, 102);
+        }
+
+
+        sleep(750);
+
+        //we move the glyph manipulator down
+        moveDownGlyph(1.05);
+        sleep(100);
+        //we let go of the block
+        openGlyphManipulator();
+        sleep(250);
+
+        //we drive forward 35 cm to push the block in
+        encoderMecanumDrive(0.3,35,35,1000,0);
+        sleep(250);
+
+        if (vuMark == RelicRecoveryVuMark.RIGHT){
+            //to push the block in more, we turn left while pushing in forward
+            encoderMecanumDrive(0.3,15,-15,1000,0);
+
+        }
+        else {
+            //to push the block in more, we turn right while pushing in forward
+            encoderMecanumDrive(0.3,-15,15,1000,0);
+        }
+
+        sleep(500);
+        //we back up 10 cm to park
+        encoderMecanumDrive(0.3, -10, -10, 1000, 0);
 
 
     }
