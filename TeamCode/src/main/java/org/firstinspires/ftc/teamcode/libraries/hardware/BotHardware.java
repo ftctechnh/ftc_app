@@ -302,6 +302,11 @@ public class BotHardware {
         Motor.liftRight.motor.setPower(power);
     }
 
+    public void setLiftMotorsDegrees(float deg) {
+        Motor.liftLeft.motor.setVelocity(deg, AngleUnit.DEGREES);
+        Motor.liftRight.motor.setVelocity(deg, AngleUnit.DEGREES);
+    }
+
     private static class IMUHeading implements HeadingSensor {
         private final BNO055IMU imu;
 

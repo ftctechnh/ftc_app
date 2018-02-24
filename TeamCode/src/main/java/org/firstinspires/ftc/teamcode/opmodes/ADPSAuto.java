@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
+import org.firstinspires.ftc.teamcode.opmodes.demo.Color;
 import org.firstinspires.ftc.teamcode.opmodes.diagnostic.UltraHoneDebug;
 
 import java.util.Arrays;
@@ -38,6 +40,8 @@ public class ADPSAuto extends VuforiaBallLib {
     protected final APDS9960.Config frontConfig = new APDS9960.Config();
     protected MatbotixUltra frontUltra;
     protected MatbotixUltra backUltra;
+    protected ColorSensor frontColor;
+    protected ColorSensor backColor;
     protected boolean red = false;
     protected boolean rear = false;
     protected boolean justDrive = false;
@@ -134,6 +138,8 @@ public class ADPSAuto extends VuforiaBallLib {
         frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"));
         frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
         backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
+        frontColor = hardwareMap.get(ColorSensor.class, "fc");
+        backColor = hardwareMap.get(ColorSensor.class, "bc");
 
         backDist.initDevice();
         frontDist.initDevice();
@@ -159,6 +165,10 @@ public class ADPSAuto extends VuforiaBallLib {
         telemetry.addData("Back Ultra", backUltra.getReading());
         telemetry.addData("Front Infrared", frontDist.getDist());
         telemetry.addData("Back Infrared", backDist.getDist());
+        telemetry.addData("Front Red", frontColor.red());
+        telemetry.addData("Front Blue", frontColor.blue());
+        telemetry.addData("Back Red", backColor.red());
+        telemetry.addData("Back Blue", backColor.blue());
     }
 
     public void start() {
@@ -186,7 +196,8 @@ public class ADPSAuto extends VuforiaBallLib {
             final AutoLib.Step whackRight;
             if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
             else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
-            //whack.add(new APDSBallFind(red, frontDist, backDist, color, whackLeft, whackRight, this));
+            whack.add(new APDSBallFind(red, frontColor, backColor, color, whackLeft, whackRight, this));
+            /*
             if(red) {
                 if(color == BallColor.LeftBlue) whack.add(whackLeft);
                 else if(color == BallColor.LeftRed) whack.add(whackRight);
@@ -200,6 +211,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
                 whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             }
+            */
 
             final int mul = red ? -1 : 1;
 
@@ -536,17 +548,17 @@ public class ADPSAuto extends VuforiaBallLib {
 
     public static class APDSBallFind extends AutoLib.Step {
         private final boolean red;
-        private final APDS9960 frontDist;
-        private final APDS9960 backDist;
+        private final ColorSensor frontColorSens;
+        private final ColorSensor backColorSens;
         private BallColor color;
         private final AutoLib.Step whackLeft;
         private final AutoLib.Step whackRight;
         private final OpMode mode;
 
-        APDSBallFind(boolean red, APDS9960 frontDist, APDS9960 backDist, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight, OpMode mode) {
+        APDSBallFind(boolean red, ColorSensor frontColor, ColorSensor backColor, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight, OpMode mode) {
             this.red = red;
-            this.frontDist = frontDist;
-            this.backDist = backDist;
+            this.frontColorSens = frontColor;
+            this.backColorSens = backColor;
             this.color = color;
             this.whackLeft = whackLeft;
             this.whackRight = whackRight;
@@ -556,30 +568,32 @@ public class ADPSAuto extends VuforiaBallLib {
         public boolean loop() {
             super.loop();
             //check detection
-            /*
             if(color == BallColor.Indeterminate || color == BallColor.Undefined) {
                 //get colors
-                int[] backColor;
-                int[] frontColor;
+                int backRed;
+                int backBlue;
+                int frontRed;
+                int frontBlue;
                 int count = 0;
                 do {
-                    backColor = backDist.getColor();
-                    frontColor = frontDist.getColor();
+                    backRed = backColorSens.red();
+                    backBlue = backColorSens.blue();
+                    frontRed = frontColorSens.red();
+                    frontBlue = frontColorSens.blue();
                     count++;
-                } while ((backColor[1] == 0 || backColor[3] == 0 || frontColor[1] == 0 || frontColor[3] == 0) && count < 5);
-                if(backColor[1] != 0 && backColor[3] != 0 && frontColor[1] != 0 && frontColor[3] != 0) {
-                    if(backColor[1] < backColor[3] && frontColor[1] > frontColor[3]) color = BallColor.LeftRed;
-                    else if(backColor[1] > backColor[3] && frontColor[1] < frontColor[3]) color = BallColor.LeftBlue;
+                } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
+                if(backRed != 0 && backBlue != 0 && frontRed != 0 && frontBlue != 0) {
+                    if(backRed < backBlue && frontRed > frontBlue) color = BallColor.LeftRed;
+                    else if(backRed > backBlue && frontRed < frontBlue) color = BallColor.LeftBlue;
                     else {
-                        mode.telemetry.addData("MUY SKETCH", Arrays.toString(frontColor) + ' ' + Arrays.toString(backColor));
-                        if(backColor[1] > frontColor[1]) color = BallColor.LeftBlue;
-                        else if(backColor[1] < frontColor[1]) color = BallColor.LeftRed;
+                        mode.telemetry.addData("MUY SKETCH", "");
+                        if(backRed > frontRed) color = BallColor.LeftBlue;
+                        else if(backRed < frontRed) color = BallColor.LeftRed;
                         else color = BallColor.Indeterminate;
                     }
                 }
                 else color = BallColor.Undefined;
             }
-            */
             //run appropriete sewunce
             if(color == BallColor.LeftBlue) {
                 if(red) return whackLeft.loop();

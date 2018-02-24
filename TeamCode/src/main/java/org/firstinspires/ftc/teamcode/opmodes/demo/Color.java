@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
  * Created by Noah on 2/21/2018.
  */
 
-@Autonomous(name = "APDS + Color", group = "test")
-public class ColorDistance extends OpMode {
+@Autonomous(name = "Color", group = "test")
+public class Color extends OpMode {
     //APDS9960 dist;
     //APDS9960.Config distConfig = new APDS9960.Config();
     ColorSensor frontColor;
@@ -30,6 +30,9 @@ public class ColorDistance extends OpMode {
 
     public void start() {
         //dist.startDevice();
+
+        frontColor.enableLed(true);
+        backColor.enableLed(true);
     }
 
     public void loop() {
@@ -40,5 +43,10 @@ public class ColorDistance extends OpMode {
         telemetry.addData("Back Red", backColor.red());
         telemetry.addData("Back Green", backColor.green());
         telemetry.addData("Back Blue", backColor.blue());
+    }
+
+    public void stop() {
+        frontColor.enableLed(false);
+        backColor.enableLed(false);
     }
 }
