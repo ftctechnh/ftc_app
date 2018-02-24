@@ -28,10 +28,8 @@ public class redFront_NoGyro_George extends Autonomous_General_George {
         telemetry.update();
 
         waitForStart();
-//reseting gyro sensor
 
-        //toggleLight(false);
-        //light.setPower(0.5);
+        jewelServoRotate.setPosition(0.74);
         startTracking();
         telemetry.addData("","READY TO TRACK");
         telemetry.update();
@@ -60,7 +58,7 @@ public class redFront_NoGyro_George extends Autonomous_General_George {
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
-        readColor();
+        readColorRev();
         sleep(1500);
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
@@ -85,7 +83,7 @@ public class redFront_NoGyro_George extends Autonomous_General_George {
             sleep(1500);
             jewelServo.setPosition(1);
             sleep(500);
-            readColor();
+            readColorRev();
             sleep(1000);
             if(ballColor.equals("blue")){
                 encoderMecanumDrive(0.9, 10,10,5000,0);
