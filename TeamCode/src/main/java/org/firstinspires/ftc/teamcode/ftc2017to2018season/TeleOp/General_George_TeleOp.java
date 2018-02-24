@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 /**
@@ -42,6 +43,7 @@ public class General_George_TeleOp extends OpMode {
     Servo relicMain;
     Servo relicClaw;
     public int IVFSM;
+    ElapsedTime runtime = new ElapsedTime();
 
 
 
@@ -106,6 +108,8 @@ public class General_George_TeleOp extends OpMode {
         jewel_servo.setPosition(0.1);
         jewel_servo_rotate.setPosition(0.74);
         relicMain.setPosition(1);
+
+
 
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
@@ -346,8 +350,8 @@ public class General_George_TeleOp extends OpMode {
     public void slideIncrement() {
 
         if (gamepad2.dpad_up) {
-
-            moveUpInch(33.02);
+//This was done by Rohan and Steven on 2/23/18 because the regionals are soon and the slides malfunction if they reach the very top. This causes the most ascension, therefore, it is disabled. TEMPORARY!!
+            //moveUpInch(33.02);
 
         } else if (gamepad2.dpad_right) {
             moveUpInch(17.78);
@@ -357,6 +361,7 @@ public class General_George_TeleOp extends OpMode {
     }
 
     public void moveUpInch(double cm) {
+        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double target_Position;
         double countsPerCM = 44;
         double finalTarget = cm * countsPerCM;
@@ -367,8 +372,8 @@ public class General_George_TeleOp extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-0.6);
-
-        while (slideMotor.isBusy()) {
+        double begintime = runtime.seconds();
+        while (slideMotor.isBusy() && (runtime.seconds() - begintime) < 1.5) {
             telemetry.addData("In while loop in moveUpInch", slideMotor.getTargetPosition());
             telemetry.update();
 
