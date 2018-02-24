@@ -24,6 +24,7 @@ public class Teleop extends OpMode {
     private static final double SERVO_INC_MIN = 0.001;
     private static final int LIFT_COUNTS = 2800; //4250
     private static final int LIFT_BOTTOM_COUNTS = 730;
+    private static final int LIFT_INC_COUNTS = 100;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
 
     BotHardware bot = new BotHardware(this);
@@ -93,8 +94,8 @@ public class Teleop extends OpMode {
         if((gamepad2.x || gamepad1.x) && time - lastTime >= BUCKET_SHAKE_INTERVAL) {
             telemetry.addData("Interval", time - lastTime);
             lastTime = time;
-            if(servoSet) bot.setDropPos(Range.clip(bot.getDropPos() - 0.1, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
-            else bot.setDropPos(Range.clip(bot.getDropPos() + 0.1, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+            if(servoSet) bot.setDropPos(Range.clip(bot.getDropPos() - SERVO_INC_SHAKE, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+            else bot.setDropPos(Range.clip(bot.getDropPos() + SERVO_INC_SHAKE, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
             servoSet = !servoSet;
         }
         else if(!gamepad2.x && !gamepad1.x) servoSet = false;
