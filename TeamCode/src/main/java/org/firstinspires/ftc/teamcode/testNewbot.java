@@ -206,7 +206,7 @@ public class testNewbot extends LinearOpMode {
                 }
             }
 
-
+            /* Failsafes */
             if (yPos == 0 && bottomTouch.getState() && getRuntime() < 5) {
                 if (bottomPushed == 0) {
                     verticalArmMotor.setPower(-.2);
@@ -216,6 +216,21 @@ public class testNewbot extends LinearOpMode {
                         topPushed = 0;
                     }
                 }
+            }
+
+            if(gamepad2.left_bumper && gamepad2.a && getRuntime() < 7){
+                trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(100);
+                trayMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                trayMotor.setPower(.1);
+            }
+
+            if(gamepad2.left_bumper && gamepad2.right_bumper && gamepad2.b && getRuntime() < 7){
+                trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(100);
+                trayMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                trayPos = 0;
+                aPush = false;
             }
 
 /* Rotational Drive Control */
