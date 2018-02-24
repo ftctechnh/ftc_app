@@ -347,20 +347,20 @@ public class General_George_TeleOp extends OpMode {
 
         if (gamepad2.dpad_up) {
 
-            moveUpInch(2.54);
+            moveUpInch(33.02);
 
         } else if (gamepad2.dpad_right) {
             moveUpInch(17.78);
         } else if (gamepad2.dpad_down){
-            moveUpInch(33.02);
+            moveUpInch(5.08);
         }
     }
 
     public void moveUpInch(double cm) {
         double target_Position;
-        double countsPerCM = 609.6;
-        double finalTarget = cm * countsPerCM*2.54;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+        double countsPerCM = 44;
+        double finalTarget = cm * countsPerCM;
+        target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int) target_Position);
 
@@ -369,7 +369,7 @@ public class General_George_TeleOp extends OpMode {
         slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy()) {
-            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
+            telemetry.addData("In while loop in moveUpInch", slideMotor.getTargetPosition());
             telemetry.update();
 
         }

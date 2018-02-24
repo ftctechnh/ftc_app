@@ -140,9 +140,6 @@ public class General_Delta_TeleOp extends OpMode {
         incrementOpen();
         incrementClose();
 
-        telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
-        telemetry.update();
-
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -161,6 +158,7 @@ public class General_Delta_TeleOp extends OpMode {
     public void Slides(){
         slideMove();
         slideIncrement();
+
     }
     public void FourWheelDrive() {
         /*
@@ -215,10 +213,12 @@ public class General_Delta_TeleOp extends OpMode {
     }
 
     public void slideMove() {
-
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//Commented out to test since this caused the encoders not to funtoin in program. 2/23/18 by Rohan TEMPORARY
+        //slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
-
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
+        telemetry.update();
         if (gamepad2.right_stick_y != 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
 
@@ -298,7 +298,7 @@ public class General_Delta_TeleOp extends OpMode {
 
     public void moveUpInch(double cm) {
         double target_Position;
-        double countsPerCM = 150;
+        double countsPerCM = 28;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
