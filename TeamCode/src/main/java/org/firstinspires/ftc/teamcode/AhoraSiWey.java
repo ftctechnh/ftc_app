@@ -8,7 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -35,6 +37,12 @@ public class AhoraSiWey extends LinearOpMode {
     Servo gemServo;
     BNO055IMU imu;
 
+    double frontLeft;
+    double frontRight;
+    double backLeft;
+    double backRight;
+
+
     Orientation lastAngles = new Orientation();
     double globalAngle;
     double xPosUp = 0;
@@ -42,6 +50,12 @@ public class AhoraSiWey extends LinearOpMode {
     int trayOut = -390;
     int trayIn = 10;
     OpenGLMatrix lastLocation = null;
+
+    /* Give place holder values for the motors*/
+    double FrontLeftPower = 0;
+    double FrontRightPower = 0;
+    double BackRightPower = 0;
+    double BackLeftPower = 0;
 
     String teamColorPosition = "BlueRight";
 //    String teamColorPosition = "BlueLeft";
@@ -84,9 +98,19 @@ public class AhoraSiWey extends LinearOpMode {
         gemServo = hardwareMap.servo.get("gemservo");
         colorSensor = hardwareMap.colorSensor.get("colorsensor");
 
-//    /* Reverse the direction of the front right and back right motors */
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
+
+    /* Initialize with encoders */
+        trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(100);
+        trayMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     /* Set wheels to brake mode */
         frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -94,6 +118,9 @@ public class AhoraSiWey extends LinearOpMode {
         backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+    /* Reverse the left wheels */
+        frontLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
     /* Set parameters for the gyro (imu)*/
         BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
@@ -141,107 +168,253 @@ public class AhoraSiWey extends LinearOpMode {
         telemetry.addLine("Ayyy, I'm running");
         telemetry.update();
 
-        while (opModeIsActive()){
-            telemetry.addData("angles", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES));
+        /* no encoder */
+        runWithoutEncoder();
+
+        /* Put the servo color arm down */
+        gemServo.setPosition(xPosDown);
+        sleep(500);
+
+        /* Knock off the jewel */
+        switch (teamColorPosition) {
+            case "BlueRight":
+                knockjewelBlue();
+                break;
+            case "BlueLeft":
+                knockjewelBlue();
+                break;
+            case "RedRight":
+                knockjewelRed();
+                break;
+            case "RedLeft":
+                knockjewelRed();
+                break;
         }
 
-//        /* Put the servo color arm down */
-//        gemServo.setPosition(xPosDown);
-//        sleep(1500);
-//
-//        /* Knock off the jewel */
-//        switch (teamColorPosition) {
-//            case "BlueRight":
-//                knockjewelBlue();
-//                break;
-//            case "BlueLeft":
-//                knockjewelBlue();
-//                break;
-//            case "RedRight":
-//                knockjewelRed();
-//                break;
-//            case "RedLeft":
-//                knockjewelRed();
-//                break;
-//        }
-//
-//        /* Rotate so the phone can see the Vuforia Key */
-//        rotate(10, .2);
-//
-//        /* Tells vuforia to look for relic templates, if it finds something, then it returns
-//        LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
-//        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//
-//        /* If "vuMark" is something other than UNKNOWN */
-//        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-//            /* Send telemetry saying what vuforia sees */
-//            telemetry.addData("I see...", vuMark);
-//        }
-//        telemetry.update();
-//
-//        /* Return to starting position */
-//        rotate(-10, .2);
-//
-//        /* Wait a moment and let vuforia do its work and for the robot to realign properly */
-//        sleep(500);
-//
-//        //////////////////* Move and face cryptobox. Claw is in front of center position center *\\\\\\\\\\\\\\\\\\\\\\\\\\\
-//
-//        switch (teamColorPosition) {
-//            case "BlueRight":
-//                movebytime(1200, .3, "Forward");
-//                rotate(43, .2);
-//                break;
-//            case "BlueLeft":
-//                break;
-//            case "RedRight":
-//                break;
-//            case "RedLeft":
-//                break;
-//        }
-/*************PAUSE***********************/
-//        /////////////////* move to the column in the cryptobox specified by vuMark *\\\\\\\\\\\\\\\\\\\\\\\
-//
-//        /* Switch case based on what vuMark we see */
-//        switch (vuMark){
-//            case LEFT:
-//                /* Drive forward into the left position */
-//                movebytime(70,.3,"Left");
-//                break;
-//            case RIGHT:
-//                /* Drive forward into the right position */
-//                movebytime(70, .3, "Right");
-//                break;
-//            case CENTER:
-//                /* Drive forward into the center position */
-//                break;
-//            case UNKNOWN:
-//                /* Drive forward into the center position just cuz i said so */
-//                break;
-//        }
-//
-//        /* Move forward slightly so the block is in the space */
-//        movebytime(300, .2, "Forward");
-//
-//        /* Open up the claw to release the block */
-//        clawServo.setPower(clawOpen);
-//
-//        /* Wait a moment */
-//        sleep(2000);
-//
-//        /* Stop the claw */
-//        clawServo.setPower(clawStill);
-//
-//        /* Wait a moment */
-//        sleep(2000);
-//
-//        /* Back up a small bit */
-//        movebytime(200, .2, "Backward");
+        /* Rotate so the phone can see the Vuforia Key */
+        rotate(10, .2);
+
+        /* Tells vuforia to look for relic templates, if it finds something, then it returns
+        LEFT, RIGHT, CENTER and stores it into "vuMark", otherwise it only returns UNKNOWN */
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        /* If "vuMark" is something other than UNKNOWN */
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            /* Send telemetry saying what vuforia sees */
+            telemetry.addData("I see...", vuMark);
+        }
+        telemetry.update();
+
+        /* Return to starting position */
+        rotate(-10, .2);
+
+        /* Wait a moment and let vuforia do its work and for the robot to realign properly */
+        sleep(500);
+
+        /* with encoder */
+        resetRunToPosition();
+
+        /* wait a moment */
+        sleep(100);
+
+        /* switch case to position proper distance and rotate to 45 */
+        switch (teamColorPosition) {
+            case "BlueRight":
+                runToPositionWheels(1000, .7, "Forward");
+                sleep(1500);
+                runWithoutEncoder();
+                rotate(177, .3);
+                keyAlignment(teamColorPosition, vuMark);
+                runWithoutEncoder();
+                rotate(43, .2);
+                sleep(30);
+                break;
+            case "BlueLeft":
+                break;
+            case "RedRight":
+                break;
+            case "RedLeft":
+                break;
+        }
     }
 
     /***********************************************************************************************
      * These are all of the methods used in the Autonomous*
      ***********************************************************************************************/
+
+    /* This moves the robot so it's ready to turn 45 towards the cryptobox based on
+    the vuforia key reading*/
+    public void keyAlignment(String teamColorPosition, RelicRecoveryVuMark vuMark) {
+        resetRunToPosition();
+
+        switch (teamColorPosition) {
+            case "BlueRight":
+                switch (vuMark) {
+                    case LEFT:
+                        runToPositionWheels(500, .5, "Backward");
+                        sleep(1000);
+                        break;
+                    case CENTER:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case UNKNOWN:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case RIGHT:
+                        runToPositionWheels(1500, .5, "Backward");
+                        sleep(2000);
+                        break;
+                }
+                break;
+            case "BlueLeft":
+                switch (vuMark) {
+                    case LEFT:
+                        runToPositionWheels(500, .5, "Backward");
+                        sleep(1000);
+                        break;
+                    case CENTER:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case UNKNOWN:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case RIGHT:
+                        runToPositionWheels(1500, .5, "Backward");
+                        sleep(2000);
+                        break;
+                }
+                break;
+            case "RedRight":
+                switch (vuMark) {
+                    case LEFT:
+                        runToPositionWheels(500, .5, "Backward");
+                        sleep(1000);
+                        break;
+                    case CENTER:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case UNKNOWN:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case RIGHT:
+                        runToPositionWheels(1500, .5, "Backward");
+                        sleep(2000);
+                        break;
+                }
+                break;
+            case "RedLeft":
+                switch (vuMark) {
+                    case LEFT:
+                        runToPositionWheels(500, .5, "Backward");
+                        sleep(1000);
+                        break;
+                    case CENTER:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case UNKNOWN:
+                        runToPositionWheels(1000, .5, "Backward");
+                        sleep(1500);
+                        break;
+                    case RIGHT:
+                        runToPositionWheels(1500, .5, "Backward");
+                        sleep(2000);
+                        break;
+                }
+                break;
+        }
+    }
+
+    /* This places the block */
+    public void placeGlyph() {
+        trayMotor.setTargetPosition(trayOut);
+        trayMotor.setPower(-.2);
+        sleep(2000);
+        trayMotor.setTargetPosition(trayIn);
+        trayMotor.setPower(.2);
+        sleep(2000);
+    }
+
+    /* This resets the encoders on the wheels to RUN_WITHOUT_ENCODER */
+    public void runWithoutEncoder() {
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(100);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    /* This resets the encoders back to ZERO while still running with RUN_TO_POSITION */
+    public void resetRunToPosition() {
+        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        sleep(100);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+
+    /* This tells the wheels to run to a position for a certain number of ticks, at a certain power
+    and in a certain direction */
+    public void runToPositionWheels(int ticks, double power, String direction) {
+
+        switch (direction) {
+            case "Forward":
+                frontRightMotor.setTargetPosition(ticks);
+                frontLeftMotor.setTargetPosition(ticks);
+                backRightMotor.setTargetPosition(ticks);
+                backLeftMotor.setTargetPosition(ticks);
+                break;
+            case "Backward":
+                frontRightMotor.setTargetPosition(-ticks);
+                frontLeftMotor.setTargetPosition(-ticks);
+                backRightMotor.setTargetPosition(-ticks);
+                backLeftMotor.setTargetPosition(-ticks);
+                break;
+            case "Right":
+                frontRightMotor.setTargetPosition(-ticks);
+                frontLeftMotor.setTargetPosition(ticks);
+                backRightMotor.setTargetPosition(ticks);
+                backLeftMotor.setTargetPosition(-ticks);
+                break;
+            case "Left":
+                frontRightMotor.setTargetPosition(ticks);
+                frontLeftMotor.setTargetPosition(-ticks);
+                backRightMotor.setTargetPosition(-ticks);
+                backLeftMotor.setTargetPosition(ticks);
+                break;
+        }
+
+        switch (direction) {
+            case "Forward":
+                setWheelPower(-power, power, -power, power);
+                break;
+            case "Backward":
+                setWheelPower(power, -power, power, -power);
+                break;
+            case "Right":
+                setWheelPower(-power, -power, power, power);
+                break;
+            case "Left":
+                setWheelPower(power, power, -power, -power);
+                break;
+        }
+    }
+
     /* This method moves the tray to position */
     public void setTrayPosition(String position) {
         switch (position) {
@@ -256,26 +429,6 @@ public class AhoraSiWey extends LinearOpMode {
         }
     }
 
-    /* This method moves the claw up or down for a certain amount of time either up or down */
-    public void moveclawbytime(long time, double power, String direction) {
-
-    /* This switch case is determined by the String indicated above */
-        switch (direction) {
-            case "Up":
-                verticalArmMotor.setPower(power);
-                break;
-            case "Down":
-                verticalArmMotor.setPower(-power);
-                break;
-        }
-
-    /* Sleep instead timer sucks */
-        sleep(time);
-
-    /* Once the while loop above finishes turn off claw motor */
-        verticalArmMotor.setPower(0);
-    }
-
     /* This method moves the robot forward for time and power indicated*/
     public void movebytime(long time, double power, String direction) {
 
@@ -283,16 +436,16 @@ public class AhoraSiWey extends LinearOpMode {
 
         switch (direction) {
             case "Forward":
-                setWheelPower(power, -power, power, -power);
-                break;
-            case "Backward":
                 setWheelPower(-power, power, -power, power);
                 break;
+            case "Backward":
+                setWheelPower(power, -power, power, -power);
+                break;
             case "Right":
-                setWheelPower(power, power, -power, -power);
+                setWheelPower(-power, -power, power, power);
                 break;
             case "Left":
-                setWheelPower(-power, -power, power, power);
+                setWheelPower(power, power, -power, -power);
                 break;
         }
 
@@ -303,38 +456,6 @@ public class AhoraSiWey extends LinearOpMode {
     /* Once the while loop above finishes turn off the wheels */
         wheelsOff();
     }
-
-//    /* This method moves the robot forward for time and power indicated*/
-//    public void movePowerDistanceDirectionSensor ( double power, double distance, String direction, String sensor) {
-//
-//    /* This switch case is determined by the String direction indicated above */
-//        switch (direction) {
-//            case "Forward":
-//                setWheelPower(power, -power, power, -power);
-//                break;
-//            case "Backward":
-//                setWheelPower(-power, power, -power, power);
-//                break;
-//            case "Right":
-//                setWheelPower(power, power, -power, -power);
-//                break;
-//            case "Left":
-//                setWheelPower(-power, -power, power, power);
-//                break;
-//        }
-//
-//        switch (sensor){
-//            case "Front":
-//                while(opModeIsActive() && sideRangeSensor.cmUltrasonic() != distance){};
-//                break;
-//            case "Side":
-//                while(opModeIsActive() && frontRangeSensor.cmUltrasonic() != distance){};
-//                break;
-//        }
-//
-//    /* Once the while loop above finishes turn off the wheels */
-//        wheelsOff();
-//    }
 
 
     /* This method simply sets all wheel motors to zero power */
@@ -393,14 +514,14 @@ public class AhoraSiWey extends LinearOpMode {
             resetAngle();
             rotate(10, .3);
             wheelsOff();
-            sleep(500);
+            sleep(200);
             gemServo.setPosition(xPosUp);
             rotate(-10, .3);
         } else {
             resetAngle();
             rotate(-10, .3);
             wheelsOff();
-            sleep(500);
+            sleep(200);
             gemServo.setPosition(xPosUp);
             rotate(10, .3);
         }
@@ -414,14 +535,14 @@ public class AhoraSiWey extends LinearOpMode {
             resetAngle();
             rotate(10, .3);
             wheelsOff();
-            sleep(500);
+            sleep(200);
             gemServo.setPosition(xPosUp);
             rotate(-10, .3);
         } else {
             resetAngle();
             rotate(-10, .3);
             wheelsOff();
-            sleep(500);
+            sleep(200);
             gemServo.setPosition(xPosUp);
             rotate(10, .3);
         }
@@ -450,7 +571,7 @@ public class AhoraSiWey extends LinearOpMode {
 
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        double deltaAngle = angles.thirdAngle - lastAngles.thirdAngle;
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
         if (deltaAngle < -180)
             deltaAngle += 360;
@@ -462,29 +583,6 @@ public class AhoraSiWey extends LinearOpMode {
         lastAngles = angles;
 
         return globalAngle;
-    }
-
-    /**
-     * See if we are moving in a straight line and if not return a power correction value.
-     *
-     * @return Power adjustment, + is adjust left - is adjust right.
-     */
-    private double checkDirection() {
-        // The gain value determines how sensitive the correction is to direction changes.
-        // You will have to experiment with your robot to get small smooth direction changes
-        // to stay on a straight line.
-        double correction, angle, gain = .10;
-
-        angle = getAngle();
-
-        if (angle == 0)
-            correction = 0;             // no adjustment.
-        else
-            correction = -angle;        // reverse sign of angle for correction.
-
-        correction = correction * gain;
-
-        return correction;
     }
 
     /**
@@ -502,11 +600,11 @@ public class AhoraSiWey extends LinearOpMode {
         // clockwise (right).
 
         if (degrees < 0) {   // turn right.
-            leftPower = -power;
-            rightPower = power;
-        } else if (degrees > 0) {   // turn left.
             leftPower = power;
             rightPower = -power;
+        } else if (degrees > 0) {   // turn left.
+            leftPower = -power;
+            rightPower = power;
         } else return;
 
         // set power to rotate.

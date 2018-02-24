@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
-@TeleOp(name = "El Teleop", group = "bacon")
+@TeleOp(name = "2 Personas", group = "bacon")
 //@Disabled
-public class testNewbot extends LinearOpMode {
+public class dosjugadores extends LinearOpMode {
 
     /* Declare all objects */
     DcMotor frontLeftMotor = null;
@@ -147,7 +146,7 @@ public class testNewbot extends LinearOpMode {
             }
 
             /* Function to toggle tray at bottom-most position */
-            if (gamepad1.a) {
+            if (gamepad2.a) {
                 if (trayPos == 0 & !aPush) {
                     trayMotor.setTargetPosition(trayOut);
                     trayMotor.setPower(-.2);
@@ -166,7 +165,7 @@ public class testNewbot extends LinearOpMode {
             }
 
             /*** Int Toggle ***/
-            if (gamepad1.y) {
+            if (gamepad2.y) {
                 if (yPos == 0 && !yPush) {
                     yPos++;
                     yPush = true;
