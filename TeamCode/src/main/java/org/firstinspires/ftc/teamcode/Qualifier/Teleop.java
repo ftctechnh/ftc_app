@@ -383,7 +383,7 @@ public class Teleop extends OpMode {
         if (gamepad2.right_trigger > 0.1) {
             if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance) {
                 if (blocks != 0) {
-                    if(gromit.glyphTrain.liftIndex >= 1) {
+                    if(gromit.glyphTrain.liftIndex >= 2) {
                         gromit.glyphTrain.glyphclampupper("open");
                         gromit.glyphTrain.kickGlyph();
                         sleep(350);

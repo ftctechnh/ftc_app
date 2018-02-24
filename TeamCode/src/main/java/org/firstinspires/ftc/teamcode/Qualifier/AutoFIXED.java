@@ -499,11 +499,20 @@ public class AutoFIXED extends LinearOpMode {
             }*/
             //You are in front of the Box
             //Drive into the box
-            gromit.glyphTrain.startGlyphMotors(1.0);
-            mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
+            if(gromit.glyphTrain.lift_motor.getCurrentPosition() > 6 / ((Math.PI * gromit.glyphTrain.pulleydiameter) * gromit.glyphTrain.TICKS_REV)){//If two blocks
+                gromit.glyphTrain.startGlyphMotors(1.0);
+                mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
 
-            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
-            gromit.glyphTrain.glyphclampupper("open");
+                gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+                gromit.glyphTrain.glyphclampupper("open");
+            }
+            else {
+                gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+                gromit.glyphTrain.glyphclampupper("open");
+
+                gromit.glyphTrain.startGlyphMotors(1.0);
+                mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
+            }
             sleep(500);
 
 
