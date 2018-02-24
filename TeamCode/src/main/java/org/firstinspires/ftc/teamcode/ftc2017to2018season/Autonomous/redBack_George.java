@@ -86,20 +86,24 @@ public class redBack_George extends Autonomous_General_George {
 
 
 
-        if(ballColor.equals("blue")){
+        if(ballColor.equals("red")){
             //move the jewel manipulator to the right to knock off the ball
             jewelServoRotate.setPosition(0.5);
             sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
             //move it back to the original posititon
-            jewelServoRotate.setPosition(0.74);
+            jewelServoRotate.setPosition(0.79);
 
         }
-        else if(ballColor.equals("red")){
+        else if(ballColor.equals("blue")){
             //move the jewel manipulator to the left to knock off the ball
             jewelServoRotate.setPosition(1);
             sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
             //move the jewel manipulator to the original position
-            jewelServoRotate.setPosition(0.74);
+            jewelServoRotate.setPosition(0.79);
             sleep(1000);
         }
         //redo what was done before in the case that the ball was unable to be read
@@ -110,41 +114,46 @@ public class redBack_George extends Autonomous_General_George {
             sleep(500);
             readColorRev();
             sleep(1000);
-            if(ballColor.equals("blue")){
+            if(ballColor.equals("red")){
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
-                jewelServoRotate.setPosition(0.74);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                jewelServoRotate.setPosition(0.79);
                 sleep(1000);
             }
-            else if(ballColor.equals("red")) {
+            else if(ballColor.equals("blue")) {
                 jewelServoRotate.setPosition(1);
                 sleep(300);
-                jewelServoRotate.setPosition(0.74);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                jewelServoRotate.setPosition(0.79);
                 sleep(1000);
             }
         }
         //move the jewel servi back up
+
         jewelServo.setPosition(1);
-        sleep(750);
+        sleep(100);
         //drive off the plate (we drive backwards since robot was backwards)
-        encoderMecanumDrive(0.5, -50,-50,5000,0);
+        encoderMecanumDrive(0.3, -45,-45,5000,0);
         sleep(1000);
         //move robot back to original angle so that when we drive it is going straight
-        gyroTurnREV(0.5, 0);
+        gyroTurnREV(0.5, -180);
 
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             //if the right image was read we move back 4.25 cm
-            encoderMecanumDrive(0.4,-4.25,-4.25,5000,0);
+            encoderMecanumDrive(0.4,9,9,5000,0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
             //if the center or unkown image was read we move forward 4 cm
-            encoderMecanumDrive(0.4,4,4,5000,0);
+            encoderMecanumDrive(0.4,-4,-4,5000,0);
 
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
             //if the left image was read we move back 9.25 cm
-            encoderMecanumDrive(0.4,-9.25,-9.25,5000,0);
+            encoderMecanumDrive(0.4,9.5,9.5,5000,0);
         }
 
 
@@ -152,12 +161,12 @@ public class redBack_George extends Autonomous_General_George {
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             //if the image was right we turn to 60º counterclockwise from origin angle to push block in angled
-            gyroTurnREV(0.5, 60);
+            gyroTurnREV(0.5, 76);
 
         }
         else {
             //if the image was right we turn to 102º counterclockwise from origin angle to push block in angled
-            gyroTurnREV(0.5, 102);
+            gyroTurnREV(0.5, 127);
         }
 
 

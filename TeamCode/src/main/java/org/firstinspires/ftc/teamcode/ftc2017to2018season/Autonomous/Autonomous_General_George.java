@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
 
@@ -86,6 +87,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public Servo jewelServoRotate;
     public Servo glyphServoRight;
     public Servo glyphServoLeft;
+    public Servo relicMain;
 
     public ModernRoboticsI2cGyro gyro;
     public ModernRoboticsI2cRangeSensor wallAlignFront;
@@ -138,6 +140,7 @@ public class Autonomous_General_George extends LinearOpMode {
 
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
+        relicMain = hardwareMap.servo.get("relicMain");
         wallAlignFront = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "wallAlignFront");
         wallAlignBack = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "wallAlignBack");
 
@@ -195,8 +198,9 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.addData("motors initiated","");
         telemetry.update();
 
-        jewelServo.setPosition(1);
+        //jewelServo.setPosition(1);
         jewelServoRotate.setPosition(0.74);//0.74 for it to be in the middle, 0.9 to knock off ball in front of color sensor, 0.6 to knock off ball behind color sensor
+        relicMain.setPosition(0);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_left_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -678,8 +682,9 @@ public class Autonomous_General_George extends LinearOpMode {
     public void wallAlign(double speed, double distance, int front){
         telemetry.addData("starting wall align", "");
         telemetry.update();
-
-        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front)){
+        ElapsedTime runtime = new ElapsedTime();
+        double begintime= runtime.seconds();
+        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front) && runtime.seconds() - begintime < 4){
             telemetry.update();
             idle();
 //            telemetry.addData("-->","inside while loop :-(");
@@ -976,8 +981,9 @@ public class Autonomous_General_George extends LinearOpMode {
 
         telemetry.addData("starting gyro turn","-----");
         telemetry.update();
-
-        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF)){
+        ElapsedTime runtime = new ElapsedTime();
+        double begintime= runtime.seconds();
+        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < 4){
             telemetry.update();
             idle();
             telemetry.addData("-->","inside while loop :-(");
