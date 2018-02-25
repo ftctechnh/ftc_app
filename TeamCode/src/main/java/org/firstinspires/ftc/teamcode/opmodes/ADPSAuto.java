@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
+import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
 import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 import org.firstinspires.ftc.teamcode.opmodes.demo.Color;
 import org.firstinspires.ftc.teamcode.opmodes.diagnostic.UltraHoneDebug;
@@ -138,13 +140,16 @@ public class ADPSAuto extends VuforiaBallLib {
         frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"));
         frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
         backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
-        frontColor = hardwareMap.get(ColorSensor.class, "fc");
-        backColor = hardwareMap.get(ColorSensor.class, "bc");
+        frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
+        backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
 
         backDist.initDevice();
         frontDist.initDevice();
         frontUltra.initDevice();
         backUltra.initDevice();
+
+        frontColor.enableLed(false);
+        backColor.enableLed(false);
 
         backDist.startDevice();
         frontDist.startDevice();
@@ -584,6 +589,8 @@ public class ADPSAuto extends VuforiaBallLib {
                 int frontBlue;
                 int count = 0;
                 if(!rear) {
+                    frontColorSens.enableLed(true);
+                    backColorSens.enableLed(true);
                     do {
                         backRed = backColorSens.red();
                         backBlue = backColorSens.blue();
@@ -591,6 +598,8 @@ public class ADPSAuto extends VuforiaBallLib {
                         frontBlue = frontColorSens.blue();
                         count++;
                     } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
+                    frontColorSens.enableLed(false);
+                    backColorSens.enableLed(false);
                 }
                 else {
                     do {

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
+import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
 
 import java.util.Arrays;
 
@@ -29,16 +30,16 @@ public class Color extends OpMode {
         frontDist.initDevice();
         backDist.initDevice();
 
-        frontColor = hardwareMap.get(ColorSensor.class, "fc");
-        backColor = hardwareMap.get(ColorSensor.class, "bc");
+        frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
+        backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
+
+        frontColor.enableLed(true);
+        backColor.enableLed(true);
     }
 
     public void start() {
         frontDist.startDevice();
         backDist.startDevice();
-
-        frontColor.enableLed(true);
-        backColor.enableLed(true);
     }
 
     public void loop() {
