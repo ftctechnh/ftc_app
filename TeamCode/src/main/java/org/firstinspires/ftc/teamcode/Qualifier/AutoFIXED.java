@@ -558,11 +558,11 @@ public class AutoFIXED extends LinearOpMode {
         if (vuMark == RelicRecoveryVuMark.CENTER) {
             //Strafe right
             strafe = -3;//strafe right
-        } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
             //Strafe Right
-            strafe = -3;//strafe right
+            strafe = 3;//strafe right
         } else {///THIS IS DEFAULT CASE OF VUMARK/LEFT
-            strafe = 3;//left
+            strafe = -3;//left
         }
 
         //Push in first block
@@ -586,14 +586,14 @@ public class AutoFIXED extends LinearOpMode {
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
                 mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 0, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
-            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 //Strafe Left
                 telemetry.addLine("ITS LEFT");
                 telemetry.update();
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, -8, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 3, headingcrypto, -90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, -8, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
             mecanumTurn(menuFile.DriveSpeed, driveangle);
           //drive fast without glyphtrain
@@ -609,7 +609,7 @@ public class AutoFIXED extends LinearOpMode {
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
                 mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -12, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
-            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 //Strafe Left
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -17, menuFile.BlueBackHeading3, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
