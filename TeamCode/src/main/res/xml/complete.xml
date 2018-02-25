@@ -4,18 +4,17 @@
         <LynxModule name="Expansion Hub 2" port="2">
             <TetrixMotor name="motorConL" port="0" />
             <TetrixMotor name="motorConR" port="1" />
-            <NeveRest60Gearmotor name="motorRocker1" port="2" />
-            <NeveRest60Gearmotor name="motorRocker2" port="3" />
+            <NeveRest60Gearmotor name="motorFlip" port="2" />
+            <NeveRest60Gearmotor name="motorSlide" port="3" />
+            <Servo name="servoTapper" port="4" />
+            <Servo name="servoFlicker" port="5" />
         </LynxModule>
         <LynxModule name="Expansion Hub 3" port="3">
             <NeveRest20Gearmotor name="motorFL" port="0" />
             <NeveRest20Gearmotor name="motorFR" port="1" />
             <NeveRest20Gearmotor name="motorBL" port="2" />
             <NeveRest20Gearmotor name="motorBR" port="3" />
-            <ContinuousRotationServo name="servoConR" port="1" />
-            <Servo name="tapper" port="2" />
-            <Servo name="Jack" port="3" />
-            <ContinuousRotationServo name="servoConL" port="4" />
+            <ContinuousRotationServo name="servoTapper" port="4" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <ModernRoboticsI2cRangeSensor name="rangeSensor" port="0" bus="3" />
             <LynxColorSensor name="colorSensor" port="1" bus="1" />

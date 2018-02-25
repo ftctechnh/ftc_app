@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Math.abs;
 
-@TeleOp(name="Preciousss: TeleOp6217_DRC 1654", group="Preciousss")
+@TeleOp(name="Preciousss: TeleOp6217Flip", group="Preciousss")
 
 public class TeleOp6217Flip extends OpMode
 {
