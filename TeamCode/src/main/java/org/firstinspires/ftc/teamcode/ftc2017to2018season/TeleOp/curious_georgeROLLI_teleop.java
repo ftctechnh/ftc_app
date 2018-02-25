@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * Created by Team Inspiration on 1/21/18.
  */
 @TeleOp(name = "Curious George Roll-y collector")
+@Disabled
 public class curious_georgeROLLI_teleop extends OpMode {
 
 

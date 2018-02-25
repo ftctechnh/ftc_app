@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.hardware.ServoController;
  * Created by Team Inspiration on 1/21/18.
  */
 @TeleOp(name = "Curious George")
+@Disabled
 public class curious_george_teleop extends OpMode {
 
 

@@ -17,8 +17,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Rohan on 2/23/18.
  * Created for testing purposes in slide increment
  */
-@TeleOp(name = "General George")
-public class General_George_TeleOp extends OpMode {
+@TeleOp(name = "1 Use this for competition George")
+public class
+General_George_TeleOp extends OpMode {
 
 
     /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -354,7 +355,7 @@ public class General_George_TeleOp extends OpMode {
             //moveUpInch(33.02);
 
         } else if (gamepad2.dpad_right) {
-            moveUpInch(17.78);
+            moveUpInch(20.32);
         } else if (gamepad2.dpad_down){
             moveUpInch(5.08);
         }
@@ -363,7 +364,7 @@ public class General_George_TeleOp extends OpMode {
     public void moveUpInch(double cm) {
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         double target_Position;
-        double countsPerCM = 44;
+        double countsPerCM = 50;
         double finalTarget = cm * countsPerCM;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 

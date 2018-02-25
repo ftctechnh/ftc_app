@@ -71,7 +71,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
     double P_TURN_COEFF = 0.08;
-    double TURN_THRESHOLD = 5;
+    double TURN_THRESHOLD = 3;
     double P_WALL_COEFF = 0.07;
     double ALIGN_THRESHOLD = 3;
     public DcMotor front_right_motor;
@@ -684,7 +684,25 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.update();
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front) && runtime.seconds() - begintime < 4){
+        DistanceSensor currentSensor;
+
+        if (front == 0) {
+            currentSensor = wallAlignFront;
+        }
+        else if (front == 1) {
+            currentSensor = wallAlignBack;
+        }
+        else if (front == 2){
+            currentSensor = glyphBlockRangeSensor;
+        }
+        else if (front == 3){
+            currentSensor = revJewelRangeSensor;
+        }
+        else {
+            currentSensor = wallAlignFront;
+        }
+
+        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front) && runtime.seconds() - begintime < 4 && (currentSensor.getDistance(DistanceUnit.CM) - 6 <  distance) && (distance < currentSensor.getDistance(DistanceUnit.CM) + 10)){
             telemetry.update();
             idle();
 //            telemetry.addData("-->","inside while loop :-(");

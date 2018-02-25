@@ -110,7 +110,7 @@ public class redBack_George extends Autonomous_General_George {
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(1);
             sleep(1500);
-            jewelServo.setPosition(0);
+            jewelServo.setPosition(0.2);
             sleep(500);
             readColorRev();
             sleep(1000);
@@ -144,11 +144,11 @@ public class redBack_George extends Autonomous_General_George {
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             //if the right image was read we move back 4.25 cm
-            encoderMecanumDrive(0.4,9,9,5000,0);
+            encoderMecanumDrive(0.4,11,11,5000,0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
             //if the center or unkown image was read we move forward 4 cm
-            encoderMecanumDrive(0.4,-4,-4,5000,0);
+            encoderMecanumDrive(0.4,-2,-2,5000,0);
 
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){

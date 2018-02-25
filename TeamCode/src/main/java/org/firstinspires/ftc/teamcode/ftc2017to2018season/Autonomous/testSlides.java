@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
  * Created by Inspiration Team on 2/10/2018.
  */
 @TeleOp(name = "testSlides")
+@Disabled
 public class testSlides extends Autonomous_General_George {
 
     public void runOpMode(){

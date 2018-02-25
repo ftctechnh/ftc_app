@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 /**
  * Created by Inspiration Team on 2/18/2018.
  */
 @Autonomous(name = "revgyroturn")
+@Disabled
 public class revgyroturn extends Autonomous_General_George {
 
     @Override

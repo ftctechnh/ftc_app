@@ -59,7 +59,7 @@ public class redFront_George extends Autonomous_General_George {
         sleep(500);
         moveUpGlyph(1.45);
         sleep(250);
-        jewelServo.setPosition(0);
+        jewelServo.setPosition(0.2);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         sleep(1000);
@@ -73,47 +73,47 @@ public class redFront_George extends Autonomous_General_George {
 
 
         if(ballColor.equals("blue")){
-            jewelServoRotate.setPosition(0.9);
+            //move the jewel manipulator to the left to knock off the ball
+            jewelServoRotate.setPosition(1);
             sleep(300);
-            jewelServoRotate.setPosition(0.74);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move the jewel manipulator to the original position
+            jewelServoRotate.setPosition(0.79);
             sleep(1000);
-            jewelServo.setPosition(1);
-            sleep(2000);
-            //Add code to swing the jwele arm
         }
         else if(ballColor.equals("red")){
-            jewelServoRotate.setPosition(0.6);
+            //move the jewel manipulator to the right to knock off the ball
+            jewelServoRotate.setPosition(0.5);
             sleep(300);
-            jewelServoRotate.setPosition(0.74);
-            sleep(1000);
-            jewelServo.setPosition(1);
-            sleep(2000);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move it back to the original posititon
+            jewelServoRotate.setPosition(0.79);
             //Add code to swing the jwele arm
         }
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(1);
             sleep(1500);
-            jewelServo.setPosition(0);
+            jewelServo.setPosition(0.2);
             sleep(500);
             readColorRev();
             sleep(1000);
             if(ballColor.equals("blue")){
-                jewelServoRotate.setPosition(0.9);
+                jewelServoRotate.setPosition(1);
                 sleep(300);
-                jewelServoRotate.setPosition(0.74);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                jewelServoRotate.setPosition(0.79);
                 sleep(1000);
-                jewelServo.setPosition(1);
-                sleep(2000);
-                //Add code to swing the jwele arm
             }
             else if(ballColor.equals("red")){
-                jewelServoRotate.setPosition(0.6);
+                jewelServoRotate.setPosition(0.5);
                 sleep(300);
-                jewelServoRotate.setPosition(0.74);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                jewelServoRotate.setPosition(0.79);
                 sleep(1000);
-                jewelServo.setPosition(1);
-                sleep(2000);
-                //Add code to swing the jwele arm
             }
             else {
                 jewelServo.setPosition(1);
@@ -137,7 +137,7 @@ public class redFront_George extends Autonomous_General_George {
         if (vuMark == RelicRecoveryVuMark.RIGHT){//should be 20 cm away from wall for left
             //goes to given distance away from the wall
             wallAlign(0.3, 35, 1);
-            encoderMecanumDrive(0.3, -15, -15, 5000, 0);
+            encoderMecanumDrive(0.3, -12, -12, 5000, 0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER){
             wallAlign(0.4, 35, 1);

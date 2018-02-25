@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
 @TeleOp(name = "servo read position")
+@Disabled
 public class rangeSensor_valueRead extends OpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;

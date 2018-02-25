@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
  */
 
 @Autonomous(name = "rangeTest")
-//@Disabled
+@Disabled
 public class rangeTest extends Autonomous_General_George {
 
     public void runOpMode(){

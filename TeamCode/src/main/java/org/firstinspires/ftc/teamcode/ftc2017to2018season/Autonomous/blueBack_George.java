@@ -77,38 +77,54 @@ public class blueBack_George extends Autonomous_General_George {
 
 
         if(ballColor.equals("blue")){
+            //move the jewel manipulator to the right to knock off the ball
             jewelServoRotate.setPosition(0.5);
             sleep(300);
-            jewelServoRotate.setPosition(0.74);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move it back to the original posititon
+            jewelServoRotate.setPosition(0.79);
+            //Add code to swing the jwele arm
 
         }
         else if(ballColor.equals("red")){
+            //move the jewel manipulator to the left to knock off the ball
             jewelServoRotate.setPosition(1);
             sleep(300);
-            jewelServoRotate.setPosition(0.74);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move the jewel manipulator to the original position
+            jewelServoRotate.setPosition(0.79);
             sleep(1000);
         }
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(1);
             sleep(1500);
-            jewelServo.setPosition(0);
+            jewelServo.setPosition(0.2);
             sleep(500);
             readColorRev();
             sleep(1000);
             if(ballColor.equals("blue")){
+                //move the jewel manipulator to the right to knock off the ball
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
-                jewelServoRotate.setPosition(0.74);
-                sleep(1000);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move it back to the original posititon
+                jewelServoRotate.setPosition(0.79);
+                //Add code to swing the jwele arm
             }
             else if(ballColor.equals("red")) {
+                //move the jewel manipulator to the left to knock off the ball
                 jewelServoRotate.setPosition(1);
                 sleep(300);
-                jewelServoRotate.setPosition(0.74);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move the jewel manipulator to the original position
+                jewelServoRotate.setPosition(0.79);
                 sleep(1000);
             }
         }
-        jewelServo.setPosition(1);
         sleep(1000);
         encoderMecanumDrive(0.6,50,50,5000,0);
         sleep(100);
