@@ -50,6 +50,8 @@ public class Teleop extends OpMode {
         DcMotor[] ray = bot.getMotorRay();
         for(DcMotor motor : ray)
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
     }
 
     public void start() {
@@ -81,21 +83,29 @@ public class Teleop extends OpMode {
         else if(gamepad1.right_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
 
         //check if going down
-        if(gamepad1.left_bumper && liftState != LiftState.LOWERING) {
+        if(gamepad2.left_bumper && liftState != LiftState.LOWERING) {
             BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos);
             BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos);
+            BotHardware.Motor.liftLeft.motor.setPower(1.0);
+            BotHardware.Motor.liftRight.motor.setPower(1.0);
             liftState = LiftState.LOWERING;
         }
-        else if((gamepad1.right_bumper || (gamepad1.right_trigger > 0 && leftLiftPosDelta < LIFT_BOTTOM_COUNTS && rightLiftPosDelta < LIFT_BOTTOM_COUNTS)) && liftState != LiftState.RAISING) {
+        else if((gamepad2.right_bumper || (gamepad1.right_trigger > 0 && leftLiftPosDelta < LIFT_BOTTOM_COUNTS && rightLiftPosDelta < LIFT_BOTTOM_COUNTS)) && liftState != LiftState.RAISING) {
             BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos + LIFT_COUNTS);
             BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos + LIFT_COUNTS);
+            BotHardware.Motor.liftLeft.motor.setPower(1.0);
+            BotHardware.Motor.liftRight.motor.setPower(1.0);
             liftState = LiftState.RAISING;
         }
-        else if(!gamepad1.left_bumper && !gamepad1.right_bumper && liftState != LiftState.MID) {
+        else if(!gamepad2.left_bumper && !gamepad2.right_bumper && liftState != LiftState.MID) {
             //calculate lift position such that they are on the same proportion
-            final int avgDelta = (int)((double)(leftLiftPosDelta + rightLiftPosDelta) / 2.0);
+            int avgDelta;
+            if(liftState == LiftState.RAISING) avgDelta = avgDelta = Range.clip((int)((double)(leftLiftPosDelta + rightLiftPosDelta) / 2.0) + 150, 0, LIFT_COUNTS);
+            else avgDelta = avgDelta = Range.clip((int)((double)(leftLiftPosDelta + rightLiftPosDelta) / 2.0), 0, LIFT_COUNTS);
             BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos + avgDelta);
             BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos + avgDelta);
+            BotHardware.Motor.liftLeft.motor.setPower(0.5);
+            BotHardware.Motor.liftRight.motor.setPower(0.5);
             liftState = LiftState.MID;
         }
 

@@ -8,28 +8,34 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
 
+import java.util.Arrays;
+
 /**
  * Created by Noah on 2/21/2018.
  */
 
 @Autonomous(name = "Color", group = "test")
 public class Color extends OpMode {
-    //APDS9960 dist;
-    //APDS9960.Config distConfig = new APDS9960.Config();
+    APDS9960 frontDist;
+    APDS9960.Config distConfig = new APDS9960.Config();
+    APDS9960.Config backDistConfig = new APDS9960.Config();
+    APDS9960 backDist;
     ColorSensor frontColor;
     ColorSensor backColor;
 
     public void init() {
-        //final I2cDeviceSynch device = hardwareMap.get(I2cDeviceSynch.class, "color");
-        //dist = new APDS9960(distConfig, device, true, APDS9960.Config.DistGain.GAIN_8X);
-        //dist.initDevice();
+        frontDist = new APDS9960(distConfig, hardwareMap.get(I2cDeviceSynch.class, "reddist"), true, APDS9960.Config.DistGain.GAIN_8X);
+        backDist = new APDS9960(distConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"), true, APDS9960.Config.DistGain.GAIN_8X);
+        frontDist.initDevice();
+        backDist.initDevice();
 
         frontColor = hardwareMap.get(ColorSensor.class, "fc");
         backColor = hardwareMap.get(ColorSensor.class, "bc");
     }
 
     public void start() {
-        //dist.startDevice();
+        frontDist.startDevice();
+        backDist.startDevice();
 
         frontColor.enableLed(true);
         backColor.enableLed(true);
@@ -43,6 +49,8 @@ public class Color extends OpMode {
         telemetry.addData("Back Red", backColor.red());
         telemetry.addData("Back Green", backColor.green());
         telemetry.addData("Back Blue", backColor.blue());
+        telemetry.addData("APDS Front", Arrays.toString(frontDist.getColor()));
+        telemetry.addData("APDS Back", Arrays.toString(backDist.getColor()));
     }
 
     public void stop() {

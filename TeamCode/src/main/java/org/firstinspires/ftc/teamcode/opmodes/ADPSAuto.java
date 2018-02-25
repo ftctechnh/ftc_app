@@ -184,11 +184,10 @@ public class ADPSAuto extends VuforiaBallLib {
             //init whacky stick code here
             AutoLib.Sequence whack = new AutoLib.LinearSequence();
 
-            if(color == BallColor.LeftBlue || color == BallColor.LeftRed) {
-                if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
-                else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
-                whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
-            }
+            if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
+            else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
+            whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
+
             //hmmmmm
             final AutoLib.Step whackLeft;
             if(red) whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed - BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
@@ -196,7 +195,7 @@ public class ADPSAuto extends VuforiaBallLib {
             final AutoLib.Step whackRight;
             if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
             else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
-            whack.add(new APDSBallFind(red, frontColor, backColor, color, whackLeft, whackRight, this));
+            whack.add(new APDSBallFind(red, frontColor, backColor, frontDist, backDist, color, whackLeft, whackRight, rear, this));
             /*
             if(red) {
                 if(color == BallColor.LeftBlue) whack.add(whackLeft);
@@ -212,6 +211,9 @@ public class ADPSAuto extends VuforiaBallLib {
                 whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
             }
             */
+
+            whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
+            whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
 
             final int mul = red ? -1 : 1;
 
@@ -550,19 +552,25 @@ public class ADPSAuto extends VuforiaBallLib {
         private final boolean red;
         private final ColorSensor frontColorSens;
         private final ColorSensor backColorSens;
+        private final APDS9960 frontColorRear;
+        private final APDS9960 backColorRear;
         private BallColor color;
         private final AutoLib.Step whackLeft;
         private final AutoLib.Step whackRight;
         private final OpMode mode;
+        private final boolean rear;
 
-        APDSBallFind(boolean red, ColorSensor frontColor, ColorSensor backColor, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight, OpMode mode) {
+        APDSBallFind(boolean red, ColorSensor frontColor, ColorSensor backColor, APDS9960 frontColorRear, APDS9960 backColorRear, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight, boolean rear, OpMode mode) {
             this.red = red;
             this.frontColorSens = frontColor;
             this.backColorSens = backColor;
+            this.frontColorRear = frontColorRear;
+            this.backColorRear = backColorRear;
             this.color = color;
             this.whackLeft = whackLeft;
             this.whackRight = whackRight;
             this.mode = mode;
+            this.rear = rear;
         }
 
         public boolean loop() {
@@ -575,22 +583,30 @@ public class ADPSAuto extends VuforiaBallLib {
                 int frontRed;
                 int frontBlue;
                 int count = 0;
-                do {
-                    backRed = backColorSens.red();
-                    backBlue = backColorSens.blue();
-                    frontRed = frontColorSens.red();
-                    frontBlue = frontColorSens.blue();
-                    count++;
-                } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
+                if(!rear) {
+                    do {
+                        backRed = backColorSens.red();
+                        backBlue = backColorSens.blue();
+                        frontRed = frontColorSens.red();
+                        frontBlue = frontColorSens.blue();
+                        count++;
+                    } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
+                }
+                else {
+                    do {
+                        final int[] backColor = backColorRear.getColor();
+                        final int[] frontColor = frontColorRear.getColor();
+                        backRed = backColor[1];
+                        backBlue = backColor[3];
+                        frontRed = frontColor[1];
+                        frontBlue = frontColor[3];
+                        count++;
+                    } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
+                }
                 if(backRed != 0 && backBlue != 0 && frontRed != 0 && frontBlue != 0) {
                     if(backRed < backBlue && frontRed > frontBlue) color = BallColor.LeftRed;
                     else if(backRed > backBlue && frontRed < frontBlue) color = BallColor.LeftBlue;
-                    else {
-                        mode.telemetry.addData("MUY SKETCH", "");
-                        if(backRed > frontRed) color = BallColor.LeftBlue;
-                        else if(backRed < frontRed) color = BallColor.LeftRed;
-                        else color = BallColor.Indeterminate;
-                    }
+                    else color = BallColor.Indeterminate;
                 }
                 else color = BallColor.Undefined;
             }
