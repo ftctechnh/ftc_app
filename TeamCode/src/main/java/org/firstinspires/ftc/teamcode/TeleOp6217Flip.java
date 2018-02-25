@@ -25,7 +25,7 @@ public class TeleOp6217Flip extends OpMode
     DcMotor motorBL;
     DcMotor motorConL;
     DcMotor motorConR;
-    DcMotor motorRocker1;
+    DcMotor motorFlip;
     Servo servoTapper;
     DcMotor motorSlide;
     Servo servoClaw;
@@ -68,8 +68,8 @@ public class TeleOp6217Flip extends OpMode
 
         // Rocker Motors
 
-        motorRocker1 = hardwareMap.dcMotor.get("motorRocker1");
-        motorRocker1.setDirection(DcMotor.Direction.FORWARD);
+        motorFlip = hardwareMap.dcMotor.get("motorFlip");
+        motorFlip.setDirection(DcMotor.Direction.FORWARD);
 
 
         // Tapper
@@ -114,8 +114,8 @@ public class TeleOp6217Flip extends OpMode
         float FRBLPower = 0.f;
         float posx = gamepad1.left_stick_x;
         float posy = gamepad1.left_stick_y;
-        float posyR = gamepad1.right_stick_y;
-        float posxR = gamepad1.right_stick_x;
+        float posyFlip = gamepad1.right_stick_y;
+        float posxFlip = gamepad1.right_stick_x;
         float LT = gamepad1.left_trigger;
         float RT = gamepad1.right_trigger;
         boolean a = gamepad1.a;
@@ -132,13 +132,13 @@ public class TeleOp6217Flip extends OpMode
 
         posx = Range.clip(posx, -1, 1);
         posy = Range.clip(posy, -1, 1);
-        posxR = Range.clip(posxR, -1, 1);
-        posyR = Range.clip(posyR, -1, 1);
+        posxFlip = Range.clip(posxFlip, -1, 1);
+        posyFlip = Range.clip(posyFlip, -1, 1);
 
         posx = (float) powerCurve(posx);
         posy = (float) powerCurve(posy);
-        posxR = (float) pCurve(posxR);
-        posyR = (float) pCurve(posyR);
+        posxFlip = (float) pCurve(posxFlip);
+        posyFlip = (float) pCurve(posyFlip);
 
 
         LT = (float) powerCurve(LT);
@@ -160,13 +160,13 @@ public class TeleOp6217Flip extends OpMode
 
         }
 
-        // Rocker
-        if (posyR <= -.2) {
-            motorRocker1.setPower(posyR);
-        } else if (posyR >= .2) {
-            motorRocker1.setPower(posyR);
+        // Rocker (for verticle flip, use negative power)
+        if (posyFlip <= -.2) {
+            motorFlip.setPower(posyFlip);
+        } else if (posyFlip >= .2) {
+            motorFlip.setPower(-posyFlip);
         } else {
-            motorRocker1.setPower(0);
+            motorFlip.setPower(0);
         }
 
         //  pivot left

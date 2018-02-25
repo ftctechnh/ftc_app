@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Josie on 2/23/2018.
  */
-@Autonomous(name="Preciousss: AutoRed1", group="Preciousss")
+@Autonomous(name="Preciousss: AutoRed2", group="Preciousss")
 
 public class autoRed2 extends superAuto {
 
@@ -29,7 +29,7 @@ public class autoRed2 extends superAuto {
 
         Wait(1);
 
-        Conveyor(3f);
+        //Conveyor(3f);
 
         Wait(1);
 
