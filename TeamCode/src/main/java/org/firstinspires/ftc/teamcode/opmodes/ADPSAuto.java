@@ -148,9 +148,6 @@ public class ADPSAuto extends VuforiaBallLib {
         frontUltra.initDevice();
         backUltra.initDevice();
 
-        frontColor.enableLed(false);
-        backColor.enableLed(false);
-
         backDist.startDevice();
         frontDist.startDevice();
         frontUltra.startDevice();
@@ -159,6 +156,9 @@ public class ADPSAuto extends VuforiaBallLib {
         bot.init();
         bot.start();
         bot.setDropPos(0.7);
+
+        frontColor.enableLed(false);
+        backColor.enableLed(false);
 
         telemetry.update();
 
@@ -174,6 +174,7 @@ public class ADPSAuto extends VuforiaBallLib {
         telemetry.addData("Front Blue", frontColor.blue());
         telemetry.addData("Back Red", backColor.red());
         telemetry.addData("Back Blue", backColor.blue());
+        telemetry.addData("Ball Color", getBallColor().toString());
     }
 
     public void start() {

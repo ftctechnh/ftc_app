@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
+import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
+import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +34,8 @@ public class Teleop extends OpMode {
     private boolean lastA = false;
     private boolean robotSlow = true;
     private boolean motorsSet = false;
+    ColorSensor frontColor;
+    ColorSensor backColor;
 
     private enum LiftState {
         RAISING,
@@ -51,7 +56,15 @@ public class Teleop extends OpMode {
         for(DcMotor motor : ray)
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-
+        try {
+            frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
+            backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
+            frontColor.enableLed(false);
+            backColor.enableLed(false);
+        }
+        catch (Exception e) {
+            //hmmmmm
+        }
     }
 
     public void start() {

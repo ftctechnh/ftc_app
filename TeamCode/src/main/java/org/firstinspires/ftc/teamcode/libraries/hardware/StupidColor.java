@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  */
 
 public class StupidColor extends AdafruitI2cColorSensor {
-    protected boolean LEDEn = false;
+    protected boolean LEDEn = true;
 
     public StupidColor(AdafruitI2cColorSensor sensor) {
         super(sensor.getDeviceClient());
