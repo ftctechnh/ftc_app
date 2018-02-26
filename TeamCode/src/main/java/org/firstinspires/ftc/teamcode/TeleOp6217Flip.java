@@ -73,7 +73,7 @@ public class TeleOp6217Flip extends OpMode
 
 
         // Tapper
-        servoTapper = hardwareMap.servo.get("tapper");
+        servoTapper = hardwareMap.servo.get("servoTapper");
 
         //Relic Arm
         motorSlide = hardwareMap.dcMotor.get("motorSlide");

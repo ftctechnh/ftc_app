@@ -36,6 +36,7 @@ abstract public class superAuto extends LinearOpMode {
     Servo servoClaw;
     Servo servoWrist;
     Servo servoIntake;
+    Servo servoFlicker;
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -77,7 +78,8 @@ abstract public class superAuto extends LinearOpMode {
         motorConL.setDirection(DcMotor.Direction.FORWARD);
         motorConR =hardwareMap.dcMotor.get("motorConR");
         motorConR.setDirection(DcMotor.Direction.FORWARD);
-        servoTapper =hardwareMap.servo.get("tapper");
+        servoTapper =hardwareMap.servo.get("servoTapper");
+        servoFlicker =hardwareMap.servo.get("servoFlicker");
         colorSensor =hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
         if(colorSensor instanceof SwitchableLight)
         {
