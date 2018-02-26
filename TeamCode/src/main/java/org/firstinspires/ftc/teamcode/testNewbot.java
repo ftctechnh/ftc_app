@@ -218,14 +218,14 @@ public class testNewbot extends LinearOpMode {
                 }
             }
 
-            if(gamepad2.left_bumper && gamepad2.a && getRuntime() < 7){
+            if (gamepad2.left_bumper && gamepad2.a && getRuntime() < 7) {
                 trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 sleep(100);
                 trayMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 trayMotor.setPower(.1);
             }
 
-            if(gamepad2.left_bumper && gamepad2.right_bumper && gamepad2.b && getRuntime() < 7){
+            if (gamepad2.left_bumper && gamepad2.right_bumper && gamepad2.b && getRuntime() < 7) {
                 trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 sleep(100);
                 trayMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -233,7 +233,7 @@ public class testNewbot extends LinearOpMode {
                 aPush = false;
             }
 
-/* Rotational Drive Control */
+        /* Rotational Drive Control */
             if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
                 double GRX = gamepad1.right_stick_x / bumperSlowest;

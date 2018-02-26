@@ -2,15 +2,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -23,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "Azul Right", group = "Bacon Autonomous!")
+@Autonomous(name = "Azul Left", group = "Bacon Autonomous!")
 //@Disabled
-public class AhoraSiWey extends LinearOpMode {
+public class AhoraSiazulleft extends LinearOpMode {
     /* Declare all devices since hardware class isn't working */
     DcMotor frontLeftMotor;
     DcMotor backLeftMotor;
@@ -57,8 +54,8 @@ public class AhoraSiWey extends LinearOpMode {
     double BackRightPower = 0;
     double BackLeftPower = 0;
 
-    String teamColorPosition = "BlueRight";
-//    String teamColorPosition = "BlueLeft";
+    //    String teamColorPosition = "BlueRight";
+    String teamColorPosition = "BlueLeft";
 //    String teamColorPosition = "RedRight";
 //    String teamColorPosition = "RedLeft";
 
@@ -230,10 +227,31 @@ public class AhoraSiWey extends LinearOpMode {
                 sleep(30);
                 break;
             case "BlueLeft":
+                /* Get off balance board & rotate 180*/
+                runToPositionWheels(2200, .7, "Forward");
+                sleep(1500);
+                runWithoutEncoder();
+                rotate(-88, .6);
+                /* Rotate properly for vuMark */
+                keyAlignment(teamColorPosition, vuMark);
+                sleep(30);
                 break;
             case "RedRight":
+                runToPositionWheels(2200, .7, "Backward");
+                sleep(1500);
+                /* Rotate properly for vuMark */
+                keyAlignment(teamColorPosition, vuMark);
+                sleep(30);
                 break;
             case "RedLeft":
+                /* Get off balance board & rotate 180*/
+                runToPositionWheels(2200, .7, "Backward");
+                sleep(1500);
+                runWithoutEncoder();
+                rotate(88, .6);
+                /* Rotate properly for vuMark */
+                keyAlignment(teamColorPosition, vuMark);
+                sleep(30);
                 break;
         }
     }
@@ -251,13 +269,13 @@ public class AhoraSiWey extends LinearOpMode {
                 vumarkSwitch(vuMark, 85, 50, 40, .5);
                 break;
             case "BlueLeft":
-                vumarkSwitch(vuMark, 85, 60, 50, .5);
+                vumarkSwitch(vuMark, -85, -60, -50, .5);
                 break;
             case "RedRight":
                 vumarkSwitch(vuMark, -85, -60, -50, .5);
                 break;
             case "RedLeft":
-                vumarkSwitch(vuMark, -85, -60, -50, .5);
+                vumarkSwitch(vuMark, -40, -50, -85, .5);
                 break;
 
         }
@@ -362,6 +380,7 @@ public class AhoraSiWey extends LinearOpMode {
         sleep(2000);
 
     }
+
 
     /* This resets the encoders on the wheels to RUN_WITHOUT_ENCODER */
     public void runWithoutEncoder() {
