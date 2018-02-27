@@ -243,7 +243,7 @@ public class Blue1 extends LinearOpMode{
             telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
-            AXISRIGHT(2500);
+            AXISRIGHT(2545);
             telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
@@ -259,7 +259,8 @@ public class Blue1 extends LinearOpMode{
 
             FORWARD(500, 0.5);
             BACKWARD(500,0.5);
-            FORWARD(450,0.5);
+            FORWARD(570,0.5);
+            BACKWARD(500,0.5);
         }
 
         if (gridColum == 3){
@@ -269,7 +270,7 @@ public class Blue1 extends LinearOpMode{
             telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
-            AXISRIGHT(2500);
+            AXISRIGHT(2450);
             telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
@@ -288,7 +289,8 @@ public class Blue1 extends LinearOpMode{
             //FOR RIGHT SIDE
             SWAYRIGHT(600);
 
-            FORWARD(450, 0.1);
+            FORWARD(570, 0.1);
+            BACKWARD(500,0.5);
         }
 
         if (gridColum == 1){
@@ -317,7 +319,8 @@ public class Blue1 extends LinearOpMode{
             //FOR LEFT SIDE
             SWAYLEFT(600);
 
-            FORWARD(450,0.5);
+            FORWARD(570,0.5);
+            BACKWARD(500,0.5);
         }
 
         //Degrees travllled at this point

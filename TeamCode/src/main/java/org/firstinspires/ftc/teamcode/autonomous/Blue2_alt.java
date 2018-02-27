@@ -8,8 +8,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_TO_POSITION;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
@@ -20,7 +24,7 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
  * Created by anshnanda on 16/02/18.
  */
 
-@Autonomous(name = "AlT - Blue side position 2", group = "auto")
+@Autonomous(name = "AlT - Blue2 right", group = "auto")
 
 public class Blue2_alt extends LinearOpMode {
 
@@ -144,22 +148,22 @@ public class Blue2_alt extends LinearOpMode {
 
         jewelArm.setPosition(jaUP);
         jewelKnock.setPosition(jkRIGHT);
-//
-//        /**<VUFORIA>*/
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-//        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
-//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-//        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-//        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-//        /**</VUFORIA>*/
+
+        /**<VUFORIA>*/
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        /**</VUFORIA>*/
 
         waitForStart();
 /**<>*/
-//        //VUFORIA
-//        relicTrackables.activate();
+        //VUFORIA
+        relicTrackables.activate();
 /**</>*/
         //      telemetry.addData("JA:", jewelArm.getPosition());
         //      telemetry.update();
@@ -202,32 +206,32 @@ public class Blue2_alt extends LinearOpMode {
         Thread.sleep(1000);
 
         /**<VUFORIA>*/
-//        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-//            telemetry.addData("VuMark", "%s visible", vuMark);
-//            if (vuMark == RelicRecoveryVuMark.CENTER){
-//                gridColum = 2;
-//            }
-//            else if (vuMark == RelicRecoveryVuMark.RIGHT){
-//                gridColum = 1;
-//            }
-//            else if (vuMark == RelicRecoveryVuMark.LEFT){
-//                gridColum = 3;
-//            }
-//            else {
-//                telemetry.addData("error", gridColum);
-//            }
-//        }
-//        else {
-//            telemetry.addData("VuMark", "not visible");
-//        }
-//        telemetry.update();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            if (vuMark == RelicRecoveryVuMark.CENTER){
+                gridColum = 2;
+            }
+            else if (vuMark == RelicRecoveryVuMark.RIGHT){
+                gridColum = 1;
+            }
+            else if (vuMark == RelicRecoveryVuMark.LEFT){
+                gridColum = 3;
+            }
+            else {
+                telemetry.addData("error", gridColum);
+            }
+        }
+        else {
+            telemetry.addData("VuMark", "not visible");
+        }
+        telemetry.update();
         /**</VUFORIA>*/
 
         //Grip the block and lift
         grabTopLeft.setPosition(0.3);
         grabTopRight.setPosition(0.4);
-        GRABUP(1500);
+        GRABUP(1100);
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
@@ -236,26 +240,81 @@ public class Blue2_alt extends LinearOpMode {
         telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
         telemetry.update();
 
+
+
+
+        if (gridColum == 2){
+            //CENTER
             BACKWARD(2750, 0.5);
 
             //Turn 180 degrees
-            AXISLEFT(2500);
+            AXISLEFT(2450);
 
-            BACKWARD(2700,0.3);
 
-            FORWARD(3350, 0.5);
+            FORWARD(1700, 0.5);
 
             AXISLEFT(2300);
 
-        //Move towards safezone
-        FORWARD(700, 0.5);
-        //Drop glyph
-        grabTopLeft.setPosition(0.4);
-        grabTopRight.setPosition(0.3);
+            //Move towards safezone
+            FORWARD(700, 0.5);
+            //Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
 
-        BACKWARD(700, 0.5);
-        FORWARD(850,0.5);
+            BACKWARD(700, 0.5);
+            FORWARD(850,0.5);
 
+            BACKWARD(600,0.5);
+
+        }
+
+        if (gridColum == 3){
+            //LEFT
+            BACKWARD(2750, 0.5);
+
+            //Turn 180 degrees
+            AXISLEFT(2425);
+
+
+            FORWARD( 800, 0.5);
+
+            AXISLEFT(2300);
+
+            //Move towards safezone
+            FORWARD(700, 0.5);
+            //Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
+
+            BACKWARD(700, 0.5);
+            FORWARD(850,0.5);
+
+            BACKWARD(600,0.5);
+        }
+
+        if (gridColum == 1){
+            //RIGHT
+            BACKWARD(2750, 0.5);
+
+            //Turn 180 degrees
+            AXISLEFT(2450);
+
+
+            FORWARD(2450, 0.5);
+
+            AXISLEFT(2300);
+
+            //Move towards safezone
+            FORWARD(700, 0.5);
+            //Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
+
+            BACKWARD(700, 0.5);
+            FORWARD(850,0.5);
+
+            BACKWARD(600,0.5);
+        }
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());

@@ -266,7 +266,8 @@ public class Red1 extends LinearOpMode{
                 FORWARD(500, 0.5);
                 BACKWARD(500);
 
-                FORWARD(500, 0.5);
+                FORWARD(570, 0.5);
+                BACKWARD(500);
             }
 
             if (gridColum == 1){
@@ -295,7 +296,8 @@ public class Red1 extends LinearOpMode{
                 //FOR RIGHT SIDE
                 SWAYLEFT(650);
 
-                FORWARD(450,0.5);
+                FORWARD(570,0.5);
+                BACKWARD(500);
             }
 
             if (gridColum == 3){
@@ -324,7 +326,8 @@ public class Red1 extends LinearOpMode{
                 //FOR LEFT SIDE
                 SWAYRIGHT(650);
 
-                FORWARD(450,0.5);
+                FORWARD(570,0.5);
+                BACKWARD(500);
             }
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());

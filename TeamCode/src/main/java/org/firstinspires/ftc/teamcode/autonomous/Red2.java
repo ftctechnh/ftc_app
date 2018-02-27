@@ -260,14 +260,15 @@ public class Red2 extends LinearOpMode{
             FORWARD(580, 0.5);
             BACKWARD(580);
 
-            FORWARD(500, 0.5);
+            FORWARD(625, 0.5);
+            BACKWARD(500);
 
         }
 
         if (gridColum == 1){
             FORWARD(2800, 0.5);
             //right
-            SWAYLEFT(1000);
+            SWAYLEFT(950);
 
             //Move towards safezone
             FORWARD(750, 0.5);
@@ -283,13 +284,17 @@ public class Red2 extends LinearOpMode{
 
             SWAYLEFT(600);
 
-            FORWARD(450, 0.5);
+            FORWARD(570, 0.5);
+            BACKWARD(500);
         }
 
         if (gridColum == 3){
-            FORWARD(2800, 0.5);
+            FORWARD(2700, 0.5);
             //left
-            SWAYLEFT(3100);
+            SWAYLEFT(2900);
+            STOP();
+
+            Thread.sleep(1000);
 
             //Move towards safezone
             FORWARD(750, 0.5);
@@ -305,7 +310,9 @@ public class Red2 extends LinearOpMode{
 
             SWAYRIGHT(600);
 
-            FORWARD(450, 0.5);
+            FORWARD(570, 0.5);
+            BACKWARD(500);
+
         }
 
         //Degrees travlled at this point
@@ -358,8 +365,8 @@ public class Red2 extends LinearOpMode{
             //wait till motors done doing its thing
         }
 
-        motorFrontRight.setPower(0);
         motorBackRight.setPower(0);
+        motorFrontRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
     }
@@ -393,10 +400,12 @@ public class Red2 extends LinearOpMode{
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
         }
+
+        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
-        motorBackRight.setPower(0);
+
     }
 
     public static void AXISLEFT(int degrees) {
@@ -611,6 +620,23 @@ public class Red2 extends LinearOpMode{
         motorBackRight.setPower(0);
     }
 
+    public static void STOP() {
+        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorBackLeft.setPower(0);
+        motorFrontRight.setPower(0);
+    }
+
     public static void SWAYLEFT(int degrees) {
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -640,10 +666,12 @@ public class Red2 extends LinearOpMode{
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
         }
+
+        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
-        motorBackRight.setPower(0);
+
 
     }
 
@@ -658,10 +686,10 @@ public class Red2 extends LinearOpMode{
         motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        motorFrontLeft.setPower(0.7);
-        motorBackLeft.setPower(-0.7);
-        motorFrontRight.setPower(-0.7);
-        motorBackRight.setPower(0.7);
+        motorFrontLeft.setPower(1);
+        motorBackLeft.setPower(-1);
+        motorFrontRight.setPower(-1);
+        motorBackRight.setPower(1);
 
         motorFrontLeft.setTargetPosition(degrees);
         motorBackLeft.setTargetPosition(-degrees);
@@ -676,11 +704,16 @@ public class Red2 extends LinearOpMode{
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
         }
+
+        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
-        motorBackRight.setPower(0);
+
     }
+
+
+
     public static void GRABUP(int degrees) {
         grabDC.setMode(STOP_AND_RESET_ENCODER);
         grabDC.setMode(RUN_USING_ENCODER);

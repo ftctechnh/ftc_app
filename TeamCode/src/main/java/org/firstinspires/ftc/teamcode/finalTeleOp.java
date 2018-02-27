@@ -147,15 +147,6 @@ public class finalTeleOp extends LinearOpMode{
             }
 
 
-
-
-
-
-
-
-
-
-
             //Gamepad 2
             if (mode == 1) {
                 //Code for grabber only mapping here
@@ -251,7 +242,7 @@ public class finalTeleOp extends LinearOpMode{
                     relicArmPosition -= relicArmDelta;
                 }
                 if (gamepad2.left_stick_button) {
-                    relicArmPosition = 0.25;
+                    relicArmPosition = 0.27;
                 }
                 relicArmPosition = Range.clip(relicArmPosition, 0, 0.9);
                 relicArm.setPosition(relicArmPosition);
@@ -267,7 +258,7 @@ public class finalTeleOp extends LinearOpMode{
                     relicGrabPosition -= relicGrabDelta;
                 }
                 if (gamepad2.right_stick_button) {
-                    relicGrabPosition = 0.7;
+                    relicGrabPosition = 0.38;
                 }
                 relicGrabPosition = Range.clip(relicGrabPosition, 0, 1);
                 relicGrab.setPosition(relicGrabPosition);
