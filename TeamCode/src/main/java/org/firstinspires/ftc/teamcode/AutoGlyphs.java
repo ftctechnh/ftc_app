@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 
 public class AutoGlyphs extends GlyphDetector {
+    static final double X_HIGH_POS = 240; //Austin test this number with GlyphOpMode. It puts a number on telemetry with the name "Glyph X Pos". This should be the highest possible value it outputs.
+    static final double X_CENTER = X_HIGH_POS / 2;
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
         super();
         init(hardwareMap.appContext, CameraViewDisplay.getInstance());
@@ -22,7 +24,13 @@ public class AutoGlyphs extends GlyphDetector {
     public void enable() {
         enable();
     }
-    public void thing() {
-
+    public void disable() {
+      disable();
+    }
+    public double getxOffset() {
+        return getChosenGlyphOffset() - X_CENTER;
+    }
+    public double getYOffSet() {
+        return getChosenGlyphPosition().x;
     }
 }

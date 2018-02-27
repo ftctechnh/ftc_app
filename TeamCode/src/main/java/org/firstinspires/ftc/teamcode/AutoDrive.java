@@ -46,6 +46,7 @@ public class AutoDrive {
     static final double DISTANCE_TO_FAR_COLUMN = 32.75;
     static final double DISTANCE_TO_CENTER_COLUMN = 25.5;
     static final double DISTANCE_TO_CLOSE_COLUMN = 17.5;
+    static final double DISTANCE_TO_CENTER = 36;
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");

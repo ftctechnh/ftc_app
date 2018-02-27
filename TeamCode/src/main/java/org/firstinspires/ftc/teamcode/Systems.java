@@ -4,6 +4,8 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 1/3/2018.
  */
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -15,17 +17,20 @@ public class Systems {
     private BeehiveVuforia vuforia;
     private JewelArm JewelArm;
     private Telemetry telemetry;
+    private AutoGlyphs glyphDetector;
+
     public Systems(DriveMecanum drive, ForkLift ForkLift, RelicClaw RelicClaw) {
         this.DriveMecanum = drive;
         this.ForkLift = ForkLift;
         this.RelicClaw = RelicClaw;
     }
-    public Systems(AutoDrive drive, ForkLift ForkLift, JewelArm JewelArm, BeehiveVuforia vuforia, Telemetry telemetry) {
+    public Systems(AutoDrive drive, ForkLift ForkLift, JewelArm JewelArm, BeehiveVuforia vuforia, HardwareMap hardwareMap, Telemetry telemetry) {
         this.AutoDrive = drive;
         this.ForkLift = ForkLift;
         this.JewelArm = JewelArm;
         this.vuforia = vuforia;
         this.telemetry = telemetry;
+        this.glyphDetector = new AutoGlyphs(hardwareMap, telemetry);
     }
     void pushInBlock() {
         ForkLift.openClaw();
@@ -61,8 +66,11 @@ public class Systems {
         RelicClaw.moveMotor(0);
     }
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
+        glyphDetector.enable();
         ForkLift.moveMotor(1, 1000);
         ForkLift.closeClaw();
+        //double xOffSet = glyphDetector.getXOffSet();
+
 
     }
 }

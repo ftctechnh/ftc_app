@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import java.io.IOException;
 
 
-//@TeleOp(name="DogeCV Glyph Detector", group="DogeCV")
+@TeleOp(name="DogeCV Glyph Detector", group="DogeCV")
 public class GlyphOpMode extends OpMode
 {
     // Declare OpMode members.
@@ -55,7 +55,7 @@ public class GlyphOpMode extends OpMode
 
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("Glyph Pos X", glyphDetector.getChosenGlyphOffset());
-        telemetry.addData("Glyph Pos Offest", glyphDetector.getChosenGlyphPosition().toString());
+        telemetry.addData("Glyph Pos Offset", glyphDetector.getChosenGlyphPosition().toString());
 
 
     }
