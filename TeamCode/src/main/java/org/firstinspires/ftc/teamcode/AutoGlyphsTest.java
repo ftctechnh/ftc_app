@@ -13,8 +13,8 @@ public class AutoGlyphsTest extends OpMode{
         cv.enable();
     }
     public void loop() {
-        telemetry.addData("X pos", cv.getxOffset());
-        telemetry.addData("Y Pos", cv.getYOffSet());
+        telemetry.addData("X pos", cv.getXOffset());
+        telemetry.addData("Y Pos", cv.getYOffset());
         telemetry.update();
     }
 
