@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.CameraCalibration;
 import com.vuforia.CameraDevice;
@@ -72,6 +75,9 @@ public abstract class VuforiaBallLib extends DrawLib {
 
     protected boolean displayData = false;
 
+    //DOGE CV stuff
+    protected JewelDetector jewelDetector = new JewelDetector();
+
     //load vuforia libraries and configure
     protected void initVuforia(boolean displayData) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -115,6 +121,19 @@ public abstract class VuforiaBallLib extends DrawLib {
 
         point = new Vec3F[] { botLeft, botRight, botFrontRight, botFrontLeft, topLeft, topRight, topFrontRight, topFrontLeft,
                 ballLeftTop, ballLeftBottom, ballRightTop, ballRightBottom };
+
+        // more DogeCV detector stuff
+        jewelDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+
+        //Jewel Detector Settings
+        jewelDetector.areaWeight = 0.02;
+        jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
+        //jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
+        jewelDetector.debugContours = true;
+        jewelDetector.maxDiffrence = 15;
+        jewelDetector.ratioWeight = 15;
+        jewelDetector.minArea = 700;
+        jewelDetector.speed = JewelDetector.JewelDetectionSpeed.VERY_SLOW;
 
         //setup view
         if(displayData) super.initDraw();
@@ -210,6 +229,21 @@ public abstract class VuforiaBallLib extends DrawLib {
         }
     }
 
+    protected BallColor getCVBallColor() {
+        //get the frame
+        try {
+            Mat in = getFrame();
+            //feed the frame into the DogeCV ball detection algorithm
+            Mat out = jewelDetector.processFrame(in, null);
+            if(displayData) drawFrame(out);
+            return BallColor.fromJewelOrder(jewelDetector.getCurrentOrder());
+        }
+        catch (Exception e) {
+            //hmmmm
+            return BallColor.Undefined;
+        }
+    }
+
     protected RelicRecoveryVuMark getLastVuMark() {
         return this.tempMark;
     }
@@ -278,7 +312,14 @@ public abstract class VuforiaBallLib extends DrawLib {
         LeftRed,
         LeftBlue,
         Indeterminate,
-        Undefined
+        Undefined;
+
+        static BallColor fromJewelOrder(JewelDetector.JewelOrder order) {
+            if(order == JewelDetector.JewelOrder.BLUE_RED) return BallColor.LeftBlue;
+            if(order == JewelDetector.JewelOrder.RED_BLUE) return BallColor.LeftRed;
+            if(order == JewelDetector.JewelOrder.UNKNOWN) return BallColor.Indeterminate;
+            else return BallColor.Undefined;
+        }
     }
 
     /**

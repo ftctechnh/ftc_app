@@ -32,8 +32,6 @@ public class JewelDetector extends OpenCVPipeline {
     }
 
 
-
-
     public enum JewelDetectionMode {
         PERFECT_AREA, MAX_AREA
     }
@@ -75,10 +73,10 @@ public class JewelDetector extends OpenCVPipeline {
     public Mat processFrame(Mat rgba, Mat gray) {
 
         Size initSize= rgba.size();
-        newSize  = new Size(initSize.width * downScaleFactor, initSize.height * downScaleFactor);
+        newSize  = new Size(initSize.width * downScaleFactor, (initSize.height / 2) * downScaleFactor); //cut mat in half
         rgba.copyTo(workingMat);
 
-        Imgproc.resize(workingMat, workingMat,newSize);
+        Imgproc.resize(workingMat.submat(0, workingMat.rows() / 2, 0, workingMat.cols()), workingMat, newSize);
 
         if(rotateMat){
             Mat tempBefore = workingMat.t();
