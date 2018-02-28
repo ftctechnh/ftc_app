@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.CameraDirection;
 import com.disnodeteam.dogecv.detectors.GlyphDetector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -19,11 +18,15 @@ public class AutoGlyphs extends GlyphDetector {
     static final double Y_CENTER = Y_HIGH_POS / 2;
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
+        this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_SLOW, CameraDirection.FRONT);
+    }
+
+    public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {
         super();
-        init(hardwareMap.appContext, CameraViewDisplay.getInstance(), CameraDirection.FRONT);
-        minScore = 1;
-        downScaleFactor = 0.3;
-        speed = GlyphDetector.GlyphDetectionSpeed.SLOW;
+        init(hardwareMap.appContext, CameraViewDisplay.getInstance(), cameraDirection.value);
+        this.minScore = 1;
+        this.downScaleFactor = 0.3;
+        this.speed = speed;
     }
 
     public void enable() {
