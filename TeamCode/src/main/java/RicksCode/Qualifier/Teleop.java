@@ -1,14 +1,12 @@
-package org.firstinspires.ftc.teamcode.Qualifier;
+package RicksCode.Qualifier;
 
 
 import android.content.Context;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.RobotLog;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,19 +14,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import RicksCode.Bill_Adapted.ConfigFileHandler;
-
-import static java.lang.Math.PI;
 import static java.lang.Math.abs;
-import static java.lang.Math.signum;
-import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.FAST;
-import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.MID;
-import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.SpeedSetting.SLOW;
-import static java.lang.Math.atan;
+import static RicksCode.Qualifier.DriveTrain.SpeedSetting.FAST;
+import static RicksCode.Qualifier.DriveTrain.SpeedSetting.MID;
+import static RicksCode.Qualifier.DriveTrain.SpeedSetting.SLOW;
 
 
 @TeleOp(name = "zMoo", group = "8045")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class Teleop extends OpMode {
 
     RobotRR gromit;
@@ -212,13 +205,15 @@ public class Teleop extends OpMode {
             glyphSensedDelay = 0;
              if (blocks == 0) {
                 gromit.glyphTrain.glyphliftupper("top");
-
+                 stall = false;
                  //gromit.glyphTrain.glyphclamp("open");
                 blocks = 1;
             } else {
                  gromit.glyphTrain.stopGlyphMotors();
                  //liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
                  glyphLiftismoving = true;
+
+
                 gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
             }
         }
@@ -344,7 +339,7 @@ public class Teleop extends OpMode {
                     waitforglyph = true;
                 }
                 else{
-                   // stall = true;
+                    stall = true;
                 }
             } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
                 if (!gamepad1.dpad_right && !gamepad2.dpad_right) {

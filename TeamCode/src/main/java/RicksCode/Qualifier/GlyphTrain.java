@@ -1,16 +1,9 @@
-package org.firstinspires.ftc.teamcode.Qualifier;
+package RicksCode.Qualifier;
 
-import android.app.ListFragment;
-
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import static com.sun.tools.doclint.Entity.pi;
 
 
 public class GlyphTrain {

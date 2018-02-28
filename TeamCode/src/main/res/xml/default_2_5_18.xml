@@ -10,6 +10,7 @@
             <Servo name="left_lower" port="1" />
             <Servo name="right_lower" port="2" />
             <Servo name="glyph_kicker" port="3" />
+            <Servo name="glyph_kicker2" port="4" />
             <AnalogInput name="sharpirsensor" port="1"/>
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <DigitalDevice name="glyphfrontIR" port="0"/>

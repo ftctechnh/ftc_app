@@ -1,9 +1,7 @@
-package org.firstinspires.ftc.teamcode.Qualifier;
+package RicksCode.Qualifier;
 
 import android.graphics.Bitmap;
 
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -53,7 +51,7 @@ public class JewelArm {
     }
 
     public void jewelflickerBack() {
-        jewelFlickerServo.setPosition(0.0); //was 0.3
+        jewelFlickerServo.setPosition(0.1); //was 0
     }
 
     public void jewelflickerCenter() {
@@ -61,7 +59,7 @@ public class JewelArm {
     }
 
     public void jewelflickerForward() {
-        jewelFlickerServo.setPosition(1.0);//.6
+        jewelFlickerServo.setPosition(0.6);
     } //was 1.0
 
     public void solveJewelPuzzle(boolean teamIsRED) {
