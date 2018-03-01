@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import android.graphics.Bitmap;
+import android.hardware.camera2.CameraDevice;
 import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -47,6 +48,7 @@ public class CVBallDemo extends VuforiaBallLib {
                 e.printStackTrace();
             }
         }
+        com.vuforia.CameraDevice.getInstance().setFlashTorchMode(true);
     }
 
     @Override
@@ -59,5 +61,6 @@ public class CVBallDemo extends VuforiaBallLib {
     @Override
     public void stop() {
         super.stopVuforia();
+        com.vuforia.CameraDevice.getInstance().setFlashTorchMode(true);
     }
 }

@@ -34,7 +34,8 @@ public class BotHardware {
         frontLeft("fl", false),
         backLeft("bl", false),
         liftLeft("ll", false),
-        liftRight("lr", true);
+        liftRight("lr", true),
+        green("g", false);
 
         private final String name;
         private final boolean reverse;
@@ -276,6 +277,10 @@ public class BotHardware {
     public void setSuckRight(double power) {
         ContiniuosServoE.SuckRight.servo.setPower(power);
         ContiniuosServoE.FrontSuckRight.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
+    }
+
+    public void setLights(double power) {
+        Motor.green.motor.setPower(Math.abs(power));
     }
 
 

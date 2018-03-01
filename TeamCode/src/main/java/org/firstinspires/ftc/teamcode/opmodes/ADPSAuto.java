@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.opmodes.demo.Color;
 import org.firstinspires.ftc.teamcode.opmodes.diagnostic.UltraHoneDebug;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Noah on 12/20/2017.
@@ -35,6 +36,9 @@ import java.util.Arrays;
 @Autonomous(name="Blue Front Auto", group="test")
 public class ADPSAuto extends VuforiaBallLib {
     private static final double BALL_WAIT_SEC = 2.0;
+    private static final int UNDERGLOW_PULSE_WAIT = 50;
+    private static final double UNDERGLOW_INC = 0.01;
+    private static final double UNDERGLOW_MAX = 0.5;
 
     protected APDS9960 backDist; //formerly redDist
     protected final APDS9960.Config backConfig = new APDS9960.Config();
@@ -50,6 +54,7 @@ public class ADPSAuto extends VuforiaBallLib {
     private BotHardware bot = new BotHardware(this);
 
     private BallColor color = BallColor.Undefined;
+    private BallColor altColor = BallColor.Undefined;
     private double startLoop = 0;
     private boolean firstLoop = false;
 
@@ -73,6 +78,10 @@ public class ADPSAuto extends VuforiaBallLib {
 
     private static final double MM_PER_ENCODE = 13.298;
     private static final int APDS_DIST = 60;
+
+    private boolean glowInc = true;
+    private double glowPower = 0.0;
+    private long glowLastTime;
 
     private enum AutoPath {
         RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, 1, 125, 370, 32),
@@ -184,7 +193,11 @@ public class ADPSAuto extends VuforiaBallLib {
     public void loop() {
         if(startLoop == 0) startLoop = getRuntime();
         if(getRuntime() - startLoop >= BALL_WAIT_SEC / 2 && !firstLoop) CameraDevice.getInstance().setFlashTorchMode(true);
-        if(getRuntime() - startLoop < BALL_WAIT_SEC && (color == BallColor.Indeterminate || color == BallColor.Undefined)) color = getBallColor();
+        if(getRuntime() - startLoop < BALL_WAIT_SEC && (color == BallColor.Indeterminate || color == BallColor.Undefined)) {
+            color = getBallColor();
+            altColor = getCVBallColor();
+
+        }
         else if(!firstLoop){
             CameraDevice.getInstance().setFlashTorchMode(false);
             //init whacky stick code here
@@ -201,22 +214,7 @@ public class ADPSAuto extends VuforiaBallLib {
             final AutoLib.Step whackRight;
             if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
             else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
-            whack.add(new APDSBallFind(red, frontColor, backColor, frontDist, backDist, color, whackLeft, whackRight, rear, this));
-            /*
-            if(red) {
-                if(color == BallColor.LeftBlue) whack.add(whackLeft);
-                else if(color == BallColor.LeftRed) whack.add(whackRight);
-            }
-            else {
-                if(color == BallColor.LeftBlue) whack.add(whackRight);
-                else if(color == BallColor.LeftRed) whack.add(whackLeft);
-            }
-
-            if(color == BallColor.LeftRed || color == BallColor.LeftBlue) {
-                whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
-                whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
-            }
-            */
+            whack.add(new APDSBallFind(red, frontColor, backColor, frontDist, backDist, (color != BallColor.Indeterminate && color != BallColor.Undefined) ? color : altColor, whackLeft, whackRight, rear, this));
 
             whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
@@ -287,6 +285,25 @@ public class ADPSAuto extends VuforiaBallLib {
 
         try {
             if(firstLoop && mSeq.loop()) requestOpModeStop();
+            //underglow pulse
+            /*
+            long time = System.currentTimeMillis();
+            if(time - glowLastTime >= UNDERGLOW_PULSE_WAIT) {
+                glowLastTime = time;
+                if(glowInc) glowPower += UNDERGLOW_INC;
+                else glowPower -= UNDERGLOW_INC;
+                if(glowPower >= UNDERGLOW_MAX) {
+                    glowInc = false;
+                    glowPower = UNDERGLOW_MAX;
+                }
+                else if(glowPower <= 0) {
+                    glowInc = true;
+                    glowPower = 0;
+                }
+                bot.setLights(glowPower);
+            }
+            */
+
         }
         catch (Exception e) {
             backDist.stopDevice();

@@ -134,6 +134,7 @@ public abstract class VuforiaBallLib extends DrawLib {
         jewelDetector.ratioWeight = 15;
         jewelDetector.minArea = 700;
         jewelDetector.speed = JewelDetector.JewelDetectionSpeed.VERY_SLOW;
+        //jewelDetector.rotateMat = true;
 
         //setup view
         if(displayData) super.initDraw();
@@ -315,8 +316,8 @@ public abstract class VuforiaBallLib extends DrawLib {
         Undefined;
 
         static BallColor fromJewelOrder(JewelDetector.JewelOrder order) {
-            if(order == JewelDetector.JewelOrder.BLUE_RED) return BallColor.LeftBlue;
-            if(order == JewelDetector.JewelOrder.RED_BLUE) return BallColor.LeftRed;
+            if(order == JewelDetector.JewelOrder.RED_BLUE) return BallColor.LeftBlue;
+            if(order == JewelDetector.JewelOrder.BLUE_RED) return BallColor.LeftRed;
             if(order == JewelDetector.JewelOrder.UNKNOWN) return BallColor.Indeterminate;
             else return BallColor.Undefined;
         }

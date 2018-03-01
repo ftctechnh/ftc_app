@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name="Teleop")
 public class Teleop extends OpMode {
     private static final float slowFactor = 0.5f;
-    private static final float fastFactor = 0.75f;
+    private static final float fastFactor = 0.6f;
     private static final double SERVO_INC_SHAKE = 0.1;
     private static final double SERVO_INC_MAX = 0.02;
     private static final double SERVO_INC_MIN = 0.001;
@@ -29,6 +29,9 @@ public class Teleop extends OpMode {
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
+    private static final double BUCKET_FLAT = 0.75;
+    //private static final int BUCKET_LIFT_COUNTS = 50;
+    //private static final int INTAKE_LIFT_COUNTS = 1200;
 
     BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
@@ -50,6 +53,9 @@ public class Teleop extends OpMode {
     private boolean servoSet = false;
     private double lastTime = 0;
 
+    private boolean dropBool = false;
+    private boolean frontBool = false;
+
     public void init() {
         bot.init();
         DcMotor[] ray = bot.getMotorRay();
@@ -65,6 +71,7 @@ public class Teleop extends OpMode {
         catch (Exception e) {
             //hmmmmm
         }
+        bot.setLights(0.5);
     }
 
     public void start() {
@@ -90,7 +97,7 @@ public class Teleop extends OpMode {
         if(gamepad1.a && !lastA) robotSlow = !robotSlow;
         lastA = gamepad1.a;
 
-        if(gamepad1.b || gamepad2.b) bot.setDropPos(0.7);
+        if(gamepad1.b || gamepad2.b) bot.setDropPos(BUCKET_FLAT);
 
         if(gamepad1.left_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() - SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
         else if(gamepad1.right_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
@@ -121,6 +128,26 @@ public class Teleop extends OpMode {
             BotHardware.Motor.liftRight.motor.setPower(0.5);
             liftState = LiftState.MID;
         }
+
+        /*
+        if(leftLiftPosDelta < INTAKE_LIFT_COUNTS && rightLiftPosDelta < INTAKE_LIFT_COUNTS && !frontBool) {
+            bot.setFrontDrop(BotHardware.ServoE.frontDropDown);
+            frontBool = true;
+        }
+        else if(leftLiftPosDelta > INTAKE_LIFT_COUNTS && rightLiftPosDelta > INTAKE_LIFT_COUNTS && frontBool) {
+            bot.setFrontDrop(BotHardware.ServoE.frontDropUp);
+            frontBool = false;
+        }
+
+        if(leftLiftPosDelta < BUCKET_LIFT_COUNTS && rightLiftPosDelta < BUCKET_LIFT_COUNTS && !dropBool) {
+            bot.setDropPos(BotHardware.ServoE.backDropUp);
+            dropBool = true;
+        }
+        else if(leftLiftPosDelta > BUCKET_LIFT_COUNTS && rightLiftPosDelta > BUCKET_LIFT_COUNTS && dropBool) {
+            bot.setDropPos(BUCKET_FLAT);
+            dropBool = false;
+        }
+        */
 
         if(gamepad1.left_trigger > 0)
             bot.setDropPos(Range.clip(bot.getDropPos() + Range.scale(gamepad1.left_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
