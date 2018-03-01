@@ -31,19 +31,19 @@ public class AutoGlyphs extends GlyphDetector {
     }
 
     public void enable() {
-        enable();
+        super.enable();
     }
 
     public void disable() {
-        disable();
+        super.disable();
     }
 
     public double getXOffset() {
-        return getChosenGlyphOffset() - X_CENTER;
+        return super.getChosenGlyphOffset() - X_CENTER;
     }
 
     public double getYOffset() {
-        return getChosenGlyphPosition().x - Y_CENTER;
+        return super.getChosenGlyphPosition().x - Y_CENTER;
     }
 
     public Point getPoint() {

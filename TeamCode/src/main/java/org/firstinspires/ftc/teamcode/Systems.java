@@ -67,10 +67,9 @@ public class Systems {
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
         setUpMultiGlyph();
         double xOffSet = glyphDetector.getXOffset();
-
-
-
+        telemetry.addData("xOffSet", xOffSet);
     }
+
     public void setUpMultiGlyph() {
         ForkLift.closeAllTheWay();
         phone.faceFront();

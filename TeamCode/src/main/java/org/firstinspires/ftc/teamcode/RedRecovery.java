@@ -52,7 +52,7 @@ public class RedRecovery extends LinearOpMode {
         drive.leftGyro(drive.SPIN_TO_CENTER_SPEED, 90);
         ForkLift.openClaw();
         ForkLift.moveUntilDown();
-        sleep(1000);
+        Systems.getMoreGlyphs(-90, CryptoboxColumn.CENTER);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 }
