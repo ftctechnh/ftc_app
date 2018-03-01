@@ -4,8 +4,6 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 11/26/2017.
  */
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 //@Autonomous(name = "AutoTest", group = "Autonomous")
@@ -14,7 +12,7 @@ public class TestAuto extends LinearOpMode {
 	ForkLift ForkLift;
 	RelicClaw RelicClaw;
 	Systems Systems;
-	BeehiveVuforia vuforia;
+	Phone phone;
 	JewelArm JewelArm;
 	public void runOpMode() throws InterruptedException {
 		telemetry.addLine("DO NOT PRESS PLAY YET");
@@ -23,8 +21,8 @@ public class TestAuto extends LinearOpMode {
 		drive.init(); //Calibrates gyro
 		JewelArm = new JewelArm(hardwareMap, telemetry);
 		ForkLift = new ForkLift(hardwareMap, telemetry);
-		vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-		Systems = new Systems(drive, ForkLift, JewelArm, vuforia, hardwareMap, telemetry);
+		phone = new Phone(hardwareMap, telemetry);
+		Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
 		telemetry.addLine("NOW YOU CAN PRESS PLAY");
 		telemetry.update();
 		waitForStart();

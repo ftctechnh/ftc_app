@@ -5,6 +5,7 @@ import com.disnodeteam.dogecv.detectors.GlyphDetector;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.opencv.core.Point;
 
 /**
@@ -18,12 +19,12 @@ public class AutoGlyphs extends GlyphDetector {
     static final double Y_CENTER = Y_HIGH_POS / 2;
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
-        this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_SLOW, CameraDirection.FRONT);
+        this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_SLOW, CameraDirection.BACK);
     }
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {
         super();
-        init(hardwareMap.appContext, CameraViewDisplay.getInstance(), cameraDirection.value);
+        init(hardwareMap.appContext, CameraViewDisplay.getInstance(), cameraDirection.direction);
         this.minScore = 1;
         this.downScaleFactor = 0.3;
         this.speed = speed;

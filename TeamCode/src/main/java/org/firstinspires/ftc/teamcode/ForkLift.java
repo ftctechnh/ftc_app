@@ -20,9 +20,10 @@ public class ForkLift {
     private DigitalChannel bottomButton;
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    private final double CLAW_CLOSE_POSITION = 0.55;
+    private final double CLAW_GRAB_POSITION = 0.55;
     private final double CLAW_PUSH_IN_BLOCK_POSITION = 0.85;
     private final double CLAW_OPEN_POSITION = 0;
+    private final double CLAW_CLOSE_POSITION = 1;
 
     public ForkLift(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
@@ -53,7 +54,7 @@ public class ForkLift {
     }
 
     public void closeClaw() {
-        setClawPosition(CLAW_CLOSE_POSITION);
+        setClawPosition(CLAW_GRAB_POSITION);
     }
 
     public void openClaw() {
@@ -117,4 +118,5 @@ public class ForkLift {
     }
 
     private void sleep(long time) {try {Thread.sleep(time);} catch (InterruptedException e) {}}
+    public void closeAllTheWay() {setClawPosition(CLAW_CLOSE_POSITION);}
 }

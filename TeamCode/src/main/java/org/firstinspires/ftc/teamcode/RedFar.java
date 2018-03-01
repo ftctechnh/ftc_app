@@ -14,7 +14,7 @@ public class RedFar extends LinearOpMode {
     private AutoDrive drive;
     private JewelArm JewelArm;
     private ForkLift ForkLift;
-    private BeehiveVuforia vuforia;
+    private Phone phone;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
 
@@ -25,15 +25,15 @@ public class RedFar extends LinearOpMode {
         drive.init(); //Calibrates gyro
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
-        vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, JewelArm, vuforia, hardwareMap, telemetry);
+        phone = new Phone(hardwareMap, telemetry);
+        Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
         JewelArm.findJewel(Color.RED);
-        pictograph = vuforia.getMark();
+        pictograph = phone.getMark();
         drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED,  drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR);
         ForkLift.moveMotor(-1,250);
         boolean isDistanceSane = 12 < drive.getDistance() && drive.getDistance() < 19;

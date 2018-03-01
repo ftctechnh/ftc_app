@@ -14,7 +14,7 @@ public class BlueRecovery extends LinearOpMode {
     private AutoDrive drive;
     private JewelArm JewelArm;
     private ForkLift ForkLift;
-    private BeehiveVuforia vuforia;
+    private Phone phone;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
     private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY = 36.5;
@@ -26,15 +26,15 @@ public class BlueRecovery extends LinearOpMode {
         drive.init(); //Calibrates gyro
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
-        vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, JewelArm, vuforia, hardwareMap, telemetry);
+        phone = new Phone(hardwareMap, telemetry);
+        Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
         JewelArm.findJewel(Color.BLUE);
-        pictograph = vuforia.getMark();
+        pictograph = phone.getMark();
         if (pictograph == RelicRecoveryVuMark.LEFT) {
             drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY - drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
         }

@@ -14,7 +14,7 @@ public class BlueFar extends LinearOpMode {
     private AutoDrive drive;
     private JewelArm JewelArm;
     private ForkLift ForkLift;
-    private BeehiveVuforia vuforia;
+    private Phone phone;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
     private Systems Systems;
     private final double DISTANCE_OFFSET = 3;
@@ -26,15 +26,15 @@ public class BlueFar extends LinearOpMode {
         drive.init(); //Calibrates gyro
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
-        vuforia = new BeehiveVuforia(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, JewelArm, vuforia, hardwareMap, telemetry);
+        phone = new Phone(hardwareMap, telemetry);
+        Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
         telemetry.addLine("NOW YOU CAN PRESS PLAY");
         telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
         JewelArm.findJewel(Color.BLUE);
-        pictograph = vuforia.getMark();
+        pictograph = phone.getMark();
         drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, drive.DRIVE_TO_CYRPTOBOX_DISTANCE_FAR + 2);
         boolean isDistanceSane = 12 < drive.getDistance() && drive.getDistance() < 19;
         if (pictograph == RelicRecoveryVuMark.LEFT) {
