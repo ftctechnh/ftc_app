@@ -28,10 +28,10 @@ public class GlyphOpMode extends OpMode
     public void init() {
         telemetry.addData("Status", "Initialized");
         glyphDetector = new GlyphDetector();
-        glyphDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), CameraDirection.FRONT.value);
+        glyphDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), 0);
         glyphDetector.minScore = 1;
         glyphDetector.downScaleFactor = 0.3;
-        glyphDetector.speed = GlyphDetector.GlyphDetectionSpeed.SLOW;
+        glyphDetector.speed = GlyphDetector.GlyphDetectionSpeed.VERY_SLOW;
         glyphDetector.enable();
 
 

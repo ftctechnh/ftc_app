@@ -68,12 +68,12 @@ public class Systems {
         setUpMultiGlyph();
         double xOffSet = glyphDetector.getXOffset();
         telemetry.addData("xOffSet", xOffSet);
+        telemetry.update();
     }
 
     public void setUpMultiGlyph() {
         ForkLift.closeAllTheWay();
         phone.faceFront();
         glyphDetector.enable();
-
     }
 }
