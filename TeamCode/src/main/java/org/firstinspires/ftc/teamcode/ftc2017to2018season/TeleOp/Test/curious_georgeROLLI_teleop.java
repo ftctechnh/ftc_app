@@ -1,23 +1,23 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
-
-import android.transition.Slide;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 
 /**
  * Created by Team Inspiration on 1/21/18.
  */
-@TeleOp(name = "Curious George")
+@TeleOp(name = "Curious George Roll-y collector")
 @Disabled
-public class curious_george_teleop extends OpMode {
+public class curious_georgeROLLI_teleop extends OpMode {
 
 
     /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -37,10 +37,16 @@ public class curious_george_teleop extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
-    Servo jewel_servo_rotate;
+    CRServo intakeLeftTop;
+    CRServo intakeLeftBotton;
+    CRServo intakeRightTop;
+    CRServo intakeRightBottom;
+    ColorSensor intakeColorTop;
+    ColorSensor intakeColorBottom;
     DcMotor relicMotor;
     Servo relicMain;
     Servo relicClaw;
+    Servo glyphRotate;
     public int IVFSM;
 
 
@@ -89,25 +95,27 @@ public class curious_george_teleop extends OpMode {
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
-        jewel_servo_rotate = hardwareMap.servo.get("jewelServoRotate");
         IVFSM = slideMotor.getCurrentPosition();
         relicMain = hardwareMap.servo.get("relicMain");
         relicClaw = hardwareMap.servo.get("relicClaw");
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
+        intakeLeftTop = hardwareMap.crservo.get("intakeLeftTop");
+        intakeLeftBotton = hardwareMap.crservo.get("intakeLeftBottom");
+        intakeRightTop = hardwareMap.crservo.get("intakeRightTop");
+        intakeRightBottom = hardwareMap.crservo.get("intakeRightBottom");
 
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        intakeLeftTop.setDirection(CRServo.Direction.REVERSE);
+        intakeLeftBotton.setDirection(CRServo.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
         openGlyph();
-        jewel_servo.setPosition(0.1);
-        jewel_servo_rotate.setPosition(0.74);
-        relicMain.setPosition(1);
-
-
+        jewel_servo.setPosition(0.6);
+        glyphRotate.setPosition(0);
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
         telemetry.addData("jewel pos", jewel_servo.getPosition());
@@ -176,19 +184,20 @@ public class curious_george_teleop extends OpMode {
  */
 public void Slides(){
     slideMove();
-    slideIncrement();
+    //slideIncrement();
 }
 public void Drive(){
     FourWheelDrive();
 }
 public void Relic() {
     relicManipulator();
+    IncrementMain();
 }
 public void Glyph() {
     glyphManipulator();
-    incrementOpen();
-    incrementClose();
+
 }
+
 
 public void IncrementMain(){
    while (gamepad2.dpad_up){
@@ -218,7 +227,7 @@ public void IncrementMain(){
             relicClaw.setPosition(0.5);
         }
         else{
-            relicMotor.setPower(gamepad2.left_stick_y);
+            relicMotor.setPower(gamepad2.left_stick_y*0.6);
         }
     }
 
@@ -293,18 +302,17 @@ public void IncrementMain(){
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
-        if (gamepad1.right_bumper&&gamepad1.left_bumper){
-            middleGlyph();
 
+        if (gamepad1.left_bumper) {
+
+           // outtakeBlock();
         }
-        else if (gamepad1.left_bumper) {
-
 //opening the claw
 
-            openGlyph();
-        } else if (gamepad1.right_bumper) {
 
-            closeGlyph();
+        else if (gamepad1.right_bumper){
+
+           // intakeBlock();
         }
 
 
@@ -314,6 +322,17 @@ public void IncrementMain(){
 
         */
     }
+
+//    public void intakeBlock(){
+//        intakeLeft.setPower(1);
+//        intakeRight.setPower(1);
+//    }
+//
+//    public void outtakeBlock(){
+//        intakeLeft.setPower(-1);
+//        intakeRight.setPower(-1);
+//    }
+
     public void wait(int mSec){
         double startTime;
         double endTime;

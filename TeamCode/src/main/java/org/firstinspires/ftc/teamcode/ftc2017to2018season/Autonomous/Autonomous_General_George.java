@@ -71,7 +71,7 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
     double P_TURN_COEFF = 0.08;
-    double TURN_THRESHOLD = 3;
+    double TURN_THRESHOLD = 2;
     double P_WALL_COEFF = 0.07;
     double ALIGN_THRESHOLD = 3;
     public DcMotor front_right_motor;
@@ -95,7 +95,8 @@ public class Autonomous_General_George extends LinearOpMode {
     public ModernRoboticsI2cColorSensor colorSensor;
     public ColorSensor revColorSensor;
     public DistanceSensor revJewelRangeSensor;
-    public DistanceSensor glyphBlockRangeSensor;
+    public DistanceSensor glyphRangeSensorTop;
+    public DistanceSensor glyphRangeSensorBottom;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
     public String ballColor;
@@ -147,7 +148,8 @@ public class Autonomous_General_George extends LinearOpMode {
 
         revColorSensor = hardwareMap.get(ColorSensor.class, "revColorSensor");
         revJewelRangeSensor = hardwareMap.get(DistanceSensor.class, "revJewelRangeSensor");
-        glyphBlockRangeSensor = hardwareMap.get(DistanceSensor.class, "glyphBlockRangeSensor");
+        glyphRangeSensorTop = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorTop");
+        glyphRangeSensorBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorBottom");
         jewelServo.setDirection(Servo.Direction.REVERSE);
 
         if (modernRobotics) {
@@ -693,10 +695,13 @@ public class Autonomous_General_George extends LinearOpMode {
             currentSensor = wallAlignBack;
         }
         else if (front == 2){
-            currentSensor = glyphBlockRangeSensor;
+            currentSensor = glyphRangeSensorBottom;
         }
         else if (front == 3){
             currentSensor = revJewelRangeSensor;
+        }
+        else if (front == 4){
+            currentSensor = glyphRangeSensorTop;
         }
         else {
             currentSensor = wallAlignFront;
@@ -763,10 +768,13 @@ public class Autonomous_General_George extends LinearOpMode {
                                                                         //back of the robot's current distance from the wall is less than the target distance
         }
         else if (front == 2){
-            robotError = targetDistance - glyphBlockRangeSensor.getDistance(DistanceUnit.CM);
+            robotError = targetDistance - glyphRangeSensorBottom.getDistance(DistanceUnit.CM);
         }
         else if (front == 3){
             robotError = targetDistance - revJewelRangeSensor.getDistance(DistanceUnit.CM);
+        }
+        else if (front == 4){
+            robotError = targetDistance - glyphRangeSensorTop.getDistance(DistanceUnit.CM);
         }
         else {
             robotError = targetDistance - wallAlignFront.cmUltrasonic();

@@ -1,24 +1,21 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
-
-import java.sql.Time;
 
 
 /**
- * Created by Rohan on 11/18/17.
+ * Created by Pahel and Rohan on 11/18/17.
  */
 
 
-@TeleOp(name = "General_Delta_TeleOp")
+@TeleOp(name = "Delta_TeleOp_relic")
 @Disabled
-public class General_Delta_TeleOp extends OpMode {
+public class Delta_TeleOp_Relic extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -33,13 +30,22 @@ public class General_Delta_TeleOp extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor slideMotor;
+    DcMotor relicMotor;
     Servo glyphServoRight;
     Servo glyphServoLeft;
-    Servo jewel_servo;
+    Servo clawServo;
+    Servo moveRelicManipulatorServo;
     //Initial value for slide motor
     public int IVFSM;
+/*
+    public double openClaw = 0;
+    public double closeClaw = 0.6;
+    public double upClaw = 0;
+    public double downClaw = 0.5;
 
+*/
 
+    
 
 /*
     ---------------------------------------------------------------------------------------------
@@ -72,7 +78,7 @@ public class General_Delta_TeleOp extends OpMode {
         //   Servo right_servo;
 
 
-        /*---------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------
                 Get references to the hardware installed on the robot and name them here
         */
     @Override
@@ -84,21 +90,17 @@ public class General_Delta_TeleOp extends OpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
-        jewel_servo = hardwareMap.servo.get("jewelServo");
+        relicMotor = hardwareMap.dcMotor.get("relicMotor");
+        clawServo = hardwareMap.servo.get("clawServo");
+        moveRelicManipulatorServo = hardwareMap.servo.get("moveRelicManipulatorServo");
         IVFSM = slideMotor.getCurrentPosition();
 
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-        slideMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        openGlyph();
-        jewel_servo.setPosition(0.1);
-
-        /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
-        telemetry.update();*/
+        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(0.35);
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
@@ -134,12 +136,15 @@ public class General_Delta_TeleOp extends OpMode {
 
     @Override
     public void loop() {
-        FourWheelDrive();
-        Slides();
-        glyphManipulator();
-        incrementOpen();
-        incrementClose();
+        //This is what runs when the play button is hit
 
+        FourWheelDrive();
+        slideMove();
+        glyphManipulator();
+        slideIncrement();
+        //relicSlides();
+        //relicManipulatorClawServo();
+        //relicManipulatorMovementServo();
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -150,16 +155,12 @@ public class General_Delta_TeleOp extends OpMode {
 ---------------------------------------------------------------------------------------------
  */
 
-    /*
-    ---------------------------------------------------------------------------------------------
+/*
+---------------------------------------------------------------------------------------------
 
-        Functions go here
-     */
-    public void Slides(){
-        slideMove();
-        slideIncrement();
+    Functions go here
+ */
 
-    }
     public void FourWheelDrive() {
         /*
 
@@ -175,15 +176,15 @@ public class General_Delta_TeleOp extends OpMode {
         // run the motors by setting power to the motors with the game pad value
 
         if (gamepad1.left_trigger > 0) {
-
-            leftWheelMotorFront.setPower(-0.7);
+//Used for strafing to the left
+            leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
         } else if (gamepad1.right_trigger > 0) {
-
-            leftWheelMotorFront.setPower(0.7);
+//Used for strafing to the right
+            leftWheelMotorFront.setPower(1);
             leftWheelMotorBack.setPower(-1);
             rightWheelMotorFront.setPower(-1);
             rightWheelMotorBack.setPower(1);
@@ -193,6 +194,11 @@ public class General_Delta_TeleOp extends OpMode {
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
+            //run the motors by setting power to the motors with the game pad values
+            //leftWheelMotorFront.setPower(leftY_gp1);
+            //leftWheelMotorBack.setPower(leftY_gp1);
+            //rightWheelMotorFront.setPower(rightY_gp1);
+            //rightWheelMotorBack.setPower(rightY_gp1);
         }
 
         // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
@@ -200,52 +206,52 @@ public class General_Delta_TeleOp extends OpMode {
         // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
         //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
         //  telemetry.update();
-        //telemetry.addData("",)
-        //telemetry.update();
-        //These were going to be used to find the values of triggers but we couldn't acomplish it
-        //run the motors by setting power to the motors with the game pad values
-        //leftWheelMotorFront.setPower(leftY_gp1);
-        //leftWheelMotorBack.setPower(leftY_gp1);
-        //rightWheelMotorFront.setPower(rightY_gp1);
-        //rightWheelMotorBack.setPower(rightY_gp1);
+
 
 
     }
 
     public void slideMove() {
-//Commented out to test since this caused the encoders not to funtoin in program. 2/23/18 by Rohan TEMPORARY
-        //slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//This moves the glyph manipulator slides up and down.
+        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
-        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
-        telemetry.update();
-        if (gamepad2.right_stick_y != 0) {
-            slideMotor.setPower(gamepad2.right_stick_y);
 
+        if (gamepad2.right_stick_y > 0) {
+            slideMotor.setPower(gamepad2.right_stick_y);
+            //If the right stick is pushed up move the slides up
+        } else if (gamepad2.right_stick_y < 0) {
+            slideMotor.setPower(gamepad2.right_stick_y);
+            //If the right stick is pushed down move the slides down
         } else {
             slideMotor.setPower(0);
+            //Otherwise do nothing
         }
     }
 
     public void glyphManipulator() {
-       /* Boolean Right_Bumper = (gamepad1.right_bumper);
+       /*
+        Boolean Right_Bumper = (gamepad1.right_bumper);
         Boolean Left_Bumper = (gamepad1.left_bumper);
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
 
         if (gamepad1.left_bumper) {
-
-            openGlyph();
+//If the left bumper is hit then move the servos to these values or open the claw
+//opening the claw
+            glyphServoRight.setPosition(0.35);
+            glyphServoLeft.setPosition(0.5);
         } else if (gamepad1.right_bumper) {
+//If the right bumper is hit move the servos the the below positions or close the claw
+            glyphServoRight.setPosition(0.05);
+            glyphServoLeft.setPosition(0.85);
 
-            closeGlyph();
-        }
-        else if (gamepad1.left_bumper&&gamepad1.right_bumper){
-            middleGlyph();
+           /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
+            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
+            telemetry.update();    */
         }
 
-/*        telemetry.addData("The value of the right servo is", left_claw);
+/*      telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
         telemetry.update();
 
@@ -254,61 +260,36 @@ public class General_Delta_TeleOp extends OpMode {
 
     public void slideIncrement() {
 
-        if(gamepad2.dpad_up){
-            moveUpInch(13);
-        }else if(gamepad2.dpad_right){
-            moveUpInch(7);
-        }else if(gamepad2.dpad_down){
-            moveUpInch(2);
+       /* if (gamepad2.dpad_down)
+        {
+
+            moveUpInch(2.54);
+
+        }*/
+        if (gamepad2.dpad_up)
+        {
+            //Makes a nice function for the other long function moveUpInch()
+            moveUpInch(-2);
         }
-        else{
-
-        }
-    }
-
-    public void incrementOpen(){
-
-        while (gamepad1.x){
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
-            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
-            wait(300);
-        }
-    }
-    public void incrementClose(){
-
-        while (gamepad1.y) {
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
-            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
-            wait(300);
-        }
-    }
-
-    public void wait(int mSec){
-        double startTime;
-        double endTime;
-
-        startTime = System.currentTimeMillis();
-        endTime = startTime+mSec;
-
-        while(endTime >= System.currentTimeMillis()){
+        else {
 
         }
     }
 
-
-    public void moveUpInch(double cm) {
+   /*  public void moveUpInch(double cm) {
         double target_Position;
-        double countsPerCM = 28;
-        double finalTarget = cm * countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() - finalTarget;
+        double countsPerCM = 609.6;
+        double finalTarget = cm*countsPerCM;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
-        slideMotor.setTargetPosition((int) target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setTargetPosition((int)target_Position);
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         slideMotor.setPower(-0.6);
 
-        while (slideMotor.isBusy()) {
+        while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
             telemetry.update();
 
@@ -316,45 +297,66 @@ public class General_Delta_TeleOp extends OpMode {
 
         slideMotor.setPower(0);
 
+    }*/
+
+    public void moveUpInch(double cm) {
+        double target_Position;
+        double countsPerCM = 609.6;
+        double finalTarget = cm*countsPerCM;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+//This is the math that is used to determine how much to move the motor
+
+        slideMotor.setTargetPosition((int)target_Position);
+
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        slideMotor.setPower(-0.6);
+//This part sets power to the motor and stops it when the motor is done running
+        while (slideMotor.isBusy()){
+            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+            telemetry.update();
+
+        }
+
+        slideMotor.setPower(0);
+//This stops the motor
     }
 
-    /*  public void moveDownInch(double cm) {
-          double target_Position;
-          double countsPerCM = 150;
-          double finalTarget = cm * countsPerCM;
-          target_Position = slideMotor.getCurrentPosition() + finalTarget;
+   /* public void relicSlides() {
+      double g2lsx = gamepad2.left_stick_x;
+//If there is movement on the x-axis then move the motor proportionally to the amount of movement on the joystick
+        if (g2lsx != 0) {
+            relicMotor.setPower(g2lsx);
+        }
+        else{
+            relicMotor.setPower(0);
+        }
+    }*/
 
-          slideMotor.setTargetPosition((int) target_Position);
-
-          slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-          slideMotor.setPower(0.6);
-
-
-          while (slideMotor.isBusy()) {
-              telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
-              telemetry.update();
-
-          }
-
-          slideMotor.setPower(0);
-
+  /*  public void relicManipulatorClawServo() {
+      if (gamepad2.left_bumper){
+          clawServo.setPosition(openClaw);
       }
-      */
-    public void openGlyph(){
-        glyphServoRight.setPosition(0.6);
-        glyphServoLeft.setPosition(0.3);
+      else if (gamepad2.right_bumper){
+          clawServo.setPosition(closeClaw);
+          //This says that if you press a bumper open or close the claw
+      }
+      telemetry.addData("In the function relicManipulatorClawServo and the value of that servo is", clawServo.getPosition());
+      telemetry.update();
+    }
+*/
+  /*  public void relicManipulatorMovementServo(){
+        if (gamepad2.x){
+            moveRelicManipulatorServo.setPosition(upClaw);
+        }
+        else if (gamepad2.y){
+            moveRelicManipulatorServo.setPosition(downClaw);
+            //This controls the overall movement of the claw
+        }
+
+    }
+*/
     }
 
-    public void closeGlyph(){
-        glyphServoRight.setPosition(0.85);
-        glyphServoLeft.setPosition(0.0);
-    }
 
-    public void middleGlyph(){
-        glyphServoRight.setPosition(0.75);
-        glyphServoLeft.setPosition(0.1);
-
-    }
-}
-
+//--------------------------------------------------------------------------------------------

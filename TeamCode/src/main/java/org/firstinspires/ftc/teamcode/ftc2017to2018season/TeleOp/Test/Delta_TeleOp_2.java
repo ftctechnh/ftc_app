@@ -1,20 +1,21 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * Created by Rohan on 11/18/17.
+ * Created by Pahel and Rohan on 11/18/17.
  */
 
 
-@TeleOp(name = "DeltaTeleOp_DEBUG")
+@TeleOp(name = "Delta_TeleOp_2")
 @Disabled
-public class Delta_TeleOp_DEBUG extends OpMode {
+public class Delta_TeleOp_2 extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
@@ -31,7 +32,6 @@ public class Delta_TeleOp_DEBUG extends OpMode {
     DcMotor slideMotor;
     Servo glyphServoRight;
     Servo glyphServoLeft;
-    Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
 
@@ -80,27 +80,14 @@ public class Delta_TeleOp_DEBUG extends OpMode {
         glyphServoRight = hardwareMap.servo.get("glyphServoRight");
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
-        jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
-        double servoPos;
 
 
         rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        glyphServoLeft.setPosition(0.8);
-        telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
-        telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
-        telemetry.update();
-
-        glyphServoRight.setPosition(0.1);
-        telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
-        telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
-        telemetry.update();
-
-// SetPosition | position min to max = 0 to 1
-        jewel_servo.setPosition(0.80);
-
+        glyphServoLeft.setPosition(0.5);
+        glyphServoRight.setPosition(0.35);
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
@@ -215,11 +202,12 @@ public class Delta_TeleOp_DEBUG extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         IVFSM = slideMotor.getCurrentPosition();
 
-        if (gamepad2.right_stick_y != 0) {
+        if (gamepad2.right_stick_y > 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
 
-        }
-        else{
+        } else if (gamepad2.right_stick_y < 0) {
+            slideMotor.setPower(-1);
+        } else {
             slideMotor.setPower(0);
         }
     }
@@ -235,9 +223,6 @@ public class Delta_TeleOp_DEBUG extends OpMode {
 
 //opening the claw
             glyphServoRight.setPosition(0.35);
-            telemetry.addData(" right moved, est. pos = 0.35", glyphServoRight.getPosition());
-            telemetry.addData(" left moved, est. pos = 0.5", glyphServoLeft.getPosition());
-            telemetry.update();
             /*try {
                 glyphServoRight.setPosition(0.5);
             } catch (Exception e) {
@@ -245,34 +230,15 @@ public class Delta_TeleOp_DEBUG extends OpMode {
             }
 */
             glyphServoLeft.setPosition(0.5);
-            telemetry.addData(" right moved, est. pos = 0.35", glyphServoRight.getPosition());
-            telemetry.addData(" left moved, est. pos = 0.5", glyphServoLeft.getPosition());
-            telemetry.update();
-
-
         } else if (gamepad1.right_bumper) {
 
-            glyphServoRight.setPosition(0.1);
-            telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
-            telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
-            telemetry.update();
-            glyphServoLeft.setPosition(0.8);
-            telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
-            telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
-            telemetry.update();
+            glyphServoRight.setPosition(0.05);
+
+            glyphServoLeft.setPosition(0.85);
+
            /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
             telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
             telemetry.update();    */
-        }
-        else if (gamepad1.x){
-            glyphServoRight.setPosition(0.22);
-            telemetry.addData(" right moved, est. pos = 0.22", glyphServoRight.getPosition());
-            telemetry.addData(" left moved, est. pos = 0.65", glyphServoLeft.getPosition());
-            telemetry.update();
-            glyphServoLeft.setPosition(0.65);
-            telemetry.addData(" right moved, est. pos = 0.22", glyphServoRight.getPosition());
-            telemetry.addData(" left moved, est. pos = 0.65", glyphServoLeft.getPosition());
-            telemetry.update();
         }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
@@ -284,30 +250,31 @@ public class Delta_TeleOp_DEBUG extends OpMode {
 
     public void slideIncrement() {
 
-        if (gamepad2.dpad_up)
+       /* if (gamepad2.dpad_down)
         {
 
             moveUpInch(2.54);
 
-        }
-        else if (gamepad2.dpad_down)
+        }*/
+    if (gamepad2.dpad_up)
         {
-            moveDownInch(2.54);
+            moveUpInch(-2.54);
         }
         else {
 
         }
     }
 
-    public void moveUpInch(double cm) {
+   /*  public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() - finalTarget;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
+
 
         slideMotor.setTargetPosition((int)target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         slideMotor.setPower(-0.6);
 
@@ -319,19 +286,20 @@ public class Delta_TeleOp_DEBUG extends OpMode {
 
         slideMotor.setPower(0);
 
-    }
+    }*/
 
-    public void moveDownInch(double cm) {
+   public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm*countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
+
         slideMotor.setTargetPosition((int)target_Position);
 
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        slideMotor.setPower(0.6);
+        slideMotor.setPower(-0.6);
 
         while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
@@ -342,6 +310,8 @@ public class Delta_TeleOp_DEBUG extends OpMode {
         slideMotor.setPower(0);
 
     }
+
+
 }
 
 //--------------------------------------------------------------------------------------------
