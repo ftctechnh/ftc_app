@@ -70,8 +70,8 @@ public class Autonomous_General_George extends LinearOpMode {
     public static double COUNTS_PER_CM;
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
-    double P_TURN_COEFF = 0.08;
-    double TURN_THRESHOLD = 2;
+    double P_TURN_COEFF = 0.06;
+    double TURN_THRESHOLD = 1.5;
     double P_WALL_COEFF = 0.07;
     double ALIGN_THRESHOLD = 3;
     public DcMotor front_right_motor;
@@ -95,8 +95,8 @@ public class Autonomous_General_George extends LinearOpMode {
     public ModernRoboticsI2cColorSensor colorSensor;
     public ColorSensor revColorSensor;
     public DistanceSensor revJewelRangeSensor;
-    public DistanceSensor glyphRangeSensorTop;
-    public DistanceSensor glyphRangeSensorBottom;
+    //public DistanceSensor glyphRangeSensorTop;
+    //public DistanceSensor glyphRangeSensorBottom;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
     public String ballColor;
@@ -148,8 +148,8 @@ public class Autonomous_General_George extends LinearOpMode {
 
         revColorSensor = hardwareMap.get(ColorSensor.class, "revColorSensor");
         revJewelRangeSensor = hardwareMap.get(DistanceSensor.class, "revJewelRangeSensor");
-        glyphRangeSensorTop = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorTop");
-        glyphRangeSensorBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorBottom");
+        //glyphRangeSensorTop = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorTop");
+        //glyphRangeSensorBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorBottom");
         jewelServo.setDirection(Servo.Direction.REVERSE);
 
         if (modernRobotics) {
@@ -695,19 +695,21 @@ public class Autonomous_General_George extends LinearOpMode {
             currentSensor = wallAlignBack;
         }
         else if (front == 2){
-            currentSensor = glyphRangeSensorBottom;
+            //currentSensor = glyphRangeSensorBottom;
+            currentSensor = wallAlignBack;
         }
         else if (front == 3){
             currentSensor = revJewelRangeSensor;
         }
         else if (front == 4){
-            currentSensor = glyphRangeSensorTop;
+            //currentSensor = glyphRangeSensorTop;
+            currentSensor = wallAlignBack;
         }
         else {
             currentSensor = wallAlignFront;
         }
 
-        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front) && runtime.seconds() - begintime < 4 && (currentSensor.getDistance(DistanceUnit.CM) - 6 <  distance) && (distance < currentSensor.getDistance(DistanceUnit.CM) + 10)){
+        while(opModeIsActive() && !onTargetDistance(speed, distance, P_WALL_COEFF, front) && runtime.seconds() - begintime < 2.5 && (currentSensor.getDistance(DistanceUnit.CM) - 6 <  distance) && (distance < currentSensor.getDistance(DistanceUnit.CM) + 10)){
             telemetry.update();
             idle();
 //            telemetry.addData("-->","inside while loop :-(");
@@ -768,13 +770,15 @@ public class Autonomous_General_George extends LinearOpMode {
                                                                         //back of the robot's current distance from the wall is less than the target distance
         }
         else if (front == 2){
-            robotError = targetDistance - glyphRangeSensorBottom.getDistance(DistanceUnit.CM);
+            //robotError = targetDistance - glyphRangeSensorBottom.getDistance(DistanceUnit.CM);
+            robotError = 0;
         }
         else if (front == 3){
             robotError = targetDistance - revJewelRangeSensor.getDistance(DistanceUnit.CM);
         }
         else if (front == 4){
-            robotError = targetDistance - glyphRangeSensorTop.getDistance(DistanceUnit.CM);
+            //robotError = targetDistance - glyphRangeSensorTop.getDistance(DistanceUnit.CM);
+            robotError = 0;
         }
         else {
             robotError = targetDistance - wallAlignFront.cmUltrasonic();
@@ -1009,7 +1013,7 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.update();
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < 4){
+        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < 2.5){
             telemetry.update();
             idle();
             telemetry.addData("-->","inside while loop :-(");

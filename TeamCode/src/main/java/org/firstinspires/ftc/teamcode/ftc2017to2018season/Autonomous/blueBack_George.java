@@ -4,15 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
-@Autonomous(name = "Blue Back George HIGH CONTROL")
+@Autonomous(name = "Blue Back George Super-Regionals")
 //@Disabled
+//3/2/18 edit by Steven Chen: trying to see if going a slower speed off the platform makes it go more straight
 public class blueBack_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
-
 
     @Override
     public void runOpMode() {
@@ -126,7 +127,7 @@ public class blueBack_George extends Autonomous_General_George {
             }
         }
         sleep(1000);
-        encoderMecanumDrive(0.6,50,50,5000,0);
+        encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
         sleep(100);
@@ -166,15 +167,15 @@ public class blueBack_George extends Autonomous_General_George {
         openGlyphManipulator();
         sleep(250);
 
-        encoderMecanumDrive(0.3,35,35,1000,0);
+        encoderMecanumDrive(0.3,20,20,1000,0);
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.LEFT){
-            encoderMecanumDrive(0.3,-15,15,1000,0);
+            encoderMecanumDrive(0.3,-10,10,1000,0);
 
         }
         else {
-            encoderMecanumDrive(0.3,15,-15,1000,0);
+            encoderMecanumDrive(0.3,10,-10,1000,0);
         }
 
         sleep(500);
