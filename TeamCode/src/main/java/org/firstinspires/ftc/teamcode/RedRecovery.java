@@ -20,21 +20,19 @@ public class RedRecovery extends LinearOpMode {
     private final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY = 32.5;
 
     public void runOpMode() throws InterruptedException {
-        telemetry.addLine("DO NOT PRESS PLAY YET");
-        telemetry.update();
+        telemetry.addLine("DO NOT PRESS PLAY YET"); telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
         drive.init(); //Calibrates gyro
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         phone = new Phone(hardwareMap, telemetry);
         Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
-        telemetry.addLine("NOW YOU CAN PRESS PLAY");
-        telemetry.update();
+        telemetry.addLine("NOW YOU CAN PRESS PLAY"); telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ForkLift.autoInit();
-        JewelArm.findJewel(Color.RED);
-        pictograph = phone.getMark();
+        //JewelArm.findJewel(Color.RED);
+        //pictograph = phone.getMark();
         if (pictograph == RelicRecoveryVuMark.LEFT) {
             drive.forward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_RED_RECOVERY + drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
         }

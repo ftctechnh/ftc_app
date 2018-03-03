@@ -31,7 +31,7 @@ public class AutoDrive {
     static final double MIN_STRAFE_SPEED = 0.35;
     static final double GYRO_OFFSET = 2.25;
     static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
-    static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 0.4;
+    static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 1; //TEMPORARY... SWITCH BACK TO 0.4 SOMETIME SOON
     static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.75;
     static final double SPIN_TO_CRYPTOBOX_SPEED = 1;
     static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.6;
