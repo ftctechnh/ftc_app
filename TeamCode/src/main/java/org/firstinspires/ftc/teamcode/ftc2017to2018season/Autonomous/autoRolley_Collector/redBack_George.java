@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.autoRolley_Collector;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,8 +9,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
-@Autonomous(name="Red Back George HIGH CONTROL final")
-public class redBack_George extends Autonomous_General_George {
+@Autonomous(name="Red Back George Test Rolley")
+@Disabled
+public class redBack_George extends Autonomous_General_Rolley {
 
     DcMotor leftFront;
     DcMotor rightFront;

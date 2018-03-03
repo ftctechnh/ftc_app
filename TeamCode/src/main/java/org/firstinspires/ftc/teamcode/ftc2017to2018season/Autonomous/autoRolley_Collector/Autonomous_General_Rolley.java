@@ -56,7 +56,7 @@ import java.util.Locale;
 
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
-public class Autonomous_General_George extends LinearOpMode {
+public class Autonomous_General_Rolley extends LinearOpMode {
     //we attached a light to make it easier to see the target
     //public DcMotor light;
     public double waitTime = 3;

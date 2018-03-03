@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Main;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -7,16 +7,17 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 /**
  * Created by Team Inspiration on 1/21/18.
  */
 @TeleOp(name = "Curious George Roll-y collector")
-@Disabled
+
 public class curious_georgeROLLI_teleop extends OpMode {
 
 
@@ -38,11 +39,11 @@ public class curious_georgeROLLI_teleop extends OpMode {
     Servo glyphServoLeft;
     Servo jewel_servo;
     CRServo intakeLeftTop;
-    CRServo intakeLeftBotton;
+    CRServo intakeLeftBottom;
     CRServo intakeRightTop;
     CRServo intakeRightBottom;
-    ColorSensor intakeColorTop;
-    ColorSensor intakeColorBottom;
+    DistanceSensor intakeColorTop;
+    DistanceSensor intakeColorBottom;
     DcMotor relicMotor;
     Servo relicMain;
     Servo relicClaw;
@@ -99,16 +100,19 @@ public class curious_georgeROLLI_teleop extends OpMode {
         relicMain = hardwareMap.servo.get("relicMain");
         relicClaw = hardwareMap.servo.get("relicClaw");
         relicMotor = hardwareMap.dcMotor.get("relicMotor");
+
         intakeLeftTop = hardwareMap.crservo.get("intakeLeftTop");
-        intakeLeftBotton = hardwareMap.crservo.get("intakeLeftBottom");
+        intakeLeftBottom = hardwareMap.crservo.get("intakeLeftBottom");
         intakeRightTop = hardwareMap.crservo.get("intakeRightTop");
         intakeRightBottom = hardwareMap.crservo.get("intakeRightBottom");
 
+        intakeColorTop = hardwareMap.get(DistanceSensor.class, "intakeColorTop");
+        intakeColorBottom = hardwareMap.get(DistanceSensor.class, "intakeColorBottom");
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         intakeLeftTop.setDirection(CRServo.Direction.REVERSE);
-        intakeLeftBotton.setDirection(CRServo.Direction.REVERSE);
+        intakeLeftBottom.setDirection(CRServo.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
@@ -303,17 +307,42 @@ public void IncrementMain(){
         double left_claw = (glyphServoLeft.getPosition());
        */
 
-        if (gamepad1.left_bumper) {
+       if (gamepad1.dpad_left){
+           glyphRotate.setPosition(0);
+       }
+       else if (gamepad1.dpad_right){
+           glyphRotate.setPosition(1);
+       }
 
-           // outtakeBlock();
+       else if (gamepad1.left_bumper) {
+
+           smartIntake();
         }
 //opening the claw
 
 
         else if (gamepad1.right_bumper){
 
-           // intakeBlock();
+           outtakeBlock();
         }
+
+        else if (gamepad1.x){
+            intakeLeftTop.setPower(1);
+            intakeRightTop.setPower(1);
+       }
+       else if (gamepad1.a){
+           intakeLeftBottom.setPower(1);
+           intakeRightBottom.setPower(1);
+       }
+
+       else if (gamepad1.y){
+           intakeLeftTop.setPower(-1);
+           intakeRightTop.setPower(-1);
+       }
+       else if (gamepad1.b){
+           intakeLeftBottom.setPower(-1);
+           intakeRightBottom.setPower(-1);
+       }
 
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
@@ -323,15 +352,33 @@ public void IncrementMain(){
         */
     }
 
-//    public void intakeBlock(){
-//        intakeLeft.setPower(1);
-//        intakeRight.setPower(1);
-//    }
-//
-//    public void outtakeBlock(){
-//        intakeLeft.setPower(-1);
-//        intakeRight.setPower(-1);
-//    }
+
+    public void outtakeBlock(){
+        intakeLeftTop.setPower(-1);
+        intakeRightBottom.setPower(-1);
+        intakeLeftTop.setPower(-1);
+        intakeLeftBottom.setPower(-1);
+    }
+    public void smartIntake(){
+        while (intakeColorTop.getDistance(DistanceUnit.CM)>6){
+            intakeLeftTop.setPower(1);
+            intakeRightTop.setPower(1);
+        }
+        while (intakeColorBottom.getDistance(DistanceUnit.CM)>6){
+            intakeLeftBottom.setPower(1);
+            intakeRightBottom.setPower(1);
+        }
+
+        if(intakeColorTop.getDistance(DistanceUnit.CM)<6){
+            intakeLeftTop.setPower(0);
+            intakeRightTop.setPower(0);
+        }
+        if (intakeColorBottom.getDistance(DistanceUnit.CM)<6){
+            intakeLeftBottom.setPower(0);
+            intakeRightBottom.setPower(0);
+        }
+
+    }
 
     public void wait(int mSec){
         double startTime;
@@ -344,22 +391,22 @@ public void IncrementMain(){
 
         }
     }
-    public void incrementOpen(){
+//    public void incrementOpen(){
+//
+//        while (gamepad1.x){
+//            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
+//            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
+//            wait(300);
+//        }
+//    }
+//    public void incrementClose(){
+//
+//        while (gamepad1.y) {
+//            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
+//            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
+//            wait(300);
+//        }
 
-        while (gamepad1.x){
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
-            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
-            wait(300);
-        }
-    }
-    public void incrementClose(){
-
-        while (gamepad1.y) {
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
-            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
-            wait(300);
-        }
-    }
     public void slideIncrement() {
 
         if (gamepad2.dpad_up) {
