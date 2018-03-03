@@ -6,12 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
+//import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
 @Autonomous(name="Blue Back No Gyro George")
 @Disabled
-public class blueBack_NoGyro_George extends Autonomous_General_George {
+public class blueBack_NoGyro_George extends Autonomous_General_George_old {
 
     DcMotor leftFront;
     DcMotor rightFront;

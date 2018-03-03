@@ -1,16 +1,15 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_2_18;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
+//import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
 @Autonomous(name = "Blue Front George Super-Regionals")
 //@Disabled
-public class blueFront_George extends Autonomous_General_George {
+public class blueFront_George extends Autonomous_General_George_old {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
@@ -123,7 +122,7 @@ public class blueFront_George extends Autonomous_General_George {
                 sleep(1000);
             }
         }
-        encoderMecanumDrive(0.4,40,40,5000,0);
+        encoderMecanumDrive(0.6,40,40,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
         sleep(100);
@@ -180,9 +179,9 @@ public class blueFront_George extends Autonomous_General_George {
         openGlyphManipulator();
         sleep(250);
 
-        encoderMecanumDrive(0.3,20,20,1000,0);
+        encoderMecanumDrive(0.3,33,33,1000,0);
         sleep(250);
-        encoderMecanumDrive(0.3,10,-10,1000,0);
+        encoderMecanumDrive(0.3,15,-15,1000,0);
         sleep(500);
         encoderMecanumDrive(0.3, -10, -10, 1000, 0);
         /*sleep(100);
