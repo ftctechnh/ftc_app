@@ -60,7 +60,7 @@ public class Phone {
             time.reset();
             while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
                 vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if(time.seconds()>3) {
+                if(time.seconds()>2) {
                     break;
                 }
             }

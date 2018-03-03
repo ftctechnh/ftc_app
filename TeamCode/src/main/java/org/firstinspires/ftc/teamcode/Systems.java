@@ -5,8 +5,11 @@ package org.firstinspires.ftc.teamcode;
  */
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
 
 public class Systems {
     private DriveMecanum DriveMecanum;
@@ -53,7 +56,7 @@ public class Systems {
         sleep(250);
         ForkLift.moveMotor(1, 250);
     }
-    static void sleep(long time) {
+    public static void sleep(long time) {
         try {
             Thread.sleep(time);
         } catch (InterruptedException e) {}
@@ -66,8 +69,17 @@ public class Systems {
     }
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
         setUpMultiGlyph();
-        double xOffSet = glyphDetector.getXOffset();
-        telemetry.addData("xOffSet", xOffSet);
+        ElapsedTime findGlyphTime = new ElapsedTime();
+        findGlyphTime.reset();
+        double xOffSet;
+        Point bestPos = new Point(100,0);
+        while(findGlyphTime.seconds()<2) {
+            xOffSet = glyphDetector.getXOffset();
+            if((Math.abs(xOffSet) < bestPos.x) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
+                bestPos.x = xOffSet;
+            }
+        }
+        telemetry.addData("xOffSet", bestPos.x);
         telemetry.update();
     }
 

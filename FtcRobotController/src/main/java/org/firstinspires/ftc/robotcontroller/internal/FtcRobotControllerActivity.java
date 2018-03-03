@@ -306,7 +306,7 @@ public class FtcRobotControllerActivity extends Activity
     ServiceController.startService(FtcRobotControllerWatchdogService.class);
     bindToService();
     logPackageVersions();
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); //THING I ADDED TO MAKE ONLY LANDSCAPE
   }
 
   protected UpdateUI createUpdateUI() {
