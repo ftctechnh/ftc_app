@@ -5,9 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
-@Autonomous(name="Red Back George HIGH CONTROL final")
+@Autonomous(name="Red Back George Super-Regionals")
+//3/2/18 edit by Steven Chen: getting rid of unnecessary turns (this is new version of the regional code)
 public class redBack_George extends Autonomous_General_George {
 
     DcMotor leftFront;
@@ -138,8 +140,8 @@ public class redBack_George extends Autonomous_General_George {
         //drive off the plate (we drive backwards since robot was backwards)
         encoderMecanumDrive(0.3, -45,-45,5000,0);
         sleep(1000);
-        //move robot back to original angle so that when we drive it is going straight
-        gyroTurnREV(0.5, -180);
+
+        //gyroTurnREV(0.5, -180);
 
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
@@ -180,17 +182,17 @@ public class redBack_George extends Autonomous_General_George {
         sleep(250);
 
         //we drive forward 35 cm to push the block in
-        encoderMecanumDrive(0.3,35,35,1000,0);
+        encoderMecanumDrive(0.3,20,20,1000,0);
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             //to push the block in more, we turn left while pushing in forward
-            encoderMecanumDrive(0.3,15,-15,1000,0);
+            encoderMecanumDrive(0.3,10,-10,1000,0);
 
         }
         else {
             //to push the block in more, we turn right while pushing in forward
-            encoderMecanumDrive(0.3,-15,15,1000,0);
+            encoderMecanumDrive(0.3,-10,10,1000,0);
         }
 
         sleep(500);
