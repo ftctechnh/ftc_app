@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Main;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -16,19 +16,14 @@ import java.sql.Time;
  */
 
 
-@TeleOp(name = "Delta_TeleOp_Main")
+@TeleOp(name = "Delta_TeleOp")
 @Disabled
-public class Delta_TeleOp_Main extends OpMode {
+public class Delta_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
 
-    /*
-        ---------------------------------------------------------------------------------------------
-
-       Define the actuators we use in the robot here
-    */
-    DcMotor leftWheelMotorFront;
+       DcMotor leftWheelMotorFront;
     DcMotor leftWheelMotorBack;
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
@@ -38,9 +33,6 @@ public class Delta_TeleOp_Main extends OpMode {
     Servo jewel_servo;
     //Initial value for slide motor
     public int IVFSM;
-    public int slidesBaseValue;
-    public int dif2Inch = 8;
-    //public int dif7Inch =
 
 
 
@@ -138,11 +130,10 @@ public class Delta_TeleOp_Main extends OpMode {
     @Override
     public void loop() {
         FourWheelDrive();
-        slideMove();
+        Slides();
         glyphManipulator();
         incrementOpen();
         incrementClose();
-        slideIncrement();
 
         telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
@@ -162,41 +153,9 @@ public class Delta_TeleOp_Main extends OpMode {
 
     Functions go here
  */
-    public void Drive(){
-        if (gamepad1.left_stick_x>0.2 && gamepad1.left_stick_y>0.2 && gamepad1.right_stick_y>0.2&&gamepad1.right_stick_x>0.2){
-            leftWheelMotorFront.setPower(0.7);
-            rightWheelMotorBack.setPower(1);
-        }
-        else if (gamepad1.left_stick_y>0.2&&gamepad1.left_stick_x<0.2&&gamepad1.right_stick_y>0.2&&gamepad1.right_stick_x<0.2){
-            rightWheelMotorFront.setPower(1);
-            leftWheelMotorBack.setPower(1);
-        }
-        else if (gamepad1.left_stick_y<0.2&&gamepad1.left_stick_x<0.2&&gamepad1.right_stick_x<0.2&&gamepad1.right_stick_y<0.2){
-            leftWheelMotorFront.setPower(-0.7);
-            rightWheelMotorBack.setPower(-1);
-        }
-        else if (gamepad1.left_stick_y<0.2&&gamepad1.left_stick_x>0.2&&gamepad1.right_stick_y<0.2&&gamepad1.right_stick_x>0.2){
-            rightWheelMotorFront.setPower(-1);
-            leftWheelMotorBack.setPower(-1);
-        }
-        else if (gamepad1.right_stick_x>0&&gamepad1.left_stick_x>0){
-            leftWheelMotorFront.setPower(0.7);
-            leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
-        }
-        else if (gamepad1.right_stick_x<0&&gamepad1.left_stick_x<0){
-            leftWheelMotorFront.setPower(-0.7);
-            leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(1);
-            rightWheelMotorBack.setPower(-1);
-        }
-        else{
-            leftWheelMotorFront.setPower(gamepad1.left_stick_y);
-            leftWheelMotorBack.setPower(gamepad1.left_stick_y);
-            rightWheelMotorFront.setPower(gamepad1.right_stick_y);
-            rightWheelMotorBack.setPower(gamepad1.right_stick_y);
-        }
+    public void Slides(){
+        slideMove();
+       // slideIncrement();
     }
     public void FourWheelDrive() {
         /*
@@ -270,16 +229,16 @@ public class Delta_TeleOp_Main extends OpMode {
         double left_claw = (glyphServoLeft.getPosition());
        */
 
-        if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper) {
 
-//opening the claw
-
-            openGlyph();
+           openGlyph();
         } else if (gamepad1.right_bumper) {
 
-            closeGlyph();
+          closeGlyph();
         }
-
+          else if (gamepad1.left_bumper&&gamepad1.right_bumper){
+            middleGlyph();
+        }
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
@@ -354,43 +313,43 @@ public class Delta_TeleOp_Main extends OpMode {
 
     }
 
-    /*  public void moveDownInch(double cm) {
-          double target_Position;
-          double countsPerCM = 150;
-          double finalTarget = cm * countsPerCM;
-          target_Position = slideMotor.getCurrentPosition() + finalTarget;
+  /*  public void moveDownInch(double cm) {
+        double target_Position;
+        double countsPerCM = 150;
+        double finalTarget = cm * countsPerCM;
+        target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
-          slideMotor.setTargetPosition((int) target_Position);
+        slideMotor.setTargetPosition((int) target_Position);
 
-          slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-          slideMotor.setPower(0.6);
+        slideMotor.setPower(0.6);
 
 
-          while (slideMotor.isBusy()) {
-              telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
-              telemetry.update();
+        while (slideMotor.isBusy()) {
+            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+            telemetry.update();
 
-          }
+        }
 
-          slideMotor.setPower(0);
+        slideMotor.setPower(0);
 
-      }
-      */
-    public void openGlyph(){
+    }
+    */
+  public void openGlyph(){
         glyphServoRight.setPosition(0.6);
         glyphServoLeft.setPosition(0.3);
-    }
+  }
 
-    public void closeGlyph(){
-        glyphServoRight.setPosition(0.8);
-        glyphServoLeft.setPosition(0.05);
-    }
+  public void closeGlyph(){
+      glyphServoRight.setPosition(0.85);
+      glyphServoLeft.setPosition(0.0);
+  }
 
-    public void middleGlyph(){
-        glyphServoRight.setPosition(0.75);
-        glyphServoLeft.setPosition(0.1);
+  public void middleGlyph(){
+      glyphServoRight.setPosition(0.75);
+      glyphServoLeft.setPosition(0.1);
 
-    }
+  }
 }
 

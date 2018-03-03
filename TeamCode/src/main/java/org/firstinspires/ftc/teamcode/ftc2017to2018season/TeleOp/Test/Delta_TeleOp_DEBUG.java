@@ -1,24 +1,21 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
-
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
 /**
- * Created by Team Inspiration on 1/21/18.
+ * Created by Rohan on 11/18/17.
  */
-@TeleOp(name = "Curious George Roll-y collector")
+
+
+@TeleOp(name = "DeltaTeleOp_DEBUG")
 @Disabled
-public class curious_georgeROLLI_teleop extends OpMode {
-
-
-    /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
+public class Delta_TeleOp_DEBUG extends OpMode {
+/*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
 
@@ -35,11 +32,7 @@ public class curious_georgeROLLI_teleop extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
-    CRServo intakeLeft;
-    CRServo intakeRight;
-    DcMotor relicMotor;
-    Servo relicMain;
-    Servo relicClaw;
+    //Initial value for slide motor
     public int IVFSM;
 
 
@@ -89,27 +82,25 @@ public class curious_georgeROLLI_teleop extends OpMode {
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
-        relicMain = hardwareMap.servo.get("relicMain");
-        relicClaw = hardwareMap.servo.get("relicClaw");
-        relicMotor = hardwareMap.dcMotor.get("relicMotor");
-        intakeLeft = hardwareMap.crservo.get("intakeLeft");
-        intakeRight = hardwareMap.crservo.get("intakeRight");
+        double servoPos;
 
 
-        leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
-        leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-        intakeLeft.setDirection(CRServo.Direction.REVERSE);
-        slideMotor.setDirection(DcMotor.Direction.REVERSE);
-        relicMotor.setDirection(DcMotor.Direction.REVERSE);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
+        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
 
-        openGlyph();
-        jewel_servo.setPosition(0.6);
+        glyphServoLeft.setPosition(0.8);
+        telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+        telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+        telemetry.update();
 
-        /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-        telemetry.addData("jewel pos", jewel_servo.getPosition());
-        telemetry.update();*/
+        glyphServoRight.setPosition(0.1);
+        telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+        telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+        telemetry.update();
+
+// SetPosition | position min to max = 0 to 1
+        jewel_servo.setPosition(0.80);
+
 //This is closed-loop speed control. Encoders are required for this mode.
 // SetPower() in this mode is actually requesting a certain speed, based on the top speed of
 // encoder 4000 pulses per second.
@@ -145,17 +136,11 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
     @Override
     public void loop() {
-       Glyph();
-       Relic();
-       Drive();
-       Slides();
+        FourWheelDrive();
+        slideMove();
+        glyphManipulator();
+        slideIncrement();
 
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-
-        //  telemetry.addData("jewel pos", jewel_servo.getPosition());
-
-        telemetry.update();
 
     }
 
@@ -172,66 +157,14 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
     Functions go here
  */
-public void Slides(){
-    slideMove();
-    //slideIncrement();
-}
-public void Drive(){
-    FourWheelDrive();
-}
-public void Relic() {
-    relicManipulator();
-    IncrementMain();
-}
-public void Glyph() {
-    glyphManipulator();
-    incrementOpen();
-    incrementClose();
-}
-
-
-public void IncrementMain(){
-   while (gamepad2.dpad_up){
-       relicMain.setPosition(relicMain.getPosition()+0.05);
-   }
-   while (gamepad2.dpad_down){
-       relicMain.setPosition(relicMain.getPosition()-0.05);
-   }
-}
-    public void relicManipulator() {
-        if (gamepad2.a){
-            relicMain.setPosition(0.1);
-        }
-        else if (gamepad2.x){
-            relicMain.setPosition(0.6);
-        }
-        else if (gamepad2.y){
-            relicMain.setPosition(1);
-        }
-        else if (gamepad2.left_bumper){
-            relicClaw.setPosition(1.0);
-        }
-        else if (gamepad2.right_bumper){
-            relicClaw.setPosition(0.2);
-        }
-        else if (gamepad2.left_bumper&&gamepad2.right_bumper){
-            relicClaw.setPosition(0.5);
-        }
-        else{
-            relicMotor.setPower(gamepad2.left_stick_y*0.6);
-        }
-    }
 
     public void FourWheelDrive() {
         /*
 
         read the gamepad values and put into variables
          */
-        double threshold = 0.2;
         float leftY_gp1 = (-gamepad1.left_stick_y);
         float rightY_gp1 = (-gamepad1.right_stick_y);
-        telemetry.addData("right power input", rightY_gp1);
-        telemetry.addData("left power input", leftY_gp1);
         //
         //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
         // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
@@ -239,36 +172,40 @@ public void IncrementMain(){
         //
         // run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.right_trigger > 0) {
-
-            leftWheelMotorFront.setPower(1);
-            leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
-
-        } else if (gamepad1.left_trigger > 0) {
+        if (gamepad1.left_trigger > 0) {
 
             leftWheelMotorFront.setPower(-1);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
-        } else if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
+        } else if (gamepad1.right_trigger > 0) {
+
+            leftWheelMotorFront.setPower(1);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
+
+        } else {
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
-        else{
-            leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftWheelMotorFront.setPower(0);
-            leftWheelMotorBack.setPower(0);
-            rightWheelMotorFront.setPower(0);
-            rightWheelMotorBack.setPower(0);
-        }
+
+        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+        //  telemetry.update();
+        //telemetry.addData("",)
+        //telemetry.update();
+        //These were going to be used to find the values of triggers but we couldn't acomplish it
+        //run the motors by setting power to the motors with the game pad values
+        //leftWheelMotorFront.setPower(leftY_gp1);
+        //leftWheelMotorBack.setPower(leftY_gp1);
+        //rightWheelMotorFront.setPower(rightY_gp1);
+        //rightWheelMotorBack.setPower(rightY_gp1);
 
 
     }
@@ -276,13 +213,13 @@ public void IncrementMain(){
     public void slideMove() {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
             slideMotor.setPower(gamepad2.right_stick_y);
 
-        } else {
+        }
+        else{
             slideMotor.setPower(0);
         }
     }
@@ -296,21 +233,47 @@ public void IncrementMain(){
 
         if (gamepad1.left_bumper) {
 
-            intakeBlock();
-        }
 //opening the claw
+            glyphServoRight.setPosition(0.35);
+            telemetry.addData(" right moved, est. pos = 0.35", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.5", glyphServoLeft.getPosition());
+            telemetry.update();
+            /*try {
+                glyphServoRight.setPosition(0.5);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+*/
+            glyphServoLeft.setPosition(0.5);
+            telemetry.addData(" right moved, est. pos = 0.35", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.5", glyphServoLeft.getPosition());
+            telemetry.update();
 
 
-        else if (gamepad1.right_bumper){
+        } else if (gamepad1.right_bumper) {
 
-            outtakeBlock();
+            glyphServoRight.setPosition(0.1);
+            telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+            telemetry.update();
+            glyphServoLeft.setPosition(0.8);
+            telemetry.addData(" right moved, est. pos = 0.1", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.8", glyphServoLeft.getPosition());
+            telemetry.update();
+           /* telemetry.addData("The value of the right servo is", glyphServoRight.getPosition());
+            telemetry.addData("The value of the left servo is", glyphServoLeft.getPosition());
+            telemetry.update();    */
         }
-
-        else{
-            intakeLeft.setPower(0);
-            intakeRight.setPower(0);
+        else if (gamepad1.x){
+            glyphServoRight.setPosition(0.22);
+            telemetry.addData(" right moved, est. pos = 0.22", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.65", glyphServoLeft.getPosition());
+            telemetry.update();
+            glyphServoLeft.setPosition(0.65);
+            telemetry.addData(" right moved, est. pos = 0.22", glyphServoRight.getPosition());
+            telemetry.addData(" left moved, est. pos = 0.65", glyphServoLeft.getPosition());
+            telemetry.update();
         }
-
 
 /*        telemetry.addData("The value of the right servo is", left_claw);
         telemetry.addData("The value of the left servo is", right_claw);
@@ -319,69 +282,36 @@ public void IncrementMain(){
         */
     }
 
-    public void intakeBlock(){
-        intakeLeft.setPower(1);
-        intakeRight.setPower(1);
-    }
-
-    public void outtakeBlock(){
-        intakeLeft.setPower(-1);
-        intakeRight.setPower(-1);
-    }
-
-    public void wait(int mSec){
-        double startTime;
-        double endTime;
-
-        startTime = System.currentTimeMillis();
-        endTime = startTime+mSec;
-
-        while(endTime >= System.currentTimeMillis()){
-
-        }
-    }
-    public void incrementOpen(){
-
-        while (gamepad1.x){
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
-            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
-            wait(300);
-        }
-    }
-    public void incrementClose(){
-
-        while (gamepad1.y) {
-            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
-            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
-            wait(300);
-        }
-    }
     public void slideIncrement() {
 
-        if (gamepad2.dpad_up) {
+        if (gamepad2.dpad_up)
+        {
 
             moveUpInch(2.54);
 
-        } else if (gamepad2.dpad_right) {
-            moveUpInch(17.78);
-        } else if (gamepad2.dpad_down){
-            moveUpInch(33.02);
+        }
+        else if (gamepad2.dpad_down)
+        {
+            moveDownInch(2.54);
+        }
+        else {
+
         }
     }
 
     public void moveUpInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
-        double finalTarget = cm * countsPerCM;
+        double finalTarget = cm*countsPerCM;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
-        slideMotor.setTargetPosition((int) target_Position);
+        slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-0.6);
 
-        while (slideMotor.isBusy()) {
+        while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
             telemetry.update();
 
@@ -394,16 +324,16 @@ public void IncrementMain(){
     public void moveDownInch(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
-        double finalTarget = cm * countsPerCM;
+        double finalTarget = cm*countsPerCM;
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
 
-        slideMotor.setTargetPosition((int) target_Position);
+        slideMotor.setTargetPosition((int)target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(0.6);
 
-        while (slideMotor.isBusy()) {
+        while (slideMotor.isBusy()){
             telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
             telemetry.update();
 
@@ -412,22 +342,6 @@ public void IncrementMain(){
         slideMotor.setPower(0);
 
     }
-    public void openGlyph(){
-
-        //switching values with closeGlyph
-        //reversed values
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
-    }
-
-    public void closeGlyph(){
-        //reversed values
-        glyphServoRight.setPosition(0.75);
-        glyphServoLeft.setPosition(0.15);
-    }
-
-    public void middleGlyph(){
-        glyphServoRight.setPosition(0.65);
-        glyphServoLeft.setPosition(0.25);
-    }
 }
+
+//--------------------------------------------------------------------------------------------

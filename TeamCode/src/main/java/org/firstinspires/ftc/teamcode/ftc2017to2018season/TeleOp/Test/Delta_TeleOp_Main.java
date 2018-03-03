@@ -1,7 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
-
-
-import android.transition.Slide;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -10,19 +7,19 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoController;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.sql.Time;
 
 
 /**
- * Created by Rohan on 2/23/18.
- * Created for testing purposes in slide increment
+ * Created by Rohan on 11/18/17.
  */
-@TeleOp(name = "1 Use this for competition George")
-public class
-General_George_TeleOp extends OpMode {
 
 
-    /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
+@TeleOp(name = "Delta_TeleOp_Main")
+@Disabled
+public class Delta_TeleOp_Main extends OpMode {
+/*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
 * This is specificly made for the Tile Runner and not another pushbot or competiotion robot. However, this program is the basic design for
 * simple program and could work on a different robot with simple debugging and configuration.*/
 
@@ -39,12 +36,11 @@ General_George_TeleOp extends OpMode {
     Servo glyphServoRight;
     Servo glyphServoLeft;
     Servo jewel_servo;
-    Servo jewel_servo_rotate;
-    DcMotor relicMotor;
-    Servo relicMain;
-    Servo relicClaw;
+    //Initial value for slide motor
     public int IVFSM;
-    ElapsedTime runtime = new ElapsedTime();
+    public int slidesBaseValue;
+    public int dif2Inch = 8;
+    //public int dif7Inch =
 
 
 
@@ -92,26 +88,15 @@ General_George_TeleOp extends OpMode {
         glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
-        jewel_servo_rotate = hardwareMap.servo.get("jewelServoRotate");
         IVFSM = slideMotor.getCurrentPosition();
-        relicMain = hardwareMap.servo.get("relicMain");
-        relicClaw = hardwareMap.servo.get("relicClaw");
-        relicMotor = hardwareMap.dcMotor.get("relicMotor");
 
 
-        leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
-        leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
+        rightWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
-        relicMotor.setDirection(DcMotor.Direction.REVERSE);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
         openGlyph();
         jewel_servo.setPosition(0.1);
-        jewel_servo_rotate.setPosition(0.74);
-        relicMain.setPosition(1);
-
-
-
 
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
         telemetry.addData("glyph right pos", glyphServoRight.getPosition());
@@ -152,16 +137,14 @@ General_George_TeleOp extends OpMode {
 
     @Override
     public void loop() {
-        Glyph();
-        Relic();
-        Drive();
-        Slides();
+        FourWheelDrive();
+        slideMove();
+        glyphManipulator();
+        incrementOpen();
+        incrementClose();
+        slideIncrement();
 
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-
-        //  telemetry.addData("jewel pos", jewel_servo.getPosition());
-
+        telemetry.addData("Slide Motor is ", slideMotor.getCurrentPosition());
         telemetry.update();
 
     }
@@ -174,71 +157,54 @@ General_George_TeleOp extends OpMode {
 ---------------------------------------------------------------------------------------------
  */
 
-    /*
-    ---------------------------------------------------------------------------------------------
+/*
+---------------------------------------------------------------------------------------------
 
-        Functions go here
-     */
-    public void Slides(){
-        slideMove();
-        slideIncrement();
-        telemetry.addData("Slide Motor Value is ", slideMotor.getCurrentPosition());
-        telemetry.update();
-    }
+    Functions go here
+ */
     public void Drive(){
-        FourWheelDrive();
-    }
-    public void Relic() {
-        relicManipulator();
-    }
-    public void Glyph() {
-        glyphManipulator();
-        incrementOpen();
-        incrementClose();
-    }
-
-    public void IncrementMain(){
-        while (gamepad2.dpad_up){
-            relicMain.setPosition(relicMain.getPosition()+0.05);
+        if (gamepad1.left_stick_x>0.2 && gamepad1.left_stick_y>0.2 && gamepad1.right_stick_y>0.2&&gamepad1.right_stick_x>0.2){
+            leftWheelMotorFront.setPower(0.7);
+            rightWheelMotorBack.setPower(1);
         }
-        while (gamepad2.dpad_down){
-            relicMain.setPosition(relicMain.getPosition()-0.05);
+        else if (gamepad1.left_stick_y>0.2&&gamepad1.left_stick_x<0.2&&gamepad1.right_stick_y>0.2&&gamepad1.right_stick_x<0.2){
+            rightWheelMotorFront.setPower(1);
+            leftWheelMotorBack.setPower(1);
         }
-    }
-    public void relicManipulator() {
-        if (gamepad2.a){
-            relicMain.setPosition(0.1);
+        else if (gamepad1.left_stick_y<0.2&&gamepad1.left_stick_x<0.2&&gamepad1.right_stick_x<0.2&&gamepad1.right_stick_y<0.2){
+            leftWheelMotorFront.setPower(-0.7);
+            rightWheelMotorBack.setPower(-1);
         }
-        else if (gamepad2.x){
-            relicMain.setPosition(0.6);
+        else if (gamepad1.left_stick_y<0.2&&gamepad1.left_stick_x>0.2&&gamepad1.right_stick_y<0.2&&gamepad1.right_stick_x>0.2){
+            rightWheelMotorFront.setPower(-1);
+            leftWheelMotorBack.setPower(-1);
         }
-        else if (gamepad2.y){
-            relicMain.setPosition(1);
+        else if (gamepad1.right_stick_x>0&&gamepad1.left_stick_x>0){
+            leftWheelMotorFront.setPower(0.7);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
         }
-        else if (gamepad2.left_bumper){
-            relicClaw.setPosition(1.0);
-        }
-        else if (gamepad2.right_bumper){
-            relicClaw.setPosition(0.2);
-        }
-        else if (gamepad2.left_bumper&&gamepad2.right_bumper){
-            relicClaw.setPosition(0.5);
+        else if (gamepad1.right_stick_x<0&&gamepad1.left_stick_x<0){
+            leftWheelMotorFront.setPower(-0.7);
+            leftWheelMotorBack.setPower(1);
+            rightWheelMotorFront.setPower(1);
+            rightWheelMotorBack.setPower(-1);
         }
         else{
-            relicMotor.setPower(gamepad2.left_stick_y);
+            leftWheelMotorFront.setPower(gamepad1.left_stick_y);
+            leftWheelMotorBack.setPower(gamepad1.left_stick_y);
+            rightWheelMotorFront.setPower(gamepad1.right_stick_y);
+            rightWheelMotorBack.setPower(gamepad1.right_stick_y);
         }
     }
-
     public void FourWheelDrive() {
         /*
 
         read the gamepad values and put into variables
          */
-        double threshold = 0.2;
         float leftY_gp1 = (-gamepad1.left_stick_y);
         float rightY_gp1 = (-gamepad1.right_stick_y);
-        telemetry.addData("right power input", rightY_gp1);
-        telemetry.addData("left power input", leftY_gp1);
         //
         //11/24/17 This edit was made by Colin Szeto. This was a test that we used to see if the triggers will work for the servos
         // float strafeStickLeft = (-gamepad1.left_trigger);//*leftWheelMotorFront.getMaxSpeed();
@@ -246,36 +212,40 @@ General_George_TeleOp extends OpMode {
         //
         // run the motors by setting power to the motors with the game pad value
 
-        if (gamepad1.right_trigger > 0) {
+        if (gamepad1.left_trigger > 0) {
 
-            leftWheelMotorFront.setPower(1);
-            leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
-
-        } else if (gamepad1.left_trigger > 0) {
-
-            leftWheelMotorFront.setPower(-1);
+            leftWheelMotorFront.setPower(-0.7);
             leftWheelMotorBack.setPower(1);
             rightWheelMotorFront.setPower(1);
             rightWheelMotorBack.setPower(-1);
 
-        } else if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
+        } else if (gamepad1.right_trigger > 0) {
+
+            leftWheelMotorFront.setPower(0.7);
+            leftWheelMotorBack.setPower(-1);
+            rightWheelMotorFront.setPower(-1);
+            rightWheelMotorBack.setPower(1);
+
+        } else {
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
             rightWheelMotorBack.setPower(rightY_gp1);
         }
-        else{
-            leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            rightWheelMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            leftWheelMotorFront.setPower(0);
-            leftWheelMotorBack.setPower(0);
-            rightWheelMotorFront.setPower(0);
-            rightWheelMotorBack.setPower(0);
-        }
+
+        // telemetry.addData("Left Front value is", leftWheelMotorFront.getPower());
+        //  telemetry.addData("Left Back value is", leftWheelMotorBack.getPower());
+        // telemetry.addData("Right Front value is", rightWheelMotorFront.getPower());
+        //  telemetry.addData("Right Back value is", rightWheelMotorBack.getPower());
+        //  telemetry.update();
+        //telemetry.addData("",)
+        //telemetry.update();
+        //These were going to be used to find the values of triggers but we couldn't acomplish it
+        //run the motors by setting power to the motors with the game pad values
+        //leftWheelMotorFront.setPower(leftY_gp1);
+        //leftWheelMotorBack.setPower(leftY_gp1);
+        //rightWheelMotorFront.setPower(rightY_gp1);
+        //rightWheelMotorBack.setPower(rightY_gp1);
 
 
     }
@@ -283,7 +253,6 @@ General_George_TeleOp extends OpMode {
     public void slideMove() {
 
         slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         IVFSM = slideMotor.getCurrentPosition();
 
         if (gamepad2.right_stick_y != 0) {
@@ -300,11 +269,8 @@ General_George_TeleOp extends OpMode {
         double right_claw = (glyphServoRight.getPosition());
         double left_claw = (glyphServoLeft.getPosition());
        */
-        if (gamepad1.right_bumper&&gamepad1.left_bumper){
-            middleGlyph();
 
-        }
-        else if (gamepad1.left_bumper) {
+        if (gamepad1.left_bumper) {
 
 //opening the claw
 
@@ -321,17 +287,21 @@ General_George_TeleOp extends OpMode {
 
         */
     }
-    public void wait(int mSec){
-        double startTime;
-        double endTime;
 
-        startTime = System.currentTimeMillis();
-        endTime = startTime+mSec;
+    public void slideIncrement() {
 
-        while(endTime >= System.currentTimeMillis()){
+        if(gamepad2.dpad_up){
+            moveUpInch(13);
+        }else if(gamepad2.dpad_right){
+            moveUpInch(7);
+        }else if(gamepad2.dpad_down){
+            moveUpInch(2);
+        }
+        else{
 
         }
     }
+
     public void incrementOpen(){
 
         while (gamepad1.x){
@@ -348,24 +318,24 @@ General_George_TeleOp extends OpMode {
             wait(300);
         }
     }
-    public void slideIncrement() {
 
-        if (gamepad2.dpad_up) {
-//This was done by Rohan and Steven on 2/23/18 because the regionals are soon and the slides malfunction if they reach the very top. This causes the most ascension, therefore, it is disabled. TEMPORARY!!
-            //moveUpInch(33.02);
+    public void wait(int mSec){
+        double startTime;
+        double endTime;
 
-        } else if (gamepad2.dpad_right) {
-            moveUpInch(20.32);
-        } else if (gamepad2.dpad_down){
-            moveUpInch(5.08);
+        startTime = System.currentTimeMillis();
+        endTime = startTime+mSec;
+
+        while(endTime >= System.currentTimeMillis()){
+
         }
     }
 
-    public void moveUpInch(double cm) {
-        slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    public void moveUpInch(double inch) {
         double target_Position;
-        double countsPerCM = 50;
-        double finalTarget = cm * countsPerCM;
+        double countsPerCM = 150;
+        double finalTarget = inch * countsPerCM * 2.54;
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
         slideMotor.setTargetPosition((int) target_Position);
@@ -373,31 +343,9 @@ General_George_TeleOp extends OpMode {
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-0.6);
-        double begintime = runtime.seconds();
-        while (slideMotor.isBusy() && (runtime.seconds() - begintime) < 1.5) {
-            telemetry.addData("In while loop in moveUpInch", slideMotor.getTargetPosition());
-            telemetry.update();
-
-        }
-
-        slideMotor.setPower(0);
-
-    }
-
-    public void moveDownInch(double cm) {
-        double target_Position;
-        double countsPerCM = 609.6;
-        double finalTarget = cm * countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
-
-        slideMotor.setTargetPosition((int) target_Position);
-
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        slideMotor.setPower(0.6);
 
         while (slideMotor.isBusy()) {
-            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
             telemetry.update();
 
         }
@@ -405,22 +353,44 @@ General_George_TeleOp extends OpMode {
         slideMotor.setPower(0);
 
     }
-    public void openGlyph(){
 
-        //switching values with closeGlyph
-        //reversed values
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+    /*  public void moveDownInch(double cm) {
+          double target_Position;
+          double countsPerCM = 150;
+          double finalTarget = cm * countsPerCM;
+          target_Position = slideMotor.getCurrentPosition() + finalTarget;
+
+          slideMotor.setTargetPosition((int) target_Position);
+
+          slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+          slideMotor.setPower(0.6);
+
+
+          while (slideMotor.isBusy()) {
+              telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
+              telemetry.update();
+
+          }
+
+          slideMotor.setPower(0);
+
+      }
+      */
+    public void openGlyph(){
+        glyphServoRight.setPosition(0.6);
+        glyphServoLeft.setPosition(0.3);
     }
 
     public void closeGlyph(){
-        //reversed values
-        glyphServoRight.setPosition(0.75);
-        glyphServoLeft.setPosition(0.15);
+        glyphServoRight.setPosition(0.8);
+        glyphServoLeft.setPosition(0.05);
     }
 
     public void middleGlyph(){
-        glyphServoRight.setPosition(0.65);
-        glyphServoLeft.setPosition(0.25);
+        glyphServoRight.setPosition(0.75);
+        glyphServoLeft.setPosition(0.1);
+
     }
 }
+

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

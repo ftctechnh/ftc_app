@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Test;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
