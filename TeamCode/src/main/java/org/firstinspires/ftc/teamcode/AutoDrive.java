@@ -376,8 +376,8 @@ public class AutoDrive {
             telemetry.addData("Ran times", ranTimes);
             telemetry.addData("Accepted Ratio", acceptedSensorValue / ranTimes);
             telemetrizeDistance();
-            telemetry.update();
         }
+        telemetry.update();
         stopMotors();
     }
 
