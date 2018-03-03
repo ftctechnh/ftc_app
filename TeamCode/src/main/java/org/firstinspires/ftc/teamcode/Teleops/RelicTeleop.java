@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Teleops;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,13 +6,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
-@TeleOp(name = "2 Personas", group = "bacon")
+@TeleOp(name = "El Teleop", group = "bacon")
 //@Disabled
-public class dosjugadores extends LinearOpMode {
+public class RelicTeleop extends LinearOpMode {
+    /* All hardware & variables */
 
     /* Declare all objects */
     DcMotor frontLeftMotor = null;
@@ -65,7 +67,7 @@ public class dosjugadores extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+    /* Initialization */
         /* Define and Initialize Hardware */
         frontLeftMotor = hardwareMap.dcMotor.get("FL");
         frontRightMotor = hardwareMap.dcMotor.get("FR");
@@ -96,6 +98,8 @@ public class dosjugadores extends LinearOpMode {
         telemetry.addLine("!☺ Ready to Run ☺!");
         telemetry.update();
         waitForStart();
+
+    /* While OpMode is Active Loop */
 
         while (opModeIsActive()) {
 
@@ -146,7 +150,7 @@ public class dosjugadores extends LinearOpMode {
             }
 
             /* Function to toggle tray at bottom-most position */
-            if (gamepad2.a) {
+            if (gamepad1.a) {
                 if (trayPos == 0 & !aPush) {
                     trayMotor.setTargetPosition(trayOut);
                     trayMotor.setPower(-.2);
@@ -165,7 +169,7 @@ public class dosjugadores extends LinearOpMode {
             }
 
             /*** Int Toggle ***/
-            if (gamepad2.y) {
+            if (gamepad1.y) {
                 if (yPos == 0 && !yPush) {
                     yPos++;
                     yPush = true;
@@ -205,7 +209,7 @@ public class dosjugadores extends LinearOpMode {
                 }
             }
 
-
+            /* Failsafes */
             if (yPos == 0 && bottomTouch.getState() && getRuntime() < 5) {
                 if (bottomPushed == 0) {
                     verticalArmMotor.setPower(-.2);
@@ -217,7 +221,22 @@ public class dosjugadores extends LinearOpMode {
                 }
             }
 
-/* Rotational Drive Control */
+            if (gamepad2.left_bumper && gamepad2.a && getRuntime() < 7) {
+                trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(100);
+                trayMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                trayMotor.setPower(.1);
+            }
+
+            if (gamepad2.left_bumper && gamepad2.right_bumper && gamepad2.b && getRuntime() < 7) {
+                trayMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                sleep(100);
+                trayMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                trayPos = 0;
+                aPush = false;
+            }
+
+        /* Rotational Drive Control */
             if (gamepad1.left_bumper && gamepad1.right_stick_x < 0 || gamepad1.left_bumper && gamepad1.right_stick_x > 0) {
 
                 double GRX = gamepad1.right_stick_x / bumperSlowest;
@@ -288,9 +307,7 @@ public class dosjugadores extends LinearOpMode {
 
             }
         }
-
     }
-
 
     /***********************************************************************************************
      * These are all of the methods used in the Teleop*

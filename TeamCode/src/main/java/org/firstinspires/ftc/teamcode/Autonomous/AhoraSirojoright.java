@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "Rojo Left", group = "Bacon Autonomous!")
+@Autonomous(name = "Rojo Right", group = "Bacon Autonomous!")
 //@Disabled
-public class AhoraSirojoleft extends LinearOpMode {
+public class AhoraSirojoright extends LinearOpMode {
     /* Declare all devices since hardware class isn't working */
     DcMotor frontLeftMotor;
     DcMotor backLeftMotor;
@@ -56,8 +56,8 @@ public class AhoraSirojoleft extends LinearOpMode {
 
     //    String teamColorPosition = "BlueRight";
 //    String teamColorPosition = "BlueLeft";
-//    String teamColorPosition = "RedRight";
-    String teamColorPosition = "RedLeft";
+    String teamColorPosition = "RedRight";
+//    String teamColorPosition = "RedLeft";
 
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
     VuforiaLocalizer vuforia;
@@ -229,11 +229,17 @@ public class AhoraSirojoleft extends LinearOpMode {
             case "BlueLeft":
                 break;
             case "RedRight":
+                runToPositionWheels(2200, .7, "Backward");
+                sleep(1500);
+                /* Rotate properly for vuMark */
+                keyAlignment(teamColorPosition, vuMark);
+                sleep(30);
                 break;
             case "RedLeft":
                 /* Get off balance board & rotate 180*/
                 runToPositionWheels(2200, .7, "Backward");
                 sleep(1500);
+                rotate(88, .6);
                 /* Rotate properly for vuMark */
                 keyAlignment(teamColorPosition, vuMark);
                 sleep(30);
@@ -265,6 +271,7 @@ public class AhoraSirojoleft extends LinearOpMode {
 
         }
     }
+
 
     /* This method is the switch case for vuMark alignment */
     public void vumarkSwitch(RelicRecoveryVuMark vuMark, int leftRotate, int centerRotate, int rightRotate, double power) {

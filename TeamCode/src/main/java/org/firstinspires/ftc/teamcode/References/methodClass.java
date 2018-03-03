@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.References;
 
 /*
  * Howdy! This class defines all the hardware, constants, and variables
@@ -17,14 +17,6 @@ public class methodClass {
     DcMotor frontRightMotor = null;
     DcMotor backLeftMotor = null;
     DcMotor backRightMotor = null;
-    DcMotor verticalArmMotor;
-    DcMotor trayMotor;
-    DcMotor P1Motor = null;
-    DcMotor P2Motor = null;
-    Servo gemServo;
-    BNO055IMU imu;
-    DigitalChannel topTouch;
-    DigitalChannel bottomTouch;
 
     /* Give place holder values for the motor powers for the
     * setWheelPower method*/
