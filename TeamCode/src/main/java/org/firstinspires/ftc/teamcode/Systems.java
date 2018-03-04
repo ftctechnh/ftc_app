@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.Mat;
 import org.opencv.core.Point;
 
 public class Systems {
@@ -79,9 +78,9 @@ public class Systems {
         findGlyphTime.reset();
         double xOffSet;
         Point bestPos = new Point(100, 0);
-        while (findGlyphTime.seconds() < 2.5) {
+        while (findGlyphTime.seconds() < 3.5) {
             xOffSet = glyphDetector.getXOffset();
-            if ((Math.abs(xOffSet) < bestPos.x) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
+            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
                 bestPos.x = xOffSet;
                 telemetry.addData("xOffSet", bestPos.x);
             }
@@ -98,10 +97,10 @@ public class Systems {
         */
     }
 
-
     public void setUpMultiGlyph() {
         ForkLift.closeAllTheWay();
         phone.faceFront();
         glyphDetector.enable();
+
     }
 }
