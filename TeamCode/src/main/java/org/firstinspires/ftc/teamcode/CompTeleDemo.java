@@ -47,6 +47,27 @@ public class CompTeleDemo extends OpMode
         else
             newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
+        if (gamepad1.y)
+        {
+            if (!newRobot.getWingTouchSens().getState())
+            {
+
+            }
+            else
+            newRobot.getWingMotor().setPower(1);//lift wing
+        }
+        else if (gamepad1.b)
+        {
+            if (!newRobot.getWingTouchSens().getState())
+            {
+
+            }
+            else
+                newRobot.getWingMotor().setPower(-1f);
+        }
+        else
+            newRobot.getWingMotor().setPower(0f);
+
         telemetry.addData("LiftEnc", newRobot.getLiftMotor().getCurrentPosition());
         telemetry.addData("RightDriveEnc ", newRobot.getDriveRightOne().getCurrentPosition());
         telemetry.addData("LeftDriveEnc", newRobot.getDriveLeftOne().getCurrentPosition());
