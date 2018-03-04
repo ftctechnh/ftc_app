@@ -50,7 +50,7 @@ public class AutoGlyphs extends GlyphDetector {
         if (xPosOffset == DEFAULT_X_POS_VALUE) {
             return DEFAULT_X_POS_VALUE;
         }
-        return getXPos() + X_POSITION_OFFSET;
+        return xPosOffset + X_POSITION_OFFSET;
     }
 
     public double getXPos() {
