@@ -526,10 +526,12 @@ public class NewRobotFinal
         if (adjLevels + currentLvl < 0)
         {
             currentLvl = 0;
-        } else if (adjLevels + currentLvl >= liftLevels.length)
+        }
+        else if (adjLevels + currentLvl >= liftLevels.length)
         {
             currentLvl = (short) (liftLevels.length - 1);
-        } else
+        }
+        else
         {
             currentLvl += adjLevels;
         }
@@ -539,7 +541,8 @@ public class NewRobotFinal
         {
             liftTargetPos = (short) (liftLevels[currentLvl] - liftDeadzone);
             liftDir = UP_L;
-        } else
+        }
+        else
         {
             liftTargetPos = (short) (liftLevels[currentLvl] + liftDeadzone);
             liftDir = DOWN_L;
