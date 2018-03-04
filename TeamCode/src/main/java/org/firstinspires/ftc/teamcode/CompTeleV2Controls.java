@@ -9,10 +9,13 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 /**
  * Created by Jeremy on 11/17/2017.
  */
-@TeleOp(name = "CompTeleV1Controls", group = "Tele")
-public class CompTeleFinal extends OpMode
+@TeleOp(name = "CompTeleV2Controls", group = "Tele")
+public class CompTeleV2Controls extends OpMode
 {
+    float[] rotatorLvls =  {0.91f, .6067f,.3033f, 0};
+    short rotatorCurrentLvl = 0;
     boolean liftArmed = true;
+    boolean rotatorArmed = true;
     NewRobotFinal newRobot;
 
     public void init ()
@@ -21,6 +24,7 @@ public class CompTeleFinal extends OpMode
         gamepad1.setJoystickDeadzone(.2f);//driver
         newRobot = new NewRobotFinal(hardwareMap);
         newRobot.openOrCloseDoor(false);
+        newRobot.getGrabberRotator().setPosition(.91f);
     }
 
     public void start ()
@@ -66,7 +70,7 @@ public class CompTeleFinal extends OpMode
         }
         else
         {
-            newRobot.fineMoveLift(gamepad2.left_stick_y, .76f);
+            newRobot.fineMoveLift(gamepad2.left_stick_y, 1f);
             telemetry.addData("Fine move lift", null);
         }
 
@@ -75,16 +79,11 @@ public class CompTeleFinal extends OpMode
         else if (gamepad2.left_trigger > .2)
             newRobot.fineAdjDoors(.16f);
 
-        if (gamepad2.right_bumper)
-            newRobot.getTailRelease().setPower(-1);//release
-        else if (gamepad2.right_trigger > .2f)
-            newRobot.getTailRelease().setPower(1);//retract
-        else
-            newRobot.getTailRelease().setPower(0f);
+        newRobot.getTailRelease().setPower(gamepad2.right_stick_y);
 
-        if (gamepad2.a)
+        if (gamepad2.right_trigger > .3f)
             newRobot.fineAdjGrabber(.028f);   //closing
-        else if (gamepad2.b)
+        else if (gamepad2.right_bumper)
             newRobot.fineAdjGrabber(-.028f);  //opening
 
         if (gamepad2.x)
@@ -96,15 +95,52 @@ public class CompTeleFinal extends OpMode
             newRobot.fineAdjGrabberRotator(-.004f);
         }
 
+        if (gamepad2.dpad_left)
+        {
+            //Insert pull function
+        }
+        else if (gamepad2.dpad_right)
+        {
+            //insert push function
+        }
+        else
+        {
+
+        }
+
+        if (gamepad2.a)
+        {
+            if (rotatorArmed)
+            {
+                rotatorCurrentLvl -= 1;
+                if (rotatorCurrentLvl < 0)
+                    rotatorCurrentLvl = 0;
+                newRobot.getGrabberRotator().setPosition(rotatorLvls[rotatorCurrentLvl]);
+                rotatorArmed = false;
+            }
+        }
+        else if(gamepad2.b)
+        {
+            if (rotatorArmed)
+            {
+                rotatorCurrentLvl += 1;
+                if (rotatorCurrentLvl > rotatorLvls.length - 1)
+                    rotatorCurrentLvl -= 1;
+                newRobot.getGrabberRotator().setPosition(rotatorLvls[rotatorCurrentLvl]);
+                rotatorArmed = false;
+            }
+        }
+        else
+            rotatorArmed = true;
         /**
          *DRIVE CONTROLS
          * GAMEPAD 1
          */
 
-            if (gamepad1.right_trigger > .4f)
-                newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
-            else
-                newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
+        if (gamepad1.right_trigger > .4f)
+            newRobot.driveMotors(gamepad1.left_stick_y / 2, gamepad1.right_stick_y / 2);
+        else
+            newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
         if (gamepad1.y)
             newRobot.getWingMotor().setPower(1);//lift wing
