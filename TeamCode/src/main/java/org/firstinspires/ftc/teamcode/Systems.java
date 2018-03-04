@@ -20,12 +20,14 @@ public class Systems {
     private JewelArm JewelArm;
     private Telemetry telemetry;
     public AutoGlyphs glyphDetector;
+    static final double STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH = 0.4;
 
     public Systems(DriveMecanum drive, ForkLift ForkLift, RelicClaw RelicClaw) {
         this.DriveMecanum = drive;
         this.ForkLift = ForkLift;
         this.RelicClaw = RelicClaw;
     }
+
     public Systems(AutoDrive drive, ForkLift ForkLift, JewelArm JewelArm, Phone phone, HardwareMap hardwareMap, Telemetry telemetry) {
         this.AutoDrive = drive;
         this.ForkLift = ForkLift;
@@ -34,14 +36,15 @@ public class Systems {
         this.telemetry = telemetry;
         this.glyphDetector = new AutoGlyphs(hardwareMap, telemetry);
     }
+
     void pushInBlock() {
         ForkLift.openClaw();
         sleep(100);
-        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,4);
+        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 4);
         ForkLift.moveUntilDown(0.75);
         ForkLift.setClawPositionPushInBlock();
         sleep(250);
-        AutoDrive.forwardTime(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,500);
+        AutoDrive.forwardTime(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 500);
     }
 
     public void grabSecondGlyph() {
@@ -56,10 +59,12 @@ public class Systems {
         sleep(250);
         ForkLift.moveMotor(1, 250);
     }
+
     public static void sleep(long time) {
         try {
             Thread.sleep(time);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
     }
 
     public void stopAll() {
@@ -67,21 +72,32 @@ public class Systems {
         ForkLift.moveMotor(0);
         RelicClaw.moveMotor(0);
     }
+
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
         setUpMultiGlyph();
         ElapsedTime findGlyphTime = new ElapsedTime();
         findGlyphTime.reset();
         double xOffSet;
-        Point bestPos = new Point(100,0);
-        while(findGlyphTime.seconds()<2.5) {
+        Point bestPos = new Point(100, 0);
+        while (findGlyphTime.seconds() < 2.5) {
             xOffSet = glyphDetector.getXOffset();
-            if((Math.abs(xOffSet) < bestPos.x) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
+            if ((Math.abs(xOffSet) < bestPos.x) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
                 bestPos.x = xOffSet;
+                telemetry.addData("xOffSet", bestPos.x);
             }
         }
-        telemetry.addData("xOffSet", bestPos.x);
         telemetry.update();
+        /*
+        if (bestPos.x > 0) {
+            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH);
+        } else if (bestPos.x < 0) {
+            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH);
+        }
+        AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
+        ForkLift.closeClaw();
+        */
     }
+
 
     public void setUpMultiGlyph() {
         ForkLift.closeAllTheWay();
