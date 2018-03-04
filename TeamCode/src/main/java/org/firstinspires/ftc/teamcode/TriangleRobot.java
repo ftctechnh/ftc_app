@@ -76,8 +76,8 @@ public class TriangleRobot extends LinearOpMode{
             double drivex = gamepad1.left_stick_x;
             //double turn =  gamepad1.right_stick_x;
             double time = getRuntime();
-            double driveθ = Math.atan(drivex/drivey);
-            double driveV = (abs(drivey)/drivey)*sqrt(pow(drivey,2)+pow(drivey,2));
+            double driveθ = Math.atan2(drivex,drivey);
+            double driveV = (sqrt(pow(drivey,2)+pow(drivey,2)));
             Range.clip(driveV,-1,1);
             //drivebase powers
             APwr= driveV*sin(driveθ);
@@ -90,6 +90,7 @@ public class TriangleRobot extends LinearOpMode{
             //Telemetry Data
             telemetry.addData("path1","A Power:" + String.valueOf(APwr) + " B Power:" + String.valueOf(BPwr) + " C Power:" +String.valueOf(CPwr));
             telemetry.addData("path2","Integrated Z:" + String.valueOf(MRI2CGyro.getIntegratedZValue()));
+            telemetry.update();
         }
     }
 }
