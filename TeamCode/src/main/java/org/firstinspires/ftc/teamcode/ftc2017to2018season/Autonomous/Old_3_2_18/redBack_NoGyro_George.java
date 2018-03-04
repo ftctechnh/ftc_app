@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 //10-28-17
 @Autonomous(name="Red Back No Gyro George")
 @Disabled
-public class redBack_NoGyro_George extends Autonomous_General_George {
+public class redBack_NoGyro_George extends Autonomous_General_George_old {
 
     DcMotor leftFront;
     DcMotor rightFront;

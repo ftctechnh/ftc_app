@@ -120,7 +120,7 @@ public class redFront_George extends Autonomous_General_George {
                 sleep(2000);
             }
         }
-        encoderMecanumDrive(0.6,-40,-40,5000,0);
+        encoderMecanumDrive(0.4,-40,-40,5000,0);
 
         sleep(100);
         gyroTurnREV(0.4,0);
@@ -170,9 +170,9 @@ public class redFront_George extends Autonomous_General_George {
         openGlyphManipulator();
         sleep(250);
 
-        encoderMecanumDrive(0.3,35,35,1000,0);
+        encoderMecanumDrive(0.3,20,20,1000,0);
         sleep(250);
-        encoderMecanumDrive(0.3,-15,15,1000,0);
+        encoderMecanumDrive(0.3,-10,10,1000,0);
         sleep(500);
         encoderMecanumDrive(0.3, -10, -10, 1000, 0);
         /*sleep(100);
