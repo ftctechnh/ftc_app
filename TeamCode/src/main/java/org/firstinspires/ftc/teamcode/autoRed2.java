@@ -13,13 +13,9 @@ public class autoRed2 extends superAuto {
 
         iAmRed = true;
 
-        configureGyro();
+        setUp();
 
-        mapHardware();
-
-        composeTelemetry();
-
-        waitForStart();
+        jewel();
 
         move(0f, -0.5f, .35f);
 

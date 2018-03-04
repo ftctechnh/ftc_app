@@ -14,13 +14,8 @@ public class autoBlue2 extends superAuto {
         iAmRed = false;
         iAmBlue = true;
 
-        configureGyro();
-
-        mapHardware();
-
-        composeTelemetry();
-
-        waitForStart();
+        setUp();
+        jewel();
 
         move(0f, 0.5f, .23f);
 

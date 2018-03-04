@@ -8,10 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -19,6 +21,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
 
@@ -45,11 +51,27 @@ abstract public class superAuto extends LinearOpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;
     NormalizedColorSensor colorSensor;
+    NormalizedRGBA colors;
 
     boolean iAmRed;
     boolean iAmBlue = !iAmRed;
 
     private ElapsedTime runtime = new ElapsedTime();
+
+    void setUp(){
+        configureGyro();
+
+        mapHardware();
+
+        composeTelemetry();
+
+        waitForStart();
+
+        setUpVuforia();
+
+    }
+
+
 
     void configureGyro() {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -65,6 +87,7 @@ abstract public class superAuto extends LinearOpMode {
         imu =hardwareMap.get(BNO055IMU.class,"imu");
         imu.initialize(parameters);
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+
 
         motorFR =hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
@@ -275,5 +298,84 @@ abstract public class superAuto extends LinearOpMode {
         motorBL.setPower(power);
         motorFR.setPower(power);
         motorBR.setPower(power);
+    }
+
+    void setUpVuforia(){
+
+        VuforiaLocalizer vuforia;
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = "Ac+mNz7/////AAAAGarZm7vF6EvSku/Zvonu0Dtf199jWYNFXcXymm3KQ4XngzMBntb" +
+                    "NeMXt0qCPqACXugivtrYvwDU3VhMDRJwlwdMi4C2F6Su/8LZBrPIFtxUtr7MMagebQM/+4CSUIOQQdKNpdBttrX8yWM" +
+                    "SrdyfnkNhh/vhXpQd7pXWwJ02UcnEVT1CiLeyTcl+bJUo1+xNonNaNEs8861zxmtO2TBtf9gyXhunlM6lpBJjC6nYWQ3" +
+                    "BM2DOODFNz2EU3F3N1WxnOvCERQ+c934JKPajgCrNs5dquSo1wpcr0Kkf3u29hzK0DornR8s9j03g8Ea7q5cYN8WLn/e" +
+                    "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
+
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+
+        VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+
+        relicTrackables.activate();
+    }
+
+    void jewel(){
+
+        // J e w e l s
+
+        boolean iSeeBlue = false;
+        boolean iSeeRed = false;
+        servoFlicker.setPosition(.5);
+        servoTapper.setPosition(0.2d);
+        Wait(.2f);
+        servoTapper.setPosition(0.8d);
+        Wait(1.5f);
+
+
+        telemetry.update();
+        colors = colorSensor.getNormalizedColors();
+        float redValue = colors.red * 10000;
+        float blueValue = colors.blue * 10000;
+
+        if (redValue > blueValue) {
+            iSeeRed = true;
+            iSeeBlue = false;
+        } else {
+            iSeeBlue = true;
+            iSeeRed = false;
+        }
+
+        telemetry.addLine()
+                .addData("r", "%.3f", redValue)
+                .addData("b", "%.3f", blueValue)
+                .addData("iSeeRed", "%b", iSeeRed)
+                .addData("iSeeBlue", "%b", iSeeBlue)
+                .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
+                .addData ( "iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
+                .addData ( "Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
+
+        telemetry.update();
+
+        Wait(1f);
+
+        if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
+            telemetry.addData("1", "move right");
+            servoFlicker.setPosition(.7);
+        }
+        else {
+            telemetry.addData("1", "move left");
+            servoFlicker.setPosition(.3);
+        }
+        Wait(1d);
+        servoFlicker.setPosition(.5);
+        servoTapper.setPosition(.2d);
+        Wait(1d);
+        servoFlicker.setPosition(0);
+
+        telemetry.update();
+
     }
 }

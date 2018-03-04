@@ -94,7 +94,7 @@ public class TeleOp6217Flip extends OpMode
      */
     @Override
     public void start() {
-        servoTapper.setPosition(0.2d);
+        servoTapper.setPosition(0.35d);
     }
 
     @Override
@@ -146,11 +146,11 @@ public class TeleOp6217Flip extends OpMode
 
         //  Loading Glyphs
         // Directions will require testing
-        if (dpad_up) {
+        if (dpad_up && !b) {
             motorConL.setPower(-.7);
             motorConR.setPower(.7);
 
-        } else if (dpad_down) {
+        } else if (dpad_down && ! b ) {
             motorConL.setPower(.7);
             motorConR.setPower(-.7);
 
@@ -161,10 +161,8 @@ public class TeleOp6217Flip extends OpMode
         }
 
         // Rocker (for verticle flip, use negative power)
-        if (posyFlip <= -.2) {
-            motorFlip.setPower(posyFlip);
-        } else if (posyFlip >= .2) {
-            motorFlip.setPower(-posyFlip);
+        if (posyFlip <= -.2 || posyFlip >= .2) {
+            motorFlip.setPower(posyFlip *0.5);
         } else {
             motorFlip.setPower(0);
         }
@@ -190,25 +188,25 @@ public class TeleOp6217Flip extends OpMode
 
         // Relic
         if (y) {
-            motorSlide.setPower(1);
-        }
-        else if (a) {
             motorSlide.setPower(-1);
+        }
+        else if (a){
+            motorSlide.setPower(.25);
         }
         else {
             motorSlide.setPower(0);
         }
 
-        if (a && dpad_up ){
+        if (b && dpad_up ){
             servoClaw.setPosition(0);
         }
-        else if (a && dpad_down){
-            servoClaw.setPosition(0);
+        else if (b && dpad_down){
+            servoClaw.setPosition(1);
         }
-        if(a && leftPad){
+        if(b && leftPad){
             servoWrist.setPosition(1.0);
         }
-        else if (a && rightPad){
+        else if (b && rightPad){
             servoWrist.setPosition(.52);
         }
 

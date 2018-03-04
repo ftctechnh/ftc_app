@@ -13,14 +13,8 @@ public class autoRed1 extends superAuto {
 
         iAmRed = true;
 
-        configureGyro();
-
-        mapHardware();
-
-        composeTelemetry();
-
-        waitForStart();
-
+        setUp();
+        jewel();
         pivotTo(-90);
     }
 }
