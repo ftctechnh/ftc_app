@@ -8,11 +8,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_2_18.Autonomous_General_George_old;
 
 //10-28-17
 @Autonomous(name="Red Back George")
 @Disabled
-public class redBack_GeorgeOld extends Autonomous_General_George {
+public class redBack_GeorgeOld extends Autonomous_General_George_old {
 
     DcMotor leftFront;
     DcMotor rightFront;

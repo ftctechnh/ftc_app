@@ -16,7 +16,7 @@ import java.sql.Time;
  */
 
 
-@TeleOp(name = "General_Delta_TeleOp")
+@TeleOp(name = "Rolley_Delta_TeleOp")
 
 public class Delta_Rolly_TeleOp extends OpMode {
 /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
