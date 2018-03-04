@@ -12,7 +12,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
  */
 @Autonomous(name = "testing auto glyphs stuff", group = "test")
 public class AutoGlyphsTest extends LinearOpMode {
-    AutoGlyphs cv;
     private AutoDrive drive;
     private JewelArm JewelArm;
     private ForkLift ForkLift;
@@ -22,16 +21,16 @@ public class AutoGlyphsTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET"); telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
-        drive.init(); //Calibrates gyro
+        //drive.init(); //Calibrates gyro
         JewelArm = new JewelArm(hardwareMap, telemetry);
         ForkLift = new ForkLift(hardwareMap, telemetry);
         phone = new Phone(hardwareMap, telemetry);
         Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
+        phone.closeVuforia();
         telemetry.addLine("NOW YOU CAN PRESS PLAY"); telemetry.update();
         waitForStart();
-        phone.closeVuforia();
         Systems.getMoreGlyphs(-90, CryptoboxColumn.CENTER);
+        Systems.glyphDetector.disable();
         sleep(2000);
     }
-
 }

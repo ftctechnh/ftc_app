@@ -18,11 +18,11 @@ public class AutoGlyphs extends GlyphDetector {
     static final double X_CENTER = X_HIGH_POS / 2;
     static final double Y_HIGH_POS = 216; //Austin test this number with GlyphOpMode.
     static final double Y_CENTER = Y_HIGH_POS / 2;
-    static final double X_POSITION_OFFSET = 38;
+    static final double X_POSITION_OFFSET = 31.5;
     static final double DEFAULT_X_POS_VALUE = 0;
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
-        this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_SLOW, 0);
+        this(hardwareMap, telemetry, GlyphDetectionSpeed.BALANCED, 0);
     }
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {

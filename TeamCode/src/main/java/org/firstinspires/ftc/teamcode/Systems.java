@@ -19,7 +19,7 @@ public class Systems {
     private Phone phone;
     private JewelArm JewelArm;
     private Telemetry telemetry;
-    private AutoGlyphs glyphDetector;
+    public AutoGlyphs glyphDetector;
 
     public Systems(DriveMecanum drive, ForkLift ForkLift, RelicClaw RelicClaw) {
         this.DriveMecanum = drive;
@@ -73,7 +73,7 @@ public class Systems {
         findGlyphTime.reset();
         double xOffSet;
         Point bestPos = new Point(100,0);
-        while(findGlyphTime.seconds()<2) {
+        while(findGlyphTime.seconds()<2.5) {
             xOffSet = glyphDetector.getXOffset();
             if((Math.abs(xOffSet) < bestPos.x) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
                 bestPos.x = xOffSet;
