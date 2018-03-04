@@ -35,8 +35,6 @@ public class curious_georgeROLLI_teleop extends OpMode {
     DcMotor rightWheelMotorFront;
     DcMotor rightWheelMotorBack;
     DcMotor slideMotor;
-    Servo glyphServoRight;
-    Servo glyphServoLeft;
     Servo jewel_servo;
     CRServo intakeLeftTop;
     CRServo intakeLeftBottom;
@@ -92,8 +90,7 @@ public class curious_georgeROLLI_teleop extends OpMode {
         leftWheelMotorBack = hardwareMap.dcMotor.get("leftWheelMotorBack");
         rightWheelMotorFront = hardwareMap.dcMotor.get("rightWheelMotorFront");
         rightWheelMotorBack = hardwareMap.dcMotor.get("rightWheelMotorBack");
-        glyphServoRight = hardwareMap.servo.get("glyphServoRight");
-        glyphServoLeft = hardwareMap.servo.get("glyphServoLeft");
+        glyphRotate = hardwareMap.servo.get("glyphRotate");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
         jewel_servo = hardwareMap.servo.get("jewelServo");
         IVFSM = slideMotor.getCurrentPosition();
@@ -117,7 +114,7 @@ public class curious_georgeROLLI_teleop extends OpMode {
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
-        openGlyph();
+       // openGlyph();
         jewel_servo.setPosition(0.6);
         glyphRotate.setPosition(0);
         /*telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
@@ -163,14 +160,6 @@ public class curious_georgeROLLI_teleop extends OpMode {
        Relic();
        Drive();
        Slides();
-
-        telemetry.addData("glyph left pos", glyphServoLeft.getPosition());
-        telemetry.addData("glyph right pos", glyphServoRight.getPosition());
-
-        //  telemetry.addData("jewel pos", jewel_servo.getPosition());
-
-        telemetry.update();
-
     }
 
     /* Code to run ONCE after the driver hits STOP
@@ -463,22 +452,22 @@ public void IncrementMain(){
         slideMotor.setPower(0);
 
     }
-    public void openGlyph(){
-
-        //switching values with closeGlyph
-        //reversed values
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
-    }
-
-    public void closeGlyph(){
-        //reversed values
-        glyphServoRight.setPosition(0.75);
-        glyphServoLeft.setPosition(0.15);
-    }
-
-    public void middleGlyph(){
-        glyphServoRight.setPosition(0.65);
-        glyphServoLeft.setPosition(0.25);
-    }
+//    public void openGlyph(){
+//
+//        //switching values with closeGlyph
+//        //reversed values
+//        glyphServoRight.setPosition(0.5);
+//        glyphServoLeft.setPosition(0.4);
+//    }
+//
+//    public void closeGlyph(){
+//        //reversed values
+//        glyphServoRight.setPosition(0.75);
+//        glyphServoLeft.setPosition(0.15);
+//    }
+//
+//    public void middleGlyph(){
+//        glyphServoRight.setPosition(0.65);
+//        glyphServoLeft.setPosition(0.25);
+//    }
 }
