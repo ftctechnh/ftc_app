@@ -1,10 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 
 /**
  * Created by Jeremy on 11/17/2017.
@@ -131,7 +128,9 @@ public class CompTeleV2Controls extends OpMode
             }
         }
         else
+        {
             rotatorArmed = true;
+        }
         /**
          *DRIVE CONTROLS
          * GAMEPAD 1
