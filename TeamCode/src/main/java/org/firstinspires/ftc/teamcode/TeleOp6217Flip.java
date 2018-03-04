@@ -94,7 +94,7 @@ public class TeleOp6217Flip extends OpMode
      */
     @Override
     public void start() {
-        servoTapper.setPosition(0.35d);
+        servoTapper.setPosition(0.45d);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class TeleOp6217Flip extends OpMode
 
         // Rocker (for verticle flip, use negative power)
         if (posyFlip <= -.2 || posyFlip >= .2) {
-            motorFlip.setPower(posyFlip *0.5);
+            motorFlip.setPower(-(posyFlip *0.5));
         } else {
             motorFlip.setPower(0);
         }
