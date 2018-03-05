@@ -174,6 +174,10 @@ public class redFront_George extends Autonomous_General_George {
         encoderMecanumDrive(0.3,-10,10,1000,0);
         sleep(500);
         encoderMecanumDrive(0.3, -10, -10, 1000, 0);
+        if(vuMark == RelicRecoveryVuMark.RIGHT){
+            encoderMecanumDrive(0.3, 10, 10, 1000, -1);
+            encoderMecanumDrive(0.3,2,2,1000,0);
+        }
         /*sleep(100);
         gyroTurnREV(0.3, 179);
         sleep(100);*/
