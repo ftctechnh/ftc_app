@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_2_18;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name = "Blue Back George Super-Regionals")
-//@Disabled
+@Autonomous(name = "Blue Back George")
+@Disabled
 //3/2/18 edit by Steven Chen: trying to see if going a slower speed off the platform makes it go more straight
 public class blueBack_George extends Autonomous_General_George_old {
 

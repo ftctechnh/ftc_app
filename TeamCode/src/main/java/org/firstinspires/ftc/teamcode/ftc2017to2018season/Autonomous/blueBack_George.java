@@ -126,7 +126,8 @@ public class blueBack_George extends Autonomous_General_George {
                 sleep(1000);
             }
         }
-        sleep(1000);
+        jewelServo.setPosition(1);
+        sleep(700);
         encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
@@ -150,7 +151,7 @@ public class blueBack_George extends Autonomous_General_George {
         sleep(100);
 
         if (vuMark == RelicRecoveryVuMark.LEFT){
-            gyroTurnREV(0.5, 102);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+            gyroTurnREV(0.5, 112);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
 
         }
         else {
@@ -167,7 +168,7 @@ public class blueBack_George extends Autonomous_General_George {
         openGlyphManipulator();
         sleep(250);
 
-        encoderMecanumDrive(0.3,20,20,1000,0);
+        encoderMecanumDrive(0.3,16,16,1000,0);
         sleep(250);
 
         if (vuMark == RelicRecoveryVuMark.LEFT){

@@ -40,8 +40,8 @@ public class curious_georgeROLLI_teleop extends OpMode {
     CRServo intakeLeftBottom;
     CRServo intakeRightTop;
     CRServo intakeRightBottom;
-    DistanceSensor intakeColorTop;
-    DistanceSensor intakeColorBottom;
+    DistanceSensor intakeRangeTop;
+    DistanceSensor intakeRangeBottom;
     DcMotor relicMotor;
     Servo relicMain;
     Servo relicClaw;
@@ -103,13 +103,11 @@ public class curious_georgeROLLI_teleop extends OpMode {
         intakeRightTop = hardwareMap.crservo.get("intakeRightTop");
         intakeRightBottom = hardwareMap.crservo.get("intakeRightBottom");
 
-        intakeColorTop = hardwareMap.get(DistanceSensor.class, "intakeColorTop");
-        intakeColorBottom = hardwareMap.get(DistanceSensor.class, "intakeColorBottom");
+        intakeRangeTop = hardwareMap.get(DistanceSensor.class, "intakeRangeTop");
+        intakeRangeBottom = hardwareMap.get(DistanceSensor.class, "intakeRangeBottom");
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-        intakeLeftTop.setDirection(CRServo.Direction.REVERSE);
-        intakeLeftBottom.setDirection(CRServo.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         relicMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
@@ -344,25 +342,25 @@ public void IncrementMain(){
 
     public void outtakeBlock(){
         intakeLeftTop.setPower(-1);
-        intakeRightBottom.setPower(-1);
-        intakeLeftTop.setPower(-1);
+        intakeRightTop.setPower(1);
         intakeLeftBottom.setPower(-1);
+        intakeRightBottom.setPower(1);
     }
     public void smartIntake(){
-        while (intakeColorTop.getDistance(DistanceUnit.CM)>6){
+        while (intakeRangeTop.getDistance(DistanceUnit.CM)>6){
             intakeLeftTop.setPower(1);
-            intakeRightTop.setPower(1);
+            intakeRightTop.setPower(-1);
         }
-        while (intakeColorBottom.getDistance(DistanceUnit.CM)>6){
+        while (intakeRangeBottom.getDistance(DistanceUnit.CM)>6){
             intakeLeftBottom.setPower(1);
-            intakeRightBottom.setPower(1);
+            intakeRightBottom.setPower(-1);
         }
 
-        if(intakeColorTop.getDistance(DistanceUnit.CM)<6){
+        if(intakeRangeTop.getDistance(DistanceUnit.CM)<6){
             intakeLeftTop.setPower(0);
             intakeRightTop.setPower(0);
         }
-        if (intakeColorBottom.getDistance(DistanceUnit.CM)<6){
+        if (intakeRangeBottom.getDistance(DistanceUnit.CM)<6){
             intakeLeftBottom.setPower(0);
             intakeRightBottom.setPower(0);
         }

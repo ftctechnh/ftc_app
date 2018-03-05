@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_2_18;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 
 //10-28-17
 @Autonomous(name="Red Back George Super-Regionals")
+@Disabled
 //3/2/18 edit by Steven Chen: getting rid of unnecessary turns (this is new version of the regional code)
 public class redBack_George extends Autonomous_General_George_old {
 

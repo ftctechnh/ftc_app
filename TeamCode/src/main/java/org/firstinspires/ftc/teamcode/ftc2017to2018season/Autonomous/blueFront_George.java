@@ -123,6 +123,10 @@ public class blueFront_George extends Autonomous_General_George {
                 sleep(1000);
             }
         }
+
+        jewelServo.setPosition(1);
+        sleep(200);
+
         encoderMecanumDrive(0.4,40,40,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
@@ -137,39 +141,24 @@ public class blueFront_George extends Autonomous_General_George {
 
 
         if (vuMark == RelicRecoveryVuMark.LEFT){//should be 20 cm away from wall for left
-            wallAlign(0.4, 20, 1);
-            encoderMecanumDrive(0.3, -12, -12, 5000, 0);
-            sleep(100);
-
-            gyroTurnREV(0.5, -45);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+            //goes to given distance away from the wall
+            //wallAlign(0.3, 35, 1);
+            encoderMecanumDrive(0.3, -14, -14, 5000, 0);
         }
-        else if (vuMark == RelicRecoveryVuMark.CENTER){
-            wallAlign(0.4, 20, 1);
+        else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
+            encoderMecanumDrive(0.3,-5,-5,5000,0);
+            //wallAlign(0.4, 35, 1);
             //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
-            sleep(100);
-
-            gyroTurnREV(0.5, -45);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
         }
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            //wallAlign(0.4, 48, 1);
-            encoderMecanumDrive(0.5, 6, 6, 5000, 0);
-            sleep(100);
-
-            gyroTurnREV(0.5, -53.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+        else if(vuMark == RelicRecoveryVuMark.RIGHT){
+            encoderMecanumDrive(0.3,3,3,5000,0);
+            //wallAlign(0.4, 50, 1);
+            //encoderMecanumDrive(0.5, 48, 48, 5000, 0);
 
         }
+        //if we didn't detect the image, automatically put the glyph in the center
 
-        else if (vuMark == RelicRecoveryVuMark.UNKNOWN){
-            wallAlign(0.4, 20, 1);
-            //encoderMecanumDrive(0.5, 33, 33, 5000, 0);
-            sleep(100);
-
-            gyroTurnREV(0.5, -45);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
-
-        }
-
-        //columnAlign();
-
+        gyroTurnREV(0.5,-45);
 
         sleep(750);
 

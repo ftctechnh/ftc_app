@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  */
 @TeleOp(name = "Rolley Collector Test")
 
-public class curious_georgeROLLI_teleop extends OpMode {
+public class onylRolley extends OpMode {
 
 
     /*Delta_TeleOp is designed for and tested with the Tile Runner robot. If this program is used with another robot it may not worked.
@@ -33,8 +33,8 @@ public class curious_georgeROLLI_teleop extends OpMode {
     CRServo intakeLeftBottom;
     CRServo intakeRightTop;
     CRServo intakeRightBottom;
-    DistanceSensor intakeColorTop;
-    DistanceSensor intakeColorBottom;
+    DistanceSensor intakeRangeTop;
+    DistanceSensor intakeRangeBottom;
     Servo glyphRotate;
     public int IVFSM;
 
@@ -62,7 +62,7 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
 
         //private ElapsedTime runtime = new ElapsedTime();
-        static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
+     `   static final double     COUNTS_PER_MOTOR_REV    = 757 ;    // eg: TETRIX Motor Encoder
         static final double     DRIVE_GEAR_REDUCTION    = 1 ;     // 56/24
         static final double     WHEEL_PERIMETER_CM   = 9;     // For figuring circumference
         static final double     COUNTS_PER_CM         = (COUNTS_PER_MOTOR_REV ) /
@@ -87,12 +87,10 @@ public class curious_georgeROLLI_teleop extends OpMode {
         intakeRightTop = hardwareMap.crservo.get("intakeRightTop");
         intakeRightBottom = hardwareMap.crservo.get("intakeRightBottom");
 
-        intakeColorTop = hardwareMap.get(DistanceSensor.class, "intakeColorTop");
-        intakeColorBottom = hardwareMap.get(DistanceSensor.class, "intakeColorBottom");
+        intakeRangeTop = hardwareMap.get(DistanceSensor.class, "intakeRangeTop");
+        intakeRangeBottom = hardwareMap.get(DistanceSensor.class, "intakeRangeBottom");
 
 
-        intakeLeftTop.setDirection(CRServo.Direction.REVERSE);
-        intakeLeftBottom.setDirection(CRServo.Direction.REVERSE);
         slideMotor.setDirection(DcMotor.Direction.REVERSE);
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);//in this mode, the motors actively fight any movement when their power is set to 0
 
@@ -220,29 +218,34 @@ public void Glyph() {
 
     public void outtakeBlock(){
         intakeLeftTop.setPower(-1);
-        intakeRightBottom.setPower(-1);
-        intakeLeftTop.setPower(-1);
+        intakeRightTop.setPower(1);
         intakeLeftBottom.setPower(-1);
+        intakeRightBottom.setPower(1);
     }
     public void smartIntake(){
-        while (intakeColorTop.getDistance(DistanceUnit.CM)>6){
-            intakeLeftTop.setPower(1);
-            intakeRightTop.setPower(1);
-        }
-        while (intakeColorBottom.getDistance(DistanceUnit.CM)>6){
-            intakeLeftBottom.setPower(1);
-            intakeRightBottom.setPower(1);
-        }
+//        while (intakeRangeTop.getDistance(DistanceUnit.CM)>6){
+//            intakeLeftTop.setPower(1);
+//            intakeRightTop.setPower(-1);
+//        }
+//        while (intakeRangeBottom.getDistance(DistanceUnit.CM)>6){
+//            intakeLeftBottom.setPower(1);
+//            intakeRightBottom.setPower(-1);
+//        }
+//
+//        if(intakeRangeTop.getDistance(DistanceUnit.CM)<6){
+//            intakeLeftTop.setPower(0);
+//            intakeRightTop.setPower(0);
+//        }
+//        if (intakeRangeBottom.getDistance(DistanceUnit.CM)<6){
+//            intakeLeftBottom.setPower(0);
+//            intakeRightBottom.setPower(0);
+//        }
+        //disabled because the sensors are currently not in
 
-        if(intakeColorTop.getDistance(DistanceUnit.CM)<6){
-            intakeLeftTop.setPower(0);
-            intakeRightTop.setPower(0);
-        }
-        if (intakeColorBottom.getDistance(DistanceUnit.CM)<6){
-            intakeLeftBottom.setPower(0);
-            intakeRightBottom.setPower(0);
-        }
-
+        intakeLeftTop.setPower(1);
+        intakeRightTop.setPower(-1);
+        intakeLeftBottom.setPower(1);
+        intakeRightBottom.setPower(-1);
     }
 
     public void wait(int mSec){
@@ -256,94 +259,5 @@ public void Glyph() {
 
         }
     }
-//    public void incrementOpen(){
-//
-//        while (gamepad1.x){
-//            glyphServoLeft.setPosition(glyphServoLeft.getPosition()+0.05);
-//            glyphServoRight.setPosition(glyphServoRight.getPosition()-0.05);
-//            wait(300);
-//        }
-//    }
-//    public void incrementClose(){
-//
-//        while (gamepad1.y) {
-//            glyphServoLeft.setPosition(glyphServoLeft.getPosition()-0.05);
-//            glyphServoRight.setPosition(glyphServoRight.getPosition()+0.05);
-//            wait(300);
-//        }
 
-    public void slideIncrement() {
-
-        if (gamepad2.dpad_up) {
-
-            moveUpInch(2.54);
-
-        } else if (gamepad2.dpad_right) {
-            moveUpInch(17.78);
-        } else if (gamepad2.dpad_down){
-            moveUpInch(33.02);
-        }
-    }
-
-    public void moveUpInch(double cm) {
-        double target_Position;
-        double countsPerCM = 609.6;
-        double finalTarget = cm * countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() - finalTarget;
-
-        slideMotor.setTargetPosition((int) target_Position);
-
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        slideMotor.setPower(-0.6);
-
-        while (slideMotor.isBusy()) {
-            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
-            telemetry.update();
-
-        }
-
-        slideMotor.setPower(0);
-
-    }
-
-    public void moveDownInch(double cm) {
-        double target_Position;
-        double countsPerCM = 609.6;
-        double finalTarget = cm * countsPerCM;
-        target_Position = slideMotor.getCurrentPosition() + finalTarget;
-
-        slideMotor.setTargetPosition((int) target_Position);
-
-        slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        slideMotor.setPower(0.6);
-
-        while (slideMotor.isBusy()) {
-            telemetry.addData("In while loop in moveDownInch", slideMotor.getCurrentPosition());
-            telemetry.update();
-
-        }
-
-        slideMotor.setPower(0);
-
-    }
-//    public void openGlyph(){
-//
-//        //switching values with closeGlyph
-//        //reversed values
-//        glyphServoRight.setPosition(0.5);
-//        glyphServoLeft.setPosition(0.4);
-//    }
-//
-//    public void closeGlyph(){
-//        //reversed values
-//        glyphServoRight.setPosition(0.75);
-//        glyphServoLeft.setPosition(0.15);
-//    }
-//
-//    public void middleGlyph(){
-//        glyphServoRight.setPosition(0.65);
-//        glyphServoLeft.setPosition(0.25);
-//    }
 }
