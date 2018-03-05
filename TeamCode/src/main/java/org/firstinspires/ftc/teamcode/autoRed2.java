@@ -12,9 +12,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 public class autoRed2 extends superAuto {
 
     public void runOpMode() {
-        boxOrder[0] = RelicRecoveryVuMark.LEFT;
-        boxOrder[1] = RelicRecoveryVuMark.CENTER;
-        boxOrder[2] = RelicRecoveryVuMark.RIGHT;
 
         iAmRed = true;
 

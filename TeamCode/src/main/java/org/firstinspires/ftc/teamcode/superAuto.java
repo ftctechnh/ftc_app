@@ -199,6 +199,28 @@ abstract public class superAuto extends LinearOpMode {
         runtime.reset();
         float currentDist = rangeSensor.rawUltrasonic();
         float previousDist = currentDist;
+
+        /*
+        Set the order in which we expect to encounter the cryptobox columns.
+        Use UNKNOWN to indicate that we need to move extra to center ourselves on the column
+        If for some reason we are not successful reading the vuMark, reset it from UNKNOWN to
+        the first column, which is the quickest one to load.
+        */
+
+        if (iAmRed) {
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {vuMark = RelicRecoveryVuMark.RIGHT;}
+            boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
+            boxOrder[1] = RelicRecoveryVuMark.RIGHT;
+            boxOrder[2] = RelicRecoveryVuMark.CENTER;
+            boxOrder[3] = RelicRecoveryVuMark.LEFT;
+        } else {
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {vuMark = RelicRecoveryVuMark.LEFT;}
+            boxOrder[0] = RelicRecoveryVuMark.LEFT;
+            boxOrder[1] = RelicRecoveryVuMark.CENTER;
+            boxOrder[2] = RelicRecoveryVuMark.RIGHT;
+            boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
+        }
+
         for (int i = 0; i < boxOrder.length; i++){
             while ((currentDist - previousDist) < ridgeDepth) {
                 adjustHeading(targetHeading, basePosx, basePosy);
@@ -325,6 +347,8 @@ abstract public class superAuto extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         relicTrackables.activate();
+        // We may need to put a loop around this to read until we get something other than UNKNOWN
+        // It should not be an unlimited loop, since we could get stuck here forever.
         vuMark = RelicRecoveryVuMark.from(relicTemplate);
         telemetry.addData("VuMark", "%s visible", vuMark);
         telemetry.update();
