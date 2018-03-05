@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -44,6 +46,10 @@ abstract public class superAuto extends LinearOpMode {
     Servo servoIntake;
     Servo servoFlicker;
 
+    static final float ridgeDepth = 6;
+
+    RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[3];
+
     BNO055IMU imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
     Orientation angles;
@@ -52,6 +58,8 @@ abstract public class superAuto extends LinearOpMode {
     ModernRoboticsI2cRangeSensor rangeSensor;
     NormalizedColorSensor colorSensor;
     NormalizedRGBA colors;
+    RelicRecoveryVuMark vuMark;
+
 
     boolean iAmRed;
     boolean iAmBlue = !iAmRed;
@@ -66,9 +74,6 @@ abstract public class superAuto extends LinearOpMode {
         composeTelemetry();
 
         waitForStart();
-
-        setUpVuforia();
-
     }
 
 
@@ -89,14 +94,14 @@ abstract public class superAuto extends LinearOpMode {
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
 
-        motorFR =hardwareMap.dcMotor.get("motorFR");
-        motorFR.setDirection(DcMotor.Direction.REVERSE);
-        motorFL =hardwareMap.dcMotor.get("motorFL");
-        motorFL.setDirection(DcMotor.Direction.FORWARD);
-        motorBL =hardwareMap.dcMotor.get("motorBL");
-        motorBL.setDirection(DcMotor.Direction.FORWARD);
-        motorBR =hardwareMap.dcMotor.get("motorBR");
-        motorBR.setDirection(DcMotor.Direction.REVERSE);
+        motorFL = hardwareMap.dcMotor.get("motorFL");
+        motorFL.setDirection(DcMotor.Direction.REVERSE);
+        motorFR = hardwareMap.dcMotor.get("motorFR");
+        motorFR.setDirection(DcMotor.Direction.FORWARD);
+        motorBL = hardwareMap.dcMotor.get("motorBL");
+        motorBL.setDirection(DcMotor.Direction.REVERSE);
+        motorBR = hardwareMap.dcMotor.get("motorBR");
+        motorBR.setDirection(DcMotor.Direction.FORWARD);
         motorConL =hardwareMap.dcMotor.get("motorConL");
         motorConL.setDirection(DcMotor.Direction.FORWARD);
         motorConR =hardwareMap.dcMotor.get("motorConR");
@@ -173,69 +178,69 @@ abstract public class superAuto extends LinearOpMode {
                 });
     }
 
-    void move(float posx, float posy, float waitTime) {
-        float FRBLPower = posy + posx;
-        float FLBRPower = posy - posx;
+    void drive(float posx, float posy){
+        float FRBLPower = (-posy) + posx;
+        float FLBRPower = (-posy) - posx;
         motorFR.setPower(FRBLPower);
         motorFL.setPower(FLBRPower);
         motorBR.setPower(FLBRPower);
         motorBL.setPower(FRBLPower);
+
+    }
+    void moveWTime(float posx, float posy, float waitTime) {
+    drive(posx, posy);
         Wait(waitTime);
         sR();
     }
 
-    void findCrypto(int targetHeading, float ridgeDepth, float basePosx, float basePosy ){
+    void findCrypto(int targetHeading, float basePosx, float basePosy ) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
         float currentDist = rangeSensor.rawUltrasonic();
         float previousDist = currentDist;
-        while ((currentDist-previousDist) < ridgeDepth){
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            if (angles != null) {
-                double currentHeading = angles.firstAngle;
-                double adjustPower =  (targetHeading - currentHeading) * .025;
-                float addPower =(float) adjustPower;
-
-                float FRBLPower = basePosy + basePosx;
-                float FLBRPower = basePosy - basePosx;
-                motorFR.setPower( FRBLPower - addPower);
-                motorFL.setPower( FLBRPower + addPower);
-                motorBR.setPower( FLBRPower - addPower );
-                motorBL.setPower( FRBLPower + addPower );
+        for (int i = 0; i < boxOrder.length; i++){
+            while ((currentDist - previousDist) < ridgeDepth) {
+                adjustHeading(targetHeading, basePosx, basePosy);
+                previousDist = currentDist;
+                currentDist = rangeSensor.rawUltrasonic();
+                telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+                telemetry.update();
             }
-            previousDist = currentDist;
-            currentDist = rangeSensor.rawUltrasonic();
-            telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-            telemetry.update();
+            RelicRecoveryVuMark currentVumark = boxOrder[i];
+            if(currentVumark == vuMark){
+                break;
+            }
         }
         sR();
     }
-
 
     void followHeading(int targetHeading, double time, float basePosx, float basePosy ){
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
         while (((runtime.seconds() < time))){
-            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-            if (angles != null) {
-                double currentHeading = angles.firstAngle;
-                double adjustPower =  (targetHeading - currentHeading) * .025;
-                float addPower =(float) adjustPower;
-
-                float FRBLPower = basePosy + basePosx;
-                float FLBRPower = basePosy - basePosx;
-                motorFR.setPower( FRBLPower - addPower);
-                motorFL.setPower( FLBRPower + addPower);
-                motorBR.setPower( FLBRPower - addPower );
-                motorBL.setPower( FRBLPower + addPower );
-            }
+            adjustHeading(targetHeading, basePosx, basePosy);
         }
         sR();
     }
 
+    void adjustHeading(int targetHeading, float basePosx, float basePosy) {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        if (angles != null) {
+            double currentHeading = angles.firstAngle;
+            double adjustPower = (targetHeading - currentHeading) * .025;
+            float addPower = (float) adjustPower;
+
+            float FRBLPower = (-basePosy) - basePosx;
+            float FLBRPower = (-basePosy) + basePosx;
+            motorFR.setPower(FRBLPower + addPower);
+            motorFL.setPower(FLBRPower - addPower);
+            motorBR.setPower(FLBRPower + addPower);
+            motorBL.setPower(FRBLPower - addPower);
+        }
+    }
 
 
     void pivotTo(int target) {
@@ -248,7 +253,7 @@ abstract public class superAuto extends LinearOpMode {
         double dif = target;
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-       double currentHeading = angles.firstAngle;
+        double currentHeading = angles.firstAngle;
         wheelPower = .3;
 
         while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
@@ -320,7 +325,11 @@ abstract public class superAuto extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         relicTrackables.activate();
+        vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        telemetry.addData("VuMark", "%s visible", vuMark);
+        telemetry.update();
     }
+
 
     void jewel(){
 
