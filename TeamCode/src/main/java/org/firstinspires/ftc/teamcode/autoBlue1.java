@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
 /**
  * Created by GJF on 1/28/2018.
  */
@@ -10,33 +12,17 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class autoBlue1 extends superAuto {
 
     public void runOpMode() {
+        boxOrder[0] = RelicRecoveryVuMark.RIGHT;
+        boxOrder[1] = RelicRecoveryVuMark.CENTER;
+        boxOrder[2] = RelicRecoveryVuMark.LEFT;
 
         iAmRed = false;
-        iAmBlue = true;
 
         setUp();
         jewel();
-
-        move(0f, 0.5f, .5f);
-
-        Wait(.5);
-
-       // pivotRight(.7f);
-
-        Wait(1);
-
-        move(0f,-.25f,.35f);
-
-        Wait(1);
-
-       // Conveyor(3f)
-
-        Wait(1);
-
-        move(0f,-.25f,.5f);
-
-        Wait(1);
-
-        move(0f,.25f,.25f);
+        setUpVuforia();
+        followHeading(0, 1f, 0f, 0.5f);
+        pivotTo(-90);
+        findCrypto(-90,-.5f, 0f);
     }
 }

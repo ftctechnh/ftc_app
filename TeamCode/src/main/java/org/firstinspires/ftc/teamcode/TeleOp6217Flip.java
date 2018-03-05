@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -50,13 +51,13 @@ public class TeleOp6217Flip extends OpMode
        * Wheels: controller 1, motors 0,1,2,3
        */
         motorFL = hardwareMap.dcMotor.get("motorFL");
-        motorFL.setDirection(DcMotor.Direction.FORWARD);
+        motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorFR = hardwareMap.dcMotor.get("motorFR");
-        motorFR.setDirection(DcMotor.Direction.REVERSE);
+        motorFR.setDirection(DcMotor.Direction.FORWARD);
         motorBL = hardwareMap.dcMotor.get("motorBL");
-        motorBL.setDirection(DcMotor.Direction.FORWARD);
+        motorBL.setDirection(DcMotor.Direction.REVERSE);
         motorBR = hardwareMap.dcMotor.get("motorBR");
-        motorBR.setDirection(DcMotor.Direction.REVERSE);
+        motorBR.setDirection(DcMotor.Direction.FORWARD);
 
         // Conveyor
 
@@ -213,8 +214,8 @@ public class TeleOp6217Flip extends OpMode
         //  Driving
         if ( ( posy != 0) || ( posx != 0 ) ) {
 
-            FRBLPower = posy - posx;
-            FLBRPower = posy + posx;
+            FRBLPower = (-posy) - posx;
+            FLBRPower = (-posy) + posx;
             motorFR.setPower( FRBLPower );
             motorFL.setPower( FLBRPower );
             motorBR.setPower( FLBRPower );
