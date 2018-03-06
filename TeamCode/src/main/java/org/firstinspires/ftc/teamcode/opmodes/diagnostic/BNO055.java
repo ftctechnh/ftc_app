@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.Func;
@@ -18,6 +19,7 @@ import java.util.Locale;
  */
 
 @Autonomous(name="Gyro Test", group="test")
+@Disabled
 public class BNO055 extends OpMode{
     private BNO055IMU imu;
 

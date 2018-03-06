@@ -16,7 +16,6 @@ import java.io.IOException;
  */
 
 @Autonomous(name="Pilliar Demo", group="test")
-@Disabled
 public class PilliarDemo extends PilliarLib {
     private boolean red = true;
     private boolean lastA = false;

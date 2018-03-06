@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.opmodes.ADPSAuto;
  */
 
 @Autonomous(name="Ultra Calibrate")
+@Disabled
 public class UltraHoneDebug extends OpMode {
     private static final int BACKUP_COUNTS = 980;
 

@@ -184,6 +184,7 @@ public class ADPSAuto extends VuforiaBallLib {
         telemetry.addData("Back Red", backColor.red());
         telemetry.addData("Back Blue", backColor.blue());
         telemetry.addData("Ball Color", getBallColor().toString());
+        telemetry.addData("IMU", bot.getHeadingSensor().getHeading());
     }
 
     public void start() {

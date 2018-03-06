@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
  */
 
 @Autonomous(name="Ultra Teleop", group="test")
+@Disabled
 public class UltraTest extends OpMode {
     private MatbotixUltra ultra;
     private MatbotixUltra ultraBack;
