@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class AutoDrive {
     public static final double MULTI_GLYPH_STRAFE_SPEED = 0.7;
     public static final double DRIVE_INTO_GLYPH_PIT_SPEED = 1;
-    public static final double DRIVE_INTO_GLYPH_PIT_DISTANCE = 14;
+    public static final double DRIVE_INTO_GLYPH_PIT_DISTANCE = 17;
     public static final double DRIVE_INTO_GLYPHS_SPEED = 0.4;
     public static final double DRIVE_INTO_GLYPHS_DISTANCE = 6;
     private DcMotor FrontLeft;
