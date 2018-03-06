@@ -77,24 +77,41 @@ public class Systems {
         ElapsedTime findGlyphTime = new ElapsedTime();
         findGlyphTime.reset();
         double xOffSet;
+        double yPos;
         Point bestPos = new Point(100, 0);
         while (findGlyphTime.seconds() < 3.5) {
             xOffSet = glyphDetector.getXOffset();
-            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
+            yPos = glyphDetector.getYPos();
+            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (yPos < 60)) {
                 bestPos.x = xOffSet;
-                telemetry.addData("xOffSet", bestPos.x);
+                bestPos.y = yPos;
+                telemetry.addData("Glyph Position", bestPos.toString());
             }
         }
         telemetry.update();
         ForkLift.openClaw();
-        if (bestPos.x > 0) {
-            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH);
+        double distanceToStrafe = bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH;
+        if (distanceToStrafe > 0) {
+            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
         } else if (bestPos.x < 0) {
-            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH);
+            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
         }
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
+        AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPHS_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE);
         ForkLift.closeClaw();
-
+        double heading = AutoDrive.getHeading();
+        if(heading < returnHeading) {
+            AutoDrive.leftGyro(AutoDrive.SPIN_TO_CRYPTOBOX_SPEED, returnHeading);
+        }
+        else {
+            AutoDrive.rightGyro(AutoDrive.SPIN_TO_CRYPTOBOX_SPEED, returnHeading);
+        }
+        AutoDrive.forward(AutoDrive.MAX_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE + AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
+        if (distanceToStrafe > 0) {
+            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        } else if (bestPos.x < 0) {
+            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        }
     }
 
     public void setUpMultiGlyph() {

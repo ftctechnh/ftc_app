@@ -25,11 +25,11 @@ public class AutoTest extends LinearOpMode {
         telemetry.update();
         waitForStart();
         systems.glyphDetector.enable();
-        sleep(1000);
+        sleep(1500);
         while(opModeIsActive()) {
-            telemetry.addData("yPos", systems.glyphDetector.getYPos());
+            telemetry.addData("Glyph Position", systems.glyphDetector.getPoint().toString());
             telemetry.update();
         }
-        sleep(2000);
+        systems.glyphDetector.disable();
     }
 }
