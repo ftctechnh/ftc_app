@@ -19,7 +19,7 @@ public class AutoGlyphs extends GlyphDetector {
     static final double Y_HIGH_POS = 216;
     static final double Y_CENTER = Y_HIGH_POS / 2;
     static final double X_POSITION_OFFSET = 31.5;
-    static final double DEFAULT_X_POS_VALUE = 0;
+    static final double DEFAULT_X_POS_VALUE = 1000;
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
         this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_FAST, 0);
@@ -46,19 +46,11 @@ public class AutoGlyphs extends GlyphDetector {
     }
 
     public double getXOffset() {
-        double xPosOffset = getXPos();
-        if (xPosOffset == DEFAULT_X_POS_VALUE) {
-            return DEFAULT_X_POS_VALUE;
-        }
-        return xPosOffset + X_POSITION_OFFSET;
+        return getXPos() + X_POSITION_OFFSET;
     }
 
     public double getXPos() {
-        xPos = DEFAULT_X_POS_VALUE;
-        try {
-            xPos = super.getChosenGlyphPosition().y - Y_CENTER;
-        } catch(NullPointerException e){}
-        return xPos;
+        return super.getChosenGlyphPosition().y - Y_CENTER;
     }
 
     public double getYPos() {

@@ -73,51 +73,58 @@ public class Systems {
     }
 
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
+        JewelArm.up(); //take this out later
         setUpMultiGlyph();
         ElapsedTime findGlyphTime = new ElapsedTime();
         findGlyphTime.reset();
         double xOffSet;
         double yPos;
-        Point bestPos = new Point(100, 0);
+        Point bestPos = new Point(1000, 0);
+        while (findGlyphTime.seconds() < 0.75) {
+        }
         while (findGlyphTime.seconds() < 3.5) {
             xOffSet = glyphDetector.getXOffset();
             yPos = glyphDetector.getYPos();
-            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (yPos < 60)) {
+            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {// && (yPos < 60)) {
                 bestPos.x = xOffSet;
                 bestPos.y = yPos;
-                telemetry.addData("Glyph Position", bestPos.toString());
             }
         }
+        telemetry.addData("Glyph Position", bestPos.toString());
         telemetry.update();
+        glyphDetector.disable();
         ForkLift.openClaw();
-        double distanceToStrafe = bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH;
-        if (distanceToStrafe > 0) {
-            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
-        } else if (bestPos.x < 0) {
-            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        if (bestPos.x == AutoGlyphs.DEFAULT_X_POS_VALUE) {
+            bestPos.x = 0;
         }
+        double distanceToStrafe = bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH;
+        strafeForMultiGlyph(distanceToStrafe);
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPHS_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE);
         ForkLift.closeClaw();
+        sleep(750);
+        AutoDrive.backward(AutoDrive.MAX_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE + AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
         double heading = AutoDrive.getHeading();
-        if(heading < returnHeading) {
+        if (heading < returnHeading) {
             AutoDrive.leftGyro(AutoDrive.SPIN_TO_CRYPTOBOX_SPEED, returnHeading);
-        }
-        else {
+        } else {
             AutoDrive.rightGyro(AutoDrive.SPIN_TO_CRYPTOBOX_SPEED, returnHeading);
         }
-        AutoDrive.forward(AutoDrive.MAX_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE + AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
-        if (distanceToStrafe > 0) {
-            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
-        } else if (bestPos.x < 0) {
-            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
-        }
+        strafeForMultiGlyph(distanceToStrafe);
     }
 
     public void setUpMultiGlyph() {
+        glyphDetector.enable();
         ForkLift.closeAllTheWay();
         phone.faceFront();
-        glyphDetector.enable();
 
+    }
+
+    private void strafeForMultiGlyph(double distanceToStrafe) {
+        if (distanceToStrafe > 0) {
+            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        } else if (distanceToStrafe < 0) {
+            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        }
     }
 }
