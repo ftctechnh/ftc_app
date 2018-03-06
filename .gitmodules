@@ -4,3 +4,6 @@
 [submodule "Library"]
 	path = Library
 	url = https://github.com/KadenGordon/Library
+[submodule "RelicRecoveryCV"]
+	path = RelicRecoveryCV
+	url = git@github.com:BeehiveRobotics/RelicRecoveryCV.git
