@@ -1,4 +1,4 @@
 include ':FtcRobotController', ':openCVLibrary320', ':DogeCV_'
 include ':TeamCode'
-project(':openCVLibrary320').projectDir = new File('DogeCV/openCVLibrary320')
-project(':DogeCV_').projectDir = new File('DogeCV/DogeCV')
+project(':openCVLibrary320').projectDir = new File('RelicRecoveryCV/openCVLibrary320')
+project(':DogeCV_').projectDir = new File('RelicRecoveryCV/DogeCV')
