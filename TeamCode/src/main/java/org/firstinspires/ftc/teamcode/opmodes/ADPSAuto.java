@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.libraries.FilterLib;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.APDS9960;
+import org.firstinspires.ftc.teamcode.libraries.hardware.BlinkyEffect;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
 import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
@@ -166,6 +167,8 @@ public class ADPSAuto extends VuforiaBallLib {
         bot.start();
         bot.setDropPos(0.7);
 
+        bot.setLights(new BlinkyEffect.Pulse(500, 0.5f));
+
         frontColor.enableLed(false);
         backColor.enableLed(false);
 
@@ -304,6 +307,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 bot.setLights(glowPower);
             }
             */
+            bot.loopLEDs();
 
         }
         catch (Exception e) {

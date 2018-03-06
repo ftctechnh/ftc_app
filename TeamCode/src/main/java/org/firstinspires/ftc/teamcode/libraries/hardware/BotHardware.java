@@ -145,6 +145,8 @@ public class BotHardware {
     private BNO055IMU imu;
     private IMUHeading heading;
 
+    private BlinkyGlowLib blink;
+
     public BotHardware(OpMode mode) {
         this.mode = mode;
     }
@@ -158,6 +160,7 @@ public class BotHardware {
         //init motor shim array
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
         //liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
+        blink = new BlinkyGlowLib(Motor.green.motor, 0.5f);
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
         for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
@@ -310,6 +313,14 @@ public class BotHardware {
     public void setLiftMotorsDegrees(float deg) {
         Motor.liftLeft.motor.setVelocity(deg, AngleUnit.DEGREES);
         Motor.liftRight.motor.setVelocity(deg, AngleUnit.DEGREES);
+    }
+
+    public boolean loopLEDs() {
+        return blink.loop();
+    }
+
+    public void setLights(BlinkyEffect effect) {
+        blink.setAnimation(effect);
     }
 
     private static class IMUHeading implements HeadingSensor {

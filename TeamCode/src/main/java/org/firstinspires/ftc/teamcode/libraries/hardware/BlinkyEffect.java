@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 //abstraction for a blinky effect
 public abstract class BlinkyEffect {
     private DcMotor blinker;
-    private void setMotor(DcMotor blinker) {
+    public void setMotor(DcMotor blinker) {
         this.blinker = blinker;
     }
 
