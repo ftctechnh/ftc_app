@@ -19,7 +19,7 @@ public class Systems {
     private JewelArm JewelArm;
     private Telemetry telemetry;
     public AutoGlyphs glyphDetector;
-    static final double STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH = 0.4;
+    static final double STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH = 0.2;
 
     public Systems(DriveMecanum drive, ForkLift ForkLift, RelicClaw RelicClaw) {
         this.DriveMecanum = drive;
@@ -86,7 +86,7 @@ public class Systems {
             }
         }
         telemetry.update();
-        /*
+        ForkLift.openClaw();
         if (bestPos.x > 0) {
             AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH);
         } else if (bestPos.x < 0) {
@@ -94,7 +94,7 @@ public class Systems {
         }
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
         ForkLift.closeClaw();
-        */
+
     }
 
     public void setUpMultiGlyph() {

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Kaden on 2/3/18.
  */
-@Autonomous(name = "Testing multi-glyph", group = "test")
+@Autonomous(name = "Testing cv", group = "test")
 public class AutoTest extends LinearOpMode {
     AutoDrive drive;
     Phone phone;
@@ -17,15 +17,19 @@ public class AutoTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         drive = new AutoDrive(hardwareMap, telemetry);
         phone = new Phone(hardwareMap,telemetry);
+        phone.closeVuforia();
         forkLift = new ForkLift(hardwareMap, telemetry);
         jewelArm = new JewelArm(hardwareMap, telemetry);
         systems = new Systems(drive, forkLift, jewelArm, phone, hardwareMap, telemetry);
-        drive.init();
         telemetry.addLine("ready to start");
         telemetry.update();
         waitForStart();
-        phone.getMark();
-        systems.getMoreGlyphs(-90, CryptoboxColumn.CENTER);
+        systems.glyphDetector.enable();
+        sleep(1000);
+        while(opModeIsActive()) {
+            telemetry.addData("yPos", systems.glyphDetector.getYPos());
+            telemetry.update();
+        }
         sleep(2000);
     }
 }
