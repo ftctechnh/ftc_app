@@ -16,13 +16,13 @@ public class AutoGlyphs extends GlyphDetector {
     double xPos = DEFAULT_X_POS_VALUE;
     static final double X_HIGH_POS = 384;
     static final double X_CENTER = X_HIGH_POS / 2;
-    static final double Y_HIGH_POS = 216; //Austin test this number with GlyphOpMode.
+    static final double Y_HIGH_POS = 216;
     static final double Y_CENTER = Y_HIGH_POS / 2;
     static final double X_POSITION_OFFSET = 31.5;
     static final double DEFAULT_X_POS_VALUE = 0;
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
-        this(hardwareMap, telemetry, GlyphDetectionSpeed.BALANCED, 0);
+        this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_FAST, 0);
     }
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {
@@ -32,7 +32,7 @@ public class AutoGlyphs extends GlyphDetector {
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, int cameraDirection) {
         super();
         super.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), cameraDirection);
-        this.minScore = 1;
+        this.minScore = 0.5;
         this.downScaleFactor = 0.3;
         this.speed = speed;
     }
@@ -50,7 +50,7 @@ public class AutoGlyphs extends GlyphDetector {
         if (xPosOffset == DEFAULT_X_POS_VALUE) {
             return DEFAULT_X_POS_VALUE;
         }
-        return getXPos() + X_POSITION_OFFSET;
+        return xPosOffset + X_POSITION_OFFSET;
     }
 
     public double getXPos() {

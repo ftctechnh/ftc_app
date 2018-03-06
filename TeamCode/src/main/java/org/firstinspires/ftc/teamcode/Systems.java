@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.opencv.core.Mat;
 import org.opencv.core.Point;
 
 public class Systems {
@@ -20,12 +19,14 @@ public class Systems {
     private JewelArm JewelArm;
     private Telemetry telemetry;
     public AutoGlyphs glyphDetector;
+    static final double STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH = 0.2;
 
     public Systems(DriveMecanum drive, ForkLift ForkLift, RelicClaw RelicClaw) {
         this.DriveMecanum = drive;
         this.ForkLift = ForkLift;
         this.RelicClaw = RelicClaw;
     }
+
     public Systems(AutoDrive drive, ForkLift ForkLift, JewelArm JewelArm, Phone phone, HardwareMap hardwareMap, Telemetry telemetry) {
         this.AutoDrive = drive;
         this.ForkLift = ForkLift;
@@ -34,14 +35,15 @@ public class Systems {
         this.telemetry = telemetry;
         this.glyphDetector = new AutoGlyphs(hardwareMap, telemetry);
     }
+
     void pushInBlock() {
         ForkLift.openClaw();
         sleep(100);
-        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,4);
+        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 4);
         ForkLift.moveUntilDown(0.75);
         ForkLift.setClawPositionPushInBlock();
         sleep(250);
-        AutoDrive.forwardTime(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED,500);
+        AutoDrive.forwardTime(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 500);
     }
 
     public void grabSecondGlyph() {
@@ -56,10 +58,12 @@ public class Systems {
         sleep(250);
         ForkLift.moveMotor(1, 250);
     }
+
     public static void sleep(long time) {
         try {
             Thread.sleep(time);
-        } catch (InterruptedException e) {}
+        } catch (InterruptedException e) {
+        }
     }
 
     public void stopAll() {
@@ -67,25 +71,53 @@ public class Systems {
         ForkLift.moveMotor(0);
         RelicClaw.moveMotor(0);
     }
+
     public void getMoreGlyphs(double returnHeading, CryptoboxColumn column) {
         setUpMultiGlyph();
         ElapsedTime findGlyphTime = new ElapsedTime();
         findGlyphTime.reset();
         double xOffSet;
-        Point bestPos = new Point(100,0);
-        while(findGlyphTime.seconds()<2.5) {
+        double yPos;
+        Point bestPos = new Point(100, 0);
+        while (findGlyphTime.seconds() < 3.5) {
             xOffSet = glyphDetector.getXOffset();
-            if((Math.abs(xOffSet) < bestPos.x) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {
+            yPos = glyphDetector.getYPos();
+            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (yPos < 60)) {
                 bestPos.x = xOffSet;
+                bestPos.y = yPos;
+                telemetry.addData("Glyph Position", bestPos.toString());
             }
         }
-        telemetry.addData("xOffSet", bestPos.x);
         telemetry.update();
+        ForkLift.openClaw();
+        double distanceToStrafe = bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH;
+        if (distanceToStrafe > 0) {
+            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        } else if (bestPos.x < 0) {
+            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        }
+        AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
+        AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPHS_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE);
+        ForkLift.closeClaw();
+        double heading = AutoDrive.getHeading();
+        if(heading < returnHeading) {
+            AutoDrive.leftGyro(AutoDrive.SPIN_TO_CRYPTOBOX_SPEED, returnHeading);
+        }
+        else {
+            AutoDrive.rightGyro(AutoDrive.SPIN_TO_CRYPTOBOX_SPEED, returnHeading);
+        }
+        AutoDrive.forward(AutoDrive.MAX_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE + AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
+        if (distanceToStrafe > 0) {
+            AutoDrive.strafeRight(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        } else if (bestPos.x < 0) {
+            AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
+        }
     }
 
     public void setUpMultiGlyph() {
         ForkLift.closeAllTheWay();
         phone.faceFront();
         glyphDetector.enable();
+
     }
 }
