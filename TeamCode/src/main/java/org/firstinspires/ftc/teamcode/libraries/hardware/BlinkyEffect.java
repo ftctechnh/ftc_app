@@ -19,11 +19,11 @@ public abstract class BlinkyEffect {
     //brightness from 0 to 1
     //scale brightness based on sqrt function
     protected void setBrightness(float bright){
-        blinker.setPower(Math.sqrt(Math.abs(bright)));
+        blinker.setPower(Math.pow(Math.abs(bright), 2));
     }
 
     protected float getBrightness(){
-        return (float)Math.pow(blinker.getPower(), 2);
+        return (float)Math.sqrt(blinker.getPower());
     }
 
     abstract int loop(int deltaTime); //takes the milliseconds since last call, returns milliseconds till next call

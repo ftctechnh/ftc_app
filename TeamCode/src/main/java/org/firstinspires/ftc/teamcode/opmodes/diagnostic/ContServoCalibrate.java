@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.diagnostic;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -11,7 +12,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  */
 
 @TeleOp(name = "Intake Servo Calibrate", group = "Main")
-//@Disabled
+@Disabled
 public class ContServoCalibrate extends OpMode {
 
     private enum Incs {
@@ -76,7 +77,7 @@ public class ContServoCalibrate extends OpMode {
         }
 
         lastDPad = gamepad1.dpad_up || gamepad1.dpad_right || gamepad1.dpad_left || gamepad1.dpad_down;
-        
+
         if(!lastA && gamepad1.a) front = !front;
         lastA = gamepad1.a;
 
