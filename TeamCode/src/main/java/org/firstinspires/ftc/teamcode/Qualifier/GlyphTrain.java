@@ -111,6 +111,7 @@ public class GlyphTrain {
         //Set the lift down
         glyphliftupper("bottom");
         resetkickGlyph();
+        resetkickGlyph2();
         // reset encoder to zero for lift (assume you have it down)
         lift_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -121,6 +122,16 @@ public class GlyphTrain {
     }
     void resetkickGlyph() {
         glyph_kicker.setPosition(0.585);
+    }
+
+    void kickGlyph2() {
+        glyph_kicker2.setPosition(0.95);
+    }
+    void resetkickGlyph2() {
+        glyph_kicker2.setPosition(0.0);
+    }
+    void signalkickGlyph2() {
+        glyph_kicker2.setPosition(0.5);
     }
 
     public void startGlyphMotors(double glyphpower) {

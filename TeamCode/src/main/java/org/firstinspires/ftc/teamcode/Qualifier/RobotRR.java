@@ -8,6 +8,7 @@ public class RobotRR {
     JewelArm jewelArm;
     RelicArm relicArm;
     GlyphTrain glyphTrain;
+    //GlyphKicker2 glyph_kicker2;
 
 
     //Shooter shooter;
@@ -22,7 +23,6 @@ public class RobotRR {
         relicArm = new RelicArm();
         jewelArm = new JewelArm();
         glyphTrain = new GlyphTrain();
-
 
         //shooter = new Shooter();
         //beaconColorDetector = new BeaconColorDetector();

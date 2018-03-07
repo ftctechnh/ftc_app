@@ -53,7 +53,7 @@ public class JewelArm {
     }
 
     public void jewelflickerBack() {
-        jewelFlickerServo.setPosition(0.0); //was 0.3
+        jewelFlickerServo.setPosition(0.0); //was 0.0
     }
 
     public void jewelflickerCenter() {
@@ -61,7 +61,7 @@ public class JewelArm {
     }
 
     public void jewelflickerForward() {
-        jewelFlickerServo.setPosition(1.0);//.6
+        jewelFlickerServo.setPosition(1.0);
     } //was 1.0
 
     public void solveJewelPuzzle(boolean teamIsRED) {

@@ -33,6 +33,7 @@ public class Teleop extends OpMode {
 
     RobotRR gromit;
 
+
     // variables used during the configuration process
 
     double turnDirection;
@@ -218,6 +219,7 @@ public class Teleop extends OpMode {
             } else {
                  gromit.glyphTrain.stopGlyphMotors();
                  //liftTarget = gromit.glyphTrain.liftPosition[1];  // set the new Target
+                 gromit.glyphTrain.signalkickGlyph2();
                  glyphLiftismoving = true;
                 gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
             }
@@ -246,6 +248,7 @@ public class Teleop extends OpMode {
         if (glyphLiftismoving) {
             if (liftTarget == 0) {  // going down
                 gromit.glyphTrain.resetkickGlyph();//Make sure the kicker isn't in the way
+                gromit.glyphTrain.resetkickGlyph2();
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition() <= liftTarget + 200) {  // slow down before overshooting zero
                     gromit.glyphTrain.lift_motor.setPower(-0.3);
 
@@ -370,13 +373,15 @@ public class Teleop extends OpMode {
                 //Turn on lights you have a block
                 gromit.glyphTrain.LED1.setState(true);
                 gromit.glyphTrain.LED2.setState(true);
-
-                //gromit.jewelArm.jewelflickerCenter();
+                gromit.glyphTrain.signalkickGlyph2();
 
             }else if (gromit.glyphTrain.seeFrontBlock.getState() && gromit.glyphTrain.seeMiddleBlock.getState()) {     // if block was already sensed (sense the back end)
                 //frontglyphSensed = false;
                 gromit.glyphTrain.LED1.setState(false);
                 gromit.glyphTrain.LED2.setState(false);
+                if (blocks == 0) {
+                    gromit.glyphTrain.resetkickGlyph2();
+                }
             }
         }
         /**
@@ -387,9 +392,12 @@ public class Teleop extends OpMode {
                 if (blocks != 0) {
                     if(gromit.glyphTrain.liftIndex >= 2) {
                         gromit.glyphTrain.glyphclampupper("open");
+                        gromit.glyphTrain.kickGlyph2();
+                        sleep(100);
                         gromit.glyphTrain.kickGlyph();
                         sleep(350);
                         gromit.glyphTrain.resetkickGlyph();
+                        gromit.glyphTrain.resetkickGlyph2();
                     }
                     gromit.glyphTrain.glyphclamp("open");
 
