@@ -145,7 +145,7 @@ public class BotHardware {
     private BNO055IMU imu;
     private IMUHeading heading;
 
-    private BlinkyGlowLib blink;
+    //private BlinkyGlowLib blink;
 
     public BotHardware(OpMode mode) {
         this.mode = mode;
@@ -160,7 +160,7 @@ public class BotHardware {
         //init motor shim array
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
         //liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
-        blink = new BlinkyGlowLib(Motor.green.motor, 0.5f);
+        //blink = new BlinkyGlowLib(Motor.green.motor, 0.5f);
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
         for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
@@ -276,7 +276,6 @@ public class BotHardware {
     }
     */
 
-
     public void setSuckRight(double power) {
         ContiniuosServoE.SuckRight.servo.setPower(power);
         ContiniuosServoE.FrontSuckRight.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
@@ -285,7 +284,6 @@ public class BotHardware {
     public void setLights(double power) {
         Motor.green.motor.setPower(Math.abs(power));
     }
-
 
     /*
     public void setSuckRight(double power) {
@@ -315,6 +313,7 @@ public class BotHardware {
         Motor.liftRight.motor.setVelocity(deg, AngleUnit.DEGREES);
     }
 
+    /*
     public boolean loopLEDs() {
         return blink.loop();
     }
@@ -322,6 +321,7 @@ public class BotHardware {
     public void setLights(BlinkyEffect effect) {
         blink.setAnimation(effect);
     }
+    */
 
     private static class IMUHeading implements HeadingSensor {
         private final BNO055IMU imu;
