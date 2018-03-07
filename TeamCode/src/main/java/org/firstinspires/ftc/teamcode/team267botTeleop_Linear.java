@@ -29,10 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
@@ -61,8 +59,9 @@ public class team267botTeleop_Linear extends LinearOpMode {
     public void runOpMode() {
         double left;
         double right;
-        double leftBeltPower;
-        double rightBeltPower;
+        double beltPower;
+        double spinnerPower;
+        double rampStatus = robot.RAMP_CLOSED;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -92,30 +91,39 @@ public class team267botTeleop_Linear extends LinearOpMode {
                 //If the left trigger is pressed, move block forward.
 
                 //normalize to between 0 and 1
-                leftBeltPower=  gamepad1.left_trigger;
-                rightBeltPower= gamepad1.left_trigger;
+                beltPower=  gamepad1.left_trigger;
+                spinnerPower= gamepad1.left_trigger;
 
             }
             else if (gamepad1.right_trigger >0) {
                 //If the right trigger is pressed, move block backwards.
-                leftBeltPower= -gamepad1.right_trigger;
-                rightBeltPower= -gamepad1.right_trigger;
+                beltPower= -gamepad1.right_trigger;
+                spinnerPower= -gamepad1.right_trigger;
             }
             else {
                 //If neither triggers are pressed, do nothing.
-                leftBeltPower= 0;
-                rightBeltPower= 0;
+                beltPower= 0;
+                spinnerPower= 0;
             }
-            robot.leftBelt.setPower(leftBeltPower);
-            robot.rightBelt.setPower(rightBeltPower);
+            robot.belts.setPower(beltPower);
+
+
+            if (gamepad1.x) {
+                rampStatus = robot.RAMP_OPEN;
+            }
+            else if (gamepad1.b) {
+                rampStatus = robot.RAMP_CLOSED;
+            }
+            robot.beltOpener.setPosition(rampStatus);
+            //robot.rightBelt.setPower(rightBeltPower);
 
 
             // Send telemetry message to signify robot running;
 
             telemetry.addData("left",  "%.2f", left);
             telemetry.addData("right", "%.2f", right);
-            telemetry.addData("leftBelt", "%.2f", leftBeltPower);
-            telemetry.addData("rightBelt","%.2f", rightBeltPower);
+            telemetry.addData("belts", "%.2f", beltPower);
+            telemetry.addData("spinnerPower","%.2f", spinnerPower);
             telemetry.addData("leftTrigger", "%.2f", gamepad1.left_trigger);
             telemetry.addData("rightTrigger","%.2f", gamepad1.right_trigger);
             telemetry.update();
