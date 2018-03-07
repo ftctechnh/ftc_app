@@ -20,17 +20,8 @@ public class AutoDrive {
     public static final double DRIVE_INTO_GLYPH_PIT_DISTANCE = 19;
     public static final double DRIVE_INTO_GLYPHS_SPEED = 0.4;
     public static final double DRIVE_INTO_GLYPHS_DISTANCE = 4;
-    private DcMotor FrontLeft;
-    private DcMotor FrontRight;
-    private DcMotor RearLeft;
-    private DcMotor RearRight;
-    private REVGyro imu;
-    private ModernRoboticsI2cRangeSensor rangeSensor;
     static private final double CIRCUMFERENCE_Of_WHEELS = 3.937 * Math.PI;
     static private final int CPR = 1120; //Clicks per rotation of the encoder with the NeveRest 40 motors. Please do not edit.
-    public double heading;
-    private HardwareMap hardwareMap;
-    private Telemetry telemetry;
     static final double MIN_MOVE_SPEED = 0.25;
     public static final double MAX_SPEED = 1;
     static final double MIN_SPIN_SPEED = 0.2;
@@ -53,6 +44,16 @@ public class AutoDrive {
     static final double DISTANCE_TO_CENTER_COLUMN = 25.5;
     static final double DISTANCE_TO_CLOSE_COLUMN = 17.5;
     static final double DISTANCE_TO_CENTER = 36;
+    private DcMotor FrontLeft;
+    private DcMotor FrontRight;
+    private DcMotor RearLeft;
+    private DcMotor RearRight;
+    private REVGyro imu;
+    public double heading;
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
+    private ModernRoboticsI2cRangeSensor rangeSensor;
+
 
     public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
