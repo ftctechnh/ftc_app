@@ -39,10 +39,10 @@ public class Systems {
     void pushInBlock() {
         ForkLift.openClaw();
         sleep(100);
-        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 4);
-        ForkLift.moveUntilDown(0.75);
+        AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
+        ForkLift.moveUntilDown();
         ForkLift.setClawPositionPushInBlock();
-        sleep(250);
+        sleep(150);
         AutoDrive.forwardTime(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 500);
     }
 
@@ -79,8 +79,9 @@ public class Systems {
         findGlyphTime.reset();
         double xOffSet;
         double yPos;
+        double decisionPoint = 0;
         Point bestPos = new Point(1000, 0);
-        while (findGlyphTime.seconds() < 0.75) {
+        while (findGlyphTime.seconds() < 0.5) {
         }
         while (findGlyphTime.seconds() < 3.5) {
             xOffSet = glyphDetector.getXOffset();
@@ -88,9 +89,11 @@ public class Systems {
             if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE)) {// && (yPos < 60)) {
                 bestPos.x = xOffSet;
                 bestPos.y = yPos;
+                decisionPoint = findGlyphTime.seconds();
             }
         }
         telemetry.addData("Glyph Position", bestPos.toString());
+        telemetry.addData("Decision made at", decisionPoint);
         telemetry.update();
         glyphDetector.disable();
         ForkLift.openClaw();
@@ -102,7 +105,8 @@ public class Systems {
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPHS_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE);
         ForkLift.closeClaw();
-        sleep(750);
+        sleep(300);
+        ForkLift.moveMotor(1, 150);
         AutoDrive.backward(AutoDrive.MAX_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE + AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
         double heading = AutoDrive.getHeading();
         if (heading < returnHeading) {

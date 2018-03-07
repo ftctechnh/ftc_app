@@ -17,9 +17,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class AutoDrive {
     public static final double MULTI_GLYPH_STRAFE_SPEED = 0.7;
     public static final double DRIVE_INTO_GLYPH_PIT_SPEED = 1;
-    public static final double DRIVE_INTO_GLYPH_PIT_DISTANCE = 17;
+    public static final double DRIVE_INTO_GLYPH_PIT_DISTANCE = 19;
     public static final double DRIVE_INTO_GLYPHS_SPEED = 0.4;
-    public static final double DRIVE_INTO_GLYPHS_DISTANCE = 6;
+    public static final double DRIVE_INTO_GLYPHS_DISTANCE = 4;
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;
@@ -40,11 +40,11 @@ public class AutoDrive {
     static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 1; //TEMPORARY... SWITCH BACK TO 0.4 SOMETIME SOON
     static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.75;
     static final double SPIN_TO_CRYPTOBOX_SPEED = 1;
-    static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.6;
+    static final double DRIVE_INTO_CRYPTOBOX_SPEED = 0.8;
     static final double DEFAULT_MOVING_TOWARDS_CRYPTOBOX_DISTANCE_FAR_POSITION = 14;
     static final double CRYPTOBOX_COLUMNS_OFFSET_RECOVERY = 7.5;
     static final double CRYPTOBOX_COLUMNS_OFFSET_FAR = 11;
-    static final double BACK_AWAY_FROM_BLOCK_SPEED = 0.75;
+    static final double BACK_AWAY_FROM_BLOCK_SPEED = 1;
     static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
     static final double SPIN_TO_CENTER_SPEED = 1;
     static final double DRIVE_EXPO = 3;
