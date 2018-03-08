@@ -102,6 +102,8 @@ public class Teleop extends OpMode {
 
         if(gamepad1.left_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() - SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
         else if(gamepad1.right_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
+        else if(gamepad2.dpad_up) bot.setFrontDrop(BotHardware.ServoE.frontDropUp);
+        else if(gamepad2.dpad_down) bot.setFrontDrop(BotHardware.ServoE.frontDropDown);
 
         //check if going down
         if(gamepad2.left_bumper && liftState != LiftState.LOWERING) {

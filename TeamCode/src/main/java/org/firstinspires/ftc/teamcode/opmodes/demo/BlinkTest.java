@@ -1,26 +1,35 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
+import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.libraries.hardware.BlinkyEffect;
-import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
 
 /**
  * Created by Noah on 3/6/2018.
  */
 
-@TeleOp(name="Blink Test")
+@TeleOp(name="Lights On")
 public class BlinkTest extends OpMode {
-    BotHardware bot = new BotHardware(this);
+    private DcMotor glow;
+    private ColorSensor frontColor;
+    private ColorSensor backColor;
+
 
     public void init() {
-        bot.init();
-        bot.start();
+        glow = hardwareMap.get(DcMotor.class, "g");
+        frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
+        backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
+
+        frontColor.enableLed(false);
+        backColor.enableLed(false);
+        glow.setPower(1);
     }
 
     public void start() {
-        bot.setLights(0.5);
+
     }
 
     public void loop() {
@@ -28,6 +37,6 @@ public class BlinkTest extends OpMode {
     }
 
     public void stop() {
-        bot.stopAll();
+        glow.setPower(0);
     }
 }
