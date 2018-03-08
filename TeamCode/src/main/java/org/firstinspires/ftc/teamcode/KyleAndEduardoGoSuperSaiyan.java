@@ -56,6 +56,8 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
     // could also use HardwarePushbotMatrix class.
     double          clawOffset      = 0;                       // Servo mid position
     final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
+    final double    CLAW_OPEN_MAX   = -0.12;
+    final double    CLAW_OPEN_MIN   = -0.5;
 
     @Override
     public void runOpMode()
@@ -124,13 +126,13 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
                 robot.leftArm.setPower(0.0);
             }
 
-            if (clawOffset > -0.12)
+            if (clawOffset > CLAW_OPEN_MAX)
             {
-                clawOffset = -0.12;
+                clawOffset = CLAW_OPEN_MAX;
             }
-            if (clawOffset < -0.5)
+            if (clawOffset < CLAW_OPEN_MIN)
             {
-                clawOffset = -0.5;
+                clawOffset = CLAW_OPEN_MIN;
             }
 
             // Send telemetry message to signify robot running;

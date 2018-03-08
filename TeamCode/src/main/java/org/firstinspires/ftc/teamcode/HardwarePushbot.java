@@ -62,6 +62,8 @@ public class HardwarePushbot
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
+    //public static final double CLAW_OPEN_MAX = -0.12;     not sure whether to put these in the class or the opmode
+    //public static final double CLAW_OPEN_MIN = -0.5;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
