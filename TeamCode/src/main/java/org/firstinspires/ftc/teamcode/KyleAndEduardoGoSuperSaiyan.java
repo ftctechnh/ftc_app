@@ -124,6 +124,15 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
                 robot.leftArm.setPower(0.0);
             }
 
+            if (clawOffset > -0.12)
+            {
+                clawOffset = -0.12;
+            }
+            if (clawOffset < -0.5)
+            {
+                clawOffset = -0.5;
+            }
+
             // Send telemetry message to signify robot running;
             telemetry.addData("claw",  "Offset = %.2f", clawOffset);
             telemetry.addData("left",  "%.2f", left);
@@ -131,7 +140,7 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             telemetry.update();
 
             // Pace this loop so jaw action is reasonable speed.
-            sleep(50);
+            sleep(25);
         }
     }
 }
