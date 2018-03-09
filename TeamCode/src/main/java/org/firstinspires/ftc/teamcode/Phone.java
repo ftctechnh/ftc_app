@@ -44,35 +44,22 @@ public class Phone {
         vuMark = RelicRecoveryVuMark.UNKNOWN;
     }
     public RelicRecoveryVuMark getMark() {
-        if(!isCameraOpened) {return RelicRecoveryVuMark.UNKNOWN;}
+        if(!isCameraOpened) {return vuMark;}
         relicTrackables.activate();
-        boolean tryAgain = false;
+        setServoPosition(PICTOGRAPH_POSITION);
         time.reset();
         while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
           vuMark = RelicRecoveryVuMark.from(relicTemplate);
           if(time.seconds()>2) {
-              tryAgain = true;
               break;
           }
         }
-        if(tryAgain) {
-            setServoPosition(PICTOGRAPH_POSITION);
-            time.reset();
-            while(vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                vuMark = RelicRecoveryVuMark.from(relicTemplate);
-                if(time.seconds()>2) {
-                    break;
-                }
-            }
-        }
-        setServoPosition(PICTOGRAPH_POSITION);
         telemetry.addData("Pictograph", "%s visible", vuMark);
         telemetry.update();
         closeVuforia();
         return vuMark;
     }
     private void setServoPosition(double position) {
-      servo.setPosition(position);
       servo.setPosition(position);
     }
     public void closeVuforia() {
