@@ -7,6 +7,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -44,6 +46,7 @@ public class Phone {
         vuMark = RelicRecoveryVuMark.UNKNOWN;
     }
     public RelicRecoveryVuMark getMark() {
+        CameraDevice.getInstance().setFlashTorchMode(true);
         if(!isCameraOpened) {return vuMark;}
         relicTrackables.activate();
         setServoPosition(PICTOGRAPH_POSITION);
