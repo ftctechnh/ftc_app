@@ -7,11 +7,11 @@ package org.firstinspires.ftc.teamcode;
 public enum Color {
     RED, BLUE, UNKNOWN;
     Color not(Color target) {
-        Color notTarget = null;
         switch (target) {
-            case RED: notTarget = BLUE;
-            case BLUE: notTarget = RED;
+            case RED: return BLUE;
+            case BLUE: return RED;
+            case UNKNOWN: return UNKNOWN;
         }
-        return notTarget;
+        return UNKNOWN;
     }
 }
