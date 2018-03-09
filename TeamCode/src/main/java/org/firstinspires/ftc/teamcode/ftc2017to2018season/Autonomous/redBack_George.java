@@ -34,7 +34,8 @@ public class redBack_George extends Autonomous_General_George {
         telemetry.update();
         //wait for driver to click play
         waitForStart();
-
+        jewelServoRotate.setPosition(0.74);
+        sleep(100);
         //turn on the phone flashlight
         toggleLight(true);
         //start looking for the image and tell the driver that the phone is tracking the image

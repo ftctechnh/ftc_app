@@ -202,8 +202,9 @@ public class Autonomous_General_George extends LinearOpMode {
         telemetry.update();
 
         //jewelServo.setPosition(1);
-        jewelServoRotate.setPosition(0.74);//0.74 for it to be in the middle, 0.9 to knock off ball in front of color sensor, 0.6 to knock off ball behind color sensor
+        //jewelServoRotate.setPosition(0.74);//0.74 for it to be in the middle, 0.9 to knock off ball in front of color sensor, 0.6 to knock off ball behind color sensor
         relicMain.setPosition(0);
+        allOpenGlyphManipulator();
         slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_left_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         front_right_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -1141,8 +1142,8 @@ public class Autonomous_General_George extends LinearOpMode {
         glyphServoLeft.setPosition(0.3);
     }
     public void allOpenGlyphManipulator(){
-        glyphServoRight.setPosition(0.1);
-        glyphServoLeft.setPosition(0.8);
+        glyphServoRight.setPosition(0.25);
+        glyphServoLeft.setPosition(0.65);
     }
     public void moveUpGlyph(double cm) {
         double target_Position;

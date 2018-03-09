@@ -30,7 +30,8 @@ public class blueFront_George extends Autonomous_General_George {
 
         waitForStart();
 //reseting gyro sensor
-
+        jewelServoRotate.setPosition(0.74);
+        sleep(100);
         toggleLight(true);
         //light.setPower(0.5);
         startTracking();
