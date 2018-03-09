@@ -165,7 +165,7 @@ public class ADPSAuto extends VuforiaBallLib {
 
         bot.init();
         bot.start();
-        bot.setDropPos(0.7);
+        bot.setDropPos(0.75);
 
         //bot.setLights(new BlinkyEffect.Pulse(500, 0.5f));
 
