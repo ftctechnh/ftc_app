@@ -18,7 +18,21 @@ public class headingTest extends superAuto {
 
         waitForStart();
 
-      findCrypto(0, -.5f, 0f);
+        servoTapper.setPosition(0);
+        Wait(2);
+        servoTapper.setPosition(.25);
+        Wait(2);
+        servoTapper.setPosition(.75);
+        Wait(2);
+        servoTapper.setPosition(1);
+        Wait(2);
+        servoFlicker.setPosition(0);
+        Wait(2);
+        servoFlicker.setPosition(.5);
+        Wait(2);
+        servoFlicker.setPosition(1);
+
+
 
     }
 }

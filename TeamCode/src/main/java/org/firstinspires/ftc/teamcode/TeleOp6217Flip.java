@@ -95,7 +95,7 @@ public class TeleOp6217Flip extends OpMode
      */
     @Override
     public void start() {
-        servoTapper.setPosition(1d);
+        servoTapper.setPosition(.2d);
     }
 
     @Override
