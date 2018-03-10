@@ -80,7 +80,7 @@ public class Systems {
         double xOffSet;
         double yPos;
         double decisionPoint = 0;
-        Point bestPos = new Point(DEFAULT_X_POS_VALUE, 0);
+        Point bestPos = new Point(AutoGlyphs.DEFAULT_X_POS_VALUE, 0);
         while (findGlyphTime.seconds() < 0.5) {
         }
         while (findGlyphTime.seconds() < 3.5) {
