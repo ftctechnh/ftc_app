@@ -132,4 +132,32 @@ public class Systems {
             AutoDrive.strafeLeft(AutoDrive.MULTI_GLYPH_STRAFE_SPEED, distanceToStrafe);
         }
     }
+    public void testFindingGlyphs() {
+        glyphDetector.enable();
+        ElapsedTime findGlyphTime = new ElapsedTime();
+        findGlyphTime.reset();
+        double xOffSet;
+        double yPos;
+        double decisionPoint = 0;
+        double size;
+        Point bestPos = new Point(AutoGlyphs.DEFAULT_X_POS_VALUE, 0);
+        while (findGlyphTime.seconds() < 0.5) {
+        }
+        while (findGlyphTime.seconds() < 3.5) {
+            xOffSet = glyphDetector.getXOffset();
+            yPos = glyphDetector.getYPos();
+            size = glyphDetector.getSize();
+            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (size<110) && (size>40)) {// && (yPos < 60)) {
+                bestPos.x = xOffSet;
+                bestPos.y = yPos;
+                decisionPoint = findGlyphTime.seconds();
+            }
+        }
+        telemetry.addData("Glyph Position", bestPos.toString());
+        telemetry.addData("Decision made at", decisionPoint);
+        telemetry.addData("Size", glyphDetector.getSize());
+        telemetry.update();
+        glyphDetector.disable();
+
+    }
 }

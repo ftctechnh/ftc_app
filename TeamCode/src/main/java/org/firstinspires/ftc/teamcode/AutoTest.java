@@ -15,21 +15,15 @@ public class AutoTest extends LinearOpMode {
     ForkLift forkLift;
     JewelArm jewelArm;
     public void runOpMode() throws InterruptedException {
+        telemetry.addLine("DO NOT PRESS PLAY YET"); telemetry.update();
         drive = new AutoDrive(hardwareMap, telemetry);
-        phone = new Phone(hardwareMap,telemetry);
-        phone.closeVuforia();
-        forkLift = new ForkLift(hardwareMap, telemetry);
         jewelArm = new JewelArm(hardwareMap, telemetry);
+        forkLift = new ForkLift(hardwareMap, telemetry);
+        phone = new Phone(hardwareMap, telemetry);
         systems = new Systems(drive, forkLift, jewelArm, phone, hardwareMap, telemetry);
-        telemetry.addLine("ready to start");
-        telemetry.update();
+        telemetry.addLine("NOW YOU CAN PRESS PLAY"); telemetry.update();
         waitForStart();
-        systems.glyphDetector.enable();
-        sleep(1500);
-        while(opModeIsActive()) {
-            telemetry.addData("Glyph Position", systems.glyphDetector.getPoint().toString());
-            telemetry.update();
-        }
-        systems.glyphDetector.disable();
+        systems.testFindingGlyphs();
+        sleep(2000);
     }
 }
