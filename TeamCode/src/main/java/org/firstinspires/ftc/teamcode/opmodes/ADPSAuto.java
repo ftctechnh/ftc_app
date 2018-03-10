@@ -379,6 +379,15 @@ public class ADPSAuto extends VuforiaBallLib {
             if(movingAvg == null) {
                 movingAvg = new FilterLib.MovingWindowFilter(10, dist);
                 for (int i = 0; i < 4; i++) startEncoderCache[i] = gyroStep.getMotors()[i].getCurrentPosition();
+                //check stick distance when we first drop to see if we need to p[ick up immediately
+                if(pilliarCount > 0 && dist <= pilliarDist) {
+                    stick.setPosition(stickUp);
+                    markEncoders();
+                    stickPulled = true;
+                    try { TimeUnit.MILLISECONDS.sleep(250); }
+                    catch (InterruptedException e) {}
+                    return false;
+                }
             }
             movingAvg.appendValue(dist);
             double filteredDist = movingAvg.currentValue();
