@@ -94,6 +94,7 @@ public class Systems {
         }
         telemetry.addData("Glyph Position", bestPos.toString());
         telemetry.addData("Decision made at", decisionPoint);
+        telemetry.addData("Size", glyphDetector.getSize());
         telemetry.update();
         glyphDetector.disable();
         ForkLift.openClaw();

@@ -57,6 +57,8 @@ public class AutoGlyphs extends GlyphDetector {
         return super.getChosenGlyphPosition().x - X_CENTER;
     }
 
+    public double getSize() {return super.getSize();}
+
     public Point getPoint() {
         return new Point(getXOffset(), getYPos());
     }
