@@ -14,10 +14,7 @@ public class autoRed1 extends superAuto {
         setUp();
         jewel();
         setUpVuforia();
-        // We may need to put a loop around the code that reads the vuMark (inside setupvuforia)
-        // to read until we get something other than UNKNOWN.
-        // It should not be an unlimited loop, since we could get stuck there forever.
-        followHeading(0, 1f, 0f, 0.5f);
+        followHeading(0, 1f, 0f, -0.5f);
         pivotTo(-90);
         findCrypto(-90,-.5f, 0f);
     }

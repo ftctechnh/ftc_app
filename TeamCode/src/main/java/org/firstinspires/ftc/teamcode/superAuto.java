@@ -285,7 +285,7 @@ abstract public class superAuto extends LinearOpMode {
                 dif = (target - currentHeading);
                 telemetry.update();
                 //wheelPower = ( ( ( dif / target ) - minWheelPower ) * baseWheelPower ) + minWheelPower ;
-                if (target - currentHeading < 0) {
+                if (target - currentHeading > 0) {
                     motorFL.setPower(-wheelPower);
                     motorBL.setPower(-wheelPower);
                     motorFR.setPower(wheelPower);
@@ -347,11 +347,14 @@ abstract public class superAuto extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
         relicTrackables.activate();
-        // We may need to put a loop around this to read until we get something other than UNKNOWN
-        // It should not be an unlimited loop, since we could get stuck here forever.
-        vuMark = RelicRecoveryVuMark.from(relicTemplate);
-        telemetry.addData("VuMark", "%s visible", vuMark);
-        telemetry.update();
+        for(int t = 0; t<1000; t++) {
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            telemetry.update();
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN){
+                break;
+            }
+        }
     }
 
 
