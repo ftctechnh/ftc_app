@@ -80,30 +80,32 @@ public class Systems {
         double xOffSet;
         double yPos;
         double decisionPoint = 0;
-        double size;
-        Point bestPos = new Point(AutoGlyphs.DEFAULT_X_POS_VALUE, 0);
+        double size = 0;
+        Point bestGlyphPos = new Point(AutoGlyphs.DEFAULT_X_POS_VALUE, 0);
+        double bestGlyphSize = 0;
         while (findGlyphTime.seconds() < 0.5) {
         }
         while (findGlyphTime.seconds() < 3.5) {
             xOffSet = glyphDetector.getXOffset();
             yPos = glyphDetector.getYPos();
             size = glyphDetector.getSize();
-            if ((Math.abs(xOffSet) < Math.abs(bestPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (size<110) && (size>40)) {// && (yPos < 60)) {
-                bestPos.x = xOffSet;
-                bestPos.y = yPos;
+            if ((Math.abs(xOffSet) < Math.abs(bestGlyphPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (size < 110) && (size > 40)) {// && (yPos < 60)) {
+                bestGlyphPos.x = xOffSet;
+                bestGlyphPos.y = yPos;
+                bestGlyphSize = size;
                 decisionPoint = findGlyphTime.seconds();
             }
         }
-        telemetry.addData("Glyph Position", bestPos.toString());
+        telemetry.addData("Glyph Position", bestGlyphPos.toString());
         telemetry.addData("Decision made at", decisionPoint);
-        telemetry.addData("Size", glyphDetector.getSize());
+        telemetry.addData("Size", bestGlyphSize);
         telemetry.update();
         glyphDetector.disable();
         ForkLift.openClaw();
-        if (bestPos.x == AutoGlyphs.DEFAULT_X_POS_VALUE) {
-            bestPos.x = 0;
+        if (bestGlyphPos.x == AutoGlyphs.DEFAULT_X_POS_VALUE) {
+            bestGlyphPos.x = 0;
         }
-        double distanceToStrafe = bestPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH;
+        double distanceToStrafe = bestGlyphPos.x * STRAFING_DAMPEN_FACTOR_FOR_MULTI_GLYPH;
         strafeForMultiGlyph(distanceToStrafe);
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPH_PIT_SPEED, AutoDrive.DRIVE_INTO_GLYPH_PIT_DISTANCE);
         AutoDrive.forward(AutoDrive.DRIVE_INTO_GLYPHS_SPEED, AutoDrive.DRIVE_INTO_GLYPHS_DISTANCE);
