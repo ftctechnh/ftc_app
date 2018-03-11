@@ -13,6 +13,8 @@ public class headingTest extends superAuto {
         setUp();
         servoTapper.setPosition(.2);
         Wait(1);
+        servoTapper.setPosition(.4);
+        Wait(1);
         servoFlicker.setPosition(.3);
         Wait(2);
         servoFlicker.setPosition(0);
