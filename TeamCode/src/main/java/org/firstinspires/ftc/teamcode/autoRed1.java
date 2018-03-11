@@ -15,7 +15,9 @@ public class autoRed1 extends superAuto {
         jewel();
         setUpVuforia();
         followHeading(0, .5f, 0f, -0.25f);
-       /*pivotTo(-90);
-        findCrypto(-90,-.5f, 0f);*/
+        Wait(.25);
+        pivotTo(-90);
+        Wait(5);
+        /*findCrypto(-90,-.5f, 0f);*/
     }
 }
