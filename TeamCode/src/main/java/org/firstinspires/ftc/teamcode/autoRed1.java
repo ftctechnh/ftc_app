@@ -18,6 +18,6 @@ public class autoRed1 extends superAuto {
         Wait(.25);
         pivotTo(-90);
         Wait(5);
-        /*findCrypto(-90,-.5f, 0f);*/
+        findCrypto(-90,-.5f, 0f);
     }
 }
