@@ -67,6 +67,9 @@ abstract public class superAuto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     void setUp(){
+        
+       iAmBlue = !iAmRed;
+
         configureGyro();
 
         mapHardware();
@@ -367,8 +370,8 @@ abstract public class superAuto extends LinearOpMode {
         servoTapper.setPosition(0.2d);
         servoFlicker.setPosition(.3d);
         Wait(.2f);
-        servoTapper.setPosition(0.65d);
-
+        servoTapper.setPosition(0.73d);
+        Wait(1f);
 
         telemetry.update();
         colors = colorSensor.getNormalizedColors();

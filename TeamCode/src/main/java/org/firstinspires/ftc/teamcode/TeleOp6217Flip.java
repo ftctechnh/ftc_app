@@ -323,7 +323,7 @@ public class TeleOp6217Flip extends OpMode
 
 
         double dead = .2;
-f
+
         // Regular
         double max = 1;
 
