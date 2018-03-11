@@ -175,7 +175,11 @@ public class Teleop extends OpMode {
         //if(dropperDown) bot.dropBack();
         //else bot.raiseBack();
 
-        if(robotSlow) {
+        if(gamepad1.y) {
+            bot.setLeftDrive(gamepad1.left_stick_y);
+            bot.setRightDrive(gamepad1.right_stick_y);
+        }
+        else if(robotSlow) {
             if(!motorsSet) {
                 DcMotor[] ray = bot.getMotorRay();
                 for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
