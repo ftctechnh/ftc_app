@@ -171,20 +171,20 @@ public class TeleOp6217Flip extends OpMode
         //  pivot left
         if (LT != 0)  {
 
-            motorFL.setPower(LT);
-            motorBL.setPower(LT);
-            motorFR.setPower(-LT);
-            motorBR.setPower(-LT);
+            motorFL.setPower(1);
+            motorBL.setPower(1);
+            motorFR.setPower(-1);
+            motorBR.setPower(-1);
         }
 
 
         //  pivot right
         else if (RT != 0)  {
 
-            motorFL.setPower(-RT);
-            motorBL.setPower(-RT);
-            motorFR.setPower(RT);
-            motorBR.setPower(RT);
+            motorFL.setPower(-1);
+            motorBL.setPower(-1);
+            motorFR.setPower(1);
+            motorBR.setPower(1);
         }
 
         // Relic
@@ -323,7 +323,7 @@ public class TeleOp6217Flip extends OpMode
 
 
         double dead = .2;
-
+f
         // Regular
         double max = 1;
 
