@@ -67,7 +67,7 @@ abstract public class superAuto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     void setUp(){
-        
+
        iAmBlue = !iAmRed;
 
         configureGyro();
@@ -352,12 +352,12 @@ abstract public class superAuto extends LinearOpMode {
         relicTrackables.activate();
         for(int t = 0; t<1000; t++) {
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            telemetry.addData("VuMark", "%s visible", vuMark);
-            telemetry.update();
             if (vuMark != RelicRecoveryVuMark.UNKNOWN){
                 break;
             }
         }
+        telemetry.addData("VuMark", "%s visible", vuMark);
+        telemetry.update();
     }
 
 
