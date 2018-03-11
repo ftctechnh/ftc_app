@@ -67,13 +67,13 @@ public class FinalUniversalAudi extends LinearOpMode
                 }
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In_Stall(12, .6, telemetry);
-                newRobot.driveStraight_In(-32,.6); //added 24 inches to the original value for the 2nd glyph
+                newRobot.driveStraight_In(-26,.6); //added 18 inches to the original value for the 2nd glyph
                 newRobot.pivot(180,.7);
                 newRobot.driveStraight_In(6,.6);
                 newRobot.openOrCloseDoor(true);
                 newRobot.driveStraight_In(-6, .6);
                 newRobot.pivot(180,.7);
-                newRobot.moveLift(2);
+                newRobot.moveLift(1);
                 newRobot.driveStraight_In(32,.6);
                 newRobot.driveStraight_In_Stall(12,.6, telemetry);
                 newRobot.stopAllMotors();
@@ -123,13 +123,13 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.oldMoveLift(-1);
                 newRobot.openOrCloseDoor(false);
                 newRobot.driveStraight_In_Stall(16,.6,telemetry);
-                newRobot.driveStraight_In(-30,.6); //added 24 inches to the original value for the 2nd glyph
+                newRobot.driveStraight_In(-24,.6); //added 18 inches to the original value for the 2nd glyph
                 newRobot.pivot(-180,.7);
                 newRobot.driveStraight_In(6,.6);
                 newRobot.openOrCloseDoor(true);
                 newRobot.driveStraight_In(-6, .6);
                 newRobot.pivot(180,.7);
-                newRobot.moveLift(2);
+                newRobot.moveLift(1);
                 newRobot.driveStraight_In(30,.6);
                 newRobot.driveStraight_In_Stall(16,.6, telemetry);
                 newRobot.stopAllMotors();
