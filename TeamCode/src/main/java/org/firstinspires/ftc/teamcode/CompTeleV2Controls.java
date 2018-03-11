@@ -76,7 +76,10 @@ public class CompTeleV2Controls extends OpMode
         else if (gamepad2.left_trigger > .2)
             newRobot.fineAdjDoors(.16f);
 
-        newRobot.getTailRelease().setPower(gamepad2.right_stick_y);
+        if(newRobot.getTailRelease().getCurrentPosition() > -63)
+            newRobot.getTailRelease().setPower(gamepad2.right_stick_y/2);
+        else
+            newRobot.getTailRelease().setPower(gamepad2.right_stick_y);
 
         if (gamepad2.right_trigger > .3f)
             newRobot.fineAdjGrabber(.028f);   //closing
@@ -91,7 +94,7 @@ public class CompTeleV2Controls extends OpMode
         {
             newRobot.fineAdjGrabberRotator(-.004f);
         }
-
+/*
         if (gamepad2.dpad_left)
         {
             //Insert pull function
@@ -103,7 +106,7 @@ public class CompTeleV2Controls extends OpMode
         else
         {
 
-        }
+        }*/
 
         if (gamepad2.a)
         {
@@ -154,6 +157,7 @@ public class CompTeleV2Controls extends OpMode
         telemetry.addData("WingEnc", newRobot.getWingMotor().getCurrentPosition());
         telemetry.addData("Left Y", gamepad1.left_stick_y);
         telemetry.addData("Right y", gamepad1.right_stick_y);
+        telemetry.addData("Tail Release", newRobot.getTailRelease().getCurrentPosition());
         telemetry.update();
     }
 

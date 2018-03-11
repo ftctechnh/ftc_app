@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-//import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,12 +18,12 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-//import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-//import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-//import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-//import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -101,9 +101,9 @@ public class NewRobotFinal
     public NewRobotFinal(HardwareMap hardwareMap) //Initialize or set values to instance variables or give each variable a speicfic sensor/motor
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
-       // initIMU();
-       // updateIMUValues();
+        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+       initIMU();
+       updateIMUValues();
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
@@ -185,7 +185,7 @@ public class NewRobotFinal
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
         leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
-/*
+
     public void initIMU() //Gives IMU of what to read
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -228,7 +228,7 @@ public class NewRobotFinal
         {
             stopDriveMotors();
         }
-    }*/
+    }
 
     public char getGlyphCipher()
     {
