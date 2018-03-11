@@ -364,11 +364,10 @@ abstract public class superAuto extends LinearOpMode {
 
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
-        servoFlicker.setPosition(.5d);
         servoTapper.setPosition(0.2d);
+        servoFlicker.setPosition(.5d);
         Wait(.2f);
-        servoTapper.setPosition(0.8d);
-        Wait(1.5f);
+        servoTapper.setPosition(0.7d);
 
 
         telemetry.update();
