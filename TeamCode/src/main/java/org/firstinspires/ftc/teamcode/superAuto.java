@@ -354,7 +354,7 @@ abstract public class superAuto extends LinearOpMode {
         relicTrackables.activate();
         int timeRecongnize=0;
 
-        for(int t = 0; t<1000000000; t++) {
+        for(int t = 0; t<2e6; t++) {
             timeRecongnize =t;
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN){
@@ -362,7 +362,7 @@ abstract public class superAuto extends LinearOpMode {
             }
         }
         telemetry.addData("VuMark", "%s visible", vuMark);
-        telemetry.addData("Time Recognize", "%d",timeRecongnize);
+        telemetry.addData("Time Recognize", "%d", timeRecongnize);
         telemetry.update();
     }
 
