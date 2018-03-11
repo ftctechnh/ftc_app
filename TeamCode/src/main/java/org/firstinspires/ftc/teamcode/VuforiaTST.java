@@ -117,6 +117,7 @@ public class VuforiaTST extends LinearOpMode {
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
+        int t = 0;
 
         relicTrackables.activate();
 
@@ -128,6 +129,8 @@ public class VuforiaTST extends LinearOpMode {
              * UNKNOWN, LEFT, CENTER, and RIGHT. When a VuMark is visible, something other than
              * UNKNOWN will be returned by {@link RelicRecoveryVuMark#from(VuforiaTrackable)}.
              */
+
+            t = t + 1;
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
 
@@ -135,6 +138,8 @@ public class VuforiaTST extends LinearOpMode {
                  * loop until this condition occurs, then move on to act accordingly depending
                  * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.addData("Time Recognize", "%d", t);
+
 
                 /* For fun, we also exhibit the navigational pose. In the Relic Recovery game,
                  * it is perhaps unlikely that you will actually need to act on this pose information, but
