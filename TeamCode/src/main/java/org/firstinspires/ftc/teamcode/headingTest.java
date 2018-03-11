@@ -20,14 +20,7 @@ public class headingTest extends superAuto {
         Wait(2);
         servoTapper.setPosition(.3);
         Wait(2);
-        servoTapper.setPosition(.4);
-        Wait(2);
-        servoTapper.setPosition(.5);
-        Wait(2);
-        servoTapper.setPosition(.6);
-        Wait(2);
 
-        Wait(4);
         //Flicker
         servoFlicker.setPosition(0);
         Wait(2);
@@ -38,5 +31,15 @@ public class headingTest extends superAuto {
         servoFlicker.setPosition(.75);
         Wait(2);
         servoFlicker.setPosition(1);
+        Wait(2);
+
+        //back to Tapper
+        servoTapper.setPosition(.4);
+        Wait(2);
+        servoTapper.setPosition(.5);
+        Wait(2);
+        servoTapper.setPosition(.6);
+
+
     }
 }
