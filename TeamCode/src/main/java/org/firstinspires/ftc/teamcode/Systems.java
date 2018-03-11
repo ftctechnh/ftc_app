@@ -38,7 +38,7 @@ public class Systems {
 
     void pushInBlock() {
         ForkLift.openClaw();
-        sleep(100);
+        sleep(150);
         AutoDrive.backward(AutoDrive.DRIVE_INTO_CRYPTOBOX_SPEED, 3);
         ForkLift.moveUntilDown();
         ForkLift.setClawPositionPushInBlock();
@@ -89,7 +89,7 @@ public class Systems {
             xOffSet = glyphDetector.getXOffset();
             yPos = glyphDetector.getYPos();
             size = glyphDetector.getSize();
-            if ((Math.abs(xOffSet) < Math.abs(bestGlyphPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (size < 110) && (size > 40)) {// && (yPos < 60)) {
+            if ((Math.abs(xOffSet) < Math.abs(bestGlyphPos.x)) && (xOffSet != AutoGlyphs.DEFAULT_X_POS_VALUE) && (size < 105) && (size > 40)) {// && (yPos < 60)) {
                 bestGlyphPos.x = xOffSet;
                 bestGlyphPos.y = yPos;
                 bestGlyphSize = size;
