@@ -354,7 +354,7 @@ abstract public class superAuto extends LinearOpMode {
         relicTrackables.activate();
 
         for(int t = 0; t<2000; t++) {
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN){
                 break;
             }
