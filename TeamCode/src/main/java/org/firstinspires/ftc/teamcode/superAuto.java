@@ -364,8 +364,8 @@ abstract public class superAuto extends LinearOpMode {
 
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
-        servoTapper.setPosition(0.2d);
-        servoFlicker.setPosition(.5d);
+        servoTapper.setPosition(0.3d);
+        servoFlicker.setPosition(.4d);
         Wait(.2f);
         servoTapper.setPosition(0.6d);
 
@@ -398,14 +398,14 @@ abstract public class superAuto extends LinearOpMode {
 
         if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
             telemetry.addData("1", "move right");
-            servoFlicker.setPosition(.7);
+            servoFlicker.setPosition(.25);
         }
         else {
             telemetry.addData("1", "move left");
-            servoFlicker.setPosition(.3);
+            servoFlicker.setPosition(.55);
         }
         Wait(1d);
-        servoFlicker.setPosition(.5);
+        servoFlicker.setPosition(.4);
         servoTapper.setPosition(.2d);
         Wait(1d);
         servoFlicker.setPosition(0);
