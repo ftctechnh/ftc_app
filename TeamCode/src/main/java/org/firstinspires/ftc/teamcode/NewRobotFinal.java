@@ -4,7 +4,7 @@ import android.graphics.Color;
 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+//import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -18,12 +18,12 @@ import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+//import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+//import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
+//import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+//import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -45,7 +45,6 @@ public class NewRobotFinal
     private final static short STOP_L = 0;
 
     final double defaultTurnPow = .5; //Default powers for motors
-    final double defaultDrivePow = .75;
     final double defaultLiftSpeed = 1;
     public double balPow = .25;
 
@@ -95,16 +94,16 @@ public class NewRobotFinal
 
     //Also to note: The front wheels to the back wheels is 13.5 apart in terms of center distance
     public final int neverrestEncCountsPerRev = 1120; //Based on Nevverest 40 motors
-    public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
+    //public final float roboDiameterCm = (float) (38.7 * Math.PI); // can be adjusted
     public final float wheelCircIn = (float) (Math.PI * 4); //Circumference of wheels used
-    public final float wheelCircCm = (float) (10.168 * Math.PI);//Converted to CM
+    //public final float wheelCircCm = (float) (10.168 * Math.PI);//Converted to CM
 
     public NewRobotFinal(HardwareMap hardwareMap) //Initialize or set values to instance variables or give each variable a speicfic sensor/motor
     {
         liftMotor = hardwareMap.get(DcMotorImplEx.class, "liftMotor");
-        imu = (hardwareMap.get(BNO055IMU.class, "imu"));
-        initIMU();
-        updateIMUValues();
+        //imu = (hardwareMap.get(BNO055IMU.class, "imu"));
+       // initIMU();
+       // updateIMUValues();
 
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
@@ -186,7 +185,7 @@ public class NewRobotFinal
         rightDoorWall.setDirection(Servo.Direction.FORWARD);
         leftDoorWall.setDirection(Servo.Direction.FORWARD);
     }
-
+/*
     public void initIMU() //Gives IMU of what to read
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -229,7 +228,7 @@ public class NewRobotFinal
         {
             stopDriveMotors();
         }
-    }
+    }*/
 
     public char getGlyphCipher()
     {
@@ -465,7 +464,6 @@ public class NewRobotFinal
             while ((driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget) && !opMode.isStopRequested())
             {
             }
-
         }
         else //CounterClockwise
         {
@@ -528,10 +526,12 @@ public class NewRobotFinal
         if (adjLevels + currentLvl < 0)
         {
             currentLvl = 0;
-        } else if (adjLevels + currentLvl >= liftLevels.length)
+        }
+        else if (adjLevels + currentLvl >= liftLevels.length)
         {
             currentLvl = (short) (liftLevels.length - 1);
-        } else
+        }
+        else
         {
             currentLvl += adjLevels;
         }
@@ -541,7 +541,8 @@ public class NewRobotFinal
         {
             liftTargetPos = (short) (liftLevels[currentLvl] - liftDeadzone);
             liftDir = UP_L;
-        } else
+        }
+        else
         {
             liftTargetPos = (short) (liftLevels[currentLvl] + liftDeadzone);
             liftDir = DOWN_L;
