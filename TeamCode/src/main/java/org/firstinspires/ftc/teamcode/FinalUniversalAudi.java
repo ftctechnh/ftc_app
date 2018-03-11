@@ -73,6 +73,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.openOrCloseDoor(true);
                 newRobot.driveStraight_In(-6, .6);
                 newRobot.pivot(180,.7);
+                newRobot.moveLift(2);
                 newRobot.driveStraight_In(32,.6);
                 newRobot.driveStraight_In_Stall(12,.6, telemetry);
                 newRobot.stopAllMotors();
@@ -128,6 +129,7 @@ public class FinalUniversalAudi extends LinearOpMode
                 newRobot.openOrCloseDoor(true);
                 newRobot.driveStraight_In(-6, .6);
                 newRobot.pivot(180,.7);
+                newRobot.moveLift(2);
                 newRobot.driveStraight_In(30,.6);
                 newRobot.driveStraight_In_Stall(16,.6, telemetry);
                 newRobot.stopAllMotors();
