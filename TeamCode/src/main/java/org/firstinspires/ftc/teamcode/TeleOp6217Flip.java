@@ -29,7 +29,7 @@ public class TeleOp6217Flip extends OpMode
     DcMotor motorFlip;
     Servo servoTapper;
     DcMotor motorSlide;
-    Servo servoClaw;
+    Servo servoThumb;
     Servo servoWrist;
 
    /* IntegratingGyroscope gyro;
@@ -80,7 +80,7 @@ public class TeleOp6217Flip extends OpMode
         motorSlide = hardwareMap.dcMotor.get("motorSlide");
         motorSlide.setDirection(DcMotor.Direction.FORWARD);
         servoWrist = hardwareMap.servo.get("servoWrist");
-        servoClaw = hardwareMap.servo.get("servoClaw");
+        servoThumb = hardwareMap.servo.get("servoThumb");
     }
 
     /*
@@ -198,16 +198,16 @@ public class TeleOp6217Flip extends OpMode
             motorSlide.setPower(0);
         }
 
-        if (b && dpad_up ){
-            servoClaw.setPosition(0);
-        }
-        else if (b && dpad_down){
-            servoClaw.setPosition(1);
-        }
-        if(b && leftPad){
-            servoWrist.setPosition(1.0);
+        if (b && leftPad ){
+            servoThumb.setPosition(0);
         }
         else if (b && rightPad){
+            servoThumb.setPosition(1);
+        }
+        if(b && dpad_up){
+            servoWrist.setPosition(1.0);
+        }
+        else if (b && dpad_down){
             servoWrist.setPosition(.52);
         }
 
