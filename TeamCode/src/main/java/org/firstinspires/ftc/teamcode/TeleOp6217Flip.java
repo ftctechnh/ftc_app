@@ -88,6 +88,8 @@ public class TeleOp6217Flip extends OpMode
     */
     @Override
     public void init_loop() {
+        // Start wrist in stowed position
+        servoWrist.setPosition(1);
     }
 
     /*
@@ -205,10 +207,10 @@ public class TeleOp6217Flip extends OpMode
             servoThumb.setPosition(1);
         }
         if(b && dpad_up){
-            servoWrist.setPosition(1.0);
+            servoWrist.setPosition(0);
         }
         else if (b && dpad_down){
-            servoWrist.setPosition(.52);
+            servoWrist.setPosition(.4);
         }
 
         //  Driving
