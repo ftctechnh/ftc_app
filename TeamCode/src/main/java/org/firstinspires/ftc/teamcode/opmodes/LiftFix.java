@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  */
 
 @TeleOp(name="Lift Fixer")
+//bwahahaha were going to worlds
 public class LiftFix extends OpMode {
     BotHardware bot = new BotHardware(this);
 
