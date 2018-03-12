@@ -48,7 +48,7 @@ abstract public class superAuto extends LinearOpMode {
 
     static final float ridgeDepth = 6;
 
-    RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[3];
+    RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
