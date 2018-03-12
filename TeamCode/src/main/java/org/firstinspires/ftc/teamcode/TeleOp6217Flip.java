@@ -147,13 +147,13 @@ public class TeleOp6217Flip extends OpMode
 
         //  Loading Glyphs
         // Directions will require testing
-        if (dpad_up && !b) {
-            motorConL.setPower(-.7);
-            motorConR.setPower(.7);
-
-        } else if (dpad_down && ! b ) {
+        if (dpad_up) {
             motorConL.setPower(.7);
             motorConR.setPower(-.7);
+
+        } else if (dpad_down ) {
+            motorConL.setPower(-.7);
+            motorConR.setPower(.7);
 
         } else {
             motorConL.setPower(0);
@@ -198,11 +198,11 @@ public class TeleOp6217Flip extends OpMode
             motorSlide.setPower(0);
         }
 
-        if (b && dpad_up ){
+        if (b  ){
             servoClaw.setPosition(0);
         }
-        else if (b && dpad_down){
-            servoClaw.setPosition(1);
+        else if (y){
+            servoClaw.setPosition(.5);
         }
         if(b && leftPad){
             servoWrist.setPosition(1.0);
