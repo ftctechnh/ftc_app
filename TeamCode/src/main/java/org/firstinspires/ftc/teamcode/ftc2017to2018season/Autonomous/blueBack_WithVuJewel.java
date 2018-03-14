@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
 import android.support.annotation.Nullable;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.vuforia.PIXEL_FORMAT;
 import com.android.internal.util.Predicate;
 import com.vuforia.ar.pl.ImageTools;
@@ -15,11 +18,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 /**
  * Created by boswo on 3/12/2018.
  */
-
+@Autonomous(name = "blueBlack_VueJeWEl")
 public class blueBack_WithVuJewel extends Autonomous_General_George {
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
-
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -69,9 +71,18 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
         moveUpGlyph(1.45);
         sleep(250);
 
-        Bitmap img =getImage();
+        Bitmap img = getImage();
 
-        Analyze_Color(img,img.getPixel(img.getWidth(), img.getHeight()) );
+        if (Analyze_Color(img,img.getPixel(img.getWidth(), img.getHeight())) == 0){
+            jewelServoRotate.setPosition(1);
+        }
+        else if (Analyze_Color(img,img.getPixel(img.getWidth(), img.getHeight())) == 1){
+            jewelServoRotate.setPosition(0);
+        }
+        else if (Analyze_Color(img,img.getPixel(img.getWidth(), img.getHeight())) == 3){
+            jewelServoRotate.setPosition(0.5);
+        }
+
 
         sleep(1000);
 
@@ -84,15 +95,14 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
         sleep(100);
 
 
-        if (vuMark == RelicRecoveryVuMark.LEFT) {
-            encoderMecanumDrive(0.4, 4.25, 4.25, 5000, 0);
-        } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            encoderMecanumDrive(0.4, -4, -4, 5000, 0);
-
-        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            encoderMecanumDrive(0.4, 9.25, 9.25, 5000, 0);
-        }
-
+//        if (vuMark == RelicRecoveryVuMark.LEFT) {
+//            encoderMecanumDrive(0.4, 4.25, 4.25, 5000, 0);
+//        } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
+//            encoderMecanumDrive(0.4, -4, -4, 5000, 0);
+//
+//        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+//            encoderMecanumDrive(0.4, 9.25, 9.25, 5000, 0);
+//        }
 
         sleep(100);
 
@@ -129,6 +139,8 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
 
 
     public Bitmap getImage() throws InterruptedException {
+vuforiaInit(true,false);
+        vuforia.setFrameQueueCapacity(1);
         com.vuforia.Image img;
         img = getImagefromFrame(vuforia.getFrameQueue().take(), PIXEL_FORMAT.RGB565);
         Bitmap bm_img = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.RGB_565);
@@ -164,7 +176,7 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
                 cur_color_int = bm_img.getPixel(j, i);
                 rgb[0] = cur_color.red(cur_color_int);
                 rgb[1] = cur_color.green(cur_color_int);
-                rgb[3] = cur_color.blue(cur_color_int);
+                rgb[2] = cur_color.blue(cur_color_int);
 
                 Color.RGBToHSV(rgb[0], rgb[1], rgb[2], hsv);
 

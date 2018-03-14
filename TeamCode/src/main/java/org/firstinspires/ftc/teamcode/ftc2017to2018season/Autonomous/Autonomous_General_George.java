@@ -17,6 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.*;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -59,7 +61,7 @@ import java.util.Locale;
 //Edit by Steven Chen: cleaning up unused code 3/3/18
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
-public class Autonomous_General_George extends LinearOpMode {
+public class Autonomous_General_George extends LinearOpMode{
     //we attached a light to make it easier to see the target
     //public DcMotor light;
     public double waitTime = 3;
@@ -1197,7 +1199,7 @@ public class Autonomous_General_George extends LinearOpMode {
     }
 
 
-    @Override public void runOpMode() {}
+    @Override public void runOpMode() throws InterruptedException {}
 
     /**
      * uses range sensor by reading distance and then driving that distance
