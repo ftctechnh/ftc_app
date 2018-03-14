@@ -21,7 +21,7 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
     private ElapsedTime runtime = new ElapsedTime();
 
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
 
         vuforiaInit(true, true);
@@ -69,7 +69,10 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
         moveUpGlyph(1.45);
         sleep(250);
 
-       Analyze_Color(getImage(), )
+        Bitmap img =getImage();
+
+        Analyze_Color(img,img.getPixel(img.getWidth(), img.getHeight()) );
+
         sleep(1000);
 
 
@@ -135,7 +138,7 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
     }
 
     @Nullable
-    private Image getImagefromFrame(VuforiaLocalizer.CloseableFrame frame, int format) {
+    private com.vuforia.Image getImagefromFrame(VuforiaLocalizer.CloseableFrame frame, int format) {
         long numImgs = frame.getNumImages();
         for (int i = 0; i < numImgs; i++) {
             if (frame.getImage(1).getFormat() == format) {
@@ -158,7 +161,7 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
 
         for (int i = 500; i < height; i += 3) {
             for (int j = pix; j < width; j += 3) {
-                cur_color_int = bm_img.getPixels(j, i);
+                cur_color_int = bm_img.getPixel(j, i);
                 rgb[0] = cur_color.red(cur_color_int);
                 rgb[1] = cur_color.green(cur_color_int);
                 rgb[3] = cur_color.blue(cur_color_int);
@@ -185,7 +188,7 @@ public class blueBack_WithVuJewel extends Autonomous_General_George {
          return 0;
         }
         else if (Xl>X){//blue
-return 1;
+        return 1;
         }
         else {
             return 2;
