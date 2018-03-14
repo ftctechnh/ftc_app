@@ -22,7 +22,7 @@ public class AutoGlyphs extends GlyphDetector {
     static final double DEFAULT_X_POS_VALUE = 1000;
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
-        this(hardwareMap, telemetry, GlyphDetectionSpeed.VERY_FAST, 0);
+        this(opMode.hardwareMap, opMode.elemetry, GlyphDetectionSpeed.VERY_FAST, 0);
     }
 
     public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {

@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -55,7 +56,8 @@ public class AutoDrive {
     private ModernRoboticsI2cRangeSensor rangeSensor;
 
 
-    public AutoDrive(HardwareMap hardwareMap, Telemetry telemetry) {
+    public AutoDrive(OpMode opMode) {
+        this.hardwareMap = opMode.hardwareMap;
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
         this.FrontRight = hardwareMap.dcMotor.get("m2");
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -64,7 +66,7 @@ public class AutoDrive {
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
         this.imu = new REVGyro(hardwareMap.get(BNO055IMU.class, "imu"));
         this.rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "d1");
-        this.telemetry = telemetry;
+        this.telemetry = opMode.telemetry;
         setBRAKE();
     }
 
