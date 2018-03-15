@@ -271,14 +271,17 @@ abstract public class superAuto extends LinearOpMode {
         for (int i = 0; i < boxOrder.length; i++){
             while ((previousDist-currentDist) < ridgeDepth) {
                 telemetry.addData("Top of loop", boxOrder[i]);
+                telemetry.addData("i=", i);
+                telemetry.addData("ridgeDepth", ridgeDepth);
+                telemetry.addData("Previous Distance at start: ", previousDist);
+                telemetry.addData("Current Distance at start: ", currentDist);
                 //translateForCrypto(basePosx);
                 //telemetry.addData("Past Translate for Crypto", boxOrder[i]);
-                telemetry.addData("i=", i);
                 adjustHeading(targetHeading, basePosx, basePosy);
-                telemetry.addData("Previous Distance: ", previousDist);
-                telemetry.addData("Current Distance: ", currentDist);
                 previousDist = currentDist;
                 currentDist = rangeSensor.rawUltrasonic();
+                telemetry.addData("Previous Distance after read: ", previousDist);
+                telemetry.addData("Current Distance after read: ", currentDist);
                 telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
                 telemetry.update();
             }
