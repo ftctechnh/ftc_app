@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="Preciousss: AutoRed1", group="Preciousss")
+@Autonomous(name="Preciousss: autoPlay", group="Preciousss")
 
 public class autoPlay extends superAuto {
 
