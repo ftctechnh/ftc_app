@@ -656,6 +656,7 @@ public class Teleop extends OpMode {
                 gromit.relicArm.relicArmMotor.setPower(0.0);
                 out = true;
                 onehitwonder = false;
+                elbowmoving = false;
             }
         }
         //Telemetry
