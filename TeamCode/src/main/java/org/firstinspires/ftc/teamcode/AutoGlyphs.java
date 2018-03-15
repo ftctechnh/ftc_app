@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.GlyphDetector;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -21,17 +22,17 @@ public class AutoGlyphs extends GlyphDetector {
     static final double X_POSITION_OFFSET = 31.5;
     static final double DEFAULT_X_POS_VALUE = 1000;
 
-    public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry) {
-        this(opMode.hardwareMap, opMode.elemetry, GlyphDetectionSpeed.VERY_FAST, 0);
+    public AutoGlyphs(OpMode opMode) {
+        this(opMode, GlyphDetectionSpeed.VERY_FAST, 0);
     }
 
-    public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {
-        this(hardwareMap, telemetry, speed, cameraDirection.direction);
+    public AutoGlyphs(OpMode opMode, GlyphDetectionSpeed speed, CameraDirection cameraDirection) {
+        this(opMode, speed, cameraDirection.direction);
     }
 
-    public AutoGlyphs(HardwareMap hardwareMap, Telemetry telemetry, GlyphDetectionSpeed speed, int cameraDirection) {
+    public AutoGlyphs(OpMode opMode, GlyphDetectionSpeed speed, int cameraDirection) {
         super();
-        super.init(hardwareMap.appContext, CameraViewDisplay.getInstance(), cameraDirection);
+        super.init(opMode.hardwareMap.appContext, CameraViewDisplay.getInstance(), cameraDirection);
         this.minScore = 0.5;
         this.downScaleFactor = 0.3;
         this.speed = speed;
