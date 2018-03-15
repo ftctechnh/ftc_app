@@ -267,6 +267,23 @@ abstract public class superAuto extends LinearOpMode {
         }
     }
 
+    void flip ()    {
+
+        motorFlip.setPower(.5f);
+        Wait(1f);
+        motorFlip.setPower(0);
+        motorBL.setPower(-1);
+        motorBR.setPower(-1);
+        motorFL.setPower(-1);
+        motorFR.setPower(-1);
+        Wait(.5);
+        motorBL.setPower(1);
+        motorBR.setPower(1);
+        motorFL.setPower(1);
+        motorFR.setPower(1);
+        Wait(.5);
+        sR();
+    }
 
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
@@ -328,6 +345,7 @@ abstract public class superAuto extends LinearOpMode {
         motorBL.setPower(power);
         motorFR.setPower(power);
         motorBR.setPower(power);
+
     }
 
     void setUpVuforia(){
