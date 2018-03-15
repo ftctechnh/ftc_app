@@ -46,7 +46,7 @@ abstract public class superAuto extends LinearOpMode {
     Servo servoIntake;
     Servo servoFlicker;
 
-    static final float ridgeDepth = 3;
+    static final float ridgeDepth = 6;
 
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
@@ -253,27 +253,23 @@ abstract public class superAuto extends LinearOpMode {
         If for some reason we are not successful reading the vuMark, reset it from UNKNOWN to
         the first column, which is the quickest one to load.
         */
-
+        telemetry.addData("Check iAmRed", iAmRed);
         if (iAmRed) {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                vuMark = RelicRecoveryVuMark.RIGHT;
-            }
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN){vuMark = RelicRecoveryVuMark.RIGHT;}
             boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
             boxOrder[1] = RelicRecoveryVuMark.RIGHT;
             boxOrder[2] = RelicRecoveryVuMark.CENTER;
             boxOrder[3] = RelicRecoveryVuMark.LEFT;
         } else {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                vuMark = RelicRecoveryVuMark.LEFT;
-            }
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN){vuMark = RelicRecoveryVuMark.LEFT;}
             boxOrder[0] = RelicRecoveryVuMark.LEFT;
             boxOrder[1] = RelicRecoveryVuMark.CENTER;
             boxOrder[2] = RelicRecoveryVuMark.RIGHT;
             boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
         }
 
-        for (int i = 0; i < boxOrder.length; i++) {
-            while (true) {
+        for (int i = 0; i < boxOrder.length; i++){
+            while ((currentDist - previousDist) < ridgeDepth) {
                 //adjustHeading(targetHeading, basePosx, basePosy);
                 telemetry.addData("Gotten into the loop", boxOrder[i]);
                 translateForCrypto(basePosx);
@@ -282,19 +278,14 @@ abstract public class superAuto extends LinearOpMode {
                 currentDist = rangeSensor.rawUltrasonic();
                 telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
                 telemetry.update();
-                //  }
-                if ((previousDist-currentDist ) > ridgeDepth) {
-                    telemetry.addData("We see a ridge!", boxOrder[i]);
-
-                }
-                RelicRecoveryVuMark currentVumark = boxOrder[i];
-                if (currentVumark == vuMark) {
-                    telemetry.addData("We've found the right box", boxOrder[i]);
-                    break;
-                }
             }
-            sR();
+            RelicRecoveryVuMark currentVumark = boxOrder[i];
+            if(currentVumark == vuMark){
+                telemetry.addData("We've found the right box", boxOrder[i]);
+                break;
+            }
         }
+        sR();
     }
 
     void followHeading(int targetHeading, double time, float basePosx, float basePosy ){
