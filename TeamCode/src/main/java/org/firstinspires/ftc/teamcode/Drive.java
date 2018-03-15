@@ -39,6 +39,9 @@ public class Drive {
     static final double DISTANCE_TO_FAR_COLUMN = 32.75;
     static final double DISTANCE_TO_CENTER_COLUMN = 25.5;
     static final double DISTANCE_TO_CLOSE_COLUMN = 17.5;
+    static final double D_PAD_SLOW_SPEED = 0.25;
+    static final double BUMPER_SLOW_SPEED = 0.25;
+
 
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
@@ -123,24 +126,48 @@ public class Drive {
         driveTranslateRotate(0, Math.abs(speed), 0, distance);
     }
 
+    public void forward(double speed) {
+        driveTranslateRotate(0, Math.abs(speed), 0);
+    }
+
     public void backward(double speed, double distance) {
         driveTranslateRotate(0, -Math.abs(speed), 0, distance);
+    }
+
+    public void backward(double speed) {
+        driveTranslateRotate(0, -Math.abs(speed), 0);
     }
 
     public void strafeRight(double speed, double distance) {
         driveTranslateRotate(Math.abs(speed), 0, 0, distance);
     }
 
+    public void strafeRight(double speed) {
+        driveTranslateRotate(Math.abs(speed), 0, 0);
+    }
+
     public void strafeLeft(double speed, double distance) {
         driveTranslateRotate(-Math.abs(speed), 0, 0, distance);
+    }
+
+    public void strafeLeft(double speed) {
+        driveTranslateRotate(-Math.abs(speed), 0, 0);
     }
 
     public void spinRight(double speed, double distance) {
         driveTranslateRotate(0, 0, Math.abs(speed), distance);
     }
 
+    public void spinRight(double speed) {
+        driveTranslateRotate(0, 0, Math.abs(speed));
+    }
+
     public void spinLeft(double speed, double distance) {
         driveTranslateRotate(0, 0, -Math.abs(speed), distance);
+    }
+
+    public void spinLeft(double speed) {
+        driveTranslateRotate(0, 0, -Math.abs(speed));
     }
 
     public void forwardTime(double speed, long miliseconds) {
@@ -211,7 +238,9 @@ public class Drive {
         return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
     }
 
-
+    public void stop() {
+        driveSpeeds(0,0,0,0);
+    }
 
     private void telemetrizeEncoders() {
         telemetry.addData("First motor: ", FrontLeft.getCurrentPosition());

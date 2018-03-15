@@ -20,7 +20,6 @@ public class Robot {
     private Telemetry telemetry;
     public Drive drive;
     public AutoGlyphs glyphDetector;
-    public DriveMecanum driveMecanum;
     public ForkLift forkLift;
     public JewelArm jewelArm;
     public RelicClaw relicClaw;
