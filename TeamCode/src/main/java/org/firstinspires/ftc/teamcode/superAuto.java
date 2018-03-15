@@ -270,22 +270,26 @@ abstract public class superAuto extends LinearOpMode {
 
         for (int i = 0; i < boxOrder.length; i++){
             while ((currentDist - previousDist) < ridgeDepth) {
-                //adjustHeading(targetHeading, basePosx, basePosy);
-                telemetry.addData("Gotten into the loop", boxOrder[i]);
-                translateForCrypto(basePosx);
-                telemetry.addData("Past Translate for Crypto", boxOrder[i]);
+                telemetry.addData("Top of loop", boxOrder[i]);
+                //translateForCrypto(basePosx);
+                //telemetry.addData("Past Translate for Crypto", boxOrder[i]);
                 telemetry.addData("i=", i);
+                adjustHeading(targetHeading, basePosx, basePosy);
                 previousDist = currentDist;
                 currentDist = rangeSensor.rawUltrasonic();
+                telemetry.addData("Previous Distance: ", previousDist;
+                telemetry.addData("Current Distance: ", currentDist;
                 telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
                 telemetry.update();
+            }
 
                 RelicRecoveryVuMark currentVumark = boxOrder[i];
                 if (currentVumark == vuMark) {
+                    telemetry.addData("Current Vumark: ", currentVumark;
                     telemetry.addData("We've found the right box", boxOrder[i]);
                     break;
                 }
-            }
+
         }
         sR();
     }
