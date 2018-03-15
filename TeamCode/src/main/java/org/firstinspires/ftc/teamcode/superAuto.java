@@ -269,7 +269,7 @@ abstract public class superAuto extends LinearOpMode {
         }
 
         for (int i = 0; i < boxOrder.length; i++){
-            while ((currentDist - previousDist) < ridgeDepth) {
+            while ((previousDist-currentDist) < ridgeDepth) {
                 telemetry.addData("Top of loop", boxOrder[i]);
                 //translateForCrypto(basePosx);
                 //telemetry.addData("Past Translate for Crypto", boxOrder[i]);
