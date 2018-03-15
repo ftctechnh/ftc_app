@@ -46,7 +46,7 @@ abstract public class superAuto extends LinearOpMode {
     Servo servoIntake;
     Servo servoFlicker;
 
-    static final float ridgeDepth = 6;
+    static final float ridgeDepth = 3;
 
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
@@ -283,7 +283,7 @@ abstract public class superAuto extends LinearOpMode {
                 telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
                 telemetry.update();
                 //  }
-                if ((currentDist - previousDist) > ridgeDepth) {
+                if ((previousDist-currentDist ) > ridgeDepth) {
                     telemetry.addData("We see a ridge!", boxOrder[i]);
 
                 }
