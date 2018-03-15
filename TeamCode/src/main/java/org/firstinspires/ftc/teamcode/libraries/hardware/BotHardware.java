@@ -35,7 +35,8 @@ public class BotHardware {
         backLeft("bl", false),
         liftLeft("ll", false),
         liftRight("lr", true),
-        green("g", false);
+        suckLeft("sl", true),
+        suckRight("sr", false);
 
         private final String name;
         private final boolean reverse;
@@ -79,8 +80,8 @@ public class BotHardware {
         public static final double stickBaseSwingSize = 0.2;
         public static final double stickBaseHidden = 0.95;
 
-        public static final double backDropDown = 0.10;
-        public static final double backDropUp = 0.82;
+        public static final double backDropDown = 0.06;
+        public static final double backDropUp = 0.79;
 
         public static final double frontDropUp = 0.7;
         public static final double frontDropDown = 0.2;
@@ -109,6 +110,7 @@ public class BotHardware {
     }
 
 
+    /*
     public enum ContiniuosServoE {
         SuckLeft("crl", false),
         SuckRight("crr", true),
@@ -133,6 +135,7 @@ public class BotHardware {
             }
         }
     }
+    */
 
 
     //opmode pointer
@@ -163,7 +166,7 @@ public class BotHardware {
         //blink = new BlinkyGlowLib(Motor.green.motor, 0.5f);
         //init all servos
         for (int i = 0; i < ServoE.values().length; i++) ServoE.values()[i].initServo(this.mode);
-        for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
+        //for(ContiniuosServoE s : ContiniuosServoE.values()) s.initServo(this.mode);
         //init IMU
         BNO055IMU.Parameters par = new BNO055IMU.Parameters();
         par.mode = BNO055IMU.SensorMode.IMU;
@@ -264,10 +267,19 @@ public class BotHardware {
         return mSeq;
     }
 
-
+    /*
     public void setSuckLeft(double power) {
         ContiniuosServoE.SuckLeft.servo.setPower(power);
         ContiniuosServoE.FrontSuckLeft.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
+    }
+    */
+
+    public void setSuckLeft(double power) {
+        Motor.suckLeft.motor.setPower(power);
+    }
+
+    public void setSuckRight(double power) {
+        Motor.suckRight.motor.setPower(power);
     }
 
     /*
@@ -276,13 +288,15 @@ public class BotHardware {
     }
     */
 
+    /*
     public void setSuckRight(double power) {
         ContiniuosServoE.SuckRight.servo.setPower(power);
         ContiniuosServoE.FrontSuckRight.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
     }
+    */
 
     public void setLights(double power) {
-        Motor.green.motor.setPower(Math.abs(power));
+        /*Motor.green.motor.setPower(Math.abs(power));*/
     }
 
     /*

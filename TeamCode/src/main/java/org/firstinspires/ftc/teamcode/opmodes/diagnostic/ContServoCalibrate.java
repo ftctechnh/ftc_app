@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 /**
  * Created by Noah on 3/6/2018.
  */
-
+/*
 @TeleOp(name = "Intake Servo Calibrate", group = "Main")
 @Disabled
 public class ContServoCalibrate extends OpMode {
@@ -87,3 +87,4 @@ public class ContServoCalibrate extends OpMode {
         telemetry.addData("Increment", Incs.values()[incIndex].inc);
     }
 }
+*/

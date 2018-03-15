@@ -29,7 +29,7 @@ public class Teleop extends OpMode {
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
-    private static final double BUCKET_FLAT = 0.75;
+    private static final double BUCKET_FLAT = 0.22;
     //private static final int BUCKET_LIFT_COUNTS = 50;
     //private static final int INTAKE_LIFT_COUNTS = 1200;
 
