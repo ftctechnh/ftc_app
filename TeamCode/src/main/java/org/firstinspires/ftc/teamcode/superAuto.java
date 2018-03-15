@@ -274,15 +274,17 @@ abstract public class superAuto extends LinearOpMode {
                 telemetry.addData("Gotten into the loop", boxOrder[i]);
                 translateForCrypto(basePosx);
                 telemetry.addData("Past Translate for Crypto", boxOrder[i]);
+                telemetry.addData("i=", i);
                 previousDist = currentDist;
                 currentDist = rangeSensor.rawUltrasonic();
                 telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
                 telemetry.update();
-            }
-            RelicRecoveryVuMark currentVumark = boxOrder[i];
-            if(currentVumark == vuMark){
-                telemetry.addData("We've found the right box", boxOrder[i]);
-                break;
+
+                RelicRecoveryVuMark currentVumark = boxOrder[i];
+                if (currentVumark == vuMark) {
+                    telemetry.addData("We've found the right box", boxOrder[i]);
+                    break;
+                }
             }
         }
         sR();
