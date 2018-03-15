@@ -196,7 +196,8 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
-    void findCrypto(int targetHeading, float basePosx, float basePosy ) {
+
+    void findCryptoOld(int targetHeading, float basePosx, float basePosy ) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
@@ -239,6 +240,62 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
+    void findCrypto(int targetHeading, float basePosx, float basePosy ) {
+        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //double currentHeading = angles.firstAngle;
+        runtime.reset();
+        float currentDist = rangeSensor.rawUltrasonic();
+        float previousDist = currentDist;
+
+        /*
+        Set the order in which we expect to encounter the cryptobox columns.
+        Use UNKNOWN to indicate that we need to move extra to center ourselves on the column
+        If for some reason we are not successful reading the vuMark, reset it from UNKNOWN to
+        the first column, which is the quickest one to load.
+        */
+
+        if (iAmRed) {
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                vuMark = RelicRecoveryVuMark.RIGHT;
+            }
+            boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
+            boxOrder[1] = RelicRecoveryVuMark.RIGHT;
+            boxOrder[2] = RelicRecoveryVuMark.CENTER;
+            boxOrder[3] = RelicRecoveryVuMark.LEFT;
+        } else {
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                vuMark = RelicRecoveryVuMark.LEFT;
+            }
+            boxOrder[0] = RelicRecoveryVuMark.LEFT;
+            boxOrder[1] = RelicRecoveryVuMark.CENTER;
+            boxOrder[2] = RelicRecoveryVuMark.RIGHT;
+            boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
+        }
+
+        for (int i = 0; i < boxOrder.length; i++) {
+            while (true) {
+                //adjustHeading(targetHeading, basePosx, basePosy);
+                telemetry.addData("Gotten into the loop", boxOrder[i]);
+                translateForCrypto(basePosx);
+                telemetry.addData("Past Translate for Crypto", boxOrder[i]);
+                previousDist = currentDist;
+                currentDist = rangeSensor.rawUltrasonic();
+                telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
+                telemetry.update();
+                //  }
+                if ((currentDist - previousDist) > ridgeDepth) {
+                    telemetry.addData("We see a ridge!", boxOrder[i]);
+
+                }
+                RelicRecoveryVuMark currentVumark = boxOrder[i];
+                if (currentVumark == vuMark) {
+                    telemetry.addData("We've found the right box", boxOrder[i]);
+                    break;
+                }
+            }
+            sR();
+        }
+    }
 
     void followHeading(int targetHeading, double time, float basePosx, float basePosy ){
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -250,10 +307,17 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
+    void translateForCrypto(float basePosx) {
+            float FRBLPower = - basePosx;
+            float FLBRPower = + basePosx;
+            motorFR.setPower(FRBLPower);
+            motorFL.setPower(FLBRPower);
+            motorBR.setPower(FLBRPower);
+            motorBL.setPower(FRBLPower);
+        }
     void adjustHeading(int targetHeading, float basePosx, float basePosy) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
-        if (angles != null) {
+            if (angles != null) {
             double currentHeading = angles.firstAngle;
             double adjustPower = (targetHeading - currentHeading) * .025;
             float addPower = (float) adjustPower;
@@ -269,19 +333,19 @@ abstract public class superAuto extends LinearOpMode {
 
     void flip ()    {
 
-        motorFlip.setPower(.5f);
-        Wait(1f);
-        motorFlip.setPower(0);
-        motorBL.setPower(-1);
-        motorBR.setPower(-1);
-        motorFL.setPower(-1);
-        motorFR.setPower(-1);
-        Wait(.5);
-        motorBL.setPower(1);
-        motorBR.setPower(1);
-        motorFL.setPower(1);
-        motorFR.setPower(1);
-        Wait(.5);
+        motorFlip.setPower(.5d);
+        Wait(1d);
+        motorFlip.setPower(0d);
+        motorBL.setPower(-1d);
+        motorBR.setPower(-1d);
+        motorFL.setPower(-1d);
+        motorFR.setPower(-1d);
+        Wait(.5d);
+        motorBL.setPower(1d);
+        motorBR.setPower(1d);
+        motorFL.setPower(1d);
+        motorFR.setPower(1d);
+        Wait(.5d);
         sR();
     }
 

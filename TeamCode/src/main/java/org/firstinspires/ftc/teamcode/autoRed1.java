@@ -14,11 +14,13 @@ public class autoRed1 extends superAuto {
         setUp();
         jewel();
         setUpVuforia();
+        Wait(3d);
         followHeading(0, .47f, 0f, -0.25f);
-        Wait(.8);
+        Wait(3);
         pivotTo(-90);
-        Wait(5);
+        Wait(3);
         findCrypto(-90,-.5f, 0f);
+        telemetry.addData("We have gotten past findCrypto", iAmRed);
         flip();
 
     }

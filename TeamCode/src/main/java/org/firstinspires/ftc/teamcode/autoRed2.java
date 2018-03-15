@@ -15,26 +15,13 @@ public class autoRed2 extends superAuto {
 
         iAmRed = true;
 
-       /* setUp();
-
+        setUp();
         jewel();
+        setUpVuforia();
+        followHeading(0, .47f, 0f, .25f); //check that y is in right direction
+       // followHeading(0, .47f, -.25, 0f); //translate left, may already be lined up
+        findCrypto(-90,-.5f, 0f);
+        flip();
 
-        move(0f, -0.5f, .35f);
-
-        Wait(1);
-
-        move(-.75f,0f,1.0f);
-
-        Wait(1);
-
-        //Conveyor(3f);
-
-        Wait(1);
-
-        move(0f,-.25f,.5f);
-
-        Wait(1);
-
-        move(0f,.25f,.25f);*/
     }
 }
