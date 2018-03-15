@@ -57,18 +57,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class testEncoders extends LinearOpMode {
 
-    DcMotor frontLeftMotor;
-    DcMotor backLeftMotor;
-    DcMotor frontRightMotor;
-    DcMotor backRightMotor;
-    DcMotor verticalArmMotor;
-    public DcMotor P1Motor = null;
-    public DcMotor P2Motor = null;
+    //Call test motor
+    DcMotor testMotor;
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
-    // DcMotor leftMotor = null;
-    // DcMotor rightMotor = null;
 
     @Override
     public void runOpMode() {
@@ -78,25 +71,11 @@ public class testEncoders extends LinearOpMode {
         telemetry.update();
 
         /* Find all hardware in configuration */
-        frontLeftMotor = hardwareMap.dcMotor.get("FL");
-        backLeftMotor = hardwareMap.dcMotor.get("BL");
-        frontRightMotor = hardwareMap.dcMotor.get("FR");
-        backRightMotor = hardwareMap.dcMotor.get("BR");
-        verticalArmMotor = hardwareMap.dcMotor.get("VAM");
-        P1Motor = hardwareMap.dcMotor.get("P1");
-        P2Motor = hardwareMap.dcMotor.get("P2");
+        testMotor = hardwareMap.dcMotor.get("FL");
 
-        verticalArmMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(100);
-        verticalArmMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        testMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -105,69 +84,16 @@ public class testEncoders extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            telemetry.addLine("B = FrontRight");
-            telemetry.addLine("X = BackLeft");
-            telemetry.addLine("Y = BackRight");
-            telemetry.addLine("D-Pad = VerticalArm");
-
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Front Left: ", frontLeftMotor.getCurrentPosition());
-            telemetry.addData("Front Right: ", frontRightMotor.getCurrentPosition());
-            telemetry.addData("Back Left: ", backLeftMotor.getCurrentPosition());
-            telemetry.addData("Back Right: ", backRightMotor.getCurrentPosition());
-            telemetry.addData("Vertical Arm:", verticalArmMotor.getCurrentPosition());
+            telemetry.addLine("Push 'A' to run Motor");
+            telemetry.addData("Front Left: ", testMotor.getCurrentPosition());
             telemetry.update();
 
             if (gamepad1.a) {
-                frontLeftMotor.setPower(.2);
+                testMotor.setPower(.2);
             } else {
-                frontLeftMotor.setPower(0);
+                testMotor.setPower(0);
             }
-
-            if (gamepad1.b) {
-                frontRightMotor.setPower(.2);
-            } else {
-                frontRightMotor.setPower(0);
-            }
-
-            if (gamepad1.x) {
-                backLeftMotor.setPower(.2);
-            } else {
-                backLeftMotor.setPower(0);
-            }
-
-            if (gamepad1.y) {
-                backRightMotor.setPower(.2);
-            } else {
-                backRightMotor.setPower(0);
-            }
-
-            if (gamepad1.dpad_up){
-                verticalArmMotor.setPower(.2);
-            }
-
-            if (gamepad1.dpad_down){
-                verticalArmMotor.setPower(-.2);
-            }
-
-            if (!gamepad1.dpad_up && !gamepad1.dpad_down){
-                verticalArmMotor.setPower(0);
-            }
-
-            if(gamepad1.left_bumper){
-                P1Motor.setPower(1);
-            }
-            else{
-                P1Motor.setPower(0);
-            }
-
-            if(gamepad1.right_bumper){
-                P2Motor.setPower(1);
-            }
-            else{
-                P2Motor.setPower(0);
-            }
-
         }
     }
 }
