@@ -284,9 +284,9 @@ abstract public class superAuto extends LinearOpMode {
             }
 
                 RelicRecoveryVuMark currentVumark = boxOrder[i];
+                telemetry.addData("Target Vumark: ", vuMark);
+                telemetry.addData("Current Vumark: ", currentVumark);
                 if (currentVumark == vuMark) {
-                    telemetry.addData("Target Vumark: ", vuMark);
-                    telemetry.addData("Current Vumark: ", currentVumark);
                     telemetry.addData("We've found the right box", boxOrder[i]);
                     break;
                 }
