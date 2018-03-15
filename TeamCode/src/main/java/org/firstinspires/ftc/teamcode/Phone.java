@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 12/26/17.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -28,9 +29,9 @@ public class Phone {
     private final double PICTOGRAPH_POSITION = 0.5;
     private final double FRONT_POSITION = 0;
     private boolean isCameraOpened = false;
-    public Phone(HardwareMap hardwareMap, Telemetry telemetry) {
-        this.hardwareMap = hardwareMap;
-        this.telemetry = telemetry;
+    public Phone(OpMode opMode) {
+        this.hardwareMap = opMode.hardwareMap;
+        this.telemetry = opMode.telemetry;
         this.servo = hardwareMap.servo.get("s7");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);

@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 1/3/2018.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -25,8 +26,8 @@ public class ForkLift {
     private final double CLAW_OPEN_POSITION = 0;
     private final double CLAW_CLOSE_POSITION = 1;
 
-    public ForkLift(HardwareMap hardwareMap, Telemetry telemetry) {
-        this.hardwareMap = hardwareMap;
+    public ForkLift(OpMode opMode) {
+        this.hardwareMap = opMode.hardwareMap;
         this.rightClaw = hardwareMap.servo.get("s5");
         this.rightClaw.setDirection(Servo.Direction.REVERSE);
         this.leftClaw = hardwareMap.servo.get("s6");

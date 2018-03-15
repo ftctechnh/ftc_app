@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 11/28/2017.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -21,14 +22,10 @@ public class JewelArm {
     private final double MIDDLE_POSITION = 0.55;
     private final double MIN_COLOR_DETECTION_THRESHOLD = 30;
     private Telemetry telemetry;
+    private HardwareMap hardwareMap;
 
-    public JewelArm(Servo upDownServo, Servo endServo, ColorSensor cs, Telemetry telemetry) {
-        this.upDownServo = upDownServo;
-        this.endServo = endServo;
-        this.cs = cs;
-        this.telemetry = telemetry;
-    }
-    public JewelArm (HardwareMap hardwareMap, Telemetry telemetry) {
+    public JewelArm (OpMode opMode) {
+        this.hardwareMap = opMode.hardwareMap;
         this.endServo = hardwareMap.servo.get("s3");
         this.upDownServo = hardwareMap.servo.get("s4");
         this.cs = hardwareMap.colorSensor.get("cs1");

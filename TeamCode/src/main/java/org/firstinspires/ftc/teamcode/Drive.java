@@ -1,11 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-/**
- * Created by Kaden on 11/25/2017.
- **/
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,9 +7,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class AutoDrive {
+/**
+ * Created by Kaden on 3/15/18.
+ */
+
+public class Drive {
     public static final double MULTI_GLYPH_STRAFE_SPEED = 0.7;
     public static final double DRIVE_INTO_GLYPH_PIT_SPEED = 1;
     public static final double DRIVE_INTO_GLYPH_PIT_DISTANCE = 19;
@@ -27,7 +24,6 @@ public class AutoDrive {
     public static final double MAX_SPEED = 1;
     static final double MIN_SPIN_SPEED = 0.2;
     static final double MIN_STRAFE_SPEED = 0.35;
-    static final double GYRO_OFFSET = 2.25;
     static final double SPIN_ON_BALANCE_BOARD_SPEED = 0.15;
     static final double DRIVE_OFF_BALANCE_BOARD_SPEED = 1; //TEMPORARY... SWITCH BACK TO 0.4 SOMETIME SOON
     static final double STRAFING_PAST_CRYPTOBOX_SPEED = 0.75;
@@ -39,35 +35,42 @@ public class AutoDrive {
     static final double BACK_AWAY_FROM_BLOCK_SPEED = 1;
     static final double DRIVE_TO_CYRPTOBOX_DISTANCE_FAR = 24;
     static final double SPIN_TO_CENTER_SPEED = 1;
-    static final double DRIVE_EXPO = 3;
     static final double RAMP_LOG_EXPO = 0.8;
     static final double DISTANCE_TO_FAR_COLUMN = 32.75;
     static final double DISTANCE_TO_CENTER_COLUMN = 25.5;
     static final double DISTANCE_TO_CLOSE_COLUMN = 17.5;
-    static final double DISTANCE_TO_CENTER = 36;
+
     private DcMotor FrontLeft;
     private DcMotor FrontRight;
     private DcMotor RearLeft;
     private DcMotor RearRight;
-    private REVGyro imu;
-    public double heading;
+
     private HardwareMap hardwareMap;
     private Telemetry telemetry;
-    private ModernRoboticsI2cRangeSensor rangeSensor;
 
-
-    public AutoDrive(OpMode opMode) {
+    public Drive(OpMode opMode) {
         this.hardwareMap = opMode.hardwareMap;
+        this.telemetry = opMode.telemetry;
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
         this.FrontRight = hardwareMap.dcMotor.get("m2");
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
         this.RearLeft = hardwareMap.dcMotor.get("m3");
         this.RearRight = hardwareMap.dcMotor.get("m4");
         this.RearRight.setDirection(DcMotor.Direction.REVERSE);
-        this.imu = new REVGyro(hardwareMap.get(BNO055IMU.class, "imu"));
-        this.rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "d1");
-        this.telemetry = opMode.telemetry;
-        setBRAKE();
+    }
+
+    public void setBRAKE() {
+        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void setFLOAT() {
+        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void driveTranslateRotate(double x, double y, double z, double distance) {
@@ -164,7 +167,7 @@ public class AutoDrive {
         driveTranslateRotate(0, 0, -Math.abs(speed), miliseconds);
     }
 
-    private void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
+    public void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
         FrontLeft.setPower(clip(flSpeed));
         FrontRight.setPower(clip(frSpeed));
         RearLeft.setPower(clip(rlSpeed));
@@ -208,76 +211,7 @@ public class AutoDrive {
         return Math.abs(getCurrentPosition(motor)) >= Math.abs(target);
     }
 
-    public void rightGyro(double x, double y, double z, double target) {
-        double Adjustedtarget = target + GYRO_OFFSET;
-        heading = getHeading();
-        double derivative = 0;
-        double fl = clip(-y + -x - z);
-        double fr = clip(-y + x + z);
-        double rl = clip(-y + x - z);
-        double rr = clip(-y + -x + z);
-        driveSpeeds(fl, fr, rl, rr);
-        if (heading < target) {
-            while (derivative <= 0) {
-                derivative = getHeading() - heading;
-                heading = getHeading();
-            }
-        }
-        double start = getHeading();
-        double distance = Adjustedtarget - start;
-        while (heading >= Adjustedtarget) {
-            heading = getHeading();
-            double proportion = 1 - (Math.abs((heading - start) / distance));
-            driveSpeeds(clipSpinSpeed(fl * proportion), clipSpinSpeed(fr * proportion), clipSpinSpeed(rl * proportion), clipSpinSpeed(rr * proportion));
-        }
-        stopMotors();
-    }
 
-    public void rightGyro(double speed, double target) {
-        rightGyro(0, 0, Math.abs(speed), target);
-    }
-
-    public void leftGyro(double x, double y, double z, double target) {
-        double adjustedTarget = target - GYRO_OFFSET;
-        heading = getHeading();
-        double derivative = 0;
-        double fl = clip(-y + -x - z);
-        double fr = clip(-y + x + z);
-        double rl = clip(-y + x - z);
-        double rr = clip(-y + -x + z);
-        driveSpeeds(fl, fr, rl, rr);
-        if (adjustedTarget < heading) {
-            while (derivative >= 0) {
-                derivative = getHeading() - heading;
-                heading = getHeading();
-            }
-        }
-        double start = heading;
-        double distance = adjustedTarget - start;
-        while (heading <= adjustedTarget) {
-            heading = getHeading();
-            double proportion = 1 - (Math.abs((heading - start) / distance));
-            driveSpeeds(clipSpinSpeed(fl * proportion), clipSpinSpeed(fr * proportion), clipSpinSpeed(rl * proportion), clipSpinSpeed(rr * proportion));
-        }
-        stopMotors();
-    }
-
-    public void leftGyro(double speed, double target) {
-        leftGyro(0, 0, -Math.abs(speed), target);
-    }
-
-    public void init() {
-        imu.calibrate();
-        heading = getHeading();
-    }
-
-    public double getHeading() {
-        return imu.getHeading();
-    }
-
-    private void telemetrizeGyro() {
-        telemetry.addData("Current heading: ", heading);
-    }
 
     private void telemetrizeEncoders() {
         telemetry.addData("First motor: ", FrontLeft.getCurrentPosition());
@@ -292,17 +226,6 @@ public class AutoDrive {
         telemetry.addData("Front right motor", FrontRight.getPower());
         telemetry.addData("Back left motor", RearLeft.getPower());
         telemetry.addData("Back right motor", RearRight.getPower());
-    }
-
-    private void telemetrizeDistance() {
-        telemetry.addData("Distance", getDistance());
-    }
-
-    private void setBRAKE() {
-        this.FrontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.FrontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.RearLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.RearRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     private double calculateSpeedLog(DcMotor motor, double targetClicks, double defaultSpeed) {
@@ -322,15 +245,7 @@ public class AutoDrive {
         }
     }
 
-    private double calculateSpeedLinear(DcMotor motor, double targetClicks, double defaultSpeed) {
-        if (defaultSpeed != 0) {
-            return clipMoveSpeed(defaultSpeed * (targetClicks - Math.abs(motor.getCurrentPosition())) / targetClicks);
-        } else {
-            return 0;
-        }
-    }
-
-    private double clipSpinSpeed(double speed) {
+    public double clipSpinSpeed(double speed) {
         if (speed > 0) {
             return Range.clip(speed, MIN_SPIN_SPEED, 1);
         } else if (speed < 0) {
@@ -350,7 +265,7 @@ public class AutoDrive {
         }
     }
 
-    private double clipStrafeSpeed(double speed) {
+    public double clipStrafeSpeed(double speed) {
         if (speed > 0) {
             return Range.clip(speed, Math.abs(MIN_STRAFE_SPEED), 1);
         } else if (speed < 0) {
@@ -360,49 +275,18 @@ public class AutoDrive {
         }
     }
 
-    public void driveUntilDistance(double x, double y, double z, double endDistance) {
-        double fl = clip(-y + -x - z);
-        double fr = clip(-y + x + z);
-        double rl = clip(-y + x - z);
-        double rr = clip(-y + -x + z);
-        driveSpeeds(fl, fr, rl, rr);
-        double start = getDistance();
-        double distanceToTravel = endDistance - start;
-        double proportion;
-        double derivative = 0;
-        double distance = getDistance();
-        int ranTimes = 0;
-        int acceptedSensorValue = 0;
-        while (distance < endDistance) {
-            proportion = 1 - Math.abs((distance - start) / distanceToTravel + 0.0001);
-            driveSpeeds(clipStrafeSpeed(fl * proportion), clipStrafeSpeed(fr * proportion), clipStrafeSpeed(rl * proportion), clipStrafeSpeed(rr * proportion));
-            derivative = getDistance() - distance;
-            if (derivative >= 0 && derivative < 6) {
-                distance = getDistance();
-                acceptedSensorValue++;
-            }
-            ranTimes++;
-            telemetry.addData("Ran times", ranTimes);
-            telemetry.addData("Accepted Ratio", acceptedSensorValue / ranTimes);
-            telemetrizeDistance();
-        }
-        telemetry.update();
-        stopMotors();
+    public void driveLeftRight(double xLeft, double xRight, double yLeft, double yRight) {
+        //This one is kinda complicated for using in an autonomous program or any linear set of commands. I'd recommend using driveTranslateRotate for things other than driving. However I will explain this one anyway.
+        //There are two forces for each side (left/right) of the robot. y controls forward/backward, x controls side-to-side (strafing). For instance if both ys are positive it will move forward. If both xs are positive it will move right.
+        driveSpeeds(yLeft - xLeft, yRight + xRight, yLeft + xLeft, yRight - xRight);
     }
 
-    public void driveLeftUntilDistance(double speed, double distance) {
-        driveUntilDistance(-Math.abs(speed), 0, 0, distance);
+    public void swingRight() {
+        driveSpeeds(0, 0, -1, 1);
     }
 
-    public void driveRightUntilDistance(double speed, double distance) {
-        driveUntilDistance(Math.abs(speed), 0, 0, distance);
+    public void swingLeft() {
+        driveSpeeds(0, 0, 1, -1);
     }
 
-    public double getDistance(DistanceUnit unit) {
-        return rangeSensor.getDistance(unit);
-    }
-
-    public double getDistance() {
-        return getDistance(DistanceUnit.INCH);
-    }
 }

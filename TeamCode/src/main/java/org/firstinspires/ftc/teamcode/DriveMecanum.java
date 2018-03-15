@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 11/22/2017.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
@@ -16,10 +17,12 @@ public class DriveMecanum {
     private DcMotor RearRight;
     private double speed = 1;
     private Telemetry telemetry;
+    private HardwareMap hardwareMap;
     final double D_PAD_SLOW_SPEED = 0.25;
     final double BUMPER_SLOW_SPEED = 0.25;
 
-    public DriveMecanum(HardwareMap hardwareMap, Telemetry telemetry) {
+    public DriveMecanum(OpMode opMode) {
+        this.hardwareMap = opMode.hardwareMap;
         this.FrontLeft = hardwareMap.dcMotor.get("m1");
         this.FrontRight = hardwareMap.dcMotor.get("m2");
         this.FrontRight.setDirection(DcMotor.Direction.REVERSE);
@@ -69,26 +72,7 @@ public class DriveMecanum {
         stop();
 
     }
-    public void driveLeftRight(double xLeft, double xRight, double yLeft, double yRight) {
-        //This one is kinda complicated for using in an autonomous program or any linear set of commands. I'd recommend using driveTranslateRotate for things other than driving. However I will explain this one anyway.
-        //There are two forces for each side (left/right) of the robot. y controls forward/backward, x controls side-to-side (strafing). For instance if both ys are positive it will move forward. If both xs are positive it will move right.
-        driveSpeeds(yLeft - xLeft, yRight + xRight, yLeft + xLeft, yRight - xRight);
-    }
 
-    public void swingRight() {
-        driveSpeeds(0, 0, -1, 1);
-    }
-
-    public void swingLeft() {
-        driveSpeeds(0, 0, 1, -1);
-    }
-
-    public void driveSpeeds(double flSpeed, double frSpeed, double rlSpeed, double rrSpeed) {
-        FrontLeft.setPower(speed * clip(flSpeed));
-        FrontRight.setPower(speed * clip(frSpeed));
-        RearLeft.setPower(speed * clip(rlSpeed));
-        RearRight.setPower(speed * clip(rrSpeed));
-    }
     public void stop() {
         driveSpeeds(0,0,0,0);
     }

@@ -11,47 +11,38 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 @Autonomous(name = "Blue Recovery", group = "Autonomous")
 public class BlueRecovery extends LinearOpMode {
-    private AutoDrive drive;
-    private JewelArm JewelArm;
-    private ForkLift ForkLift;
-    private Phone phone;
     private RelicRecoveryVuMark pictograph = RelicRecoveryVuMark.UNKNOWN;
-    private Systems Systems;
+    private Robot robot;
     private static final double MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY = 36.5;
 
     public void runOpMode() throws InterruptedException {
-        telemetry.addLine("DO NOT PRESS PLAY YET");
-        telemetry.update();
-        drive = new AutoDrive(hardwareMap, telemetry);
-        drive.init(); //Calibrates gyro
-        JewelArm = new JewelArm(hardwareMap, telemetry);
-        ForkLift = new ForkLift(hardwareMap, telemetry);
-        phone = new Phone(hardwareMap, telemetry);
-        Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
-        telemetry.addLine("NOW YOU CAN PRESS PLAY");
-        telemetry.update();
+        telemetry.addLine("DO NOT PRESS PLAY YET"); telemetry.update();
+        robot = new Robot(this);
+        robot.mapRobot();
+        robot.calibrateGyro();
+        telemetry.addLine("NOW YOU CAN PRESS PLAY"); telemetry.update();
         waitForStart();
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ForkLift.autoInit();
-        JewelArm.findJewel(Color.BLUE);
-        pictograph = phone.getMark();
+        robot.forkLift.autoInit();
+        robot.jewelArm.findJewel(Color.BLUE);
+        pictograph = robot.phone.getMark();
         if (pictograph == RelicRecoveryVuMark.LEFT) {
-            drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY - drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
+            robot.drive.backward(robot.drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY - robot.drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
         }
         else if (pictograph == RelicRecoveryVuMark.CENTER) {
-            drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY);
+            robot.drive.backward(robot.drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY);
         }
         else if (pictograph == RelicRecoveryVuMark.RIGHT || pictograph == RelicRecoveryVuMark.UNKNOWN) {
-            drive.backward(drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY + drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
+            robot.drive.backward(robot.drive.DRIVE_OFF_BALANCE_BOARD_SPEED, MOVE_TOWARDS_CRYPTOBOX_DISTANCE_BLUE_RECOVERY + robot.drive.CRYPTOBOX_COLUMNS_OFFSET_RECOVERY);
         }
-        ForkLift.moveMotor(-1,250);
-        drive.rightGyro(drive.SPIN_TO_CRYPTOBOX_SPEED, -90);
-        drive.forward(drive.DRIVE_INTO_CRYPTOBOX_SPEED, 5);
-        Systems.pushInBlock();
-        drive.backward(drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
-        drive.leftGyro(drive.SPIN_TO_CENTER_SPEED, 90);
-        ForkLift.openClaw();
-        ForkLift.moveUntilDown();
+        robot.forkLift.moveMotor(-1,250);
+        robot.rightGyro(robot.drive.SPIN_TO_CRYPTOBOX_SPEED, -90);
+        robot.drive.forward(robot.drive.DRIVE_INTO_CRYPTOBOX_SPEED, 5);
+        robot.pushInBlock();
+        robot.drive.backward(robot.drive.BACK_AWAY_FROM_BLOCK_SPEED, 4);
+        robot.leftGyro(robot.drive.SPIN_TO_CENTER_SPEED, 90);
+        robot.forkLift.openClaw();
+        robot.forkLift.moveUntilDown();
         sleep(1000);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }

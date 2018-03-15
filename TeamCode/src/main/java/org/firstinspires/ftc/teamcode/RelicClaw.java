@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
  * Created by Kaden on 11/21/2017.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,6 +17,7 @@ public class RelicClaw {
     private Servo arm;
     private DcMotor motor;
     private Telemetry telemetry;
+    private HardwareMap hardwareMap;
     private DigitalChannel outButton;
     private DigitalChannel inButton;
     private final double CLOSE_POSITION = 0.0;
@@ -25,7 +27,8 @@ public class RelicClaw {
     private final double DRIVING_POSITION = 0.6;
     private final double UP_POSITION = 0.0;
 
-    public RelicClaw(HardwareMap hardwareMap, Telemetry telemetry) {
+    public RelicClaw(OpMode opMode) {
+        this.hardwareMap = opMode.hardwareMap;
         this.claw = hardwareMap.servo.get("s1");
         this.arm = hardwareMap.servo.get("s2");
         this.motor = hardwareMap.dcMotor.get("m5");

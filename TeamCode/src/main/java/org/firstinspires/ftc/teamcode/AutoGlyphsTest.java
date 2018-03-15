@@ -19,10 +19,10 @@ public class AutoGlyphsTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("DO NOT PRESS PLAY YET"); telemetry.update();
         drive = new AutoDrive(this);
-        //drive.init(); //Calibrates gyro
-        JewelArm = new JewelArm(hardwareMap, telemetry);
-        ForkLift = new ForkLift(hardwareMap, telemetry);
-        phone = new Phone(hardwareMap, telemetry);
+        //drive.calibrateGyro(); //Calibrates gyro
+        JewelArm = new JewelArm(this);
+        ForkLift = new ForkLift(this);
+        phone = new Phone(this);
         Systems = new Systems(drive, ForkLift, JewelArm, phone, hardwareMap, telemetry);
         phone.closeVuforia();
         telemetry.addLine("NOW YOU CAN PRESS PLAY"); telemetry.update();
