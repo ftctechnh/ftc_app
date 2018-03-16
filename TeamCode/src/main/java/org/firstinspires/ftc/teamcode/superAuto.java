@@ -97,6 +97,8 @@ abstract public class superAuto extends LinearOpMode {
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
 
+        motorFlip = hardwareMap.dcMotor.get("motorFL");
+        motorFlip.setDirection(DcMotor.Direction.FORWARD);
         motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorFR = hardwareMap.dcMotor.get("motorFR");
@@ -293,9 +295,13 @@ abstract public class superAuto extends LinearOpMode {
             telemetry.update();
 
         }
-
+        telemetry.addData("We have made it this far... ", state);
         // Stop the robot
-        sR();
+        motorFR.setPower(0);
+        motorFL.setPower(0);
+        motorBR.setPower(0);
+        motorBL.setPower(0);
+
     }
     void findCrypto(int targetHeading, float basePosx, float basePosy ) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
