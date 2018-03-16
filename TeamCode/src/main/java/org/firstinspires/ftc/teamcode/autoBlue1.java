@@ -14,13 +14,16 @@ public class autoBlue1 extends superAuto {
     public void runOpMode() {
 
         iAmRed = false;
+        iAmBlue = true;
 
         setUp();
         jewel();
         setUpVuforia();
-        followHeading(0, 1f, 0f, 0.5f);//back up
-        pivotTo(90); //pivo 90 degrees to right clockwise
-        findCrypto(90,.5f, 0f);
+        followHeading(0, .47f, 0f, 0.5f);//back up
+        Wait(1);
+        pivotTo(-90); //pivo 90 degrees to right clockwise
+        Wait(1);
+        cryptoState(-90,.5f, 0f);
         flip();
 }
 }

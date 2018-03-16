@@ -14,12 +14,14 @@ public class autoRed1 extends superAuto {
         setUp();
         jewel();
         setUpVuforia();
-        Wait(3d);
+        Wait(.5);
         followHeading(0, .47f, 0f, -0.25f);
-        Wait(3);
+        Wait(.5);
         pivotTo(-90);
-        Wait(3);
+        Wait(.5);
         cryptoState(-90,-.5f, 0f);
+        Wait(1);
+        followHeading(-90, .01f,-.35f, 0f);
         flip();
     }
 }

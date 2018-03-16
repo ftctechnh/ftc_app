@@ -18,10 +18,14 @@ public class autoRed2 extends superAuto {
         setUp();
         jewel();
         setUpVuforia();
-        followHeading(0, .47f, 0f, .25f); //check that y is in right direction: drive forward
+        Wait(.5);
+        followHeading(0, 1f, 0f, -.25f); //check that y is in right direction: drive forward
        // followHeading(0, .47f, -.25, 0f); //translate left, may already be lined up
-        findCrypto(-90,-.5f, 0f);
+        Wait(.5);
+        cryptoState(0,-.5f, 0f);
+        Wait(1);
+        followHeading(0, .01f,-.35f, 0f);
+        Wait(1);
         flip();
-
     }
 }

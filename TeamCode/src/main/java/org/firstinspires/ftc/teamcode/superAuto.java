@@ -507,7 +507,7 @@ abstract public class superAuto extends LinearOpMode {
         servoTapper.setPosition(0.2d);
         servoFlicker.setPosition(.3d);
         Wait(.2f);
-        servoTapper.setPosition(0.73d);
+        servoTapper.setPosition(0.76d);
         Wait(1f);
 
         telemetry.update();
