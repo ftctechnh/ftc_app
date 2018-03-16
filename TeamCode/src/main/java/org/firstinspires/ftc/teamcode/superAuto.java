@@ -297,10 +297,7 @@ abstract public class superAuto extends LinearOpMode {
         }
         telemetry.addData("We have made it this far... ", state);
         // Stop the robot
-        motorFR.setPower(0);
-        motorFL.setPower(0);
-        motorBR.setPower(0);
-        motorBL.setPower(0);
+        sR();
 
     }
     void findCrypto(int targetHeading, float basePosx, float basePosy ) {
