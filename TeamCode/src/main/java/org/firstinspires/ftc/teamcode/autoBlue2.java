@@ -17,31 +17,12 @@ public class autoBlue2 extends superAuto {
 
         setUp();
         jewel();
-
-        /*move(0f, 0.5f, .23f);
-
-        Wait(1);
-
-        move(-.7f,0f,1f);
-
-        Wait(1);
-
-        //pivotRight(1.735f);
-
-        Wait(1);
-
-        move(0f,-.25f,.2f);
-
-        Wait(1);
-
-        //Conveyor(3f);
-
-        Wait(1);
-
-        move(0f,.25f,.35f);
-
-        Wait(1);
-
-        move(0f,-.25f,.5f);*/
+        setUpVuforia();
+        followHeading(0, 1f, 0f, 0.5f);//back up
+        pivotTo(-90); //pivo 180 to right clockwise
+        pivotTo(-45); //pivo 180 to right clockwise
+        pivotTo(-44); //pivo 180 to right clockwise
+        findCrypto(90,.5f, 0f);
+        flip();
     }
 }

@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+@Autonomous(name="Preciousss: AutoRed1HELP", group="Preciousss")
 
-@Autonomous(name="Preciousss: AutoRed1", group="Preciousss")
-
-public class autoRed1 extends superAuto {
+public class autoRed1HELP extends superAuto {
 
     public void runOpMode() {
         iAmRed = true;
@@ -14,12 +12,12 @@ public class autoRed1 extends superAuto {
         setUp();
         jewel();
         setUpVuforia();
-        Wait(3d);
+        Wait(.5d);
         followHeading(0, .47f, 0f, -0.25f);
-        Wait(3);
+        Wait(.5d);
         pivotTo(-90);
-        Wait(3);
-        cryptoState(-90,-.5f, 0f);
+        Wait(.5d);
+        followHeading(-90, 1f, -.5f, 0f);//REPLACES cryptoState(-90,-.5f, 0f);
         flip();
     }
 }
