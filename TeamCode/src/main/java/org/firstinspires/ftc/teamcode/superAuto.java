@@ -464,12 +464,10 @@ abstract public class superAuto extends LinearOpMode {
     }
 
     void sR() {
-        double power = 0d;
-        motorFL.setPower(power);
-        motorBL.setPower(power);
-        motorFR.setPower(power);
-        motorBR.setPower(power);
-
+        motorFL.setPower(0);
+        motorBL.setPower(0);
+        motorFR.setPower(0);
+        motorBR.setPower(0);
     }
 
     void setUpVuforia(){
