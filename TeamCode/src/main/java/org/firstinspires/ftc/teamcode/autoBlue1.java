@@ -19,11 +19,12 @@ public class autoBlue1 extends superAuto {
         setUp();
         jewel();
         setUpVuforia();
-        followHeading(0, .47f, 0f, 0.5f);//back up
+        followHeading(0, .40f, 0f, 0.5f);//back up
         Wait(1);
-        pivotTo(-90); //pivo 90 degrees to right clockwise
+        pivotTo(-90); //pivot 90 degrees to right clockwise
         Wait(1);
+        followHeading(-90, .1, 0f, .25f);
         cryptoState(-90,.5f, 0f);
         flip();
-}
+    }
 }

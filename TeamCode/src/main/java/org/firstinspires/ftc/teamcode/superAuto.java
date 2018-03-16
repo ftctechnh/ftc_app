@@ -498,6 +498,36 @@ abstract public class superAuto extends LinearOpMode {
     }
 
 
+    void distCorrector(double targetDist)
+    {
+        double currentDist = rangeSensor.getDistance(DistanceUnit.CM);
+        double originalComparison = currentDist - targetDist;
+        double changingComparison = originalComparison;
+        double fudgeFactor = 0.1 * originalComparison;
+        double sign = 0;
+
+        if(Math.abs(changingComparison)>= fudgeFactor)
+        {
+            if (changingComparison > 0) {
+                sign = -1;
+            }
+            else{
+                sign = 1;
+            }
+            //adjust power
+            double adjust = (Math.abs(currentDist/originalComparison))* sign;
+            motorFL.setPower(adjust);
+            motorFR.setPower(adjust);
+            motorBL.setPower(adjust);
+            motorBR.setPower(adjust);
+        }
+
+        else
+            {
+            sR();
+            }
+    }
+
     void jewel(){
 
         // J e w e l s
