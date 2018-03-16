@@ -97,7 +97,7 @@ abstract public class superAuto extends LinearOpMode {
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
 
-        motorFlip = hardwareMap.dcMotor.get("motorFL");
+        motorFlip = hardwareMap.dcMotor.get("motorFlip");
         motorFlip.setDirection(DcMotor.Direction.FORWARD);
         motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.REVERSE);
@@ -395,21 +395,9 @@ abstract public class superAuto extends LinearOpMode {
     }
 
     void flip ()    {
-
         motorFlip.setPower(.5d);
         Wait(1d);
         motorFlip.setPower(0d);
-        motorBL.setPower(-1d);
-        motorBR.setPower(-1d);
-        motorFL.setPower(-1d);
-        motorFR.setPower(-1d);
-        Wait(.5d);
-        motorBL.setPower(1d);
-        motorBR.setPower(1d);
-        motorFL.setPower(1d);
-        motorFR.setPower(1d);
-        Wait(.5d);
-        sR();
     }
 
     void pivotTo(int target) {
