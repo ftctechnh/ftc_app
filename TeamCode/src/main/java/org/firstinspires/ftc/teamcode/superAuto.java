@@ -245,8 +245,8 @@ abstract public class superAuto extends LinearOpMode {
         runtime.reset();
 
         // Grab first distance
-        float currentDist = rangeSensor.rawUltrasonic();
-        float previousDist = currentDist;
+        double currentDist = rangeSensor.getDistance(DistanceUnit.CM);
+        double previousDist = currentDist;
 
         // Red game
         if (iAmRed) {
@@ -276,7 +276,7 @@ abstract public class superAuto extends LinearOpMode {
             // Move & take reading
             adjustHeading(targetHeading, basePosx, basePosy);
             previousDist = currentDist;
-            currentDist = rangeSensor.rawUltrasonic();
+            currentDist = rangeSensor.getDistance(DistanceUnit.CM);
 
             // Found a divider, change state
             if((currentDist-previousDist) >= 4) {
