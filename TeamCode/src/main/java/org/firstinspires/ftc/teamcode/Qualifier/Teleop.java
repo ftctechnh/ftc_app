@@ -354,7 +354,7 @@ public class Teleop extends OpMode {
                     startclosetime = runtime.milliseconds();    // start timer  set boolean
                     //delayLift = true;                            // check for time to lift
                     delayClamp = true;
-                    glyphSensedDelay = 300;
+                    glyphSensedDelay = 50;
                     //glyphLiftismoving = true;     // turn on manual override
                     if (blocks != 0) {
                         gromit.glyphTrain.liftIndex = Math.min(gromit.glyphTrain.liftIndex + 1, 2);   //add one to index, max is 2
