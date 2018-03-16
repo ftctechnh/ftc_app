@@ -46,7 +46,7 @@ abstract public class superAuto extends LinearOpMode {
     Servo servoIntake;
     Servo servoFlicker;
 
-    static final float ridgeDepth = 6;
+    static final float ridgeDepth = 4;
 
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
@@ -240,6 +240,63 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
+
+    void cryptoState(int targetHeading, float basePosx, float basePosy ) {
+        runtime.reset();
+
+        // Grab first distance
+        float currentDist = rangeSensor.rawUltrasonic();
+        float previousDist = currentDist;
+
+        // Red game
+        if (iAmRed) {
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN){vuMark = RelicRecoveryVuMark.RIGHT;}
+            boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
+            boxOrder[1] = RelicRecoveryVuMark.RIGHT;
+            boxOrder[2] = RelicRecoveryVuMark.CENTER;
+            boxOrder[3] = RelicRecoveryVuMark.LEFT;
+        }
+        // Blue game
+        else {
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {vuMark = RelicRecoveryVuMark.LEFT;}
+            boxOrder[0] = RelicRecoveryVuMark.LEFT;
+            boxOrder[1] = RelicRecoveryVuMark.CENTER;
+            boxOrder[2] = RelicRecoveryVuMark.RIGHT;
+            boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
+        }
+
+        // Simple state machine
+        int i = 0;
+        boolean go = true;
+        RelicRecoveryVuMark state = boxOrder[i];
+
+        // While not our state do ...
+        while (go) {
+
+            // Move & take reading
+            adjustHeading(targetHeading, basePosx, basePosy);
+            previousDist = currentDist;
+            currentDist = rangeSensor.rawUltrasonic();
+
+            // Found a divider, change state
+            if((currentDist-previousDist) >= 4) {
+                i++;
+                state = boxOrder[i];
+                if (state == vuMark) { go = false; }
+            }
+
+            // Debugging info
+            telemetry.addData("Previous Distance after read: ", previousDist);
+            telemetry.addData("Current Distance after read: ", currentDist);
+            telemetry.addData("State", state);
+            telemetry.addData("i", i);
+            telemetry.update();
+
+        }
+
+        // Stop the robot
+        sR();
+    }
     void findCrypto(int targetHeading, float basePosx, float basePosy ) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
@@ -269,7 +326,7 @@ abstract public class superAuto extends LinearOpMode {
         }
 
         for (int i = 0; i < boxOrder.length; i++){
-            while ((previousDist-currentDist) < ridgeDepth) {
+            while ((Math.abs(currentDist-previousDist)) <= ridgeDepth){
                 telemetry.addData("Top of loop", boxOrder[i]);
                 telemetry.addData("i=", i);
                 telemetry.addData("ridgeDepth", ridgeDepth);
@@ -316,15 +373,17 @@ abstract public class superAuto extends LinearOpMode {
             motorBR.setPower(FLBRPower);
             motorBL.setPower(FRBLPower);
         }
+
     void adjustHeading(int targetHeading, float basePosx, float basePosy) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            if (angles != null) {
+        telemetry.addData("First Angle", angles.firstAngle);
+        if (angles != null) {
             double currentHeading = angles.firstAngle;
-            double adjustPower = (targetHeading - currentHeading) * .025;
-            float addPower = (float) adjustPower;
+            double addPower = (targetHeading - currentHeading) * .025;
+            telemetry.addData("add power", addPower);
 
-            float FRBLPower = (-basePosy) - basePosx;
-            float FLBRPower = (-basePosy) + basePosx;
+            double FRBLPower = (-basePosy) - basePosx;
+            double FLBRPower = (-basePosy) + basePosx;
             motorFR.setPower(FRBLPower + addPower);
             motorFL.setPower(FLBRPower - addPower);
             motorBR.setPower(FLBRPower + addPower);
@@ -405,7 +464,7 @@ abstract public class superAuto extends LinearOpMode {
     }
 
     void sR() {
-        float power = 0.f;
+        double power = 0d;
         motorFL.setPower(power);
         motorBL.setPower(power);
         motorFR.setPower(power);

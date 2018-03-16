@@ -15,7 +15,7 @@ public class autoPlay extends superAuto {
        // Wait(3);
         //pivotTo(-90);
         Wait(3);
-        findCrypto(0,-.5f, 0f);
+        cryptoState(0,-.375f, 0f);
         telemetry.addData("We have gotten past findCrypto", iAmRed);
         flip();
     }
