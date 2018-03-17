@@ -22,7 +22,12 @@ public class autoBlue2 extends superAuto {
         Wait(1);
         pivotTo(-178);//pivot
         Wait(1);
-        cryptoState(-179,.5f, 0f);
+        distCorrector(18);
+        cryptoState(-90,.5f, 0f);
         flip();
+        Wait(1);
+        distCorrector(20);
+        Wait(1);
+        distCorrector(18);
     }
 }

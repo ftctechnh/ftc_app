@@ -24,7 +24,12 @@ public class autoBlue1 extends superAuto {
         pivotTo(-90); //pivot 90 degrees to right clockwise
         Wait(1);
         followHeading(-90, .1, 0f, .25f);
+        distCorrector(18);
         cryptoState(-90,.5f, 0f);
         flip();
+        Wait(1);
+        distCorrector(20);
+        Wait(1);
+        distCorrector(18);
     }
 }
