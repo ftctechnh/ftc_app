@@ -183,65 +183,6 @@ abstract public class superAuto extends LinearOpMode {
                 });
     }
 
-    void drive(float posx, float posy){
-        float FRBLPower = (-posy) + posx;
-        float FLBRPower = (-posy) - posx;
-        motorFR.setPower(FRBLPower);
-        motorFL.setPower(FLBRPower);
-        motorBR.setPower(FLBRPower);
-        motorBL.setPower(FRBLPower);
-
-    }
-    void moveWTime(float posx, float posy, float waitTime) {
-    drive(posx, posy);
-        Wait(waitTime);
-        sR();
-    }
-
-
-    void findCryptoOld(int targetHeading, float basePosx, float basePosy ) {
-        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        //double currentHeading = angles.firstAngle;
-        runtime.reset();
-        float currentDist = rangeSensor.rawUltrasonic();
-        float previousDist = currentDist;
-
-        /*
-        Set the order in which we expect to encounter the cryptobox columns.
-        Use UNKNOWN to indicate that we need to move extra to center ourselves on the column
-        If for some reason we are not successful reading the vuMark, reset it from UNKNOWN to
-        the first column, which is the quickest one to load.
-        */
-
-        if (iAmRed) {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {vuMark = RelicRecoveryVuMark.RIGHT;}
-            boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
-            boxOrder[1] = RelicRecoveryVuMark.RIGHT;
-            boxOrder[2] = RelicRecoveryVuMark.CENTER;
-            boxOrder[3] = RelicRecoveryVuMark.LEFT;
-        } else {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {vuMark = RelicRecoveryVuMark.LEFT;}
-            boxOrder[0] = RelicRecoveryVuMark.LEFT;
-            boxOrder[1] = RelicRecoveryVuMark.CENTER;
-            boxOrder[2] = RelicRecoveryVuMark.RIGHT;
-            boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
-        }
-
-        for (int i = 0; i < boxOrder.length; i++){
-            while ((currentDist - previousDist) < ridgeDepth) {
-                adjustHeading(targetHeading, basePosx, basePosy);
-                previousDist = currentDist;
-                currentDist = rangeSensor.rawUltrasonic();
-                telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-                telemetry.update();
-            }
-            RelicRecoveryVuMark currentVumark = boxOrder[i];
-            if(currentVumark == vuMark){
-                break;
-            }
-        }
-        sR();
-    }
 
     void cryptoState(int targetHeading, float basePosx, float basePosy ) {
         runtime.reset();
@@ -300,63 +241,6 @@ abstract public class superAuto extends LinearOpMode {
         sR();
 
     }
-    void findCrypto(int targetHeading, float basePosx, float basePosy ) {
-        //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        //double currentHeading = angles.firstAngle;
-        runtime.reset();
-        float currentDist = rangeSensor.rawUltrasonic();
-        float previousDist = currentDist;
-
-        /*
-        Set the order in which we expect to encounter the cryptobox columns.
-        Use UNKNOWN to indicate that we need to move extra to center ourselves on the column
-        If for some reason we are not successful reading the vuMark, reset it from UNKNOWN to
-        the first column, which is the quickest one to load.
-        */
-        telemetry.addData("Check iAmRed", iAmRed);
-        if (iAmRed) {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN){vuMark = RelicRecoveryVuMark.RIGHT;}
-            boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
-            boxOrder[1] = RelicRecoveryVuMark.RIGHT;
-            boxOrder[2] = RelicRecoveryVuMark.CENTER;
-            boxOrder[3] = RelicRecoveryVuMark.LEFT;
-        } else {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN){vuMark = RelicRecoveryVuMark.LEFT;}
-            boxOrder[0] = RelicRecoveryVuMark.LEFT;
-            boxOrder[1] = RelicRecoveryVuMark.CENTER;
-            boxOrder[2] = RelicRecoveryVuMark.RIGHT;
-            boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
-        }
-
-        for (int i = 0; i < boxOrder.length; i++){
-            while ((Math.abs(currentDist-previousDist)) <= ridgeDepth){
-                telemetry.addData("Top of loop", boxOrder[i]);
-                telemetry.addData("i=", i);
-                telemetry.addData("ridgeDepth", ridgeDepth);
-                telemetry.addData("Previous Distance at start: ", previousDist);
-                telemetry.addData("Current Distance at start: ", currentDist);
-                //translateForCrypto(basePosx);
-                //telemetry.addData("Past Translate for Crypto", boxOrder[i]);
-                adjustHeading(targetHeading, basePosx, basePosy);
-                previousDist = currentDist;
-                currentDist = rangeSensor.rawUltrasonic();
-                telemetry.addData("Previous Distance after read: ", previousDist);
-                telemetry.addData("Current Distance after read: ", currentDist);
-                telemetry.addData("raw ultrasonic", rangeSensor.rawUltrasonic());
-                telemetry.update();
-            }
-
-                RelicRecoveryVuMark currentVumark = boxOrder[i];
-                telemetry.addData("Target Vumark: ", vuMark);
-                telemetry.addData("Current Vumark: ", currentVumark);
-                if (currentVumark == vuMark) {
-                    telemetry.addData("We've found the right box", boxOrder[i]);
-                    break;
-                }
-
-        }
-        sR();
-    }
 
     void followHeading(int targetHeading, double time, float basePosx, float basePosy ){
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -367,15 +251,6 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
-
-    void translateForCrypto(float basePosx) {
-            float FRBLPower = - basePosx;
-            float FLBRPower = + basePosx;
-            motorFR.setPower(FRBLPower);
-            motorFL.setPower(FLBRPower);
-            motorBR.setPower(FLBRPower);
-            motorBL.setPower(FRBLPower);
-        }
 
     void adjustHeading(int targetHeading, float basePosx, float basePosy) {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -498,35 +373,59 @@ abstract public class superAuto extends LinearOpMode {
     }
 
 
-    void distCorrector(double targetDist)
-    {
-        double currentDist = rangeSensor.getDistance(DistanceUnit.CM);
-        double originalComparison = currentDist - targetDist;
-        double changingComparison = originalComparison;
-        double fudgeFactor = 0.1 * originalComparison;
-        double sign = 0;
+    void distCorrector(double trgDistance) {
 
-        if(Math.abs(changingComparison)>= fudgeFactor)
-        {
-            if (changingComparison > 0) {
-                sign = -1;
-            }
-            else{
-                sign = 1;
-            }
-            //adjust power
-            double adjust = (Math.abs(currentDist/originalComparison))* sign;
-            motorFL.setPower(adjust);
-            motorFR.setPower(adjust);
-            motorBL.setPower(adjust);
-            motorBR.setPower(adjust);
-        }
+        double curDistance = rangeSensor.getDistance(DistanceUnit.CM);
+        double fstDistance = curDistance - trgDistance;
 
-        else
+        boolean go = true;
+        int i = 0;
+
+        // While not our state do ...
+        while (go) {
+
+            curDistance = rangeSensor.getDistance(DistanceUnit.CM);
+            double chgDistance = curDistance - trgDistance;
+
+            double direction;
+            if (chgDistance > 0) {
+                direction = 1;
+            } else {
+                direction = -1;
+            }
+
+            if (Math.abs(chgDistance) >= 2) {
+
+                // Slow down
+                double adjust = 0.20 * direction;
+
+                //(Math.abs(chgDistance / fstDistance)) * direction;
+                //if (adjust > 0.25) { adjust = 0.25; }
+
+                telemetry.addData("current distance", curDistance);
+                telemetry.addData("target distance", trgDistance);
+                telemetry.addData("direction", direction);
+                telemetry.addData("adjust", adjust);
+                telemetry.addData("i", i);
+                telemetry.update();
+
+                // Power the motors
+                  motorFL.setPower(adjust);
+                  motorFR.setPower(adjust);
+                  motorBL.setPower(adjust);
+                  motorBR.setPower(adjust);
+            } else
             {
-            sR();
+                go = false;
             }
+            i++;
+        //    if (i > 30) {
+        //        go = false;
+        //    }
+        }
+        sR();
     }
+
 
     void jewel(){
 

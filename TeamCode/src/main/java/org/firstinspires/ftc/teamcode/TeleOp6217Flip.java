@@ -89,7 +89,7 @@ public class TeleOp6217Flip extends OpMode
     @Override
     public void init_loop() {
         // Start wrist in stowed position
-        servoWrist.setPosition(1);
+        servoWrist.setPosition(.85);
     }
 
     /*
