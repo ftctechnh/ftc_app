@@ -139,28 +139,29 @@ public class redBack_George extends Autonomous_General_George {
         jewelServo.setPosition(1);
         sleep(100);
         //drive off the plate (we drive backwards since robot was backwards)
-        encoderMecanumDrive(0.3, -45,-45,5000,0);
+        encoderMecanumDrive(0.70, -45,-45,5000,0);
         sleep(1000);
 
-        //gyroTurnREV(0.5, -180);
+        gyroTurnREV(0.3,0);
 
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             //if the right image was read we move back 4.25 cm
-            encoderMecanumDrive(0.4,-11,-11,5000,0);
+            encoderMecanumDrive(0.4,10,10,5000,0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
             //if the center or unkown image was read we move forward 4 cm
-            encoderMecanumDrive(0.4,-2,-2,5000,0);
+            encoderMecanumDrive(0.4,3,3,5000,0);
 
         }
         else if (vuMark == RelicRecoveryVuMark.LEFT){
             //if the left image was read we move back 9.25 cm
-            encoderMecanumDrive(0.4,-9.5,-9.5,5000,0);
+            encoderMecanumDrive(0.4,-6,-6,5000,0);
         }
 
 
         sleep(100);
+        gyroTurnREV(0.4, 0);
 
         if (vuMark == RelicRecoveryVuMark.RIGHT){
             //if the image was right we turn to 60º counterclockwise from origin angle to push block in angled

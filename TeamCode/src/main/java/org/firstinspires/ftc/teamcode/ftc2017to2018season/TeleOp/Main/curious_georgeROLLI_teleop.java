@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Created by Team Inspiration on 1/21/18.
  */
 @TeleOp(name = "Curious George Roll-y collector")
-
+@Disabled
 public class curious_georgeROLLI_teleop extends OpMode {
 
 
