@@ -181,7 +181,7 @@ public class Auto_B2 extends OpMode {
 
                 case OFFSTONE:
                     if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.5 )) {
-                        state = States.END;
+                        state = States.STRAFE;
                         completedStates += "OFFSTONE - ";
                     }
                     break;
@@ -208,7 +208,7 @@ public class Auto_B2 extends OpMode {
                     } else{
                         isFinished = false;
                         state = States.DROP;
-                        completedStates += "DRIVEBOX";
+                        completedStates += "DRIVE BOX";
                         goalSeconds = currentSeconds += 2.0;
                     }
 
