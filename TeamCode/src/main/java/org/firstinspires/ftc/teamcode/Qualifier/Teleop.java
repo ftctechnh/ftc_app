@@ -63,6 +63,7 @@ public class Teleop extends OpMode {
     boolean out = true;                          // what the heck does out mean? Out toggles the switch from forward to backward relic
     double starthit = 0;
     int blocks = 0;
+    boolean jam = false;//Used to auto unjam the glyphtrain
 
     //SLOW SERVO
     public boolean elbowmoving = false;
@@ -113,10 +114,12 @@ public class Teleop extends OpMode {
 //       lastLoadTime = -10000;
 //        telemetry.addData("elbowmovetime", elbowdowntime);
 
-        double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+       // double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
 //        double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
         telemetry.addData("ElbowTime from file", elbowdowntime);
-        telemetry.addData("Sharp IR V ", sharpIRVoltage);
+        telemetry.addData("Left Switch", gromit.glyphTrain.touchLeft.getState());
+        telemetry.addData("Rght Switch", gromit.glyphTrain.touchRight.getState());
+       // telemetry.addData("Sharp IR V ", sharpIRVoltage);
 //        telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getVoltage());
 //        telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getVoltage());
 
@@ -383,6 +386,26 @@ public class Teleop extends OpMode {
                     gromit.glyphTrain.resetkickGlyph2();
                 }
             }
+            /**
+            SMART GLIDEANCE
+            */
+            if (gromit.glyphTrain.touchLeft.getState() && !jam){ //JAM ALERT TOUCHING THE LEFT SIDE
+                jam = true;
+                //Adjust the motors
+                gromit.glyphTrain.right_glyph.setPower(-0.3);
+
+            }
+//            else if (gromit.glyphTrain.touchRight.getState() && !jam) {//Otherwise YOU HAVE A JAM ON THE RIGHT SIDE
+//                  jam = true;
+            //Adjust the motors
+//            gromit.glyphTrain.left_glyph.setPower(-0.3);
+//            }
+            else if( jam && !gromit.glyphTrain.touchLeft.getState()){//THE JAM IS FIXED OR THINGS ARE RUNNING SMOOTHLY
+                jam = false;
+                //Set the motors the same again
+                gromit.glyphTrain.startGlyphMotors(1.0);
+            }
+
         }
         /**
          * BLOCK CLAMPS AND RELIC CLAW CLAMPS
@@ -429,7 +452,7 @@ public class Teleop extends OpMode {
 
         // jam buttons,  rotate one side of  chains opposite directions
         /**
-         * Rotate the blocks JAM BUTTONS
+         * Rotate the blocks JAM BUTTONS WOULDN'T HURT FOR THEM TO ONLY WOK WHEN TRAIN WAS ON
          */
         if (gamepad1.right_trigger > 0.1) {
             gromit.glyphTrain.right_glyph.setPower(-0.3);
@@ -493,19 +516,18 @@ public class Teleop extends OpMode {
         /**
          * DRIVE RIGHT HERE
          */
-        if(stall) {
-            if(gamepad1.right_stick_y > 0.1){
-                gromit.driveTrain.drivesmart(-0, 0, turnDirection * gamepad1.left_stick_x);
-            }
-            else if(gamepad1.right_stick_y < -0.1){
-                gromit.driveTrain.drivesmart(-0, 0, turnDirection * gamepad1.left_stick_x);
-            }
-        }
-        else{
-            gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
-        }
-
+//        if(stall) {
+//            if(gamepad1.right_stick_y > 0.1){
+//                gromit.driveTrain.drivesmart(-0, 0, turnDirection * gamepad1.left_stick_x);
+//            }
+//            else if(gamepad1.right_stick_y < -0.1){
+//                gromit.driveTrain.drivesmart(-0, 0, turnDirection * gamepad1.left_stick_x);
+//            }
 //        }
+//        else{
+            gromit.driveTrain.drivesmart(-gamepad1.right_stick_x, -gamepad1.right_stick_y, turnDirection * gamepad1.left_stick_x);
+//        }
+
         /**
          * RELIC CONTROLS
          */

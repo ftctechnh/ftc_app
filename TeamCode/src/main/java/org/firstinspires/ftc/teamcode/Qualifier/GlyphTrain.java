@@ -48,6 +48,8 @@ public class GlyphTrain {
 
     public DigitalChannel seeFrontBlock;
     public DigitalChannel seeMiddleBlock;
+    public DigitalChannel touchLeft;
+    public DigitalChannel touchRight;
     public DigitalChannel LED1;
     public DigitalChannel LED2;
     //GLYPHTRAIN SENSORS
@@ -85,6 +87,12 @@ public class GlyphTrain {
         seeFrontBlock.setMode(DigitalChannel.Mode.INPUT);
         seeMiddleBlock = hardwareMap.digitalChannel.get("glyphmiddleIR");
         seeMiddleBlock.setMode(DigitalChannel.Mode.INPUT);
+        //Touch Sensors
+        touchLeft = hardwareMap.digitalChannel.get("glyphLeftTouch");
+        touchLeft.setMode(DigitalChannel.Mode.INPUT);
+        touchRight = hardwareMap.digitalChannel.get("glyphRightTouch");
+        touchRight.setMode(DigitalChannel.Mode.INPUT);
+
         LED1 = hardwareMap.digitalChannel.get("LED1");
         LED1.setMode(DigitalChannel.Mode.OUTPUT);
         LED2 = hardwareMap.digitalChannel.get("LED2");
@@ -138,7 +146,7 @@ public class GlyphTrain {
         //speed change code
         if (glyphpower > 0) {
             left_glyph.setPower(glyphpower - 0.0);//left facing forward on robot
-            right_glyph.setPower(glyphpower - 0.12);
+            right_glyph.setPower(glyphpower - 0.0);
         } else {
             left_glyph.setPower(glyphpower - 0.0);//left facing forward on robot
             right_glyph.setPower(glyphpower - 0.0);
