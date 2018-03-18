@@ -78,10 +78,9 @@ public class redBack_George extends Autonomous_General_George {
         //move down the jewel arm
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
-        sleep(1000);
         //read the color of the ball to the right of the arm
         readColorRev();
-        sleep(1500);
+        sleep(100);
         //tell the driver what the color of the ball is
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
@@ -107,7 +106,7 @@ public class redBack_George extends Autonomous_General_George {
             sleep(750);
             //move the jewel manipulator to the original position
             jewelServoRotate.setPosition(0.79);
-            sleep(1000);
+            sleep(500);
         }
         //redo what was done before in the case that the ball was unable to be read
         else if (ballColor.equals("blank")){
@@ -123,7 +122,7 @@ public class redBack_George extends Autonomous_General_George {
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 jewelServoRotate.setPosition(0.79);
-                sleep(1000);
+                sleep(500);
             }
             else if(ballColor.equals("blue")) {
                 jewelServoRotate.setPosition(1);
@@ -131,7 +130,7 @@ public class redBack_George extends Autonomous_General_George {
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 jewelServoRotate.setPosition(0.79);
-                sleep(1000);
+                sleep(500);
             }
         }
         //move the jewel servi back up
@@ -139,8 +138,10 @@ public class redBack_George extends Autonomous_General_George {
         jewelServo.setPosition(1);
         sleep(100);
         //drive off the plate (we drive backwards since robot was backwards)
-        encoderMecanumDrive(0.70, -45,-45,5000,0);
-        sleep(1000);
+
+        encoderMecanumDrive(0.3, -45,-45,5000,0);
+        sleep(100);
+
 
         gyroTurnREV(0.3,0);
 
@@ -174,7 +175,7 @@ public class redBack_George extends Autonomous_General_George {
         }
 
 
-        sleep(750);
+        sleep(100);
 
         //we move the glyph manipulator down
         moveDownGlyph(1.05);
@@ -197,9 +198,20 @@ public class redBack_George extends Autonomous_General_George {
             encoderMecanumDrive(0.3,-10,10,1000,0);
         }
 
-        sleep(500);
+        sleep(100);
         //we back up 10 cm to park
-        encoderMecanumDrive(0.3, -10, -10, 1000, 0);
+
+        //code to get second glyph
+        encoderMecanumDrive(0.3, -20, -20, 1000, 0);
+        gyroTurnREV(0.5,-90);
+        encoderMecanumDrive(0.6,20,20,5000,0);
+        closeGlyphManipulator();
+        moveUpGlyph(3.4);
+        gyroTurnREV(0.5,90);
+        moveDownGlyph(2);
+        openGlyphManipulator();
+        encoderMecanumDrive(0.5,35,35,5000,0);
+        encoderMecanumDrive(0.3,10,10,5000,0);
 
 
     }

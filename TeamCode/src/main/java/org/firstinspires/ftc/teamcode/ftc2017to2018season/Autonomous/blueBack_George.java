@@ -35,7 +35,7 @@ public class blueBack_George extends Autonomous_General_George {
 //reseting gyro sensor
 
         jewelServoRotate.setPosition(0.74);
-        sleep(100);
+        //sleep(100);
         toggleLight(true);
         //light.setPower(0.5);
         startTracking();
@@ -51,7 +51,7 @@ public class blueBack_George extends Autonomous_General_George {
 
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
-        sleep(250);
+        //sleep(250);
 
         moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
@@ -67,9 +67,9 @@ public class blueBack_George extends Autonomous_General_George {
         jewelServo.setPosition(0.2);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
-        sleep(1000);
+        //sleep(100);
         readColorRev();
-        sleep(1000);
+        sleep(100);
         //light.setPower(0);
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
@@ -96,15 +96,15 @@ public class blueBack_George extends Autonomous_General_George {
             sleep(750);
             //move the jewel manipulator to the original position
             jewelServoRotate.setPosition(0.79);
-            sleep(1000);
+            sleep(500);
         }
         else if (ballColor.equals("blank")){
             jewelServo.setPosition(1);
-            sleep(1500);
+            sleep(300);
             jewelServo.setPosition(0.2);
-            sleep(500);
+            sleep(750);
             readColorRev();
-            sleep(1000);
+            sleep(500);
             if(ballColor.equals("blue")){
                 //move the jewel manipulator to the right to knock off the ball
                 jewelServoRotate.setPosition(0.5);
@@ -123,11 +123,11 @@ public class blueBack_George extends Autonomous_General_George {
                 sleep(750);
                 //move the jewel manipulator to the original position
                 jewelServoRotate.setPosition(0.79);
-                sleep(1000);
+                sleep(500);
             }
         }
         jewelServo.setPosition(1);
-        sleep(700);
+        sleep(500);
         encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
@@ -159,7 +159,7 @@ public class blueBack_George extends Autonomous_General_George {
         }
 
 
-        sleep(750);
+        sleep(200);
 
         moveDownGlyph(1.05);
         sleep(100);
@@ -179,8 +179,18 @@ public class blueBack_George extends Autonomous_General_George {
             encoderMecanumDrive(0.3,10,-10,1000,0);
         }
 
-        sleep(500);
-        encoderMecanumDrive(0.3, -10, -10, 1000, 0);
+        //code to get second glyph
+        encoderMecanumDrive(0.3, -20, -20, 1000, 0);
+        gyroTurnREV(0.5,-90);
+        encoderMecanumDrive(0.6,20,20,5000,0);
+        closeGlyphManipulator();
+        moveUpGlyph(3.4);
+        gyroTurnREV(0.5,90);
+        moveDownGlyph(2);
+        openGlyphManipulator();
+        encoderMecanumDrive(0.5,35,35,5000,0);
+        encoderMecanumDrive(0.3,10,10,5000,0);
+
     }
 
 
