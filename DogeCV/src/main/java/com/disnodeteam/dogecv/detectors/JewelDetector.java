@@ -19,9 +19,6 @@ import org.opencv.imgproc.Imgproc;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Victo on 11/5/2017.
- */
 
 public class JewelDetector extends OpenCVPipeline {
 
@@ -84,6 +81,13 @@ public class JewelDetector extends OpenCVPipeline {
             Mat tempBefore = workingMat.t();
 
             Core.flip(tempBefore, workingMat, -1); //mRgba.t() is the transpose
+
+            tempBefore.release();
+        }
+        else {
+            Mat tempBefore = workingMat.t();
+
+            Core.flip(tempBefore, workingMat, 1); //mRgba.t() is the transpose
 
             tempBefore.release();
         }

@@ -10,8 +10,8 @@ MERGED from [:Hardware-release:] /Users/adityamavalankar/.gradle/caches/transfor
 MERGED from [:FtcCommon-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/FtcCommon-release.aar/88f80c8aaa0142bf8cdaf6e247684e81/AndroidManifest.xml:3:1-224:12
 MERGED from [:Analytics-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Analytics-release.aar/c375b0c6cbabdfed30eb75284e9de1e9/AndroidManifest.xml:2:1-26:12
 MERGED from [:WirelessP2p-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/WirelessP2p-release.aar/4675de848afa41f3cfea01cff64ae650/AndroidManifest.xml:2:1-11:12
-MERGED from [:DogeCV] /Users/adityamavalankar/Documents/GitHub/ftc_app/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-17:12
 MERGED from [:openCVLibrary320] /Users/adityamavalankar/Documents/GitHub/ftc_app/openCVLibrary320/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-11:12
+MERGED from [:DogeCV] /Users/adityamavalankar/Documents/GitHub/ftc_app/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-17:12
 MERGED from [:Inspection-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Inspection-release.aar/d7ae09462b593045c187f331d028a4fc/AndroidManifest.xml:2:1-32:12
 MERGED from [:Blocks-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Blocks-release.aar/a300ea0aa25bceffa89c5e5817df9701/AndroidManifest.xml:2:1-41:12
 INJECTED from /Users/adityamavalankar/Documents/GitHub/ftc_app/TeamCode/src/main/AndroidManifest.xml:8:1-12:12
@@ -79,10 +79,10 @@ MERGED from [:Analytics-release:] /Users/adityamavalankar/.gradle/caches/transfo
 MERGED from [:Analytics-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Analytics-release.aar/c375b0c6cbabdfed30eb75284e9de1e9/AndroidManifest.xml:5:5-7:41
 MERGED from [:WirelessP2p-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/WirelessP2p-release.aar/4675de848afa41f3cfea01cff64ae650/AndroidManifest.xml:5:5-7:41
 MERGED from [:WirelessP2p-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/WirelessP2p-release.aar/4675de848afa41f3cfea01cff64ae650/AndroidManifest.xml:5:5-7:41
-MERGED from [:DogeCV] /Users/adityamavalankar/Documents/GitHub/ftc_app/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
-MERGED from [:DogeCV] /Users/adityamavalankar/Documents/GitHub/ftc_app/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:openCVLibrary320] /Users/adityamavalankar/Documents/GitHub/ftc_app/openCVLibrary320/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:openCVLibrary320] /Users/adityamavalankar/Documents/GitHub/ftc_app/openCVLibrary320/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:DogeCV] /Users/adityamavalankar/Documents/GitHub/ftc_app/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:DogeCV] /Users/adityamavalankar/Documents/GitHub/ftc_app/DogeCV/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:Inspection-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Inspection-release.aar/d7ae09462b593045c187f331d028a4fc/AndroidManifest.xml:7:5-9:41
 MERGED from [:Inspection-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Inspection-release.aar/d7ae09462b593045c187f331d028a4fc/AndroidManifest.xml:7:5-9:41
 MERGED from [:Blocks-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Blocks-release.aar/a300ea0aa25bceffa89c5e5817df9701/AndroidManifest.xml:7:5-9:41

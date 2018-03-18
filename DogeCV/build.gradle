@@ -21,6 +21,6 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(path: ':openCVLibrary320')
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly project(':openCVLibrary320')
 }
