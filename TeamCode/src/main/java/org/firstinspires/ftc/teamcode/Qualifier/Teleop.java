@@ -64,6 +64,8 @@ public class Teleop extends OpMode {
     double starthit = 0;
     int blocks = 0;
     boolean jam = false;//Used to auto unjam the glyphtrain
+    double intakespeed = 0.75;
+    double travelspeed = 1.0;
 
     //SLOW SERVO
     public boolean elbowmoving = false;
@@ -241,7 +243,7 @@ public class Teleop extends OpMode {
 //                gromit.glyphTrain.liftIndex = Math.max(gromit.glyphTrain.liftIndex - 1, 0);  //subtract one from index, min is
 //                gromit.glyphTrain.liftGlyphIndex(gromit.glyphTrain.liftIndex);  //lower
                 blocks = 0;
-                gromit.glyphTrain.startGlyphMotors(1.0);
+                gromit.glyphTrain.startGlyphMotors(intakespeed);
                 trainon = true;
             }
         } else {
@@ -264,6 +266,10 @@ public class Teleop extends OpMode {
                 if (gromit.glyphTrain.lift_motor.getCurrentPosition() >= liftTarget) { //If it exceeds the target cut it off
                     gromit.glyphTrain.lift_motor.setPower(0.0);
                     glyphLiftismoving = false;
+//                    if(trainon){
+//                        gromit.glyphTrain.startGlyphMotors(intakespeed);
+//                    }
+
                 }
             }
         }
@@ -297,7 +303,7 @@ public class Teleop extends OpMode {
             relicspeed = 0.2;
         } else {
             gromit.driveTrain.setSpeedMode(MID);
-            relicspeed = 0.7;
+            relicspeed = 0.8;
         }
 //on and off glyph intake
         if (gamepad1.dpad_right || gamepad2.dpad_right) {
@@ -308,7 +314,7 @@ public class Teleop extends OpMode {
                     gromit.glyphTrain.stopGlyphMotors();
                 } else {
                     trainon = true;
-                    gromit.glyphTrain.startGlyphMotors(1.0);
+                    gromit.glyphTrain.startGlyphMotors(intakespeed);
                 }
             }
         } else {
@@ -336,7 +342,7 @@ public class Teleop extends OpMode {
         if(waitforglyph){//If you have a block waiting in the train
             if( abs(gamepad1.right_stick_x) < .1 && abs(gamepad1.right_stick_y) < .1 &&  abs(gamepad1.left_stick_x) < .1){
                 waitforglyph = false;
-                gromit.glyphTrain.startGlyphMotors(1.0);
+                gromit.glyphTrain.startGlyphMotors(intakespeed);
                 trainon = true;
             }
         }
@@ -369,6 +375,7 @@ public class Teleop extends OpMode {
                     }
                     glyphSensed = false;
                 }
+                gromit.glyphTrain.startGlyphMotors(intakespeed);//Set back t slow speed
             }
             //Front glyph sensor trigger lights
             if (!gromit.glyphTrain.seeFrontBlock.getState() || !gromit.glyphTrain.seeMiddleBlock.getState()){ //  && !frontglyphSensed) {     // if block is sensed set boolean
@@ -377,6 +384,8 @@ public class Teleop extends OpMode {
                 gromit.glyphTrain.LED1.setState(true);
                 gromit.glyphTrain.LED2.setState(true);
                 gromit.glyphTrain.signalkickGlyph2();
+                //Maybe diable if lift is moving...
+                gromit.glyphTrain.startGlyphMotors(travelspeed);
 
             }else if (gromit.glyphTrain.seeFrontBlock.getState() && gromit.glyphTrain.seeMiddleBlock.getState()) {     // if block was already sensed (sense the back end)
                 //frontglyphSensed = false;
@@ -403,7 +412,7 @@ public class Teleop extends OpMode {
             else if( jam && !gromit.glyphTrain.touchLeft.getState()){//THE JAM IS FIXED OR THINGS ARE RUNNING SMOOTHLY
                 jam = false;
                 //Set the motors the same again
-                gromit.glyphTrain.startGlyphMotors(1.0);
+                gromit.glyphTrain.startGlyphMotors(travelspeed);
             }
 
         }
@@ -465,7 +474,7 @@ public class Teleop extends OpMode {
         } else if (jamButton){
             jamButton=false;
             trainon = true;
-            gromit.glyphTrain.startGlyphMotors(1.0);
+            gromit.glyphTrain.startGlyphMotors(travelspeed);
         }
         //They might need to be switched left to right
         if (gamepad1.start) {
