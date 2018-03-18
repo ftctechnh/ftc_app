@@ -35,7 +35,7 @@ public class TestTeleOp extends OpMode
         telemetry.addData("RJoyStick= ", gamepad1.right_stick_y);
         telemetry.addData("REncoders= ", tank.getRightEncoderPos());
         telemetry.addData("LEncoders= ", tank.getLeftEncoderPos());
-        tank.driveMotors(gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        tank.driveMotors(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
     }
 
     public void stop()
