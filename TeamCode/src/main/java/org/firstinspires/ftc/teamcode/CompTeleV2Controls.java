@@ -144,6 +144,9 @@ public class CompTeleV2Controls extends OpMode
         else
             newRobot.driveMotors(gamepad1.left_stick_y, gamepad1.right_stick_y);
 
+        if (gamepad1.left_trigger > .4f)
+            newRobot.selfBal();
+
         if (gamepad1.y)
             newRobot.getWingMotor().setPower(1);//lift wing
         else if (gamepad1.b)
