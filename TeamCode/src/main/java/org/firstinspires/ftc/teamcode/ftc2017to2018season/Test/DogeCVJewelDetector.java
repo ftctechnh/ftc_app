@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @Autonomous(name="DogeCV Jewel Detector", group="DogeCV")
 
-public class JewelOpMode extends OpMode
+public class DogeCVJewelDetector extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();

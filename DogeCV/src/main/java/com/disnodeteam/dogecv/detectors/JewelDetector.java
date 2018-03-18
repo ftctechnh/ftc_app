@@ -268,11 +268,12 @@ public class JewelDetector extends OpenCVPipeline {
         }
 
         if(chosenBlueRect != null && chosenRedRect != null){
-            if(chosenBlueRect.x < chosenRedRect.x){
-                currentOrder = JewelOrder.BLUE_RED;
+            //if(chosenBlueRect.x < chosenRedRect.x){
+            if(chosenBlueRect.y<chosenRedRect.y){
+                currentOrder = JewelOrder.RED_BLUE;
                 lastOrder = currentOrder;
             }else{
-                currentOrder = JewelOrder.RED_BLUE;
+                currentOrder = JewelOrder.BLUE_RED;
                 lastOrder = currentOrder;
             }
         }else{

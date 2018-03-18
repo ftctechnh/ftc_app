@@ -157,8 +157,6 @@ public class General_Delta_TeleOp extends OpMode {
      */
     public void Slides(){
         slideMove();
-        slideIncrement();
-
     }
     public void FourWheelDrive() {
         /*
@@ -250,20 +248,6 @@ public class General_Delta_TeleOp extends OpMode {
         telemetry.update();
 
         */
-    }
-
-    public void slideIncrement() {
-
-        if(gamepad2.dpad_up){
-            moveUpInch(13);
-        }else if(gamepad2.dpad_right){
-            moveUpInch(7);
-        }else if(gamepad2.dpad_down){
-            moveUpInch(2);
-        }
-        else{
-
-        }
     }
 
     public void incrementOpen(){
