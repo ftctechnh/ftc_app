@@ -53,29 +53,10 @@ public Servo jewelServoRotate;
         jewelDetector.minArea = 700;
 
         jewelDetector.enable();
-        switch (jewelDetector.getCurrentOrder()){
-            case UNKNOWN:
-                telemetry.addData("Balls not seen", "Solution TBD   :/");
-                break;
-            case BLUE_RED:
-                //move the jewel manipulator to the left to knock off the ball
-                jewelServoRotate.setPosition(1);
-                jewelServo.setPosition(0.8);
-                //move the jewel manipulator to the original position
-                jewelServoRotate.setPosition(0.79);
-                break;
-            case RED_BLUE:
-                //move the jewel manipulator to the right to knock off the ball
-                jewelServoRotate.setPosition(0.5);
-                jewelServo.setPosition(0.8);
-                //move it back to the original posititon
-                jewelServoRotate.setPosition(0.79);
-                //Add code to swing the jwele arm
-                break;
 
         }
 
-    }
+    
 
     @Override
     public void init_loop() {
