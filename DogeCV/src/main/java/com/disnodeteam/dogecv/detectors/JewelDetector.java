@@ -21,7 +21,6 @@ import java.util.List;
 
 
 public class JewelDetector extends OpenCVPipeline {
-
     public enum JewelOrder {
         RED_BLUE,
         BLUE_RED,
