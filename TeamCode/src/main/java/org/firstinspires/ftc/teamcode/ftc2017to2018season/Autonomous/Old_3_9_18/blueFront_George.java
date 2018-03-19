@@ -1,15 +1,11 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
-import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
-import com.disnodeteam.dogecv.detectors.JewelDetector;
-import com.vuforia.Vuforia;
-
 
 //10-28-17
 @Autonomous(name = "Blue Front George Super-Regionals")
@@ -18,10 +14,11 @@ public class blueFront_George extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
-    JewelDetector jewelDetector = new JewelDetector();
+
 
     @Override
     public void runOpMode() {
+
 
         vuforiaInit(true, true);
         telemetry.addData("","Vuforia Initiated");
@@ -51,37 +48,6 @@ public class blueFront_George extends Autonomous_General_George {
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
         sleep(250);
-        relicTrackables.deactivate();
-
-        jewelDetector.enable();
-        sleep(750);
-
-        switch (jewelDetector.getCurrentOrder()){
-            case UNKNOWN:
-                telemetry.addData("Balls not seen", "Solution TBD   :/");
-                break;
-            case BLUE_RED:
-                //move the jewel manipulator to the left to knock off the ball
-                jewelServoRotate.setPosition(1);
-                sleep(300);
-                jewelServo.setPosition(0.8);
-                sleep(750);
-                //move the jewel manipulator to the original position
-                jewelServoRotate.setPosition(0.79);
-                sleep(1000);
-                break;
-            case RED_BLUE:
-                //move the jewel manipulator to the right to knock off the ball
-                jewelServoRotate.setPosition(0.5);
-                sleep(300);
-                jewelServo.setPosition(0.8);
-                sleep(750);
-                //move it back to the original posititon
-                jewelServoRotate.setPosition(0.79);
-                //Add code to swing the jwele arm
-
-        }
-        jewelServo.setPosition(1);
 
         moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
@@ -93,8 +59,73 @@ public class blueFront_George extends Autonomous_General_George {
         sleep(250);
         moveUpGlyph(1.45);
         sleep(250);
+        jewelServo.setPosition(0.2);
+        telemetry.addData("jewelServo Position", jewelServo.getPosition());
+        telemetry.update();
+        sleep(1000);
+        readColorRev();
+        sleep(1500);
+        //light.setPower(0);
+        telemetry.addData("right jewel color", ballColor);
+        telemetry.update();
+        //returnImage();
 
 
+
+        if(ballColor.equals("blue")){
+            //move the jewel manipulator to the right to knock off the ball
+            jewelServoRotate.setPosition(0.5);
+            sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move it back to the original posititon
+            jewelServoRotate.setPosition(0.79);
+            //Add code to swing the jwele arm
+        }
+        else if(ballColor.equals("red")){
+            //move the jewel manipulator to the left to knock off the ball
+            jewelServoRotate.setPosition(1);
+            sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move the jewel manipulator to the original position
+            jewelServoRotate.setPosition(0.79);
+            sleep(1000);
+        }
+        else if (ballColor.equals("blank")){
+            jewelServo.setPosition(1);
+            sleep(1500);
+            jewelServo.setPosition(0.2);
+            sleep(500);
+            readColorRev();
+            sleep(1000);
+            if(ballColor.equals("blue")){
+                //move the jewel manipulator to the right to knock off the ball
+                jewelServoRotate.setPosition(0.5);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move it back to the original posititon
+                jewelServoRotate.setPosition(0.79);
+                //Add code to swing the jwele arm
+            }
+            else if(ballColor.equals("red")){
+                //move the jewel manipulator to the left to knock off the ball
+                jewelServoRotate.setPosition(1);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move the jewel manipulator to the original position
+                jewelServoRotate.setPosition(0.79);
+                sleep(1000);
+            }
+            else {
+                jewelServo.setPosition(1);
+                sleep(1000);
+            }
+        }
+
+        jewelServo.setPosition(1);
         sleep(200);
 
         encoderMecanumDrive(0.4,40,40,5000,0);
