@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 //10-28-17
-@Autonomous(name="Red Back George Super-Regionals")
+@Autonomous(name="Red Back George Super-Regionals_Old")
 //3/2/18 edit by Steven Chen: getting rid of unnecessary turns (this is new version of the regional code)
-public class redBack_George extends Autonomous_General_George {
+public class redBack_George_Old extends Autonomous_General_George {
 
     DcMotor leftFront;
     DcMotor rightFront;

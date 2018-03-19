@@ -1,6 +1,7 @@
 
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 @Autonomous(name="Jewel Detector Auto Imp", group="DogeCV")
+
 
 public class JewelDetectorAutoImp extends OpMode
 {
