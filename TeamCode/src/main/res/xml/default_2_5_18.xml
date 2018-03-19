@@ -30,6 +30,7 @@
             <Servo name="right_upper" port="4" />
             <Servo name="servo_lift" port="5" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+            <AnalogInput name="maxbotixsensor" port="0"/>
             <DigitalDevice name="LED1" port="6"/>
             <DigitalDevice name="LED2" port="7"/>
 
