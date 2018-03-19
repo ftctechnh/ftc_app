@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_9_18;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -59,7 +59,7 @@ import java.util.Locale;
  */
 
 //Edit by Steven Chen: cleaning up unused code 3/3/18
-@Autonomous(name="Concept: VuMark Id", group ="Concept")
+@Autonomous(name="Concept: VuMark Id_Old", group ="Concept")
 @Disabled
 public class Autonomous_General_George_Old extends LinearOpMode{
     //we attached a light to make it easier to see the target
