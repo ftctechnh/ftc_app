@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_9_18;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,7 +14,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.ConceptVuforiaNavigation;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -35,37 +32,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.Locale;
 
 
-/**
- * This OpMode illustrates the basics of using the Vuforia engine to determine
- * the identity of Vuforia VuMarks encountered on the field. The code is structured as
- * a LinearOpMode. It shares much structure with {@link ConceptVuforiaNavigation}; we do not here
- * duplicate the core Vuforia documentation found there, but rather instead focus on the
- * differences between the use of Vuforia for navigation vs VuMark identification.
- *
- * @see ConceptVuforiaNavigation
- * @see VuforiaLocalizer
- * @see VuforiaTrackableDefaultListener
- * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained in {@link ConceptVuforiaNavigation}.
- */
 
-//Edit by Steven Chen: cleaning up unused code 3/3/18
-@Autonomous(name="Concept: VuMark Id", group ="Concept")
-@Disabled
-public class Autonomous_General_George extends LinearOpMode{
-    //we attached a light to make it easier to see the target
-    //public DcMotor light;
+public abstract class Autonomous_General_George extends LinearOpMode{
     public double waitTime = 3;
 
     public static double RobotWidth = 41.91;
-    public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
-    public static double WHEEL_REV_PER_MOTOR_REV;     // 56/24
-    public static double WHEEL_PERIMETER_CM;     // For figuring circumference
+    public static double COUNTS_PER_MOTOR_REV;
+    public static double WHEEL_REV_PER_MOTOR_REV;
+    public static double WHEEL_PERIMETER_CM;
     public static double COUNTS_PER_CM;
     public static double ENCODERS_PER_DEGREE;
     public static double ENCODERSPER360;
@@ -100,6 +74,8 @@ public class Autonomous_General_George extends LinearOpMode{
 
     public String ballColor;
     public static final String TAG = "Vuforia VuMark Sample";
+
+    REV_ColorSensor jewelSensor;
 
     OpenGLMatrix lastLocation = null;
 
@@ -147,6 +123,13 @@ public class Autonomous_General_George extends LinearOpMode{
 
         revColorSensor = hardwareMap.get(ColorSensor.class, "revColorSensor");
         revJewelRangeSensor = hardwareMap.get(DistanceSensor.class, "revJewelRangeSensor");
+
+        MR_RangeSensor sensorFront = new MR_RangeSensor("sensorFront");
+        MR_RangeSensor sensorBack = new MR_RangeSensor("sensorBack");
+        jewelSensor = new REV_ColorSensor(revColorSensor); // since we can't use hardware map outside of OpMode/LinearOpMode, we instantiate it here and pass it to
+                                                            // the REV_ColorSensor class, which can now use the color Sensor
+                                                            //we also can't construct an object as a child of linearOpMode since that causes null pointer exceptions
+
         //glyphRangeSensorTop = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorTop");
         //glyphRangeSensorBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorBottom");
         jewelServo.setDirection(Servo.Direction.REVERSE);

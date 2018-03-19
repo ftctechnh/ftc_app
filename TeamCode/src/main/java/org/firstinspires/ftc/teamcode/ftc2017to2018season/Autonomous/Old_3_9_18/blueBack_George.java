@@ -1,10 +1,9 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Old_3_9_18;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
 @Autonomous(name = "Blue Back George Super-Regionals")
@@ -179,17 +178,7 @@ public class blueBack_George extends Autonomous_General_George {
             encoderMecanumDrive(0.3,10,-10,1000,0);
         }
 
-        //code to get second glyph
-        encoderMecanumDrive(0.3, -20, -20, 1000, 0);
-        gyroTurnREV(0.5,-90);
-        encoderMecanumDrive(0.6,20,20,5000,0);
-        closeGlyphManipulator();
-        moveUpGlyph(3.4);
-        gyroTurnREV(0.5,90);
-        moveDownGlyph(2);
-        openGlyphManipulator();
-        encoderMecanumDrive(0.5,35,35,5000,0);
-        encoderMecanumDrive(0.3,10,10,5000,0);
+
 
     }
 

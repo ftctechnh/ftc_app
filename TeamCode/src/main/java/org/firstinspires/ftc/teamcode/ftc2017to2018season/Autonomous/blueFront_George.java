@@ -12,7 +12,7 @@ import com.vuforia.Vuforia;
 
 
 //10-28-17
-@Autonomous(name = "Blue Front George Super-Regionals")
+@Autonomous(name = "Blue Front George Worlds")
 //@Disabled
 public class blueFront_George extends Autonomous_General_George {
 

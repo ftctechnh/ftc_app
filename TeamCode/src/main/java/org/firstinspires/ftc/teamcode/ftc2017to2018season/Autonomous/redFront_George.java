@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
 
 //10-28-17
-@Autonomous(name = "Red Front George Super-Regionals")
+@Autonomous(name = "Red Front George Worlds")
 //@Disabled
 public class redFront_George extends Autonomous_General_George {
 
