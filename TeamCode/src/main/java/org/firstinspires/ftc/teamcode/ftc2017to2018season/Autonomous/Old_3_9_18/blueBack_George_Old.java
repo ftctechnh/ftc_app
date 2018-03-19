@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 @Autonomous(name = "Blue Back George Super-Regionals")
 //@Disabled
 //3/2/18 edit by Steven Chen: trying to see if going a slower speed off the platform makes it go more straight
-public class blueBack_George extends Autonomous_General_George {
+public class blueBack_George_Old extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();

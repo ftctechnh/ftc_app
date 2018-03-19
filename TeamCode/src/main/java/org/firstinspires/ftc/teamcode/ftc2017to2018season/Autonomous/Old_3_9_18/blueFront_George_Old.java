@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 //10-28-17
 @Autonomous(name = "Blue Front George Super-Regionals")
 //@Disabled
-public class blueFront_George extends Autonomous_General_George {
+public class blueFront_George_Old extends Autonomous_General_George {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();

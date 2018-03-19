@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Test;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,7 +16,7 @@ import java.io.IOException;
 
 @Autonomous(name="DogeCV Jewel Detector", group="DogeCV")
 
-public class DogeCVJewelDetector extends OpMode
+public class JewelDetectorAutoImp extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
