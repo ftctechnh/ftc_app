@@ -35,8 +35,8 @@ public class BotHardware {
         backLeft("bl", false),
         liftLeft("ll", false),
         liftRight("lr", true),
-        suckLeft("sl", true),
-        suckRight("sr", false);
+        suckLeft("sl", false),
+        suckRight("sr", true);
 
         private final String name;
         private final boolean reverse;
@@ -81,7 +81,7 @@ public class BotHardware {
         public static final double stickBaseHidden = 0.95;
 
         public static final double backDropDown = 0.06;
-        public static final double backDropUp = 0.79;
+        public static final double backDropUp = 0.85;
 
         public static final double frontDropUp = 0.7;
         public static final double frontDropDown = 0.2;
