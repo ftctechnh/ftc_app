@@ -81,7 +81,7 @@ public class BotHardware {
         public static final double stickBaseHidden = 0.95;
 
         public static final double backDropDown = 0.06;
-        public static final double backDropUp = 0.85;
+        public static final double backDropUp = 0.78;
 
         public static final double frontDropUp = 0.7;
         public static final double frontDropDown = 0.2;

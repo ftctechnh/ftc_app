@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
@@ -22,6 +23,8 @@ public class EncoderIntegration extends OpMode {
     int leftEncoderLast = 0;
     int rightEncoderLast = 0;
     float lastHeading = 0;
+    double lastNetForward = 0;
+
     HeadingSensor sensor;
     static final float slowFactor = 0.1f;
 
@@ -30,6 +33,9 @@ public class EncoderIntegration extends OpMode {
     @Override
     public void init() {
         bot.init();
+        DcMotor[] ray = bot.getMotorRay();
+        for(DcMotor motor : ray)
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bot.start();
         sensor = bot.getHeadingSensor();
     }
@@ -40,24 +46,13 @@ public class EncoderIntegration extends OpMode {
         rightEncoderLast = BotHardware.Motor.frontRight.motor.getCurrentPosition();
         lastHeading = sensor.getHeading();
 
-        telemetry.addLine().addData("XPos", new Func<Double>() {
+        telemetry.addAction(new Runnable() {
             @Override
-            public Double value() {
-                return xpos;
-            }
-        });
-
-        telemetry.addLine().addData("YPos", new Func<Double>() {
-            @Override
-            public Double value() {
-                return ypos;
-            }
-        });
-
-        telemetry.addLine().addData("Heading", new Func<Float>() {
-            @Override
-            public Float value() {
-                return lastHeading;
+            public void run() {
+                telemetry.addData("XPos", xpos);
+                telemetry.addData("YPos", ypos);
+                telemetry.addData("Heading", lastHeading);
+                telemetry.addData("Net Forward", lastNetForward);
             }
         });
     }
@@ -72,11 +67,12 @@ public class EncoderIntegration extends OpMode {
         //get net forward movement from averaging encoder counts
         double netForward = ((nowEncoderLeft - leftEncoderLast) + (nowEncoderRight - rightEncoderLast)) / 2.0;
         //use vector with heading and gyro and determine x and y movement
-        xpos += Math.cos(lastHeading)  * netForward;
+        xpos += Math.cos(lastHeading) * netForward;
         ypos += Math.sin(lastHeading) * netForward;
 
         leftEncoderLast = nowEncoderLeft;
         rightEncoderLast = nowEncoderRight;
+        lastNetForward = netForward;
 
         bot.setLeftDrive(gamepad1.left_stick_y * slowFactor);
         bot.setRightDrive(gamepad1.right_stick_y * slowFactor);

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
 
@@ -21,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @TeleOp(name="Teleop")
 public class Teleop extends OpMode {
     private static final float slowFactor = 0.5f;
-    private static final float fastFactor = 0.6f;
+    private static final float fastFactor = 0.7f;
     private static final double SERVO_INC_SHAKE = 0.1;
     private static final double SERVO_INC_MAX = 0.02;
     private static final double SERVO_INC_MIN = 0.001;
@@ -29,9 +30,10 @@ public class Teleop extends OpMode {
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
-    private static final double BUCKET_FLAT = 0.6;
+    private static final double BUCKET_FLAT = 0.53;
     //private static final int BUCKET_LIFT_COUNTS = 50;
     //private static final int INTAKE_LIFT_COUNTS = 1200;
+    private static final int MIN_VELOCITY = 550;
 
     protected BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
@@ -39,6 +41,11 @@ public class Teleop extends OpMode {
     private boolean motorsSet = false;
     ColorSensor frontColor;
     ColorSensor backColor;
+
+    private boolean suckMotorStopped = false;
+    private boolean suckLeftStopped = false;
+    private boolean suckMotorRamping = false;
+    private int suckMotorRampCount = 0;
 
     private enum LiftState {
         RAISING,
@@ -171,8 +178,45 @@ public class Teleop extends OpMode {
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
-        bot.setSuckLeft(gamepad2.left_stick_y);
-        bot.setSuckRight(gamepad2.right_stick_y);
+        if(gamepad2.left_stick_y != 1 || gamepad2.right_stick_y != 1) {
+            bot.setSuckLeft(gamepad2.left_stick_y);
+            bot.setSuckRight(gamepad2.right_stick_y);
+            suckMotorRamping = true;
+            suckMotorStopped = false;
+            suckMotorRampCount = 5;
+        }
+        else {
+            telemetry.addData("Metering", true);
+
+            double lastRight = BotHardware.Motor.suckRight.motor.getVelocity(AngleUnit.DEGREES);
+            double lastLeft = BotHardware.Motor.suckLeft.motor.getVelocity(AngleUnit.DEGREES);
+
+            if(suckMotorRamping) {
+                BotHardware.Motor.suckLeft.motor.setPower(1);
+                BotHardware.Motor.suckRight.motor.setPower(1);
+                if(lastRight > MIN_VELOCITY && lastLeft > MIN_VELOCITY) suckMotorRampCount++;
+                else suckMotorRampCount = 0;
+                if(suckMotorRampCount >= 10) {
+                    suckMotorRamping = false;
+                    suckMotorRampCount = 0;
+                }
+            }
+            else if(!suckMotorStopped && (lastRight < MIN_VELOCITY || lastLeft < MIN_VELOCITY)) {
+                if(lastLeft < lastRight) {
+                    BotHardware.Motor.suckRight.motor.setPower(0);
+                    suckLeftStopped = false;
+                }
+                else {
+                    BotHardware.Motor.suckLeft.motor.setPower(0);
+                    suckLeftStopped = true;
+                }
+                suckMotorStopped = true;
+            }
+            else if(suckMotorStopped && ((suckLeftStopped && lastRight > MIN_VELOCITY) || (!suckLeftStopped && lastLeft > MIN_VELOCITY))) {
+                suckMotorStopped = false;
+                suckMotorRamping = true;
+            }
+        }
 
         //if(dropperDown) bot.dropBack();
         //else bot.raiseBack();

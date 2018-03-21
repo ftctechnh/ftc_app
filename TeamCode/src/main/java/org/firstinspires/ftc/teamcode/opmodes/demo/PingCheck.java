@@ -35,6 +35,7 @@ public class PingCheck extends OpMode {
         lastMillis = nowTime;
         if(!gamepadChanged && gamepad1.timestamp != lastStamp) gamepadChanged = true;
         lastStamp = gamepad1.timestamp;
+        telemetry.addData("Interval", telemetry.getMsTransmissionInterval());
     }
 
     public void stop() {
