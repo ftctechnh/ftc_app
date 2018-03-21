@@ -59,6 +59,10 @@ Changes with version 3.5 include:
  * Improved error message on OnBot Java that occurs when renaming a file fails.
  * Removed unneeded resources from android.jar binaries used by OnBot Java to reduce final size of Robot Controller app.
  * Added MR_ANALOG_TOUCH_SENSOR block to Blocks Programming Tool.
+Version 3.7 (built on 18.03.12)
+
+Changes include:
+ * Interim fix to allow FTC apps to run on Android Nougat (7.x) devices.
 
 **************************************************************************************
 # Release Information
