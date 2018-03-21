@@ -126,7 +126,7 @@ public class GlyphTrain {
         lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     void kickGlyph() {
-            glyph_kicker.setPosition(0.9);
+            glyph_kicker.setPosition(1.0);
     }
     void resetkickGlyph() {
         glyph_kicker.setPosition(0.585);

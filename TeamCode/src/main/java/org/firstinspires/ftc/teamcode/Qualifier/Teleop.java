@@ -388,6 +388,9 @@ public class Teleop extends OpMode {
                     glyphSensed = false;
                 }
             }
+            else if (glyphSensed){//INBETWEEN the middle of the block
+                //If moving and you haven't already stopped then you should probably stop
+            }
             //Front glyph sensor trigger lights
             if (!gromit.glyphTrain.seeFrontBlock.getState() || !gromit.glyphTrain.seeMiddleBlock.getState()){ //  && !frontglyphSensed) {     // if block is sensed set boolean
                 //frontglyphSensed = true;
