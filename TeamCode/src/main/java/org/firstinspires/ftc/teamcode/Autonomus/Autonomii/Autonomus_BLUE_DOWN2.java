@@ -58,7 +58,7 @@ import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_START_POS;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_DOWN;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_UP;
 
-@Autonomous(name="BLUE DOWN", group="AUTONOMUS")
+@Autonomous(name="BLUE DOWN2", group="AUTONOMUS")
 
 public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
 
@@ -75,14 +75,14 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
     /** VUFORIA DECLARATION END **/
     /** DEPLASARE DECLARATI **/
     public static int deplasare = 0;
-    public static int deplasare_fata = 20;
-    public static int deplasare_fata2 = 35;
-    public static int deplasare_spate = 60;
-    public static int deplasare_left = 11;
+    public static int deplasare_fata = 25; //20
+    public static int deplasare_fata2 = 30;
+    public static int deplasare_spate = 73;//70
+    public static int deplasare_left = 25; //16
     public static int deplasare_center = 30;
     public static int deplasare_right = 49;
-    static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED = 0.15;
+    static final double     DRIVE_SPEED             = 0.3;
+    static final double     TURN_SPEED              = 0.2;
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // ANDYMARK_TICKS_PER_REV
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP ???????? or 2.0
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference ????????
@@ -193,13 +193,16 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
             closeServo();
             lift_UP(1, 2000);
             jewels_move(0);
+            sleep(500);
             moveBackward(deplasare_spate, 1000);
             turnAbsolute(90);///STANGA
             moveForward(deplasare, 500);
             turnAbsolute(180);
             moveForward(deplasare_fata, 500);
+            lift_DOWN(1, 2000);
             openServo();
             moveForward(deplasare_fata2, 500);
+            moveBackward(10,5000);
             //turnAbsolute(180);
             //moveForward(deplasare, 1000);
             //closeServo();
@@ -211,7 +214,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
         }
 
     }
-    //}
+    //
 
     ///FUNCTII
     public void turnAbsolute(int target)throws InterruptedException {
@@ -222,7 +225,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
         robot.BackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
 
-        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() && !isStopRequested())
+        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() /*&& !isStopRequested()*/)
         {
             telemetry.addData("TARGET", target);
             telemetry.addData("mathABS", Math.abs(zAccumulated - target));
@@ -245,7 +248,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
             zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
             telemetry.addData("integratedZ", zAccumulated);
         }
-        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive() && !isStopRequested())///SLOWER
+        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive() /*&& !isStopRequested()*/)///SLOWER
         {
             telemetry.addData("TARGET", target);
             telemetry.addData("mathABS", Math.abs(zAccumulated - target));
@@ -288,6 +291,12 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
 
     public void lift_UP(double power, int time)throws InterruptedException {
         robot.Lift.setPower(power);
+        sleep(time);
+        robot.Lift.setPower(0);
+    }
+
+    public void lift_DOWN(double power, int time)throws InterruptedException {
+        robot.Lift.setPower(-power);
         sleep(time);
         robot.Lift.setPower(0);
     }

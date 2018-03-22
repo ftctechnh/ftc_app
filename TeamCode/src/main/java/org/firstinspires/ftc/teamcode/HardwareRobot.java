@@ -78,11 +78,11 @@ public class HardwareRobot
     public static final double RELIC_POS_CLAW_INIT  = 0.2;
     public static final double RELIC_POS_CLAW_HAND  = 0.9;
 
-    public static final double COLOR_POS_INIT = 0.4;
-    public static final double COLOR_POS_DOWN = 0.7;
-    public static final double JEWEL_START_POS = 0.5;
-    public static final double JEWEL_LEFT_POS = 0.5;
-    public static final double JEWEL_RIGHT_POS = 0.5;
+    public static final double COLOR_POS_INIT = 0;
+    public static final double COLOR_POS_DOWN = 0.8;
+    public static final double JEWEL_START_POS = 0.47;
+    public static final double JEWEL_LEFT_POS = 0.38;
+    public static final double JEWEL_RIGHT_POS = 0.57;
 
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
