@@ -14,7 +14,7 @@ public class RelicArm {
     public Servo relicClawServo;
     public DcMotor relicArmMotor  = null;
     public double elbowtop = 1.0;       //  up for transport
-    public double elbowup = 0.35;       //relic pickup position
+    public double elbowup = 0.37;       //relic pickup position
     public double elbowdown = 0.0;      // Stored in the robot
     public int    relicArmMotorMin = 0;
     public int    relicArmMotorMax = 3000; //5000;

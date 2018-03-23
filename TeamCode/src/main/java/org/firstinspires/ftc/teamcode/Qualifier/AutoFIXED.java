@@ -386,19 +386,19 @@ public class AutoFIXED extends LinearOpMode {
 
 
         } else if (menuFile.teamIsRed && !menuFile.startPositionIsFront) {                 /** RED  Back  */    //  back  4, 14, 26
-            mecanumDrive(menuFile.DriveSpeed * 0.6, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
+            mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.RedBackDistance1, menuFile.RedBackHeading1, 0);  //0
             double distance2 = menuFile.RedBackDistance2Right;
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 distance2 = menuFile.RedBackDistance2Center;
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 distance2 = menuFile.RedBackDistance2Left;
             }
-            mecanumDrive(menuFile.DriveSpeed, distance2, menuFile.RedBackHeading2, -90);  //-90
+            mecanumDrive(menuFile.DriveSpeed*0.8, distance2, menuFile.RedBackHeading2, -90);  //-90
             gromit.glyphTrain.lowerGlyph(2);
-
+            mecanumTurn(menuFile.DriveSpeed, menuFile.RedBackHeading2);
             mecanumDrive(menuFile.DriveSpeed * 0.5, menuFile.RedBackDistance3, menuFile.RedBackHeading3, 0);  //0
             gromit.glyphTrain.glyphclamp("open");
-            gromit.glyphTrain.startGlyphMotors(0.8);
+            gromit.glyphTrain.startGlyphMotors(0.6);
             sleep(400);
             if (menuFile.mode == 1 || menuFile.mode == 2) {
 //                goGetAnotherGlyphRedBack(vuMark, menuFile.RedBackHeading3, -30);
@@ -469,7 +469,7 @@ public class AutoFIXED extends LinearOpMode {
         /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
 //ZERO LIFTS
         gromit.glyphTrain.liftGlyphIndex(0,0.3);  //lower
-            gromit.glyphTrain.startGlyphMotors(1.0);
+            gromit.glyphTrain.startGlyphMotors(0.6);
             mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.8, drivedistance/2, headingcrypto, 0); //HEad to center
             mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.4, drivedistance/2, headingcrypto, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
@@ -504,7 +504,7 @@ public class AutoFIXED extends LinearOpMode {
             //You are in front of the Box
             //Drive into the box
 
-            if(gromit.glyphTrain.lift_motor.getCurrentPosition() > 8 / ((Math.PI * gromit.glyphTrain.pulleydiameter) * gromit.glyphTrain.TICKS_REV)){//If two blocks
+            if(gromit.glyphTrain.lift_motor.getCurrentPosition() > 8 / ((Math.PI * gromit.glyphTrain.pulleydiameter) * gromit.glyphTrain.TICKS_REV)){//If two blocks exist
                 gromit.glyphTrain.startGlyphMotors(1.0);
                 mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
 
@@ -512,7 +512,7 @@ public class AutoFIXED extends LinearOpMode {
                 gromit.glyphTrain.glyphclampupper("open");
             }
             else {
-               mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
+               mecanumDrive(menuFile.DriveSpeed * 0.3, -8, headingcrypto, 0); //move 50
                 gromit.glyphTrain.startGlyphMotors(1.0);
                 sleep(2000);
                 gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
@@ -685,12 +685,19 @@ public class AutoFIXED extends LinearOpMode {
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive fast without glyphtrain
 
+            //Open and zero lifts
+            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+            gromit.glyphTrain.glyphclampupper("open");
+            gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
+            //ZERO LIFTS
+            gromit.glyphTrain.liftGlyphIndex(0,0.3);  //lower
+            gromit.glyphTrain.startGlyphMotors(0.6);
+
             mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, drivedistance/2, driveangle, 0); //HEad to center
-            gromit.glyphTrain.startGlyphMotors(0.7);
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.6, drivedistance/2, driveangle, 0); //HEad to center
+            mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.4, drivedistance/2, driveangle, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive back towards glyph box  try going back a bit shorter.
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, -(drivedistance-1),driveangle, 0); //move back
+            mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, -(drivedistance),driveangle, 0); //move back
             //gromit.glyphTrain.glyphclamp("close");
             mecanumTurn(menuFile.DriveSpeed, headingcrypto);
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -698,7 +705,7 @@ public class AutoFIXED extends LinearOpMode {
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 11, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
-                mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.6, -1,headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.5, -4,headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueBackHeading3, 90);  //THe column to the left, Our and robot's roight

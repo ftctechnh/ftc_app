@@ -713,7 +713,7 @@ public class Teleop extends OpMode {
         telemetry.addData("relicArmTicks", gromit.relicArm.relicArmMotor.getCurrentPosition());
         telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getState());
         telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getState());
-        telemetry.addData("Maxbotix", gromit.driveTrain.sharpIRSensor.getVoltage() * (512 / 5));
+        telemetry.addData("Maxbotix", gromit.driveTrain.sharpIRSensor.getVoltage());
         telemetry.update();
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
