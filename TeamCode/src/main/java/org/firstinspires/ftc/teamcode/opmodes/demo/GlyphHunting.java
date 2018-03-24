@@ -32,6 +32,7 @@ public class GlyphHunting extends CrappyGraphLib {
     int motorRampCount = 0;
 
     private static final int MIN_VELOCITY = 550;
+    private static final int FOUND_VELOCITY = 790;
 
     public void init() {
         bot.init();
@@ -69,20 +70,36 @@ public class GlyphHunting extends CrappyGraphLib {
                 motorRampCount = 0;
             }
         }
-        else if(!motorStopped && (lastRight < MIN_VELOCITY || lastLeft < MIN_VELOCITY)) {
-            if(lastLeft < lastRight) {
-                BotHardware.Motor.suckRight.motor.setPower(0);
-                leftStopped = false;
+        else if(!motorStopped){
+            if(lastRight < MIN_VELOCITY || lastLeft < MIN_VELOCITY) {
+                if(lastLeft < lastRight) {
+                    BotHardware.Motor.suckRight.motor.setPower(0);
+                    leftStopped = false;
+                }
+                else {
+                    BotHardware.Motor.suckLeft.motor.setPower(0);
+                    leftStopped = true;
+                }
+                motorStopped = true;
+            }
+            else if(lastLeft < FOUND_VELOCITY) {
+                bot.setLeftDrive(-0.4f);
+                bot.setRightDrive(0);
+            }
+            else if(lastRight < FOUND_VELOCITY) {
+                bot.setLeftDrive(0);
+                bot.setRightDrive(-0.4f);
             }
             else {
-                BotHardware.Motor.suckLeft.motor.setPower(0);
-                leftStopped = true;
+                bot.setLeftDrive(0);
+                bot.setRightDrive(0);
             }
-            motorStopped = true;
         }
-        else if(motorStopped && ((leftStopped && lastRight > MIN_VELOCITY) || (!leftStopped && lastLeft > MIN_VELOCITY))) {
+        else if((leftStopped && lastRight > MIN_VELOCITY) || (!leftStopped && lastLeft > MIN_VELOCITY)) {
             BotHardware.Motor.suckLeft.motor.setPower(1);
             BotHardware.Motor.suckRight.motor.setPower(1);
+            bot.setRightDrive(0);
+            bot.setLeftDrive(0);
             motorStopped = false;
             motorRamping = true;
         }

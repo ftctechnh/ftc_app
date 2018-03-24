@@ -26,7 +26,7 @@ public class EncoderIntegration extends OpMode {
     double lastNetForward = 0;
 
     HeadingSensor sensor;
-    static final float slowFactor = 0.1f;
+    static final float slowFactor = 0.4f;
 
     protected BotHardware bot = new BotHardware(this);
 
@@ -67,8 +67,8 @@ public class EncoderIntegration extends OpMode {
         //get net forward movement from averaging encoder counts
         double netForward = ((nowEncoderLeft - leftEncoderLast) + (nowEncoderRight - rightEncoderLast)) / 2.0;
         //use vector with heading and gyro and determine x and y movement
-        xpos += Math.cos(lastHeading) * netForward;
-        ypos += Math.sin(lastHeading) * netForward;
+        xpos += Math.cos(Math.toRadians(lastHeading)) * netForward;
+        ypos += Math.sin(Math.toRadians(lastHeading)) * netForward;
 
         leftEncoderLast = nowEncoderLeft;
         rightEncoderLast = nowEncoderRight;
