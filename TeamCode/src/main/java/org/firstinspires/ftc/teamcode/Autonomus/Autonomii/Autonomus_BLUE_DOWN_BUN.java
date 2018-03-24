@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -50,14 +51,17 @@ import org.firstinspires.ftc.teamcode.HardwareRobot;
 
 import static org.firstinspires.ftc.teamcode.HardwareRobot.COLOR_POS_DOWN;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.COLOR_POS_INIT;
-import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_UP;
-import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_DOWN;
-import static org.firstinspires.ftc.teamcode.HardwareRobot.GRAB_POS_UP;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.GRAB_POS_DOWN;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.GRAB_POS_UP;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_LEFT_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_RIGHT_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_START_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_DOWN;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_UP;
 
-@Autonomous(name="BLUE DOWN", group="AUTONOMUS")
+@Autonomous(name="BLUE DOWN BUN", group="AUTONOMUS")
 
-public class Autonomus_BLUE_DOWN extends LinearOpMode {
+public class Autonomus_BLUE_DOWN_BUN extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -72,14 +76,14 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
     /** VUFORIA DECLARATION END **/
     /** DEPLASARE DECLARATI **/
     public static int deplasare = 0;
-    public static int deplasare_fata = 20;
-    public static int deplasare_fata2 = 35;
-    public static int deplasare_spate = 60;
-    public static int deplasare_left = 11;
+    public static int deplasare_fata = 25; //20
+    public static int deplasare_fata2 = 7;
+    public static int deplasare_spate = 73;//70
+    public static int deplasare_left = 25; //16
     public static int deplasare_center = 30;
-    public static int deplasare_right = 49;
-    static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED = 0.15;
+    public static int deplasare_right = 45;
+    static final double     DRIVE_SPEED             = 0.4;
+    static final double     TURN_SPEED              = 0.2;
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // ANDYMARK_TICKS_PER_REV
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP ???????? or 2.0
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference ????????
@@ -113,7 +117,7 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
         /** VUFORIA START INIT **/
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
+        //CameraDevice.getInstance().setFlashTorchMode(true);
         parameters.vuforiaLicenseKey = "AddjBXL/////AAAAmcN61ZHW80IvtUwvfesWZa5JrV9AQn+mphNUco4vRSptOi8UXRpia2gnoLyZrCakLsIEUTD6Z84YWrKm3hjsUcsq8XuiTCxroeAOz4ExDes3eBcnsXsEWud++ymX1jCUgGt4sBHuRh7J0BZ+mj4ATIsXcBHf/SlWjmkKavc0vSqfwR6owMJPBzs0tv49k//jc6JJh2pKREB6YGUBUjlTsroX1qGvxxLHLTTHog1tmBe7cvsa+jQAGtn7kItK/quRF9DQqDGo9dc3UlPUbhwX5O9V4cdOt0r45C62g6Buj47mxVzzz5XurgeGYF1dMhLyl4toN5mCi03wUb+L1/X1pBGPNWwD3guQzUy7pGPjQlYw";
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -130,17 +134,10 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
         relicTrackables.activate();
         /** VUFORIA END INIT **/
 
-        /**
-         ******** START*******
-         ******** OP**********
-         ******** MODE********
-         */
-        //while(opModeIsActive())
-        //{
         /** VUFORIA START OPMODE **/
         if (!isStopRequested())
         {
-            int T = 5000;
+            int T = 10000;
             while(T > 0 && opModeIsActive() && !isStopRequested()) {
                 T--;
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -190,25 +187,22 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
             closeServo();
             lift_UP(1, 2000);
             jewels_move(0);
-            moveBackward(deplasare_spate, 1000);
+            sleep(500);
+            moveBackward(deplasare_spate, 3000);
             turnAbsolute(90);///STANGA
-            moveForward(deplasare, 500);
-            turnAbsolute(180);
-            moveForward(deplasare_fata, 500);
+            moveForward(deplasare, 3000);
+            turnAbsolute(135);
+            lift_UP(-1,1500);
             openServo();
-            moveForward(deplasare_fata2, 500);
-            //turnAbsolute(180);
-            //moveForward(deplasare, 1000);
-            //closeServo();
-            //moveBackward(60, 1000);
-            //turnAbsolute(180);
-            //moveForward(90,1000);
-            ///ridicare_glyph();
-            //openServo();
+            turnAbsolute(180);
+            closeServo();
+            moveForward(deplasare_fata2, 3000);
+            openServo();
+            moveBackward(10,5000);
         }
 
     }
-    //}
+    //
 
     ///FUNCTII
     public void turnAbsolute(int target)throws InterruptedException {
@@ -285,6 +279,12 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
 
     public void lift_UP(double power, int time)throws InterruptedException {
         robot.Lift.setPower(power);
+        sleep(time);
+        robot.Lift.setPower(0);
+    }
+
+    public void lift_DOWN(double power, int time)throws InterruptedException {
+        robot.Lift.setPower(-power);
         sleep(time);
         robot.Lift.setPower(0);
     }
@@ -391,17 +391,20 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
     }
 
     public void jewels_move(int TEAM)throws InterruptedException {
+        robot.Jewel_Hand.setPosition(JEWEL_START_POS);
         robot.Color_Hand.setPosition(COLOR_POS_INIT);
         idle();
         sleep(500);
         robot.Color_Hand.setPosition(COLOR_POS_DOWN);
         sleep(500);
-        int dir = get_color(TEAM) * 30;
+        int dir = get_color(TEAM);
+        if(dir == 1)
+            robot.Jewel_Hand.setPosition(JEWEL_LEFT_POS);
+        else if(dir == -1)
+            robot.Jewel_Hand.setPosition(JEWEL_RIGHT_POS);
         sleep(500);
-        turnAbsolute(dir);
-        sleep(500);
-        turnAbsolute(0);
-        sleep(500);
+        robot.Jewel_Hand.setPosition(JEWEL_START_POS);
+        sleep(100);
         robot.Color_Hand.setPosition(COLOR_POS_INIT);
         sleep(500);
     }
@@ -411,7 +414,6 @@ public class Autonomus_BLUE_DOWN extends LinearOpMode {
         position_right = GRAB_POS_DOWN;
         robot.Up_Hand.setPosition(position_left);
         robot.Down_Hand.setPosition(position_right);
-
         idle();
         sleep(400);
     }

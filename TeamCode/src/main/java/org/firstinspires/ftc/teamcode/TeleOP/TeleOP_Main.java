@@ -128,10 +128,10 @@ public class TeleOP_Main extends LinearOpMode {
             double z2; /// stanga-dreapta (RIGHT STICK)
 
                 /** PRINDERE CUBURI **/
-            if (gamepad2.b && moved_down >= 0) {position_down = GRAB_POS_DOWN;  moved_down = -1;    sleep(400);}
-            else if (gamepad2.b && moved_down < 0) {position_down = START_POS_DOWN;   moved_down = 0; sleep(400);}
-            if (gamepad2.a && moved >= 0) {position_up = GRAB_POS_UP;  moved = -1;    sleep(400);}
-            else if (gamepad2.a && moved < 0) {position_up = START_POS_UP;   moved = 0; sleep(400);}
+            if (gamepad2.a && moved_down >= 0) {position_down = GRAB_POS_DOWN;  moved_down = -1;    sleep(400);}
+            else if (gamepad2.a && moved_down < 0) {position_down = START_POS_DOWN;   moved_down = 0; sleep(400);}
+            if (gamepad2.b && moved >= 0) {position_up = GRAB_POS_UP;  moved = -1;    sleep(400);}
+            else if (gamepad2.b && moved < 0) {position_up = START_POS_UP;   moved = 0; sleep(400);}
             robot.Up_Hand.setPosition(position_up);
             robot.Down_Hand.setPosition(position_down);
             idle();
@@ -143,37 +143,41 @@ public class TeleOP_Main extends LinearOpMode {
             else z2 = 0;
 
             /**PIVOT**/
-            if (gamepad1.dpad_left)///URCA
+            /*if (gamepad1.dpad_left)///URCA
             {
-                robot.Pivot_Relic.setPosition(1);
+                robot.Pivot_Relic.setPosition(RELIC_POS_PIVOT_UP);
                 moved_pivot = RELIC_POS_PIVOT_UP;
             }
             if (gamepad1.dpad_right) {///COBOARA
-                if (moved_pivot == 0)
+                /*
+                if (moved_pivot !=RELIC_POS_PIVOT_UP)
                 {
                     moved_pivot = RELIC_POS_PIVOT_INIT;
                     robot.Pivot_Relic.setPosition(moved_pivot);
                 }
-                else if (moved_pivot == 1)
+                else
+                if (moved_pivot != RELIC_POS_PIVOT_INIT)
                 {
                     while (moved_pivot > RELIC_POS_PIVOT_INIT && opModeIsActive()) {
                         moved_pivot -= 0.005;//era 0.01
                         robot.Pivot_Relic.setPosition(moved_pivot);
                     }
                 }
-            }
+            }*/
+
 
             if (gamepad2.dpad_left)///URCA
             {
-                if( moved_pivot < 1)
-                    moved_pivot+=0.005;
+                if( moved_pivot > 0)
+                    moved_pivot-=0.005;
                 robot.Pivot_Relic.setPosition(moved_pivot);
             }
             if (gamepad2.dpad_right)
             {
                 ///COBOARA
-                    if( moved_pivot > RELIC_POS_PIVOT_INIT)
-                        moved_pivot-=0.005;
+                    if( moved_pivot < 1)
+                        moved_pivot+=0.005
+                                ;
                     robot.Pivot_Relic.setPosition(moved_pivot);
             }
 
@@ -185,22 +189,22 @@ public class TeleOP_Main extends LinearOpMode {
             //DECLARARE PUTERE
             if (x != 0 || y != 0 || z != 0)
             {
-                FRONT_LEFT_POWER     = - x - y + z;
-                FRONT_RIGHT_POWER    = - x + y + z;
-                BACK_LEFT_POWER      = + x - y + z;
-                BACK_RIGHT_POWER     = + x + y + z;
+                FRONT_LEFT_POWER     = - x - DRIVEPOW * y + DRIVEPOW * z;
+                FRONT_RIGHT_POWER    = - x + DRIVEPOW * y + DRIVEPOW * z;
+                BACK_LEFT_POWER      = + x - DRIVEPOW * y + DRIVEPOW * z;
+                BACK_RIGHT_POWER     = + x + DRIVEPOW * y + DRIVEPOW * z;
             }
             else
             {
-                FRONT_LEFT_POWER     = - x2 - y2 + z2;
-                FRONT_RIGHT_POWER    = - x2 + y2 + z2;
-                BACK_LEFT_POWER      = + x2 - y2 + z2;
-                BACK_RIGHT_POWER     = + x2 + y2 + z2;
+                FRONT_LEFT_POWER     = DRIVEPOW * (- x2 - y2 + z2);
+                FRONT_RIGHT_POWER    = DRIVEPOW * (- x2 + y2 + z2);
+                BACK_LEFT_POWER      = DRIVEPOW * (+ x2 - y2 + z2);
+                BACK_RIGHT_POWER     = DRIVEPOW * (+ x2 + y2 + z2);
             }
-            robot.FrontLeftMotor.setPower(DRIVEPOW * FRONT_LEFT_POWER);
-            robot.FrontRightMotor.setPower(DRIVEPOW * FRONT_RIGHT_POWER);
-            robot.BackRightMotor.setPower(DRIVEPOW * BACK_RIGHT_POWER);
-            robot.BackLeftMotor.setPower(DRIVEPOW * BACK_LEFT_POWER);
+            robot.FrontLeftMotor.setPower(FRONT_LEFT_POWER);
+            robot.FrontRightMotor.setPower(FRONT_RIGHT_POWER);
+            robot.BackRightMotor.setPower(BACK_RIGHT_POWER);
+            robot.BackLeftMotor.setPower(BACK_LEFT_POWER);
 
             /** BRAT RELICVA **/
             if (gamepad1.dpad_up)
@@ -210,7 +214,7 @@ public class TeleOP_Main extends LinearOpMode {
                 else
                     robot.Brat.setPower(0);
                 if (!gamepad2.dpad_down)
-                    robot.BratRetreat.setPower(0.3);
+                    robot.BratRetreat.setPower(0.18);
                 else
                     robot.BratRetreat.setPower(0);
             }

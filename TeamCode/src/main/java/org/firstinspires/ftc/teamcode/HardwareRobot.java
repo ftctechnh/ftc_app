@@ -68,15 +68,17 @@ public class HardwareRobot
     public ModernRoboticsI2cGyro modernRoboticsI2cGyro;
 
     /** VARIABILE **/
+    public static final double INIT_POS_UP     = 0.1;///0 open
+    public static final double INIT_POS_DOWN   = 0.7;///0 open
     public static final double START_POS_UP     = 0.2;///0 open
     public static final double GRAB_POS_UP      =  0.5;///1 closed
     public static final double START_POS_DOWN   = 0.8 ;///0 open
     public static final double GRAB_POS_DOWN    =  1;///1 closed okish
 
-    public static final double RELIC_POS_PIVOT_INIT = 0;
-    public static final double RELIC_POS_PIVOT_UP = 1;
-    public static final double RELIC_POS_CLAW_INIT  = 0.2;
-    public static final double RELIC_POS_CLAW_HAND  = 0.9;
+    public static final double RELIC_POS_PIVOT_INIT = 1;
+    public static final double RELIC_POS_PIVOT_UP = 0;
+    public static final double RELIC_POS_CLAW_INIT  = 0.9;
+    public static final double RELIC_POS_CLAW_HAND  = 0.2;
 
     public static final double COLOR_POS_INIT = 0;
     public static final double COLOR_POS_DOWN = 0.8;

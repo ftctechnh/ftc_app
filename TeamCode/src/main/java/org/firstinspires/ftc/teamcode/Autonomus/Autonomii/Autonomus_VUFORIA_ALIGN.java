@@ -58,9 +58,9 @@ import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_START_POS;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_DOWN;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_UP;
 
-@Autonomous(name="BLUE DOWN2", group="AUTONOMUS")
+@Autonomous(name="VUFORIA ALIGN", group="AUTONOMUS")
 
-public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
+public class Autonomus_VUFORIA_ALIGN extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime     runtime = new ElapsedTime();
@@ -76,12 +76,12 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
     /** DEPLASARE DECLARATI **/
     public static int deplasare = 0;
     public static int deplasare_fata = 25; //20
-    public static int deplasare_fata2 = 30;
+    public static int deplasare_fata2 = 7;
     public static int deplasare_spate = 73;//70
     public static int deplasare_left = 25; //16
     public static int deplasare_center = 30;
-    public static int deplasare_right = 49;
-    static final double     DRIVE_SPEED             = 0.3;
+    public static int deplasare_right = 45;
+    static final double     DRIVE_SPEED             = 0.4;
     static final double     TURN_SPEED              = 0.2;
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // ANDYMARK_TICKS_PER_REV
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP ???????? or 2.0
@@ -116,7 +116,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
         /** VUFORIA START INIT **/
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
+        //CameraDevice.getInstance().setFlashTorchMode(true);
         parameters.vuforiaLicenseKey = "AddjBXL/////AAAAmcN61ZHW80IvtUwvfesWZa5JrV9AQn+mphNUco4vRSptOi8UXRpia2gnoLyZrCakLsIEUTD6Z84YWrKm3hjsUcsq8XuiTCxroeAOz4ExDes3eBcnsXsEWud++ymX1jCUgGt4sBHuRh7J0BZ+mj4ATIsXcBHf/SlWjmkKavc0vSqfwR6owMJPBzs0tv49k//jc6JJh2pKREB6YGUBUjlTsroX1qGvxxLHLTTHog1tmBe7cvsa+jQAGtn7kItK/quRF9DQqDGo9dc3UlPUbhwX5O9V4cdOt0r45C62g6Buj47mxVzzz5XurgeGYF1dMhLyl4toN5mCi03wUb+L1/X1pBGPNWwD3guQzUy7pGPjQlYw";
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -133,19 +133,10 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
         relicTrackables.activate();
         /** VUFORIA END INIT **/
 
-        /**
-         ******** START*******
-         ******** OP**********
-         ******** MODE********
-         */
-        //while(opModeIsActive())
-        //{
         /** VUFORIA START OPMODE **/
-        if (!isStopRequested())
+        if(!isStopRequested())
         {
-            int T = 5000;
-            while(T > 0 && opModeIsActive() && !isStopRequested()) {
-                T--;
+            while(opModeIsActive() && !isStopRequested()) {
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 telemetry.update();
@@ -189,28 +180,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
                 deplasare = deplasare_center;
             else
                 deplasare = deplasare_right;
-            /**START AUTONOM**/
-            closeServo();
-            lift_UP(1, 2000);
-            jewels_move(0);
-            sleep(500);
-            moveBackward(deplasare_spate, 1000);
-            turnAbsolute(90);///STANGA
-            moveForward(deplasare, 500);
-            turnAbsolute(180);
-            moveForward(deplasare_fata, 500);
-            lift_DOWN(1, 2000);
-            openServo();
-            moveForward(deplasare_fata2, 500);
-            moveBackward(10,5000);
-            //turnAbsolute(180);
-            //moveForward(deplasare, 1000);
-            //closeServo();
-            //moveBackward(60, 1000);
-            //turnAbsolute(180);
-            //moveForward(90,1000);
-            ///ridicare_glyph();
-            //openServo();
+
         }
 
     }
@@ -225,7 +195,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
         robot.BackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
 
-        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() /*&& !isStopRequested()*/)
+        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() && !isStopRequested())
         {
             telemetry.addData("TARGET", target);
             telemetry.addData("mathABS", Math.abs(zAccumulated - target));
@@ -248,7 +218,7 @@ public class Autonomus_BLUE_DOWN2 extends LinearOpMode {
             zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
             telemetry.addData("integratedZ", zAccumulated);
         }
-        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive() /*&& !isStopRequested()*/)///SLOWER
+        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive() && !isStopRequested())///SLOWER
         {
             telemetry.addData("TARGET", target);
             telemetry.addData("mathABS", Math.abs(zAccumulated - target));

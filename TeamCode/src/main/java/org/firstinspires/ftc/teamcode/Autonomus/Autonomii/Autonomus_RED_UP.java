@@ -35,6 +35,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -53,6 +54,9 @@ import org.firstinspires.ftc.teamcode.HardwareRobot;
 
 import static org.firstinspires.ftc.teamcode.HardwareRobot.COLOR_POS_DOWN;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.COLOR_POS_INIT;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_LEFT_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_RIGHT_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_START_POS;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_UP;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_DOWN;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.GRAB_POS_UP;
@@ -75,13 +79,12 @@ public class Autonomus_RED_UP extends LinearOpMode {
     /** VUFORIA DECLARATION END **/
     /** DEPLASARE DECLARATI **/
     public static int deplasare = 0;
-    public static int deplasare_back = 30;
-    public static int deplasare_fata = 20;
-    public static int deplasare_fata2 = 35;
+    public static int deplasare_back = 15;
+    public static int deplasare_fata = 35;
     public static int deplasare_right = 75;
     public static int deplasare_center = 93;
-    public static int deplasare_left     = 112;
-    static final double     DRIVE_SPEED             = 0.3;
+    public static int deplasare_left     = 112;///112
+    static final double     DRIVE_SPEED             = 0.4;
     static final double     TURN_SPEED = 0.2;
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // ANDYMARK_TICKS_PER_REV
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP ???????? or 2.0
@@ -116,7 +119,7 @@ public class Autonomus_RED_UP extends LinearOpMode {
         /** VUFORIA START INIT **/
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
+        //CameraDevice.getInstance().setFlashTorchMode(true);
         parameters.vuforiaLicenseKey = "AddjBXL/////AAAAmcN61ZHW80IvtUwvfesWZa5JrV9AQn+mphNUco4vRSptOi8UXRpia2gnoLyZrCakLsIEUTD6Z84YWrKm3hjsUcsq8XuiTCxroeAOz4ExDes3eBcnsXsEWud++ymX1jCUgGt4sBHuRh7J0BZ+mj4ATIsXcBHf/SlWjmkKavc0vSqfwR6owMJPBzs0tv49k//jc6JJh2pKREB6YGUBUjlTsroX1qGvxxLHLTTHog1tmBe7cvsa+jQAGtn7kItK/quRF9DQqDGo9dc3UlPUbhwX5O9V4cdOt0r45C62g6Buj47mxVzzz5XurgeGYF1dMhLyl4toN5mCi03wUb+L1/X1pBGPNWwD3guQzUy7pGPjQlYw";
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -129,20 +132,13 @@ public class Autonomus_RED_UP extends LinearOpMode {
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
         waitForStart();
-        toString();
-        relicTrackables.activate();
-        /** VUFORIA END INIT **/
-
-        /**
-         ******** START*******
-         ******** OP**********
-         ******** MODE********
-         */
-        //while(opModeIsActive())
-        //{
+        if (!isStopRequested())
+        {
+            toString();
+            relicTrackables.activate();
             /** VUFORIA START OPMODE **/
-            int T = 5000;
-            while(T > 0 && opModeIsActive()) {
+            int T = 10000;
+            while(T > 0 && opModeIsActive() && !isStopRequested()) {
                 T--;
                 RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
                 telemetry.addData("VuMark", "%s visible", vuMark);
@@ -191,22 +187,20 @@ public class Autonomus_RED_UP extends LinearOpMode {
             closeServo();
             lift_UP(1, 2000);
             jewels_move(1);
-            moveForward(deplasare, 500);
-            turnAbsolute(-90);///DREAPTA
-            moveForward(deplasare_fata, 500);
+            sleep(1000);
+            moveForward(deplasare, 3000);
+            turnAbsolute(-45);///DREAPTA
+            lift_UP(-1, 1500);
             openServo();
-            moveForward(deplasare_fata2, 500);
-            moveBackward(deplasare_back, 500);
-            //turnAbsolute(180);
-            //moveForward(deplasare, 1000);
-            //closeServo();
-            //moveBackward(60, 1000);
-            //turnAbsolute(180);
-            //moveForward(90,1000);
-            ///ridicare_glyph();
-            //openServo();
-            }
-        //}
+            turnAbsolute(-90);
+            closeServo();
+            sleep(1000);
+            moveForward(deplasare_fata, 5000);
+            openServo();
+            sleep(1000);
+            moveBackward(deplasare_back, 3000);
+        }
+    }
 
     ///FUNCTII
     public void turnAbsolute(int target)throws InterruptedException {
@@ -217,7 +211,7 @@ public class Autonomus_RED_UP extends LinearOpMode {
         robot.BackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
 
-        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive())
+        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() && !isStopRequested())
         {
             telemetry.addData("TARGET", target);
             telemetry.addData("mathABS", Math.abs(zAccumulated - target));
@@ -240,7 +234,7 @@ public class Autonomus_RED_UP extends LinearOpMode {
             zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
             telemetry.addData("integratedZ", zAccumulated);
         }
-        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive())///SLOWER
+        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive() && !isStopRequested())///SLOWER
         {
             telemetry.addData("TARGET", target);
             telemetry.addData("mathABS", Math.abs(zAccumulated - target));
@@ -326,7 +320,7 @@ public class Autonomus_RED_UP extends LinearOpMode {
             robot.BackRightMotor.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < timeoutS) && !isStopRequested() &&
                     (robot.FrontLeftMotor.isBusy() && robot.FrontRightMotor.isBusy()
                             && robot.BackLeftMotor.isBusy() && robot.BackRightMotor.isBusy())) {
 
@@ -354,7 +348,6 @@ public class Autonomus_RED_UP extends LinearOpMode {
         }
     }
 
-
     public int get_color(int TEAM) throws InterruptedException {
         int answer = 0;
         ///-1 dreapta
@@ -362,36 +355,49 @@ public class Autonomus_RED_UP extends LinearOpMode {
         telemetry.addData("ROSU = " ,robot.colorSensor.red());
         telemetry.addData("ALBASTRU = " ,robot.colorSensor.blue());
         telemetry.update();
-        if(TEAM == 1) ///RED
+        int T = 10000;
+        while (T > 0 && opModeIsActive() && !isStopRequested())
         {
-            if(robot.colorSensor.red() > MIN_RED)
-                answer = -1;
-            else if( robot.colorSensor.blue() > MIN_BLUE)
-                answer = 1;
+            telemetry.addData("ROSU = " ,robot.colorSensor.red());
+            telemetry.addData("ALBASTRU = " ,robot.colorSensor.blue());
+            telemetry.update();
+            if(TEAM == 1) ///RED
+            {
+                if(robot.colorSensor.red() > MIN_RED)
+                    answer = -1;
+                else if( robot.colorSensor.blue() > MIN_BLUE)
+                    answer = 1;
+            }
+            else if(TEAM == 0) ///BLUE
+            {
+                if(robot.colorSensor.red() > MIN_RED)
+                    answer = 1;
+                else if(robot.colorSensor.blue() > MIN_BLUE)
+                    answer = -1;
+            }
+            if (answer != 0)break;
+            T--;
         }
-        else if(TEAM == 0) ///BLUE
-        {
-            if(robot.colorSensor.red() > MIN_RED)
-                answer = 1;
-            else if(robot.colorSensor.blue() > MIN_BLUE)
-                answer = -1;
-        }
+
         return answer;
     }
 
     public void jewels_move(int TEAM)throws InterruptedException {
+        robot.Jewel_Hand.setPosition(JEWEL_START_POS);
         robot.Color_Hand.setPosition(COLOR_POS_INIT);
         idle();
         sleep(500);
         robot.Color_Hand.setPosition(COLOR_POS_DOWN);
         sleep(500);
-        int dir = get_color(TEAM) * 30;
+        int dir = get_color(TEAM);
+        if(dir == 1)
+            robot.Jewel_Hand.setPosition(JEWEL_LEFT_POS);
+        else if(dir == -1)
+            robot.Jewel_Hand.setPosition(JEWEL_RIGHT_POS);
         sleep(500);
-        turnAbsolute(dir);
-        sleep(500);
-        turnAbsolute(0);
-        sleep(500);
+        robot.Jewel_Hand.setPosition(JEWEL_START_POS);
         robot.Color_Hand.setPosition(COLOR_POS_INIT);
+        sleep(500);
     }
 
     public void closeServo() throws InterruptedException {

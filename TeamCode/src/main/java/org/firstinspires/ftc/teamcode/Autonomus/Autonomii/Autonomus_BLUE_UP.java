@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.vuforia.CameraDevice;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -49,6 +50,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.HardwareRobot;
 
 import static org.firstinspires.ftc.teamcode.HardwareRobot.COLOR_POS_DOWN;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.COLOR_POS_INIT;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_LEFT_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_RIGHT_POS;
+import static org.firstinspires.ftc.teamcode.HardwareRobot.JEWEL_START_POS;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_UP;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.START_POS_DOWN;
 import static org.firstinspires.ftc.teamcode.HardwareRobot.GRAB_POS_UP;
@@ -71,12 +76,14 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
     /** VUFORIA DECLARATION END **/
     /** DEPLASARE DECLARATI **/
     public static int deplasare = 0;
-    public static int deplasare_left = 75;
-    public static int deplasare_center = 93;
-    public static int deplasare_right = 112;
+    public static int deplasare_back = 15;
+    public static int deplasare_fata = 35;
+    public static int deplasare_left = 75;//era 80
+    public static int deplasare_center = 94;//era 95
+    public static int deplasare_right = 113;//era 116
 
-    static final double     DRIVE_SPEED             = 0.2;
-    static final double     TURN_SPEED = 0.15;
+    static final double     DRIVE_SPEED             = 0.4;
+    static final double     TURN_SPEED              = 0.2;
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // ANDYMARK_TICKS_PER_REV
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP ???????? or 2.0
     static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference ????????
@@ -96,10 +103,21 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.update();
 
+        telemetry.log().add("Gyro Calibrating. Do Not Move!");
+        robot.modernRoboticsI2cGyro.calibrate();
+        runtime.reset();
+        while (!isStopRequested() && robot.modernRoboticsI2cGyro.isCalibrating() && opModeIsActive())  {
+            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
+            telemetry.update();
+            sleep(50);
+        }
+        telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
+        telemetry.clear(); telemetry.update();
+
         /** VUFORIA START INIT **/
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
+        //CameraDevice.getInstance().setFlashTorchMode(true);
         parameters.vuforiaLicenseKey = "AddjBXL/////AAAAmcN61ZHW80IvtUwvfesWZa5JrV9AQn+mphNUco4vRSptOi8UXRpia2gnoLyZrCakLsIEUTD6Z84YWrKm3hjsUcsq8XuiTCxroeAOz4ExDes3eBcnsXsEWud++ymX1jCUgGt4sBHuRh7J0BZ+mj4ATIsXcBHf/SlWjmkKavc0vSqfwR6owMJPBzs0tv49k//jc6JJh2pKREB6YGUBUjlTsroX1qGvxxLHLTTHog1tmBe7cvsa+jQAGtn7kItK/quRF9DQqDGo9dc3UlPUbhwX5O9V4cdOt0r45C62g6Buj47mxVzzz5XurgeGYF1dMhLyl4toN5mCi03wUb+L1/X1pBGPNWwD3guQzUy7pGPjQlYw";
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
@@ -108,56 +126,57 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);;
 
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
+
         waitForStart();
-        toString();
-        relicTrackables.activate();
         /** VUFORIA END INIT **/
-
-        /**
-         ******** START*******
-         ******** OP**********
-         ******** MODE********
-         */
-        while(opModeIsActive())
+        if(!isStopRequested())
         {
-            closeServo();
-
+            toString();
+            relicTrackables.activate();
             /** VUFORIA START OPMODE **/
-            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            int T = 10000;
+            while(T > 0 && opModeIsActive() && !isStopRequested()) {
+                T--;
+                vuMark = RelicRecoveryVuMark.from(relicTemplate);
                 telemetry.addData("VuMark", "%s visible", vuMark);
+                telemetry.update();
+                if (vuMark != RelicRecoveryVuMark.UNKNOWN)
+                {
+                    telemetry.addData("VuMark", "%s visible", vuMark);
+                    telemetry.update();
+                    OpenGLMatrix pose = ((VuforiaTrackableDefaultListener) relicTemplate.getListener()).getPose();
+                    //telemetry.addData("Pose", format(pose));
+                    if (vuMark == RelicRecoveryVuMark.LEFT)
+                        relicCode = 1;
+                    if (vuMark == RelicRecoveryVuMark.CENTER)
+                        relicCode = 2;
+                    if (vuMark == RelicRecoveryVuMark.RIGHT)
+                        relicCode = 3;
+                    if (pose != null) {
+                        VectorF trans = pose.getTranslation();
+                        Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-                OpenGLMatrix pose = ((VuforiaTrackableDefaultListener)relicTemplate.getListener()).getPose();
-                //telemetry.addData("Pose", format(pose));
-                if (vuMark == RelicRecoveryVuMark.LEFT)
-                    relicCode = 1;
-                if (vuMark == RelicRecoveryVuMark.CENTER)
-                    relicCode = 2;
-                if (vuMark == RelicRecoveryVuMark.RIGHT)
-                    relicCode = 3;
+                        double tX = trans.get(0);
+                        double tY = trans.get(1);
+                        double tZ = trans.get(2);
 
-                if (pose != null) {
-                    VectorF trans = pose.getTranslation();
-                    Orientation rot = Orientation.getOrientation(pose, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-
-                    double tX = trans.get(0);
-                    double tY = trans.get(1);
-                    double tZ = trans.get(2);
-
-                    double rX = rot.firstAngle;
-                    double rY = rot.secondAngle;
-                    double rZ = rot.thirdAngle;
+                        double rX = rot.firstAngle;
+                        double rY = rot.secondAngle;
+                        double rZ = rot.thirdAngle;
+                    }
                 }
+                else {
+                    relicCode = 0;
+                    telemetry.addData("VuMark", "not visible");
+                    telemetry.update();
+                }
+                if (relicCode != 0)
+                    break;
             }
-            else {
-                relicCode = 0;
-                telemetry.addData("VuMark", "not visible");
-            }
-            telemetry.addData("Relic Code", relicCode);
-            telemetry.update();
             /** VUFORIA END OPMODE **/
             /** RELIC CODE **/
             if (relicCode == 1)
@@ -167,55 +186,75 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
             else
                 deplasare = deplasare_right;
 
-            telemetry.addData("DEPLASARE DUPA CE CITESTE PICTOGRAMA = ", deplasare);
-            telemetry.update();
-            jewels_move(0);
-            moveBackward(deplasare, 5000);
-            turnAbsolute(90);
-            moveForward(60, 5000); ///PROBABIL MAI PUTIN
-            openServo();
-            ///AICI PROBABIL MAI TREBE SA IMPINGEM CUBUL
-            moveBackward(60, 5000);
-            turnAbsolute(180);
-            moveForward(90, 5000);
             closeServo();
-            ///AICI PROBABIL MAI TREBE SA RIDICAM CUBUL
-            moveBackward(60, 5000);
-            turnAbsolute(180);
-            moveForward(90, 5000); ///PROBABIL MAI PUTIN
+            lift_UP(1, 2000);
+            jewels_move(0);
+            sleep(500);
+            moveBackward(deplasare, 3000);
+            turnAbsolute(-45);///DREAPTA
+            lift_UP(-1, 1500);
             openServo();
-            ///AICI PROBABIL MAI TREBE SA IMPINGEM CUBUL
+            turnAbsolute(-90);
+            closeServo();
+            moveForward(deplasare_fata, 3000);
+            openServo();
+            moveBackward(deplasare_back, 3000);
+
         }
     }
-
-    /**
-     ******** END*********
-     ******** OP**********
-     ******** MODE********
-     */
 
     ///FUNCTII
     public void turnAbsolute(int target)throws InterruptedException {
 
+        robot.FrontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.FrontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.BackLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.BackRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
 
-        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() )
+        while (Math.abs(zAccumulated - target) > 3 && opModeIsActive() && !isStopRequested())
         {
+            telemetry.addData("TARGET", target);
+            telemetry.addData("mathABS", Math.abs(zAccumulated - target));
+            telemetry.addData("integratedZ", zAccumulated);
+            telemetry.update();
             if (zAccumulated > target)
             {
-                robot.FrontLeftMotor.setPower(TURN_SPEED);
-                robot.BackLeftMotor.setPower(TURN_SPEED);
+                robot.FrontLeftMotor.setPower(-TURN_SPEED);
+                robot.BackLeftMotor.setPower(-TURN_SPEED);
                 robot.FrontRightMotor.setPower(-TURN_SPEED);
                 robot.BackRightMotor.setPower(-TURN_SPEED);
             }
             else if (zAccumulated < target)
             {
-                robot.FrontLeftMotor.setPower(-TURN_SPEED);
-                robot.BackLeftMotor.setPower(-TURN_SPEED);
+                robot.FrontLeftMotor.setPower(TURN_SPEED);
+                robot.BackLeftMotor.setPower(TURN_SPEED);
                 robot.FrontRightMotor.setPower(TURN_SPEED);
                 robot.BackRightMotor.setPower(TURN_SPEED);
             }
-
+            zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
+            telemetry.addData("integratedZ", zAccumulated);
+        }
+        while (Math.abs(zAccumulated - target) > 1 && opModeIsActive() && !isStopRequested())///SLOWER
+        {
+            telemetry.addData("TARGET", target);
+            telemetry.addData("mathABS", Math.abs(zAccumulated - target));
+            telemetry.addData("integratedZ", zAccumulated);
+            telemetry.update();
+            if (zAccumulated > target)
+            {
+                robot.FrontLeftMotor.setPower(-TURN_SPEED / 2);
+                robot.BackLeftMotor.setPower(-TURN_SPEED / 2);
+                robot.FrontRightMotor.setPower(-TURN_SPEED / 2);
+                robot.BackRightMotor.setPower(-TURN_SPEED / 2);
+            }
+            else if (zAccumulated < target)
+            {
+                robot.FrontLeftMotor.setPower(TURN_SPEED / 2);
+                robot.BackLeftMotor.setPower(TURN_SPEED / 2);
+                robot.FrontRightMotor.setPower(TURN_SPEED / 2);
+                robot.BackRightMotor.setPower(TURN_SPEED / 2);
+            }
             zAccumulated = robot.modernRoboticsI2cGyro.getIntegratedZValue();
             telemetry.addData("integratedZ", zAccumulated);
         }
@@ -233,31 +272,31 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
         return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
 
-    public void moveForward(int distance, int timeout) {
+    public void moveForward(int distance, int timeout) throws InterruptedException {
         encoderDrive(DRIVE_SPEED,  0, distance, 0,  timeout);
     }
 
-    public void moveBackward(int distance, int timeout) {
-        moveForward(-distance, timeout);
+    public void lift_UP(double power, int time)throws InterruptedException {
+        robot.Lift.setPower(power);
+        sleep(time);
+        robot.Lift.setPower(0);
     }
 
-    public void encoderDrive(double speed, double x, double y, double z, double timeoutS) {
+    public void moveBackward(int distance, int timeout) throws InterruptedException {
+        encoderDrive(DRIVE_SPEED,  0, -distance, 0,  timeout);
+    }
+
+    public void encoderDrive(double speed, double x, double y, double z, double timeoutS) throws InterruptedException {
         int newFrontLeftTarget;
         int newFrontRightTarget;
         int newBackLeftTarget;
         int newBackRightTarget;
 
-        double FRONT_LEFT_POWER   =   - y + z;
-        double FRONT_RIGHT_POWER  =   + y + z;
-        double BACK_LEFT_POWER    =   - y + z;
-        double BACK_RIGHT_POWER   =   + y + z;
-
-        /*
         double FRONT_LEFT_POWER   =   - x - y + z;
         double FRONT_RIGHT_POWER  =   - x + y + z;
-        double BACK_LEFT_POWER    =     x - y + z;
-        double BACK_RIGHT_POWER   =     x + y + z;
-        */
+        double BACK_LEFT_POWER    =   + x - y + z;
+        double BACK_RIGHT_POWER   =   + x + y + z;
+
         if (opModeIsActive()) {
 
             newFrontLeftTarget = robot.FrontLeftMotor.getCurrentPosition() + (int)(FRONT_LEFT_POWER * COUNTE_PER_CM);
@@ -282,20 +321,10 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
             robot.BackRightMotor.setPower(Math.abs(speed));
 
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+                    (runtime.seconds() < timeoutS) && !isStopRequested() &&
                     (robot.FrontLeftMotor.isBusy() && robot.FrontRightMotor.isBusy()
                             && robot.BackLeftMotor.isBusy() && robot.BackRightMotor.isBusy())) {
 
-                telemetry.addData("Path1" , "TO FL: " + newFrontLeftTarget);
-                telemetry.addData("Path1" , "TO FR: " + newFrontRightTarget);
-                telemetry.addData("Path1" , "TO BL: " + newBackLeftTarget);
-                telemetry.addData("Path1" , "TO BR: " + newBackRightTarget);
-                telemetry.update();
-                telemetry.addData("Path0" , "FL: " + robot.FrontLeftMotor.getCurrentPosition());
-                telemetry.addData("Path0" , "FR: " + robot.FrontRightMotor.getCurrentPosition());
-                telemetry.addData("Path0" , "BL: " + robot.BackLeftMotor.getCurrentPosition());
-                telemetry.addData("Path0" , "BR: " + robot.BackRightMotor.getCurrentPosition());
-                telemetry.update();
             }
             robot.FrontLeftMotor.setPower(DRIVE_SPEED / 2);
             robot.FrontRightMotor.setPower(DRIVE_SPEED / 2);
@@ -320,52 +349,69 @@ public class Autonomus_BLUE_UP extends LinearOpMode {
         }
     }
 
-    public int get_color(int TEAM) {
+    public int get_color(int TEAM) throws InterruptedException {
         int answer = 0;
-        ///1 dreapta
-        ///-1 stanga
+        ///-1 dreapta
+        ///1 stanga
         telemetry.addData("ROSU = " ,robot.colorSensor.red());
         telemetry.addData("ALBASTRU = " ,robot.colorSensor.blue());
         telemetry.update();
-        if(TEAM == 1) ///RED
+        int T = 10000;
+        while (T > 0 && opModeIsActive() && !isStopRequested())
         {
-            if(robot.colorSensor.red() > MIN_RED)
-                answer = 1;
-            else if( robot.colorSensor.blue() > MIN_BLUE)
-                answer = -1;
+            telemetry.addData("ROSU = " ,robot.colorSensor.red());
+            telemetry.addData("ALBASTRU = " ,robot.colorSensor.blue());
+            telemetry.update();
+            if(TEAM == 1) ///RED
+            {
+                if(robot.colorSensor.red() > MIN_RED)
+                    answer = -1;
+                else if( robot.colorSensor.blue() > MIN_BLUE)
+                    answer = 1;
+            }
+            else if(TEAM == 0) ///BLUE
+            {
+                if(robot.colorSensor.red() > MIN_RED)
+                    answer = 1;
+                else if(robot.colorSensor.blue() > MIN_BLUE)
+                    answer = -1;
+            }
+            if (answer != 0)break;
+            T--;
         }
-        else if(TEAM == 0) ///BLUE
-        {
-            if(robot.colorSensor.red() > MIN_RED)
-                answer = -1;
-            else if(robot.colorSensor.blue() > MIN_BLUE)
-                answer = 1;
-        }
+
         return answer;
     }
 
     public void jewels_move(int TEAM)throws InterruptedException {
-        robot.Color_Hand.setPosition(COLOR_POS_DOWN);
+        robot.Jewel_Hand.setPosition(JEWEL_START_POS);
+        robot.Color_Hand.setPosition(COLOR_POS_INIT);
         idle();
         sleep(500);
-        int dir = get_color(TEAM) * 30;
+        robot.Color_Hand.setPosition(COLOR_POS_DOWN);
         sleep(500);
-        turnAbsolute(dir);
+        int dir = get_color(TEAM);
+        if(dir == 1)
+            robot.Jewel_Hand.setPosition(JEWEL_LEFT_POS);
+        else if(dir == -1)
+            robot.Jewel_Hand.setPosition(JEWEL_RIGHT_POS);
         sleep(500);
-        turnAbsolute(0);
+        robot.Jewel_Hand.setPosition(JEWEL_START_POS);
+        robot.Color_Hand.setPosition(COLOR_POS_INIT);
         sleep(500);
     }
 
-    public void closeServo() {
+    public void closeServo() throws InterruptedException {
         position_left = GRAB_POS_UP;
         position_right = GRAB_POS_DOWN;
         robot.Up_Hand.setPosition(position_left);
         robot.Down_Hand.setPosition(position_right);
+
         idle();
         sleep(400);
     }
 
-    public void openServo() {
+    public void openServo() throws InterruptedException{
         position_left = START_POS_UP;
         position_right = START_POS_DOWN;
         robot.Up_Hand.setPosition(position_left);
