@@ -60,6 +60,8 @@ public class Auto_R1 extends OpMode {
 
     private int keyColumn;
 
+    private double columnDist;
+
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -75,7 +77,7 @@ public class Auto_R1 extends OpMode {
 
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
-        robot = new Robot(hardwareMap, telemetry, true);
+        robot = new Robot(hardwareMap, telemetry, false);
 
         goalPosition = 0.5;
         position = 0;
@@ -88,7 +90,8 @@ public class Auto_R1 extends OpMode {
 
         isFinished = false;
 
-        keyColumn = 0;
+        keyColumn = 1;
+        columnDist = 7.5;
 
         //Starts the timer WORKING
         time.reset();
@@ -97,21 +100,25 @@ public class Auto_R1 extends OpMode {
         @Override
         public void loop(){
         currentSeconds = time.seconds();
+        robot.blockLift.brake(true);
+        telemetry.addData("State:", state);
             switch(state){
                 case TIME:
                     time.reset();
-                    state = States.GRAB;
+                    state = States.ARMDOWN;
+                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:
                     state = States.SCAN;
-                    goalSeconds = currentSeconds += 5.0;
+                    //goalSeconds = currentSeconds += 5.0;
                     break;
                 case SCAN:
-                    keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
+                    /*keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
-                        goalSeconds = currentSeconds += 0.4;
                         state = States.ARMDOWN;
-                    } break;
+                    }*/
+                    state = States.ARMDOWN;
+                    break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
@@ -121,17 +128,17 @@ public class Auto_R1 extends OpMode {
                 case READ:
                     //Reads the color/distance sensor to determine which ball to knock off WORKING
                     if(colorSensorRight.blue() > colorSensorRight.red()){
-                        telemetry.addData("Blue:", colorSensorRight.blue());
+                        /*telemetry.addData("Blue:", colorSensorRight.blue());
                         telemetry.addData("Red:", colorSensorRight.red());
                         telemetry.addData("The ball is:", "blue");
-                        telemetry.update();
+                        telemetry.update();*/
 
                         state = States.LEFTKNOCK;
                     } else if(colorSensorRight.red() > colorSensorRight.blue()){
-                        telemetry.addData("Blue:", colorSensorRight.blue());
+                        /*telemetry.addData("Blue:", colorSensorRight.blue());
                         telemetry.addData("Red:", colorSensorRight.red());
                         telemetry.addData("The ball is:", "red");
-                        telemetry.update();
+                        telemetry.update();*/
 
                         state = States.RIGHTKNOCK;
                     } break;
@@ -180,7 +187,17 @@ public class Auto_R1 extends OpMode {
                         time.reset();
                     } break;
                 case OFFSTONE:
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5 )) {
+                    if(keyColumn == 1){
+                        columnDist = 7.5;
+                    } else if(keyColumn == 2){
+                        columnDist = 9;
+                    } else if(keyColumn == 3){
+                        columnDist = 10.5;
+                    } else if(keyColumn == 0){
+                        columnDist = 9;
+                    }
+
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, columnDist)) {
                         state = States.TURNBOX;
                     }
                     break;
@@ -199,7 +216,7 @@ public class Auto_R1 extends OpMode {
                     } else{
                         isFinished = false;
                         state = States.DROP;
-                        goalSeconds = currentSeconds += 2.0;
+                        goalSeconds = currentSeconds += 1.0;
                     } break;
                 case DROP:
                     robot.blockLift.grab(true, 0);

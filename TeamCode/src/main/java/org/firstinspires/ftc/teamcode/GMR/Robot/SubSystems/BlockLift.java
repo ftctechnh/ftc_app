@@ -105,4 +105,22 @@ public class BlockLift {
         }
 
     }
+
+    public void hold(boolean hold) {
+        if(hold){
+            leftGrab.setPower(-0.05);
+            rightGrab.setPower(0.05);
+        }
+        if(!hold){
+            leftGrab.setPower(0);
+            rightGrab.setPower(0);
+        }
+    }
+
+    public void brake(boolean brake) {
+        if(brake){
+            leftGrab.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightGrab.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+    }
 }

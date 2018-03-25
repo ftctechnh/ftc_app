@@ -76,7 +76,7 @@ public class Auto_B2 extends OpMode {
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
 
-        robot = new Robot(hardwareMap, telemetry, true);
+        robot = new Robot(hardwareMap, telemetry, false);
 
         goalPosition = 0.25;
         position = 0.85;
@@ -99,8 +99,8 @@ public class Auto_B2 extends OpMode {
             currentSeconds = time.seconds();
             switch(state){
                 case TIME:
-                    state = States.GRAB;
-                    time.reset();
+                    state = States.ARMDOWN;
+                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:
                     goalSeconds = currentSeconds += 5;
@@ -196,10 +196,10 @@ public class Auto_B2 extends OpMode {
                     }
                     break;
                 case COLUMNMOVE:
-                    /*if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
+                    if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
                         state = States.DRIVEBOX;
                         completedStates += "COLUMNMOVE - ";
-                    }*/
+                    }
                     break;
                 case DRIVEBOX:
                     //Drives into CryptoBox
@@ -208,8 +208,8 @@ public class Auto_B2 extends OpMode {
                     } else{
                         isFinished = false;
                         state = States.DROP;
-                        completedStates += "DRIVE BOX";
-                        goalSeconds = currentSeconds += 2.0;
+                        completedStates += "DRIVEBOX";
+                        goalSeconds = currentSeconds += 1.0;
                     }
 
                     break;

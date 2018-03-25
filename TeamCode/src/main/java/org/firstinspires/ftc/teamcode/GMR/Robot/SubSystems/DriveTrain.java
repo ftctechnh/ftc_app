@@ -333,7 +333,7 @@ public class DriveTrain {
                 case N:
                     if (combinedEnValue < goalEncoderPosition) {
                         drive(direction, power);
-                        telemetry.addData("Current Combined Value", combinedEnValue);
+                        //telemetry.addData("Current Combined Value", combinedEnValue);
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -345,7 +345,7 @@ public class DriveTrain {
                 case S:
                     if (combinedEnValue > goalBackwardPosition) {
                         drive(direction, power);
-                        telemetry.addData("Current Combined Value", combinedEnValue);
+                        //telemetry.addData("Current Combined Value", combinedEnValue);
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -357,8 +357,8 @@ public class DriveTrain {
                 case W:
                     if (leftStrafeValue < goalLeftStrafePosition) {
                         drive(direction, power);
-                        telemetry.addData("Current Combined Value", combinedEnValue);
-                        telemetry.addData("Goal Value", goalLeftStrafePosition);
+                        //telemetry.addData("Current Combined Value", combinedEnValue);
+                        //telemetry.addData("Goal Value", goalLeftStrafePosition);
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -370,9 +370,9 @@ public class DriveTrain {
                 case E:
                     if (rightStrafeValue < goalRightStrafePosition) {
                         drive(direction, power);
-                        telemetry.addData("Current Combined Value", rightStrafeValue);
-                        telemetry.addData("Current Goal Value", goalRightStrafePosition);
-                        telemetry.addData("Current Comparison Value", goalEncoderPosition);
+                        //telemetry.addData("Current Combined Value", rightStrafeValue);
+                        //telemetry.addData("Current Goal Value", goalRightStrafePosition);
+                        //telemetry.addData("Current Comparison Value", goalEncoderPosition);
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -389,8 +389,8 @@ public class DriveTrain {
                         } else {
                             leftFront.setPower(0);
                         }
-                        telemetry.addData("Current Right Encoder Value", getLeftEncoder());
-                        telemetry.addData("Current Yaw", getYaw());
+                        //telemetry.addData("Current Right Encoder Value", getLeftEncoder());
+                        //telemetry.addData("Current Yaw", getYaw());
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -409,8 +409,8 @@ public class DriveTrain {
                         } else {
                             leftFront.setPower(0);
                         }
-                        telemetry.addData("Current Right Encoder Value", getRightEncoder());
-                        telemetry.addData("Current Yaw", getYaw());
+                        //telemetry.addData("Current Right Encoder Value", getRightEncoder());
+                        //telemetry.addData("Current Yaw", getYaw());
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -426,8 +426,8 @@ public class DriveTrain {
                 case TURNRIGHT:
                     if (getLeftEncoder() < goalLeftPosition) {
                         drive(direction, power);
-                        telemetry.addData("Current Combined Value", combinedEnValue);
-                        telemetry.addData("Goal Value", goalEncoderPosition);
+                        //telemetry.addData("Current Combined Value", combinedEnValue);
+                        //telemetry.addData("Goal Value", goalEncoderPosition);
                     } else {
                         encodersCanRun = true;
                         //resets the encoders to a neutral value
@@ -455,8 +455,8 @@ public class DriveTrain {
                 if (!(this.getYaw() < (goalDegrees + gyroRange) && this.getYaw() > (goalDegrees - gyroRange))) {
                     drive(direction, power);
 
-                    telemetry.addData("Goal Degrees", goalDegrees);
-                    telemetry.addData("Current Degrees", getYaw());
+                    //telemetry.addData("Goal Degrees", goalDegrees);
+                    //telemetry.addData("Current Degrees", getYaw());
                     return false;
                 } else {
                     this.stop();
@@ -470,10 +470,11 @@ public class DriveTrain {
                         goalDegrees = (goalDegrees + 360);
                     }
                 }
+                //telemetry.addData("Goal Degrees", goalDegrees);
+                //telemetry.addData("Current Degrees", getYaw());
                 if (!(this.getYaw() < (goalDegrees + gyroRange) && this.getYaw() > (goalDegrees - gyroRange))) {
                     drive(direction, power);
-                    telemetry.addData("Goal Degrees", goalDegrees);
-                    telemetry.addData("Current Degrees", getYaw());
+
                     return false;
                 } else {
                     this.stop();
