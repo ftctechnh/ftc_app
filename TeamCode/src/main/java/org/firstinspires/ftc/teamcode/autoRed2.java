@@ -22,12 +22,10 @@ public class autoRed2 extends superAuto {
         followHeading(0, 1f, 0f, -.25f); //check that y is in right direction: drive forward
        // followHeading(0, .47f, -.25, 0f); //translate left, may already be lined up
         Wait(.5);
-        distCorrector(18);
-        cryptoState(-90,.5f, 0f);
+        //Move right
+        followHeading(0, .25, .5f, 0f);
+        distCorrector(19.5);
+        cryptoState(0,-.5f, 0f);
         flip();
-        Wait(1);
-        distCorrector(20);
-        Wait(1);
-        distCorrector(18);
     }
 }

@@ -66,9 +66,9 @@ abstract public class superAuto extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
 
-    void setUp(){
+    void setUp() {
 
-       iAmBlue = !iAmRed;
+        iAmBlue = !iAmRed;
 
         configureGyro();
 
@@ -78,7 +78,6 @@ abstract public class superAuto extends LinearOpMode {
 
         waitForStart();
     }
-
 
 
     void configureGyro() {
@@ -92,7 +91,7 @@ abstract public class superAuto extends LinearOpMode {
 
     void mapHardware() {
 
-        imu =hardwareMap.get(BNO055IMU.class,"imu");
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
@@ -107,18 +106,18 @@ abstract public class superAuto extends LinearOpMode {
         motorBL.setDirection(DcMotor.Direction.REVERSE);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
-        motorConL =hardwareMap.dcMotor.get("motorConL");
+        motorConL = hardwareMap.dcMotor.get("motorConL");
         motorConL.setDirection(DcMotor.Direction.FORWARD);
-        motorConR =hardwareMap.dcMotor.get("motorConR");
+        motorConR = hardwareMap.dcMotor.get("motorConR");
         motorConR.setDirection(DcMotor.Direction.FORWARD);
-        servoTapper =hardwareMap.servo.get("servoTapper");
-        servoFlicker =hardwareMap.servo.get("servoFlicker");
-        colorSensor =hardwareMap.get(NormalizedColorSensor.class,"colorSensor");
-        if(colorSensor instanceof SwitchableLight)
-        {
+        servoTapper = hardwareMap.servo.get("servoTapper");
+        servoFlicker = hardwareMap.servo.get("servoFlicker");
+        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
+        if (colorSensor instanceof SwitchableLight) {
             ((SwitchableLight) colorSensor).enableLight(true);
         }
     }
+
     void composeTelemetry() {
 
         boolean autoClear = false;
@@ -128,63 +127,71 @@ abstract public class superAuto extends LinearOpMode {
 
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity  = imu.getGravity();
-        }
+        telemetry.addAction(new Runnable() {
+            @Override
+            public void run() {
+                // Acquiring the angles is relatively expensive; we don't want
+                // to do that in each of the three items that need that info, as that's
+                // three times the necessary expense.
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                gravity = imu.getGravity();
+            }
         });
 
         telemetry.addLine()
                 .addData("status", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return imu.getSystemStatus().toShortString();
                     }
                 })
                 .addData("calib", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return imu.getCalibrationStatus().toString();
                     }
                 });
 
         telemetry.addLine()
                 .addData("heading", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return formatAngle(angles.angleUnit, angles.firstAngle);
                     }
                 })
                 .addData("roll", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return formatAngle(angles.angleUnit, angles.secondAngle);
                     }
                 })
                 .addData("pitch", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return formatAngle(angles.angleUnit, angles.thirdAngle);
                     }
                 });
 
         telemetry.addLine()
                 .addData("grvty", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return gravity.toString();
                     }
                 })
                 .addData("mag", new Func<String>() {
-                    @Override public String value() {
+                    @Override
+                    public String value() {
                         return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
+                                Math.sqrt(gravity.xAccel * gravity.xAccel
+                                        + gravity.yAccel * gravity.yAccel
+                                        + gravity.zAccel * gravity.zAccel));
                     }
                 });
     }
 
 
-    void cryptoState(int targetHeading, float basePosx, float basePosy ) {
+    void cryptoState(int targetHeading, float basePosx, float basePosy) {
         runtime.reset();
 
         // Grab first distance
@@ -193,7 +200,9 @@ abstract public class superAuto extends LinearOpMode {
 
         // Red game
         if (iAmRed) {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN){vuMark = RelicRecoveryVuMark.RIGHT;}
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                vuMark = RelicRecoveryVuMark.RIGHT;
+            }
             boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
             boxOrder[1] = RelicRecoveryVuMark.RIGHT;
             boxOrder[2] = RelicRecoveryVuMark.CENTER;
@@ -201,7 +210,9 @@ abstract public class superAuto extends LinearOpMode {
         }
         // Blue game
         else {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {vuMark = RelicRecoveryVuMark.LEFT;}
+            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+                vuMark = RelicRecoveryVuMark.LEFT;
+            }
             boxOrder[0] = RelicRecoveryVuMark.LEFT;
             boxOrder[1] = RelicRecoveryVuMark.CENTER;
             boxOrder[2] = RelicRecoveryVuMark.RIGHT;
@@ -222,10 +233,12 @@ abstract public class superAuto extends LinearOpMode {
             currentDist = rangeSensor.getDistance(DistanceUnit.CM);
 
             // Found a divider, change state
-            if((currentDist-previousDist) >= 4) {
+            if ((currentDist - previousDist) >= 4) {
                 i++;
                 state = boxOrder[i];
-                if (state == vuMark) { go = false; }
+                if (state == vuMark) {
+                    go = false;
+                }
             }
 
             // Debugging info
@@ -242,11 +255,11 @@ abstract public class superAuto extends LinearOpMode {
 
     }
 
-    void followHeading(int targetHeading, double time, float basePosx, float basePosy ){
+    void followHeading(int targetHeading, double time, float basePosx, float basePosy) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
-        while (((runtime.seconds() < time))){
+        while (((runtime.seconds() < time))) {
             adjustHeading(targetHeading, basePosx, basePosy);
         }
         sR();
@@ -269,32 +282,92 @@ abstract public class superAuto extends LinearOpMode {
         }
     }
 
-    void flip ()    {
+    void flip() {
+        distCorrector(20);
         motorFlip.setPower(.5d);
         Wait(1d);
         motorFlip.setPower(0d);
+        Wait(1);
+        motorFlip.setPower(-.5d);
+        Wait(.5);
+        motorFlip.setPower(0d);
+        distCorrector(15);
+        distCorrector(25);
     }
+    void fancyGyroPivot (double target) {
+
+        //First set up variables
+
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double raw = angles.firstAngle;
+        float fudgeFactor = .25f;
+        double wheelPower = .3;
+        double convert = raw;
+        double dflt = Math.abs(target - raw);
+        double alt = (360 - dflt);
+        boolean right;
+
+        while ((convert < (target - fudgeFactor)) || (convert > (target + fudgeFactor)))
+        {
+            // determine if we are moving right or left
+            if (alt < dflt || dflt < 0)
+            {
+                right = false;
+            }
+            else
+            {
+                right = true;
+            }
+
+            //set power to motor
+            if (right = true)
+            {
+                motorFL.setPower(-wheelPower);
+                motorBL.setPower(-wheelPower);
+                motorFR.setPower(wheelPower);
+                motorBR.setPower(wheelPower);
+            }
+            else
+            {
+                motorFL.setPower(wheelPower);
+                motorBL.setPower(wheelPower);
+                motorFR.setPower(-wheelPower);
+                motorBR.setPower(-wheelPower);
+            }
+
+            //read the heading and find the shortest path
+            raw = angles.firstAngle;
+            dflt = (target - raw);
+            alt = (360 - Math.abs(dflt));
+
+            //determines if we need to convert to compass
+            if (Math.abs(dflt) > 180)
+            {
+                convert = 360 - Math.abs(raw);
+
+            }
+            else
+            {
+                convert = raw;
+            }
+        }
+    }
+
 
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
         //Pivot to clockwise is negative.
-        double baseWheelPower = .35;
-        double minWheelPower = .2;
-        double wheelPower = baseWheelPower;
         float fudgeFactor = .25f;
-        double dif = target;
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double currentHeading = angles.firstAngle;
-        wheelPower = .3;
+        double wheelPower = .3;
 
         while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             if (angles != null) {
                 currentHeading = angles.firstAngle;
-                dif = (target - currentHeading);
                 telemetry.update();
-                //wheelPower = ( ( ( dif / target ) - minWheelPower ) * baseWheelPower ) + minWheelPower ;
                 if (target - currentHeading > 0) {
                     motorFL.setPower(-wheelPower);
                     motorBL.setPower(-wheelPower);
@@ -310,6 +383,22 @@ abstract public class superAuto extends LinearOpMode {
 
         }
         sR();
+    }
+
+    public double compassConverter(double raw)
+    {
+           double compass = 3;
+
+            if (raw < 0)
+            {
+                compass = 360 + raw;
+            }
+
+            else
+            {
+                compass = raw;
+            }
+        return compass;
     }
 
     String formatAngle(AngleUnit angleUnit, double angle) {
