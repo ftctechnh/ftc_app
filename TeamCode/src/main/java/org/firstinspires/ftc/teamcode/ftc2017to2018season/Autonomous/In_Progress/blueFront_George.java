@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progress;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
@@ -18,7 +18,7 @@ import static com.disnodeteam.dogecv.detectors.JewelDetector.JewelOrder.RED_BLUE
 //10-28-17
 @Autonomous(name = "Blue Front George Worlds")
 //@Disabled
-public class blueFront_George extends Autonomous_General_George {
+public class blueFront_George extends Autonomous_General_George_ {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
