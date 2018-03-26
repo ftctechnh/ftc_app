@@ -602,6 +602,10 @@ public class AutoLib {
 
             return false;
         }
+
+        public float getTargetHeading() {
+            return mHeading;
+        }
     }
 
     // a Step that provides gyro-based guidance to motors controlled by other concurrent Steps (e.g. encoder or time-based)

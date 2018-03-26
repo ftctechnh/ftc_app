@@ -675,6 +675,8 @@ public class ADPSAuto extends VuforiaBallLib {
 
         private double lastTime = 0;
         private int currentCount = 0;
+        private float pError = 0;
+        private int curError = 0;
 
         UltraHoneStep(OpMode mode, MatbotixUltra ultra, int dist, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep) {
             this.mode = mode;
@@ -690,20 +692,23 @@ public class ADPSAuto extends VuforiaBallLib {
             super.loop();
             if(firstLoopCall()) lastTime = mode.getRuntime() - 1;
             //get the distance and error
-            final int read = ultra.getReading();
-            final int curError = dist - read;
-            //if we found it, stop
-            //if the peak is within stopping margin, stop
-            if(Math.abs(curError) <= error) {
-                setMotorsWithoutGyro(0);
-                return ++currentCount >= count;
+            final int read = ultra.getReadingNoDelay();
+            if(read > 0) {
+                curError = dist - read;
+                //if we found it, stop
+                //if the peak is within stopping margin, stop
+                if(Math.abs(curError) <= error) {
+                    setMotorsWithoutGyro(0);
+                    return ++currentCount >= count;
+                }
+                else currentCount = 0;
+                //PID
+                final double time = mode.getRuntime();
+                pError = errorPid.loop(curError, (float)(time - lastTime));
+                lastTime = time;
+                mode.telemetry.addData("power error", pError);
             }
-            else currentCount = 0;
-            //PID
-            final double time = mode.getRuntime();
-            final float pError = errorPid.loop(curError, (float)(time - lastTime));
-            lastTime = time;
-            mode.telemetry.addData("power error", pError);
+
             //cut out a middle range, but handle positive and negative
             float power;
             if(pError >= 0) power = Range.clip(pError, gyroStep.getMinPower(), gyroStep.getMaxPower());

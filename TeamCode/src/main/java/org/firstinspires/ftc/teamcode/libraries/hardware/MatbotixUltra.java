@@ -34,16 +34,16 @@ public class MatbotixUltra {
     private static final byte ADDR = 112;
 
     private final I2cDeviceSynch sensor;
-    private final long waitNanos;
+    private final int waitMillis;
 
-    private long lastTime = 0;
+    private long lastTime;
 
     public MatbotixUltra(I2cDeviceSynch sensor, int waitMillis) {
         this.sensor = sensor;
-        this.waitNanos = TimeUnit.MILLISECONDS.toNanos(waitMillis);
+        this.waitMillis = waitMillis;
     }
 
-    MatbotixUltra(I2cDeviceSynch sensor) {
+    public MatbotixUltra(I2cDeviceSynch sensor) {
         this(sensor, 90);
     }
 
@@ -59,26 +59,39 @@ public class MatbotixUltra {
         //the below line will generate a NACK
         //I'm hoping all this will mean is more logs
         sensor.write8(Regs.RANGE_TAKE.REG, 0);
-        lastTime = System.nanoTime();
     }
 
+    //WARNING: THIS CALL WILL DELAY THE MAIN LOOP
     public int getReading() {
-        if(waitNanos > 0) {
-            long run = System.nanoTime();
-            if(run - lastTime < waitNanos) {
-                try{
-                    TimeUnit.NANOSECONDS.sleep(waitNanos - (run - lastTime));
-                }
-                catch (Exception e) { /* HMMMMM */ }
+        if(lastTime != 0) sensor.write8(Regs.RANGE_TAKE.REG, 0);
+        if(waitMillis > 0) {
+            try{
+                TimeUnit.MILLISECONDS.sleep(waitMillis);
             }
+            catch (Exception e) { /* HMMMMM */ }
         }
         //get the reading (will generate NACK)
-        TimestampedData data = sensor.readTimeStamped(Regs.ADDR_UNLOCK.REG, 2);
-        //tell the sensor to start measuring again (another NACK)
-        sensor.write8(Regs.RANGE_TAKE.REG, 0);
+        byte[] data = sensor.read(Regs.ADDR_UNLOCK.REG, 2);
         //cache time and return
-        if(waitNanos > 0) lastTime = data.nanoTime;
-        return (data.data[0] & 0xFF) << 8 | (data.data[1] & 0xFF);
+        return (data[0] & 0xFF) << 8 | (data[1] & 0xFF);
+    }
+
+    //this call will return 0 if a reading is not ready, and -1 if the reading is invalid
+    public int getReadingNoDelay() {
+        if(lastTime == 0) {
+            sensor.write8(Regs.RANGE_TAKE.REG, 0);
+            lastTime = System.currentTimeMillis();
+        }
+        else if(System.currentTimeMillis() - lastTime > waitMillis) {
+            lastTime = 0;
+            //get the reading (will generate NACK)
+            byte[] data = sensor.read(Regs.ADDR_UNLOCK.REG, 2);
+            //return
+            int ret = (data[0] & 0xFF) << 8 | (data[1] & 0xFF);
+            if(ret <= 0) return -1;
+            else return ret;
+        }
+        return 0;
     }
 
     public void stopDevice() {
