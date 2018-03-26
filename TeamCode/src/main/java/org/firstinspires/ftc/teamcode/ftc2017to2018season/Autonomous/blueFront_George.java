@@ -56,69 +56,54 @@ public class blueFront_George extends Autonomous_General_George {
         telemetry.update();
         sleep(250);
         relicTrackables.deactivate();
-
+        jewelDetector.areaWeight = 0.02;
         jewelDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
+        jewelDetector.debugContours = true;
+        jewelDetector.maxDiffrence = 15;
+        jewelDetector.ratioWeight = 15;
+        jewelDetector.minArea = 700;
         jewelDetector.enable();
         sleep(750);
         //Used to make sure the jewels are recognized
 telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
 telemetry.update();
-//if (jewelDetector.getCurrentOrder() == JewelDetector.JewelOrder.UNKNOWN){
-//    telemetry.addData("Balls not seen", "Solution TBD   :/");
-//}
-if (jewelDetector.getCurrentOrder() == BLUE_RED){
-    //move the jewel manipulator to the left to knock off the ball
-    jewelServoRotate.setPosition(1);
-    sleep(300);
-    jewelServo.setPosition(0.8);
-    sleep(750);
-    //move the jewel manipulator to the original position
-    jewelServoRotate.setPosition(0.79);
-    sleep(1000);
-}
-else if (jewelDetector.getCurrentOrder() == RED_BLUE){
-    //move the jewel manipulator to the right to knock off the ball
-    jewelServoRotate.setPosition(0.5);
-    sleep(300);
-    jewelServo.setPosition(0.8);
-    sleep(750);
-    //move it back to the original posititon
-    jewelServoRotate.setPosition(0.79);
-    //Add code to swing the jwele arm
-}
-//        switch (jewelDetector.getCurrentOrder()){
-//            case UNKNOWN:
-//                telemetry.addData("Balls not seen", "Solution TBD   :/");
-//                break;
-//            case BLUE_RED:
-//                //move the jewel manipulator to the left to knock off the ball
-//                jewelServoRotate.setPosition(1);
-//                sleep(300);
-//                jewelServo.setPosition(0.8);
-//                sleep(750);
-//                //move the jewel manipulator to the original position
-//                jewelServoRotate.setPosition(0.79);
-//                sleep(1000);
-//                break;
-//            case RED_BLUE:
-//                //move the jewel manipulator to the right to knock off the ball
-//                jewelServoRotate.setPosition(0.5);
-//                sleep(300);
-//                jewelServo.setPosition(0.8);
-//                sleep(750);
-//                //move it back to the original posititon
-//                jewelServoRotate.setPosition(0.79);
-//                //Add code to swing the jwele arm
-//
-//        }
+
+        switch (jewelDetector.getCurrentOrder()){
+            case BLUE_RED:
+                //move the jewel manipulator to the left to knock off the ball
+                jewelServoRotate.setPosition(1);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move the jewel manipulator to the original position
+                jewelServoRotate.setPosition(0.79);
+                sleep(1000);
+                break;
+
+            case RED_BLUE:
+                //move the jewel manipulator to the right to knock off the ball
+                jewelServoRotate.setPosition(0.5);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move it back to the original posititon
+                jewelServoRotate.setPosition(0.79);
+                //Add code to swing the jwele arm
+                break;
+            case UNKNOWN:
+                telemetry.addData("Balls not seen", "Solution TBD   :/");
+                telemetry.update();
+                readColorRev();
+                KnockjewelSensor(ballColor);
+                break;
+        }
         //Used to make sure the jewels are recognized
         telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
 
-        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
-        sleep(250);
-        middleGlyphManipulator();
+        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator        middleGlyphManipulator();
         sleep(250);
         moveDownGlyph(1.45);
         sleep(250);

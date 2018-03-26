@@ -1117,6 +1117,34 @@ public class Autonomous_General_George extends LinearOpMode{
         //sleep(5000);
     }
 
+    public void KnockjewelSensor(String ballColor){
+        if(ballColor=="red"){
+            //move the jewel manipulator to the left to knock off the ball
+            jewelServoRotate.setPosition(1);
+            sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move the jewel manipulator to the original position
+            jewelServoRotate.setPosition(0.79);
+            sleep(1000);
+        }
+        else if (ballColor=="blue"){
+//move the jewel manipulator to the right to knock off the ball
+            jewelServoRotate.setPosition(0.5);
+            sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move it back to the original posititon
+            jewelServoRotate.setPosition(0.79);
+            //Add code to swing the jwele arm
+        }
+        else {
+            telemetry.addData("Balls not seen", "Solution TBD   :/");
+            telemetry.update();
+        }
+
+    }
+
     /*
         GLYPH MANIPULATOR METHODS
      */
@@ -1130,18 +1158,17 @@ public class Autonomous_General_George extends LinearOpMode{
 
     }
     public void openGlyphManipulator(){
-        glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+          glyphServoRight.setPosition(0.8);
+        glyphServoLeft.setPosition(0.1);
     }
     public void closeGlyphManipulator(){
-        glyphServoRight.setPosition(0.8);
-        glyphServoLeft.setPosition(0.1);
-
+        glyphServoRight.setPosition(0.5);
+        glyphServoLeft.setPosition(0.4);
     }
     public void middleGlyphManipulator(){
 
         glyphServoRight.setPosition(0.6);
-        glyphServoLeft.setPosition(0.3);
+        glyphServoLeft.setPosition (0.3);
     }
     public void allOpenGlyphManipulator(){
         glyphServoRight.setPosition(0.25);

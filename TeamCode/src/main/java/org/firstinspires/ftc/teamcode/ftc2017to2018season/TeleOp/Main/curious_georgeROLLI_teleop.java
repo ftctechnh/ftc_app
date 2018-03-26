@@ -71,6 +71,7 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
     @Override
     public void loop() {
+        //Slides();
         glyphIntake();
         glyphManipulate();
         Drive();
