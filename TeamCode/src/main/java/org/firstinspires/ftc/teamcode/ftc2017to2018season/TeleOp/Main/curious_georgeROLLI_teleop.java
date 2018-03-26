@@ -198,8 +198,7 @@ else if (gamepad1.dpad_right){
 
     public void Slides(){
         slideMove();
-      //
-       // slideIncrement();
+       slideIncrement();
         telemetry.addData("Slide Motor Value is ", slideMotor.getCurrentPosition());
         telemetry.update();
     }
