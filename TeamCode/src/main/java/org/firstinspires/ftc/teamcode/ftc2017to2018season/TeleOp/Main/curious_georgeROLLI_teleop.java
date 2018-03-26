@@ -81,24 +81,23 @@ public class curious_georgeROLLI_teleop extends OpMode {
     }
 
     public void glyphManipulate() {
-// Request from Drivers to add back strafing
-//  if (gamepad1.left_trigger != 0) {
-//            glyphLeft.setPosition(glyphLeft.getPosition() + 0.05);
-//            glyphRight.setPosition(glyphRight.getPosition() - 0.05);
-//            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
-//            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
-//            telemetry.update();
-//            sleep(200);
-//        }
-//        else if (gamepad1.right_trigger != 0) {
-//            glyphLeft.setPosition(glyphLeft.getPosition() - 0.05);
-//            glyphRight.setPosition(glyphRight.getPosition() + 0.05);
-//            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
-//            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
-//            telemetry.update();
-//            sleep(200);
-//        }
-        if (gamepad1.y) {
+        if (gamepad1.right_trigger != 0) {
+            glyphLeft.setPosition(glyphLeft.getPosition() + 0.05);
+            glyphRight.setPosition(glyphRight.getPosition() - 0.05);
+            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
+            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
+            telemetry.update();
+            sleep(200);
+        }
+        else if (gamepad1.left_trigger != 0) {
+            glyphLeft.setPosition(glyphLeft.getPosition() - 0.05);
+            glyphRight.setPosition(glyphRight.getPosition() + 0.05);
+            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
+            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
+            telemetry.update();
+            sleep(200);
+        }
+        else if (gamepad1.y) {
             glyphLeft.setPosition(0.53);
             glyphRight.setPosition(0.42);
             telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
@@ -158,21 +157,20 @@ public class curious_georgeROLLI_teleop extends OpMode {
         float rightY_gp1 = (-gamepad1.right_stick_y);
         telemetry.addData("right power input", rightY_gp1);
         telemetry.addData("left power input", leftY_gp1);
-        if (gamepad1.right_trigger > 0) {
+if (gamepad1.dpad_left){
+    leftWheelMotorFront.setPower(-1);
+    leftWheelMotorBack.setPower(1);
+    rightWheelMotorFront.setPower(1);
+    rightWheelMotorBack.setPower(-1);
+}
+else if (gamepad1.dpad_right){
+    leftWheelMotorFront.setPower(1);
+    leftWheelMotorBack.setPower(-1);
+    rightWheelMotorFront.setPower(-1);
+    rightWheelMotorBack.setPower(1);
 
-            leftWheelMotorFront.setPower(1);
-            leftWheelMotorBack.setPower(-1);
-            rightWheelMotorFront.setPower(-1);
-            rightWheelMotorBack.setPower(1);
-
-        } else if (gamepad1.left_trigger > 0) {
-
-            leftWheelMotorFront.setPower(-1);
-            leftWheelMotorBack.setPower(1);
-            rightWheelMotorFront.setPower(1);
-            rightWheelMotorBack.setPower(-1);
-        }
-        else if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
+}
+        if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
             leftWheelMotorFront.setPower(leftY_gp1);
             leftWheelMotorBack.setPower(leftY_gp1);
             rightWheelMotorFront.setPower(rightY_gp1);
@@ -200,7 +198,8 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
     public void Slides(){
         slideMove();
-        slideIncrement();
+      //
+       // slideIncrement();
         telemetry.addData("Slide Motor Value is ", slideMotor.getCurrentPosition());
         telemetry.update();
     }
