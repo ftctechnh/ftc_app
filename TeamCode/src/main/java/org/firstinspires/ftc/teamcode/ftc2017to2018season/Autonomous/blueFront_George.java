@@ -95,7 +95,7 @@ telemetry.update();
                 telemetry.addData("Balls not seen", "Solution TBD   :/");
                 telemetry.update();
                 readColorRev();
-                KnockjewelSensor();
+                KnockjewelSensor(ballColor);
                 break;
         }
         //Used to make sure the jewels are recognized
