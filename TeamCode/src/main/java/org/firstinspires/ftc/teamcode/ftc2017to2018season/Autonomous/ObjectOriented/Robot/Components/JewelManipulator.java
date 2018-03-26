@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOrie
 
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents.Jewel_Detector;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents.Robot_Servo;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents.Sleep;
 
 /**
  * Created by adityamavalankar on 3/20/18.
@@ -19,11 +20,18 @@ enum manipulatorRotateState {
     MIDDLE;
 }
 
+enum direction {
+    LEFT,
+    RIGHT,
+    MIDDLE;
+}
+
 
 public class JewelManipulator {
 
     Robot_Servo jewelMain = new Robot_Servo();
     Robot_Servo jewelRotate = new Robot_Servo();
+    Sleep sleep = new Sleep();
 
     private void rotate(manipulatorRotateState inputRotation) {
         switch (inputRotation) {
@@ -59,10 +67,28 @@ public class JewelManipulator {
         }
     }
 
-    public void knockBall(){
-        Jewel_Detector jewelDetector = new Jewel_Detector();
+    public void jewelManipulate(direction rotateDirection) {
+        JewelManipulator jewelManipulator = new JewelManipulator();
 
-        jewelDetector.getOrder();
+        jewelManipulator.rotate(manipulatorRotateState.MIDDLE);
+        jewelManipulator.manipulate(manipulatorState.DOWN);
 
+        sleep.sleep(75);
+        switch (rotateDirection) {
+            case RIGHT:
+                jewelManipulator.rotate(manipulatorRotateState.RIGHT);
+                break;
+            case LEFT:
+                jewelManipulator.rotate(manipulatorRotateState.LEFT);
+                break;
+            default:
+                jewelManipulator.rotate(manipulatorRotateState.MIDDLE);
+        }
+        
+        sleep.sleep(75);
+        jewelManipulator.rotate(manipulatorRotateState.MIDDLE);
+        sleep.sleep(75);
+        jewelManipulator.manipulate(manipulatorState.UP);
+        sleep.sleep(75);
     }
 }

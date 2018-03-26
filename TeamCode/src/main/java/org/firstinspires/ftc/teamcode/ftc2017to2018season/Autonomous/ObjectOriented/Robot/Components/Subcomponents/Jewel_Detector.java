@@ -1,16 +1,9 @@
 
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents;
 
-
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-enum jewelOrder {
-    RED_BLUE,
-    BLUE_RED,
-    UNKNOWN;
-}
 
 public class Jewel_Detector extends LinearOpMode {
 
@@ -59,5 +52,9 @@ public class Jewel_Detector extends LinearOpMode {
     }
 
 
-
+    private enum jewelOrder {
+        RED_BLUE,
+        BLUE_RED,
+        UNKNOWN;
+    }
 }
