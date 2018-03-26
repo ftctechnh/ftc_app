@@ -44,11 +44,15 @@ public class AutoFIXED extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private MenuFileHandler menuFile;
     public static final String TAG = "Vuforia VuMark Sample";
-    public boolean redjewelisright;
-    public boolean blueJewelIsLeft;
-    public int screenColor = Color.BLACK;
-    public int newScreenColor = Color.BLACK;
-
+    boolean redjewelisright;
+    boolean blueJewelIsLeft;
+    int screenColor = Color.BLACK;
+    int newScreenColor = Color.BLACK;
+    public int delay = 500;
+    boolean doneone = false;
+    boolean twoblocks = false;
+    boolean gap = false;
+    boolean glyphsensed = true;
 
     OpenGLMatrix lastLocation = null;
 
@@ -488,19 +492,6 @@ public class AutoFIXED extends LinearOpMode {
                 //Strafe Right
                 mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.6, 7.5, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
-//if you have two blocks, lift
-            /*if(!gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() < 1){
-
-                //Spit out second block
-                gromit.glyphTrain.startGlyphMotors(1.0);
-                while((!gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() < 1)&& opModeIsActive()){//While it sees a block MUST ADD A TIMEOUT HERE FOR THE JAMS
-                    //Keep waiting
-                    idle();
-                }
-                gromit.glyphTrain.stopGlyphMotors();
-                //No clamps to close
-                //gromit.glyphTrain.glyphclamp("close");
-            }*/
             //You are in front of the Box
             //Drive into the box
 
@@ -869,6 +860,102 @@ public class AutoFIXED extends LinearOpMode {
             gromit.driveTrain.left_rear.setPower(lrpower);
             gromit.driveTrain.right_front.setPower(rfpower);
             gromit.driveTrain.right_rear.setPower(rrpower);
+
+            if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
+                glyphSensed = true;
+                if(!gromit.glyphTrain.seeMiddleBlock.getState()){//TWO BLOCKS!!!!! or front sensor
+                    twoblocks = true;
+                }
+            }
+            else if(glyphSensed){//Second Edge
+                if(twoblocks){
+                    if((gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() > 1 ) ) {
+                        gromit.glyphTrain.glyphclampupper("close");
+                        gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
+                        gromit.glyphTrain.glyphliftupper("top");
+                        glyphSensed = false;
+                        gromit.glyphTrain.stopGlyphMotors();
+                    }
+                }
+                else if (gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+                    gromit.glyphTrain.glyphclampupper("close");
+                    gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
+                    gromit.glyphTrain.glyphliftupper("top");
+                    glyphSensed = false;
+                    gromit.glyphTrain.stopGlyphMotors();
+
+                }
+            }
+        }
+        gromit.driveTrain.stopMotors();
+    }
+    public void mecanumDriveBlockClamp2(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
+        double max;
+        double multiplier;
+        int right_start;
+        int left_start;
+        int moveCounts;
+        boolean glyphSensed = false;
+        boolean twoblocks =false;
+        //int drive_direction = -90;
+        moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
+        right_start = gromit.driveTrain.right_rear.getCurrentPosition();
+        left_start = gromit.driveTrain.left_rear.getCurrentPosition();
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double lfbase;
+        double lrbase;
+        double rfbase;
+        double rrbase;
+        lfbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
+        lrbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
+        rfbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
+        rrbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
+        while (((abs(gromit.driveTrain.right_rear.getCurrentPosition() - right_start) + abs(gromit.driveTrain.left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts)) && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
+            //Determine correction
+            double correction = robot_orientation - gromit.driveTrain.getheading();
+            if (correction <= -180) {
+                correction += 360;
+            } else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
+                correction -= 360;
+            }
+            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
+            lfpower = lfbase;
+            rrpower = rrbase;
+            rfpower = rfbase;
+            if (abs(correction) > drive_THRESHOLD) {//If you are off
+                //Apply power to one side of the robot to turn the robot back to the right heading
+                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
+                lrpower -= right_adjustment;
+                lfpower -= right_adjustment;
+                rrpower = rrbase + right_adjustment;
+                rfpower = rfbase + right_adjustment;
+
+            }//Otherwise you Are at the right orientation
+
+            //Determine largest power being applied in either direction
+            max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
+
+            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower *= multiplier;
+            lrpower *= multiplier;
+            rfpower *= multiplier;
+            rrpower *= multiplier;
+
+            gromit.driveTrain.left_front.setPower(lfpower);
+            gromit.driveTrain.left_rear.setPower(lrpower);
+            gromit.driveTrain.right_front.setPower(rfpower);
+            gromit.driveTrain.right_rear.setPower(rrpower);
+
+
+
 
             if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
                 glyphSensed = true;
