@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 @Autonomous(name = "Blue Back George Worlds")
 //@Disabled
 //3/2/18 edit by Steven Chen: trying to see if going a slower speed off the platform makes it go more straight
+//3/25/18 edit by Steven Chen: adding second block autonomous
 public class blueBack_George extends Autonomous_General_George_ {
 
     public double rsBuffer = 20.00;
@@ -181,7 +182,7 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         //code to get second glyph
         encoderMecanumDrive(0.3, -20, -20, 1000, 0);
-        gyroTurnREV(0.5,-90);
+        gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
         encoderMecanumDrive(0.6,20,20,5000,0);
         closeGlyphManipulator();
         moveUpGlyph(3.4);
