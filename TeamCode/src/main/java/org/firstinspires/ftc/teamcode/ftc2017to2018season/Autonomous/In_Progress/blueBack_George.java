@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progress;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 @Autonomous(name = "Blue Back George Worlds")
 //@Disabled
 //3/2/18 edit by Steven Chen: trying to see if going a slower speed off the platform makes it go more straight
-public class blueBack_George extends Autonomous_General_George {
+public class blueBack_George extends Autonomous_General_George_ {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();

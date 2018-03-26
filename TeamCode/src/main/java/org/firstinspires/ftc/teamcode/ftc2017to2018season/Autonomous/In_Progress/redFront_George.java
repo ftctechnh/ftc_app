@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progress;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_
 //10-28-17
 @Autonomous(name = "Red Front George Worlds")
 //@Disabled
-public class redFront_George extends Autonomous_General_George {
+public class redFront_George extends Autonomous_General_George_ {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
