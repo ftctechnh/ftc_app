@@ -1,17 +1,11 @@
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Main;
 
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 
 /**
@@ -79,6 +73,9 @@ public class curious_georgeROLLI_teleop extends OpMode {
     public void loop() {
         glyphIntake();
         glyphManipulate();
+        Drive();
+        Slides();
+        Relic();
 
     }
 
@@ -94,6 +91,38 @@ public class curious_georgeROLLI_teleop extends OpMode {
         else if (gamepad1.right_trigger != 0) {
             glyphLeft.setPosition(glyphLeft.getPosition() - 0.05);
             glyphRight.setPosition(glyphRight.getPosition() + 0.05);
+            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
+            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
+            telemetry.update();
+            sleep(200);
+        }
+        else if (gamepad1.y) {
+            glyphLeft.setPosition(0.4);
+            glyphRight.setPosition(0.42);
+            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
+            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
+            telemetry.update();
+            sleep(200);
+        }
+        else if (gamepad1.b) {
+            glyphLeft.setPosition(0.2);
+            glyphRight.setPosition(0.8);
+            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
+            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
+            telemetry.update();
+            sleep(200);
+        }
+        else if (gamepad1.a) {
+            glyphLeft.setPosition(0.8);
+            glyphRight.setPosition(0.17);
+            telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
+            telemetry.addData("Right Servo Pos", glyphRight.getPosition());
+            telemetry.update();
+            sleep(200);
+        }
+        else if (gamepad1.x) {
+            glyphLeft.setPosition(0.66);
+            glyphRight.setPosition(0.245);
             telemetry.addData("Left Servo Pos", glyphLeft.getPosition());
             telemetry.addData("Right Servo Pos", glyphRight.getPosition());
             telemetry.update();

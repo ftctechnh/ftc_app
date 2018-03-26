@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.ObjectOriented.Robot.Components.Subcomponents;
 
 
 public class Robot_Servo {

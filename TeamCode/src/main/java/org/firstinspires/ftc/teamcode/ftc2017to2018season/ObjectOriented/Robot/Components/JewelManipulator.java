@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components;
+package org.firstinspires.ftc.teamcode.ftc2017to2018season.ObjectOriented.Robot.Components;
 
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents.Jewel_Detector;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents.Robot_Servo;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.ObjectOriented.Robot.Components.Subcomponents.Sleep;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.ObjectOriented.Robot.Components.Subcomponents.Robot_Servo;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.ObjectOriented.Robot.Components.Subcomponents.Sleep;
 
 /**
  * Created by adityamavalankar on 3/20/18.
