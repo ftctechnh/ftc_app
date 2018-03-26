@@ -203,15 +203,20 @@ public class redBack_George extends Autonomous_General_George_ {
 
         //code to get second glyph
         encoderMecanumDrive(0.3, -20, -20, 1000, 0);
-        gyroTurnREV(0.5,-90);
+        gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
         encoderMecanumDrive(0.6,20,20,5000,0);
         closeGlyphManipulator();
+        glyphIntakeRolly(1);
         moveUpGlyph(3.4);
         gyroTurnREV(0.5,90);
-        moveDownGlyph(2);
-        openGlyphManipulator();
+        //moveDownGlyph(2);
         encoderMecanumDrive(0.5,35,35,5000,0);
-        encoderMecanumDrive(0.3,10,10,5000,0);
+        glyphOuttakeRolly(1);
+        openGlyphManipulator();
+        encoderMecanumDrive(0.3,-10,-10,5000,0);
+
+
+
 
 
     }

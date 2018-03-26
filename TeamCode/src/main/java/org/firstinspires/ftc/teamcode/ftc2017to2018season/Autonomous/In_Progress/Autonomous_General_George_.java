@@ -55,6 +55,7 @@ import java.util.Locale;
  */
 
 //Edit by Steven Chen: cleaning up unused code 3/3/18
+//Edit by Steven Chen: Started adding rolly collector methods 3/25/18
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
 public class Autonomous_General_George_ extends LinearOpMode{
@@ -73,11 +74,17 @@ public class Autonomous_General_George_ extends LinearOpMode{
     double TURN_THRESHOLD = 1.5;
     double P_WALL_COEFF = 0.07;
     double ALIGN_THRESHOLD = 3;
+
+
     public DcMotor front_right_motor;
     public DcMotor front_left_motor;
     public DcMotor back_right_motor;
     public DcMotor back_left_motor;
     public DcMotor slideMotor;
+    DcMotor intakeLeft;
+    DcMotor intakeRight;
+
+
     public BNO055IMU revGyro;
     public Orientation angles;
     public boolean gyroFail = false;
@@ -131,6 +138,8 @@ public class Autonomous_General_George_ extends LinearOpMode{
         back_left_motor = hardwareMap.dcMotor.get("leftWheelMotorBack");
         back_right_motor = hardwareMap.dcMotor.get("rightWheelMotorBack");
         slideMotor = hardwareMap.dcMotor.get("slideMotor");
+        intakeLeft = hardwareMap.dcMotor.get("glyphIntakeLeft");
+        intakeRight = hardwareMap.dcMotor.get("glyphIntakeRight");
         //light = hardwareMap.dcMotor.get("light");
         idle();
 
@@ -1154,22 +1163,45 @@ public class Autonomous_General_George_ extends LinearOpMode{
 
     }
     public void openGlyphManipulator(){
+        /*The values below were for the non rolly collector
           glyphServoRight.setPosition(0.8);
-        glyphServoLeft.setPosition(0.1);
+        glyphServoLeft.setPosition(0.1);*/
     }
     public void closeGlyphManipulator(){
+        /* The values below were for the non rolly collector
         glyphServoRight.setPosition(0.5);
-        glyphServoLeft.setPosition(0.4);
+        glyphServoLeft.setPosition(0.4);*/
     }
     public void middleGlyphManipulator(){
 
-        glyphServoRight.setPosition(0.6);
-        glyphServoLeft.setPosition (0.3);
+       /* The values below were for the non rolly collector
+       glyphServoRight.setPosition(0.6);
+        glyphServoLeft.setPosition (0.3);*/
     }
     public void allOpenGlyphManipulator(){
+        /*The values below were for the non rolly collector
         glyphServoRight.setPosition(0.25);
-        glyphServoLeft.setPosition(0.65);
+        glyphServoLeft.setPosition(0.65);*/
     }
+
+    public void glyphIntakeRolly(double seconds){
+        ElapsedTime runtime = new ElapsedTime();
+        double begintime= runtime.seconds();
+        while(runtime.seconds() - begintime < seconds) {
+            intakeLeft.setPower(1);
+            intakeRight.setPower(-1);
+        }
+    }
+
+    public void glyphOuttakeRolly(double seconds){
+        ElapsedTime runtime = new ElapsedTime();
+        double begintime= runtime.seconds();
+        while(runtime.seconds() - begintime < seconds) {
+            intakeLeft.setPower(-1);
+            intakeRight.setPower(1);
+        }
+    }
+
     public void moveUpGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
