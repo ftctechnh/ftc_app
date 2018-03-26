@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Year_2017_18.Autonomous;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -16,9 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.Year_2017_18.Robot.RobotCommands;
-
 import static com.sun.tools.javac.util.Constants.format;
-
 // Motor: NeveRest 40 each tick is 0.01682996064 of an inch.
 //Motor: NeveRest 40 each 1120 ticks is 18.8495559168 in.
 // Servos: Deluxe HItec HS-485HB
