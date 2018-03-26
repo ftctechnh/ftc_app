@@ -52,7 +52,8 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
     boolean doneone = false;
     boolean twoblocks = false;
     boolean gap = false;
-    boolean glyphsensed = true;
+    boolean glyphSensed = true;
+    boolean trainon = false;
 
     OpenGLMatrix lastLocation = null;
 
@@ -895,8 +896,8 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         int right_start;
         int left_start;
         int moveCounts;
-        boolean glyphSensed = false;
-        boolean twoblocks =false;
+       // boolean glyphSensed = false;
+        //boolean twoblocks =false;
         //int drive_direction = -90;
         moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
         right_start = gromit.driveTrain.right_rear.getCurrentPosition();
@@ -956,30 +957,71 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
 
 
 
-
-            if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
-                glyphSensed = true;
-                if(!gromit.glyphTrain.seeMiddleBlock.getState()){//TWO BLOCKS!!!!! or front sensor
+            if(!glyphSensed){
+                /**TWO BLOCKS NO GAP*/
+                if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !gromit.glyphTrain.seeMiddleBlock.getState()){//Sees two blocks
+                   glyphSensed = true;
+                   twoblocks = true;
+                   gap = false;
+                }
+                /**TWO BLOCKS WITH GAP*/
+                else if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !gromit.glyphTrain.seeFrontBlock.getState()){//Sees two blocks gap
+                    glyphSensed = true;
                     twoblocks = true;
+                    gap = true;
+                }
+                /**One block*/
+                else if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1){//Sees one blocks
+                    glyphSensed = true;
+                    twoblocks = false;
+                    gap = false;
                 }
             }
-            else if(glyphSensed){//Second Edge
-                if(twoblocks){
-                    if((gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() > 1 ) ) {
+            else{//You have seen a block edge already
+                if(twoblocks = false){/**One block*/
+                    if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){//Block is out of the train
                         gromit.glyphTrain.glyphclampupper("close");
-                        gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
                         gromit.glyphTrain.glyphliftupper("top");
-                        glyphSensed = false;
-                        gromit.glyphTrain.stopGlyphMotors();
+                        glyphSensed = false;//Restart the loop
                     }
                 }
-                else if (gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
-                    gromit.glyphTrain.glyphclampupper("close");
-                    gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
-                    gromit.glyphTrain.glyphliftupper("top");
-                    glyphSensed = false;
-                    gromit.glyphTrain.stopGlyphMotors();
-
+                else if(twoblocks && !gap){/** TWO BLOCKS Without a gap*/
+                    if(gromit.glyphTrain.seeMiddleBlock.getState() && !doneone){//Middle doesn't see anything
+                        gromit.glyphTrain.stopGlyphMotors();
+                        gromit.glyphTrain.glyphclampupper("close");
+                        gromit.glyphTrain.glyphliftupper("top");
+                        doneone = true;
+                    }
+                    else if(doneone && gromit.glyphTrain.glyphliftservo.getPosition() > 0.7){//Wait to turn on until the block is lifted
+                        gromit.glyphTrain.startGlyphMotors(1.0);
+                        trainon=true;
+                    }
+                    else if(trainon && doneone){
+                        if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+                            gromit.glyphTrain.stopGlyphMotors();
+                            //SHOULD WE LIFT
+                        }
+                    }
+                }
+                else if(twoblocks && gap){/** TWO BLOCKS WITH A GAP*/
+                    if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && !doneone){//Middle doesn't see anything
+                        gromit.glyphTrain.glyphclampupper("close");
+                        gromit.glyphTrain.glyphliftupper("top");
+                        doneone = true;
+                    }
+                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && gromit.glyphTrain.glyphliftservo.getPosition() < 0.7){//Wait to turn on until the block is lifted
+                        gromit.glyphTrain.stopGlyphMotors();
+                        trainon=false;
+                    }
+                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && gromit.glyphTrain.glyphliftservo.getPosition() > 0.7){//Wait to turn on until the block is lifted
+                        gromit.glyphTrain.startGlyphMotors(1.0);
+                        trainon=true;
+                    }
+                    else if(trainon && doneone && gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && gromit.glyphTrain.glyphliftservo.getPosition() > 0.7){
+                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+                            gromit.glyphTrain.stopGlyphMotors();
+                    }
                 }
             }
         }
