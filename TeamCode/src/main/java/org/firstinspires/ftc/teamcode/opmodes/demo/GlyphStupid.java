@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name="Glyph Hunt")
+@Disabled
 public class GlyphStupid extends OpMode{
     BotHardware bot = new BotHardware(this);
     private static final int FOUND_VELOCITY = 790;

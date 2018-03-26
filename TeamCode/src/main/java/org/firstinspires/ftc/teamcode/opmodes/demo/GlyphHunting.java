@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @TeleOp(name="Glyph Motor Speed")
+@Disabled
 public class GlyphHunting extends CrappyGraphLib {
     BotHardware bot = new BotHardware(this);
     //private int lastLeft = 0;

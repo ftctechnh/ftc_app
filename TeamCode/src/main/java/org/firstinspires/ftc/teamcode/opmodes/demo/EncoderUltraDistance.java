@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
  * Created by Noah on 3/24/2018.
  */
 
-@Autonomous(name="Ultra Encoder Stuff")
 public class EncoderUltraDistance extends OpMode {
     private BotHardware bot = new BotHardware(this);
     private MatbotixUltra sensor;
