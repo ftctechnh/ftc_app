@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
@@ -51,7 +52,6 @@ public class ADPSAuto extends VuforiaBallLib {
     protected ColorSensor backColor;
     protected boolean red = false;
     protected boolean rear = false;
-    protected boolean justDrive = false;
     private BotHardware bot = new BotHardware(this);
 
     private BallColor color = BallColor.Undefined;
@@ -485,7 +485,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private final float powerMax;
 
         public GyroCorrectStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
-                             DcMotor[] motorsteps, float power)
+                               DcMotor[] motorsteps, float power)
         {
             this(mode, heading, gyro, pid, motorsteps, power, -1, 1);
         }
@@ -510,6 +510,7 @@ public class ADPSAuto extends VuforiaBallLib {
             // initialize previous-time on our first call -> dt will be zero on first call
             if (firstLoopCall()) {
                 mPrevTime = mOpMode.getRuntime();           // use timer provided by OpMode
+                mPid.reset();
             }
 
             float heading = mGyro.getHeading();     // get latest reading from direction sensor
@@ -581,6 +582,10 @@ public class ADPSAuto extends VuforiaBallLib {
 
         public float getMaxPower() {
             return this.powerMax;
+        }
+
+        public float getHeading() {
+            return this.mHeading;
         }
     }
 
