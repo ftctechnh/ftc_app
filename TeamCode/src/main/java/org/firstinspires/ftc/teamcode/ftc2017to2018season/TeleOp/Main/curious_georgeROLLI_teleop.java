@@ -158,23 +158,19 @@ public class curious_georgeROLLI_teleop extends OpMode {
         telemetry.addData("right power input", rightY_gp1);
         telemetry.addData("left power input", leftY_gp1);
 if (gamepad1.dpad_left){
-    leftWheelMotorFront.setPower(-1);
-    leftWheelMotorBack.setPower(1);
-    rightWheelMotorFront.setPower(1);
-    rightWheelMotorBack.setPower(-1);
+  setPowerAll(-1,1,1,-1);
 }
 else if (gamepad1.dpad_right){
-    leftWheelMotorFront.setPower(1);
-    leftWheelMotorBack.setPower(-1);
-    rightWheelMotorFront.setPower(-1);
-    rightWheelMotorBack.setPower(1);
-
+    setPowerAll(1,-1,-1,1);
+}
+else if (gamepad1.dpad_down){
+    setPowerAll(-0.5,-0.5,-0.5,-0.5);
+}
+else if (gamepad1.dpad_up){
+    setPowerAll(0.5,0.5,0.5,0.5);
 }
         if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
-            leftWheelMotorFront.setPower(leftY_gp1);
-            leftWheelMotorBack.setPower(leftY_gp1);
-            rightWheelMotorFront.setPower(rightY_gp1);
-            rightWheelMotorBack.setPower(rightY_gp1);
+           setPowerAll(leftY_gp1,leftY_gp1,rightY_gp1,rightY_gp1);
         }
         else{
             leftWheelMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -186,6 +182,13 @@ else if (gamepad1.dpad_right){
             rightWheelMotorFront.setPower(0);
             rightWheelMotorBack.setPower(0);
         }
+    }
+
+    public void setPowerAll(double leftTop, double leftBottom, double rightTop, double rightBottom){
+        leftWheelMotorFront.setPower(leftTop);
+        leftWheelMotorBack.setPower(leftBottom);
+        rightWheelMotorFront.setPower(rightTop);
+        rightWheelMotorBack.setPower(rightBottom);
     }
 
     public void sleep(long ms) {
