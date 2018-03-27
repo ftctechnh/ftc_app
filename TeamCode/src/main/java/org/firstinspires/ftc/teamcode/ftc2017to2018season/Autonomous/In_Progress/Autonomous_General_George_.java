@@ -1122,19 +1122,34 @@ public class Autonomous_General_George_ extends LinearOpMode{
         //sleep(5000);
     }
 
-    public void KnockjewelSensor(String ballColor){
-        if(ballColor=="red"){
-            //move the jewel manipulator to the left to knock off the ball
-            jewelServoRotate.setPosition(1);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move the jewel manipulator to the original position
-            jewelServoRotate.setPosition(0.79);
-            sleep(1000);
-        }
-        else if (ballColor=="blue"){
-//move the jewel manipulator to the right to knock off the ball
+    public void KnockjewelSensor(String ballColor) {
+// This was done to ensure correction. The code below is guaranteed to work 3/26/18
+// if(ballColor=="red"){
+//            //move the jewel manipulator to the left to knock off the ball
+//            jewelServoRotate.setPosition(1);
+//            sleep(300);
+//            jewelServo.setPosition(0.8);
+//            sleep(750);
+//            //move the jewel manipulator to the original position
+//            jewelServoRotate.setPosition(0.79);
+//            sleep(1000);
+//        }
+//        else if (ballColor=="blue"){
+////move the jewel manipulator to the right to knock off the ball
+//            jewelServoRotate.setPosition(0.5);
+//            sleep(300);
+//            jewelServo.setPosition(0.8);
+//            sleep(750);
+//            //move it back to the original posititon
+//            jewelServoRotate.setPosition(0.79);
+//            //Add code to swing the jwele arm
+//        }
+//        else {
+//            telemetry.addData("Balls not seen", "Solution TBD   :/");
+//            telemetry.update();
+//        }
+        if (ballColor.equals("blue")) {
+            //move the jewel manipulator to the right to knock off the ball
             jewelServoRotate.setPosition(0.5);
             sleep(300);
             jewelServo.setPosition(0.8);
@@ -1142,14 +1157,21 @@ public class Autonomous_General_George_ extends LinearOpMode{
             //move it back to the original posititon
             jewelServoRotate.setPosition(0.79);
             //Add code to swing the jwele arm
-        }
-        else {
-            telemetry.addData("Balls not seen", "Solution TBD   :/");
-            telemetry.update();
-        }
 
+        } else if (ballColor.equals("red")) {
+            //move the jewel manipulator to the left to knock off the ball
+            jewelServoRotate.setPosition(1);
+            sleep(300);
+            jewelServo.setPosition(0.8);
+            sleep(750);
+            //move the jewel manipulator to the original position
+            jewelServoRotate.setPosition(0.79);
+            sleep(500);
+        } else if (ballColor.equals("blank")) {
+            jewelServo.setPosition(1);
+
+        }
     }
-
     /*
         GLYPH MANIPULATOR METHODS
      */
