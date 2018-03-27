@@ -157,10 +157,10 @@ public class curious_georgeROLLI_teleop extends OpMode {
         float rightY_gp1 = (-gamepad1.right_stick_y);
         telemetry.addData("right power input", rightY_gp1);
         telemetry.addData("left power input", leftY_gp1);
-if (gamepad1.dpad_left){
+if (gamepad1.left_stick_x<0&&gamepad1.right_stick_x<0){
   setPowerAll(-1,1,1,-1);
 }
-else if (gamepad1.dpad_right){
+else if (gamepad1.left_stick_x>0&&gamepad1.right_stick_x>0){
     setPowerAll(1,-1,-1,1);
 }
 else if (gamepad1.dpad_down){
