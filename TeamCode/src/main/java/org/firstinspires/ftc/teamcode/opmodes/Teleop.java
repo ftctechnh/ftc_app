@@ -47,21 +47,10 @@ public class Teleop extends OpMode {
     private boolean suckMotorRamping = false;
     private int suckMotorRampCount = 0;
 
-    private enum LiftState {
-        RAISING,
-        LOWERING,
-        MID,
-    }
-    private LiftState liftState = LiftState.LOWERING;
-
-    private int leftPos;
-    private int rightPos;
+    private int liftPos;
 
     private boolean servoSet = false;
     private double lastTime = 0;
-
-    private boolean dropBool = false;
-    private boolean frontBool = false;
 
     public void init() {
         bot.init();
@@ -87,21 +76,13 @@ public class Teleop extends OpMode {
         bot.start();
         bot.setFrontDrop(0.34);
         bot.setDropPos(BotHardware.ServoE.backDropUp);
-        leftPos = BotHardware.Motor.liftLeft.motor.getCurrentPosition() + 50;
-        rightPos = BotHardware.Motor.liftRight.motor.getCurrentPosition() + 50;
-        //lift run to position mode
-        BotHardware.Motor.liftLeft.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BotHardware.Motor.liftRight.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos);
-        BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos);
-        BotHardware.Motor.liftLeft.motor.setPower(1.0);
-        BotHardware.Motor.liftRight.motor.setPower(1.0);
+        BotHardware.Motor.lift.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftPos = BotHardware.Motor.lift.motor.getCurrentPosition();
     }
 
     public void loop() {
         //calc deltas
-        final int leftLiftPosDelta =  BotHardware.Motor.liftLeft.motor.getCurrentPosition() - leftPos;
-        final int rightLiftPosDelta = BotHardware.Motor.liftRight.motor.getCurrentPosition() - rightPos;
+        final int liftPosDelta = BotHardware.Motor.lift.motor.getCurrentPosition() - liftPos;
 
         if(gamepad1.a && !lastA) robotSlow = !robotSlow;
         lastA = gamepad1.a;
@@ -114,57 +95,26 @@ public class Teleop extends OpMode {
         else if(gamepad2.dpad_up) bot.setFrontDrop(BotHardware.ServoE.frontDropUp);
         else if(gamepad2.dpad_down) bot.setFrontDrop(BotHardware.ServoE.frontDropDown);
 
-        //check if going down
-        if(gamepad2.left_bumper && liftState != LiftState.LOWERING) {
-            BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos);
-            BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos);
-            BotHardware.Motor.liftLeft.motor.setPower(1.0);
-            BotHardware.Motor.liftRight.motor.setPower(1.0);
-            liftState = LiftState.LOWERING;
+        //lowering
+        if(gamepad2.left_bumper) {
+            bot.setLiftMotors(-1.0f);
+            BotHardware.Motor.lift.motor.setTargetPosition(liftPos);
         }
-        else if((gamepad2.right_bumper || (gamepad1.right_trigger > 0 && leftLiftPosDelta < LIFT_BOTTOM_COUNTS && rightLiftPosDelta < LIFT_BOTTOM_COUNTS)) && liftState != LiftState.RAISING) {
-            BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos + LIFT_COUNTS);
-            BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos + LIFT_COUNTS);
-            BotHardware.Motor.liftLeft.motor.setPower(1.0);
-            BotHardware.Motor.liftRight.motor.setPower(1.0);
-            liftState = LiftState.RAISING;
+        else if(gamepad2.right_bumper) {
+            bot.setLiftMotors(1.0f);
+            BotHardware.Motor.lift.motor.setTargetPosition(liftPos + LIFT_COUNTS);
         }
-        else if(!gamepad2.left_bumper && !gamepad2.right_bumper && liftState != LiftState.MID) {
-            //calculate lift position such that they are on the same proportion
-            int avgDelta;
-            if(liftState == LiftState.RAISING) avgDelta = avgDelta = Range.clip((int)((double)(leftLiftPosDelta + rightLiftPosDelta) / 2.0) + 150, 0, LIFT_COUNTS);
-            else avgDelta = avgDelta = Range.clip((int)((double)(leftLiftPosDelta + rightLiftPosDelta) / 2.0), 0, LIFT_COUNTS);
-            BotHardware.Motor.liftLeft.motor.setTargetPosition(leftPos + avgDelta);
-            BotHardware.Motor.liftRight.motor.setTargetPosition(rightPos + avgDelta);
-            BotHardware.Motor.liftLeft.motor.setPower(0.5);
-            BotHardware.Motor.liftRight.motor.setPower(0.5);
-            liftState = LiftState.MID;
-        }
-
-        /*
-        if(leftLiftPosDelta < INTAKE_LIFT_COUNTS && rightLiftPosDelta < INTAKE_LIFT_COUNTS && !frontBool) {
-            bot.setFrontDrop(BotHardware.ServoE.frontDropDown);
-            frontBool = true;
-        }
-        else if(leftLiftPosDelta > INTAKE_LIFT_COUNTS && rightLiftPosDelta > INTAKE_LIFT_COUNTS && frontBool) {
-            bot.setFrontDrop(BotHardware.ServoE.frontDropUp);
-            frontBool = false;
-        }
-
-        if(leftLiftPosDelta < BUCKET_LIFT_COUNTS && rightLiftPosDelta < BUCKET_LIFT_COUNTS && !dropBool) {
-            bot.setDropPos(BotHardware.ServoE.backDropUp);
-            dropBool = true;
-        }
-        else if(leftLiftPosDelta > BUCKET_LIFT_COUNTS && rightLiftPosDelta > BUCKET_LIFT_COUNTS && dropBool) {
-            bot.setDropPos(BUCKET_FLAT);
-            dropBool = false;
-        }
-        */
+        else bot.setLiftMotors(0);
 
         if(gamepad1.left_trigger > 0)
             bot.setDropPos(Range.clip(bot.getDropPos() + Range.scale(gamepad1.left_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
-        else if(gamepad1.right_trigger > 0 && liftState != LiftState.RAISING)
-            bot.setDropPos(Range.clip(bot.getDropPos() - Range.scale(gamepad1.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+        else if(gamepad1.right_trigger > 0) {
+            if(liftPosDelta > LIFT_BOTTOM_COUNTS) bot.setDropPos(Range.clip(bot.getDropPos() - Range.scale(gamepad1.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
+            else {
+                BotHardware.Motor.lift.motor.setTargetPosition(liftPos + LIFT_BOTTOM_COUNTS + 50);
+                bot.setLiftMotors(1.0f);
+            }
+        }
 
         double time = getRuntime();
         if((gamepad2.x || gamepad1.x) && time - lastTime >= BUCKET_SHAKE_INTERVAL) {
@@ -250,8 +200,7 @@ public class Teleop extends OpMode {
         telemetry.addData("Front Drop", bot.getFrontDrop());
         telemetry.addData("Back Drop", bot.getDropPos());
         telemetry.addData("Robot Slow", robotSlow);
-        telemetry.addData("Lift Left", leftLiftPosDelta);
-        telemetry.addData("Lift Right", rightLiftPosDelta);
+        telemetry.addData("Lift", liftPos);
     }
 
     public void stop() {

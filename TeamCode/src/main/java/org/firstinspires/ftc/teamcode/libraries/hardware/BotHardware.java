@@ -33,8 +33,7 @@ public class BotHardware {
         backRight("br", true),
         frontLeft("fl", false),
         backLeft("bl", false),
-        liftLeft("ll", false),
-        liftRight("lr", true),
+        lift("l", false),
         suckLeft("sl", false),
         suckRight("sr", true);
 
@@ -110,34 +109,6 @@ public class BotHardware {
     }
 
 
-    /*
-    public enum ContiniuosServoE {
-        SuckLeft("crl", false),
-        SuckRight("crr", true),
-        FrontSuckLeft("fcrl", true),
-        FrontSuckRight("fcll", false);
-
-        private final String name;
-        public CRServo servo;
-        private boolean reversed;
-        ContiniuosServoE(String name, boolean reversed) {
-            this.name = name;
-            this.reversed = reversed;
-        }
-
-        void initServo(OpMode mode) {
-            try{
-                this.servo = mode.hardwareMap.get(CRServo.class, this.name);
-                if(this.reversed) this.servo.setDirection(CRServo.Direction.REVERSE);
-            }
-            catch (Exception e) {
-                mode.telemetry.addData(this.name, "Failed to find");
-            }
-        }
-    }
-    */
-
-
     //opmode pointer
     private final OpMode mode;
     //motor wrap array pointer
@@ -158,8 +129,7 @@ public class BotHardware {
     public void init() {
         //init all motors
         for (int i = 0; i < Motor.values().length; i++) Motor.values()[i].initMotor(this.mode);
-        Motor.liftRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        Motor.liftLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        Motor.lift.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //init motor shim array
         shimRay = new DcMotorWrap[] { new DcMotorWrap(Motor.frontRight.motor), new DcMotorWrap(Motor.backRight.motor), new DcMotorWrap(Motor.frontLeft.motor), new DcMotorWrap(Motor.backLeft.motor) };
         //liftMotors = new StupidMotorLib[] { new StupidMotorLib(Motor.liftLeft.motor, 0.5f), new StupidMotorLib(Motor.liftRight.motor, 0.5f) };
@@ -245,8 +215,7 @@ public class BotHardware {
     public AutoLib.Sequence getDropStep() {
         AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
         AutoLib.ConcurrentSequence raiseLift = new AutoLib.ConcurrentSequence();
-        raiseLift.add(new AutoLib.EncoderMotorStep(Motor.liftLeft.motor, 1.0f, 400, true));
-        raiseLift.add(new AutoLib.EncoderMotorStep(Motor.liftRight.motor, 1.0f, 400, true));
+        raiseLift.add(new AutoLib.EncoderMotorStep(Motor.lift.motor, 1.0f, 400, true));
         mSeq.add(raiseLift);
         AutoLib.Sequence drop = new AutoLib.ConcurrentSequence();
         //drop the block
@@ -261,19 +230,11 @@ public class BotHardware {
         lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropUp, 1.0, false));
         mSeq.add(lift);
         AutoLib.ConcurrentSequence lowerLift = new AutoLib.ConcurrentSequence();
-        lowerLift.add(new AutoLib.EncoderMotorStep(Motor.liftLeft.motor, -1.0f, 300, true));
-        lowerLift.add(new AutoLib.EncoderMotorStep(Motor.liftRight.motor, -1.0f, 300, true));
+        lowerLift.add(new AutoLib.EncoderMotorStep(Motor.lift.motor, -1.0f, 300, true));
         mSeq.add(lowerLift);
         return mSeq;
     }
 
-    /*
-    public void setSuckLeft(double power) {
-        ContiniuosServoE.SuckLeft.servo.setPower(power);
-        ContiniuosServoE.FrontSuckLeft.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
-    }
-    */
-
     public void setSuckLeft(double power) {
         Motor.suckLeft.motor.setPower(power);
     }
@@ -282,28 +243,10 @@ public class BotHardware {
         Motor.suckRight.motor.setPower(power);
     }
 
-    /*
-    public void setSuckLeft(double power) {
-        Motor.suckLeft.motor.setPower(power);
-    }
-    */
-
-    /*
-    public void setSuckRight(double power) {
-        ContiniuosServoE.SuckRight.servo.setPower(power);
-        ContiniuosServoE.FrontSuckRight.servo.setPower(Range.scale(power, -1, 1, -0.83, 0.83));
-    }
-    */
 
     public void setLights(double power) {
         /*Motor.green.motor.setPower(Math.abs(power));*/
     }
-
-    /*
-    public void setSuckRight(double power) {
-        Motor.suckRight.motor.setPower(power);
-    }
-    */
 
     public DcMotorEx getMotor(String name) {
         return Motor.valueOf(name).motor;
@@ -318,13 +261,11 @@ public class BotHardware {
     }
 
     public void setLiftMotors(float power) {
-        Motor.liftLeft.motor.setPower(power);
-        Motor.liftRight.motor.setPower(power);
+        Motor.lift.motor.setPower(power);
     }
 
     public void setLiftMotorsDegrees(float deg) {
-        Motor.liftLeft.motor.setVelocity(deg, AngleUnit.DEGREES);
-        Motor.liftRight.motor.setVelocity(deg, AngleUnit.DEGREES);
+        Motor.lift.motor.setVelocity(deg, AngleUnit.DEGREES);
     }
 
     /*
