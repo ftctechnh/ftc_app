@@ -48,7 +48,8 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
     boolean blueJewelIsLeft;
     int screenColor = Color.BLACK;
     int newScreenColor = Color.BLACK;
-    public int delay = 500;
+    public double starttime;
+    public double delay = 750;
     boolean doneone = false;
     boolean twoblocks = false;
     boolean gap = false;
@@ -296,22 +297,28 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
 
 
         if (menuFile.mode == 3) {   //  test mode
-//            mecanumTurn (menuFile.DriveSpeed,menuFile.RedFrontTurn1);
-//            mecanumDrive();
-            RobotLog.vv("[Gromit] IR", "Begin");
+            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+            gromit.glyphTrain.glyphclampupper("open");
+            gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
+            gromit.glyphTrain.startGlyphMotors(0.6);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, 40, 0, 0);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, -40, 0, 0);
 
-            while (runtime.milliseconds() < 3000) {
-                gromit.driveTrain.left_rear.setPower(0.5);
-                gromit.driveTrain.left_front.setPower(0.5);
-                gromit.driveTrain.right_rear.setPower(0.5);
-                gromit.driveTrain.right_front.setPower(0.5);
-                double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
-                double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
-                RobotLog.vv("[Gromit] IR", Double.toString(IRdistance));
-//                Log.d("[Gromi2] IR",Double.toString(IRdistance));
-                idle();
-            }
-            RobotLog.vv("[Gromit] IR", "End");
+
+            //RobotLog.vv("[Gromit] IR", "Begin");
+
+//            while (runtime.milliseconds() < 3000) {
+//                gromit.driveTrain.left_rear.setPower(0.5);
+//                gromit.driveTrain.left_front.setPower(0.5);
+//                gromit.driveTrain.right_rear.setPower(0.5);
+//                gromit.driveTrain.right_front.setPower(0.5);
+//                double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
+//                double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+//                RobotLog.vv("[Gromit] IR", Double.toString(IRdistance));
+////                Log.d("[Gromi2] IR",Double.toString(IRdistance));
+//                idle();
+//            }
+//            RobotLog.vv("[Gromit] IR", "End");
             gromit.driveTrain.stopMotors();
 
             while (opModeIsActive()) {
@@ -980,9 +987,10 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                         gromit.glyphTrain.stopGlyphMotors();
                         gromit.glyphTrain.glyphclampupper("close");
                         gromit.glyphTrain.glyphliftupper("top");
+                        starttime =  runtime.milliseconds();
                         doneone = true;
                     }
-                    else if(doneone && gromit.glyphTrain.glyphliftservo.getPosition() > 0.7){//Wait to turn on until the block is lifted
+                    else if(doneone &&  runtime.milliseconds()-starttime > delay){//Wait to turn on until the block is lifted
                         gromit.glyphTrain.startGlyphMotors(1.0);
                         trainon=true;
                     }
@@ -995,23 +1003,27 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                     }
                 }
                 else if(twoblocks && gap){/** TWO BLOCKS WITH A GAP*/
-                    if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && !doneone){//Middle doesn't see anything
+                    if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && !doneone){//Rear doesn't see anything
                         gromit.glyphTrain.glyphclampupper("close");
                         gromit.glyphTrain.glyphliftupper("top");
+                        starttime =  runtime.milliseconds();
                         doneone = true;
                     }
-                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && gromit.glyphTrain.glyphliftservo.getPosition() < 0.7){//Wait to turn on until the block is lifted
+                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 &&  runtime.milliseconds()-starttime < delay){//Wait to turn on until the block is lifted
                         gromit.glyphTrain.stopGlyphMotors();
                         trainon=false;
                     }
-                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && gromit.glyphTrain.glyphliftservo.getPosition() > 0.7){//Wait to turn on until the block is lifted
+                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 &&  runtime.milliseconds()-starttime > delay){//Wait to turn on until the block is lifted
                         gromit.glyphTrain.startGlyphMotors(1.0);
                         trainon=true;
                     }
-                    else if(trainon && doneone && gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && gromit.glyphTrain.glyphliftservo.getPosition() > 0.7){
+                    else if(trainon && doneone && gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
                             gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
                             gromit.glyphTrain.stopGlyphMotors();
                     }
+                   // telemetry.addData("Middle ",gromit.driveTrain.sharpIRSensor.getVoltage());
+                   // telemetry.update();
+
                 }
             }
         }
