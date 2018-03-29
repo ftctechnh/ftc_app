@@ -6,7 +6,7 @@
 when                                      who                       Purpose/Change
 -----------------------------------------------------------------------------------------------------------------------------------------------
 2/28/18                                   Rohan                     Removed a temporary commenting out on slideIncrement(). There is a fail safe preventing the robot from crashing if the lift goes to far up so this is unnecessary
-
+2/28/18                                   Pahel                     Changed strafing from joysticks to the dpad and resolved strafing issue.
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Main;
 
@@ -73,9 +73,9 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
         leftWheelMotorFront.setDirection(DcMotor.Direction.REVERSE);
         leftWheelMotorBack.setDirection(DcMotor.Direction.REVERSE);
-
-        glyphRight.setPosition(1);
-        glyphLeft.setPosition(0);
+//changed values (glyphRight:1)(glyphLeft:0)
+        glyphRight.setPosition(0.245);
+        glyphLeft.setPosition(0.66);
 
     }
 
@@ -165,19 +165,32 @@ public class curious_georgeROLLI_teleop extends OpMode {
         float rightY_gp1 = (-gamepad1.right_stick_y);
         telemetry.addData("right power input", rightY_gp1);
         telemetry.addData("left power input", leftY_gp1);
-if (gamepad1.left_stick_x<0&&gamepad1.right_stick_x<0){
-  setPowerAll(-1,1,1,-1);
-}
-else if (gamepad1.left_stick_x>0&&gamepad1.right_stick_x>0){
-    setPowerAll(1,-1,-1,1);
-}
+//changing from  else if (gamepad1.right_stick_x>0&&gamepad1.left_stick_x>0)  to  else if (gamepad1.dpad_left)    3/28/18
+// if (gamepad1.left_stick_x<0&&gamepad1.right_stick_x<0)
+
+    if (gamepad1.dpad_left) {
+
+        setPowerAll(-0.9, 1, 1, -1);
+
+//changing from  else if (gamepad1.left_stick_x>0&&gamepad1.right_stick_x>0)  to  else if (gamepad1.dpad_right)  3/28/18
+//else if (gamepad1.left_stick_x>0&&gamepad1.right_stick_x>0)
+
+    }
+else if (gamepad1.dpad_right){
+        setPowerAll(0.9,-1,-1,1);
+    }
+
+   // setPowerAll(1,-1,-1,1);
+
 else if (gamepad1.dpad_down){
+    
     setPowerAll(-0.5,-0.5,-0.5,-0.5);
 }
 else if (gamepad1.dpad_up){
     setPowerAll(0.5,0.5,0.5,0.5);
 }
-        if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
+//if
+        else if (Math.abs(gamepad1.left_stick_y) > threshold || Math.abs(gamepad1.right_stick_y) > threshold){
            setPowerAll(leftY_gp1,leftY_gp1,rightY_gp1,rightY_gp1);
         }
         else{
