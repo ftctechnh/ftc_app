@@ -27,8 +27,8 @@ public class LiftFix extends OpMode {
     }
 
     public void loop() {
-        BotHardware.Motor.liftLeft.motor.setPower(gamepad1.left_stick_y / 2.0);
-        BotHardware.Motor.liftRight.motor.setPower(gamepad1.right_stick_y / 2.0);
+        //BotHardware.Motor.liftLeft.motor.setPower(gamepad1.left_stick_y / 2.0);
+        BotHardware.Motor.lift.motor.setPower(gamepad1.right_stick_y / 2.0);
     }
 
     public void stop() {
