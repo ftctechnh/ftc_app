@@ -1,3 +1,15 @@
+/*============================================================================================================================================
+                                                            EDIT HISTORY
+
+
+
+when                                      who                       Purpose/Change
+-----------------------------------------------------------------------------------------------------------------------------------------------
+3/28/18                                   Rohan                   On line 65 I changed the function value of centimeters for the moveDownGlyph() functions as it was moving down to far causing the program to crash.
+3/28/18                                   Rohan                   Added new object called jewelDectector1 which calls on DogeCV_JewelDetector. Added on line 88 jewelDectector1.init(); which initializes OpenCV. The other lines of initiation are deleted.  Added a sleep afterward as to give time for the initiation.
+3/28/18                                   Rohan                   Deleted the call on init in line 88 as it caused numerous other problems in the program. Went back to old activations methods.
+
+=============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progress;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;

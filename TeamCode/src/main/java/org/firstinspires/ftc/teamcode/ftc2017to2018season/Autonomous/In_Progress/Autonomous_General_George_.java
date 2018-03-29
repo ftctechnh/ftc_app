@@ -1,3 +1,13 @@
+/*============================================================================================================================================
+                                                            EDIT HISTORY
+
+
+
+when                                      who                       Purpose/Change
+-----------------------------------------------------------------------------------------------------------------------------------------------
+3/28/18                                   Rohan                   Added the values for servos in the functions openGlyphManipulator(), closeGlyphManipulator(), middleGlyphManipulator(), and allOpenGlyphManipulator(). This aloowed the servos to be moved to the coordinated positions when these functions are called.
+
+=============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progress;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -33,8 +43,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
-
-
 /**
  * This OpMode illustrates the basics of using the Vuforia engine to determine
  * the identity of Vuforia VuMarks encountered on the field. The code is structured as
@@ -1107,7 +1115,7 @@ public class Autonomous_General_George_ extends LinearOpMode{
     public void readColorRev() {
 
         ballColor = "blank";
-
+revColorSensor.enableLed(false);
         if (revColorSensor.red() > revColorSensor.blue()) {
             ballColor = "red";
             /*telemetry.addData("current color is red", bColorSensorLeft.red());
