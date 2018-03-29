@@ -1188,22 +1188,30 @@ public class Autonomous_General_George_ extends LinearOpMode{
         /*The values below were for the non rolly collector
           glyphServoRight.setPosition(0.8);
         glyphServoLeft.setPosition(0.1);*/
+        glyphServoLeft.setPosition(0.53);
+        glyphServoRight.setPosition(0.42);
     }
     public void closeGlyphManipulator(){
         /* The values below were for the non rolly collector
         glyphServoRight.setPosition(0.5);
         glyphServoLeft.setPosition(0.4);*/
+        glyphServoLeft.setPosition(0.75);
+        glyphServoRight.setPosition(0.17);
     }
     public void middleGlyphManipulator(){
 
        /* The values below were for the non rolly collector
        glyphServoRight.setPosition(0.6);
         glyphServoLeft.setPosition (0.3);*/
+        glyphServoLeft.setPosition(0.66);
+        glyphServoRight.setPosition(0.245);
     }
     public void allOpenGlyphManipulator(){
         /*The values below were for the non rolly collector
         glyphServoRight.setPosition(0.25);
         glyphServoLeft.setPosition(0.65);*/
+        glyphServoLeft.setPosition(0.2);
+        glyphServoRight.setPosition(0.8);
     }
 
     public void glyphIntakeRolly(double seconds){

@@ -3,10 +3,13 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progres
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.Autonomous_General_George;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Test.DogeCVJewelDetector;
+
 
 //10-28-17
 @Autonomous(name = "Blue Back George Worlds")
@@ -17,7 +20,8 @@ public class blueBack_George extends Autonomous_General_George_ {
 
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
-    JewelDetector jewelDetector = new JewelDetector();
+    DogeCVJewelDetector jewelDetector = new DogeCVJewelDetector();
+    JewelDetector jewelDetector1 = new JewelDetector();
 
     @Override
     public void runOpMode() {
@@ -61,7 +65,8 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        moveDownGlyph(1.45);
+        //3/28/18 Changed to allow the program to crash as the manipulator can't move far down mechanically. Previous value was 1.45.
+        moveDownGlyph(0.5);
         sleep(250);
         closeGlyphManipulator();
         sleep(250);
@@ -81,23 +86,25 @@ public class blueBack_George extends Autonomous_General_George_ {
 
 
         relicTrackables.deactivate();
-        jewelDetector.areaWeight = 0.02;
-        jewelDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
-        jewelDetector.debugContours = true;
-        jewelDetector.maxDiffrence = 15;
-        jewelDetector.ratioWeight = 15;
-        jewelDetector.minArea = 700;
-        jewelDetector.enable();
-        sleep(750);
-        //Used to make sure the jewels are recognized
-        telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
-        telemetry.update();
+        jewelDetector1.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
 
-        switch (jewelDetector.getCurrentOrder()){
+        //Jewel Detector Settings
+        jewelDetector1.areaWeight = 0.02;
+        jewelDetector1.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
+        //jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
+        jewelDetector1.debugContours = true;
+        jewelDetector1.maxDiffrence = 15;
+        jewelDetector1.ratioWeight = 15;
+        jewelDetector1.minArea = 700;
+
+        jewelDetector1.enable();
+       sleep(500);
+        switch (jewelDetector1.getCurrentOrder()){
             case BLUE_RED:
                 //move the jewel manipulator to the left to knock off the ball
                 jewelServoRotate.setPosition(1);
+                telemetry.addLine("Jewels Seen Blue Red");
+                telemetry.update();
                 sleep(300);
                 jewelServo.setPosition(0.8);
                 sleep(750);
@@ -108,6 +115,9 @@ public class blueBack_George extends Autonomous_General_George_ {
 
             case RED_BLUE:
                 //move the jewel manipulator to the right to knock off the ball
+               telemetry.addLine("Jewels Seen Red Blue");
+                telemetry.update();
+
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
                 jewelServo.setPosition(0.8);
@@ -117,14 +127,15 @@ public class blueBack_George extends Autonomous_General_George_ {
                 //Add code to swing the jwele arm
                 break;
             case UNKNOWN:
-                telemetry.addData("Balls not seen", "Solution TBD   :/");
-                telemetry.update();
+//                telemetry.addData("Balls not seen", "Solution TBD   :/");
+//                telemetry.update();
                 readColorRev();
                 KnockjewelSensor(ballColor);
+                sleep(1000);
                 break;
         }
         //Used to make sure the jewels are recognized
-        telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
+        telemetry.addData("Jewel order is ", jewelDetector1.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
 /*
