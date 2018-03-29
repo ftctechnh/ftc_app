@@ -49,7 +49,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
     int screenColor = Color.BLACK;
     int newScreenColor = Color.BLACK;
     public double starttime;
-    public double delay = 750;
+    public double delay = 1000;
+    public double sensetime = 0;
+    public double overshoot = 50;
     boolean doneone = false;
     boolean twoblocks = false;
     boolean gap = false;
@@ -960,6 +962,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                    glyphSensed = true;
                    twoblocks = true;
                    gap = false;
+                    telemetry.addData("Twoblocks  ",twoblocks);
+                    telemetry.addData("Gap  ",gap);
+                    telemetry.update();
                 }
                 /**TWO BLOCKS WITH GAP*/
                 else if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !gromit.glyphTrain.seeFrontBlock.getState()){//Sees two blocks gap
@@ -983,14 +988,17 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                     }
                 }
                 else if(twoblocks && !gap){/** TWO BLOCKS Without a gap*/
-                    if(gromit.glyphTrain.seeMiddleBlock.getState() && !doneone){//Middle doesn't see anything
+                    if(gromit.glyphTrain.seeMiddleBlock.getState() && !doneone && sensetime == 0){//Middle doesn't see anything
+                        sensetime =  runtime.milliseconds();
+                    }
+                    else if(gromit.glyphTrain.seeMiddleBlock.getState() && !doneone && runtime.milliseconds()-sensetime > overshoot){
                         gromit.glyphTrain.stopGlyphMotors();
                         gromit.glyphTrain.glyphclampupper("close");
                         gromit.glyphTrain.glyphliftupper("top");
                         starttime =  runtime.milliseconds();
                         doneone = true;
                     }
-                    else if(doneone &&  runtime.milliseconds()-starttime > delay){//Wait to turn on until the block is lifted
+                    else if(doneone &&  runtime.milliseconds()-starttime > delay && !trainon){//Wait to turn on until the block is lifted
                         gromit.glyphTrain.startGlyphMotors(1.0);
                         trainon=true;
                     }
