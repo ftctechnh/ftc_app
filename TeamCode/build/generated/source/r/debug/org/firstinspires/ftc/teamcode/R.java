@@ -1081,18 +1081,18 @@ public final class R {
   public static final class style {
     public static final int AppBaseTheme=0x7f0b0000;
     public static final int AppTheme=0x7f0b0001;
-    public static final int AppThemeBlueRC=0x7f0b0008;
-    public static final int AppThemeGreenRC=0x7f0b0009;
-    public static final int AppThemeOrangeRC=0x7f0b000a;
-    public static final int AppThemePurpleRC=0x7f0b000b;
-    public static final int AppThemeRedRC=0x7f0b000c;
-    public static final int AppThemeTealRC=0x7f0b000d;
     public static final int AppTheme_Blue=0x7f0b0002;
     public static final int AppTheme_Green=0x7f0b0003;
     public static final int AppTheme_Orange=0x7f0b0004;
     public static final int AppTheme_Purple=0x7f0b0005;
     public static final int AppTheme_Red=0x7f0b0006;
     public static final int AppTheme_Teal=0x7f0b0007;
+    public static final int AppThemeBlueRC=0x7f0b0008;
+    public static final int AppThemeGreenRC=0x7f0b0009;
+    public static final int AppThemeOrangeRC=0x7f0b000a;
+    public static final int AppThemePurpleRC=0x7f0b000b;
+    public static final int AppThemeRedRC=0x7f0b000c;
+    public static final int AppThemeTealRC=0x7f0b000d;
     public static final int ConfigWifiDirectDialog=0x7f0b000e;
     public static final int FeedbackButton=0x7f0b000f;
     public static final int FeedbackText=0x7f0b0010;
