@@ -242,9 +242,7 @@ else if (gamepad1.dpad_up){
     public void slideIncrement() {
 
         if (gamepad2.dpad_up) {
-//This was done by Rohan and Steven on 2/23/18 because the regionals are soon and the slides malfunction if they reach the very top. This causes the most ascension, therefore, it is disabled. TEMPORARY!!
-            //moveUpInch(33.02);
-
+            moveUpInch(33.02);
         } else if (gamepad2.dpad_right) {
             moveUpInch(20.32);
         } else if (gamepad2.dpad_down){
