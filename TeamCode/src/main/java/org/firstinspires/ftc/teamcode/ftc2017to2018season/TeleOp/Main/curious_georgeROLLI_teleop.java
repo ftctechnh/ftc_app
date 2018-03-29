@@ -5,6 +5,7 @@
 
 when                                      who                       Purpose/Change
 -----------------------------------------------------------------------------------------------------------------------------------------------
+2/28/18                                   Rohan                     Removed a temporary commenting out on slideIncrement(). There is a fail safe preventing the robot from crashing if the lift goes to far up so this is unnecessary
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Main;
@@ -80,13 +81,11 @@ public class curious_georgeROLLI_teleop extends OpMode {
 
     @Override
     public void loop() {
-        //Slides();
         glyphIntake();
         glyphManipulate();
         Drive();
         Slides();
         Relic();
-
     }
 
     public void glyphManipulate() {
