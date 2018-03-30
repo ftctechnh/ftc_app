@@ -11,18 +11,18 @@ public class headingTest extends superAuto {
 
     public void runOpMode() {
         setUp();
-        servoTapper.setPosition(.2);
-        Wait(1);
-        servoTapper.setPosition(.4);
-        Wait(1);
-        servoFlicker.setPosition(.3);
+        fancyGyroPivot(90);
+        Wait(2);setUp();
+        fancyGyroPivot(-45);
+        Wait(2);setUp();
+        fancyGyroPivot(-165);
         Wait(2);
-        servoFlicker.setPosition(0);
+        fancyGyroPivot(135);
         Wait(2);
-        servoFlicker.setPosition(.6);
+        fancyGyroPivot(0);
         Wait(2);
-        servoTapper.setPosition(.7);
-
+        fancyGyroPivot(180);
+        Wait(2);
 
     }
 }
