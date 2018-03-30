@@ -63,7 +63,7 @@ public class MatbotixUltra {
 
     //WARNING: THIS CALL WILL DELAY THE MAIN LOOP
     public int getReading() {
-        if(lastTime != 0) sensor.write8(Regs.RANGE_TAKE.REG, 0);
+        sensor.write8(Regs.RANGE_TAKE.REG, 0);
         if(waitMillis > 0) {
             try{
                 TimeUnit.MILLISECONDS.sleep(waitMillis);

@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Teleop")
 public class Teleop extends OpMode {
-    private static final float slowFactor = 0.5f;
+    private static final float slowFactor = 0.55f;
     private static final float fastFactor = 0.7f;
     private static final double SERVO_INC_SHAKE = 0.1;
     private static final double SERVO_INC_MAX = 0.02;
@@ -30,14 +30,14 @@ public class Teleop extends OpMode {
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
-    private static final double BUCKET_FLAT = 0.53;
+    private static final double BUCKET_FLAT = 0.58;
     //private static final int BUCKET_LIFT_COUNTS = 50;
     //private static final int INTAKE_LIFT_COUNTS = 1200;
     private static final int MIN_VELOCITY = 550;
 
     protected BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
-    private boolean robotSlow = true;
+    private boolean robotSlow = false;
     private boolean motorsSet = false;
     ColorSensor frontColor;
     ColorSensor backColor;

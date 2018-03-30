@@ -22,11 +22,11 @@ import org.firstinspires.ftc.teamcode.opmodes.UltraAuto;
 public class EncoderHoneTweak extends OpMode {
     private final BotHardware bot = new BotHardware(this);
     private final UDPid udPid = new UDPid();
-    private final SensorLib.PID gyroTurnPID = new SensorLib.PID(10.0f, 0, 0, 0);
-    private static final float POWER = 360;
+    private final SensorLib.PID gyroTurnPID = new SensorLib.PID(-16.0f, 0, 0, 0);
+    private static final float POWER = 100;
     private static final float POWER_MIN = 55;
-    private static final float POWER_MAX = 550;
-    private static final int COUNTS = 1000;
+    private static final float POWER_MAX = 720;
+    private static final int COUNTS = 500;
 
     private AutoLib.Sequence step;
 
@@ -51,7 +51,7 @@ public class EncoderHoneTweak extends OpMode {
     public void loop() {
         if(step.loop()) step = makeEncoderStep(drivingBackward = !drivingBackward);
         telemetry.addData("P", udPid.getP() * 100);
-        telemetry.addData("I", udPid.getI() * 100);
+        telemetry.addData("I", udPid.getI() * 1000);
         telemetry.addData("D", udPid.getD() * 100);
     }
 
@@ -61,14 +61,14 @@ public class EncoderHoneTweak extends OpMode {
     }
 
     private ADPSAuto.GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
-        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorRay(), power, powerMin, powerMax);
+        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax, 0.5f);
     }
 
     private AutoLib.Sequence makeEncoderStep(boolean reversed) {
         AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
-        mSeq.add(new UltraAuto.EncoderHoneStep(this, reversed ? -COUNTS : COUNTS, 10, 10,
-                new SensorLib.PID((float)udPid.getP() * 100, (float)udPid.getI() * 100, (float)udPid.getD() * 100, 0),
-                makeGyroDriveStep(0, gyroTurnPID, reversed ? -POWER : POWER, POWER_MIN, POWER_MAX),
+        mSeq.add(new UltraAuto.EncoderHoneStep(this, reversed ? -COUNTS : COUNTS, 5, 25,
+                new SensorLib.PID((float)udPid.getP() * 100, (float)udPid.getI() * 1000, (float)udPid.getD() * 100, 50),
+                makeGyroDriveStep(0, gyroTurnPID, POWER, POWER_MIN, POWER_MAX),
                 new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor}));
         mSeq.add(new AutoLib.LogTimeStep(this, "WAIT", 1.0));
         return mSeq;

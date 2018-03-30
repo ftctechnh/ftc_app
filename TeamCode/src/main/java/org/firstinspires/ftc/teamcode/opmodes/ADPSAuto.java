@@ -483,6 +483,7 @@ public class ADPSAuto extends VuforiaBallLib {
         private final DcMotor[] mMotorSteps;            // the motor steps we're guiding - assumed order is right ... left ...
         private final float powerMin;
         private final float powerMax;
+        private final float mError;
 
         public GyroCorrectStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
                                DcMotor[] motorsteps, float power)
@@ -491,8 +492,13 @@ public class ADPSAuto extends VuforiaBallLib {
         }
 
         public GyroCorrectStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
-                             DcMotor[] motorsteps, float power, float powerMin, float powerMax)
+                               DcMotor[] motorsteps, float power, float powerMin, float powerMax)
         {
+            this(mode, heading, gyro, pid, motorsteps, power, powerMin, powerMax, 1.0f);
+        }
+
+        public GyroCorrectStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                               DcMotor[] motorsteps, float power, float powerMin, float powerMax, float error) {
             mOpMode = mode;
             mHeading = heading;
             mGyro = gyro;
@@ -502,6 +508,7 @@ public class ADPSAuto extends VuforiaBallLib {
             startPower = power;
             this.powerMin = powerMin;
             this.powerMax = powerMax;
+            this.mError = error;
         }
 
         public boolean loop()
@@ -555,9 +562,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 mOpMode.telemetry.addData("right power ", rightPower);
             }
 
-            // guidance step always returns "done" so the CS in which it is embedded completes when
-            // all the motors it's controlling are done
-            return true;
+            return Math.abs(error) <= mError;
         }
 
         public float getPower() {

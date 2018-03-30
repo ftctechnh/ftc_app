@@ -14,7 +14,11 @@ import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
+import org.firstinspires.ftc.teamcode.libraries.interfaces.HeadingSensor;
 import org.opencv.core.Mat;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Noah on 3/25/2018.
@@ -28,11 +32,13 @@ public class UltraAuto extends VuforiaBallLib {
     private static final float PILLAR_SPACING_INCH = 7.63f;
     private static final float ENCODE_PER_CM = 17.3f;
     private static final float DRIVE_DUMP_CM = 15.0f;
-    private static final int[] RED_ZERO = new int[] {20 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
-                                                    80 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
+    private static final int[] RED_ZERO = new int[] {32 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
+                                                    78 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
     private static final int[] BLUE_ZERO = new int[] {20, 80};
+    private static final int X_STUPID_MAX = 60;
 
-    private final SensorLib.PID encoderHonePID = new SensorLib.PID(8.0f, 0, 0, 0);
+    private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 15.87f, 0, 50);
+    private final SensorLib.PID gyroDrivePID = new SensorLib.PID(-16.0f, 0, 0, 0);
     private final SensorLib.PID gyroTurnPID = new SensorLib.PID(10.0f, 0, 0, 0);
 
     private enum AutoPath {
@@ -107,22 +113,25 @@ public class UltraAuto extends VuforiaBallLib {
     }
 
     public void start() {
-        //read all sensors
-        final int xZero = red ? RED_ZERO[0] : BLUE_ZERO[0];
-        xOffsetStart = UltraPos.getXSensor().getReading() - xZero;
-        final int yZero = red ? RED_ZERO[1] : BLUE_ZERO[1];
-        yOffsetStart = UltraPos.getYSensor(red, rear).getReading() - yZero;
-
-        //initalize sequence
+        //initalize starting sequence
+        mSeq.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
+                -550, 500, false, -720, -55));
+        mSeq.add(new DriveAndMeasureStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
+                -550, 200, true, -720, -55));
     }
 
     public void loop() {
         //ball code goes above here
-        if(!firstRun) {
-            //initialize sequence
+        if(!firstRun && mSeq.loop()) {
+            //initialize sequence with found values
+            final int yZero = red ? RED_ZERO[1] : BLUE_ZERO[1];
+            yOffsetStart = UltraPos.getYSensor(red, rear).getReading() - yZero;
 
+            telemetry.addData("X Offset", xOffsetStart);
+            telemetry.addData("Y Offset", yOffsetStart);
             firstRun = true;
         }
+
 
     }
 
@@ -195,7 +204,7 @@ public class UltraAuto extends VuforiaBallLib {
             }
             //get the distance and error
             final float read = readEncoderDeltaAvg();
-            float curError = dist - read;
+            float curError = read - dist;
             //if we found it, stop
             //if the peak is within stopping margin, stop
             if(Math.abs(curError) <= error) {
@@ -203,6 +212,7 @@ public class UltraAuto extends VuforiaBallLib {
                 return ++currentCount >= count;
             }
             else currentCount = 0;
+
             //PID
             final double time = mode.getRuntime();
             final float pError = errorPid.loop(curError, (float)(time - lastTime));
@@ -215,22 +225,13 @@ public class UltraAuto extends VuforiaBallLib {
             else power = Range.clip(pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
             //reverse if necessary
             if(gyroStep.getStartPower() < 0) power = -power;
-            /*
-            if(gyroStep.getStartPower() >= 0){
-                if(pError >= 0) power = Range.clip(gyroStep.getStartPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
-                else power = Range.clip(pError - gyroStep.getStartPower(), -gyroStep.getMaxPower(), -gyroStep.getMinPower());
-            }
-            else {
-                if(pError >= 0) power = Range.clip(gyroStep.getStartPower() - pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
-                else power = Range.clip(Math.abs(gyroStep.getStartPower() + pError), gyroStep.getMinPower(), gyroStep.getMaxPower());
-            }
-            */
+
             gyroStep.setPower(power);
             gyroStep.loop();
             //telem
             mode.telemetry.addData("Power", -power);
-            mode.telemetry.addData("Ultra error", curError);
-            mode.telemetry.addData("Ultra", read);
+            mode.telemetry.addData("Encoder error", curError);
+            mode.telemetry.addData("Encoder", read);
             //return
             return false;
         }
@@ -238,12 +239,36 @@ public class UltraAuto extends VuforiaBallLib {
         private float readEncoderDeltaAvg() {
             int total = 0;
             for (int i = 0; i < encoders.length; i++) total =+ encoders[i].getCurrentPosition() - startPos[i];
-            return (float)total / (float)encoders.length;
+            return (float)-total / (float)encoders.length;
 
         }
 
         private void setMotorsWithoutGyro(float power) {
             for (DcMotor motor : gyroStep.getMotors()) motor.setPower(power);
+        }
+    }
+
+    private class DriveAndMeasureStep extends AutoLib.AzimuthCountedDriveStep {
+
+        private List<Integer> data = new LinkedList<>();
+
+        DriveAndMeasureStep(OpMode mode, float heading, HeadingSensor gyro, SensorLib.PID pid,
+                            DcMotor motors[], float power, int count, boolean stop, float powerMin, float powerMax) {
+            super(mode, heading, gyro, pid, motors, power, count, stop, powerMin, powerMax);
+        }
+
+        @Override
+        public boolean loop() {
+            final int reading;
+            if(super.loop()) {
+                int max = 0;
+                for(Integer i : data) if(i < X_STUPID_MAX && i > max) max = i;
+                final int xZero = red ? RED_ZERO[0] : BLUE_ZERO[0];
+                xOffsetStart = max - xZero;
+                return true;
+            }
+            else if((reading = UltraPos.getXSensor().getReadingNoDelay()) >= 0) data.add(reading);
+            return false;
         }
     }
 }
