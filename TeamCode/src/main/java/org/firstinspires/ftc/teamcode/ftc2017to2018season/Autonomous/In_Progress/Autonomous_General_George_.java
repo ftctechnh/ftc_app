@@ -6,7 +6,6 @@
 when                                      who                       Purpose/Change
 -----------------------------------------------------------------------------------------------------------------------------------------------
 3/28/18                                   Rohan                   Added the values for servos in the functions openGlyphManipulator(), closeGlyphManipulator(), middleGlyphManipulator(), and allOpenGlyphManipulator(). This aloowed the servos to be moved to the coordinated positions when these functions are called.
-3/28/18                                   Rohan                   Added a new function called readColorEmittedLight() to start the progress on using emitted light for the fail safe color sensor part of the program
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous.In_Progress;
@@ -1132,22 +1131,6 @@ revColorSensor.enableLed(false);
         }
         //sleep(5000);
     }
-public void readColorEmittedLight(){
-    double SCALE_FACTOR = 255;
-    float hsvValues[] = {0F, 0F, 0F};
-    final float values[] = hsvValues;
-    Color.RGBToHSV((int) (revColorSensor.red() * SCALE_FACTOR),
-            (int) (revColorSensor.green() * SCALE_FACTOR),
-            (int) (revColorSensor.blue() * SCALE_FACTOR),
-            hsvValues);
-    telemetry.addData("Alpha", revColorSensor.alpha());
-    telemetry.addData("Red  ", revColorSensor.red());
-    telemetry.addData("Green",revColorSensor.green());
-    telemetry.addData("Blue ", revColorSensor.blue());
-    telemetry.addData("Hue", hsvValues[0]);
-    telemetry.update();
-
-}
     public void KnockjewelSensor(String ballColor) {
 // This was done to ensure correction. The code below is guaranteed to work 3/26/18
 // if(ballColor=="red"){
