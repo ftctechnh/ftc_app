@@ -5,9 +5,11 @@
 
 when                                      who                       Purpose/Change
 -----------------------------------------------------------------------------------------------------------------------------------------------
-2/28/18                                   Rohan                     Removed a temporary commenting out on slideIncrement(). There is a fail safe preventing the robot from crashing if the lift goes to far up so this is unnecessary
-2/28/18                                   Pahel                     Changed strafing from joysticks to the dpad and resolved strafing issue.
-2/29/18                                   Rohan                     Added a new object called constants and started replacing constant values in the program with the object.
+3/28/18                                   Rohan                     Removed a temporary commenting out on slideIncrement(). There is a fail safe preventing the robot from crashing if the lift goes to far up so this is unnecessary
+3/28/18                                   Pahel                     Changed strafing from joysticks to the dpad and resolved strafing issue.
+3/29/18                                   Rohan                     Added a new object called constants and started replacing constant values in the program with the object.
+3/30/18                                   Rohan                     All numerical values are replaced by an object value. All values defined in Constants_For_TeleOp_Rolly.
+
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.Main;
 
@@ -311,5 +313,5 @@ else if (gamepad1.dpad_up){
         slideMotor.setPower(0);
 
     }
-    
+
 }
