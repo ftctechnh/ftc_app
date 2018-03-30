@@ -309,6 +309,13 @@ abstract public class superAuto extends LinearOpMode {
 
         while ((convert < (target - fudgeFactor)) || (convert > (target + fudgeFactor)))
         {
+
+            telemetry.addData("Raw: ", raw);
+            telemetry.addData("Convert: ", convert);
+            telemetry.addData("Default", dflt);
+            telemetry.addData("Alt", alt);
+            telemetry.update();
+
             // determine if we are moving right or left
             if (alt < dflt || dflt < 0)
             {
@@ -322,20 +329,21 @@ abstract public class superAuto extends LinearOpMode {
             //set power to motor
             if (right = true)
             {
-                motorFL.setPower(-wheelPower);
-                motorBL.setPower(-wheelPower);
-                motorFR.setPower(wheelPower);
-                motorBR.setPower(wheelPower);
-            }
-            else
-            {
                 motorFL.setPower(wheelPower);
                 motorBL.setPower(wheelPower);
                 motorFR.setPower(-wheelPower);
                 motorBR.setPower(-wheelPower);
             }
+            else
+            {
+                motorFL.setPower(-wheelPower);
+                motorBL.setPower(-wheelPower);
+                motorFR.setPower(wheelPower);
+                motorBR.setPower(wheelPower);
+            }
 
             //read the heading and find the shortest path
+            angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             raw = angles.firstAngle;
             dflt = (target - raw);
             alt = (360 - Math.abs(dflt));
