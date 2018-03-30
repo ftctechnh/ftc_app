@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants_For_TeleOp_Rolly;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants.Constants_For_TeleOp_Rolly;
 
 
 /**
