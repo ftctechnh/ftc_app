@@ -30,6 +30,7 @@ public class Teleop extends OpMode {
     private static final int LIFT_COUNTS = 2800; //4250
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
+    private static final int RELIC_ARM_COUNTS = 14600;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
     private static final double BUCKET_FLAT = 0.58;
     //private static final int BUCKET_LIFT_COUNTS = 50;
@@ -40,8 +41,8 @@ public class Teleop extends OpMode {
     private boolean lastA = false;
     private boolean robotSlow = false;
     private boolean motorsSet = false;
-    ColorSensor frontColor;
-    ColorSensor backColor;
+    private boolean lastY = false;
+    private boolean grabOpen = true;
 
     private boolean suckMotorStopped = false;
     private boolean suckLeftStopped = false;
@@ -49,6 +50,7 @@ public class Teleop extends OpMode {
     private int suckMotorRampCount = 0;
 
     private int liftPos;
+    private int relicPos;
 
     private boolean servoSet = false;
     private double lastTime = 0;
@@ -58,17 +60,6 @@ public class Teleop extends OpMode {
         DcMotor[] ray = bot.getMotorRay();
         for(DcMotor motor : ray)
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        BotHardware.Motor.relic.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        try {
-            frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
-            backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
-            frontColor.enableLed(false);
-            backColor.enableLed(false);
-        }
-        catch (Exception e) {
-            //hmmmmm
-        }
         bot.setLights(0.5);
     }
 
@@ -76,10 +67,12 @@ public class Teleop extends OpMode {
         gamepad1.setJoystickDeadzone(0.05f);
         gamepad2.setJoystickDeadzone(0.05f);
         bot.start();
-        bot.setFrontDrop(0.34);
         bot.setDropPos(BotHardware.ServoE.backDropUp);
         BotHardware.Motor.lift.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BotHardware.Motor.relic.motor.setTargetPositionTolerance(50);
+        BotHardware.Motor.relic.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftPos = BotHardware.Motor.lift.motor.getCurrentPosition();
+        relicPos = BotHardware.Motor.relic.motor.getCurrentPosition();
     }
 
     public void loop() {
@@ -91,11 +84,6 @@ public class Teleop extends OpMode {
 
         if(gamepad1.b || gamepad2.b) bot.setDropPos(BUCKET_FLAT);
         if(gamepad2.a) bot.setDropPos(BotHardware.ServoE.backDropUp);
-
-        if(gamepad1.left_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() - SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
-        else if(gamepad1.right_bumper) bot.setFrontDrop(Range.clip(bot.getFrontDrop() + SERVO_INC_MAX, BotHardware.ServoE.frontDropDown, BotHardware.ServoE.frontDropUp));
-        else if(gamepad2.dpad_up) bot.setFrontDrop(BotHardware.ServoE.frontDropUp);
-        else if(gamepad2.dpad_down) bot.setFrontDrop(BotHardware.ServoE.frontDropDown);
 
         //lowering
         if(gamepad2.left_bumper) {
@@ -130,9 +118,26 @@ public class Teleop extends OpMode {
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
-        if(gamepad2.left_trigger > 0) BotHardware.Motor.relic.motor.setPower(-gamepad2.left_trigger);
-        else if(gamepad2.right_trigger > 0) BotHardware.Motor.relic.motor.setPower(gamepad2.right_trigger);
+        if(gamepad2.dpad_up && BotHardware.Motor.relic.motor.getCurrentPosition() <= relicPos + RELIC_ARM_COUNTS) {
+            BotHardware.Motor.relic.motor.setPower(1.0f);
+        }
+        else if(gamepad2.dpad_down && BotHardware.Motor.relic.motor.getCurrentPosition() >= relicPos){
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos);
+            BotHardware.Motor.relic.motor.setPower(-1.0f);
+        }
         else BotHardware.Motor.relic.motor.setPower(0);
+
+        if(gamepad2.y && !lastY) {
+            if(grabOpen = !grabOpen) BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
+            else BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabClosed);
+        }
+        lastY = gamepad2.y;
+
+        if(gamepad2.left_trigger > 0)
+            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() - Range.scale(gamepad2.left_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
+        else if(gamepad2.right_trigger > 0)
+            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() + Range.scale(gamepad2.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX),  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
+
 
         if(gamepad2.left_stick_y != 1 || gamepad2.right_stick_y != 1) {
             bot.setSuckLeft(gamepad2.left_stick_y);
@@ -203,7 +208,6 @@ public class Teleop extends OpMode {
 
         bot.getStickBase().setPosition(BotHardware.ServoE.stickBaseHidden);
 
-        telemetry.addData("Front Drop", bot.getFrontDrop());
         telemetry.addData("Back Drop", bot.getDropPos());
         telemetry.addData("Robot Slow", robotSlow);
         telemetry.addData("Lift", liftPos);

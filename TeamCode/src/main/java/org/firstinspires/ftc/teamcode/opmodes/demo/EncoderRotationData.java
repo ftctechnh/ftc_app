@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name="Ultra Encoder Stuff")
-@Disabled
+//@Disabled
 public class EncoderRotationData extends OpMode {
     private final int COUNTS = 750;
     private final float POWER = 0.4f;
@@ -59,7 +59,7 @@ public class EncoderRotationData extends OpMode {
         bot.init();
         bot.start();
 
-        sensor = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
+        sensor = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
         sensor.initDevice();
         sensor.startDevice();
         sensor.getReading();

@@ -30,7 +30,7 @@ import java.util.List;
 public class UltraAuto extends VuforiaBallLib {
     //CONSTANTS
     private static final float PILLAR_SPACING_INCH = 7.63f;
-    private static final float ENCODE_PER_CM = 4.211f;
+    private static final float ENCODE_PER_CM = 17.1f;
     private static final float DRIVE_DUMP_CM = 9.0f;
     private static final int[] RED_ZERO = new int[] {32 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
                                                     101 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
@@ -140,8 +140,8 @@ public class UltraAuto extends VuforiaBallLib {
                     makeGyroDriveStep(0, gyroDrivePID, 100, 55, 720),
                     turn,
                     makeGyroDriveStep(path.turnAmount, gyroDrivePID, 100, 55, 720),
-                    new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor},
-                    Math.round(path.distanceCM * ENCODE_PER_CM), Math.round(DRIVE_DUMP_CM * ENCODE_PER_CM),
+                    BotHardware.Motor.frontLeft.motor,
+                    /*Math.round(path.distanceCM * ENCODE_PER_CM)*/0, Math.round(DRIVE_DUMP_CM * ENCODE_PER_CM),
                     5, 10, xOffsetStart, yOffsetStart));
             firstRun = true;
         }
@@ -164,28 +164,28 @@ public class UltraAuto extends VuforiaBallLib {
                                                       ADPSAuto.GyroCorrectStep firstDriveStep,
                                                       AutoLib.GyroTurnStep turnStep,
                                                       ADPSAuto.GyroCorrectStep secondDriveStep,
-                                                      DcMotor[] encoderMotors, int firstLegCounts, int secondLegCounts, int error, int count, int xOffsett, int yOffsett) {
+                                                      DcMotor encoderMotor, int firstLegCounts, int secondLegCounts, int error, int count, int xOffsett, int yOffsett) {
         //step zero: calculate how far the robot must drive according to our x and y offset
         //subtract the extra distance needed to be travelled in the second leg from the first leg
         final double rad = Math.toRadians(90 - turnStep.getTargetHeading());
         //firstLegCounts -= xOffsett * Math.tan(rad) * ENCODE_PER_CM;
-        firstLegCounts -= yOffsett * ENCODE_PER_CM;
+        firstLegCounts -= Math.round(yOffsett * ENCODE_PER_CM);
         //calculate the 45degree leg delta
         //secondLegCounts -= xOffsett / Math.cos(rad) * ENCODE_PER_CM;
         //construct sequence
         final AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
         //drive firstlegcounts
-        mSeq.add(new EncoderHoneStep(mode, firstLegCounts, error, count, errorPid, firstDriveStep, encoderMotors));
+        mSeq.add(new EncoderHoneStep(mode, firstLegCounts, error, count, errorPid, firstDriveStep, encoderMotor));
         //turn
-        //mSeq.add(turnStep);
+        mSeq.add(turnStep);
         //drive secondlegcounts
-        //mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
+        mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotor));
         return mSeq;
     }
 
     public static class EncoderHoneStep extends AutoLib.Step {
         private final OpMode mode;
-        private final DcMotor[] encoders;
+        private final DcMotor encode;
         private final int dist;
         private final int error;
         private final int count;
@@ -194,17 +194,17 @@ public class UltraAuto extends VuforiaBallLib {
 
         private double lastTime = 0;
         private int currentCount = 0;
-        private final int[] startPos;
+        private int startPos;
 
-        public EncoderHoneStep(OpMode mode, int distCounts, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep, DcMotor[] encoderRay) {
+        public EncoderHoneStep(OpMode mode, int distCounts, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep, DcMotor encoder) {
             this.mode = mode;
-            this.encoders = encoderRay;
+            this.encode = encoder;
             this.dist = distCounts;
             this.error = error;
             this.count = count;
             this.errorPid = errorPid;
             this.gyroStep = gyroStep;
-            this.startPos = new int[encoderRay.length];
+            this.startPos = 0;
         }
 
         /*
@@ -217,10 +217,10 @@ public class UltraAuto extends VuforiaBallLib {
             super.loop();
             if(firstLoopCall()) {
                 lastTime = mode.getRuntime() - 1;
-                for (int i = 0; i < encoders.length; i++) startPos[i] = encoders[i].getCurrentPosition();
+                startPos = encode.getCurrentPosition();
             }
             //get the distance and error
-            final float read = readEncoderDeltaAvg();
+            final float read = -(encode.getCurrentPosition() - startPos);
             float curError = read - dist;
             //if we found it, stop
             //if the peak is within stopping margin, stop
@@ -249,15 +249,9 @@ public class UltraAuto extends VuforiaBallLib {
             mode.telemetry.addData("Power", -power);
             mode.telemetry.addData("Encoder error", curError);
             mode.telemetry.addData("Encoder", read);
+            mode.telemetry.addData("Dist", dist);
             //return
             return false;
-        }
-
-        private float readEncoderDeltaAvg() {
-            int total = 0;
-            for (int i = 0; i < encoders.length; i++) total =+ encoders[i].getCurrentPosition() - startPos[i];
-            return (float)-total / (float)encoders.length;
-
         }
 
         private void setMotorsWithoutGyro(float power) {

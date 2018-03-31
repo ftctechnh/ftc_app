@@ -36,7 +36,7 @@ public class BotHardware {
         lift("l", true),
         suckLeft("sl", false),
         suckRight("sr", true),
-        relic("relic", true);
+        relic("relic", false);
 
         private final String name;
         private final boolean reverse;
@@ -63,10 +63,10 @@ public class BotHardware {
     public enum ServoE {
         stick("stick"),
         stickBase("sb"),
-        frontDropLeft("dl", true),
-        frontDropRight("dr"),
         backDropLeft("bdl", true),
-        backDropRight("bdr");
+        backDropRight("bdr"),
+        arm("arm", true),
+        grab("grab");
 
         public static final double stickUp = 0.4;
         public static final double stickDown = .94;
@@ -85,6 +85,12 @@ public class BotHardware {
 
         public static final double frontDropUp = 0.7;
         public static final double frontDropDown = 0.2;
+
+        public static final double grabClosed = 0;
+        public static final double grabOpen = 0.5;
+
+        public static final double armClosed = 0;
+        public static final double armOpen = 1;
 
         private final String name;
         public Servo servo;
@@ -151,6 +157,8 @@ public class BotHardware {
         ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
         ServoE.stick.servo.setPosition(ServoE.stickUp);
         setDropPos(ServoE.frontDropUp);
+        ServoE.arm.servo.setPosition(ServoE.armOpen);
+        ServoE.grab.servo.setPosition(ServoE.grabOpen);
     }
 
     public void setLeftDrive(double power) {
@@ -195,15 +203,6 @@ public class BotHardware {
         ServoE.backDropRight.servo.setPosition(ServoE.backDropUp);
     }
 
-    public void setFrontDrop(double pos) {
-        ServoE.frontDropLeft.servo.setPosition(pos);
-        ServoE.frontDropRight.servo.setPosition(pos);
-    }
-
-    public double getFrontDrop() {
-        return ServoE.frontDropRight.servo.getPosition();
-    }
-
     public void setDropPos(double pos) {
         ServoE.backDropLeft.servo.setPosition(pos);
         ServoE.backDropRight.servo.setPosition(pos);
@@ -222,9 +221,6 @@ public class BotHardware {
         //drop the block
         drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 1.0, false));
         drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 1.0, false));
-        //also drop the intake
-        drop.add(new AutoLib.TimedServoStep(ServoE.frontDropLeft.servo, ServoE.frontDropDown, 0, false));
-        drop.add(new AutoLib.TimedServoStep(ServoE.frontDropRight.servo, ServoE.frontDropDown, 0, false));
         mSeq.add(drop);
         AutoLib.Sequence lift = new AutoLib.ConcurrentSequence();
         lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 1.0, false));

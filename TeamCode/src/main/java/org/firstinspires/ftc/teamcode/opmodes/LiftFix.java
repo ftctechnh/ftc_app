@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  * Created by Noah on 2/23/2018.
  */
 
-@TeleOp(name="Lift Fixer")
+@TeleOp(name="Motor Fixer")
 //bwahahaha were going to worlds
 public class LiftFix extends OpMode {
     BotHardware bot = new BotHardware(this);
@@ -27,8 +27,11 @@ public class LiftFix extends OpMode {
     }
 
     public void loop() {
-        //BotHardware.Motor.liftLeft.motor.setPower(gamepad1.left_stick_y / 2.0);
+        BotHardware.Motor.relic.motor.setPower(gamepad1.left_stick_y / 2.0);
         BotHardware.Motor.lift.motor.setPower(gamepad1.right_stick_y / 2.0);
+
+        telemetry.addData("Relic", BotHardware.Motor.relic.motor.getCurrentPosition());
+        telemetry.addData("Lift", BotHardware.Motor.lift.motor.getCurrentPosition());
     }
 
     public void stop() {
