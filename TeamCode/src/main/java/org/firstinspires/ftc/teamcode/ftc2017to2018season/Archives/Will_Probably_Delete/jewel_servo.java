@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
- * Created by Pahel and Rohan on 11/19/17.
+ * Created by Rohan on 11/19/17.
  */
 
 @TeleOp(name="jewel_servo_rotate")
