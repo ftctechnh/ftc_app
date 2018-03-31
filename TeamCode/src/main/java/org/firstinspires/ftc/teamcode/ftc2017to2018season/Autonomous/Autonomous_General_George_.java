@@ -6,10 +6,13 @@
 when                                      who                       Purpose/Change
 -----------------------------------------------------------------------------------------------------------------------------------------------
 3/28/18                                   Rohan                   Added the values for servos in the functions openGlyphManipulator(), closeGlyphManipulator(), middleGlyphManipulator(), and allOpenGlyphManipulator(). This aloowed the servos to be moved to the coordinated positions when these functions are called.
+3/31/18                                   Rohan                   Added two objects. One is used to refer to the values in Constants_for_Autonomous_General_George_. Replaced wait time with an object value. The second refers to the jewel detector as a new function is added called openCVInit which requires access to this objet
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
@@ -41,6 +44,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants.Constants_for_Autonomous_General_George_;
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants.Constants_for_blueBack_George;
 
 import java.util.Locale;
 /**
@@ -67,9 +72,12 @@ import java.util.Locale;
 @Autonomous(name="Concept: VuMark Id", group ="Concept")
 @Disabled
 public class Autonomous_General_George_ extends LinearOpMode{
+    Constants_for_Autonomous_General_George_ constants = new Constants_for_Autonomous_General_George_();
+    JewelDetector jewelDetector1 = new JewelDetector();
+
     //we attached a light to make it easier to see the target
     //public DcMotor light;
-    public double waitTime = 3;
+    public double waitTime = constants.waitTime;
 
     public static double RobotWidth = 41.91;
     public static double COUNTS_PER_MOTOR_REV;    // eg: TETRIX Motor Encoder
@@ -1290,7 +1298,21 @@ revColorSensor.enableLed(false);
 
     }
 
+public void openCVInit(){
+    jewelDetector1.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
 
+    //Jewel Detector Settings
+    jewelDetector1.areaWeight = 0.02;
+    jewelDetector1.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
+    //jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
+    jewelDetector1.debugContours = true;
+    jewelDetector1.maxDiffrence = 15;
+    jewelDetector1.ratioWeight = 15;
+    jewelDetector1.minArea = 700;
+
+    jewelDetector1.enable();
+
+}
     @Override public void runOpMode() throws InterruptedException {}
 
     /**

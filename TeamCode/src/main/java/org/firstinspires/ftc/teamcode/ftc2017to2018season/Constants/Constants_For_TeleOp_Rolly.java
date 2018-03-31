@@ -13,7 +13,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public class Constants_For_TeleOp_Rolly extends LinearOpMode{
+public class Constants_For_TeleOp_Rolly{
 //glyphManipulate values
     public double glyphIncrementValue = 0.05;
 //glyphIntake values
@@ -40,9 +40,4 @@ public class Constants_For_TeleOp_Rolly extends LinearOpMode{
     public float slideCPCM = 50;
     public double slideMotorPowerIncrementing = 0.6;
     public double slideIncrementFailSafeSec = 1.5;
-
-
-    public void runOpMode(){
-
-    }
 }

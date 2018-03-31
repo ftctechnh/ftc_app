@@ -9,6 +9,8 @@ when                                      who                       Purpose/Chan
 3/28/18                                   Rohan                   Added new object called jewelDectector1 which calls on DogeCV_JewelDetector. Added on line 88 jewelDectector1.init(); which initializes OpenCV. The other lines of initiation are deleted.  Added a sleep afterward as to give time for the initiation.
 3/28/18                                   Rohan                   Deleted the call on init in line 88 as it caused numerous other problems in the program. Went back to old activations methods.
 3/28/18                                   Rohan                   Added a getCurrentOrder function
+3/31/18                                   Rohan                   Replaced numerical values with an object reference to continue with having constants in one place.
+3/31/18                                   Rohan                   Instead of having all the initiation lines for DogeCV in the program I created a function in Autonomous_General_George_ that performs the same function.
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
@@ -17,6 +19,8 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants.Constants_for_blueBack_George;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Testing_and_Calibrations.Computer_Vision.DogeCVJewelDetector;
@@ -28,8 +32,9 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Testing_and_Calibratio
 //3/2/18 edit by Steven Chen: trying to see if going a slower speed off the platform makes it go more straight
 //3/25/18 edit by Steven Chen: adding second block autonomous
 public class blueBack_George extends Autonomous_General_George_ {
+    Constants_for_blueBack_George constants = new Constants_for_blueBack_George();
 
-    public double rsBuffer = 20.00;
+    public double rsBuffer = constants.rsBuffer;
     private ElapsedTime runtime = new ElapsedTime();
     DogeCVJewelDetector jewelDetector = new DogeCVJewelDetector();
     JewelDetector jewelDetector1 = new JewelDetector();
@@ -38,14 +43,14 @@ public class blueBack_George extends Autonomous_General_George_ {
     public void runOpMode() {
 
 
-        vuforiaInit(true, true);
+        vuforiaInit(constants.vuforiaInitCameraView, constants.vuforiaInitRearCamera);
         //intiates the vuforia sdk and camera
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
         //tell driver that vuforia is ready
         initiate(false);
         //intiate hardware
-        sleep(500);
+        sleep(constants.initTimeMill);
         telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
         //tell driver that we are good to go
@@ -53,9 +58,9 @@ public class blueBack_George extends Autonomous_General_George_ {
         waitForStart();
 //reseting gyro sensor
 
-        jewelServoRotate.setPosition(0.74);
+        jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
         //sleep(100);
-        toggleLight(true);
+        toggleLight(constants.toogleLightVuforiaRead);
         //light.setPower(0.5);
         startTracking();
         telemetry.addData("","READY TO TRACK");
@@ -76,7 +81,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        //3/28/18 Changed to allow the program to crash as the manipulator can't move far down mechanically. Previous value was 1.45.
+        //3/28/18 Changed to allow the program to crash as the manipulator can't move far down mechanically. Previous value was 1.45. Done by Rohan.
         moveDownGlyph(0.5);
         sleep(250);
         closeGlyphManipulator();
@@ -97,33 +102,19 @@ public class blueBack_George extends Autonomous_General_George_ {
 
 
         relicTrackables.deactivate();
-        jewelDetector1.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-
-        //Jewel Detector Settings
-        jewelDetector1.areaWeight = 0.02;
-        jewelDetector1.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
-        //jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
-        jewelDetector1.debugContours = true;
-        jewelDetector1.maxDiffrence = 15;
-        jewelDetector1.ratioWeight = 15;
-        jewelDetector1.minArea = 700;
-
-        jewelDetector1.enable();
-
+      openCVInit();
         jewelDetector1.getCurrentOrder();
        sleep(500);
         switch (jewelDetector1.getCurrentOrder()){
             case BLUE_RED:
                 //move the jewel manipulator to the left to knock off the ball
                 jewelServoRotate.setPosition(1);
-                telemetry.addLine("Jewels Seen Blue Red");
-                telemetry.update();
                 sleep(300);
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 //move the jewel manipulator to the original position
                 jewelServoRotate.setPosition(0.79);
-                sleep(1000);
+                sleep(500);
                 break;
 
             case RED_BLUE:
@@ -137,14 +128,13 @@ public class blueBack_George extends Autonomous_General_George_ {
                 sleep(750);
                 //move it back to the original posititon
                 jewelServoRotate.setPosition(0.79);
-                //Add code to swing the jwele arm
                 break;
             case UNKNOWN:
 //                telemetry.addData("Balls not seen", "Solution TBD   :/");
 //                telemetry.update();
                 readColorRev();
                 KnockjewelSensor(ballColor);
-                sleep(1000);
+                sleep(100);
                 break;
         }
         //Used to make sure the jewels are recognized
@@ -259,7 +249,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         encoderMecanumDrive(0.3, -20, -20, 1000, 0);
         gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
         encoderMecanumDrive(0.6,20,20,5000,0);
-        closeGlyphManipulator();
+        middleGlyphManipulator();
         glyphIntakeRolly(1);
         moveUpGlyph(3.4);
         gyroTurnREV(0.5,90);
