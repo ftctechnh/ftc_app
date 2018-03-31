@@ -300,7 +300,7 @@ abstract public class superAuto extends LinearOpMode {
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double raw = angles.firstAngle;
-        float fudgeFactor = .25f;
+        float fudgeFactor = 1f;
         double wheelPower = .3;
         double convert = raw;
         double dflt = Math.abs(target - raw);
@@ -344,21 +344,30 @@ abstract public class superAuto extends LinearOpMode {
 
             //read the heading and find the shortest path
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            raw = angles.firstAngle;
-            dflt = (target - raw);
-            alt = (360 - Math.abs(dflt));
+            if (angles != null) {
+                raw = angles.firstAngle;
+                dflt = (target - raw);
+                alt = (360 - Math.abs(dflt));
 
-            //determines if we need to convert to compass
-            if (Math.abs(dflt) > 180)
-            {
-                convert = 360 - Math.abs(raw);
+                //determines if we need to convert to compass
+                if (Math.abs(dflt) > 180) {
+                    convert = 360 - Math.abs(raw);
 
-            }
-            else
-            {
-                convert = raw;
+                } else {
+                    convert = raw;
+                }
             }
         }
+        sR();
+    }
+
+    void readIMU()
+    {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double currentHeading = angles.firstAngle;
+        telemetry.addData("Heading", currentHeading);
+        telemetry.update();
+
     }
 
 
