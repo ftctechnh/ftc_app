@@ -1,0 +1,9 @@
+A lot of these files extend Autonomous General. They may have been created at different times, using different versions of Autonomous General.
+
+
+IF YOU ARE USING ONE OF THESE PROGRAMS MAKE SURE TO CHECK THAT IT IS USING THE VERSION OF AUTONOMOUS GENERAL YOU WANT
+
+
+Do this by opening the file, then ctrl click where it says Autonomous_General to take you to the Autonomous_General file.
+Scroll to the very top and look for the package. By looking at the package you can determine which folder the Autonomous_General
+file is in and make sure it is the right one.

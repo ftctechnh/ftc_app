@@ -1,0 +1,6 @@
+Delta was a robot that had:
+ModernRobotics Power Distribution Module, Core Motor Controller, etc.
+ModernRobotics Sensors
+A Glyph Manipulator that used servos to grab blocks
+
+If you need to reference code that uses the components above, you'll probably find it in this folder
