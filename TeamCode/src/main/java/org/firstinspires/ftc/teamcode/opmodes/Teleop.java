@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
+import org.firstinspires.ftc.teamcode.opmodes.demo.BlinkTest;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -57,6 +58,7 @@ public class Teleop extends OpMode {
         DcMotor[] ray = bot.getMotorRay();
         for(DcMotor motor : ray)
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BotHardware.Motor.relic.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         try {
             frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
@@ -127,6 +129,10 @@ public class Teleop extends OpMode {
         else if(!gamepad2.x && !gamepad1.x) servoSet = false;
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
+
+        if(gamepad2.left_trigger > 0) BotHardware.Motor.relic.motor.setPower(-gamepad2.left_trigger);
+        else if(gamepad2.right_trigger > 0) BotHardware.Motor.relic.motor.setPower(gamepad2.right_trigger);
+        else BotHardware.Motor.relic.motor.setPower(0);
 
         if(gamepad2.left_stick_y != 1 || gamepad2.right_stick_y != 1) {
             bot.setSuckLeft(gamepad2.left_stick_y);

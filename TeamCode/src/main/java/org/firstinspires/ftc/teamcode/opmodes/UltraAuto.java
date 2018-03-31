@@ -30,21 +30,21 @@ import java.util.List;
 public class UltraAuto extends VuforiaBallLib {
     //CONSTANTS
     private static final float PILLAR_SPACING_INCH = 7.63f;
-    private static final float ENCODE_PER_CM = 17.3f;
-    private static final float DRIVE_DUMP_CM = 15.0f;
+    private static final float ENCODE_PER_CM = 4.211f;
+    private static final float DRIVE_DUMP_CM = 9.0f;
     private static final int[] RED_ZERO = new int[] {32 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
-                                                    78 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
+                                                    101 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
     private static final int[] BLUE_ZERO = new int[] {20, 80};
     private static final int X_STUPID_MAX = 60;
 
     private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 15.87f, 0, 50);
     private final SensorLib.PID gyroDrivePID = new SensorLib.PID(-16.0f, 0, 0, 0);
-    private final SensorLib.PID gyroTurnPID = new SensorLib.PID(10.0f, 0, 0, 0);
+    private final SensorLib.PID gyroTurnPID = new SensorLib.PID(0.006f, 0, 0, 0);
 
     private enum AutoPath {
-        RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, (float)DistanceUnit.INCH.toCm(3), 45),
-        RED_FRONT_CENTER(true, false, RelicRecoveryVuMark.CENTER, (float)DistanceUnit.INCH.toCm(3 - PILLAR_SPACING_INCH), 45),
-        RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, (float)DistanceUnit.INCH.toCm(5), 135);
+        RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, (float)DistanceUnit.INCH.toCm(0), 125),
+        RED_FRONT_CENTER(true, false, RelicRecoveryVuMark.CENTER, (float)DistanceUnit.INCH.toCm(PILLAR_SPACING_INCH), 125),
+        RED_FRONT_LEFT(true, false, RelicRecoveryVuMark.LEFT, (float)DistanceUnit.INCH.toCm(2), 55);
 
         public final RelicRecoveryVuMark vuMark;
         public final boolean red;
@@ -99,7 +99,7 @@ public class UltraAuto extends VuforiaBallLib {
     }
 
     //MEMBERS
-    private final AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
+    private AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
     private boolean firstRun = false;
     private int xOffsetStart;
     private int yOffsetStart;
@@ -114,25 +114,42 @@ public class UltraAuto extends VuforiaBallLib {
 
     public void start() {
         //initalize starting sequence
+
         mSeq.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
                 -550, 500, false, -720, -55));
         mSeq.add(new DriveAndMeasureStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
                 -550, 200, true, -720, -55));
+        mSeq.add(new AutoLib.LogTimeStep(this, "WAIT", 1));
+
     }
 
     public void loop() {
         //ball code goes above here
-        if(!firstRun && mSeq.loop()) {
+        final boolean done;
+        if((done = mSeq.loop()) && !firstRun) {
             //initialize sequence with found values
             final int yZero = red ? RED_ZERO[1] : BLUE_ZERO[1];
             yOffsetStart = UltraPos.getYSensor(red, rear).getReading() - yZero;
 
-            telemetry.addData("X Offset", xOffsetStart);
-            telemetry.addData("Y Offset", yOffsetStart);
+            AutoPath path = AutoPath.RED_FRONT_RIGHT;
+
+            mSeq = new AutoLib.LinearSequence();
+
+            final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.5f, gyroTurnPID, 2f, 5, true);
+            mSeq.add(makeDriveToBoxSeq(this, encoderHonePID,
+                    makeGyroDriveStep(0, gyroDrivePID, 100, 55, 720),
+                    turn,
+                    makeGyroDriveStep(path.turnAmount, gyroDrivePID, 100, 55, 720),
+                    new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor},
+                    Math.round(path.distanceCM * ENCODE_PER_CM), Math.round(DRIVE_DUMP_CM * ENCODE_PER_CM),
+                    5, 10, xOffsetStart, yOffsetStart));
             firstRun = true;
         }
-
-
+        telemetry.addData("X Offset", xOffsetStart);
+        telemetry.addData("Y Offset", yOffsetStart);
+        if(done && firstRun) {
+            telemetry.addData("Y Reading", UltraPos.getYSensor(red, rear).getReading());
+        }
     }
 
     public void stop() {
@@ -140,7 +157,7 @@ public class UltraAuto extends VuforiaBallLib {
     }
 
     private ADPSAuto.GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
-        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorRay(), power, powerMin, powerMax);
+        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax);
     }
 
     private static AutoLib.Sequence makeDriveToBoxSeq(OpMode mode, SensorLib.PID errorPid,
@@ -151,18 +168,18 @@ public class UltraAuto extends VuforiaBallLib {
         //step zero: calculate how far the robot must drive according to our x and y offset
         //subtract the extra distance needed to be travelled in the second leg from the first leg
         final double rad = Math.toRadians(90 - turnStep.getTargetHeading());
-        firstLegCounts -= xOffsett * Math.tan(rad) * ENCODE_PER_CM;
+        //firstLegCounts -= xOffsett * Math.tan(rad) * ENCODE_PER_CM;
         firstLegCounts -= yOffsett * ENCODE_PER_CM;
         //calculate the 45degree leg delta
-        secondLegCounts -= xOffsett / Math.cos(rad) * ENCODE_PER_CM;
+        //secondLegCounts -= xOffsett / Math.cos(rad) * ENCODE_PER_CM;
         //construct sequence
         final AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
         //drive firstlegcounts
         mSeq.add(new EncoderHoneStep(mode, firstLegCounts, error, count, errorPid, firstDriveStep, encoderMotors));
         //turn
-        mSeq.add(turnStep);
+        //mSeq.add(turnStep);
         //drive secondlegcounts
-        mSeq.add(new EncoderHoneStep(mode, secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
+        //mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
         return mSeq;
     }
 
