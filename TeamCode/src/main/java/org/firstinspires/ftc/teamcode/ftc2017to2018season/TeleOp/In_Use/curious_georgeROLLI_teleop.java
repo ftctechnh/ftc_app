@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants.Constants_Fo
 /**
  * Created by Team Inspiration on 1/21/18.
  */
-@TeleOp(name = "Curious George Roll-y USE THIS ONE")
+@TeleOp(name = "1 George Roll-y RUN FOR COMPETITION")
 public class curious_georgeROLLI_teleop extends OpMode{
 Constants_For_TeleOp_Rolly constants = new Constants_For_TeleOp_Rolly();
 
