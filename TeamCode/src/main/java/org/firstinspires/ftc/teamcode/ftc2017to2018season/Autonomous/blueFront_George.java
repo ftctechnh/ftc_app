@@ -12,6 +12,7 @@ package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
@@ -22,6 +23,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 //@Disabled
 public class blueFront_George extends Autonomous_General_George_ {
 
+    /*-------------------------------------------------------
+    Aditya (3/31/18) - Fix basic errors,like the jewel not moved down and the moving glyph manipulator
+    -------------------------------------------------------*/
     public double rsBuffer = 20.00;
     private ElapsedTime runtime = new ElapsedTime();
     JewelDetector jewelDetector = new JewelDetector();
@@ -54,6 +58,17 @@ public class blueFront_George extends Autonomous_General_George_ {
         }
         toggleLight(false);
 
+        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator        middleGlyphManipulator();
+        sleep(250);
+        middleGlyphManipulator();
+        sleep(250);
+        moveDownGlyph(1.45);
+        sleep(250);
+        closeGlyphManipulator();
+        sleep(250);
+        moveUpGlyph(1.45);
+        sleep(250);
+
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
         sleep(250);
@@ -68,12 +83,14 @@ public class blueFront_George extends Autonomous_General_George_ {
         jewelDetector.enable();
         sleep(750);
         //Used to make sure the jewels are recognized
-telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
-telemetry.update();
+        telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
+        telemetry.update();
 
         switch (jewelDetector.getCurrentOrder()){
             case BLUE_RED:
                 //move the jewel manipulator to the left to knock off the ball
+                jewelServo.setPosition(0.2);
+                sleep(500);
                 jewelServoRotate.setPosition(1);
                 sleep(300);
                 jewelServo.setPosition(0.8);
@@ -85,6 +102,8 @@ telemetry.update();
 
             case RED_BLUE:
                 //move the jewel manipulator to the right to knock off the ball
+                jewelServo.setPosition(0.2);
+                sleep(500);
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
                 jewelServo.setPosition(0.8);
@@ -104,15 +123,6 @@ telemetry.update();
         telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
-
-        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator        middleGlyphManipulator();
-        sleep(250);
-        moveDownGlyph(1.45);
-        sleep(250);
-        closeGlyphManipulator();
-        sleep(250);
-        moveUpGlyph(1.45);
-        sleep(250);
 
 
         sleep(200);
@@ -172,6 +182,10 @@ telemetry.update();
         /*sleep(100);
         gyroTurnREV(0.3, 179);
         sleep(100);*/
+
+        if (!opModeIsActive()) {
+            jewelDetector.disable();
+        }
     }
 
 

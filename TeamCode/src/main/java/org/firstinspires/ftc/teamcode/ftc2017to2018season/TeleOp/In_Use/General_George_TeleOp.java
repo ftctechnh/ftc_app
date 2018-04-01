@@ -21,7 +21,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Rohan on 2/23/18.
  * Created for testing purposes in slide increment
  */
-@TeleOp(name = "1 Use this for competition George")
+@TeleOp(name = "1 USE this for competition George")
 public class
 General_George_TeleOp extends OpMode {
 

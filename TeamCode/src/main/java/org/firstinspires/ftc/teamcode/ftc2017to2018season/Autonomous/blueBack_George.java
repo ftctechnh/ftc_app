@@ -89,7 +89,8 @@ public class blueBack_George extends Autonomous_General_George_ {
         moveUpGlyph(1.45);
         sleep(250);
 
-        jewelServo.setPosition(0.2);
+        //Don't need the below code after using CV to detect jewel color
+       /* jewelServo.setPosition(0.2);
         telemetry.addData("jewelServo Position", jewelServo.getPosition());
         telemetry.update();
         //sleep(100);
@@ -98,13 +99,12 @@ public class blueBack_George extends Autonomous_General_George_ {
         //light.setPower(0);
         telemetry.addData("right jewel color", ballColor);
         telemetry.update();
-        //returnImage();
+        //returnImage();*/
 
 
         relicTrackables.deactivate();
       openCVInit();
-        jewelDetector1.getCurrentOrder();
-       sleep(500);
+
         switch (jewelDetector1.getCurrentOrder()){
             case BLUE_RED:
                 //move the jewel manipulator to the left to knock off the ball
@@ -246,7 +246,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         }
 
         //code to get second glyph
-        encoderMecanumDrive(0.3, -20, -20, 1000, 0);
+        /*encoderMecanumDrive(0.3, -20, -20, 1000, 0);
         gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
         encoderMecanumDrive(0.6,20,20,5000,0);
         middleGlyphManipulator();
@@ -257,7 +257,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         encoderMecanumDrive(0.5,35,35,5000,0);
         glyphOuttakeRolly(1);
         openGlyphManipulator();
-        encoderMecanumDrive(0.3,-10,-10,5000,0);
+        encoderMecanumDrive(0.3,-10,-10,5000,0);*/
 
     }
 
