@@ -1,13 +1,16 @@
 package org.firstinspires.ftc.teamcode.Year_2017_18.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Year_2017_18.Robot.RobotHardware;
 
 /**
- * Our main TeleOp mode.
+ * Our main BeltDriveTeleOp mode.
  */
 @TeleOp(name = "TeleOpMode", group = "TeleOpMode")
+@Disabled
+
 public class TeleOpMode extends OpMode {
 
     RobotHardware hardware = new RobotHardware();

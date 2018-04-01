@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode.Year_2017_18.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Year_2017_18.Robot.RobotHardware;
 
 @Autonomous(name = "AutoDab", group="AutoMode")
+@Disabled
+
 public class AutoDab extends LinearOpMode
 {
     RobotHardware hardware = new RobotHardware();

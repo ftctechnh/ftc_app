@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Year_2017_18.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -38,6 +39,7 @@ import org.firstinspires.ftc.teamcode.Year_2017_18.Robot.RobotCommands;
  */
 
 @Autonomous(name = "AutoBlueRight", group = "AutoMode")
+@Disabled
 
 public class AutoBlueRight extends LinearOpMode {
     RobotCommands myRobot = new RobotCommands();

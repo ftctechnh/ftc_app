@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "MiniBotFollow", group = "AutoMode")
+@Disabled
+
 public class MiniBotFollow extends LinearOpMode {
 
     DcMotor leftDrive;
