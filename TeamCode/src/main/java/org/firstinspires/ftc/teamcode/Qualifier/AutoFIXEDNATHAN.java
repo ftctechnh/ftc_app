@@ -299,12 +299,15 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
 
 
         if (menuFile.mode == 3) {   //  test mode
-            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
-            gromit.glyphTrain.glyphclampupper("open");
-            gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
-            gromit.glyphTrain.startGlyphMotors(0.6);
-            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, 40, 0, 0);
-            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, -40, 0, 0);
+            mecanumDriveMaxbotix(menuFile.DriveSpeed*0.8, 28, 0, -90, 1);  //-90
+
+//
+//            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+//            gromit.glyphTrain.glyphclampupper("open");
+//            gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
+//            gromit.glyphTrain.startGlyphMotors(0.6);
+//            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, 40, 0, 0);
+//            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, -40, 0, 0);
 
 
             //RobotLog.vv("[Gromit] IR", "Begin");
@@ -1137,6 +1140,68 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         gromit.driveTrain.stopMotors();
     }
 
+    public void mecanumDriveMaxbotix(double speed, double distancecm, double robot_orientation, double drive_direction, int forward) { //Orientation is to the field //Drive direction is from the robot
+        double max;
+        double multiplier;
+
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double lfbase;
+        double lrbase;
+        double rfbase;
+        double rrbase;
+        lfbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
+        lrbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
+        rfbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
+        rrbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
+        while ( gromit.driveTrain.maxbotixSensor.getVoltage() * 783.0 < distancecm && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
+            //Determine correction
+            double correction = robot_orientation - gromit.driveTrain.getheading();
+            if (correction <= -180){
+                correction += 360; }
+            else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
+                correction -= 360;
+            }
+            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
+            lfpower = lfbase;
+            rrpower = rrbase;
+            rfpower = rfbase;
+            if (abs(correction) > drive_THRESHOLD) {//If you are off
+                //Apply power to one side of the robot to turn the robot back to the right heading
+                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
+                lrpower -= right_adjustment;
+                lfpower -= right_adjustment;
+                rrpower = rrbase + right_adjustment;
+                rfpower = rfbase + right_adjustment;
+
+            }//Otherwise you Are at the right orientation
+
+            //Determine largest power being applied in either direction
+            max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
+
+            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower *= multiplier;
+            lrpower *= multiplier;
+            rfpower *= multiplier;
+            rrpower *= multiplier;
+
+            gromit.driveTrain.left_front.setPower(lfpower);
+            gromit.driveTrain.left_rear.setPower(lrpower);
+            gromit.driveTrain.right_front.setPower(rfpower);
+            gromit.driveTrain.right_rear.setPower(rrpower);
+
+//            RobotLog.ii("[GromitIR] ", Double.toString(18.7754*Math.pow(sharpIRSensor.getVoltage(),-1.51)), Integer.toString(left_front.getCurrentPosition()));
+
+        }
+        gromit.driveTrain.stopMotors();
+    }
 
 
 
