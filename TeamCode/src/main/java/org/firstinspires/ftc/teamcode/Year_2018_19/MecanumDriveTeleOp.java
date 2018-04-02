@@ -34,10 +34,12 @@ public class MecanumDriveTeleOp extends OpMode
     {
         if (gamepad1.left_bumper) //If left bumper.
         {
+            //Power low
             power = 0.5;
         }
         else if (gamepad1.right_bumper) //If right bumper.
         {
+            //Power high
             power = 1;
         }
 
