@@ -7,6 +7,7 @@ when                                      who                       Purpose/Chan
 -----------------------------------------------------------------------------------------------------------------------------------------------
 3/28/18                                   Rohan                   Added the values for servos in the functions openGlyphManipulator(), closeGlyphManipulator(), middleGlyphManipulator(), and allOpenGlyphManipulator(). This aloowed the servos to be moved to the coordinated positions when these functions are called.
 3/31/18                                   Rohan                   Added two objects. One is used to refer to the values in Constants_for_Autonomous_General_George_. Replaced wait time with an object value. The second refers to the jewel detector as a new function is added called openCVInit which requires access to this objet
+4/1/18                                    Rohan                   Added a fail safe on the the move down inch function.
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
@@ -1273,29 +1274,32 @@ revColorSensor.enableLed(false);
 
     }
     public void moveDownGlyph(double cm) {
+        ElapsedTime runtime = new ElapsedTime();
         double target_Position;
         double countsPerCM = 609.6;
-        double finalTarget = cm*countsPerCM;
+        double finalTarget = cm * countsPerCM;
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         target_Position = slideMotor.getCurrentPosition() - finalTarget;
 
-        slideMotor.setTargetPosition((int)target_Position);
+        slideMotor.setTargetPosition((int) target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-1);
+        double begintime = runtime.seconds();
+        while ((runtime.seconds() - begintime) < 3) {
+            while (slideMotor.isBusy() && opModeIsActive()) {
+                telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
+                telemetry.addData("power", slideMotor.getPower());
+                telemetry.addData("Target Position", slideMotor.getTargetPosition());
+                telemetry.update();
 
-        while (slideMotor.isBusy() && opModeIsActive()){
-            telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
-            telemetry.addData("power", slideMotor.getPower());
-            telemetry.addData("Target Position", slideMotor.getTargetPosition());
-            telemetry.update();
+            }
+            slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            slideMotor.setPower(0);
+            slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         }
-        slideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        slideMotor.setPower(0);
-        slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 
 public void openCVInit(){

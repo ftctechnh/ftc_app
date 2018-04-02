@@ -15,6 +15,7 @@ when                                      who                       Purpose/Chan
 4/1/18                                    Rohan                   Made it so that the jewel servo moves down before the jewel arm moves to knock of the jewel.
 4/1/18                                    Rohan                   Removed a commented section of code that was obsolete due to the new old documented programs.
 4/1/18                                    Rohan                   Changed values in the program when going back to get more blocks. Moves the robot farther into the pile.
+4/1/18                                    Rohan                   The value to go down after Vuforia was to high so the robot got stuck in the loop.
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
@@ -85,32 +86,21 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        moveDownGlyph(1.5);
+        moveDownGlyph(1.4);
         sleep(250);
         closeGlyphManipulator();
         sleep(250);
         moveUpGlyph(1.45);
         sleep(250);
 
-        //Don't need the below code after using CV to detect jewel color
-       /* jewelServo.setPosition(0.2);
-        telemetry.addData("jewelServo Position", jewelServo.getPosition());
-        telemetry.update();
-        //sleep(100);
-        readColorRev();
-        sleep(100);
-        //light.setPower(0);
-        telemetry.addData("right jewel color", ballColor);
-        telemetry.update();
-        //returnImage();*/
-
 
         relicTrackables.deactivate();
-      openCVInit();
-
+        openCVInit();
+jewelServo.setPosition(0);
+sleep(100);
         switch (jewelDetector1.getCurrentOrder()){
             case BLUE_RED:
-                jewelServo.setPosition(0);
+           //     jewelServo.setPosition(0);
                 //move the jewel manipulator to the left to knock off the ball
                 jewelServoRotate.setPosition(1);
                 sleep(300);
@@ -122,7 +112,7 @@ public class blueBack_George extends Autonomous_General_George_ {
                 break;
 
             case RED_BLUE:
-                jewelServo.setPosition(0);
+         //       jewelServo.setPosition(0);
                 //move the jewel manipulator to the right to knock off the ball
                telemetry.addLine("Jewels Seen Red Blue");
                 telemetry.update();
@@ -137,7 +127,7 @@ public class blueBack_George extends Autonomous_General_George_ {
             case UNKNOWN:
 //                telemetry.addData("Balls not seen", "Solution TBD   :/");
 //                telemetry.update();
-                jewelServo.setPosition(0.2);
+       //         jewelServo.setPosition(0.2);
                 readColorRev();
                 KnockjewelSensor(ballColor);
                 sleep(100);
@@ -153,6 +143,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(500);
         encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
+       //Rohan: Is this necessary
         gyroTurnREV(0.4,0);
         sleep(100);
 
@@ -208,7 +199,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         encoderMecanumDrive(0.6,25,25,5500,0);
         middleGlyphManipulator();
         glyphIntakeRolly(1);
-        moveUpGlyph(3);
+        moveUpGlyph(6);
         sleep(200);
         gyroTurnREV(0.5,90);
         //moveDownGlyph(2);
