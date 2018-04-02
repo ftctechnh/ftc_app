@@ -96,7 +96,6 @@ public class Auto_R2 extends OpMode {
                 case TIME:
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds += 0.5;
-                    time.reset();
                     break;
                 case GRAB:
                     state = States.SCAN;

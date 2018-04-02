@@ -93,6 +93,8 @@ public class Auto_B2 extends OpMode {
         dropInit = true;
 
         keyColumn = 0;
+
+        time.reset();
     }
         @Override
         public void loop(){

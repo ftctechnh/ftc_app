@@ -29,5 +29,5 @@ public enum States {
     BACKUPFROMBLOCK,
     ROTATE,
     OFFSTONE,
-    COLUMNMOVE
+    COLUMNMOVE,
 }

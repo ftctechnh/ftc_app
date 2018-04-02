@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -19,6 +18,9 @@ public class BlockLift {
     private boolean buttonPressed = false;
 
     private int currentLiftPosition;
+    private int automaticLiftPosition;
+
+    private LiftMode liftMode = LiftMode.AUTOMATIC;
 
     private boolean topButtonPress = false;
     private boolean bottomButtonPress = false;
@@ -37,30 +39,75 @@ public class BlockLift {
 
     }
 
-    public void slideHeight(boolean a, boolean b, boolean y, Telemetry telemetry) {
+    public void slideHeight(boolean bumper, float trigger, boolean a, boolean b, boolean y, Telemetry telemetry) {
 
-        if ((a || b || y) && ((a || b || y) != buttonPressed)) {
-            if (a) {
-                slidePosition = 1;
+            if (bumper && liftMotor.getCurrentPosition() < 4400) {
+                currentLiftPosition = liftMotor.getCurrentPosition();
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                liftMotor.setPower(1);
+            } else if (trigger > 0 && liftMotor.getCurrentPosition() > 0) {
+                currentLiftPosition = liftMotor.getCurrentPosition();
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                liftMotor.setPower(-1);
+            } else if (a) {
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(1);
+                currentLiftPosition = 0;
+                liftMotor.setTargetPosition(currentLiftPosition);
             } else if (b) {
-                slidePosition = 2;
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(1);
+                currentLiftPosition = 620;
+                liftMotor.setTargetPosition(currentLiftPosition);
             } else if (y) {
-                slidePosition = 3;
+                liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                liftMotor.setPower(1);
+                currentLiftPosition = 4050;
+                liftMotor.setTargetPosition(currentLiftPosition);
+            } else {
+                if ((Math.abs(Math.abs(currentLiftPosition) - Math.abs(liftMotor.getCurrentPosition()))) > 10) {
+                    currentLiftPosition = liftMotor.getCurrentPosition();
+                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftMotor.setTargetPosition(currentLiftPosition);
+                } else {
+                    liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                    liftMotor.setTargetPosition(currentLiftPosition);
+                }
             }
-        }
+            telemetry.addData("Current Lift Goal: ", currentLiftPosition);
+            telemetry.addData("Current Actual Position", liftMotor.getCurrentPosition());
 
-        buttonPressed = (a || b || y);
+            /*
+            if ((a || b || y)) {
+                if (a) {
+                    slidePosition = 1;
+                } else if (b) {
+                    slidePosition = 2;
+                } else {
+                    slidePosition = 3;
+                }
+            }
 
-        if (slidePosition == 1) {
-            liftMotor.setTargetPosition(0);
-            telemetry.addData("Current Position", slidePosition);
-        } else if (slidePosition == 2) {
-            liftMotor.setTargetPosition(-1768);
-            telemetry.addData("Current Position", slidePosition);
-        } else if (slidePosition == 3) {
-            liftMotor.setTargetPosition(-4410);
-            telemetry.addData("Current Position", slidePosition);
-        }
+            if (slidePosition == 1) {
+                liftMotor.setPower(1);
+                currentLiftPosition = 0;
+                telemetry.addData("Current Position", slidePosition);
+                telemetry.addData("Encoder Position", liftMotor.getCurrentPosition());
+            } else if (slidePosition == 2) {
+                liftMotor.setPower(1);
+                currentLiftPosition = 620;
+                telemetry.addData("Current Position", slidePosition);
+                telemetry.addData("Encoder Position", liftMotor.getCurrentPosition());
+            } else if (slidePosition == 3) {
+                liftMotor.setPower(1);
+                currentLiftPosition = 4050;
+                telemetry.addData("Current Position", slidePosition);
+                telemetry.addData("Encoder Position", liftMotor.getCurrentPosition());
+            }
+            */
+
+
+        //liftMotor.setTargetPosition(currentLiftPosition);
     }
 
     public void lift(boolean bumper, float trigger, Telemetry telemetry) {
@@ -105,4 +152,9 @@ public class BlockLift {
         }
 
     }
+}
+
+enum LiftMode {
+    MANUAL,
+    AUTOMATIC
 }

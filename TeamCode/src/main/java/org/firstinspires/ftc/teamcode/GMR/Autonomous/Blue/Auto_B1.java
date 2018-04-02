@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.GMR.Autonomous.Blue;
 
+import android.os.Environment;
+import android.widget.Toast;
+
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -14,6 +17,13 @@ import org.firstinspires.ftc.teamcode.GMR.Autonomous.States;
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Created by FTC 4316 on 11/11/2017
@@ -54,6 +64,8 @@ public class Auto_B1 extends OpMode {
     private int keyColumn;
 
     private String stageCheck;
+
+    private List gyroValues = new ArrayList();
 
     @Override
     public void init() {
@@ -136,6 +148,7 @@ public class Auto_B1 extends OpMode {
                     break;
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
+                    gyroValues.add(robot.driveTrain.getYaw());
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;
@@ -143,6 +156,7 @@ public class Auto_B1 extends OpMode {
 
                 case RIGHTKNOCK:
                     //Knocks the right ball off of the pedestal WORKING
+                    gyroValues.add(robot.driveTrain.getYaw());
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.RIGHTARMUP;
@@ -151,6 +165,7 @@ public class Auto_B1 extends OpMode {
 
                 case LEFTARMUP:
                     //Lifts arm up after knocking left ball WORKING
+
                     leftArm.setPosition(0.85);
                     telemetry.addData("currentSeconds", currentSeconds);
                     telemetry.addData("goalSeconds", goalSeconds);

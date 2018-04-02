@@ -99,10 +99,10 @@ public class Auto_R1 extends OpMode {
         currentSeconds = time.seconds();
             switch(state){
                 case TIME:
-                    time.reset();
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds += 0.5;
                     break;
+                    /*
                 case GRAB:
                     state = States.SCAN;
                     goalSeconds = currentSeconds += 5.0;
@@ -112,6 +112,7 @@ public class Auto_R1 extends OpMode {
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
                         state = States.ARMDOWN;
                     } break;
+                    */
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
@@ -140,7 +141,6 @@ public class Auto_R1 extends OpMode {
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;
-                        goalSeconds = currentSeconds += 1.0;
                     } break;
 
                 case RIGHTKNOCK:
@@ -169,7 +169,6 @@ public class Auto_R1 extends OpMode {
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.OFFSTONE;
-                        time.reset();
                     } break;
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
@@ -177,7 +176,6 @@ public class Auto_R1 extends OpMode {
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.OFFSTONE;
-                        time.reset();
                     } break;
                 case OFFSTONE:
                     if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5 )) {
