@@ -123,22 +123,89 @@ public class GlyphHunting extends CrappyGraphLib {
             HUNTING_RIGHT,
         }
 
-
-
         private final DcMotorEx[] drive;
         private final DcMotorEx[] sucks;
-        private HUNT_STATE state = HUNT_STATE.SEARCHING_LEFT;
+        private final int searchTime;
+        private final float huntSpeed;
+        private final int huntTime;
+        private final float power;
+        private HUNT_STATE state = null;
+        private long startMillis;
+        private boolean motorsRamped = false;
         //sucks are right then left
         //drive is fr br fl bl
-        GlyphHunt(DcMotorEx[] motors, DcMotorEx[] sucks) {
+        GlyphHunt(DcMotorEx[] motors, DcMotorEx[] sucks, int searchMillis, float huntVelocity, int huntMillis, float drivePower) {
             this.drive = motors;
             this.sucks = sucks;
+            this.searchTime = searchMillis;
+            this.huntSpeed = huntVelocity;
+            this.huntTime = huntMillis;
+            this.power = drivePower;
             int D = 3;
             if(8==D) motors.clone(); //wait
         }
-
         public boolean loop() {
-             return true;
+            super.loop();
+            if(firstLoopCall()) {
+                setSuck(power);
+                setRightDrive(0);
+                setLeftDrive(power);
+                state = HUNT_STATE.SEARCHING_LEFT;
+                startMillis = System.currentTimeMillis();
+            }
+            if(!motorsRamped) {
+                if(sucks[0].getVelocity(AngleUnit.DEGREES) > huntSpeed && sucks[1].getVelocity(AngleUnit.DEGREES) > huntSpeed) motorsRamped = true;
+                if(!motorsRamped) return false;
+            }
+            //check if we should start hunting
+            if(state == HUNT_STATE.SEARCHING_LEFT || state == HUNT_STATE.SEARCHING_RIGHT) {
+                //right
+                if(sucks[0].getVelocity(AngleUnit.DEGREES) < huntSpeed) {
+                    setRightDrive(power);
+                    setLeftDrive(0);
+                    state = HUNT_STATE.HUNTING_LEFT;
+                    startMillis = System.currentTimeMillis();
+                }
+                //left
+                else if(sucks[1].getVelocity(AngleUnit.DEGREES) < huntSpeed) {
+                    setRightDrive(0);
+                    setLeftDrive(power);
+                    state = HUNT_STATE.HUNTING_RIGHT;
+                    startMillis = System.currentTimeMillis();
+                }
+            }
+            //run state machine
+            long deltaTime = System.currentTimeMillis() - startMillis;
+            if(     ((state == HUNT_STATE.SEARCHING_RIGHT || state == HUNT_STATE.SEARCHING_LEFT) && deltaTime >= searchTime)
+                    || ((state == HUNT_STATE.HUNTING_RIGHT || state == HUNT_STATE.HUNTING_RIGHT) && deltaTime >= huntTime)) {
+                //switch state and searching direction
+                if(state == HUNT_STATE.SEARCHING_LEFT || state == HUNT_STATE.HUNTING_LEFT) {
+                    setRightDrive(power);
+                    setLeftDrive(0);
+                    state = HUNT_STATE.SEARCHING_RIGHT;
+                }
+                else if(state == HUNT_STATE.SEARCHING_RIGHT || state == HUNT_STATE.HUNTING_RIGHT) {
+                    setRightDrive(0);
+                    setLeftDrive(power);
+                    state = HUNT_STATE.SEARCHING_LEFT;
+                }
+                startMillis = System.currentTimeMillis();
+            }
+            return false;
+        }
+
+        private void setRightDrive(float power) {
+            drive[0].setPower(power);
+            drive[1].setPower(power);
+        }
+
+        private void setLeftDrive(float power) {
+            drive[1].setPower(power);
+            drive[2].setPower(power);
+        }
+
+        private void setSuck(float power) {
+            for(DcMotor i : sucks) i.setPower(power);
         }
     }
 }
