@@ -20,6 +20,9 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
+import static org.firstinspires.ftc.teamcode.GMR.Autonomous.States.ARMDOWN;
+import static org.firstinspires.ftc.teamcode.GMR.Autonomous.States.READ;
+
 /**
  * Created by FTC 4316 on 11/11/2017
  */
@@ -104,25 +107,14 @@ public class Auto_R1 extends OpMode {
         telemetry.addData("State:", state);
             switch(state){
                 case TIME:
-                    time.reset();
-                    state = States.ARMDOWN;
+                    state = ARMDOWN;
                     goalSeconds = currentSeconds += 0.5;
-                    break;
-                case GRAB:
-                    state = States.SCAN;
-                    goalSeconds = currentSeconds += 5.0;
-                    break;
-                case SCAN:
-                    keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
-                    if(keyColumn != 0 || currentSeconds >= goalSeconds){
-                        state = States.ARMDOWN;
-                    }
                     break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
                     if(currentSeconds >= goalSeconds){
-                        state = States.READ; //READ
+                        state = READ; //READ
                     } break;
                 case READ:
                     //Reads the color/distance sensor to determine which ball to knock off WORKING
@@ -146,7 +138,6 @@ public class Auto_R1 extends OpMode {
                     if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 1)){
                         isFinished = false;
                         state = States.LEFTARMUP;
-                        goalSeconds = currentSeconds += 1.0;
                     } break;
 
                 case RIGHTKNOCK:
@@ -175,7 +166,7 @@ public class Auto_R1 extends OpMode {
                     /*if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.OFFSTONE;
-                        time.reset();
+
                     }*/ break;
                 case RIGHTZONE:
                     //Returns to original position from knocking right ball WORKING
