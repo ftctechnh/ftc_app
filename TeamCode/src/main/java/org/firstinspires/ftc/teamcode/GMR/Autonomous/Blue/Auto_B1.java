@@ -62,6 +62,7 @@ public class Auto_B1 extends OpMode {
     private double goalSeconds;
 
     private int keyColumn;
+    private double columnDist;
 
     private String stageCheck;
 
@@ -93,7 +94,8 @@ public class Auto_B1 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
-        keyColumn = 0;
+        keyColumn = 2 ;
+        columnDist = 0;
 
         //Starts the timer WORKING
         time.reset();
@@ -114,11 +116,13 @@ public class Auto_B1 extends OpMode {
                     stageCheck += "Grab - ";
                     break;
                 case SCAN:
-                    keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);
+                    /*keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
                         state = States.ARMDOWN;
                         goalSeconds = currentSeconds += 0.5;
-                    } break;
+                    }*/
+                    state = States.ARMDOWN;
+                    break;
                 case ARMDOWN:
                     //Lowers left arm
                     leftArm.setPosition(goalPosition);
@@ -156,8 +160,7 @@ public class Auto_B1 extends OpMode {
 
                 case RIGHTKNOCK:
                     //Knocks the right ball off of the pedestal WORKING
-                    gyroValues.add(robot.driveTrain.getYaw());
-                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 1.0)){
                         isFinished = false;
                         state = States.RIGHTARMUP;
                         goalSeconds = currentSeconds += 1.0;
@@ -178,25 +181,29 @@ public class Auto_B1 extends OpMode {
                     //Lifts arm up after knocking right ball WORKING
                     leftArm.setPosition(0.85);
                     if(currentSeconds >= goalSeconds){
-                        state = States.RIGHTZONE;
+                        state = States.OFFSTONE;
                     } break;
 
                 case LEFTZONE:
                     //Returns to original position from knocking left ball WORKING
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, turnPower, turnRadius)){
                         isFinished = false;
-                        state = States.OFFSTONE;
-                    } break;
-
-                case RIGHTZONE:
-                    //Returns to original position from knocking right ball WORKING
-                    if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
-                        isFinished = false;
+                        columnDist = 2.0;
                         state = States.OFFSTONE;
                     } break;
 
                 case OFFSTONE:
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 7.5 )) {
+                    if(keyColumn == 1){
+                        columnDist += 5.5;
+                    } else if (keyColumn == 2){
+                        columnDist += 7;
+                    } else if (keyColumn == 3){
+                        columnDist += 8.5;
+                    } else if (keyColumn == 0){
+                        columnDist += 7;
+                    }
+
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, columnDist)) {
                         state = States.TURNBOX;
                     }
                     break;
