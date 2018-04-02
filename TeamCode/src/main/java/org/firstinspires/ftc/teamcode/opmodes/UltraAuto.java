@@ -175,17 +175,17 @@ public class UltraAuto extends VuforiaBallLib {
         //construct sequence
         final AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
         //drive firstlegcounts
-        mSeq.add(new EncoderHoneStep(mode, firstLegCounts, error, count, errorPid, firstDriveStep, encoderMotor));
+        mSeq.add(new EncoderHoneStep(mode, firstLegCounts, error, count, errorPid, firstDriveStep, new DcMotor[] {encoderMotor}));
         //turn
         mSeq.add(turnStep);
         //drive secondlegcounts
-        mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotor));
+        mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, new DcMotor[] {encoderMotor}));
         return mSeq;
     }
 
     public static class EncoderHoneStep extends AutoLib.Step {
         private final OpMode mode;
-        private final DcMotor encode;
+        private final DcMotor[] encode;
         private final int dist;
         private final int error;
         private final int count;
@@ -194,17 +194,16 @@ public class UltraAuto extends VuforiaBallLib {
 
         private double lastTime = 0;
         private int currentCount = 0;
-        private int startPos;
+        private int[] startPos;
 
-        public EncoderHoneStep(OpMode mode, int distCounts, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep, DcMotor encoder) {
+        public EncoderHoneStep(OpMode mode, int distCounts, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep, DcMotor[] encoderRay) {
             this.mode = mode;
-            this.encode = encoder;
+            this.encode = encoderRay;
             this.dist = distCounts;
             this.error = error;
             this.count = count;
             this.errorPid = errorPid;
             this.gyroStep = gyroStep;
-            this.startPos = 0;
         }
 
         /*
@@ -217,10 +216,14 @@ public class UltraAuto extends VuforiaBallLib {
             super.loop();
             if(firstLoopCall()) {
                 lastTime = mode.getRuntime() - 1;
-                startPos = encode.getCurrentPosition();
+                startPos = new int[encode.length];
+                for (int i = 0; i < encode.length; i++) startPos[i] = encode[i].getCurrentPosition();
             }
-            //get the distance and error
-            final float read = -(encode.getCurrentPosition() - startPos);
+            //get the distance delta
+            int total = 0;
+            for (int i = 0; i < encode.length; i++) total += encode[i].getCurrentPosition() - startPos[i];
+
+            final float read = -((float)total / encode.length);
             float curError = read - dist;
             //if we found it, stop
             //if the peak is within stopping margin, stop
