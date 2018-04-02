@@ -11,6 +11,10 @@ when                                      who                       Purpose/Chan
 3/28/18                                   Rohan                   Added a getCurrentOrder function
 3/31/18                                   Rohan                   Replaced numerical values with an object reference to continue with having constants in one place.
 3/31/18                                   Rohan                   Instead of having all the initiation lines for DogeCV in the program I created a function in Autonomous_General_George_ that performs the same function.
+4/1/18                                    Rohan                   Moved the lift down farther because after vuforia reads image the lift didn't move far enough down.
+4/1/18                                    Rohan                   Made it so that the jewel servo moves down before the jewel arm moves to knock of the jewel.
+4/1/18                                    Rohan                   Removed a commented section of code that was obsolete due to the new old documented programs.
+4/1/18                                    Rohan                   Changed values in the program when going back to get more blocks. Moves the robot farther into the pile.
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
@@ -81,8 +85,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        //3/28/18 Changed to allow the program to crash as the manipulator can't move far down mechanically. Previous value was 1.45. Done by Rohan.
-        moveDownGlyph(0.5);
+        moveDownGlyph(1.5);
         sleep(250);
         closeGlyphManipulator();
         sleep(250);
@@ -107,31 +110,34 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         switch (jewelDetector1.getCurrentOrder()){
             case BLUE_RED:
+                jewelServo.setPosition(0);
                 //move the jewel manipulator to the left to knock off the ball
                 jewelServoRotate.setPosition(1);
                 sleep(300);
+                jewelServoRotate.setPosition(0.79);
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 //move the jewel manipulator to the original position
-                jewelServoRotate.setPosition(0.79);
                 sleep(500);
                 break;
 
             case RED_BLUE:
+                jewelServo.setPosition(0);
                 //move the jewel manipulator to the right to knock off the ball
                telemetry.addLine("Jewels Seen Red Blue");
                 telemetry.update();
 
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
+                jewelServoRotate.setPosition(0.79);
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 //move it back to the original posititon
-                jewelServoRotate.setPosition(0.79);
                 break;
             case UNKNOWN:
 //                telemetry.addData("Balls not seen", "Solution TBD   :/");
 //                telemetry.update();
+                jewelServo.setPosition(0.2);
                 readColorRev();
                 KnockjewelSensor(ballColor);
                 sleep(100);
@@ -141,58 +147,9 @@ public class blueBack_George extends Autonomous_General_George_ {
         telemetry.addData("Jewel order is ", jewelDetector1.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
-/*
-        if(ballColor.equals("blue")){
-            //move the jewel manipulator to the right to knock off the ball
-            jewelServoRotate.setPosition(0.5);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move it back to the original posititon
-            jewelServoRotate.setPosition(0.79);
-            //Add code to swing the jwele arm
 
-        }
-        else if(ballColor.equals("red")){
-            //move the jewel manipulator to the left to knock off the ball
-            jewelServoRotate.setPosition(1);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move the jewel manipulator to the original position
-            jewelServoRotate.setPosition(0.79);
-            sleep(500);
-        }
-        else if (ballColor.equals("blank")){
-            jewelServo.setPosition(1);
-            sleep(300);
-            jewelServo.setPosition(0.2);
-            sleep(750);
-            readColorRev();
-            sleep(500);
-            if(ballColor.equals("blue")){
-                //move the jewel manipulator to the right to knock off the ball
-                jewelServoRotate.setPosition(0.5);
-                sleep(300);
-                jewelServo.setPosition(0.8);
-                sleep(750);
-                //move it back to the original posititon
-                jewelServoRotate.setPosition(0.79);
-                //Add code to swing the jwele arm
-            }
-            else if(ballColor.equals("red")) {
-                //move the jewel manipulator to the left to knock off the ball
-                jewelServoRotate.setPosition(1);
-                sleep(300);
-                jewelServo.setPosition(0.8);
-                sleep(750);
-                //move the jewel manipulator to the original position
-                jewelServoRotate.setPosition(0.79);
-                sleep(500);
-            }
-        }
-        jewelServo.setPosition(1);
-        */
+
+
         sleep(500);
         encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
@@ -206,7 +163,7 @@ public class blueBack_George extends Autonomous_General_George_ {
             encoderMecanumDrive(0.4,4.25,4.25,5000,0);
         }
         else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
-            encoderMecanumDrive(0.4,-4,-4,5000,0);
+            encoderMecanumDrive(0.4,-3,-3,5500,0);
 
         }
         else if (vuMark == RelicRecoveryVuMark.RIGHT){
@@ -246,18 +203,19 @@ public class blueBack_George extends Autonomous_General_George_ {
         }
 
         //code to get second glyph
-        /*encoderMecanumDrive(0.3, -20, -20, 1000, 0);
+        encoderMecanumDrive(0.3, -20, -20, 1000, 0);
         gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
-        encoderMecanumDrive(0.6,20,20,5000,0);
+        encoderMecanumDrive(0.6,25,25,5500,0);
         middleGlyphManipulator();
         glyphIntakeRolly(1);
-        moveUpGlyph(3.4);
+        moveUpGlyph(3);
+        sleep(200);
         gyroTurnREV(0.5,90);
         //moveDownGlyph(2);
         encoderMecanumDrive(0.5,35,35,5000,0);
         glyphOuttakeRolly(1);
         openGlyphManipulator();
-        encoderMecanumDrive(0.3,-10,-10,5000,0);*/
+        encoderMecanumDrive(0.3,-10,-10,5000,0);
 
     }
 
