@@ -62,7 +62,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         waitForStart();
 //reseting gyro sensor
 
-        jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
+        /*jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
         //sleep(100);
         toggleLight(constants.toogleLightVuforiaRead);
         //light.setPower(0.5);
@@ -78,7 +78,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         toggleLight(false);
 
         telemetry.addData("Vumark" , vuMark);
-        telemetry.update();
+        telemetry.update();*/
         //sleep(250);
 
         moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
@@ -105,7 +105,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         //returnImage();*/
 
 
-        relicTrackables.deactivate();
+        /*relicTrackables.deactivate();
       openCVInit();
 
         switch (jewelDetector1.getCurrentOrder()){
@@ -187,7 +187,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         moveDownGlyph(1.05);
         sleep(100);
         /*encoderMecanumDrive(0.3, 5, 5, 1000, 0);
-        sleep(250);*/
+        sleep(250);
         openGlyphManipulator();
         sleep(250);
 
@@ -215,7 +215,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         encoderMecanumDrive(0.5,35,35,5000,0);
         glyphOuttakeRolly(1);
         openGlyphManipulator();
-        encoderMecanumDrive(0.3,-10,-10,5000,0);
+        encoderMecanumDrive(0.3,-10,-10,5000,0);*/
 
     }
 
