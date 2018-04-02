@@ -52,12 +52,11 @@ public class JewelArm {
         jewelflickerCenter();
     }
 
-    public void jewelflickerBack() {
-        jewelFlickerServo.setPosition(0.0); //was 0.0
+    public void jewelflickerBack() { jewelFlickerServo.setPosition(0.0); //was 0.0
     }
 
-    public void jewelflickerCenter() {
-        jewelFlickerServo.setPosition(0.5);
+    public void jewelflickerCenter() { jewelFlickerServo.setPosition(0.5);
+
     }
 
     public void jewelflickerForward() {

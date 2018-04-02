@@ -335,12 +335,13 @@ public class AutoFIXED extends LinearOpMode {
 //sleep(3000);
         gromit.jewelArm.jewelArmDown();
         // while(opModeIsActive() && gromit.jewelArm.jewelArmServo.getPosition() < 0.5) { idle();}
-        sleep(900);
+        sleep(500);
 //        gromit.jewelArm.solveJewelPuzzle(menuFile.teamIsRed);
         if (menuFile.DoTheWrongJewel){      // knock the wrong one off
             gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
         }else{                              // do the correct jewel
             gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
+            SolveJewelPuzzleCameraSlow(menuFile.teamIsRed, blueJewelIsLeft);
         }
         sleep(750);
         gromit.jewelArm.jewelArmUp();
@@ -1085,7 +1086,26 @@ public class AutoFIXED extends LinearOpMode {
         gromit.driveTrain.stopMotors();
     }
 
-
+    public void SolveJewelPuzzleCameraSlow(boolean teamIsRED,boolean blueJewelIsLeft) {
+        int flickertime = 500;
+        // sensor is facing the forward ball.
+        double FlickerStartTime = runtime.milliseconds();
+        while (opModeIsActive()&& runtime.milliseconds() < FlickerStartTime + flickertime) {
+            if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front forward 1.0 backward 0.0
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * 0.5);
+                //jewelflickerForward();
+            } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
+               // jewelflickerBack();
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * -0.5);
+            } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
+                //jewelflickerBack();
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * -0.5);
+            } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
+                //jewelflickerForward();
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * 0.5);
+            }
+        }
+    }
 
 
 }
