@@ -30,7 +30,10 @@ public class BeltDriveTeleOp extends OpMode
     //Called repeatedly after robot starts.
     public void loop()
     {
-
+        myRobot.topLeftMotor.setPower(-gamepad1.left_stick_y);
+        myRobot.bottomLeftMotor.setPower(-gamepad1.left_stick_y);
+        myRobot.topRightMotor.setPower(-gamepad1.right_stick_y);
+        myRobot.bottomRightMotor.setPower(-gamepad1.right_stick_y);
     }
 
     //Robot ends.

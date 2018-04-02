@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19;
 
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -26,5 +27,8 @@ public class RobotHardware
         topRightMotor = hwMap.get(DcMotor.class, "topRightMotor");
         bottomLeftMotor = hwMap.get(DcMotor.class, "bottomLeftMotor");
         bottomRightMotor = hwMap.get(DcMotor.class, "bottomRightMotor");
+
+        topRightMotor.setDirection(DcMotor.Direction.REVERSE);
+        bottomRightMotor.setDirection(DcMotor.Direction.REVERSE);
     }
 }
