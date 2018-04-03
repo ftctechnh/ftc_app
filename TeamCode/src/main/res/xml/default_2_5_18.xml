@@ -12,6 +12,8 @@
             <Servo name="glyph_kicker" port="3" />
             <Servo name="glyph_kicker2" port="4" />
             <AnalogInput name="sharpirsensor" port="1"/>
+            <AnalogInput name="rightsharpsensor" port="2"/>
+            <AnalogInput name="leftsharpsensor" port="3"/>
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <DigitalDevice name="glyphfrontIR" port="0"/>
             <DigitalDevice name="glyphmiddleIR" port="1"/>
@@ -30,7 +32,6 @@
             <Servo name="right_upper" port="4" />
             <Servo name="servo_lift" port="5" />
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
-            <AnalogInput name="maxbotixsensor" port="0"/>
             <DigitalDevice name="LED1" port="6"/>
             <DigitalDevice name="LED2" port="7"/>
 

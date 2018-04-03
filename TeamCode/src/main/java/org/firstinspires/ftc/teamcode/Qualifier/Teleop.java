@@ -715,10 +715,10 @@ public class Teleop extends OpMode {
         telemetry.addData("relicArmTicks", gromit.relicArm.relicArmMotor.getCurrentPosition());
         telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getState());
         telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getState());
-        telemetry.addData("Maxbotix", gromit.driveTrain.maxbotixSensor.getVoltage());
-//        telemetry.addData("Maxbotix (cm)", 2.54 * (gromit.driveTrain.maxbotixSensor.getVoltage() / (5.0/512)) );
-        telemetry.addData("Maxbotix (cm)", gromit.driveTrain.maxbotixSensor.getVoltage() * 783.0 );
-        telemetry.addData("Maxbotix (in)", gromit.driveTrain.maxbotixSensor.getVoltage() * 300.0 );
+        telemetry.addData("Left Sharp", gromit.driveTrain.leftSharpSensor.getVoltage());
+        telemetry.addData("Right Sharp", gromit.driveTrain.rightSharpSensor.getVoltage());
+//        telemetry.addData("Maxbotix (cm)", gromit.driveTrain.maxbotixSensor.getVoltage() * 783.0 );
+//        telemetry.addData("Maxbotix (in)", gromit.driveTrain.maxbotixSensor.getVoltage() * 300.0 );
 
 
         telemetry.update();

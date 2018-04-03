@@ -49,7 +49,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
     int screenColor = Color.BLACK;
     int newScreenColor = Color.BLACK;
     public double starttime;
-    public double delay = 1000;
+    public double delay = 1200;
     public double sensetime = 0;
     public double overshoot = 50;
     boolean doneone = false;
@@ -299,7 +299,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
 
 
         if (menuFile.mode == 3) {   //  test mode
-            mecanumDriveMaxbotix(menuFile.DriveSpeed*0.8, 28, 0, -90, 1);  //-90
+            SharpDrive(menuFile.DriveSpeed*0.5, 1.45, 0, -90, -1);  //-90
 
 //
 //            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
@@ -353,7 +353,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         if (menuFile.DoTheWrongJewel){      // knock the wrong one off
             gromit.jewelArm.solveJewelPuzzleCameraRP(menuFile.teamIsRed, blueJewelIsLeft);
         }else{                              // do the correct jewel
-            gromit.jewelArm.solveJewelPuzzleCamera(menuFile.teamIsRed, blueJewelIsLeft);
+            solveJewelPuzzleCameraSlow(menuFile.teamIsRed, blueJewelIsLeft);
         }
         sleep(750);
         gromit.jewelArm.jewelArmUp();
@@ -486,9 +486,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         /**ONE WHEEL TURNS WOULD BE GOOD HERE **/
 //ZERO LIFTS
         gromit.glyphTrain.liftGlyphIndex(0,0.3);  //lower
-            gromit.glyphTrain.startGlyphMotors(0.6);
+            gromit.glyphTrain.startGlyphMotors(0.75);
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, drivedistance/2, headingcrypto, 0); //HEad to center
-            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, drivedistance/2, headingcrypto, 0); //HEad to center
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, drivedistance/2, headingcrypto, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.7, -(drivedistance-3), headingcrypto, 0); //move back
@@ -507,7 +507,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             }
             //You are in front of the Box
             //Drive into the box
-               mecanumDrive(menuFile.DriveSpeed * 0.3, -8, headingcrypto, 0); //move 50
+               mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.3, -8, headingcrypto, 0); //move 50
                 gromit.glyphTrain.startGlyphMotors(1.0);
                 sleep(2000);
                 gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
@@ -543,7 +543,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         gromit.glyphTrain.glyphclampupper("open");
         //Do the routine to push the block back into atleast one box //ROUTINE TO PUSH BLOCK INTO ATLEST INE COLUMN
         //drive forward
-        mecanumDrive(menuFile.DriveSpeed * 0.3, 6, menuFile.BlueFrontHeading2, 0);    // back up
+        mecanumDriveBlock(menuFile.DriveSpeed * 0.3, 6, menuFile.BlueFrontHeading2, 0);    // back up
         gromit.glyphTrain.stopGlyphMotors();
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, -90);  //-90    strafe (strafe is never as long)
         mecanumDrive(menuFile.DriveSpeed * 0.6, -7, menuFile.BlueFrontHeading2, 0);    // into box
@@ -1024,14 +1024,14 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                         gromit.glyphTrain.stopGlyphMotors();
                         trainon=false;
                     }
-                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 &&  runtime.milliseconds()-starttime > delay){//Wait to turn on until the block is lifted
-                        gromit.glyphTrain.startGlyphMotors(1.0);
-                        trainon=true;
-                    }
-                    else if(trainon && doneone && gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
-                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
-                            gromit.glyphTrain.stopGlyphMotors();
-                    }
+//                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 &&  runtime.milliseconds()-starttime > delay){//Wait to turn on until the block is lifted
+//                        gromit.glyphTrain.startGlyphMotors(1.0);
+//                        trainon=true;
+//                    }
+//                    else if(trainon && doneone && gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+//                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+//                            gromit.glyphTrain.stopGlyphMotors();
+//                    }
                    // telemetry.addData("Middle ",gromit.driveTrain.sharpIRSensor.getVoltage());
                    // telemetry.update();
 
@@ -1157,7 +1157,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         lrbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
         rfbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
         rrbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
-        while ( gromit.driveTrain.maxbotixSensor.getVoltage() * 783.0 < distancecm && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
+        while ( gromit.driveTrain.leftSharpSensor.getVoltage() < distancecm && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
             //Determine correction
             double correction = robot_orientation - gromit.driveTrain.getheading();
             if (correction <= -180){
@@ -1202,8 +1202,237 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         }
         gromit.driveTrain.stopMotors();
     }
+    public void SharpDrive(double speed, double distancecm, double robot_orientation, double drive_direction, int forward) { //Orientation is to the field //Drive direction is from the robot
+        ///-90, 1 goes right...
+        double max;
+        double multiplier;
+
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double lfbase;
+        double lrbase;
+        double rfbase;
+        double rrbase;
+        lfbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
+        lrbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
+        rfbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
+        rrbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
+        while (gromit.driveTrain.leftSharpSensor.getVoltage() < distancecm && gromit.driveTrain.rightSharpSensor.getVoltage() < distancecm && opModeIsActive()) {//Should we average all four motors?
+            //Determine correction
+            double correction = robot_orientation - gromit.driveTrain.getheading();
+            if (correction <= -180){
+                correction += 360; }
+            else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
+                correction -= 360;
+            }
+            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
+            lfpower = lfbase;
+            rrpower = rrbase;
+            rfpower = rfbase;
+            if (abs(correction) > drive_THRESHOLD) {//If you are off
+                //Apply power to one side of the robot to turn the robot back to the right heading
+                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
+                lrpower -= right_adjustment;
+                lfpower -= right_adjustment;
+                rrpower = rrbase + right_adjustment;
+                rfpower = rfbase + right_adjustment;
+
+            }//Otherwise you Are at the right orientation
+
+            //Determine largest power being applied in either direction
+            max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
+
+            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower *= multiplier;
+            lrpower *= multiplier;
+            rfpower *= multiplier;
+            rrpower *= multiplier;
+
+            gromit.driveTrain.left_front.setPower(lfpower);
+            gromit.driveTrain.left_rear.setPower(lrpower);
+            gromit.driveTrain.right_front.setPower(rfpower);
+            gromit.driveTrain.right_rear.setPower(rrpower);
+
+//            RobotLog.ii("[GromitIR] ", Double.toString(18.7754*Math.pow(sharpIRSensor.getVoltage(),-1.51)), Integer.toString(left_front.getCurrentPosition()));
+
+        }
+        gromit.driveTrain.stopMotors();
+    }
+    public void mecanumDriveBlockClamp2SHARP(double speed, double distance, double robot_orientation, double drive_direction, double distancecm) { //Orientation is to the field //Drive direction is from the robot
+        double max;
+        double multiplier;
+        int right_start;
+        int left_start;
+        int moveCounts;
+        // boolean glyphSensed = false;
+        //boolean twoblocks =false;
+        //int drive_direction = -90;
+        moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
+        right_start = gromit.driveTrain.right_rear.getCurrentPosition();
+        left_start = gromit.driveTrain.left_rear.getCurrentPosition();
+        double lfpower;
+        double lrpower;
+        double rfpower;
+        double rrpower;
+
+        double lfbase;
+        double lrbase;
+        double rfbase;
+        double rrbase;
+        lfbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
+        lrbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
+        rfbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
+        rrbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
+        while (((abs(gromit.driveTrain.right_rear.getCurrentPosition() - right_start) + abs(gromit.driveTrain.left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts)) && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
+            //Determine correction
+            double correction = robot_orientation - gromit.driveTrain.getheading();
+            if (correction <= -180) {
+                correction += 360;
+            } else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
+                correction -= 360;
+            }
+            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
+            lfpower = lfbase;
+            rrpower = rrbase;
+            rfpower = rfbase;
+            if (abs(correction) > drive_THRESHOLD) {//If you are off
+                //Apply power to one side of the robot to turn the robot back to the right heading
+                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
+                lrpower -= right_adjustment;
+                lfpower -= right_adjustment;
+                rrpower = rrbase + right_adjustment;
+                rfpower = rfbase + right_adjustment;
+
+            }//Otherwise you Are at the right orientation
+
+            //Determine largest power being applied in either direction
+            max = abs(lfpower);
+            if (abs(lrpower) > max) max = abs(lrpower);
+            if (abs(rfpower) > max) max = abs(rfpower);
+            if (abs(rrpower) > max) max = abs(rrpower);
+
+            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
+
+            lfpower *= multiplier;
+            lrpower *= multiplier;
+            rfpower *= multiplier;
+            rrpower *= multiplier;
+
+            gromit.driveTrain.left_front.setPower(lfpower);
+            gromit.driveTrain.left_rear.setPower(lrpower);
+            gromit.driveTrain.right_front.setPower(rfpower);
+            gromit.driveTrain.right_rear.setPower(rrpower);
 
 
+
+            if(!glyphSensed){
+                /**TWO BLOCKS NO GAP*/
+                if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !gromit.glyphTrain.seeMiddleBlock.getState()){//Sees two blocks
+                    glyphSensed = true;
+                    twoblocks = true;
+                    gap = false;
+                    telemetry.addData("Twoblocks  ",twoblocks);
+                    telemetry.addData("Gap  ",gap);
+                    telemetry.update();
+                }
+                /**TWO BLOCKS WITH GAP*/
+                else if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !gromit.glyphTrain.seeFrontBlock.getState()){//Sees two blocks gap
+                    glyphSensed = true;
+                    twoblocks = true;
+                    gap = true;
+                }
+                /**One block*/
+                else if(gromit.driveTrain.sharpIRSensor.getVoltage() < 1){//Sees one blocks
+                    glyphSensed = true;
+                    twoblocks = false;
+                    gap = false;
+                }
+            }
+            else{//You have seen a block edge already
+                if(!twoblocks){/**One block*/
+                    if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){//Block is out of the train
+                        gromit.glyphTrain.glyphclampupper("close");
+                        gromit.glyphTrain.glyphliftupper("top");
+                        glyphSensed = false;//Restart the loop
+                    }
+                }
+                else if(twoblocks && !gap){/** TWO BLOCKS Without a gap*/
+                    if(gromit.glyphTrain.seeMiddleBlock.getState() && !doneone && sensetime == 0){//Middle doesn't see anything
+                        sensetime =  runtime.milliseconds();
+                    }
+                    else if(gromit.glyphTrain.seeMiddleBlock.getState() && !doneone && runtime.milliseconds()-sensetime > overshoot){
+                        gromit.glyphTrain.stopGlyphMotors();
+                        gromit.glyphTrain.glyphclampupper("close");
+                        gromit.glyphTrain.glyphliftupper("top");
+                        starttime =  runtime.milliseconds();
+                        doneone = true;
+                    }
+                    else if(doneone &&  runtime.milliseconds()-starttime > delay && !trainon){//Wait to turn on until the block is lifted
+                        gromit.glyphTrain.startGlyphMotors(1.0);
+                        trainon=true;
+                    }
+                    else if(trainon && doneone){
+                        if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+                            gromit.glyphTrain.stopGlyphMotors();
+                            //SHOULD WE LIFT
+                        }
+                    }
+                }
+                else if(twoblocks && gap){/** TWO BLOCKS WITH A GAP*/
+                    if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && !doneone){//Rear doesn't see anything
+                        gromit.glyphTrain.glyphclampupper("close");
+                        gromit.glyphTrain.glyphliftupper("top");
+                        starttime =  runtime.milliseconds();
+                        doneone = true;
+                    }
+//                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 &&  runtime.milliseconds()-starttime < delay){//Wait to turn on until the block is lifted
+//                        gromit.glyphTrain.stopGlyphMotors();
+//                        trainon=false;
+//                    }
+//                    else if(doneone && gromit.driveTrain.sharpIRSensor.getVoltage() < 1 &&  runtime.milliseconds()-starttime > delay){//Wait to turn on until the block is lifted
+//                        gromit.glyphTrain.startGlyphMotors(1.0);
+//                        trainon=true;
+//                    }
+//                    else if(trainon && doneone && gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+//                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+//                            gromit.glyphTrain.stopGlyphMotors();
+//                    }
+                    // telemetry.addData("Middle ",gromit.driveTrain.sharpIRSensor.getVoltage());
+                    // telemetry.update();
+
+                }
+            }
+        }
+        gromit.driveTrain.stopMotors();
+    }
+    public void solveJewelPuzzleCameraSlow(boolean teamIsRED,boolean blueJewelIsLeft) {
+        int flickertime = 500;
+        // sensor is facing the forward ball.
+        double FlickerStartTime = runtime.milliseconds();
+        while (opModeIsActive()&& runtime.milliseconds() < FlickerStartTime + flickertime) {
+            if (teamIsRED && blueJewelIsLeft) {            //Red Team, blue is in front forward 1.0 backward 0.0
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * 0.5);
+                //jewelflickerForward();
+            } else if (teamIsRED && !blueJewelIsLeft) {    //Red Team, blue is in back
+                // jewelflickerBack();
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * -0.5);
+            } else if (!teamIsRED && blueJewelIsLeft) {     //Blue Team, blue is in front
+                //jewelflickerBack();
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * -0.5);
+            } else if (!teamIsRED && !blueJewelIsLeft) {    //Blue Team, blue is in back
+                //jewelflickerForward();
+                gromit.jewelArm.jewelFlickerServo.setPosition(0.5 + ((runtime.milliseconds() - FlickerStartTime) / flickertime) * 0.5);
+            }
+        }
+    }
 
 }
 
