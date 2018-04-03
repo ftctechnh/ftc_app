@@ -36,7 +36,7 @@ public class BotHardware {
         lift("l", true),
         suckLeft("sl", false),
         suckRight("sr", true),
-        relic("relic", false);
+        relic("relic", true);
 
         private final String name;
         private final boolean reverse;

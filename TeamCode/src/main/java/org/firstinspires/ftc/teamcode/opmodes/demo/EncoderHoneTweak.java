@@ -69,7 +69,7 @@ public class EncoderHoneTweak extends OpMode {
         mSeq.add(new UltraAuto.EncoderHoneStep(this, reversed ? -COUNTS : COUNTS, 5, 25,
                 new SensorLib.PID((float)udPid.getP() * 100, (float)udPid.getI() * 1000, (float)udPid.getD() * 100, 50),
                 makeGyroDriveStep(0, gyroTurnPID, POWER, POWER_MIN, POWER_MAX),
-                BotHardware.Motor.frontLeft.motor));
+                new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor}));
         mSeq.add(new AutoLib.LogTimeStep(this, "WAIT", 1.0));
         return mSeq;
     }

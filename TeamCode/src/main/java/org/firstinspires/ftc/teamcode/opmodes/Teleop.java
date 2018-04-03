@@ -30,7 +30,7 @@ public class Teleop extends OpMode {
     private static final int LIFT_COUNTS = 2800; //4250
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
-    private static final int RELIC_ARM_COUNTS = 14600;
+    private static final int RELIC_ARM_COUNTS = 4950;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
     private static final double BUCKET_FLAT = 0.58;
     //private static final int BUCKET_LIFT_COUNTS = 50;
@@ -58,8 +58,11 @@ public class Teleop extends OpMode {
     public void init() {
         bot.init();
         DcMotor[] ray = bot.getMotorRay();
-        for(DcMotor motor : ray)
+        for(DcMotor motor : ray){
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+
         bot.setLights(0.5);
     }
 
@@ -69,8 +72,8 @@ public class Teleop extends OpMode {
         bot.start();
         bot.setDropPos(BotHardware.ServoE.backDropUp);
         BotHardware.Motor.lift.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BotHardware.Motor.relic.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BotHardware.Motor.relic.motor.setTargetPositionTolerance(50);
-        BotHardware.Motor.relic.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftPos = BotHardware.Motor.lift.motor.getCurrentPosition();
         relicPos = BotHardware.Motor.relic.motor.getCurrentPosition();
     }
@@ -118,11 +121,12 @@ public class Teleop extends OpMode {
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
-        if(gamepad2.dpad_up && BotHardware.Motor.relic.motor.getCurrentPosition() <= relicPos + RELIC_ARM_COUNTS) {
+        if(gamepad2.dpad_up) {
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
             BotHardware.Motor.relic.motor.setPower(1.0f);
         }
-        else if(gamepad2.dpad_down && BotHardware.Motor.relic.motor.getCurrentPosition() >= relicPos){
-            BotHardware.Motor.relic.motor.setTargetPosition(relicPos);
+        else if(gamepad2.dpad_down){
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 200);
             BotHardware.Motor.relic.motor.setPower(-1.0f);
         }
         else BotHardware.Motor.relic.motor.setPower(0);
