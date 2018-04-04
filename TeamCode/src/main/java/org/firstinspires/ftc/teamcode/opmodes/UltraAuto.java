@@ -172,10 +172,10 @@ public class UltraAuto extends VuforiaBallLib {
         //step zero: calculate how far the robot must drive according to our x and y offset
         //subtract the extra distance needed to be travelled in the second leg from the first leg
         final double rad = Math.toRadians(90 - turnStep.getTargetHeading());
-        firstLegCounts += xOffsett * Math.tan(rad) * ENCODE_PER_CM;
+        firstLegCounts += Math.round(xOffsett * Math.tan(rad) * ENCODE_PER_CM);
         firstLegCounts -= Math.round(yOffsett * ENCODE_PER_CM);
         //calculate the 45degree leg delta
-        secondLegCounts += xOffsett / Math.cos(rad) * ENCODE_PER_CM;
+        secondLegCounts += Math.round(xOffsett / Math.cos(rad) * ENCODE_PER_CM);
         //construct sequence
         final AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
         //drive firstlegcounts
@@ -183,8 +183,8 @@ public class UltraAuto extends VuforiaBallLib {
         //turn
         mSeq.add(turnStep);
         //drive secondlegcounts
-        mSeq.add(new CheapEncoderGyroStep(secondDriveStep, encoderMotors, secondLegCounts));
-        //mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
+        //mSeq.add(new CheapEncoderGyroStep(secondDriveStep, encoderMotors, secondLegCounts));
+        mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
         return mSeq;
     }
 
