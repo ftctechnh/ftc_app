@@ -33,7 +33,7 @@ public class AutoLib {
     // are either run sequentially or in parallel (see Sequences below).
     static public abstract class Step {
 
-        int mLoopCount;     // keeps count of how many times loop() has been called on this Step
+        protected int mLoopCount;     // keeps count of how many times loop() has been called on this Step
 
         protected Step() {
             mLoopCount = 0;

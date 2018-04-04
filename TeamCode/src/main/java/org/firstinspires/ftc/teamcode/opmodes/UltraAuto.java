@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.Vec2F;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -31,13 +33,13 @@ public class UltraAuto extends VuforiaBallLib {
     //CONSTANTS
     private static final float PILLAR_SPACING_INCH = 7.63f;
     private static final float ENCODE_PER_CM = 17.1f;
-    private static final float DRIVE_DUMP_CM = 9.0f;
-    private static final int[] RED_ZERO = new int[] {32 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
-                                                    101 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
+    private static final float DRIVE_DUMP_CM = 17.0f;
+    private static final int[] RED_ZERO = new int[] {33 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
+                                                    104 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
     private static final int[] BLUE_ZERO = new int[] {20, 80};
     private static final int X_STUPID_MAX = 60;
 
-    private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 10.00f, 0, 50);
+    private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 7.00f, 0, 50);
     private final SensorLib.PID gyroDrivePID = new SensorLib.PID(-64.0f, 0, 0, 0);
     private final SensorLib.PID gyroTurnPID = new SensorLib.PID(0.006f, 0, 0, 0);
 
@@ -109,6 +111,7 @@ public class UltraAuto extends VuforiaBallLib {
         bot.init();
         bot.start();
         UltraPos.init(this);
+        bot.setDropPos(0.62);
         //TODO: Ball stuff
     }
 
@@ -119,7 +122,7 @@ public class UltraAuto extends VuforiaBallLib {
                 -550, 500, false, -720, -55));
         mSeq.add(new DriveAndMeasureStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
                 -550, 200, true, -720, -55));
-        mSeq.add(new AutoLib.LogTimeStep(this, "WAIT", 1));
+        mSeq.add(new WaitMotorVelocityStep(new DcMotorEx[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor}, 10));
 
     }
 
@@ -135,14 +138,15 @@ public class UltraAuto extends VuforiaBallLib {
 
             mSeq = new AutoLib.LinearSequence();
 
-            final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.5f, gyroTurnPID, 2f, 5, true);
+            final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.045f, 0.5f, gyroTurnPID, 2f, 5, true);
             mSeq.add(makeDriveToBoxSeq(this, encoderHonePID,
                     makeGyroDriveStep(0, gyroDrivePID, 100, 55, 720),
                     turn,
-                    makeGyroDriveStep(path.turnAmount, gyroDrivePID, 100, 55, 720),
+                    makeGyroDriveStep(path.turnAmount, gyroDrivePID, 600, 55, 720),
                     new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor},
                     /*Math.round(path.distanceCM * ENCODE_PER_CM)*/0, Math.round(DRIVE_DUMP_CM * ENCODE_PER_CM),
                     5, 10, xOffsetStart, yOffsetStart));
+            mSeq.add(bot.getDropStep());
             firstRun = true;
         }
         telemetry.addData("X Offset", xOffsetStart);
@@ -168,10 +172,10 @@ public class UltraAuto extends VuforiaBallLib {
         //step zero: calculate how far the robot must drive according to our x and y offset
         //subtract the extra distance needed to be travelled in the second leg from the first leg
         final double rad = Math.toRadians(90 - turnStep.getTargetHeading());
-        //firstLegCounts -= xOffsett * Math.tan(rad) * ENCODE_PER_CM;
+        firstLegCounts += xOffsett * Math.tan(rad) * ENCODE_PER_CM;
         firstLegCounts -= Math.round(yOffsett * ENCODE_PER_CM);
         //calculate the 45degree leg delta
-        //secondLegCounts -= xOffsett / Math.cos(rad) * ENCODE_PER_CM;
+        secondLegCounts += xOffsett / Math.cos(rad) * ENCODE_PER_CM;
         //construct sequence
         final AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
         //drive firstlegcounts
@@ -179,6 +183,7 @@ public class UltraAuto extends VuforiaBallLib {
         //turn
         mSeq.add(turnStep);
         //drive secondlegcounts
+        mSeq.add(new CheapEncoderGyroStep(secondDriveStep, encoderMotors, secondLegCounts));
         //mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
         return mSeq;
     }
@@ -215,6 +220,7 @@ public class UltraAuto extends VuforiaBallLib {
         public boolean loop() {
             super.loop();
             if(firstLoopCall()) {
+                gyroStep.reset();
                 lastTime = mode.getRuntime() - 1;
                 startPos = new int[encode.length];
                 for (int i = 0; i < encode.length; i++) startPos[i] = encode[i].getCurrentPosition();
@@ -223,7 +229,7 @@ public class UltraAuto extends VuforiaBallLib {
             int total = 0;
             for (int i = 0; i < encode.length; i++) {
                 total += encode[i].getCurrentPosition() - startPos[i];
-                mode.telemetry.addData("Delta " + i, encode[i].getCurrentPosition() - startPos[i]);
+                //mode.telemetry.addData("Delta " + i, encode[i].getCurrentPosition() - startPos[i]);
             }
 
             final float read = -((float)total / encode.length);
@@ -263,6 +269,64 @@ public class UltraAuto extends VuforiaBallLib {
         private void setMotorsWithoutGyro(float power) {
             for (DcMotor motor : gyroStep.getMotors()) motor.setPower(power);
         }
+    }
+
+    private static class WaitMotorVelocityStep extends AutoLib.Step {
+        private final DcMotorEx[] motors;
+        private final float velThresh;
+
+        WaitMotorVelocityStep(DcMotorEx[] motors, float velThresh) {
+            this.motors = motors;
+            this.velThresh = velThresh;
+        }
+
+        WaitMotorVelocityStep(DcMotorEx motor, float velThresh) {
+            this.motors = new DcMotorEx[] {motor};
+            this.velThresh = velThresh;
+        }
+
+        public boolean loop() {
+            super.loop();
+            boolean done = true;
+            for(DcMotorEx motor : motors) done &= Math.abs(motor.getVelocity(AngleUnit.DEGREES)) <= velThresh;
+            return done;
+        }
+    }
+
+    private static class CheapEncoderGyroStep extends AutoLib.Step {
+        private final ADPSAuto.GyroCorrectStep gyroStep;
+        private final int count;
+        private final DcMotor[] encoders;
+        private int[] startPos;
+
+        CheapEncoderGyroStep(ADPSAuto.GyroCorrectStep step, DcMotor[] encoders, int counts) {
+            this.gyroStep = step;
+            this.encoders = encoders;
+            this.count = counts;
+        }
+
+        public boolean loop() {
+            super.loop();
+            if(firstLoopCall()) {
+                gyroStep.reset();
+                startPos = new int[encoders.length];
+                for (int i = 0; i < encoders.length; i++) startPos[i] = encoders[i].getCurrentPosition();
+            }
+            //get the distance delta
+            int total = 0;
+            for (int i = 0; i < encoders.length; i++) {
+                total += encoders[i].getCurrentPosition() - startPos[i];
+                //mode.telemetry.addData("Delta " + i, encode[i].getCurrentPosition() - startPos[i]);
+            }
+            final float read = count - Math.abs((float)total / encoders.length);
+            if(read > 0) gyroStep.loop();
+            else {
+                for(DcMotor motor : gyroStep.getMotors()) motor.setPower(0);
+                return true;
+            }
+            return false;
+        }
+
     }
 
     private class DriveAndMeasureStep extends AutoLib.AzimuthCountedDriveStep {

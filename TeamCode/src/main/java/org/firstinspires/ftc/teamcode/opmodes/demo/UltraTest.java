@@ -14,30 +14,43 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
  */
 
 @Autonomous(name="Ultra Teleop", group="test")
-@Disabled
+//@Disabled
 public class UltraTest extends OpMode {
     private MatbotixUltra ultra;
     private MatbotixUltra ultraBack;
+    private MatbotixUltra ultraLeft;
+    private MatbotixUltra ultraRight;
+
+    private MatbotixUltra[] ray;
 
     public void init() {
-        ultra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
-        ultraBack = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
-        ultra.initDevice();
-        ultraBack.initDevice();
+        try {
+            ultra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
+            ultraBack = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
+            ultraRight = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraright"), 100);
+            ultraLeft = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraleft"), 100);
+        }
+        catch (Exception e) { /* hmmmm */ }
+
+        ray = new MatbotixUltra[] {ultraLeft, ultra, ultraRight, ultraBack};
+
+        for(MatbotixUltra i : ray) {
+            if(i != null) {
+                i.initDevice();
+                i.startDevice();
+            }
+        }
     }
 
     public void start() {
-        ultra.startDevice();
-        ultraBack.startDevice();
+
     }
 
     public void loop() {
-        telemetry.addData("Ultra Front", ultra.getReading());
-        telemetry.addData("Ultra Back", ultraBack.getReading());
+        for (MatbotixUltra i : ray) if(i != null) telemetry.addData(i.getDevice().getDeviceName(), i.getReading());
     }
 
     public void stop() {
-        ultra.stopDevice();
-        ultraBack.stopDevice();
+        for (MatbotixUltra i : ray) if(i != null) i.stopDevice();
     }
 }

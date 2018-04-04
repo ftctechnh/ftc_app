@@ -592,6 +592,13 @@ public class ADPSAuto extends VuforiaBallLib {
         public float getHeading() {
             return this.mHeading;
         }
+
+        public void reset() {
+            this.mPower = startPower;
+            super.mLoopCount = 0;
+            this.mPid.reset();
+
+        }
     }
 
     public static class APDSBallFind extends AutoLib.Step {

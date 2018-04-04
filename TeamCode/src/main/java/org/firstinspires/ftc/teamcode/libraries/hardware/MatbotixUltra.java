@@ -98,4 +98,8 @@ public class MatbotixUltra {
         sensor.disengage();
         //sensor.close();
     }
+
+    public I2cDeviceSynch getDevice() {
+        return sensor;
+    }
 }
