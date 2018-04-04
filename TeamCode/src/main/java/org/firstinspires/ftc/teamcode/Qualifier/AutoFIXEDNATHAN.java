@@ -491,8 +491,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, drivedistance/2, headingcrypto, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
-            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.7, -(drivedistance-3), headingcrypto, 0); //move back
-        sleep(200);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -(drivedistance-8), headingcrypto, 0); //move back
+        mecanumDriveBlockClamp2SHARP(menuFile.DriveSpeed * 0.4, headingcrypto, 0, 0.7, 1.0); //move back
+        sleep(100);
         if (menuFile.mode == 2) {//Align to a different box to do a row
             // COnditional for where you are
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -500,16 +501,16 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                 mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, -8, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
-                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, -8, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                SharpDrive(menuFile.DriveSpeed * 0.4, 1.45, headingcrypto, -90, -1);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
                 mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, 4, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
             //You are in front of the Box
             //Drive into the box
-               mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.3, -8, headingcrypto, 0); //move 50
+               mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.3, -10, headingcrypto, 0); //move 50
                 gromit.glyphTrain.startGlyphMotors(1.0);
-                sleep(2000);
+                sleep(1000);
                 gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
                 gromit.glyphTrain.glyphclampupper("open");
             sleep(100);
@@ -1001,17 +1002,17 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                         starttime =  runtime.milliseconds();
                         doneone = true;
                     }
-                    else if(doneone &&  runtime.milliseconds()-starttime > delay && !trainon){//Wait to turn on until the block is lifted
-                        gromit.glyphTrain.startGlyphMotors(1.0);
-                        trainon=true;
-                    }
-                    else if(trainon && doneone){
-                        if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
-                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
-                            gromit.glyphTrain.stopGlyphMotors();
-                            //SHOULD WE LIFT
-                        }
-                    }
+//                    else if(doneone &&  runtime.milliseconds()-starttime > delay && !trainon){//Wait to turn on until the block is lifted
+//                        gromit.glyphTrain.startGlyphMotors(1.0);
+//                        trainon=true;
+//                    }
+//                    else if(trainon && doneone){
+//                        if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+//                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+//                            gromit.glyphTrain.stopGlyphMotors();
+//                            //SHOULD WE LIFT
+//                        }
+//                    }
                 }
                 else if(twoblocks && gap){/** TWO BLOCKS WITH A GAP*/
                     if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && !doneone){//Rear doesn't see anything
@@ -1220,7 +1221,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         lrbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
         rfbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
         rrbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
-        while (gromit.driveTrain.leftSharpSensor.getVoltage() < distancecm && gromit.driveTrain.rightSharpSensor.getVoltage() < distancecm && opModeIsActive()) {//Should we average all four motors?
+        while (gromit.driveTrain.leftSharpSensor.getVoltage() < distancecm || gromit.driveTrain.rightSharpSensor.getVoltage() < distancecm && opModeIsActive()) {//Should we average all four motors?
             //Determine correction
             double correction = robot_orientation - gromit.driveTrain.getheading();
             if (correction <= -180){
@@ -1261,11 +1262,13 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             gromit.driveTrain.right_rear.setPower(rrpower);
 
 //            RobotLog.ii("[GromitIR] ", Double.toString(18.7754*Math.pow(sharpIRSensor.getVoltage(),-1.51)), Integer.toString(left_front.getCurrentPosition()));
-
+            telemetry.addData("Left Sharp", gromit.driveTrain.leftSharpSensor.getVoltage());
+            telemetry.addData("Right Sharp", gromit.driveTrain.rightSharpSensor.getVoltage());
+            telemetry.update();
         }
         gromit.driveTrain.stopMotors();
     }
-    public void mecanumDriveBlockClamp2SHARP(double speed, double distance, double robot_orientation, double drive_direction, double distancecm) { //Orientation is to the field //Drive direction is from the robot
+    public void mecanumDriveBlockClamp2SHARP(double speed, double robot_orientation, double drive_direction, double distancecm, double forward) { //Orientation is to the field //Drive direction is from the robot
         double max;
         double multiplier;
         int right_start;
@@ -1274,9 +1277,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         // boolean glyphSensed = false;
         //boolean twoblocks =false;
         //int drive_direction = -90;
-        moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
-        right_start = gromit.driveTrain.right_rear.getCurrentPosition();
-        left_start = gromit.driveTrain.left_rear.getCurrentPosition();
+//        moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
+//        right_start = gromit.driveTrain.right_rear.getCurrentPosition();
+//        left_start = gromit.driveTrain.left_rear.getCurrentPosition();
         double lfpower;
         double lrpower;
         double rfpower;
@@ -1286,11 +1289,11 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         double lrbase;
         double rfbase;
         double rrbase;
-        lfbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
-        lrbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
-        rfbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
-        rrbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
-        while (((abs(gromit.driveTrain.right_rear.getCurrentPosition() - right_start) + abs(gromit.driveTrain.left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts)) && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
+        lfbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
+        lrbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
+        rfbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
+        rrbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
+        while (Math.min(gromit.driveTrain.leftSharpSensor.getVoltage(),gromit.driveTrain.rightSharpSensor.getVoltage()) <  distancecm && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
             //Determine correction
             double correction = robot_orientation - gromit.driveTrain.getheading();
             if (correction <= -180) {
@@ -1374,17 +1377,17 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                         starttime =  runtime.milliseconds();
                         doneone = true;
                     }
-                    else if(doneone &&  runtime.milliseconds()-starttime > delay && !trainon){//Wait to turn on until the block is lifted
-                        gromit.glyphTrain.startGlyphMotors(1.0);
-                        trainon=true;
-                    }
-                    else if(trainon && doneone){
-                        if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
-                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
-                            gromit.glyphTrain.stopGlyphMotors();
-                            //SHOULD WE LIFT
-                        }
-                    }
+//                    else if(doneone &&  runtime.milliseconds()-starttime > delay && !trainon){//Wait to turn on until the block is lifted
+//                        gromit.glyphTrain.startGlyphMotors(1.0);
+//                        trainon=true;
+//                    }
+//                    else if(trainon && doneone){
+//                        if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
+//                            gromit.glyphTrain.glyphclamp("close");//Clamp the lower ones
+//                            gromit.glyphTrain.stopGlyphMotors();
+//                            //SHOULD WE LIFT
+//                        }
+//                    }
                 }
                 else if(twoblocks && gap){/** TWO BLOCKS WITH A GAP*/
                     if(gromit.driveTrain.sharpIRSensor.getVoltage() > 1 && !doneone){//Rear doesn't see anything
@@ -1409,6 +1412,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                     // telemetry.update();
 
                 }
+                telemetry.addData("Left Sharp", gromit.driveTrain.leftSharpSensor.getVoltage());
+                telemetry.addData("Right Sharp", gromit.driveTrain.rightSharpSensor.getVoltage());
+                telemetry.update();
             }
         }
         gromit.driveTrain.stopMotors();
