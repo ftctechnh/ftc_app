@@ -262,7 +262,10 @@ public class ADPSAuto extends VuforiaBallLib {
             //findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount + heading, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 90.0f, 520.0f, motorPID, 2.0f, 5, true));
             findPilliar.add(new AutoLib.GyroTurnStep(this, path.turnAmount + heading, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.4f, new SensorLib.PID(0.006f, 0, 0, 0), 2f, 5, true));
             findPilliar.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), 250.0f, path.driveCounts, true));
+            findPilliar.add(bot.getLiftRaiseStep());
             findPilliar.add(bot.getDropStep());
+            findPilliar.add(bot.getReverseDropStep());
+            findPilliar.add(bot.getLiftLowerStep());
             AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
             DcMotor[] temp = bot.getMotorRay();
             if(path.turnAmount > 55) {

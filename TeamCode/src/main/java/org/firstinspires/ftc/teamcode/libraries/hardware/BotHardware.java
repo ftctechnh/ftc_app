@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.libraries.hardware;
 import android.graphics.Path;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -212,24 +213,27 @@ public class BotHardware {
         return ServoE.backDropRight.servo.getPosition();
     }
 
-    public AutoLib.Sequence getDropStep() {
-        AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
-        AutoLib.ConcurrentSequence raiseLift = new AutoLib.ConcurrentSequence();
-        raiseLift.add(new AutoLib.EncoderMotorStep(Motor.lift.motor, 1.0f, 400, true));
-        mSeq.add(raiseLift);
+    public AutoLib.Sequence getReverseDropStep() {
+        AutoLib.Sequence lift = new AutoLib.ConcurrentSequence();
+        lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 0.5, false));
+        lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropUp, 0.5, false));
+        return lift;
+    }
+
+    public AutoLib.Step getDropStep() {
         AutoLib.Sequence drop = new AutoLib.ConcurrentSequence();
         //drop the block
-        drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 1.0, false));
-        drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 1.0, false));
-        mSeq.add(drop);
-        AutoLib.Sequence lift = new AutoLib.ConcurrentSequence();
-        lift.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropUp, 1.0, false));
-        lift.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropUp, 1.0, false));
-        mSeq.add(lift);
-        AutoLib.ConcurrentSequence lowerLift = new AutoLib.ConcurrentSequence();
-        lowerLift.add(new AutoLib.EncoderMotorStep(Motor.lift.motor, -1.0f, 300, true));
-        mSeq.add(lowerLift);
-        return mSeq;
+        drop.add(new AutoLib.TimedServoStep(ServoE.backDropLeft.servo, ServoE.backDropDown, 0.7, false));
+        drop.add(new AutoLib.TimedServoStep(ServoE.backDropRight.servo, ServoE.backDropDown, 0.7, false));
+        return drop;
+    }
+
+    public AutoLib.Step getLiftRaiseStep() {
+        return new AutoLib.EncoderMotorStep(Motor.lift.motor, 1.0f, 400, true);
+    }
+
+    public AutoLib.Step getLiftLowerStep() {
+        return new AutoLib.EncoderMotorStep(Motor.lift.motor, -1.0f, 300, true);
     }
 
     public void setSuckLeft(double power) {
@@ -290,6 +294,10 @@ public class BotHardware {
 
     public HeadingSensor getHeadingSensor() {
         return heading;
+    }
+
+    public BNO055IMU getImu() {
+        return imu;
     }
 
     private static class DcMotorWrap extends DcMotorImplEx {

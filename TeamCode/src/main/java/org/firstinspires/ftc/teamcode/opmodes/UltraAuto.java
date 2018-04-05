@@ -33,15 +33,16 @@ public class UltraAuto extends VuforiaBallLib {
     //CONSTANTS
     private static final float PILLAR_SPACING_INCH = 7.63f;
     private static final float ENCODE_PER_CM = 17.1f;
-    private static final float DRIVE_DUMP_CM = 17.0f;
+    private static final float DRIVE_DUMP_CM = 16.5f;
+    private static final float ONE_SIDE_PUSH_TIME = 0.25f;
     private static final int[] RED_ZERO = new int[] {33 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
                                                     104 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
     private static final int[] BLUE_ZERO = new int[] {20, 80};
     private static final int X_STUPID_MAX = 60;
 
-    private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 7.00f, 0, 50);
+    private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 9.00f, 0, 50);
     private final SensorLib.PID gyroDrivePID = new SensorLib.PID(-64.0f, 0, 0, 0);
-    private final SensorLib.PID gyroTurnPID = new SensorLib.PID(0.006f, 0, 0, 0);
+    private final SensorLib.PID gyroTurnPID = new SensorLib.PID(0.0056f, 0.0063f, 0, 7);
 
     private enum AutoPath {
         RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, (float)DistanceUnit.INCH.toCm(0), 125),
@@ -138,15 +139,34 @@ public class UltraAuto extends VuforiaBallLib {
 
             mSeq = new AutoLib.LinearSequence();
 
-            final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.045f, 0.5f, gyroTurnPID, 2f, 5, true);
-            mSeq.add(makeDriveToBoxSeq(this, encoderHonePID,
+            final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.7f, gyroTurnPID, 2f, 5, true);
+            mSeq.add(makeDriveToBoxSeq(this, bot, encoderHonePID,
                     makeGyroDriveStep(0, gyroDrivePID, 100, 55, 720),
                     turn,
-                    makeGyroDriveStep(path.turnAmount, gyroDrivePID, 600, 55, 720),
+                    makeGyroDriveStep(path.turnAmount, gyroDrivePID, 500, 55, 720),
                     new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor},
                     /*Math.round(path.distanceCM * ENCODE_PER_CM)*/0, Math.round(DRIVE_DUMP_CM * ENCODE_PER_CM),
                     5, 10, xOffsetStart, yOffsetStart));
             mSeq.add(bot.getDropStep());
+            final AutoLib.ConcurrentSequence backAndDown = new AutoLib.ConcurrentSequence();
+            backAndDown.add(bot.getReverseDropStep());
+            backAndDown.add(bot.getLiftLowerStep());
+            AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
+            DcMotor[] temp = bot.getMotorRay();
+            if(path.turnAmount > 55) {
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.7f, ONE_SIDE_PUSH_TIME, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.7f, ONE_SIDE_PUSH_TIME, true));
+            }
+            else {
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.7f, ONE_SIDE_PUSH_TIME, true));
+                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.7f, ONE_SIDE_PUSH_TIME, true));
+            }
+            backAndDown.add(oneSideSeq);
+            mSeq.add(backAndDown);
+
+            mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -720, 200, true));
+            mSeq.add(new AutoLib.GyroTurnStep(this, red ? 90 : -90, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.7f, gyroTurnPID, 3f, 5, true));
+
             firstRun = true;
         }
         telemetry.addData("X Offset", xOffsetStart);
@@ -164,7 +184,8 @@ public class UltraAuto extends VuforiaBallLib {
         return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax);
     }
 
-    private static AutoLib.Sequence makeDriveToBoxSeq(OpMode mode, SensorLib.PID errorPid,
+    private static AutoLib.Sequence makeDriveToBoxSeq(OpMode mode, BotHardware bot,
+                                                      SensorLib.PID errorPid,
                                                       ADPSAuto.GyroCorrectStep firstDriveStep,
                                                       AutoLib.GyroTurnStep turnStep,
                                                       ADPSAuto.GyroCorrectStep secondDriveStep,
@@ -183,8 +204,11 @@ public class UltraAuto extends VuforiaBallLib {
         //turn
         mSeq.add(turnStep);
         //drive secondlegcounts
-        //mSeq.add(new CheapEncoderGyroStep(secondDriveStep, encoderMotors, secondLegCounts));
-        mSeq.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
+        AutoLib.ConcurrentSequence liftAndDrive = new AutoLib.ConcurrentSequence();
+        liftAndDrive.add(bot.getLiftRaiseStep());
+        //liftAndDrive.add(new EncoderHoneStep(mode, -secondLegCounts, error, count, errorPid, secondDriveStep, encoderMotors));
+        liftAndDrive.add(new CheapEncoderGyroStep(secondDriveStep, encoderMotors, secondLegCounts - 30));
+        mSeq.add(liftAndDrive);
         return mSeq;
     }
 
