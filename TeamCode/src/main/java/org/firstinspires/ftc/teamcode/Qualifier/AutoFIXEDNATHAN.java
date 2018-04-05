@@ -181,6 +181,8 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
 //            telemetry.addData("Sharp IR V ", sharpIRVoltage);
             telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);//            telemetry.addData("IR Distance", gromit.glyphTrain.)
+            telemetry.addData("Maxbotix Upper ", "cm %4.1f ", gromit.driveTrain.UpperMaxbotixSensor.getVoltage()* 783.0);
+            telemetry.addData("Maxbotix Lower ", "cm %4.1f ", gromit.driveTrain.LowerMaxbotixSensor.getVoltage()* 783.0);
 
             telemetry.addLine("************ READY TO RUN *************");
             telemetry.addLine("Press BACK or START button to enter EDIT mode");
@@ -492,7 +494,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -(drivedistance-8), headingcrypto, 0); //move back
-        mecanumDriveBlockClamp2SHARP(menuFile.DriveSpeed * 0.4, headingcrypto, 0, 0.7, 1.0); //move back
+        mecanumDriveBlockClamp2SHARP(menuFile.DriveSpeed * 0.4, headingcrypto, 0, 0.65, -1.0); //move back
         sleep(100);
         if (menuFile.mode == 2) {//Align to a different box to do a row
             // COnditional for where you are

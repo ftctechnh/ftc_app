@@ -58,7 +58,10 @@ public class DriveTrain {
     public AnalogInput sharpIRSensor;
     public AnalogInput leftSharpSensor;
     public AnalogInput rightSharpSensor;
-     //?????????//Middle sensor Color hopefully
+    public AnalogInput UpperMaxbotixSensor;
+    public AnalogInput LowerMaxbotixSensor;
+
+    //?????????//Middle sensor Color hopefully
    // public DistanceSensor sensorDistance;
 
 
@@ -122,6 +125,9 @@ public class DriveTrain {
 //        forwardDirection = DirectionSetting.FRONT;
 
         //Maxbotix Sensor
+        UpperMaxbotixSensor = hardwareMap.analogInput.get("maxbotixsensorupper");
+        LowerMaxbotixSensor = hardwareMap.analogInput.get("maxbotixsensorlower");
+        //Front IR Sensor
         leftSharpSensor = hardwareMap.analogInput.get("leftsharpsensor");
         rightSharpSensor = hardwareMap.analogInput.get("rightsharpsensor");
         //Sharp IR Sensors

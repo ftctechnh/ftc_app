@@ -34,6 +34,8 @@
             <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
             <DigitalDevice name="LED1" port="6"/>
             <DigitalDevice name="LED2" port="7"/>
+            <AnalogInput name="maxbotixsensorupper" port="0"/>
+            <AnalogInput name="maxbotixsensorlower" port="1"/>
 
         </LynxModule>
     </LynxUsbDevice>
