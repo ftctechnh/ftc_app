@@ -300,7 +300,7 @@ abstract public class superAuto extends LinearOpMode {
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double raw = angles.firstAngle;
-        float fudgeFactor = 1f;
+        float fudgeFactor = 3f;
         double wheelPower = .3;
         double convert = raw;
         double dflt = Math.abs(target - raw);
