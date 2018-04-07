@@ -65,7 +65,7 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
         //sleep(100);
-        /*toggleLight(constants.toogleLightVuforiaRead);
+        toggleLight(constants.toogleLightVuforiaRead);
         //light.setPower(0.5);
         startTracking();
         telemetry.addData("","READY TO TRACK");
@@ -79,10 +79,10 @@ public class blueBack_George extends Autonomous_General_George_ {
         toggleLight(false);
 
         telemetry.addData("Vumark" , vuMark);
-        telemetry.update();*/
+        telemetry.update();
         //sleep(250);
 
-        /*moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
+        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
@@ -91,7 +91,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         closeGlyphManipulator();
         sleep(250);
         moveUpGlyph(1.45);
-        sleep(250);*/
+        sleep(250);
         relicTrackables.deactivate();
 
         switch (jewelDetector.getCurrentOrder()){
@@ -138,7 +138,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         jewelServo.setPosition(1);
         jewelDetector.disable();
 
-/*
+
         sleep(500);
         encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
@@ -176,7 +176,7 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         moveDownGlyph(1.05);
         sleep(100);
-        /*encoderMecanumDrive(0.3, 5, 5, 1000, 0);
+        encoderMecanumDrive(0.3, 5, 5, 1000, 0);
         sleep(250);
         openGlyphManipulator();
         sleep(250);
@@ -193,7 +193,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         }
 
         //code to get second glyph
-        encoderMecanumDrive(0.3, -20, -20, 1000, 0);
+       /* encoderMecanumDrive(0.3, -20, -20, 1000, 0);
         gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
         encoderMecanumDrive(0.6,25,25,5500,0);
         middleGlyphManipulator();

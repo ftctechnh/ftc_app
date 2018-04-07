@@ -43,7 +43,7 @@ public class blueFront_George extends Autonomous_General_George_ {
 //reseting gyro sensor
         jewelServoRotate.setPosition(0.74);
         sleep(100);
-        /*toggleLight(true);
+        toggleLight(true);
         //light.setPower(0.5);
         startTracking();
         telemetry.addData("","READY TO TRACK");
@@ -65,7 +65,7 @@ public class blueFront_George extends Autonomous_General_George_ {
         closeGlyphManipulator();
         sleep(250);
         moveUpGlyph(1.45);
-        sleep(250);*/
+        sleep(250);
 
         telemetry.addData("Vumark" , vuMark);
         telemetry.update();
@@ -119,7 +119,7 @@ public class blueFront_George extends Autonomous_General_George_ {
 
         sleep(200);
 
-        /*encoderMecanumDrive(0.4,40,40,5000,0);
+        encoderMecanumDrive(0.4,40,40,5000,0);
         sleep(100);
         gyroTurnREV(0.4,0);
         sleep(100);
@@ -156,7 +156,7 @@ public class blueFront_George extends Autonomous_General_George_ {
 
         moveDownGlyph(1.05);
         sleep(100);
-        /*encoderMecanumDrive(0.3, 5, 5, 1000, 0);
+        encoderMecanumDrive(0.3, 5, 5, 1000, 0);
         sleep(250);
         openGlyphManipulator();
         sleep(250);
