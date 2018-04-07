@@ -11,7 +11,8 @@ public class headingTest extends superAuto {
 
     public void runOpMode() {
         setUp();
-        fancyGyroPivot(-45);
+        fancyGyroPivot(90);
+        Wait(4);
 
     }
 }

@@ -47,6 +47,8 @@ abstract public class superAuto extends LinearOpMode {
     Servo servoFlicker;
 
     static final float ridgeDepth = 4;
+    //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
+    static final int gyroFlipped = -1;
 
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
@@ -266,10 +268,10 @@ abstract public class superAuto extends LinearOpMode {
     }
 
     void adjustHeading(int targetHeading, float basePosx, float basePosy) {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        angles =(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         telemetry.addData("First Angle", angles.firstAngle);
         if (angles != null) {
-            double currentHeading = angles.firstAngle;
+            double currentHeading =  gyroFlipped * angles.firstAngle;
             double addPower = (targetHeading - currentHeading) * .025;
             telemetry.addData("add power", addPower);
 
@@ -299,17 +301,17 @@ abstract public class superAuto extends LinearOpMode {
         //First set up variables
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double raw = angles.firstAngle;
+        double raw =  (gyroFlipped) * angles.firstAngle;
         float fudgeFactor = 3f;
         double wheelPower = .3;
         double convert = raw;
-        double dflt = Math.abs(target - raw);
-        double alt = (360 - dflt);
+        double dflt = (target - raw);
+        double alt = (360 - Math.abs(dflt));
         boolean right;
 
         while ((convert < (target - fudgeFactor)) || (convert > (target + fudgeFactor)))
         {
-
+            telemetry.clearAll();
             telemetry.addData("Raw: ", raw);
             telemetry.addData("Convert: ", convert);
             telemetry.addData("Default", dflt);
@@ -327,7 +329,7 @@ abstract public class superAuto extends LinearOpMode {
             }
 
             //set power to motor
-            if (right = true)
+            if (right = false)
             {
                 motorFL.setPower(wheelPower);
                 motorBL.setPower(wheelPower);
@@ -345,7 +347,7 @@ abstract public class superAuto extends LinearOpMode {
             //read the heading and find the shortest path
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             if (angles != null) {
-                raw = angles.firstAngle;
+                raw = (gyroFlipped)* angles.firstAngle;
                 dflt = (target - raw);
                 alt = (360 - Math.abs(dflt));
 
@@ -364,7 +366,7 @@ abstract public class superAuto extends LinearOpMode {
     void readIMU()
     {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double currentHeading = angles.firstAngle;
+        double currentHeading =   (gyroFlipped)* angles.firstAngle;
         telemetry.addData("Heading", currentHeading);
         telemetry.update();
 
