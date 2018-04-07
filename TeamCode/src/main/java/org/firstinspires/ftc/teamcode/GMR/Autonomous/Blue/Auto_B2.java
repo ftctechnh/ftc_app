@@ -48,17 +48,13 @@ public class Auto_B2 extends OpMode {
     private double currentSeconds;
     private double goalSeconds;
 
-    private boolean scanInit;
-    private boolean armdownInit;
-    private boolean rightarmupInit;
-    private boolean dropInit;
-
     private String completedStates = "";
 
     private int turnRadius = 20;
     private double turnPower = 0.15;
 
     private int keyColumn;
+    private double columnDist;
 
     @Override
     public void init() {
@@ -87,12 +83,8 @@ public class Auto_B2 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
-        scanInit = true;
-        armdownInit = true;
-        rightarmupInit = true;
-        dropInit = true;
-
-        keyColumn = 0;
+        keyColumn = 1;
+        columnDist = 0;
 
         time.reset();
     }
@@ -104,15 +96,17 @@ public class Auto_B2 extends OpMode {
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds += 0.5;
                     break;
-                case GRAB:
+                /*case GRAB:
                     goalSeconds = currentSeconds += 5;
+                    state = States.SCAN;
+                    break;
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
                         state = States.ARMDOWN;
                         goalSeconds = currentSeconds += 0.5;
                     }
-                    break;
+                    break;*/
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     leftArm.setPosition(goalPosition);
@@ -189,20 +183,30 @@ public class Auto_B2 extends OpMode {
                     break;
                 case STRAFE:
                     //Turns left to face CryptoBox. WORKING
+                    if (keyColumn == 1){
+                        columnDist = 1.0;
+                    } else if (keyColumn == 2){
+                        columnDist = 4.0;
+                    } else if (keyColumn == 3){
+                        columnDist = 6.0;
+                    } else if (keyColumn == 0){
+                        columnDist = 4.0;
+                    }
+
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 4.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, columnDist);
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
                         completedStates += "STRAFE - ";
                     }
                     break;
-                case COLUMNMOVE:
+                /*case COLUMNMOVE:
                     if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
                         state = States.DRIVEBOX;
                         completedStates += "COLUMNMOVE - ";
                     }
-                    break;
+                    break;*/
                 case DRIVEBOX:
                     //Drives into CryptoBox
                     if(!isFinished){

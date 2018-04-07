@@ -55,6 +55,7 @@ public class Auto_R2 extends OpMode {
     private float endUltrasonic;
 
     private int keyColumn;
+    private double columnDist;
 
     @Override
     public void init() {
@@ -82,7 +83,8 @@ public class Auto_R2 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
-        keyColumn = 0;
+        keyColumn = 3;
+        columnDist = 0;
 
         time.reset();
 
@@ -97,7 +99,7 @@ public class Auto_R2 extends OpMode {
                     state = States.ARMDOWN;
                     goalSeconds = currentSeconds += 0.5;
                     break;
-                case GRAB:
+                /*case GRAB:
                     state = States.SCAN;
                     goalSeconds = currentSeconds + 5.0;
                     break;
@@ -106,7 +108,8 @@ public class Auto_R2 extends OpMode {
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
                         state = States.ARMDOWN;
                         goalSeconds = currentSeconds += 0.5;
-                    } break;
+                    }
+                    break;*/
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);
@@ -186,8 +189,18 @@ public class Auto_R2 extends OpMode {
                     break;
                 case STRAFE:
                     //Strafes left to face CryptoBox. UNTESTED/DEACTIVATED
+                    if(keyColumn == 1){
+                        columnDist = 1.0;
+                    } else if (keyColumn == 2){
+                        columnDist = 4.0;
+                    } else if (keyColumn == 3){
+                        columnDist = 6.0;
+                    } else if (keyColumn == 0){
+                        columnDist = 4.0;
+                    }
+
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 4.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, columnDist);
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
