@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@Autonomous(name="Jewel Detector Auto Imp", group="DogeCV")
-@Disabled
+@Autonomous(name="Jewel Detector Auto Imp1", group="DogeCV")
+//@Disabled
 
 public class JewelDetectorAutoImp extends OpMode
 {

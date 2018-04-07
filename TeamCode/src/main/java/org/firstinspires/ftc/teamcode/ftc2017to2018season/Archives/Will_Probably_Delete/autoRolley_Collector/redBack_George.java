@@ -29,6 +29,8 @@ public class redBack_George extends Autonomous_General_Rolley {
         telemetry.update();
         //ititiate the hardware for rev robotics
         initiate(false);
+
+
         //tell robot that robot is ready to go
         telemetry.addData("The robot is loaded","You are ready to go! :D");
         telemetry.update();

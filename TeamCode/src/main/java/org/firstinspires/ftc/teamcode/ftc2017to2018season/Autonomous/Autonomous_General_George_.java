@@ -8,7 +8,7 @@ when                                      who                       Purpose/Chan
 3/28/18                                   Rohan                   Added the values for servos in the functions openGlyphManipulator(), closeGlyphManipulator(), middleGlyphManipulator(), and allOpenGlyphManipulator(). This aloowed the servos to be moved to the coordinated positions when these functions are called.
 3/31/18                                   Rohan                   Added two objects. One is used to refer to the values in Constants_for_Autonomous_General_George_. Replaced wait time with an object value. The second refers to the jewel detector as a new function is added called openCVInit which requires access to this objet
 4/1/18                                    Rohan                   Added a fail safe on the the move down inch function.
-
+4/6/18                                    Steven                  Edited openCVInit method so that jewelDetector could be used in all Autonomous programs. It has to be put in the init method of each program
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
@@ -74,7 +74,7 @@ import java.util.Locale;
 @Disabled
 public class Autonomous_General_George_ extends LinearOpMode{
     Constants_for_Autonomous_General_George_ constants = new Constants_for_Autonomous_General_George_();
-    JewelDetector jewelDetector1 = new JewelDetector();
+    JewelDetector jewelDetector = null;
 
     //we attached a light to make it easier to see the target
     //public DcMotor light;
@@ -176,6 +176,7 @@ public class Autonomous_General_George_ extends LinearOpMode{
         //glyphRangeSensorTop = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorTop");
         //glyphRangeSensorBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorBottom");
         jewelServo.setDirection(Servo.Direction.REVERSE);
+        jewelDetector = new JewelDetector();
 
         if (modernRobotics) {
             gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
@@ -1138,7 +1139,7 @@ revColorSensor.enableLed(false);
         }
         //sleep(5000);
     }
-    public void KnockjewelSensor(String ballColor) {
+    public void KnockjewelSensor(String ballColor, String side) {
 // This was done to ensure correction. The code below is guaranteed to work 3/26/18
 // if(ballColor=="red"){
 //            //move the jewel manipulator to the left to knock off the ball
@@ -1164,28 +1165,55 @@ revColorSensor.enableLed(false);
 //            telemetry.addData("Balls not seen", "Solution TBD   :/");
 //            telemetry.update();
 //        }
-        if (ballColor.equals("blue")) {
-            //move the jewel manipulator to the right to knock off the ball
-            jewelServoRotate.setPosition(0.5);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move it back to the original posititon
-            jewelServoRotate.setPosition(0.79);
-            //Add code to swing the jwele arm
+        if (side.equals("blue")) {
+            if (ballColor.equals("red")) {
+                //move the jewel manipulator to the right to knock off the ball
+                jewelServoRotate.setPosition(0.5);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move it back to the original posititon
+                jewelServoRotate.setPosition(0.79);
+                //Add code to swing the jwele arm
 
-        } else if (ballColor.equals("red")) {
-            //move the jewel manipulator to the left to knock off the ball
-            jewelServoRotate.setPosition(1);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move the jewel manipulator to the original position
-            jewelServoRotate.setPosition(0.79);
-            sleep(500);
-        } else if (ballColor.equals("blank")) {
-            jewelServo.setPosition(1);
+            } else if (ballColor.equals("blue")) {
+                //move the jewel manipulator to the left to knock off the ball
+                jewelServoRotate.setPosition(1);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move the jewel manipulator to the original position
+                jewelServoRotate.setPosition(0.79);
+                sleep(500);
+            } else if (ballColor.equals("blank")) {
+                jewelServo.setPosition(1);
 
+            }
+        }
+        else if (side.equals("red")){
+            if (ballColor.equals("red")) {
+                //move the jewel manipulator to the right to knock off the ball
+                jewelServoRotate.setPosition(0.5);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move it back to the original posititon
+                jewelServoRotate.setPosition(0.79);
+                //Add code to swing the jwele arm
+
+            } else if (ballColor.equals("blue")) {
+                //move the jewel manipulator to the left to knock off the ball
+                jewelServoRotate.setPosition(1);
+                sleep(300);
+                jewelServo.setPosition(0.8);
+                sleep(750);
+                //move the jewel manipulator to the original position
+                jewelServoRotate.setPosition(0.79);
+                sleep(500);
+            } else if (ballColor.equals("blank")) {
+                jewelServo.setPosition(1);
+
+            }
         }
     }
     /*
@@ -1303,18 +1331,17 @@ revColorSensor.enableLed(false);
     }
 
 public void openCVInit(){
-    jewelDetector1.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+    jewelDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
 
     //Jewel Detector Settings
-    jewelDetector1.areaWeight = 0.02;
-    jewelDetector1.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
+    jewelDetector.areaWeight = 0.02;
+    jewelDetector.detectionMode = JewelDetector.JewelDetectionMode.MAX_AREA; // PERFECT_AREA
     //jewelDetector.perfectArea = 6500; <- Needed for PERFECT_AREA
-    jewelDetector1.debugContours = true;
-    jewelDetector1.maxDiffrence = 15;
-    jewelDetector1.ratioWeight = 15;
-    jewelDetector1.minArea = 700;
-
-    jewelDetector1.enable();
+    jewelDetector.debugContours = true;
+    jewelDetector.maxDiffrence = 15;
+    jewelDetector.ratioWeight = 15;
+    jewelDetector.minArea = 700;
+    jewelDetector.enable();
 
 }
     @Override public void runOpMode() throws InterruptedException {}

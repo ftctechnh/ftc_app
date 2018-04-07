@@ -5,7 +5,7 @@
 
 when                                      who                       Purpose/Change
 -----------------------------------------------------------------------------------------------------------------------------------------------
-
+4/6/18                                    Steven                  By looking at test programs, fix CV to recognize jewel order. OpenCVInit has to be put before waitForStart and after initiate
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
@@ -31,6 +31,10 @@ public class redFront_George extends Autonomous_General_George_ {
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
         initiate(false);
+
+        openCVInit();
+        //initiate dogeCV
+
         sleep(500);
         telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
@@ -68,68 +72,53 @@ public class redFront_George extends Autonomous_General_George_ {
         sleep(500);
         moveUpGlyph(1.45);
         sleep(250);
-        jewelServo.setPosition(0.2);
-        telemetry.addData("jewelServo Position", jewelServo.getPosition());
-        telemetry.update();
-        sleep(1000);
-        readColorRev();
-        sleep(1500);
-        //light.setPower(0);
-        telemetry.addData("right jewel color", ballColor);
-        telemetry.update();
-        //returnImage();
 
+        relicTrackables.deactivate();
 
-
-        if(ballColor.equals("blue")){
-            //move the jewel manipulator to the left to knock off the ball
-            jewelServoRotate.setPosition(1);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move the jewel manipulator to the original position
-            jewelServoRotate.setPosition(0.79);
-            sleep(1000);
-        }
-        else if(ballColor.equals("red")){
-            //move the jewel manipulator to the right to knock off the ball
-            jewelServoRotate.setPosition(0.5);
-            sleep(300);
-            jewelServo.setPosition(0.8);
-            sleep(750);
-            //move it back to the original posititon
-            jewelServoRotate.setPosition(0.79);
-            //Add code to swing the jwele arm
-        }
-        else if (ballColor.equals("blank")){
-            jewelServo.setPosition(1);
-            sleep(1500);
-            jewelServo.setPosition(0.2);
-            sleep(500);
-            readColorRev();
-            sleep(1000);
-            if(ballColor.equals("blue")){
+        switch (jewelDetector.getCurrentOrder()){
+            case RED_BLUE:
+                jewelServo.setPosition(0.2);
+                sleep(750);
+                //move the jewel manipulator to the right to knock off the ball
                 jewelServoRotate.setPosition(1);
                 sleep(300);
+                jewelServoRotate.setPosition(0.79);
                 jewelServo.setPosition(0.8);
                 sleep(750);
-                jewelServoRotate.setPosition(0.79);
-                sleep(1000);
-            }
-            else if(ballColor.equals("red")){
+                //move the jewel manipulator to the original position
+                sleep(500);
+                break;
+
+            case BLUE_RED:
+                jewelServo.setPosition(0.2);
+                sleep(750);
+                //move the jewel manipulator to the left to knock off the ball
+                telemetry.addLine("Jewels Seen Red Blue");
+                telemetry.update();
+
                 jewelServoRotate.setPosition(0.5);
                 sleep(300);
+                jewelServoRotate.setPosition(0.79);
                 jewelServo.setPosition(0.8);
                 sleep(750);
-                jewelServoRotate.setPosition(0.79);
-                sleep(1000);
-            }
-            else {
-                jewelServo.setPosition(1);
-                sleep(2000);
-            }
+                //move it back to the original posititon
+                break;
+            case UNKNOWN:
+                telemetry.addData("Balls not seen", "Solution TBD   :/");
+                telemetry.update();
+                jewelServo.setPosition(0.2);
+                sleep(750);
+                readColorRev();
+                KnockjewelSensor(ballColor, "red");
+                sleep(100);
+                break;
         }
+        //Used to make sure the jewels are recognized
+        telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
+        telemetry.update();
         jewelServo.setPosition(1);
+        jewelDetector.disable();
+
         sleep(100);
         encoderMecanumDrive(0.4,-40,-40,5000,0);
         sleep(100);

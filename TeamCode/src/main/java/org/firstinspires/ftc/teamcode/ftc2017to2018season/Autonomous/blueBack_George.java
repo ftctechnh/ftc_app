@@ -16,19 +16,16 @@ when                                      who                       Purpose/Chan
 4/1/18                                    Rohan                   Removed a commented section of code that was obsolete due to the new old documented programs.
 4/1/18                                    Rohan                   Changed values in the program when going back to get more blocks. Moves the robot farther into the pile.
 4/1/18                                    Rohan                   The value to go down after Vuforia was to high so the robot got stuck in the loop.
-
+4/6/18                                    Steven                  By looking at test programs, fix CV to recognize jewel order. OpenCVInit has to be put before waitForStart and after initiate
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.ftc2017to2018season.Constants.Constants_for_blueBack_George;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.teamcode.ftc2017to2018season.Testing_and_Calibrations.Computer_Vision.DogeCVJewelDetector;
 
 
 //10-28-17
@@ -41,8 +38,6 @@ public class blueBack_George extends Autonomous_General_George_ {
 
     public double rsBuffer = constants.rsBuffer;
     private ElapsedTime runtime = new ElapsedTime();
-    DogeCVJewelDetector jewelDetector = new DogeCVJewelDetector();
-    JewelDetector jewelDetector1 = new JewelDetector();
 
     @Override
     public void runOpMode() {
@@ -53,8 +48,13 @@ public class blueBack_George extends Autonomous_General_George_ {
         telemetry.addData("","Vuforia Initiated");
         telemetry.update();
         //tell driver that vuforia is ready
+
         initiate(false);
         //intiate hardware
+
+        openCVInit();
+        //initiate dogeCV
+
         sleep(constants.initTimeMill);
         telemetry.addData("","GOOD TO GO! :)");
         telemetry.update();
@@ -63,9 +63,9 @@ public class blueBack_George extends Autonomous_General_George_ {
         waitForStart();
 //reseting gyro sensor
 
-        /*jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
+        jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
         //sleep(100);
-        toggleLight(constants.toogleLightVuforiaRead);
+        /*toggleLight(constants.toogleLightVuforiaRead);
         //light.setPower(0.5);
         startTracking();
         telemetry.addData("","READY TO TRACK");
@@ -82,7 +82,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         telemetry.update();*/
         //sleep(250);
 
-        moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
+        /*moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
         sleep(250);
         middleGlyphManipulator();
         sleep(250);
@@ -91,23 +91,14 @@ public class blueBack_George extends Autonomous_General_George_ {
         closeGlyphManipulator();
         sleep(250);
         moveUpGlyph(1.45);
-        sleep(250);
-
-
-<<<<<<< HEAD
+        sleep(250);*/
         relicTrackables.deactivate();
-        openCVInit();
-jewelServo.setPosition(0);
-sleep(100);
-=======
-        /*relicTrackables.deactivate();
-      openCVInit();
 
->>>>>>> 85c739b9571963f946e223ea01df758028ced8af
-        switch (jewelDetector1.getCurrentOrder()){
+        switch (jewelDetector.getCurrentOrder()){
             case BLUE_RED:
-           //     jewelServo.setPosition(0);
-                //move the jewel manipulator to the left to knock off the ball
+                jewelServo.setPosition(0.2);
+                sleep(750);
+                //move the jewel manipulator to the right to knock off the ball
                 jewelServoRotate.setPosition(1);
                 sleep(300);
                 jewelServoRotate.setPosition(0.79);
@@ -118,8 +109,9 @@ sleep(100);
                 break;
 
             case RED_BLUE:
-         //       jewelServo.setPosition(0);
-                //move the jewel manipulator to the right to knock off the ball
+                jewelServo.setPosition(0.2);
+                sleep(750);
+                //move the jewel manipulator to the left to knock off the ball
                telemetry.addLine("Jewels Seen Red Blue");
                 telemetry.update();
 
@@ -131,21 +123,22 @@ sleep(100);
                 //move it back to the original posititon
                 break;
             case UNKNOWN:
-//                telemetry.addData("Balls not seen", "Solution TBD   :/");
-//                telemetry.update();
-       //         jewelServo.setPosition(0.2);
+               telemetry.addData("Balls not seen", "Solution TBD   :/");
+                telemetry.update();
+                jewelServo.setPosition(0.2);
+                sleep(750);
                 readColorRev();
-                KnockjewelSensor(ballColor);
+                KnockjewelSensor(ballColor, "blue");
                 sleep(100);
                 break;
         }
         //Used to make sure the jewels are recognized
-        telemetry.addData("Jewel order is ", jewelDetector1.getCurrentOrder());
+        telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
+        jewelDetector.disable();
 
-
-
+/*
         sleep(500);
         encoderMecanumDrive(0.4,50,50,5000,0);
         sleep(100);
@@ -213,6 +206,9 @@ sleep(100);
         glyphOuttakeRolly(1);
         openGlyphManipulator();
         encoderMecanumDrive(0.3,-10,-10,5000,0);*/
+        /*if (!opModeIsActive()) {
+            jewelDetector.disable();
+        }*/
 
     }
 
