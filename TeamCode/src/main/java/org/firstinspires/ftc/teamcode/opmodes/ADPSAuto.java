@@ -255,7 +255,7 @@ public class ADPSAuto extends VuforiaBallLib {
             //reconstruct for saftey
             if(!red) step = new GyroCorrectStep(this, heading, bot.getHeadingSensor(), new SensorLib.PID(-30, 0, 0, 0), bot.getMotorVelocityShimArray(), 250.0f, 25.0f, 150.0f);
             else step = new GyroCorrectStep(this, heading, bot.getHeadingSensor(), new SensorLib.PID(-30, 0, 0, 0), bot.getMotorVelocityShimArray(), -250.0f, 25.0f, 150.0f);
-            final APDS9960 dist = red ? backDist : frontDist;
+            final APDS9960 dist = red ? frontDist : backDist;
             //TODO: add camera fallback
             findPilliar.add(new APDSFind(BotHardware.ServoE.stick.servo, 0.85, 0.55, dist, new SensorLib.PID(1.0f, 0, 0, 10), step,
                     APDS_DIST, 8, path.skipCount, 100, this, red, rear));
