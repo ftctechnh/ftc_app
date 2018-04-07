@@ -302,7 +302,7 @@ abstract public class superAuto extends LinearOpMode {
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double raw =  (gyroFlipped) * angles.firstAngle;
-        float fudgeFactor = 3f;
+        float fudgeFactor = .25f;
         double wheelPower = .3;
         double convert = raw;
         double dflt = (target - raw);
@@ -329,7 +329,7 @@ abstract public class superAuto extends LinearOpMode {
             }
 
             //set power to motor
-            if (right = false)
+            if (right = true)
             {
                 motorFL.setPower(wheelPower);
                 motorBL.setPower(wheelPower);

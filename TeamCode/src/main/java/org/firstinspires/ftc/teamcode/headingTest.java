@@ -13,6 +13,12 @@ public class headingTest extends superAuto {
         setUp();
         fancyGyroPivot(90);
         Wait(4);
+        fancyGyroPivot(-40);
+        Wait(4);
+        fancyGyroPivot(140);
+        Wait(4);
+        fancyGyroPivot(0);
+        Wait(4);
 
     }
 }
