@@ -158,7 +158,7 @@ public class BotHardware {
         ServoE.stickBase.servo.setPosition(ServoE.stickBaseHidden);
         ServoE.stick.servo.setPosition(ServoE.stickUp);
         setDropPos(ServoE.frontDropUp);
-        ServoE.arm.servo.setPosition(ServoE.armOpen);
+        ServoE.arm.servo.setPosition(ServoE.armClosed);
         ServoE.grab.servo.setPosition(ServoE.grabOpen);
     }
 
