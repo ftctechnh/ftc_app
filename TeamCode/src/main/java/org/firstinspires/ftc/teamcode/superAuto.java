@@ -329,7 +329,7 @@ abstract public class superAuto extends LinearOpMode {
             }
 
             //set power to motor
-            if (right = true)
+            if (right = false)
             {
                 motorFL.setPower(wheelPower);
                 motorBL.setPower(wheelPower);
