@@ -48,8 +48,8 @@ public class ADPSAuto extends VuforiaBallLib {
     protected final APDS9960.Config frontConfig = new APDS9960.Config();
     protected MatbotixUltra frontUltra;
     protected MatbotixUltra backUltra;
-    protected ColorSensor frontColor;
-    protected ColorSensor backColor;
+    //protected ColorSensor frontColor;
+    //protected ColorSensor backColor;
     protected boolean red = false;
     protected boolean rear = false;
     private BotHardware bot = new BotHardware(this);
@@ -150,8 +150,8 @@ public class ADPSAuto extends VuforiaBallLib {
         frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"));
         frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
         backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
-        frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
-        backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
+        //frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
+        //backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
 
         backDist.initDevice();
         frontDist.initDevice();
@@ -169,8 +169,8 @@ public class ADPSAuto extends VuforiaBallLib {
 
         //bot.setLights(new BlinkyEffect.Pulse(500, 0.5f));
 
-        frontColor.enableLed(false);
-        backColor.enableLed(false);
+        //frontColor.enableLed(false);
+        //backColor.enableLed(false);
 
         telemetry.update();
 
@@ -182,10 +182,12 @@ public class ADPSAuto extends VuforiaBallLib {
         telemetry.addData("Back Ultra", backUltra.getReading());
         telemetry.addData("Front Infrared", frontDist.getDist());
         telemetry.addData("Back Infrared", backDist.getDist());
+        /*
         telemetry.addData("Front Red", frontColor.red());
         telemetry.addData("Front Blue", frontColor.blue());
         telemetry.addData("Back Red", backColor.red());
         telemetry.addData("Back Blue", backColor.blue());
+        */
         telemetry.addData("Ball Color", getBallColor().toString());
         telemetry.addData("IMU", bot.getHeadingSensor().getHeading());
     }
@@ -218,7 +220,7 @@ public class ADPSAuto extends VuforiaBallLib {
             final AutoLib.Step whackRight;
             if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
             else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
-            whack.add(new APDSBallFind(red, frontColor, backColor, frontDist, backDist, (color != BallColor.Indeterminate && color != BallColor.Undefined) ? color : altColor, whackLeft, whackRight, rear, this));
+            whack.add(new APDSBallFind(red, null, null, frontDist, backDist, (color != BallColor.Indeterminate && color != BallColor.Undefined) ? color : altColor, whackLeft, whackRight, rear, this));
 
             whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
@@ -632,6 +634,7 @@ public class ADPSAuto extends VuforiaBallLib {
         public boolean loop() {
             super.loop();
             //check detection
+            /*
             if(color == BallColor.Indeterminate || color == BallColor.Undefined) {
                 //get colors
                 int backRed;
@@ -670,6 +673,7 @@ public class ADPSAuto extends VuforiaBallLib {
                 }
                 else color = BallColor.Undefined;
             }
+            */
             //run appropriete sewunce
             if(color == BallColor.LeftBlue) {
                 if(red) return whackLeft.loop();

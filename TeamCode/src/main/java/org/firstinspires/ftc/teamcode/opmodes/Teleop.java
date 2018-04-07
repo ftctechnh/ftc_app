@@ -30,12 +30,16 @@ public class Teleop extends OpMode {
     private static final int LIFT_COUNTS = 2800; //4250
     private static final int LIFT_BOTTOM_COUNTS = 730;
     private static final int LIFT_INC_COUNTS = 100;
-    private static final int RELIC_ARM_COUNTS = 4950;
+    private static final int RELIC_ARM_COUNTS = 6450;
     private static final double BUCKET_SHAKE_INTERVAL = 0.04; //seconds
     private static final double BUCKET_FLAT = 0.58;
     //private static final int BUCKET_LIFT_COUNTS = 50;
     //private static final int INTAKE_LIFT_COUNTS = 1200;
     private static final int MIN_VELOCITY = 550;
+    private static final float ARM_GRAB = 0.39f;
+
+    private static final double ARM_M_COFF = 0.0000321563938091114;
+    private static final double ARM_B_COFF = 0.206300571470232;
 
     protected BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
@@ -73,7 +77,9 @@ public class Teleop extends OpMode {
         bot.setDropPos(BotHardware.ServoE.backDropUp);
         BotHardware.Motor.lift.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BotHardware.Motor.relic.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        BotHardware.Motor.relic.motor.setTargetPositionTolerance(50);
+        BotHardware.Motor.relic.motor.setTargetPositionTolerance(5);
+        BotHardware.ServoE.arm.servo.setPosition(BotHardware.ServoE.armClosed);
+        BotHardware.Motor.relic.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftPos = BotHardware.Motor.lift.motor.getCurrentPosition();
         relicPos = BotHardware.Motor.relic.motor.getCurrentPosition();
     }
@@ -110,26 +116,28 @@ public class Teleop extends OpMode {
         }
 
         double time = getRuntime();
-        if((gamepad2.x || gamepad1.x) && time - lastTime >= BUCKET_SHAKE_INTERVAL) {
+        if(gamepad1.x && time - lastTime >= BUCKET_SHAKE_INTERVAL) {
             telemetry.addData("Interval", time - lastTime);
             lastTime = time;
             if(servoSet) bot.setDropPos(Range.clip(bot.getDropPos() - SERVO_INC_SHAKE, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
             else bot.setDropPos(Range.clip(bot.getDropPos() + SERVO_INC_SHAKE, BotHardware.ServoE.backDropDown, BotHardware.ServoE.backDropUp));
             servoSet = !servoSet;
         }
-        else if(!gamepad2.x && !gamepad1.x) servoSet = false;
+        else if(!gamepad1.x) servoSet = false;
+
+        if(gamepad2.x){
+            final double pos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos) * ARM_M_COFF + ARM_B_COFF;
+            BotHardware.ServoE.arm.servo.setPosition(pos);
+        }
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
         if(gamepad2.dpad_up) {
-            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
-            BotHardware.Motor.relic.motor.setPower(1.0f);
+            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() + 0.01,  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
         }
         else if(gamepad2.dpad_down){
-            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 200);
-            BotHardware.Motor.relic.motor.setPower(-1.0f);
+            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() - 0.01,  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
         }
-        else BotHardware.Motor.relic.motor.setPower(0);
 
         if(gamepad2.y && !lastY) {
             if(grabOpen = !grabOpen) BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
@@ -137,11 +145,15 @@ public class Teleop extends OpMode {
         }
         lastY = gamepad2.y;
 
-        if(gamepad2.left_trigger > 0)
-            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() - Range.scale(gamepad2.left_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX), BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
-        else if(gamepad2.right_trigger > 0)
-            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() + Range.scale(gamepad2.right_trigger, 0, 1, SERVO_INC_MIN, SERVO_INC_MAX),  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
-
+        if(gamepad2.left_trigger > 0) {
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 200);
+            BotHardware.Motor.relic.motor.setPower(-gamepad2.left_trigger);
+        }
+        else if(gamepad2.right_trigger > 0){
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
+            BotHardware.Motor.relic.motor.setPower(gamepad2.right_trigger);
+        }
+        else BotHardware.Motor.relic.motor.setPower(0);
 
         if(gamepad2.left_stick_y != 1 || gamepad2.right_stick_y != 1) {
             bot.setSuckLeft(gamepad2.left_stick_y);
@@ -203,8 +215,8 @@ public class Teleop extends OpMode {
             bot.setLeftDrive(gamepad1.left_stick_y * fastFactor);
             bot.setRightDrive(gamepad1.right_stick_y * fastFactor);
             if(motorsSet) {
-                //DcMotor[] ray = bot.getMotorRay();
-                //for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                DcMotor[] ray = bot.getMotorRay();
+                for(DcMotor motor : ray) motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 motorsSet = false;
             }
         }
@@ -215,6 +227,8 @@ public class Teleop extends OpMode {
         telemetry.addData("Back Drop", bot.getDropPos());
         telemetry.addData("Robot Slow", robotSlow);
         telemetry.addData("Lift", liftPos);
+        telemetry.addData("Arm", BotHardware.ServoE.arm.servo.getPosition());
+        telemetry.addData("Relic Delta", Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos));
     }
 
     public void stop() {

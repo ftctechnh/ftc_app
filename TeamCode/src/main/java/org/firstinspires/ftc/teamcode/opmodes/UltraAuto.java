@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.util.Range;
 import com.vuforia.Vec2F;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
@@ -39,10 +41,12 @@ public class UltraAuto extends VuforiaBallLib {
                                                     104 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
     private static final int[] BLUE_ZERO = new int[] {20, 80};
     private static final int X_STUPID_MAX = 60;
+    private static final float X_ANGLE_MAX = 3.0f;
 
     private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 9.00f, 0, 50);
     private final SensorLib.PID gyroDrivePID = new SensorLib.PID(-64.0f, 0, 0, 0);
     private final SensorLib.PID gyroTurnPID = new SensorLib.PID(0.0056f, 0.0063f, 0, 7);
+    private final SensorLib.PID gyroTurnPIDFast = new SensorLib.PID(0.007f, 0.0063f, 0, 7);
 
     private enum AutoPath {
         RED_FRONT_RIGHT(true, false, RelicRecoveryVuMark.RIGHT, (float)DistanceUnit.INCH.toCm(0), 125),
@@ -118,7 +122,6 @@ public class UltraAuto extends VuforiaBallLib {
 
     public void start() {
         //initalize starting sequence
-
         mSeq.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
                 -550, 500, false, -720, -55));
         mSeq.add(new DriveAndMeasureStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
@@ -372,7 +375,9 @@ public class UltraAuto extends VuforiaBallLib {
                 xOffsetStart = max - xZero;
                 return true;
             }
-            else if((reading = UltraPos.getXSensor().getReadingNoDelay()) >= 0) data.add(reading);
+            else if(Math.abs(bot.getImu().getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).secondAngle) < X_ANGLE_MAX
+                    && (reading = UltraPos.getXSensor().getReadingNoDelay()) >= 0)
+                data.add(reading);
             return false;
         }
     }

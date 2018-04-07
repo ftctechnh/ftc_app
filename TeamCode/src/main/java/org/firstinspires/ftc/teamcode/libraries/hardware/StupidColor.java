@@ -26,6 +26,10 @@ public class StupidColor extends AdafruitI2cColorSensor {
         }
     }
 
+    public synchronized void setGain(Gain gain) {
+        write8(Register.CONTROL, gain.bVal);
+    }
+
     @Override public boolean isLightOn()
     {
         return LEDEn;
