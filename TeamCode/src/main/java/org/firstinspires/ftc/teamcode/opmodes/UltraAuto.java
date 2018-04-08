@@ -43,6 +43,9 @@ public class UltraAuto extends VuforiaBallLib {
     private static final int[] RED_ZERO = new int[] {33 /* the offset from the ultrasonic sensor to the wall when the robot is centered on the balance pad */,
                                                     104 /* the ofsett from the back wall when front of robot is aligned with mat edge off balance pad */};
     private static final int[] BLUE_ZERO = new int[] {20, 80};
+    private static final int Y_STUPID_MAX = 120;
+    private static final int Y_STUPID_MIN = 90;
+    private static final int Y_STUPID_COUNT = 4;
     private static final int X_STUPID_MAX = 60;
     private static final float X_ANGLE_MAX = 3.0f;
     private static final double BALL_WAIT_SEC = 2.0;
@@ -205,7 +208,11 @@ public class UltraAuto extends VuforiaBallLib {
             if(mSeq.loop()) {
                 //measure y
                 final int yZero = red ? RED_ZERO[1] : BLUE_ZERO[1];
-                yOffsetStart = UltraPos.getYSensor(red, rear).getReading() - yZero;
+                int reading = UltraPos.getYSensor(red, rear).getReading();
+                int count = 0;
+                while ((reading >= Y_STUPID_MAX || reading <= Y_STUPID_MIN) && ++count < Y_STUPID_COUNT) reading = UltraPos.getYSensor(red, rear).getReading();
+                if(count >= Y_STUPID_COUNT); //TODO: Failure
+                yOffsetStart = reading - yZero;
                 //switch state
                 state = State.BLOCK;
                 firstRun = false;
