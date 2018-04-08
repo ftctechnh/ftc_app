@@ -343,7 +343,12 @@ public class Teleop extends OpMode {
         if(waitforglyph){//If you have a block waiting in the train
             if( abs(gamepad1.right_stick_x) < .1 && abs(gamepad1.right_stick_y) < .1 &&  abs(gamepad1.left_stick_x) < .1){
                 waitforglyph = false;
-                gromit.glyphTrain.startGlyphMotors(intakespeed);
+                if(blocks == 0){
+                    gromit.glyphTrain.startGlyphMotors(0.35);
+                }
+                else {
+                    gromit.glyphTrain.startGlyphMotors(travelspeed);
+                }
                 trainon = true;
             }
         }
