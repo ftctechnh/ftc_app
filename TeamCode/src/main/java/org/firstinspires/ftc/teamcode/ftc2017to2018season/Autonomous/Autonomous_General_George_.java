@@ -12,6 +12,8 @@ when                                      who                       Purpose/Chan
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.Autonomous;
 
+import android.graphics.Color;
+
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.detectors.JewelDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
@@ -118,8 +120,11 @@ public class Autonomous_General_George_ extends LinearOpMode{
     public ModernRoboticsI2cColorSensor colorSensor;
     public ColorSensor revColorSensor;
     public DistanceSensor revJewelRangeSensor;
-    //public DistanceSensor glyphRangeSensorTop;
-    //public DistanceSensor glyphRangeSensorBottom;
+    public DistanceSensor glyphRangeTop;
+    public DistanceSensor glyphRangeBottom;
+    public ColorSensor glyphColorTop;
+    public ColorSensor glyphColorBottom;
+    public long opModeStart;
     //public ModernRoboticsI2cRangeSensor rangeSensor2;
 
     public String ballColor;
@@ -173,8 +178,8 @@ public class Autonomous_General_George_ extends LinearOpMode{
 
         revColorSensor = hardwareMap.get(ColorSensor.class, "revColorSensor");
         revJewelRangeSensor = hardwareMap.get(DistanceSensor.class, "revJewelRangeSensor");
-        //glyphRangeSensorTop = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorTop");
-        //glyphRangeSensorBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeSensorBottom");
+        glyphRangeBottom = hardwareMap.get(DistanceSensor.class, "glyphRangeBottom");
+        glyphRangeTop = hardwareMap.get(DistanceSensor.class, "glyphRangeTop");
         jewelServo.setDirection(Servo.Direction.REVERSE);
         jewelDetector = new JewelDetector();
 
@@ -1239,6 +1244,7 @@ revColorSensor.enableLed(false);
         /* The values below were for the non rolly collector
         glyphServoRight.setPosition(0.5);
         glyphServoLeft.setPosition(0.4);*/
+
         glyphServoLeft.setPosition(0.75);
         glyphServoRight.setPosition(0.17);
     }
@@ -1261,7 +1267,7 @@ revColorSensor.enableLed(false);
     public void glyphIntakeRolly(double seconds){
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while(runtime.seconds() - begintime < seconds) {
+        while(runtime.seconds() - begintime < seconds && opModeIsActive()) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
         }
@@ -1270,7 +1276,7 @@ revColorSensor.enableLed(false);
     public void glyphOuttakeRolly(double seconds){
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while(runtime.seconds() - begintime < seconds) {
+        while(runtime.seconds() - begintime < seconds && opModeIsActive()) {
             intakeLeft.setPower(-1);
             intakeRight.setPower(1);
         }
@@ -1279,6 +1285,7 @@ revColorSensor.enableLed(false);
     public void moveUpGlyph(double cm) {
         double target_Position;
         double countsPerCM = 609.6;
+        long moveStartTime = System.currentTimeMillis();
         double finalTarget = cm*countsPerCM;
         slideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         target_Position = slideMotor.getCurrentPosition() + finalTarget;
@@ -1303,6 +1310,7 @@ revColorSensor.enableLed(false);
     }
     public void moveDownGlyph(double cm) {
         ElapsedTime runtime = new ElapsedTime();
+        long moveStartTime = System.currentTimeMillis();
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm * countsPerCM;
@@ -1314,8 +1322,6 @@ revColorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-1);
-        double begintime = runtime.seconds();
-        while ((runtime.seconds() - begintime) < 3) {
             while (slideMotor.isBusy() && opModeIsActive()) {
                 telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
                 telemetry.addData("power", slideMotor.getPower());
@@ -1328,7 +1334,7 @@ revColorSensor.enableLed(false);
             slideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         }
-    }
+
 
 public void openCVInit(){
     jewelDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
@@ -1344,6 +1350,44 @@ public void openCVInit(){
     jewelDetector.enable();
 
 }
+
+    public void moreGlyphs() {
+        openGlyphManipulator();
+        sleep(75);
+        intakeLeft.setPower(-1);
+        intakeRight.setPower(1);
+        encoderMecanumDrive(0.35, 25, 25, 1000, 0);
+        sleep(750);
+        intakeRight.setPower(0);
+        intakeLeft.setPower(0);
+        middleGlyphManipulator();
+
+        while (glyphRangeBottom.getDistance(DistanceUnit.CM) < 16) {
+            intakeLeft.setPower(1);
+            intakeRight.setPower(-1);
+            straightDrive(0.25);
+        }
+        stopMotors();
+        encoderMecanumDrive(0.5,5,5,1000,0);
+        intakeLeft.setPower(0);
+        intakeRight.setPower(0);
+        closeGlyphManipulator();
+        sleep(75);
+        encoderMecanumDrive(0.5,-15,-15,1000,0);
+        sleep(50);
+        gyroTurnREV(0.4,90);
+        encoderMecanumDrive(0.5,15,15,1000,0);
+        moveUpGlyph(3);
+        sleep(75);
+        gyroTurnREV(0.4,80);
+        encoderMecanumDrive(0.5,15,15,1000,0);
+        sleep(100);
+        glyphOuttakeRolly(1.5);
+        encoderMecanumDrive(0.4,-5,-5,1000,0);
+        openGlyphManipulator();
+
+    }
+
     @Override public void runOpMode() throws InterruptedException {}
 
     /**
