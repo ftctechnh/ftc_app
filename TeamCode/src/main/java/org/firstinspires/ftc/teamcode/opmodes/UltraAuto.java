@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.CameraDevice;
 import com.vuforia.Vec2F;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -14,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.EncoderHoneStep;
+import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
@@ -42,6 +45,7 @@ public class UltraAuto extends VuforiaBallLib {
     private static final int[] BLUE_ZERO = new int[] {20, 80};
     private static final int X_STUPID_MAX = 60;
     private static final float X_ANGLE_MAX = 3.0f;
+    private static final double BALL_WAIT_SEC = 2.0;
 
     private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 9.00f, 0, 50);
     private final SensorLib.PID gyroDrivePID = new SensorLib.PID(-64.0f, 0, 0, 0);
@@ -65,6 +69,13 @@ public class UltraAuto extends VuforiaBallLib {
             this.distanceCM = travelCM;
             this.turnAmount = turnAmount;
         }
+    }
+
+    private enum State {
+        JEWEL,
+        MEASURE,
+        BLOCK,
+        MULTIBLOCK
     }
 
     //ADJUSTABLE VARIBLES
@@ -110,6 +121,10 @@ public class UltraAuto extends VuforiaBallLib {
     private boolean firstRun = false;
     private int xOffsetStart;
     private int yOffsetStart;
+    private double startLoop = 0;
+    private BallColor color = BallColor.Undefined;
+    private BallColor altColor = BallColor.Undefined;
+    private State state = State.JEWEL;
 
     //CODE
     public void init() {
@@ -118,80 +133,156 @@ public class UltraAuto extends VuforiaBallLib {
         UltraPos.init(this);
         bot.setDropPos(0.62);
         //TODO: Ball stuff
+        initVuforia(true);
+        startTracking();
+    }
+
+    public void init_loop() {
+        for(UltraPos ultra : UltraPos.values()) telemetry.addData(ultra.name, ultra.sensor.getReading());
+        telemetry.addData("Ball Color", getBallColor().toString());
+        telemetry.addData("IMU", bot.getHeadingSensor().getHeading());
     }
 
     public void start() {
-        //initalize starting sequence
-        mSeq.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
-                -550, 500, false, -720, -55));
-        mSeq.add(new DriveAndMeasureStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
-                -550, 200, true, -720, -55));
-        mSeq.add(new WaitMotorVelocityStep(new DcMotorEx[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor}, 10));
 
     }
 
     public void loop() {
-        //ball code goes above here
-        final boolean done;
-        if((done = mSeq.loop()) && !firstRun) {
-            //initialize sequence with found values
-            final int yZero = red ? RED_ZERO[1] : BLUE_ZERO[1];
-            yOffsetStart = UltraPos.getYSensor(red, rear).getReading() - yZero;
+        //detect jewels
+        if(state == State.JEWEL) {
+            if(startLoop == 0) startLoop = getRuntime();
+            if(getRuntime() - startLoop >= BALL_WAIT_SEC / 2 && !firstRun) CameraDevice.getInstance().setFlashTorchMode(true);
+            if(getRuntime() - startLoop < BALL_WAIT_SEC && (color == BallColor.Indeterminate || color == BallColor.Undefined)) {
+                color = getBallColor();
+                altColor = getCVBallColor();
+            }
+            else state = State.MEASURE;
+        }
+        //drive and measure distances from walls
+        if(state == State.MEASURE) {
+            if(!firstRun) {
+                //initialize starting sequence
+                CameraDevice.getInstance().setFlashTorchMode(false);
+                //init whacky stick code here
+                if(color == BallColor.Indeterminate || color == BallColor.Undefined) color = altColor;
+                if(color == BallColor.LeftBlue || color == BallColor.LeftRed) {
+                    final AutoLib.Sequence whack = new AutoLib.LinearSequence();
+                    if(red) whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed, 0.25, false));
+                    else whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue, 0.25, false));
+                    whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickDown, 0.5, false));
+                    mSeq.add(whack);
 
-            AutoPath path = AutoPath.RED_FRONT_RIGHT;
+                    //hmmmmm
+                    final AutoLib.Step whackLeft;
+                    if(red) whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed - BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
+                    else whackLeft = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue - BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
+                    final AutoLib.Step whackRight;
+                    if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
+                    else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
+                    if(color == BallColor.LeftBlue) {
+                        if(red) mSeq.add(whackLeft);
+                        else mSeq.add(whackRight);
+                    }
+                    else {
+                        if(red) mSeq.add(whackRight);
+                        else mSeq.add(whackLeft);
+                    }
 
-            mSeq = new AutoLib.LinearSequence();
+                    final AutoLib.Sequence whackUp = new AutoLib.LinearSequence();
+                    whackUp.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
+                    whackUp.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0, false));
+                    mSeq.add(whackUp);
+                }
+                //TODO: Auto path
+                //drive and measure
+                mSeq.add(new AutoLib.AzimuthCountedDriveStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
+                        -550, 500, false, -720, -55));
+                mSeq.add(new DriveAndMeasureStep(this, 0, bot.getHeadingSensor(), gyroDrivePID, bot.getMotorVelocityShimArray(),
+                        -550, 200, true, -720, -55));
+                mSeq.add(new WaitMotorVelocityStep(new DcMotorEx[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor}, 10));
+                firstRun = true;
+            }
+            if(mSeq.loop()) {
+                //measure y
+                final int yZero = red ? RED_ZERO[1] : BLUE_ZERO[1];
+                yOffsetStart = UltraPos.getYSensor(red, rear).getReading() - yZero;
+                //switch state
+                state = State.BLOCK;
+                firstRun = false;
+            }
+        }
+        //execute based on above values
+        if(state == State.BLOCK) {
+            if(!firstRun) {
+                //initialize sequence with found values
+                AutoPath path = AutoPath.RED_FRONT_RIGHT;
 
-            final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.7f, gyroTurnPID, 2f, 5, true);
-            mSeq.add(makeDriveToBoxSeq(this, bot, encoderHonePID,
-                    makeGyroDriveStep(0, gyroDrivePID, 100, 55, 720),
-                    turn,
-                    makeGyroDriveStep(path.turnAmount, gyroDrivePID, 500, 55, 720),
-                    new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor},
+                mSeq = new AutoLib.LinearSequence();
+
+                final AutoLib.GyroTurnStep turn = new AutoLib.GyroTurnStep(this, path.turnAmount, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.7f, gyroTurnPID, 2f, 5, true);
+                mSeq.add(makeDriveToBoxSeq(this, bot, encoderHonePID,
+                        makeGyroDriveStep(0, gyroDrivePID, 100, 55, 720),
+                        turn,
+                        makeGyroDriveStep(path.turnAmount, gyroDrivePID, 500, 55, 720),
+                        new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor},
                     /*Math.round(path.distanceCM * ENCODE_PER_CM)*/0, Math.round(DRIVE_DUMP_CM * ENCODE_PER_CM),
-                    5, 10, xOffsetStart, yOffsetStart));
-            mSeq.add(bot.getDropStep());
-            final AutoLib.ConcurrentSequence backAndDown = new AutoLib.ConcurrentSequence();
-            backAndDown.add(bot.getReverseDropStep());
-            backAndDown.add(bot.getLiftLowerStep());
-            AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
-            DcMotor[] temp = bot.getMotorRay();
-            if(path.turnAmount > 55) {
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.7f, ONE_SIDE_PUSH_TIME, true));
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.7f, ONE_SIDE_PUSH_TIME, true));
-            }
-            else {
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.7f, ONE_SIDE_PUSH_TIME, true));
-                oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.7f, ONE_SIDE_PUSH_TIME, true));
-            }
-            backAndDown.add(oneSideSeq);
-            mSeq.add(backAndDown);
+                        5, 10, xOffsetStart, yOffsetStart));
+                mSeq.add(bot.getDropStep());
+                final AutoLib.ConcurrentSequence backAndDown = new AutoLib.ConcurrentSequence();
+                backAndDown.add(bot.getReverseDropStep());
+                backAndDown.add(bot.getLiftLowerStep());
+                AutoLib.ConcurrentSequence oneSideSeq = new AutoLib.ConcurrentSequence();
+                DcMotor[] temp = bot.getMotorRay();
+                if(path.turnAmount > 55) {
+                    oneSideSeq.add(new AutoLib.TimedMotorStep(temp[0], 0.7f, ONE_SIDE_PUSH_TIME, true));
+                    oneSideSeq.add(new AutoLib.TimedMotorStep(temp[1], 0.7f, ONE_SIDE_PUSH_TIME, true));
+                }
+                else {
+                    oneSideSeq.add(new AutoLib.TimedMotorStep(temp[2], 0.7f, ONE_SIDE_PUSH_TIME, true));
+                    oneSideSeq.add(new AutoLib.TimedMotorStep(temp[3], 0.7f, ONE_SIDE_PUSH_TIME, true));
+                }
+                backAndDown.add(oneSideSeq);
+                mSeq.add(backAndDown);
 
-            mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -720, 200, true));
-            mSeq.add(new AutoLib.GyroTurnStep(this, red ? 90 : -90, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.7f, gyroTurnPID, 3f, 5, true));
+                mSeq.add(new AutoLib.MoveByEncoderStep(bot.getMotorVelocityShimArray(), -720, 200, true));
+                mSeq.add(new AutoLib.GyroTurnStep(this, red ? 90 : -90, bot.getHeadingSensor(), bot.getMotorRay(), 0.04f, 0.7f, gyroTurnPID, 3f, 5, true));
 
-            firstRun = true;
+                firstRun = true;
+            }
+            if(mSeq.loop()) {
+                //multiblock bby
+                state = State.MULTIBLOCK;
+                firstRun = false;
+            }
+        }
+        if(state == State.MULTIBLOCK) {
+            //TODO: this
+            if(!firstRun) {
+
+                firstRun = true;
+            }
+            if(mSeq.loop()) {
+                requestOpModeStop();
+            }
         }
         telemetry.addData("X Offset", xOffsetStart);
         telemetry.addData("Y Offset", yOffsetStart);
-        if(done && firstRun) {
-            telemetry.addData("Y Reading", UltraPos.getYSensor(red, rear).getReading());
-        }
+        telemetry.addData("State", state.name());
     }
 
     public void stop() {
-
+        bot.stopAll();
     }
 
-    private ADPSAuto.GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
-        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax);
+    private GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
+        return new GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax);
     }
 
     private static AutoLib.Sequence makeDriveToBoxSeq(OpMode mode, BotHardware bot,
                                                       SensorLib.PID errorPid,
-                                                      ADPSAuto.GyroCorrectStep firstDriveStep,
+                                                      GyroCorrectStep firstDriveStep,
                                                       AutoLib.GyroTurnStep turnStep,
-                                                      ADPSAuto.GyroCorrectStep secondDriveStep,
+                                                      GyroCorrectStep secondDriveStep,
                                                       DcMotor[] encoderMotors, int firstLegCounts, int secondLegCounts, int error, int count, int xOffsett, int yOffsett) {
         //step zero: calculate how far the robot must drive according to our x and y offset
         //subtract the extra distance needed to be travelled in the second leg from the first leg
@@ -213,89 +304,6 @@ public class UltraAuto extends VuforiaBallLib {
         liftAndDrive.add(new CheapEncoderGyroStep(secondDriveStep, encoderMotors, secondLegCounts - 30));
         mSeq.add(liftAndDrive);
         return mSeq;
-    }
-
-    public static class EncoderHoneStep extends AutoLib.Step {
-        private final OpMode mode;
-        private final DcMotor[] encode;
-        private final int dist;
-        private final int error;
-        private final int count;
-        private final SensorLib.PID errorPid;
-        private final ADPSAuto.GyroCorrectStep gyroStep;
-
-        private double lastTime = 0;
-        private int currentCount = 0;
-        private int[] startPos;
-
-        public EncoderHoneStep(OpMode mode, int distCounts, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep, DcMotor[] encoderRay) {
-            this.mode = mode;
-            this.encode = encoderRay;
-            this.dist = distCounts;
-            this.error = error;
-            this.count = count;
-            this.errorPid = errorPid;
-            this.gyroStep = gyroStep;
-        }
-
-        /*
-        EncoderHoneStep(OpMode mode, int distCounts, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep, DcMotor encoderRay) {
-            this(mode, distCounts, error, count, errorPid, gyroStep, new DcMotor[] {encoderRay});
-        }
-        */
-
-        public boolean loop() {
-            super.loop();
-            if(firstLoopCall()) {
-                gyroStep.reset();
-                lastTime = mode.getRuntime() - 1;
-                startPos = new int[encode.length];
-                for (int i = 0; i < encode.length; i++) startPos[i] = encode[i].getCurrentPosition();
-            }
-            //get the distance delta
-            int total = 0;
-            for (int i = 0; i < encode.length; i++) {
-                total += encode[i].getCurrentPosition() - startPos[i];
-                //mode.telemetry.addData("Delta " + i, encode[i].getCurrentPosition() - startPos[i]);
-            }
-
-            final float read = -((float)total / encode.length);
-            float curError = read - dist;
-            //if we found it, stop
-            //if the peak is within stopping margin, stop
-            if(Math.abs(curError) <= error) {
-                setMotorsWithoutGyro(0);
-                return ++currentCount >= count;
-            }
-            else currentCount = 0;
-
-            //PID
-            final double time = mode.getRuntime();
-            final float pError = errorPid.loop(curError, (float)(time - lastTime));
-            lastTime = time;
-            mode.telemetry.addData("power error", pError);
-
-            //cut out a middle range, but handle positive and negative
-            float power;
-            if(pError >= 0) power = Range.clip(pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
-            else power = Range.clip(pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
-            //reverse if necessary
-            if(gyroStep.getStartPower() < 0) power = -power;
-
-            gyroStep.setPower(power);
-            gyroStep.loop();
-            //telem
-            mode.telemetry.addData("Power", -power);
-            mode.telemetry.addData("Encoder error", curError);
-            mode.telemetry.addData("Encoder", read);
-            mode.telemetry.addData("Dist", dist);
-            //return
-            return false;
-        }
-
-        private void setMotorsWithoutGyro(float power) {
-            for (DcMotor motor : gyroStep.getMotors()) motor.setPower(power);
-        }
     }
 
     private static class WaitMotorVelocityStep extends AutoLib.Step {
@@ -321,12 +329,12 @@ public class UltraAuto extends VuforiaBallLib {
     }
 
     private static class CheapEncoderGyroStep extends AutoLib.Step {
-        private final ADPSAuto.GyroCorrectStep gyroStep;
+        private final GyroCorrectStep gyroStep;
         private final int count;
         private final DcMotor[] encoders;
         private int[] startPos;
 
-        CheapEncoderGyroStep(ADPSAuto.GyroCorrectStep step, DcMotor[] encoders, int counts) {
+        CheapEncoderGyroStep(GyroCorrectStep step, DcMotor[] encoders, int counts) {
             this.gyroStep = step;
             this.encoders = encoders;
             this.count = counts;

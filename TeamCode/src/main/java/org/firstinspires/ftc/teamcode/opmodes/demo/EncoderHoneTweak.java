@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.EncoderHoneStep;
+import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.UDPid;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
@@ -60,13 +62,13 @@ public class EncoderHoneTweak extends OpMode {
         udPid.shutdown();
     }
 
-    private ADPSAuto.GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
-        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax, 0.5f);
+    private GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
+        return new GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax, 0.5f);
     }
 
     private AutoLib.Sequence makeEncoderStep(boolean reversed) {
         AutoLib.LinearSequence mSeq = new AutoLib.LinearSequence();
-        mSeq.add(new UltraAuto.EncoderHoneStep(this, reversed ? -COUNTS : COUNTS, 5, 25,
+        mSeq.add(new EncoderHoneStep(this, reversed ? -COUNTS : COUNTS, 5, 25,
                 new SensorLib.PID((float)udPid.getP() * 100, (float)udPid.getI() * 1000, (float)udPid.getD() * 100, 50),
                 makeGyroDriveStep(0, gyroTurnPID, POWER, POWER_MIN, POWER_MAX),
                 new DcMotor[] {BotHardware.Motor.frontLeft.motor, BotHardware.Motor.frontRight.motor}));

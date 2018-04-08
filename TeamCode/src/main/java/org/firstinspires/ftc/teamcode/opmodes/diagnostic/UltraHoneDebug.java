@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
@@ -64,7 +65,7 @@ public class UltraHoneDebug extends OpMode {
         //initialize sequence
         mSeq.add(new UltraHoneStep(this, frontUltra, counts, 0, 5,
                 new SensorLib.PID(15f, 0.15f, 0, 10),
-                new ADPSAuto.GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 0.0f, 55.0f, 400.0f)));
+                new GyroCorrectStep(this, 0, bot.getHeadingSensor(), new SensorLib.PID(-16, 0, 0, 0), bot.getMotorVelocityShimArray(), 0.0f, 55.0f, 400.0f)));
         mSeq.add(new AutoLib.GyroTurnStep(this, 90, bot.getHeadingSensor(), bot.getMotorVelocityShimArray(), 55.0f, 650.0f, motorPID, 0.5f, 10, true));
         mSeq.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stickBase.servo, BotHardware.ServoE.stickBaseCenter, 0.25, false));
         mSeq.add(new AutoLib.TimedServoStep(BotHardware.ServoE.stick.servo, 0.85, 0.25, false));
@@ -84,12 +85,12 @@ public class UltraHoneDebug extends OpMode {
         private final int error;
         private final int count;
         private final SensorLib.PID errorPid;
-        private final ADPSAuto.GyroCorrectStep gyroStep;
+        private final GyroCorrectStep gyroStep;
 
         private double lastTime = 0;
         private int currentCount = 0;
 
-        UltraHoneStep(OpMode mode, MatbotixUltra ultra, int dist, int error, int count, SensorLib.PID errorPid, ADPSAuto.GyroCorrectStep gyroStep) {
+        UltraHoneStep(OpMode mode, MatbotixUltra ultra, int dist, int error, int count, SensorLib.PID errorPid, GyroCorrectStep gyroStep) {
             this.mode = mode;
             this.ultra = ultra;
             this.dist = dist;

@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
+import org.firstinspires.ftc.teamcode.libraries.EncoderHoneStep;
+import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
@@ -53,8 +55,8 @@ public class LineStopTest extends OpMode {
             //wait until velocity is zero
             while (BotHardware.Motor.frontLeft.motor.getVelocity(AngleUnit.DEGREES) > 0);
             //create encoder hone step
-            final ADPSAuto.GyroCorrectStep step = makeGyroDriveStep(0, gyroDrivePID, 600, 720, 55);
-            mSeq.add(new UltraAuto.EncoderHoneStep(this, counts - BotHardware.Motor.frontLeft.motor.getCurrentPosition(), 5, 5, encoderHonePID, step, new DcMotor[]{BotHardware.Motor.frontLeft.motor}));
+            final GyroCorrectStep step = makeGyroDriveStep(0, gyroDrivePID, 600, 720, 55);
+            mSeq.add(new EncoderHoneStep(this, counts - BotHardware.Motor.frontLeft.motor.getCurrentPosition(), 5, 5, encoderHonePID, step, new DcMotor[]{BotHardware.Motor.frontLeft.motor}));
             lineFound = true;
         }
         else if(lineFound) mSeq.loop();
@@ -64,7 +66,7 @@ public class LineStopTest extends OpMode {
         bot.stopAll();
     }
 
-    private ADPSAuto.GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
-        return new ADPSAuto.GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax);
+    private GyroCorrectStep makeGyroDriveStep(float heading, SensorLib.PID pid, float power, float powerMin, float powerMax) {
+        return new GyroCorrectStep(this, heading, bot.getHeadingSensor(), pid, bot.getMotorVelocityShimArray(), power, powerMin, powerMax);
     }
 }
