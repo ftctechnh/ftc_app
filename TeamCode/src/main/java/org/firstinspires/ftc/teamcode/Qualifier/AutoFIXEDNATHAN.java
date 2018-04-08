@@ -181,6 +181,14 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
 //            telemetry.addData("Sharp IR V ", sharpIRVoltage);
             telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);//            telemetry.addData("IR Distance", gromit.glyphTrain.)
+            double leftIRDistance5v  = 53.122 * Math.pow( gromit.driveTrain.leftSharpSensor.getVoltage(), -2.092);
+            double rightIRDistance5v = 53.122 * Math.pow( gromit.driveTrain.rightSharpSensor.getVoltage(), -2.092);
+            telemetry.addData("Left Sharp(V)", gromit.driveTrain.leftSharpSensor.getVoltage());
+            telemetry.addData("Right Sharp(V)", gromit.driveTrain.rightSharpSensor.getVoltage());
+
+            telemetry.addData("Left Sharp(cm)", leftIRDistance5v);
+            telemetry.addData("Right Sharp(cm)", rightIRDistance5v);
+
             telemetry.addData("Maxbotix Upper ", "cm %4.1f ", gromit.driveTrain.UpperMaxbotixSensor.getVoltage()* 783.0);
             telemetry.addData("Maxbotix Lower ", "cm %4.1f ", gromit.driveTrain.LowerMaxbotixSensor.getVoltage()* 783.0);
 
