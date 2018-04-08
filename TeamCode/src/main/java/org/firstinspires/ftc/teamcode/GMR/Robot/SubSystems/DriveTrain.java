@@ -59,6 +59,8 @@ public class DriveTrain {
     private double degreesSetup;
     private int zonedDegrees;
     private float yaw;
+
+    private float currentYaw;
     //////////////////////////////////// CONSTRUCT
 
     //calls the second constructor of DriveTrain and passes a reference to the hardware map, telemetry, the 4 string names of the motors in the order left front, right front, left back, right back and the port reference to the gyro.
@@ -444,19 +446,17 @@ public class DriveTrain {
     //////////////////////////////////// GYRO
 
     public boolean gyroTurn(Direction direction, double power, float degrees){
+        currentYaw = this.getYaw();
         switch(direction) {
             case TURNLEFT:
                 if (goalDegrees == -1) {
-                    goalDegrees = (this.getYaw() + degrees);
+                    goalDegrees = (currentYaw + degrees);
                     if (goalDegrees > 360) {
                         goalDegrees -= 360;
                     }
                 }
-                if (!(this.getYaw() < (goalDegrees + gyroRange) && this.getYaw() > (goalDegrees - gyroRange))) {
+                if (!(currentYaw < (goalDegrees + gyroRange) && currentYaw > (goalDegrees - gyroRange))) {
                     drive(direction, power);
-
-                    //telemetry.addData("Goal Degrees", goalDegrees);
-                    //telemetry.addData("Current Degrees", getYaw());
                     return false;
                 } else {
                     this.stop();
@@ -465,14 +465,12 @@ public class DriveTrain {
                 }
             case TURNRIGHT:
                 if (goalDegrees == -1) {
-                    goalDegrees = (this.getYaw() - degrees);
+                    goalDegrees = (currentYaw - degrees);
                     if (goalDegrees < 0) {
                         goalDegrees = (goalDegrees + 360);
                     }
                 }
-                //telemetry.addData("Goal Degrees", goalDegrees);
-                //telemetry.addData("Current Degrees", getYaw());
-                if (!(this.getYaw() < (goalDegrees + gyroRange) && this.getYaw() > (goalDegrees - gyroRange))) {
+                if (!(currentYaw < (goalDegrees + gyroRange) && currentYaw > (goalDegrees - gyroRange))) {
                     drive(direction, power);
 
                     return false;
