@@ -177,10 +177,17 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             telemetry.addData("IMU", "Heading: %4.2f ", gromit.driveTrain.getheading());
             telemetry.addData("Blue/Red Ratio", " %4.2f ", gromit.jewelArm.BRRatio);
             telemetry.addData("VuMark", "%s is visible", vuMark);
-            double sharpIRVoltage = gromit.driveTrain.sharpIRSensor.getVoltage();
-            double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
+            double leftIRDistance5v  = 53.122 * Math.pow( gromit.driveTrain.leftSharpSensor.getVoltage(), -2.092);
+            double rightIRDistance5v = 53.122 * Math.pow( gromit.driveTrain.rightSharpSensor.getVoltage(), -2.092);
+            telemetry.addData("Left Sharp(cm)", gromit.driveTrain.leftSharpSensor.getVoltage());
+            telemetry.addData("Right Sharp(cm)", gromit.driveTrain.rightSharpSensor.getVoltage());
+
+            telemetry.addData("Left Sharp(cm)", leftIRDistance5v);
+            telemetry.addData("Right Sharp(cm)", rightIRDistance5v);
+//            double IRdistance = 18.7754 * Math.pow(sharpIRVoltage, -1.51);
 //            telemetry.addData("Sharp IR V ", sharpIRVoltage);
-            telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);//            telemetry.addData("IR Distance", gromit.glyphTrain.)
+//            telemetry.addData("Sharp IR ", "cm %4.1f ", IRdistance);//            telemetry.addData("IR Distance", gromit.glyphTrain.)
+
 
             telemetry.addLine("************ READY TO RUN *************");
             telemetry.addLine("Press BACK or START button to enter EDIT mode");
