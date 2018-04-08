@@ -45,7 +45,7 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         vuforiaInit(constants.vuforiaInitCameraView, constants.vuforiaInitRearCamera);
         //intiates the vuforia sdk and camera
-        telemetry.addData("","Vuforia Initiated");
+        telemetry.addData("", "Vuforia Initiated");
         telemetry.update();
         //tell driver that vuforia is ready
 
@@ -56,11 +56,13 @@ public class blueBack_George extends Autonomous_General_George_ {
         //initiate dogeCV
 
         sleep(constants.initTimeMill);
-        telemetry.addData("","GOOD TO GO! :)");
+        telemetry.addData("", "GOOD TO GO! :)");
         telemetry.update();
         //tell driver that we are good to go
 
         waitForStart();
+
+        opModeStart = System.currentTimeMillis();
 //reseting gyro sensor
 
         jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
@@ -68,33 +70,33 @@ public class blueBack_George extends Autonomous_General_George_ {
         toggleLight(constants.toogleLightVuforiaRead);
         //light.setPower(0.5);
         startTracking();
-        telemetry.addData("","READY TO TRACK");
+        telemetry.addData("", "READY TO TRACK");
         telemetry.update();
 
-        double begintime= runtime.seconds();
-        while(!vuMarkFound() && runtime.seconds() - begintime <= waitTime){
+        double begintime = runtime.seconds();
+        while (!vuMarkFound() && runtime.seconds() - begintime <= waitTime) {
 
 
         }
-        toggleLight(false);
+        toggleLight(true);
 
-        telemetry.addData("Vumark" , vuMark);
+        telemetry.addData("Vumark", vuMark);
         telemetry.update();
         //sleep(250);
 
         moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
-        sleep(250);
+       // sleep(250);
         middleGlyphManipulator();
         sleep(250);
-        moveDownGlyph(1.4);
-        sleep(250);
+        moveDownGlyph(1.0);
+        //sleep(250);
         closeGlyphManipulator();
         sleep(250);
-        moveUpGlyph(1.45);
-        sleep(250);
+        moveUpGlyph(1.75);
+        //sleep(250);
         relicTrackables.deactivate();
 
-        switch (jewelDetector.getCurrentOrder()){
+        switch (jewelDetector.getCurrentOrder()) {
             case BLUE_RED:
                 jewelServo.setPosition(0.2);
                 sleep(750);
@@ -105,14 +107,14 @@ public class blueBack_George extends Autonomous_General_George_ {
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 //move the jewel manipulator to the original position
-                sleep(500);
+          //      sleep(500);
                 break;
 
             case RED_BLUE:
                 jewelServo.setPosition(0.2);
                 sleep(750);
                 //move the jewel manipulator to the left to knock off the ball
-               telemetry.addLine("Jewels Seen Red Blue");
+                telemetry.addLine("Jewels Seen Red Blue");
                 telemetry.update();
 
                 jewelServoRotate.setPosition(0.5);
@@ -123,7 +125,7 @@ public class blueBack_George extends Autonomous_General_George_ {
                 //move it back to the original posititon
                 break;
             case UNKNOWN:
-               telemetry.addData("Balls not seen", "Solution TBD   :/");
+                telemetry.addData("Balls not seen", "Solution TBD   :/");
                 telemetry.update();
                 jewelServo.setPosition(0.2);
                 sleep(750);
@@ -136,81 +138,68 @@ public class blueBack_George extends Autonomous_General_George_ {
         telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
+        toggleLight(false);
         jewelDetector.disable();
 
 
         sleep(500);
-        encoderMecanumDrive(0.4,50,50,5000,0);
+        encoderMecanumDrive(0.3, 50, 50, 5000, 0);
         sleep(100);
-       //Rohan: Is this necessary
-        gyroTurnREV(0.4,0);
+        //Rohan: Is this necessary
+        gyroTurnREV(0.4, 0);
         sleep(100);
 
 
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            encoderMecanumDrive(0.4, 4.25, 4.25, 5000, 0);
+        } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            encoderMecanumDrive(0.4, -8, -8, 5000, 0);
 
-
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            encoderMecanumDrive(0.4,4.25,4.25,5000,0);
-        }
-        else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN){
-            encoderMecanumDrive(0.4,-3,-3,5500,0);
-
-        }
-        else if (vuMark == RelicRecoveryVuMark.RIGHT){
-            encoderMecanumDrive(0.4,9.25,9.25,5000,0);
+        } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+            encoderMecanumDrive(0.4, -3, -3, 5500, 0);
         }
 
 
-        sleep(100);
+        sleep(75);
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
             gyroTurnREV(0.5, 112);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
 
-        }
-        else {
+        } else {
             gyroTurnREV(0.5, 60);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
         }
 
 
-        sleep(200);
+        sleep(75);
 
         moveDownGlyph(1.05);
         sleep(100);
         encoderMecanumDrive(0.3, 5, 5, 1000, 0);
-        sleep(250);
+        sleep(100);
         openGlyphManipulator();
-        sleep(250);
+        sleep(75);
 
-        encoderMecanumDrive(0.3,16,16,1000,0);
-        sleep(250);
+        encoderMecanumDrive(0.3, 16, 16, 1000, 0);
+        sleep(100);
 
-        if (vuMark == RelicRecoveryVuMark.LEFT){
-            encoderMecanumDrive(0.3,-10,10,1000,0);
+        if (vuMark == RelicRecoveryVuMark.LEFT) {
+            encoderMecanumDrive(0.3, -10, 10, 1000, 0);
 
+        } else {
+            encoderMecanumDrive(0.3, 10, -10, 1000, 0);
         }
-        else {
-            encoderMecanumDrive(0.3,10,-10,1000,0);
-        }
 
-        //code to get second glyph
-       /* encoderMecanumDrive(0.3, -20, -20, 1000, 0);
-        gyroTurnREV(0.5,-90);//this will cause it to face the pile of glyphs at a 90 degree angle
-        encoderMecanumDrive(0.6,25,25,5500,0);
-        middleGlyphManipulator();
-        glyphIntakeRolly(1);
-        moveUpGlyph(6);
-        sleep(200);
-        gyroTurnREV(0.5,90);
-        //moveDownGlyph(2);
-        encoderMecanumDrive(0.5,35,35,5000,0);
-        glyphOuttakeRolly(1);
-        openGlyphManipulator();
-        encoderMecanumDrive(0.3,-10,-10,5000,0);*/
-        /*if (!opModeIsActive()) {
+        sleep(75);
+        encoderMecanumDrive(0.65,-10,-10,1000,0);
+        sleep(75);
+        gyroTurnREV(0.6,-100);
+        moreGlyphs();
+
+
+        if (!opModeIsActive()) {
             jewelDetector.disable();
-        }*/
+        }
+
 
     }
-
-
 }
