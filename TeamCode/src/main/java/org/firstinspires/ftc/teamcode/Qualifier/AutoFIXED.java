@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.view.View;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -36,7 +37,7 @@ import static org.firstinspires.ftc.teamcode.Qualifier.DriveTrain.turn_COEF;
 
 
 @Autonomous(name = "TheAutoFIXED", group = "8045")  // @Autonomous(...) is the other common choice
-//@Disabled
+@Disabled
 public class AutoFIXED extends LinearOpMode {
 
     RobotRR gromit;
