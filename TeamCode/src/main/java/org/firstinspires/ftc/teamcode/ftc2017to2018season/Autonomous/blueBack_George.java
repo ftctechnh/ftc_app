@@ -43,12 +43,6 @@ public class blueBack_George extends Autonomous_General_George_ {
     public void runOpMode() {
 
 
-        vuforiaInit(constants.vuforiaInitCameraView, constants.vuforiaInitRearCamera);
-        //intiates the vuforia sdk and camera
-        telemetry.addData("", "Vuforia Initiated");
-        telemetry.update();
-        //tell driver that vuforia is ready
-
         initiate(false);
         //intiate hardware
 
@@ -65,36 +59,28 @@ public class blueBack_George extends Autonomous_General_George_ {
         opModeStart = System.currentTimeMillis();
 //reseting gyro sensor
 
+        vuforiaInit(constants.vuforiaInitCameraView, constants.vuforiaInitRearCamera);
+        //intiates the vuforia sdk and camera
+        telemetry.addData("", "Vuforia Initiated");
+        telemetry.update();
+        //tell driver that vuforia is ready
+
+
         jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
         //sleep(100);
         toggleLight(constants.toogleLightVuforiaRead);
         //light.setPower(0.5);
-        startTracking();
-        telemetry.addData("", "READY TO TRACK");
-        telemetry.update();
-
-        double begintime = runtime.seconds();
-        while (!vuMarkFound() && runtime.seconds() - begintime <= waitTime) {
-
-
-        }
-        toggleLight(true);
-
-        telemetry.addData("Vumark", vuMark);
-        telemetry.update();
-        //sleep(250);
 
         moveUpGlyph(0.7);//change distances once we lower the stress of the glyph manipulator
-       // sleep(250);
+        sleep(250);
         middleGlyphManipulator();
         sleep(250);
         moveDownGlyph(1.0);
-        //sleep(250);
+        sleep(250);
         closeGlyphManipulator();
         sleep(250);
-        moveUpGlyph(1.75);
+        moveUpGlyph(1.50);
         //sleep(250);
-        relicTrackables.deactivate();
 
         switch (jewelDetector.getCurrentOrder()) {
             case BLUE_RED:
@@ -107,7 +93,7 @@ public class blueBack_George extends Autonomous_General_George_ {
                 jewelServo.setPosition(0.8);
                 sleep(750);
                 //move the jewel manipulator to the original position
-          //      sleep(500);
+                //      sleep(500);
                 break;
 
             case RED_BLUE:
@@ -138,12 +124,28 @@ public class blueBack_George extends Autonomous_General_George_ {
         telemetry.addData("Jewel order is ", jewelDetector.getCurrentOrder());
         telemetry.update();
         jewelServo.setPosition(1);
-        toggleLight(false);
         jewelDetector.disable();
+
+        startTracking();
+        telemetry.addData("", "READY TO TRACK");
+        telemetry.update();
+
+        double begintime = runtime.seconds();
+        while (!vuMarkFound() && runtime.seconds() - begintime <= waitTime) {
+
+
+        }
+        relicTrackables.deactivate();
+        //toggleLight(true);
+
+        telemetry.addData("Vumark", vuMark);
+        telemetry.update();
+        //sleep(250);
+        toggleLight(false);
 
 
         sleep(500);
-        encoderMecanumDrive(0.3, 50, 50, 5000, 0);
+        encoderMecanumDrive(0.25, 30, 30, 5000, 0);
         sleep(100);
         //Rohan: Is this necessary
         gyroTurnREV(0.4, 0);
@@ -151,12 +153,12 @@ public class blueBack_George extends Autonomous_General_George_ {
 
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            encoderMecanumDrive(0.4, 4.25, 4.25, 5000, 0);
+            encoderMecanumDrive(0.4, 24.25, 2.25, 5000, 0);
         } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            encoderMecanumDrive(0.4, -8, -8, 5000, 0);
+            encoderMecanumDrive(0.4, 12, 12, 5000, 0);
 
         } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            encoderMecanumDrive(0.4, -3, -3, 5500, 0);
+            encoderMecanumDrive(0.4, 17, 17, 5500, 0);
         }
 
 

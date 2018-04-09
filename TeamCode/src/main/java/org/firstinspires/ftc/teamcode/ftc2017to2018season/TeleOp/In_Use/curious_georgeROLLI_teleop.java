@@ -271,59 +271,21 @@ else if (gamepad1.dpad_up){
 
     public void relicManipulator() {
         if (gamepad2.a) {
-            long startTime = System.currentTimeMillis();
-            //relicMain.setPosition(constants.relicMainDownPosition);
-            while (startTime + 1000 > System.currentTimeMillis()) {
-                while (relicMain.getPosition() > constants.relicMainDownPosition + 0.04 || relicMain.getPosition() < constants.relicMainDownPosition - 0.04) {
-                    if (relicMain.getPosition() > constants.relicMainDownPosition + 0.04) {
-                        relicMain.setPosition(relicMain.getPosition() - 0.005);
-                    } else if (relicMain.getPosition() < constants.relicMainDownPosition - 0.04) {
-                        relicMain.setPosition(relicMain.getPosition() + 0.005);
-                    } else {
-                        break;
-                    }
-                }
-            }
-                sleep(75);
-
+            relicMain.setPosition(constants.relicMainDownPosition);
         }
         else if (gamepad2.x) {
-            long startTime = System.currentTimeMillis();
-            //relicMain.setPosition(constants.relicMainMiddlePosition);
-            while (startTime + 1000 > System.currentTimeMillis()) {
-                while (relicMain.getPosition() > constants.relicMainMiddlePosition + 0.04 || relicMain.getPosition() < constants.relicMainMiddlePosition - 0.04) {
-                    if (relicMain.getPosition() > constants.relicMainMiddlePosition + 0.04) {
-                        relicMain.setPosition(relicMain.getPosition() - 0.005);
-                    } else if (relicMain.getPosition() < constants.relicMainMiddlePosition - 0.04) {
-                        relicMain.setPosition(relicMain.getPosition() + 0.005);
-                    } else {
-
-                    }
-                }
+            relicMain.setPosition(constants.relicMainMiddlePosition);
             }
-                sleep(75);
-            } else if (gamepad2.y) {
-            long startTime = System.currentTimeMillis();
-                //relicMain.setPosition(constants.relicMainUpPosition);
-            while (startTime + 1000 > System.currentTimeMillis()) {
-                while (relicMain.getPosition() > constants.relicMainUpPosition + 0.04 || relicMain.getPosition() < constants.relicMainUpPosition - 0.04) {
-                    if (relicMain.getPosition() > constants.relicMainUpPosition + 0.04) {
-                        relicMain.setPosition(relicMain.getPosition() - 0.02);
-                    } else if (relicMain.getPosition() < constants.relicMainUpPosition - 0.04) {
-                        relicMain.setPosition(relicMain.getPosition() + 0.02);
-                    } else {
-
-                    }
-                }
-            }
-            sleep(75);
-            } else if (gamepad2.left_bumper) {
+        else if (gamepad2.y) {
+            relicMain.setPosition(constants.relicMainUpPosition);
+        }
+        else if (gamepad2.left_bumper) {
                 relicClaw.setPosition(constants.relicOpenClaw);
-            } else if (gamepad2.right_bumper) {
+        } else if (gamepad2.right_bumper) {
                 relicClaw.setPosition(constants.relicCloseClaw);
-            } else if (gamepad2.left_bumper && gamepad2.right_bumper) {
+        } else if (gamepad2.left_bumper && gamepad2.right_bumper) {
                 relicClaw.setPosition(constants.relicMiddleClaw);
-            } else {
+        } else {
                 relicMotor.setPower(-(gamepad2.left_stick_y));
             }
     }

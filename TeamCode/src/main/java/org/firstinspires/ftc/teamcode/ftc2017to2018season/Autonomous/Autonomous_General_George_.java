@@ -1322,7 +1322,7 @@ revColorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         slideMotor.setPower(-1);
-            while (slideMotor.isBusy() && opModeIsActive()) {
+            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 2) {
                 telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
                 telemetry.addData("power", slideMotor.getPower());
                 telemetry.addData("Target Position", slideMotor.getTargetPosition());
@@ -1360,9 +1360,10 @@ public void openCVInit(){
         sleep(750);
         intakeRight.setPower(0);
         intakeLeft.setPower(0);
+        encoderMecanumDrive(0.35,-6, -6, 1000, 0);
         middleGlyphManipulator();
 
-        while (glyphRangeBottom.getDistance(DistanceUnit.CM) < 16) {
+        while (glyphRangeBottom.getDistance(DistanceUnit.CM) < 7.5) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
             straightDrive(0.25);
