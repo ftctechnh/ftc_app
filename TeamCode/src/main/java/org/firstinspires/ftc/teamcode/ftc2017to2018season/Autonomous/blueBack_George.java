@@ -50,6 +50,13 @@ public class blueBack_George extends Autonomous_General_George_ {
         //initiate dogeCV
 
         sleep(constants.initTimeMill);
+        vuforiaInit(constants.vuforiaInitCameraView, constants.vuforiaInitRearCamera);// in order to get both openCVInit and vuforiaInit working, I initialized openCVInit first before waitForStart,
+                                                                                        // did the jewel manipulator stuff stuff first, disabled jewel detector, then did vuforia stuff last
+                                                                                        //need to do more testing to see exactly why CV stuff stops working when Vuforia stuff is done first
+        //intiates the vuforia sdk and camera
+        telemetry.addData("", "Vuforia Initiated");
+        telemetry.update();
+        //tell driver that vuforia is ready
         telemetry.addData("", "GOOD TO GO! :)");
         telemetry.update();
         //tell driver that we are good to go
@@ -59,11 +66,6 @@ public class blueBack_George extends Autonomous_General_George_ {
         opModeStart = System.currentTimeMillis();
 //reseting gyro sensor
 
-        vuforiaInit(constants.vuforiaInitCameraView, constants.vuforiaInitRearCamera);
-        //intiates the vuforia sdk and camera
-        telemetry.addData("", "Vuforia Initiated");
-        telemetry.update();
-        //tell driver that vuforia is ready
 
 
         jewelServoRotate.setPosition(constants.jewelServoRotateInitValue);
@@ -80,7 +82,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         closeGlyphManipulator();
         sleep(250);
         moveUpGlyph(1.50);
-        //sleep(250);
+        sleep(250);
 
         switch (jewelDetector.getCurrentOrder()) {
             case BLUE_RED:
@@ -140,12 +142,12 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         telemetry.addData("Vumark", vuMark);
         telemetry.update();
-        //sleep(250);
+        sleep(200);
         toggleLight(false);
 
 
         sleep(500);
-        encoderMecanumDrive(0.25, 30, 30, 5000, 0);
+        encoderMecanumDrive(0.5, 23, 23, 5000, 0);
         sleep(100);
         //Rohan: Is this necessary
         gyroTurnREV(0.4, 0);
@@ -153,9 +155,9 @@ public class blueBack_George extends Autonomous_General_George_ {
 
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            encoderMecanumDrive(0.4, 24.25, 2.25, 5000, 0);
+            encoderMecanumDrive(0.4, 18.25, 18.25, 5000, 0);
         } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            encoderMecanumDrive(0.4, 12, 12, 5000, 0);
+            encoderMecanumDrive(0.4, 8, 8, 5000, 0);
 
         } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
             encoderMecanumDrive(0.4, 17, 17, 5500, 0);
@@ -174,15 +176,11 @@ public class blueBack_George extends Autonomous_General_George_ {
 
         sleep(75);
 
-        moveDownGlyph(1.05);
+        encoderMecanumDrive(0.3, 8, 8, 1000, 0);
         sleep(100);
-        encoderMecanumDrive(0.3, 5, 5, 1000, 0);
-        sleep(100);
-        openGlyphManipulator();
-        sleep(75);
 
-        encoderMecanumDrive(0.3, 16, 16, 1000, 0);
-        sleep(100);
+        moveDownGlyph(1.05);
+        glyphOuttakeRolly(0.5);
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
             encoderMecanumDrive(0.3, -10, 10, 1000, 0);
@@ -194,7 +192,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(75);
         encoderMecanumDrive(0.65,-10,-10,1000,0);
         sleep(75);
-        gyroTurnREV(0.6,-100);
+        gyroTurnREV(0.6,-90);
         moreGlyphs();
 
 

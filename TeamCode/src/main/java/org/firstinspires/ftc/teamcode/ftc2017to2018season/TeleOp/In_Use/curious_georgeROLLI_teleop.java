@@ -83,6 +83,7 @@ Constants_For_TeleOp_Rolly constants = new Constants_For_TeleOp_Rolly();
         glyphRight.setPosition(0.245);
         glyphLeft.setPosition(0.66);
         relicMain.setPosition(constants.relicMainDownPosition);
+        relicClaw.setPosition(constants.relicOpenClaw);
 
     }
 

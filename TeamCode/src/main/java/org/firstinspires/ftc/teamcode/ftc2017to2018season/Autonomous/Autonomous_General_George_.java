@@ -1310,7 +1310,6 @@ revColorSensor.enableLed(false);
     }
     public void moveDownGlyph(double cm) {
         ElapsedTime runtime = new ElapsedTime();
-        long moveStartTime = System.currentTimeMillis();
         double target_Position;
         double countsPerCM = 609.6;
         double finalTarget = cm * countsPerCM;
@@ -1320,9 +1319,9 @@ revColorSensor.enableLed(false);
         slideMotor.setTargetPosition((int) target_Position);
 
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        long moveStartTime = System.currentTimeMillis();
         slideMotor.setPower(-1);
-            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 2) {
+            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 2000) {
                 telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
                 telemetry.addData("power", slideMotor.getPower());
                 telemetry.addData("Target Position", slideMotor.getTargetPosition());
@@ -1352,24 +1351,19 @@ public void openCVInit(){
 }
 
     public void moreGlyphs() {
-        openGlyphManipulator();
-        sleep(75);
-        intakeLeft.setPower(-1);
-        intakeRight.setPower(1);
+
         encoderMecanumDrive(0.35, 25, 25, 1000, 0);
         sleep(750);
-        intakeRight.setPower(0);
-        intakeLeft.setPower(0);
-        encoderMecanumDrive(0.35,-6, -6, 1000, 0);
         middleGlyphManipulator();
 
-        while (glyphRangeBottom.getDistance(DistanceUnit.CM) < 7.5) {
+        ElapsedTime runtime = new ElapsedTime();
+        double begintime= runtime.seconds();
+        while (runtime.seconds() - begintime < 3 && opModeIsActive()) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
             straightDrive(0.25);
         }
         stopMotors();
-        encoderMecanumDrive(0.5,5,5,1000,0);
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
         closeGlyphManipulator();
@@ -1377,11 +1371,7 @@ public void openCVInit(){
         encoderMecanumDrive(0.5,-15,-15,1000,0);
         sleep(50);
         gyroTurnREV(0.4,90);
-        encoderMecanumDrive(0.5,15,15,1000,0);
-        moveUpGlyph(3);
-        sleep(75);
-        gyroTurnREV(0.4,80);
-        encoderMecanumDrive(0.5,15,15,1000,0);
+        encoderMecanumDrive(0.5,30,30,1000,0);
         sleep(100);
         glyphOuttakeRolly(1.5);
         encoderMecanumDrive(0.4,-5,-5,1000,0);
