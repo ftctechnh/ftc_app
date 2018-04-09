@@ -189,8 +189,8 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             telemetry.addData("Left Sharp(cm)", leftIRDistance5v);
             telemetry.addData("Right Sharp(cm)", rightIRDistance5v);
 
-            telemetry.addData("Maxbotix Upper ", "cm %4.1f ", gromit.driveTrain.UpperMaxbotixSensor.getVoltage()* 783.0);
-            telemetry.addData("Maxbotix Lower ", "cm %4.1f ", gromit.driveTrain.LowerMaxbotixSensor.getVoltage()* 783.0);
+            telemetry.addData("Maxbotix Back (37) ", "cm %4.1f ", gromit.driveTrain.BackMaxbotixSensor.getVoltage()* 783.0);
+            telemetry.addData("Maxbotix Side (37) ", "cm %4.1f ", gromit.driveTrain.SideMaxbotixSensor.getVoltage()* 783.0);
 
             telemetry.addLine("************ READY TO RUN *************");
             telemetry.addLine("Press BACK or START button to enter EDIT mode");
