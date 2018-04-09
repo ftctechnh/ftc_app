@@ -202,9 +202,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
 //                }
 //            });
 
-            //
-            //
-            if (gamepad1.start || gamepad1.back) {             // edit parameters  & write the new file
+             if (gamepad1.start || gamepad1.back) {             // edit parameters  & write the new file
                 // change the background color to yellow
 
                 relativeLayout.post(new Runnable() {
