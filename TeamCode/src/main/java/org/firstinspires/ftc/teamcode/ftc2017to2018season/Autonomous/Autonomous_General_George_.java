@@ -918,13 +918,13 @@ public class Autonomous_General_George_ extends LinearOpMode{
     /**
      * GYRO TURN USING REV ROBOTICS GYRO
      */
-    public void gyroTurnREV(double speed, double angle){
+    public void gyroTurnREV(double speed, double angle, double seconds){
 
         telemetry.addData("starting gyro turn","-----");
         telemetry.update();
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < 2.5){
+        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < seconds){
             telemetry.update();
             idle();
             telemetry.addData("-->","inside while loop :-(");
@@ -1321,7 +1321,7 @@ revColorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         long moveStartTime = System.currentTimeMillis();
         slideMotor.setPower(-1);
-            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 2000) {
+            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 750) {
                 telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
                 telemetry.addData("power", slideMotor.getPower());
                 telemetry.addData("Target Position", slideMotor.getTargetPosition());
@@ -1352,16 +1352,21 @@ public void openCVInit(){
 
     public void moreGlyphs() {
 
+        glyphServoLeft.setPosition(0.64);
+        glyphServoRight.setPosition(0.235);
+        intakeLeft.setPower(1);
+        intakeRight.setPower(-1);
         encoderMecanumDrive(0.35, 25, 25, 1000, 0);
-        sleep(750);
-        middleGlyphManipulator();
+        sleep(100);
 
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while (runtime.seconds() - begintime < 3 && opModeIsActive()) {
+        while (runtime.seconds() - begintime < 4.25 && opModeIsActive()) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
-            straightDrive(0.25);
+            if(runtime.seconds() - begintime < 2) {
+                straightDrive(0.3);
+            }
         }
         stopMotors();
         intakeLeft.setPower(0);
@@ -1370,7 +1375,7 @@ public void openCVInit(){
         sleep(75);
         encoderMecanumDrive(0.5,-15,-15,1000,0);
         sleep(50);
-        gyroTurnREV(0.4,90);
+        gyroTurnREV(0.4,90, 2);
         encoderMecanumDrive(0.5,30,30,1000,0);
         sleep(100);
         glyphOuttakeRolly(1.5);

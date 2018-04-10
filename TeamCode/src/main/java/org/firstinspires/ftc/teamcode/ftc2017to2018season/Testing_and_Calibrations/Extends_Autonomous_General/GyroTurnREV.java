@@ -13,7 +13,7 @@ public class GyroTurnREV extends Autonomous_General_George_ {
         initiate(false);
 
         waitForStart();
-        gyroTurnREV(0.5,90);
+        gyroTurnREV(0.5,90,10);
     }
 
 }

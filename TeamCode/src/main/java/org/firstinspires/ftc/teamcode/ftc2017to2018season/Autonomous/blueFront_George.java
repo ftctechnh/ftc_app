@@ -121,13 +121,13 @@ public class blueFront_George extends Autonomous_General_George_ {
 
         encoderMecanumDrive(0.4,40,40,5000,0);
         sleep(100);
-        gyroTurnREV(0.4,0);
+        gyroTurnREV(0.4,0,2.5);
         sleep(100);
         wallAlign(0.5,28, 0);//since the columns of the cryptobox are protruding,
                                                     // the range sensor is actually using the distance from the protruding columns
                                                     //the last value is 0 for the blue auto and 1 for the red auto
         sleep(200);
-        gyroTurnREV(0.5, -84);
+        gyroTurnREV(0.5, -84,2.5);
         sleep(100);
 
 
@@ -150,7 +150,7 @@ public class blueFront_George extends Autonomous_General_George_ {
         }
         //if we didn't detect the image, automatically put the glyph in the center
 
-        gyroTurnREV(0.5,-45);
+        gyroTurnREV(0.5,-45,2.5);
 
         sleep(750);
 

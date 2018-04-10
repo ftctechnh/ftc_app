@@ -122,13 +122,13 @@ public class redFront_George extends Autonomous_General_George_ {
         sleep(100);
         encoderMecanumDrive(0.4,-40,-40,5000,0);
         sleep(100);
-        gyroTurnREV(0.4,0);
+        gyroTurnREV(0.4,0,2.5);
         sleep(100);
         //wallAlign(0.3,28, 1);//since the columns of the cryptobox are protruding,
                                                     // the range sensor is actually using the distance from the protruding columns
                                                     //the last value is 0 for the blue auto and 1 for the red auto
         sleep(200);
-        gyroTurnREV(0.5, -84);
+        gyroTurnREV(0.5, -84,2.5);
         sleep(100);
 
 
@@ -156,7 +156,7 @@ public class redFront_George extends Autonomous_General_George_ {
 
         sleep(100);
 
-        gyroTurnREV(0.5, -135);//turn 135 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+        gyroTurnREV(0.5, -135,2.5);//turn 135 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
 
         sleep(750);
 

@@ -141,7 +141,7 @@ public class redBack_George extends Autonomous_General_George_ {
         sleep(100);
 
 
-        gyroTurnREV(0.3, 0);
+        gyroTurnREV(0.3, 0,2.5);
 
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
@@ -158,15 +158,15 @@ public class redBack_George extends Autonomous_General_George_ {
 
 
         sleep(75);
-        gyroTurnREV(0.4, 0);
+        gyroTurnREV(0.4, 0,2.5);
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
             //if the image was right we turn to 60º counterclockwise from origin angle to push block in angled
-            gyroTurnREV(0.5, 65);
+            gyroTurnREV(0.5, 65,2.5);
 
         } else {
             //if the image was right we turn to 102º counterclockwise from origin angle to push block in angled
-            gyroTurnREV(0.5, 117);
+            gyroTurnREV(0.5, 117,2.5);
         }
 
 
@@ -200,7 +200,7 @@ public class redBack_George extends Autonomous_General_George_ {
         //code to get second glyph
         encoderMecanumDrive(0.65, -10, -10, 1000, 0);
         sleep(75);
-        gyroTurnREV(0.6, -100);//this will cause it to face the pile of glyphs at a 90 degree angle
+        gyroTurnREV(0.6, -100,2.5);//this will cause it to face the pile of glyphs at a 90 degree angle
         moreGlyphs();
 
         if (!opModeIsActive()) {

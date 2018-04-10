@@ -147,37 +147,37 @@ public class blueBack_George extends Autonomous_General_George_ {
 
 
         sleep(500);
-        encoderMecanumDrive(0.5, 23, 23, 5000, 0);
+        encoderMecanumDrive(0.5, 25, 25, 5000, 0);
         sleep(100);
         //Rohan: Is this necessary
-        gyroTurnREV(0.4, 0);
+        gyroTurnREV(0.4, 0, 0.5);
         sleep(100);
 
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
             encoderMecanumDrive(0.4, 18.25, 18.25, 5000, 0);
         } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            encoderMecanumDrive(0.4, 8, 8, 5000, 0);
+            encoderMecanumDrive(0.4, 4, 4, 5000, 0);
 
         } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-            encoderMecanumDrive(0.4, 17, 17, 5500, 0);
+            encoderMecanumDrive(0.4, 15, 15, 5500, 0);
         }
 
 
         sleep(75);
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            gyroTurnREV(0.5, 112);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+            gyroTurnREV(0.5, 112,1.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
 
         } else {
-            gyroTurnREV(0.5, 60);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+            gyroTurnREV(0.5, 60,1.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
         }
 
 
         sleep(75);
 
         encoderMecanumDrive(0.3, 8, 8, 1000, 0);
-        sleep(100);
+        sleep(75);
 
         moveDownGlyph(1.05);
         glyphOuttakeRolly(0.5);
@@ -192,7 +192,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(75);
         encoderMecanumDrive(0.65,-10,-10,1000,0);
         sleep(75);
-        gyroTurnREV(0.6,-90);
+        gyroTurnREV(0.6,-85,2);
         moreGlyphs();
 
 
