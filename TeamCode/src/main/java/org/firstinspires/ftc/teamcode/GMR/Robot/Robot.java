@@ -65,8 +65,6 @@ public class Robot {
     private VuforiaTrackable relicTemplate;
     private VuforiaLocalizer.Parameters parameters;
 
-    private ModernRoboticsI2cRangeSensor rangeSensor;
-
     private List<Integer> rangeList;
     private boolean canChange = true;
 
@@ -91,8 +89,6 @@ public class Robot {
         relicTilt = hardwareMap.servo.get("relictilt");
         relicClamp = hardwareMap.servo.get("relicclamp");
 
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
-
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -113,11 +109,6 @@ public class Robot {
     public void setServos() {
         rightColor.setPosition(0);
         leftColor.setPosition(0.85);
-    }
-
-
-    public int rawUltrasonic() {
-        return rangeSensor.rawUltrasonic();
     }
 
     private RelicRecoveryVuMark getCurrentColumn(int columnPassed, AllianceColor color) {
@@ -152,35 +143,6 @@ public class Robot {
         }
     }
 
-    public boolean columnMove(RelicRecoveryVuMark goalColumn, AllianceColor color, Telemetry telemetry) {
-
-        if (ultraRange != 0) {
-            if ((rawUltrasonic() >= ultraRange + distanceThreshold) && !distanceChange) {
-                columnPassed += 1;
-                distanceChange = true;
-            } else if (rawUltrasonic() >= ultraRange - distanceThreshold) {
-                distanceChange = false;
-            }
-        }
-
-        ultraRange = rawUltrasonic();
-
-        currentColumn = getCurrentColumn(columnPassed, color);
-
-        telemetry.addData("Column Passed", columnPassed);
-        telemetry.addData("Goal Column", goalColumn);
-        telemetry.addData("Raw Ultrasonic", rawUltrasonic());
-
-        if (goalColumn != currentColumn) {
-            driveDirection(color);
-            return false;
-        } else {
-            driveTrain.stop();
-            return true;
-        }
-
-    }
-
     private  DriveTrain.Direction columnAlignDirection(AllianceColor color) {
         if(color == AllianceColor.RED) {
             return(DriveTrain.Direction.W);
@@ -195,38 +157,5 @@ public class Robot {
             total += item;
         }
         return total/list.size();
-    }
-
-    public boolean columnDrive(AllianceColor color, Telemetry telemetry, int goalColumn) {
-
-        if (goalColumn == 0) {
-            goalColumn = 2;
-        }
-
-        if (rangeList.size() == 22) {
-            rangeList.remove(0);
-        }
-
-        rangeList.add(rangeSensor.rawUltrasonic());
-
-        if ((Math.abs(ultraRange - average(rangeList))) >= distanceThreshold && ultraRange != 0 && canChange) {
-            columnPassed += 1;
-            canChange = false;
-        } else if ((Math.abs(ultraRange - average(rangeList))) <= distanceThreshold) {
-            canChange = true;
-        }
-
-        ultraRange = rawUltrasonic();
-
-        telemetry.addData("Column Passed", columnPassed);
-        telemetry.addData("Raw Ultrasonic", rawUltrasonic());
-        telemetry.addData("Can Change", canChange);
-
-        if (columnPassed >= goalColumn) {
-            return(driveTrain.encoderDrive(columnAlignDirection(color), strafePower, .8));
-        } else {
-            driveDirection(color);
-            return false;
-        }
     }
 }

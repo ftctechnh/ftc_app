@@ -15,20 +15,14 @@ public class RR_TeleOP_Farber extends OpMode {
 
     private Robot robot;
 
-    ModernRoboticsI2cRangeSensor rangeSensor;
-
     @Override
     public void init() {
         robot = new Robot(hardwareMap, telemetry, false);
-
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
     }
 
     @Override
     public void loop() {
-
         robot.blockLift.grab(gamepad1.right_bumper, gamepad1.right_trigger);
-        //robot.blockLift.lift(gamepad1.left_bumper, gamepad1.left_trigger, telemetry);
         robot.blockLift.slideHeight(gamepad1.left_bumper, gamepad1.left_trigger, gamepad1.a, gamepad1.b, gamepad1.y, telemetry);
         robot.driveTrain.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
@@ -36,5 +30,4 @@ public class RR_TeleOP_Farber extends OpMode {
         robot.relicGrab.servoInfo(telemetry);
         robot.setServos();
     }
-
 }

@@ -17,6 +17,8 @@ public class  RelicGrab {
     private double tiltPosition; // Stored: 0.539, Upper Bound: 0.531, Lower Bound: 0.59
     private double clampPosition; // Stored: 0, Upper Bound: 0.55, Lower Bound: 0
 
+    private int relicLiftPosition;
+
     public RelicGrab(DcMotor relicLift, Servo relicTilt, Servo relicClamp) {
         this.relicLift = relicLift;
         this.relicTilt = relicTilt;
@@ -26,18 +28,31 @@ public class  RelicGrab {
 
         tiltPosition = 0.36;
         clampPosition = 0.40;
+
+        relicLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        relicLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void relicLift(boolean leftBumper, float leftTrigger) {
         if (leftBumper) {
-            relicLift.setPower(1);
+            relicLiftPosition = relicLift.getCurrentPosition();
+            relicLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            relicLift.setPower(.8);
         } else if (leftTrigger > 0) {
-            relicLift.setPower(-1);
+            relicLiftPosition = relicLift.getCurrentPosition();
+            relicLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            relicLift.setPower(-.8);
         } else {
-            relicLift.setPower(0);
+            if ((Math.abs(Math.abs(relicLiftPosition) - Math.abs(relicLift.getCurrentPosition()))) > 10) {
+                relicLiftPosition = relicLift.getCurrentPosition();
+                relicLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                relicLift.setTargetPosition(relicLiftPosition);
+            } else {
+                relicLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                relicLift.setTargetPosition(relicLiftPosition);
+            }
         }
     }
-
 
     public void setTilt(boolean y, boolean a, boolean b) {
         if (a && tiltPosition <= 1) {
