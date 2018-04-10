@@ -22,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 
 @TeleOp(name="Teleop")
 public class Teleop extends OpMode {
-    private static final float slowFactor = 0.55f;
-    private static final float fastFactor = 0.7f;
+    private static final float slowFactor = 0.8f;
+    private static final float fastFactor = 1.0f;
     private static final double SERVO_INC_SHAKE = 0.1;
     private static final double SERVO_INC_MAX = 0.02;
     private static final double SERVO_INC_MIN = 0.001;
@@ -78,7 +78,7 @@ public class Teleop extends OpMode {
         bot.start();
         bot.setDropPos(BotHardware.ServoE.backDropUp);
         BotHardware.Motor.lift.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //BotHardware.Motor.relic.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BotHardware.Motor.relic.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         BotHardware.Motor.relic.motor.setTargetPositionTolerance(5);
         BotHardware.Motor.relic.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftPos = BotHardware.Motor.lift.motor.getCurrentPosition();
@@ -138,9 +138,9 @@ public class Teleop extends OpMode {
         }
 
         if(xLock || gamepad2.x){
-            //final double pos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos) * ARM_M_COFF + ARM_B_COFF;
-            //BotHardware.ServoE.arm.servo.setPosition(pos);
-            BotHardware.ServoE.arm.servo.setPosition(ARM_GRAB);
+            final double pos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos) * ARM_M_COFF + ARM_B_COFF;
+            BotHardware.ServoE.arm.servo.setPosition(pos);
+            //BotHardware.ServoE.arm.servo.setPosition(ARM_GRAB);
             xLock = true;
         }
 
@@ -153,11 +153,11 @@ public class Teleop extends OpMode {
         lastY = gamepad2.y;
 
         if(gamepad2.left_trigger > 0) {
-            //BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 250);
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 250);
             BotHardware.Motor.relic.motor.setPower(-gamepad2.left_trigger);
         }
         else if(gamepad2.right_trigger > 0){
-            //BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
+            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
             BotHardware.Motor.relic.motor.setPower(gamepad2.right_trigger);
         }
         else BotHardware.Motor.relic.motor.setPower(0);
