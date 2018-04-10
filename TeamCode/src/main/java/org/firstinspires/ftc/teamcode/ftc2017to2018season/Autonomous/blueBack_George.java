@@ -115,11 +115,11 @@ public class blueBack_George extends Autonomous_General_George_ {
             case UNKNOWN:
                 telemetry.addData("Balls not seen", "Solution TBD   :/");
                 telemetry.update();
-                jewelServo.setPosition(0.2);
+                /*jewelServo.setPosition(0.2);
                 sleep(750);
                 readColorRev();
                 KnockjewelSensor(ballColor, "blue");
-                sleep(100);
+                sleep(100);*/
                 break;
         }
         //Used to make sure the jewels are recognized
@@ -167,7 +167,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(75);
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            gyroTurnREV(0.5, 112,1.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+            gyroTurnREV(0.5, 112,2.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
 
         } else {
             gyroTurnREV(0.5, 60,1.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
@@ -193,7 +193,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         encoderMecanumDrive(0.65,-10,-10,1000,0);
         sleep(75);
         gyroTurnREV(0.6,-85,2);
-        moreGlyphs();
+        moreGlyphsBlue(vuMark);
 
 
         if (!opModeIsActive()) {
