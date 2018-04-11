@@ -498,6 +498,8 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, drivedistance/2, headingcrypto, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
+        //use these comment block lines or the single one below changes the wiggle part of auto!!!!!!
+        /*
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, -((drivedistance*7/8)), headingcrypto, 0); //move back
             mecanumTurn(menuFile.DriveSpeed, 45);
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, drivedistance/8, 45, 0); //HEad to center
@@ -505,6 +507,12 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -((drivedistance*7/8)-3), headingcrypto, 0); //move back
             //mecanumDriveBlockClamp2SHARP(menuFile.DriveSpeed * 0.4, headingcrypto, 0, 0.65, -1.0); //move back
+        */
+
+        mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -(drivedistance-3), headingcrypto, 0); //move back
+        //^^^^^^^^^^ SINGLE BACKUP
+
+        //mecanumDriveBlockClamp2SHARP(menuFile.DriveSpeed * 0.4, headingcrypto, 0, 0.65, -1.0); //move back
         sleep(100);
         if (menuFile.mode == 2) {//Align to a different box to do a row
             // COnditional for where you are
