@@ -38,8 +38,11 @@ public class Teleop extends OpMode {
     private static final int MIN_VELOCITY = 550;
     private static final float ARM_GRAB = 0.39f;
 
-    private static final double ARM_M_COFF = 0.0000321563938091114;
-    private static final double ARM_B_COFF = 0.206300571470232;
+    private static final double ARM_M_COFF = 0.0000472907349606521;
+    private static final double ARM_B_COFF = 0.0276268627304199;
+    private static final int ARM_MIN_COUNTS = 3000;
+
+    private static final int RELIC_AUTO_ARM_COUNTS = 6250;
 
     protected BotHardware bot = new BotHardware(this);
     private boolean lastA = false;
@@ -128,39 +131,62 @@ public class Teleop extends OpMode {
 
         telemetry.addData("Drop", BotHardware.ServoE.backDropLeft.servo.getPosition());
 
-        if(gamepad2.dpad_up) {
-            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() + 0.01,  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
+
+        if(gamepad2.start) {
+            //relic automation!
+            telemetry.addData("Relic Automation!", true);
             xLock = false;
-        }
-        else if(gamepad2.dpad_down){
-            BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() - 0.01,  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
-            xLock = false;
-        }
-
-        if(xLock || gamepad2.x){
-            final double pos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos) * ARM_M_COFF + ARM_B_COFF;
-            BotHardware.ServoE.arm.servo.setPosition(pos);
-            //BotHardware.ServoE.arm.servo.setPosition(ARM_GRAB);
-            xLock = true;
-        }
-
-        telemetry.addData("XLock", xLock);
-
-        if(gamepad2.y && !lastY) {
-            if(grabOpen = !grabOpen) BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
-            else BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabClosed);
-        }
-        lastY = gamepad2.y;
-
-        if(gamepad2.left_trigger > 0) {
-            BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 250);
-            BotHardware.Motor.relic.motor.setPower(-gamepad2.left_trigger);
-        }
-        else if(gamepad2.right_trigger > 0){
+            //put arm to farthest point
             BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
-            BotHardware.Motor.relic.motor.setPower(gamepad2.right_trigger);
+            BotHardware.Motor.relic.motor.setPower(1.0f);
+            //if over first counts, drop arm servo to place
+            final int pos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos);
+            if(pos >= RELIC_AUTO_ARM_COUNTS) BotHardware.ServoE.arm.servo.setPosition(pos * ARM_M_COFF + ARM_B_COFF);
+            if(!BotHardware.Motor.relic.motor.isBusy()) {
+                //open grab
+                BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
+                grabOpen = true;
+            }
+
         }
-        else BotHardware.Motor.relic.motor.setPower(0);
+        else {
+            //driver control
+            if(gamepad2.dpad_up) {
+                BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() + 0.01,  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
+                xLock = false;
+            }
+            else if(gamepad2.dpad_down){
+                BotHardware.ServoE.arm.servo.setPosition(Range.clip(BotHardware.ServoE.arm.servo.getPosition() - 0.01,  BotHardware.ServoE.armClosed, BotHardware.ServoE.armOpen));
+                xLock = false;
+            }
+
+            if(xLock || gamepad2.x){
+                final int relPos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos);
+                final double pos = relPos * ARM_M_COFF + ARM_B_COFF;
+                if(relPos > ARM_MIN_COUNTS) BotHardware.ServoE.arm.servo.setPosition(pos);
+                else BotHardware.ServoE.arm.servo.setPosition(0.2);
+                //BotHardware.ServoE.arm.servo.setPosition(ARM_GRAB);
+                xLock = true;
+            }
+
+            telemetry.addData("XLock", xLock);
+
+            if(gamepad2.y && !lastY) {
+                if(grabOpen = !grabOpen) BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
+                else BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabClosed);
+            }
+            lastY = gamepad2.y;
+
+            if(gamepad2.left_trigger > 0) {
+                BotHardware.Motor.relic.motor.setTargetPosition(relicPos + 250);
+                BotHardware.Motor.relic.motor.setPower(-gamepad2.left_trigger);
+            }
+            else if(gamepad2.right_trigger > 0){
+                BotHardware.Motor.relic.motor.setTargetPosition(relicPos + RELIC_ARM_COUNTS);
+                BotHardware.Motor.relic.motor.setPower(gamepad2.right_trigger);
+            }
+            else BotHardware.Motor.relic.motor.setPower(0);
+        }
 
         if(gamepad2.left_stick_y <= 0.95 || gamepad2.right_stick_y <= 0.95) {
             bot.setSuckLeft(gamepad2.left_stick_y);
