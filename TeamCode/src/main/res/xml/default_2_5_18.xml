@@ -11,6 +11,7 @@
             <Servo name="right_lower" port="2" />
             <Servo name="glyph_kicker" port="3" />
             <Servo name="glyph_kicker2" port="4" />
+            <Servo name="glyph_hoop" port="5" />
             <AnalogInput name="sharpirsensor" port="1"/>
             <AnalogInput name="rightsharpsensor" port="2"/>
             <AnalogInput name="leftsharpsensor" port="3"/>

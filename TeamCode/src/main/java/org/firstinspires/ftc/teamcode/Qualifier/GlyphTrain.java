@@ -39,6 +39,7 @@ public class GlyphTrain {
     public Servo glyphliftservo = null;
     public Servo glyph_kicker = null;
     public Servo glyph_kicker2 = null;
+    public Servo glyph_hoop = null;
 
 //    public DistanceSensor sensorDistanceR;
 //    public DistanceSensor sensorDistanceL;
@@ -67,6 +68,8 @@ public class GlyphTrain {
         glyph_kicker = hardwareMap.get(Servo.class, "glyph_kicker");
 //Glyph Kicker2
         glyph_kicker2 = hardwareMap.get(Servo.class, "glyph_kicker2");
+
+        glyph_hoop = hardwareMap.get(Servo.class, "glyph_hoop");
 
 
         //Glyph Clamps
@@ -120,10 +123,17 @@ public class GlyphTrain {
         glyphliftupper("bottom");
         resetkickGlyph();
         resetkickGlyph2();
+        hoopUp();
         // reset encoder to zero for lift (assume you have it down)
         lift_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    void hoopUp() {
+        glyph_hoop.setPosition(.985);
+    }
+    void hoopDown() {
+        glyph_hoop.setPosition(0.25);
     }
     void kickGlyph() {
             glyph_kicker.setPosition(1.0);

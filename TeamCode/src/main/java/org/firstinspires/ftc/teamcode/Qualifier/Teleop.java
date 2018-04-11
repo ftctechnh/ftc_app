@@ -219,6 +219,7 @@ public class Teleop extends OpMode {
             delayLift = false;
             glyphSensedDelay = 0;
              if (blocks == 0) {
+                 gromit.glyphTrain.hoopUp();
                 gromit.glyphTrain.glyphliftupper("top");
 
                  //gromit.glyphTrain.glyphclamp("open");
@@ -301,7 +302,7 @@ public class Teleop extends OpMode {
             relicspeed = 1.0;
         } else if (gamepad1.left_trigger > 0.1) {
             gromit.driveTrain.setSpeedMode(SLOW);
-            relicspeed = 0.2;
+            relicspeed = 0.3;
         } else {
             gromit.driveTrain.setSpeedMode(MID);
             relicspeed = 0.8;
@@ -316,6 +317,9 @@ public class Teleop extends OpMode {
                 } else {
                     trainon = true;
                     gromit.glyphTrain.startGlyphMotors(intakespeed);
+                    if(blocks == 0){
+                        gromit.glyphTrain.hoopDown();
+                    }
                 }
             }
         } else {
@@ -362,16 +366,17 @@ public class Teleop extends OpMode {
                     waitforglyph = true;
                 }
                 else{//first block
-                    if(abs(gamepad1.right_stick_y) > .1 ||  abs(gamepad1.left_stick_x) > .1) {
-                        trainon = false;
-                        gromit.glyphTrain.stopGlyphMotors();
-                        waitforglyph = true;
-                    }
-                   // stall = true;
+                    //Enable these lines to stop the first block also
+//                    if(abs(gamepad1.right_stick_y) > .1 ||  abs(gamepad1.left_stick_x) > .1) {
+//                        trainon = false;
+//                        gromit.glyphTrain.stopGlyphMotors();
+//                        waitforglyph = true;
+//                    }
                 }
             } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
                 if (!gamepad1.dpad_right && !gamepad2.dpad_right) {
 
+                    gromit.glyphTrain.hoopUp();
                     startclosetime = runtime.milliseconds();    // start timer  set boolean
                     //delayLift = true;                            // check for time to lift
                     delayClamp = true;//Move the lift
@@ -399,7 +404,7 @@ public class Teleop extends OpMode {
                 //If moving and you haven't already stopped then you should probably stop
             }
             //Front glyph sensor trigger lights
-            if (!gromit.glyphTrain.seeFrontBlock.getState() || !gromit.glyphTrain.seeMiddleBlock.getState()){ //  && !frontglyphSensed) {     // if block is sensed set boolean
+            if ((!gromit.glyphTrain.seeFrontBlock.getState() || !gromit.glyphTrain.seeMiddleBlock.getState()) && gromit.glyphTrain.left_glyph.getPower() > 0.0 ){ //  && !frontglyphSensed) {     // if block is sensed set boolean
                 //frontglyphSensed = true;
                 //Turn on lights you have a block
                 gromit.glyphTrain.LED1.setState(true);
@@ -407,6 +412,9 @@ public class Teleop extends OpMode {
                 gromit.glyphTrain.signalkickGlyph2();
                 //Maybe diable if lift is moving...
                 gromit.glyphTrain.startGlyphMotors(travelspeed);
+                if (blocks == 0) {
+                    gromit.glyphTrain.hoopDown();
+                }
 
             }else if (gromit.glyphTrain.seeFrontBlock.getState() && gromit.glyphTrain.seeMiddleBlock.getState()) {     // if block was already sensed (sense the back end)
                 //frontglyphSensed = false;

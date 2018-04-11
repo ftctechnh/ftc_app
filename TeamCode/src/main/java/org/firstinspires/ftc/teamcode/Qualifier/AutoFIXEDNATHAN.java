@@ -51,7 +51,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
     public double starttime;
     public double delay = 1200;
     public double sensetime = 0;
-    public double overshoot = 50;
+    public double overshoot = 60;
     boolean doneone = false;
     boolean twoblocks = false;
     boolean gap = false;
@@ -498,7 +498,12 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, drivedistance/2, headingcrypto, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
-            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -(drivedistance-3), headingcrypto, 0); //move back
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, -((drivedistance*7/8)), headingcrypto, 0); //move back
+            mecanumTurn(menuFile.DriveSpeed, 45);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, drivedistance/8, 45, 0); //HEad to center
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, -drivedistance/8, 45, 0); //HEad to center
+            mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -((drivedistance*7/8)-3), headingcrypto, 0); //move back
             //mecanumDriveBlockClamp2SHARP(menuFile.DriveSpeed * 0.4, headingcrypto, 0, 0.65, -1.0); //move back
         sleep(100);
         if (menuFile.mode == 2) {//Align to a different box to do a row
@@ -528,10 +533,10 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             mecanumDrive(menuFile.DriveSpeed * 0.6, 5, menuFile.BlueFrontHeading2, 90);  //-90    strafe back to where you are
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             gromit.glyphTrain.startGlyphMotors(0.7);
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 54, menuFile.BlueFrontHeading2, 0); //HEad to center
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, 54, menuFile.BlueFrontHeading2, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, menuFile.BlueFrontHeading2);
             //drive back towards glyph box
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -48, menuFile.BlueFrontHeading2, 0); //move back
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, -48, menuFile.BlueFrontHeading2, 0); //move back
             gromit.glyphTrain.startGlyphMotors(0.7);
             sleep(700);
             gromit.glyphTrain.stopGlyphMotors();
@@ -573,7 +578,7 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         }
 
         //Push in first block
-        mecanumDrive(menuFile.DriveSpeed * 0.6, 6, headingcrypto, 0);
+        mecanumDrive(menuFile.DriveSpeed * 0.6, 7, headingcrypto, 0);
         mecanumDrive(menuFile.DriveSpeed * 0.6, strafe, headingcrypto, -90);  //-90    strafe (strafe is never as long)
         mecanumDrive(menuFile.DriveSpeed * 0.6, -6, headingcrypto, 0);    // forward
         mecanumDrive(menuFile.DriveSpeed * 0.6, 4, headingcrypto, 0);    // back up
@@ -592,54 +597,52 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             // COnditional for where you are
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 0, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, 0, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 //Strafe Left
                 telemetry.addLine("ITS LEFT");
                 telemetry.update();
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, 3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, 3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.8, -8, headingcrypto, -90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -8, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
             mecanumTurn(menuFile.DriveSpeed, driveangle);
           //drive fast without glyphtrain
-
-            mecanumDriveBlock(menuFile.DriveSpeed * 1.5, drivedistance/2, driveangle, 0); //HEad to center
-            gromit.glyphTrain.startGlyphMotors(0.7);
-            mecanumDriveBlock(menuFile.DriveSpeed * 0.6, drivedistance/2, driveangle, 0); //HEad to center
+            gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
+            gromit.glyphTrain.glyphclampupper("open");
+            gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
+            mecanumDrive(menuFile.DriveSpeed * 1.5, drivedistance/2, driveangle, 0); //HEad to center
+            gromit.glyphTrain.startGlyphMotors(0.75);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, drivedistance/2, driveangle, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive back towards glyph box
-            mecanumDriveBlock(menuFile.DriveSpeed * 1.5, -(drivedistance-1),driveangle, 0); //move back
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * .8, -(drivedistance-2),driveangle, 0); //move back
             //gromit.glyphTrain.glyphclamp("close");
             mecanumTurn(menuFile.DriveSpeed, headingcrypto);
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -12, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, -6, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 //Strafe Left
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -17, menuFile.BlueBackHeading3, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueBackHeading3, 90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, 2, menuFile.BlueBackHeading3, -90);  //THe column to the left, Our and robot's roight
             }
             gromit.glyphTrain.startGlyphMotors(0.7);
-
             //Drive to separate box
-            mecanumDrive(menuFile.DriveSpeed * 0.3, -7, headingcrypto, 0); //move 50
-
+            mecanumDrive(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
             //unclamp glyph
             gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
             gromit.glyphTrain.glyphclampupper("open");
-
-
         }
         //Do the routine to push the block back into atleast one box //ROUTINE TO PUSH BLOCK INTO ATLEST INE COLUMN
         //drive forward
         mecanumDrive(menuFile.DriveSpeed * 0.3, 5, headingcrypto, 0);    // back up
         gromit.glyphTrain.stopGlyphMotors();
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, headingcrypto, -90);  //-90    strafe (strafe is never as long)
-        mecanumDrive(menuFile.DriveSpeed * 0.6, -3, headingcrypto, 0);    // forward
+        mecanumDrive(menuFile.DriveSpeed * 0.6, -7, headingcrypto, 0);    // forward
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, headingcrypto, 0);    // back up
 
     }
@@ -659,9 +662,10 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
 
         //Push in first block
         mecanumDrive(menuFile.DriveSpeed * 0.6, 6, headingcrypto, 0);
-        gromit.glyphTrain.stopGlyphMotors();
+
         mecanumDrive(menuFile.DriveSpeed * 0.6, strafe, headingcrypto, -90);  //-90    strafe (strafe is never as long)
         mecanumDrive(menuFile.DriveSpeed * 0.6, -6, headingcrypto, 0);    // forward
+        gromit.glyphTrain.stopGlyphMotors();
         mecanumDrive(menuFile.DriveSpeed * 0.6, 4, headingcrypto, 0);    // back up
 
         // now try to go get some more.
@@ -675,32 +679,31 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
             // COnditional for where you are
             if (vuMark == RelicRecoveryVuMark.CENTER) {
                 //Strafe right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.7, 9, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, 9, headingcrypto, -90);   //strafe right 3//Move right (from our point of view)
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
                 //telemetry.addLine("ITS LEFT");
                 //telemetry.update();
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.7, -3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, -3, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                mecanumDriveBlock(menuFile.DriveSpeed * 0.7, 8, headingcrypto, -90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.8, 11, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive fast without glyphtrain
-
             //Open and zero lifts
             gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
             gromit.glyphTrain.glyphclampupper("open");
             gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
             //ZERO LIFTS
             gromit.glyphTrain.liftGlyphIndex(0,0.3);  //lower
-            gromit.glyphTrain.startGlyphMotors(0.6);
+            gromit.glyphTrain.startGlyphMotors(0.75);
 
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, drivedistance/2, driveangle, 0); //HEad to center
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.4, drivedistance/2, driveangle, 0); //HEad to center
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 1.5, drivedistance/2, driveangle, 0); //HEad to center
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.4, drivedistance/2, driveangle, 0); //HEad to center
             mecanumTurn(menuFile.DriveSpeed, driveangle);
             //drive back towards glyph box  try going back a bit shorter.
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 1.5, -(drivedistance),driveangle, 0); //move back
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * .8, -(drivedistance-2),driveangle, 0); //move back
             //gromit.glyphTrain.glyphclamp("close");
             mecanumTurn(menuFile.DriveSpeed, headingcrypto);
             if (vuMark == RelicRecoveryVuMark.CENTER) {
@@ -708,17 +711,15 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                 //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 11, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else if (vuMark == RelicRecoveryVuMark.LEFT) {
                 //Strafe Left
-                mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.5, -4,headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.5, -4,headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, 3, menuFile.BlueBackHeading3, 90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, -3, menuFile.BlueBackHeading3, -90);  //THe column to the left, Our and robot's roight
             }
-            mecanumDriveBlockClamp(menuFile.DriveSpeed * 0.3, -7, headingcrypto, 0); //move 50
-            gromit.glyphTrain.startGlyphMotors(0.8);
+            mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.3, -6, headingcrypto, 0); //move 50
+            gromit.glyphTrain.startGlyphMotors(0.7);
             sleep(1000);
             gromit.glyphTrain.glyphclamp("open");
-
-
             //unclamp glyph
             gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
             gromit.glyphTrain.glyphclampupper("open");
@@ -730,176 +731,9 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         mecanumDrive(menuFile.DriveSpeed * 0.3, 5, headingcrypto, 0);    // back up
         gromit.glyphTrain.stopGlyphMotors();
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, headingcrypto, -90);  //-90    strafe (strafe is never as long)
-        mecanumDrive(menuFile.DriveSpeed * 0.6, -3, headingcrypto, 0);    // forward
+        mecanumDrive(menuFile.DriveSpeed * 0.6, -7, headingcrypto, 0);    // forward
         mecanumDrive(menuFile.DriveSpeed * 0.6, 5, headingcrypto, 0);    // back up
 
-    }
-    public void mecanumDriveBlock(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
-        double max;
-        double multiplier;
-        int right_start;
-        int left_start;
-        int moveCounts;
-        boolean glyphSensed = false;
-        //int drive_direction = -90;
-        moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
-        right_start = gromit.driveTrain.right_rear.getCurrentPosition();
-        left_start = gromit.driveTrain.left_rear.getCurrentPosition();
-        double lfpower;
-        double lrpower;
-        double rfpower;
-        double rrpower;
-
-        double lfbase;
-        double lrbase;
-        double rfbase;
-        double rrbase;
-        lfbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
-        lrbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
-        rfbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
-        rrbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
-        while (((abs(gromit.driveTrain.right_rear.getCurrentPosition() - right_start) + abs(gromit.driveTrain.left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts)) && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
-            //Determine correction
-            double correction = robot_orientation - gromit.driveTrain.getheading();
-            if (correction <= -180) {
-                correction += 360;
-            } else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
-                correction -= 360;
-            }
-            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
-            lfpower = lfbase;
-            rrpower = rrbase;
-            rfpower = rfbase;
-            if (abs(correction) > drive_THRESHOLD) {//If you are off
-                //Apply power to one side of the robot to turn the robot back to the right heading
-                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
-                lrpower -= right_adjustment;
-                lfpower -= right_adjustment;
-                rrpower = rrbase + right_adjustment;
-                rfpower = rfbase + right_adjustment;
-
-            }//Otherwise you Are at the right orientation
-
-            //Determine largest power being applied in either direction
-            max = abs(lfpower);
-            if (abs(lrpower) > max) max = abs(lrpower);
-            if (abs(rfpower) > max) max = abs(rfpower);
-            if (abs(rrpower) > max) max = abs(rrpower);
-
-            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-
-            lfpower *= multiplier;
-            lrpower *= multiplier;
-            rfpower *= multiplier;
-            rrpower *= multiplier;
-
-            gromit.driveTrain.left_front.setPower(lfpower);
-            gromit.driveTrain.left_rear.setPower(lrpower);
-            gromit.driveTrain.right_front.setPower(rfpower);
-            gromit.driveTrain.right_rear.setPower(rrpower);
-
-            if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
-                glyphSensed = true;
-            } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
-                glyphSensed = false;
-                gromit.glyphTrain.stopGlyphMotors();
-                //gromit.glyphTrain.glyphclamp("close");
-            }
-        }
-        gromit.driveTrain.stopMotors();
-    }
-    public void mecanumDriveBlockClamp(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
-        double max;
-        double multiplier;
-        int right_start;
-        int left_start;
-        int moveCounts;
-        boolean glyphSensed = false;
-        boolean twoblocks =false;
-        //int drive_direction = -90;
-        moveCounts = (int) (distance * gromit.driveTrain.COUNTS_PER_INCH);
-        right_start = gromit.driveTrain.right_rear.getCurrentPosition();
-        left_start = gromit.driveTrain.left_rear.getCurrentPosition();
-        double lfpower;
-        double lrpower;
-        double rfpower;
-        double rrpower;
-
-        double lfbase;
-        double lrbase;
-        double rfbase;
-        double rrbase;
-        lfbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
-        lrbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
-        rfbase = signum(distance) * Math.sin(Math.toRadians(drive_direction + 45));
-        rrbase = signum(distance) * Math.cos(Math.toRadians(drive_direction + 45));
-        while (((abs(gromit.driveTrain.right_rear.getCurrentPosition() - right_start) + abs(gromit.driveTrain.left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts)) && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
-            //Determine correction
-            double correction = robot_orientation - gromit.driveTrain.getheading();
-            if (correction <= -180) {
-                correction += 360;
-            } else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
-                correction -= 360;
-            }
-            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
-            lfpower = lfbase;
-            rrpower = rrbase;
-            rfpower = rfbase;
-            if (abs(correction) > drive_THRESHOLD) {//If you are off
-                //Apply power to one side of the robot to turn the robot back to the right heading
-                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
-                lrpower -= right_adjustment;
-                lfpower -= right_adjustment;
-                rrpower = rrbase + right_adjustment;
-                rfpower = rfbase + right_adjustment;
-
-            }//Otherwise you Are at the right orientation
-
-            //Determine largest power being applied in either direction
-            max = abs(lfpower);
-            if (abs(lrpower) > max) max = abs(lrpower);
-            if (abs(rfpower) > max) max = abs(rfpower);
-            if (abs(rrpower) > max) max = abs(rrpower);
-
-            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-
-            lfpower *= multiplier;
-            lrpower *= multiplier;
-            rfpower *= multiplier;
-            rrpower *= multiplier;
-
-            gromit.driveTrain.left_front.setPower(lfpower);
-            gromit.driveTrain.left_rear.setPower(lrpower);
-            gromit.driveTrain.right_front.setPower(rfpower);
-            gromit.driveTrain.right_rear.setPower(rrpower);
-
-            if (gromit.driveTrain.sharpIRSensor.getVoltage() < 1 && !glyphSensed) {     // if block is sensed set boolean
-                glyphSensed = true;
-                if(!gromit.glyphTrain.seeMiddleBlock.getState()){//TWO BLOCKS!!!!! or front sensor
-                    twoblocks = true;
-                }
-            }
-            else if(glyphSensed){//Second Edge
-                if(twoblocks){
-                    if((gromit.glyphTrain.seeMiddleBlock.getState() || gromit.driveTrain.sharpIRSensor.getVoltage() > 1 ) ) {
-                        gromit.glyphTrain.glyphclampupper("close");
-                        gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
-                        gromit.glyphTrain.glyphliftupper("top");
-                        glyphSensed = false;
-                        gromit.glyphTrain.stopGlyphMotors();
-                    }
-                }
-                else if (gromit.driveTrain.sharpIRSensor.getVoltage() > 1){
-                    gromit.glyphTrain.glyphclampupper("close");
-                    gromit.glyphTrain.glyphliftupper("bottom");//Lower second Stage
-                    gromit.glyphTrain.glyphliftupper("top");
-                    glyphSensed = false;
-                    gromit.glyphTrain.stopGlyphMotors();
-
-                }
-            }
-        }
-        gromit.driveTrain.stopMotors();
     }
     public void mecanumDriveBlockClamp2(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
         double max;
@@ -1078,8 +912,6 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         }
         gromit.driveTrain.stopMotors();
     }
-
-
     public void mecanumDrive(double speed, double distance, double robot_orientation, double drive_direction) { //Orientation is to the field //Drive direction is from the robot
         double max;
         double multiplier;
@@ -1104,69 +936,6 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
         rfbase = signum(distance)*Math.sin(Math.toRadians(drive_direction + 45));
         rrbase = signum(distance)*Math.cos(Math.toRadians(drive_direction + 45));
         while (((abs(gromit.driveTrain.right_rear.getCurrentPosition() - right_start) + abs(gromit.driveTrain.left_rear.getCurrentPosition() - left_start)) / 2 < abs(moveCounts)) && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
-            //Determine correction
-            double correction = robot_orientation - gromit.driveTrain.getheading();
-            if (correction <= -180){
-                correction += 360; }
-            else if (correction >= 180) {                      // correction should be +/- 180 (to the left negative, right positive)
-                correction -= 360;
-            }
-            lrpower = lrbase; //MIGHT BE MORE EFFECIENT TO COMBINE THESE WITHT HE ADJUSTMENT PART AND SET ADJUSTMENT TO ZERO IF NOT NEEDED
-            lfpower = lfbase;
-            rrpower = rrbase;
-            rfpower = rfbase;
-            if (abs(correction) > drive_THRESHOLD) {//If you are off
-                //Apply power to one side of the robot to turn the robot back to the right heading
-                double right_adjustment = Range.clip((drive_COEF * correction / 45), -1, 1);
-                lrpower -= right_adjustment;
-                lfpower -= right_adjustment;
-                rrpower = rrbase + right_adjustment;
-                rfpower = rfbase + right_adjustment;
-
-            }//Otherwise you Are at the right orientation
-
-            //Determine largest power being applied in either direction
-            max = abs(lfpower);
-            if (abs(lrpower) > max) max = abs(lrpower);
-            if (abs(rfpower) > max) max = abs(rfpower);
-            if (abs(rrpower) > max) max = abs(rrpower);
-
-            multiplier = speed / max; //multiplier to adjust speeds of each wheel so you can have a max power of 1 on atleast 1 wheel
-
-            lfpower *= multiplier;
-            lrpower *= multiplier;
-            rfpower *= multiplier;
-            rrpower *= multiplier;
-
-            gromit.driveTrain.left_front.setPower(lfpower);
-            gromit.driveTrain.left_rear.setPower(lrpower);
-            gromit.driveTrain.right_front.setPower(rfpower);
-            gromit.driveTrain.right_rear.setPower(rrpower);
-
-//            RobotLog.ii("[GromitIR] ", Double.toString(18.7754*Math.pow(sharpIRSensor.getVoltage(),-1.51)), Integer.toString(left_front.getCurrentPosition()));
-
-        }
-        gromit.driveTrain.stopMotors();
-    }
-
-    public void mecanumDriveMaxbotix(double speed, double distancecm, double robot_orientation, double drive_direction, int forward) { //Orientation is to the field //Drive direction is from the robot
-        double max;
-        double multiplier;
-
-        double lfpower;
-        double lrpower;
-        double rfpower;
-        double rrpower;
-
-        double lfbase;
-        double lrbase;
-        double rfbase;
-        double rrbase;
-        lfbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
-        lrbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
-        rfbase = signum(forward)*Math.sin(Math.toRadians(drive_direction + 45));
-        rrbase = signum(forward)*Math.cos(Math.toRadians(drive_direction + 45));
-        while ( gromit.driveTrain.leftSharpSensor.getVoltage() < distancecm && opModeIsActive() /* ENCODERS*/) {//Should we average all four motors?
             //Determine correction
             double correction = robot_orientation - gromit.driveTrain.getheading();
             if (correction <= -180){
@@ -1449,5 +1218,3 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
     }
 
 }
-
-
