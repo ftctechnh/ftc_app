@@ -155,7 +155,7 @@ public class blueBack_George extends Autonomous_General_George_ {
 
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            encoderMecanumDrive(0.4, 18.25, 18.25, 5000, 0);
+            encoderMecanumDrive(0.4, 28, 28, 5000, 0);
         } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
             encoderMecanumDrive(0.4, 4, 4, 5000, 0);
 
@@ -167,7 +167,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(75);
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            gyroTurnREV(0.5, 112,2.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
+            gyroTurnREV(0.5, 114,2.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
 
         } else {
             gyroTurnREV(0.5, 60,1.5);//turn 45 degrees to the right of origin (actually turning left to reach it, be 32 cm away from wall
@@ -183,7 +183,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         glyphOuttakeRolly(0.5);
 
         if (vuMark == RelicRecoveryVuMark.LEFT) {
-            encoderMecanumDrive(0.3, -10, 10, 1000, 0);
+            encoderMecanumDrive(0.3, -10, 10, 1000, 0);//use this because there is some uncertainty with gyro, and we just want to turn a little bit
 
         } else {
             encoderMecanumDrive(0.3, 10, -10, 1000, 0);
@@ -192,7 +192,7 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(75);
         encoderMecanumDrive(0.65,-10,-10,1000,0);
         sleep(75);
-        gyroTurnREV(0.6,-85,2);
+        gyroTurnREV(0.6,-91,2);
         moreGlyphsBlue(vuMark);
 
 

@@ -136,7 +136,7 @@ public class redBack_George extends Autonomous_General_George_ {
             encoderMecanumDrive(0.4, -20, -20, 5000, 0);
         } else if (vuMark == RelicRecoveryVuMark.CENTER || vuMark == RelicRecoveryVuMark.UNKNOWN) {
             //if the center or unkown image was read we move forward 4 cm
-            encoderMecanumDrive(0.4, -4, -4, 5000, 0);
+            encoderMecanumDrive(0.4, -12, -12, 5000, 0);
 
         } else if (vuMark == RelicRecoveryVuMark.LEFT) {
             //if the left image was read we move back 9.25 cm
@@ -148,7 +148,7 @@ public class redBack_George extends Autonomous_General_George_ {
 
         if (vuMark == RelicRecoveryVuMark.RIGHT) {
             //if the image was right we turn to 60º counterclockwise from origin angle to push block in angled
-            gyroTurnREV(0.5, 65,2.5);
+            gyroTurnREV(0.5, 70,2.5);
 
         } else {
             //if the image was right we turn to 102º counterclockwise from origin angle to push block in angled

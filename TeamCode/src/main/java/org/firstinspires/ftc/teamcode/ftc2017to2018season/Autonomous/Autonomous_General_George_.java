@@ -1296,7 +1296,7 @@ revColorSensor.enableLed(false);
 
         slideMotor.setPower(1);
 
-        while (slideMotor.isBusy() && opModeIsActive()){
+        while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 1000){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
             telemetry.addData("power", slideMotor.getPower());
             telemetry.addData("Target Position", slideMotor.getTargetPosition());
@@ -1352,8 +1352,7 @@ public void openCVInit(){
 
     public void moreGlyphsBlue(RelicRecoveryVuMark column) {
 
-        glyphServoLeft.setPosition(0.64);
-        glyphServoRight.setPosition(0.235);
+        middleGlyphManipulator();//INCREASE LEFT VALUE TO CLOSE MORE, DECREASE RIGHT VALUE TO CLOSE MORE
         intakeLeft.setPower(1);
         intakeRight.setPower(-1);
         encoderMecanumDrive(0.7, 25, 25, 1000, 0);
@@ -1362,40 +1361,39 @@ public void openCVInit(){
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
         straightDrive(0.3);
-        while (runtime.seconds() - begintime < 3 && opModeIsActive()) {
+        while (runtime.seconds() - begintime < 2 && opModeIsActive()) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
             if(runtime.seconds() - begintime > 2) { //stop driving after 2 seconds, but keep intaking
                 stopMotors();
             }
         }
-        stopMotors();
-        intakeLeft.setPower(0);
-        intakeRight.setPower(0);
+        //stopMotors();
+
         closeGlyphManipulator();
         sleep(150);
         encoderMecanumDrive(0.7,-15,-15,1000,0);
+        intakeLeft.setPower(0);
+        intakeRight.setPower(0);
         sleep(50);
 
-        moveUpGlyph(1.3);
+        moveUpGlyph(1.9);
 
         if(column == RelicRecoveryVuMark.LEFT || column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            gyroTurnREV(0.5, 80, 4);
+            gyroTurnREV(0.5, 91, 3.25);
         }else if(column == RelicRecoveryVuMark.RIGHT){
-            gyroTurnREV(0.5, 100, 4);
+            gyroTurnREV(0.5, 100, 3.25);
         }
-        encoderMecanumDrive(0.7,33,33,1000,0);
+        encoderMecanumDrive(0.6,39,39,1000,0);
         sleep(100);
-        glyphOuttakeRolly(1.5);
+        glyphOuttakeRolly(1.0);
         encoderMecanumDrive(0.4,-5,-5,1000,0);
         openGlyphManipulator();
 
     }
 
     public void moreGlyphsRed(RelicRecoveryVuMark column) {
-
-        glyphServoLeft.setPosition(0.64);
-        glyphServoRight.setPosition(0.235);
+        middleGlyphManipulator();//INCREASE LEFT VALUE TO CLOSE MORE, DECREASE RIGHT VALUE TO CLOSE MORE
         intakeLeft.setPower(1);
         intakeRight.setPower(-1);
         encoderMecanumDrive(0.7, 25, 25, 1000, 0);
@@ -1404,35 +1402,38 @@ public void openCVInit(){
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
         straightDrive(0.3);
-        while (runtime.seconds() - begintime < 3 && opModeIsActive()) {
+        while (runtime.seconds() - begintime < 2 && opModeIsActive()) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
             if(runtime.seconds() - begintime > 2) { //stop driving after 2 seconds, but keep intaking
                 stopMotors();
             }
         }
-        stopMotors();
+        //stopMotors();
+
+        closeGlyphManipulator();
+        sleep(900);
+        encoderMecanumDrive(0.7,-15,-15,1000,0);
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
-        closeGlyphManipulator();
-        sleep(150);
-        encoderMecanumDrive(0.7,-15,-15,1000,0);
         sleep(50);
 
-        moveUpGlyph(1.3);
+        moveUpGlyph(1.9);
 
         if(column == RelicRecoveryVuMark.RIGHT || column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
-            gyroTurnREV(0.5, 100, 4);
+            gyroTurnREV(0.5, 110, 4);
         }else if(column == RelicRecoveryVuMark.LEFT){
             gyroTurnREV(0.5, 80, 4);
         }
-        encoderMecanumDrive(0.7,33,33,1000,0);
+        encoderMecanumDrive(0.6,39,39,1000,0);
         sleep(100);
-        glyphOuttakeRolly(1.5);
+        glyphOuttakeRolly(1.0);
         encoderMecanumDrive(0.4,-5,-5,1000,0);
         openGlyphManipulator();
 
     }
+
+
 
     @Override public void runOpMode() throws InterruptedException {}
 
