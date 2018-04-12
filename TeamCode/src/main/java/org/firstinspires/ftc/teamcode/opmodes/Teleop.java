@@ -142,7 +142,7 @@ public class Teleop extends OpMode {
             //if over first counts, drop arm servo to place
             final int pos = Math.abs(BotHardware.Motor.relic.motor.getCurrentPosition() - relicPos);
             if(pos >= RELIC_AUTO_ARM_COUNTS) BotHardware.ServoE.arm.servo.setPosition(pos * ARM_M_COFF + ARM_B_COFF);
-            if(!BotHardware.Motor.relic.motor.isBusy()) {
+            if(pos > RELIC_ARM_COUNTS - 15) {
                 //open grab
                 BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
                 grabOpen = true;
