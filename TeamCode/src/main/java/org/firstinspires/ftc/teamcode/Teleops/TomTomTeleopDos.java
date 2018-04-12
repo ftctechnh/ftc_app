@@ -61,7 +61,6 @@ public class TomTomTeleopDos extends LinearOpMode {
     /* While OpMode is Active Loop */
 
         while (opModeIsActive()) {
-
             /* Talk to the drivers & coach */
             telemetry.addLine("Hi~♪");
 //            telemetry.addData("Wheel Control", "X is the toggle");
