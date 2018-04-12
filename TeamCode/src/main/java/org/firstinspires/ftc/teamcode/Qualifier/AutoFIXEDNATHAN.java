@@ -633,10 +633,10 @@ public class AutoFIXEDNATHAN extends LinearOpMode {
                 mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, -6, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
                 //Strafe Left
-                //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -17, menuFile.BlueBackHeading3, -90);  //strafe left 3 //Move left if you are on the certain edge
+                //mecanumDriveBlock(menuFile.DriveSpeed * 0.6, -17, headingcrypto, -90);  //strafe left 3 //Move left if you are on the certain edge
             } else {///THIS IS DEFAULT CASE OF VUMARK
                 //Strafe Right
-                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, 2, menuFile.BlueBackHeading3, -90);  //THe column to the left, Our and robot's roight
+                mecanumDriveBlockClamp2(menuFile.DriveSpeed * 0.6, 2, headingcrypto, -90);  //THe column to the left, Our and robot's roight
             }
             gromit.glyphTrain.startGlyphMotors(0.7);
             //Drive to separate box

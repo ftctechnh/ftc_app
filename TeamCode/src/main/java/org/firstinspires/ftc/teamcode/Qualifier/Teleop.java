@@ -81,6 +81,8 @@ public class Teleop extends OpMode {
     public boolean glyphLiftismoving = false;
     public boolean delayLift = false;
     public boolean delayClamp = false;
+    public boolean delayHoop = false;
+    public double starthooptime;
     public boolean frontglyphSensed = false;
     public boolean glyphSensed = false;
     public int manualLiftDelay = 100;
@@ -219,9 +221,11 @@ public class Teleop extends OpMode {
             delayLift = false;
             glyphSensedDelay = 0;
              if (blocks == 0) {
-                 gromit.glyphTrain.hoopUp();
+                gromit.glyphTrain.hoopUp();
                 gromit.glyphTrain.glyphliftupper("top");
 
+                 delayHoop = true;
+                 starthooptime = runtime.milliseconds();
                  //gromit.glyphTrain.glyphclamp("open");
                 blocks = 1;
                  gromit.glyphTrain.startGlyphMotors(intakespeed);//Set back t slow speed
@@ -234,7 +238,9 @@ public class Teleop extends OpMode {
                 gromit.glyphTrain.lift_motor.setPower(1.0);   // start the motor going up
             }
         }
-
+        if (delayLift && runtime.milliseconds() - starthooptime > 500) {
+            gromit.glyphTrain.hoopUp();
+        }
         if (gamepad1.a || gamepad2.a) {         //lower the glyph lift
             if (aIsReleased) {
                 gromit.glyphTrain.glyphclamp("wide");   // OPEN BOTH SEROVS
@@ -302,7 +308,7 @@ public class Teleop extends OpMode {
             relicspeed = 1.0;
         } else if (gamepad1.left_trigger > 0.1) {
             gromit.driveTrain.setSpeedMode(SLOW);
-            relicspeed = 0.3;
+            relicspeed = 0.4;
         } else {
             gromit.driveTrain.setSpeedMode(MID);
             relicspeed = 0.8;
@@ -376,7 +382,7 @@ public class Teleop extends OpMode {
             } else if (glyphSensed && gromit.driveTrain.sharpIRSensor.getVoltage() > 1) {     // if block was already sensed (sense the back end)
                 if (!gamepad1.dpad_right && !gamepad2.dpad_right) {
 
-                    gromit.glyphTrain.hoopUp();
+//                    gromit.glyphTrain.hoopUp();
                     startclosetime = runtime.milliseconds();    // start timer  set boolean
                     //delayLift = true;                            // check for time to lift
                     delayClamp = true;//Move the lift
@@ -593,7 +599,7 @@ public class Teleop extends OpMode {
                 elbowstartpos = gromit.relicArm.relicElbowServo.getPosition();
                 elbowstarttime = runtime.milliseconds();//Start time
                 if (gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMax - 1000) {
-                    elbowtarget = gromit.relicArm.elbowup + .09;
+                    elbowtarget = gromit.relicArm.elbowup;
                 } else {
                     elbowtarget = gromit.relicArm.elbowup;
                 }
