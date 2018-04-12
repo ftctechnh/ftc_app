@@ -1130,7 +1130,7 @@ public class Autonomous_General_George_ extends LinearOpMode{
     public void readColorRev() {
 
         ballColor = "blank";
-revColorSensor.enableLed(false);
+        revColorSensor.enableLed(true);
         if (revColorSensor.red() > revColorSensor.blue()) {
             ballColor = "red";
             /*telemetry.addData("current color is red", bColorSensorLeft.red());
@@ -1142,6 +1142,7 @@ revColorSensor.enableLed(false);
         } else {
             ballColor = "blank";
         }
+        revColorSensor.enableLed(false);
         //sleep(5000);
     }
     public void KnockjewelSensor(String ballColor, String side) {
@@ -1321,7 +1322,7 @@ revColorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         long moveStartTime = System.currentTimeMillis();
         slideMotor.setPower(-1);
-            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 750) {
+            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 700) {
                 telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
                 telemetry.addData("power", slideMotor.getPower());
                 telemetry.addData("Target Position", slideMotor.getTargetPosition());

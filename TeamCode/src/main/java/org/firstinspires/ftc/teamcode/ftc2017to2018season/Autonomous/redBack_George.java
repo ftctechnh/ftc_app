@@ -179,8 +179,10 @@ public class redBack_George extends Autonomous_General_George_ {
         //code to get second glyph
         encoderMecanumDrive(0.65, -10, -10, 1000, 0);
         sleep(75);
-        gyroTurnREV(0.6, -100,2);//this will cause it to face the pile of glyphs at a 90 degree angle
-        moreGlyphsRed(vuMark);
+        if(System.currentTimeMillis() - opModeStart > 5000) {
+            gyroTurnREV(0.6, -100, 2);//this will cause it to face the pile of glyphs at a 90 degree angle
+            moreGlyphsRed(vuMark);
+        }
 
         if (!opModeIsActive()) {
             jewelDetector.disable();

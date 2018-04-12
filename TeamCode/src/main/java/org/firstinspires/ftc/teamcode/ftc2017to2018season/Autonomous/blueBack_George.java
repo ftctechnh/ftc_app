@@ -192,9 +192,10 @@ public class blueBack_George extends Autonomous_General_George_ {
         sleep(75);
         encoderMecanumDrive(0.65,-10,-10,1000,0);
         sleep(75);
-        gyroTurnREV(0.6,-91,2);
-        moreGlyphsBlue(vuMark);
-
+        if(System.currentTimeMillis() - opModeStart > 5000) {
+            gyroTurnREV(0.6, -91, 2);
+            moreGlyphsBlue(vuMark);
+        }
 
         if (!opModeIsActive()) {
             jewelDetector.disable();
