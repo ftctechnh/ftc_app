@@ -86,7 +86,6 @@ public class TomTomTeleop extends LinearOpMode {
                 }
                 loopCount++;
             }
-
             if (gamepad1.left_bumper) {
                 if (0 == loopCount % 500) {
                     servoPos = servoPos - .1;
