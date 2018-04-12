@@ -71,7 +71,7 @@ public class testEncoders extends LinearOpMode {
         telemetry.update();
 
         /* Find all hardware in configuration */
-        testMotor = hardwareMap.dcMotor.get("FL");
+        testMotor = hardwareMap.dcMotor.get("motor");
 
         testMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         sleep(100);
@@ -86,7 +86,7 @@ public class testEncoders extends LinearOpMode {
 
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addLine("Push 'A' to run Motor");
-            telemetry.addData("Front Left: ", testMotor.getCurrentPosition());
+            telemetry.addData("Motor Position: ", testMotor.getCurrentPosition());
             telemetry.update();
 
             if (gamepad1.a) {
