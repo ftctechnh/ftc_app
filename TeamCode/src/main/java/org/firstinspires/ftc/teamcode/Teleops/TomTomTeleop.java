@@ -77,7 +77,7 @@ public class TomTomTeleop extends LinearOpMode {
 
         /* Use bumpers to rotate octopus head */
             if (gamepad1.right_bumper) {
-                if (0 == loopCount % 500) {
+                if (0 == loopCount % 700) {
                     servoPos = servoPos + .1;
                     if (servoPos > 1) {
                         servoPos = 1;
@@ -87,7 +87,7 @@ public class TomTomTeleop extends LinearOpMode {
                 loopCount++;
             }
             if (gamepad1.left_bumper) {
-                if (0 == loopCount % 500) {
+                if (0 == loopCount % 700) {
                     servoPos = servoPos - .1;
                     if (servoPos < 0) {
                         servoPos = 0;
