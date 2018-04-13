@@ -37,12 +37,8 @@ public class UltraHoneStep extends AutoLib.Step {
     public boolean loop() {
         super.loop();
         if(firstLoopCall()) lastTime = mode.getRuntime() - 1;
-        //get the distance and error
-        final int read = ultra.getReadingNoDelay();
-        if(read > 0) {
-            curError = dist - read;
-            //if we found it, stop
-            //if the peak is within stopping margin, stop
+        if(currentCount > 0) {
+            curError = dist - ultra.getReading();
             if(Math.abs(curError) <= error) {
                 setMotorsWithoutGyro(0);
                 return ++currentCount >= count;
@@ -54,13 +50,31 @@ public class UltraHoneStep extends AutoLib.Step {
             lastTime = time;
             mode.telemetry.addData("power error", pError);
         }
+        else {
+            //get the distance and error
+            final int read = ultra.getReadingNoDelay();
+            if(read > 0) {
+                curError = dist - read;
+                //if we found it, stop
+                //if the peak is within stopping margin, stop
+                if(Math.abs(curError) <= error) {
+                    setMotorsWithoutGyro(0);
+                    currentCount = 1;
+                }
+                else currentCount = 0;
+                //PID
+                final double time = mode.getRuntime();
+                pError = errorPid.loop(curError, (float)(time - lastTime));
+                lastTime = time;
+                mode.telemetry.addData("power error", pError);
+            }
 
-        //cut out a middle range, but handle positive and negative
-        float power;
-        if(pError >= 0) power = Range.clip(pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
-        else power = Range.clip(pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
-        //reverse if necessary
-        if(gyroStep.getStartPower() < 0) power = -power;
+            //cut out a middle range, but handle positive and negative
+            float power;
+            if(pError >= 0) power = Range.clip(pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
+            else power = Range.clip(pError, -gyroStep.getMaxPower(), -gyroStep.getMinPower());
+            //reverse if necessary
+            if(gyroStep.getStartPower() < 0) power = -power;
             /*
             if(gyroStep.getStartPower() >= 0){
                 if(pError >= 0) power = Range.clip(gyroStep.getStartPower() + pError, gyroStep.getMinPower(), gyroStep.getMaxPower());
@@ -71,12 +85,13 @@ public class UltraHoneStep extends AutoLib.Step {
                 else power = Range.clip(Math.abs(gyroStep.getStartPower() + pError), gyroStep.getMinPower(), gyroStep.getMaxPower());
             }
             */
-        gyroStep.setPower(power);
-        gyroStep.loop();
-        //telem
-        mode.telemetry.addData("Power", -power);
-        mode.telemetry.addData("Ultra error", curError);
-        mode.telemetry.addData("Ultra", read);
+            gyroStep.setPower(power);
+            gyroStep.loop();
+            //telem
+            mode.telemetry.addData("Power", -power);
+            mode.telemetry.addData("Ultra error", curError);
+            mode.telemetry.addData("Ultra", read);
+        }
         //return
         return false;
     }

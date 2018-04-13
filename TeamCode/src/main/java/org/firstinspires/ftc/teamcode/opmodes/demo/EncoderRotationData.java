@@ -34,7 +34,7 @@ import java.util.concurrent.TimeUnit;
  */
 
 @Autonomous(name="Ultra Encoder Stuff")
-//@Disabled
+@Disabled
 public class EncoderRotationData extends OpMode {
     private final int COUNTS = 750;
     private final float POWER = 0.4f;

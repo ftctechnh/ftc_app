@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
  */
 
 @Autonomous(name = "Gyro Angle Corrections")
+@Disabled
 public class GyroUltraCorrect extends OpMode {
     MatbotixUltra ultra;
     BotHardware bot = new BotHardware(this);

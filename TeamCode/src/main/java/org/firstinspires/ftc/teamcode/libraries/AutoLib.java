@@ -82,6 +82,10 @@ public class AutoLib {
             return false;
         }
 
+        public boolean isStarted() {
+            return mLoopCount != 0;
+        }
+
     }
 
     // a Sequence that performs its constituent Steps sequentially

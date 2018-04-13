@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
@@ -17,6 +18,7 @@ import java.util.Arrays;
  */
 
 @Autonomous(name = "Color", group = "test")
+@Disabled
 public class Color extends OpMode {
     APDS9960 frontDist;
     APDS9960.Config distConfig = new APDS9960.Config();

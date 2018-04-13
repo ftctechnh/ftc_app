@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.opmodes.UltraAuto;
 
 
 @TeleOp(name="Wifi Encoder PID Tweak")
+@Disabled
 public class EncoderHoneTweak extends OpMode {
     private final BotHardware bot = new BotHardware(this);
     private final UDPid udPid = new UDPid();

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
  */
 
 @TeleOp(name="Lights On")
+@Disabled
 public class BlinkTest extends OpMode {
     private DcMotor glow;
     private ColorSensor frontColor;

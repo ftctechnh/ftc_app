@@ -5,6 +5,7 @@ import android.hardware.camera2.CameraDevice;
 import android.os.Environment;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.libraries.VuforiaBallLib;
 
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 
 @Autonomous(name = "CV Ball Demo")
+@Disabled
 public class CVBallDemo extends VuforiaBallLib {
     @Override
     public void init() {

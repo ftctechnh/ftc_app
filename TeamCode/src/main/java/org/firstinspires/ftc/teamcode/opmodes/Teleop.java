@@ -42,7 +42,7 @@ public class Teleop extends OpMode {
     private static final double ARM_B_COFF = 0.0276268627304199;
     private static final int ARM_MIN_COUNTS = 3000;
 
-    private static final int RELIC_AUTO_ARM_COUNTS = 6250;
+    private static final int RELIC_AUTO_ARM_COUNTS = 6200;
 
     protected BotHardware bot = new BotHardware(this);
     private boolean lastA = false;

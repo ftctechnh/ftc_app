@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
  */
 
 @Autonomous(name="Ultra Teleop", group="test")
-//@Disabled
+@Disabled
 public class UltraTest extends OpMode {
     private MatbotixUltra ultra;
     private MatbotixUltra ultraBack;

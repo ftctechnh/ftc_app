@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -34,6 +35,7 @@ import java.util.List;
  */
 
 @Autonomous(name="Ultra Auto")
+@Disabled
 public class UltraAuto extends VuforiaBallLib {
     //CONSTANTS
     private static final float PILLAR_SPACING_INCH = 7.63f;

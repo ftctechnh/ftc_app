@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.demo;
 import com.qualcomm.hardware.adafruit.AdafruitI2cColorSensor;
 import com.qualcomm.hardware.ams.AMSColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.opmodes.UltraAuto;
  */
 
 @Autonomous(name = "Line Color Stop")
+@Disabled
 public class LineStopTest extends OpMode {
     private static final float RED_RATIO_MIN = 3f;
     private final SensorLib.PID encoderHonePID = new SensorLib.PID(3.88f, 9.00f, 0, 50);
