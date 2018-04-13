@@ -65,14 +65,7 @@ public class TomTomTeleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             /* Talk to the drivers & coach */
-            telemetry.addLine("Hi~♪");
-//            telemetry.addData("Wheel Control", "X is the toggle");
-//            telemetry.addData("Tray Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
-//            telemetry.addData("Tray Flipping Controls", "Hold A for out, release for in");
-            telemetry.addData("Front Left:", frontLeftMotor.getPower());
-            telemetry.addData("Front Right:", frontRightMotor.getPower());
-            telemetry.addData("Back Left:", backLeftMotor.getPower());
-            telemetry.addData("Back Right:", backRightMotor.getPower());
+            telemetry.addLine("Hi! I'm OctoBot!");
             telemetry.update();
 
         /* Use bumpers to rotate octopus head */
