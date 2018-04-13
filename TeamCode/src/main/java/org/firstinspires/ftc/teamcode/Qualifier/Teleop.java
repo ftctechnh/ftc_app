@@ -61,6 +61,7 @@ public class Teleop extends OpMode {
     public boolean tristanmode = false;
     boolean onehitwonder = false;
     boolean out = true;                          // what the heck does out mean? Out toggles the switch from forward to backward relic
+    boolean relicdone = false;
     double starthit = 0;
     int blocks = 0;
     boolean jam = false;//Used to auto unjam the glyphtrain
@@ -357,7 +358,7 @@ public class Teleop extends OpMode {
                     gromit.glyphTrain.startGlyphMotors(0.35);
                 }
                 else {
-                    gromit.glyphTrain.startGlyphMotors(travelspeed);
+                    gromit.glyphTrain.startGlyphMotors(intakespeed);
                 }
                 trainon = true;
             }
@@ -668,6 +669,7 @@ public class Teleop extends OpMode {
             if (gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.deploydistance && !glyphinit) {
                 glyphinit = true;
                 gromit.relicArm.relicElbowServo.setPosition(gromit.relicArm.elbowup);
+                gromit.glyphTrain.hoopUp();
             }
             gromit.relicArm.relicArmMotor.setPower(relicspeed);
         } else if (gamepad1.dpad_down && gromit.relicArm.relicArmMotor.getCurrentPosition() > gromit.relicArm.relicArmMotorMin && !onehitwonder && !reliczeroing) {
@@ -720,6 +722,12 @@ public class Teleop extends OpMode {
                 gromit.relicArm.relicElbowServo.setPosition(1.0);
             } else if (gromit.relicArm.relicArmMotor.getCurrentPosition() < gromit.relicArm.deploydistance && !out) {    // out changes if it is on the way out or in
                 gromit.relicArm.relicArmMotor.setPower(0.0);
+                if(relicdone){
+                    gromit.glyphTrain.hoopUp();
+                    trainon = true;
+                    gromit.glyphTrain.startGlyphMotors(intakespeed);
+                }
+                relicdone = true;
                 out = true;
                 onehitwonder = false;
                 elbowmoving = false;

@@ -130,10 +130,10 @@ public class GlyphTrain {
         lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     void hoopUp() {
-        glyph_hoop.setPosition(.994);
+        glyph_hoop.setPosition(.98);
     }
     void hoopDown() {
-        glyph_hoop.setPosition(0.25);
+        glyph_hoop.setPosition(0.2);
     }
     void kickGlyph() {
             glyph_kicker.setPosition(1.0);
