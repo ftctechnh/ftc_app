@@ -75,6 +75,7 @@ public class TomTomTeleop extends LinearOpMode {
                     if (servoPos > 1) {
                         servoPos = 1;
                     }
+
                     octoServo.setPosition(servoPos);
                 }
                 loopCount++;
