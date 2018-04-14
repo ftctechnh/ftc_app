@@ -51,8 +51,6 @@ public class ADPSAuto extends VuforiaBallLib {
     protected final APDS9960.Config frontConfig = new APDS9960.Config();
     protected MatbotixUltra frontUltra;
     protected MatbotixUltra backUltra;
-    //protected ColorSensor frontColor;
-    //protected ColorSensor backColor;
     protected boolean red = false;
     protected boolean rear = false;
     private BotHardware bot = new BotHardware(this);
@@ -65,20 +63,20 @@ public class ADPSAuto extends VuforiaBallLib {
     private AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
 
     //parameters for gyro steering
-    float Kp4 = -8.0f;        // degree heading proportional term correction per degree of deviation
-    float Ki4 = 0.0f;         // ... integrator term
-    float Kd4 = 0;             // ... derivative term
-    float Ki4Cutoff = 0.0f;    // maximum angle error for which we update integrator
+    private static final float Kp4 = -8.0f;        // degree heading proportional term correction per degree of deviation
+    private static final float Ki4 = 0.0f;         // ... integrator term
+    private static final float Kd4 = 0;             // ... derivative term
+    private static final float Ki4Cutoff = 0.0f;    // maximum angle error for which we update integrator
 
     SensorLib.PID drivePID = new SensorLib.PID(Kp4, Ki4, Kd4, Ki4Cutoff);
 
     //parameters for gyro turning
-    float Kp5 = 10.0f;        // degree heading proportional term correction per degree of deviation
-    float Ki5 = 0.0f;         // ... integrator term
-    float Kd5 = 0;             // ... derivative term
-    float Ki5Cutoff = 0.0f;    // maximum angle error for which we update integrator
+    private static final float Kp5 = 10.0f;        // degree heading proportional term correction per degree of deviation
+    private static final float Ki5 = 0.0f;         // ... integrator term
+    private static final float Kd5 = 0;             // ... derivative term
+    private static final float Ki5Cutoff = 0.0f;    // maximum angle error for which we update integrator
 
-    SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
+    private final SensorLib.PID motorPID = new SensorLib.PID(Kp5, Ki5, Kd5, Ki5Cutoff);
 
     private static final double MM_PER_ENCODE = 13.298;
     private static final int APDS_DIST = 60;
@@ -98,9 +96,9 @@ public class ADPSAuto extends VuforiaBallLib {
         BLUE_FRONT_LEFT(false, false, RelicRecoveryVuMark.LEFT, 3, 130, 700, 32),
         BLUE_FRONT_CENTER(false, false, RelicRecoveryVuMark.CENTER, 1, 55, 600, 32),
         BLUE_FRONT_RIGHT(false, false, RelicRecoveryVuMark.RIGHT, 2, 55, 640, 32),
-        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 115, 320, 32),
-        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55, 520, 32),
-        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55, 520, 32);
+        BLUE_REAR_LEFT(false, true, RelicRecoveryVuMark.LEFT, 1, 115, 320, 33),
+        BLUE_REAR_CENTER(false, true, RelicRecoveryVuMark.CENTER, 0, 55, 520, 33),
+        BLUE_REAR_RIGHT(false, true, RelicRecoveryVuMark.RIGHT, 1, 55, 520, 33);
 
         //robot and field constants (in cm)
         private final double REAR_PILLAR_WALL_DIST = DistanceUnit.INCH.toCm(24);
@@ -153,8 +151,6 @@ public class ADPSAuto extends VuforiaBallLib {
         frontDist = new APDS9960(frontConfig, hardwareMap.get(I2cDeviceSynch.class, "bluedist"));
         frontUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultrafront"), 100);
         backUltra = new MatbotixUltra(hardwareMap.get(I2cDeviceSynch.class, "ultraback"), 100);
-        //frontColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "fc"));
-        //backColor = new StupidColor(hardwareMap.get(AdafruitI2cColorSensor.class, "bc"));
 
         backDist.initDevice();
         frontDist.initDevice();
@@ -170,11 +166,6 @@ public class ADPSAuto extends VuforiaBallLib {
         bot.start();
         bot.setDropPos(0.62);
 
-        //bot.setLights(new BlinkyEffect.Pulse(500, 0.5f));
-
-        //frontColor.enableLed(false);
-        //backColor.enableLed(false);
-
         telemetry.update();
 
         startTracking();
@@ -185,12 +176,6 @@ public class ADPSAuto extends VuforiaBallLib {
         telemetry.addData("Back Ultra", backUltra.getReading());
         telemetry.addData("Front Infrared", frontDist.getDist());
         telemetry.addData("Back Infrared", backDist.getDist());
-        /*
-        telemetry.addData("Front Red", frontColor.red());
-        telemetry.addData("Front Blue", frontColor.blue());
-        telemetry.addData("Back Red", backColor.red());
-        telemetry.addData("Back Blue", backColor.blue());
-        */
         telemetry.addData("Ball Color", getBallColor().toString());
         telemetry.addData("IMU", bot.getHeadingSensor().getHeading());
         telemetry.addData("Lift", BotHardware.Motor.lift.motor.getCurrentPosition());
@@ -223,7 +208,7 @@ public class ADPSAuto extends VuforiaBallLib {
             final AutoLib.Step whackRight;
             if(red) whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterRed + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
             else whackRight = new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseCenterBlue + BotHardware.ServoE.stickBaseSwingSize, 0.5, false);
-            whack.add(new APDSBallFind(red, null, null, frontDist, backDist, (color != BallColor.Indeterminate && color != BallColor.Undefined) ? color : altColor, whackLeft, whackRight, rear, this));
+            whack.add(new APDSBallFind(red, (color != BallColor.Indeterminate && color != BallColor.Undefined) ? color : altColor, whackLeft, whackRight));
 
             whack.add(new AutoLib.TimedServoStep(bot.getStick(), BotHardware.ServoE.stickUp, 0.25, false));
             whack.add(new AutoLib.TimedServoStep(bot.getStickBase(), BotHardware.ServoE.stickBaseHidden, 0.25, false));
@@ -302,25 +287,6 @@ public class ADPSAuto extends VuforiaBallLib {
 
         try {
             if(firstLoop && mSeq.loop()) requestOpModeStop();
-            //underglow pulse
-            /*
-            long time = System.currentTimeMillis();
-            if(time - glowLastTime >= UNDERGLOW_PULSE_WAIT) {
-                glowLastTime = time;
-                if(glowInc) glowPower += UNDERGLOW_INC;
-                else glowPower -= UNDERGLOW_INC;
-                if(glowPower >= UNDERGLOW_MAX) {
-                    glowInc = false;
-                    glowPower = UNDERGLOW_MAX;
-                }
-                else if(glowPower <= 0) {
-                    glowInc = true;
-                    glowPower = 0;
-                }
-                bot.setLights(glowPower);
-            }
-            */
-
         }
         catch (Exception e) {
             backDist.stopDevice();
@@ -484,72 +450,19 @@ public class ADPSAuto extends VuforiaBallLib {
 
     public static class APDSBallFind extends AutoLib.Step {
         private final boolean red;
-        private final ColorSensor frontColorSens;
-        private final ColorSensor backColorSens;
-        private final APDS9960 frontColorRear;
-        private final APDS9960 backColorRear;
         private BallColor color;
         private final AutoLib.Step whackLeft;
         private final AutoLib.Step whackRight;
-        private final OpMode mode;
-        private final boolean rear;
 
-        APDSBallFind(boolean red, ColorSensor frontColor, ColorSensor backColor, APDS9960 frontColorRear, APDS9960 backColorRear, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight, boolean rear, OpMode mode) {
+        APDSBallFind(boolean red, BallColor color, AutoLib.Step whackLeft, AutoLib.Step whackRight) {
             this.red = red;
-            this.frontColorSens = frontColor;
-            this.backColorSens = backColor;
-            this.frontColorRear = frontColorRear;
-            this.backColorRear = backColorRear;
             this.color = color;
             this.whackLeft = whackLeft;
             this.whackRight = whackRight;
-            this.mode = mode;
-            this.rear = rear;
         }
 
         public boolean loop() {
             super.loop();
-            //check detection
-            /*
-            if(color == BallColor.Indeterminate || color == BallColor.Undefined) {
-                //get colors
-                int backRed;
-                int backBlue;
-                int frontRed;
-                int frontBlue;
-                int count = 0;
-                if(!rear) {
-                    frontColorSens.enableLed(true);
-                    backColorSens.enableLed(true);
-                    do {
-                        backRed = backColorSens.red();
-                        backBlue = backColorSens.blue();
-                        frontRed = frontColorSens.red();
-                        frontBlue = frontColorSens.blue();
-                        count++;
-                    } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
-                    frontColorSens.enableLed(false);
-                    backColorSens.enableLed(false);
-                }
-                else {
-                    do {
-                        final int[] backColor = backColorRear.getColor();
-                        final int[] frontColor = frontColorRear.getColor();
-                        backRed = backColor[1];
-                        backBlue = backColor[3];
-                        frontRed = frontColor[1];
-                        frontBlue = frontColor[3];
-                        count++;
-                    } while ((backRed == 0 || backBlue == 0 || frontRed == 0 || frontBlue == 0) && count < 5);
-                }
-                if(backRed != 0 && backBlue != 0 && frontRed != 0 && frontBlue != 0) {
-                    if(backRed < backBlue && frontRed > frontBlue) color = BallColor.LeftRed;
-                    else if(backRed > backBlue && frontRed < frontBlue) color = BallColor.LeftBlue;
-                    else color = BallColor.Indeterminate;
-                }
-                else color = BallColor.Undefined;
-            }
-            */
             //run appropriete sewunce
             if(color == BallColor.LeftBlue) {
                 if(red) return whackLeft.loop();

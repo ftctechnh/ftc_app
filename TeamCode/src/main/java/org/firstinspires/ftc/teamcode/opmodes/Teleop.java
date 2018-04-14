@@ -133,6 +133,7 @@ public class Teleop extends OpMode {
 
 
         if(gamepad2.start) {
+            /*
             //relic automation!
             telemetry.addData("Relic Automation!", true);
             xLock = false;
@@ -147,7 +148,9 @@ public class Teleop extends OpMode {
                 BotHardware.ServoE.grab.servo.setPosition(BotHardware.ServoE.grabOpen);
                 grabOpen = true;
             }
-
+            */
+            xLock = false;
+            BotHardware.ServoE.arm.servo.setPosition(0.39);
         }
         else {
             //driver control
