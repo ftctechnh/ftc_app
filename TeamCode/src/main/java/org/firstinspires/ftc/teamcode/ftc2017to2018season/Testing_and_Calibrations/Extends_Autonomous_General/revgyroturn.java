@@ -16,7 +16,7 @@ public class revgyroturn extends Autonomous_General_George_ {
     public void runOpMode() {
         initiate(false);
         waitForStart();
-        gyroTurnREV(0.4,0);
+        gyroTurnREV(0.4,0, 10);
         sleep(100);
         telemetry.addData("","gyro turn finished, starting wall align");
         telemetry.update();
@@ -26,6 +26,6 @@ public class revgyroturn extends Autonomous_General_George_ {
         sleep(200);
         telemetry.addData("", "wall align finished, starting gyro turn");
         telemetry.update();
-        gyroTurnREV(0.5,-84);
+        gyroTurnREV(0.5,-84, 10);
     }
 }

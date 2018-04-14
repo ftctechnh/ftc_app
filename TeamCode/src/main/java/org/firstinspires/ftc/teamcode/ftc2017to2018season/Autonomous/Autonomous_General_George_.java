@@ -918,13 +918,13 @@ public class Autonomous_General_George_ extends LinearOpMode{
     /**
      * GYRO TURN USING REV ROBOTICS GYRO
      */
-    public void gyroTurnREV(double speed, double angle){
+    public void gyroTurnREV(double speed, double angle, double seconds){
 
         telemetry.addData("starting gyro turn","-----");
         telemetry.update();
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < 2.5){
+        while(opModeIsActive() && !onTargetAngleREV(speed, angle, P_TURN_COEFF) && (runtime.seconds() - begintime) < seconds){
             telemetry.update();
             idle();
             telemetry.addData("-->","inside while loop :-(");
@@ -1130,7 +1130,7 @@ public class Autonomous_General_George_ extends LinearOpMode{
     public void readColorRev() {
 
         ballColor = "blank";
-revColorSensor.enableLed(false);
+        revColorSensor.enableLed(true);
         if (revColorSensor.red() > revColorSensor.blue()) {
             ballColor = "red";
             /*telemetry.addData("current color is red", bColorSensorLeft.red());
@@ -1142,6 +1142,7 @@ revColorSensor.enableLed(false);
         } else {
             ballColor = "blank";
         }
+        revColorSensor.enableLed(false);
         //sleep(5000);
     }
     public void KnockjewelSensor(String ballColor, String side) {
@@ -1296,7 +1297,7 @@ revColorSensor.enableLed(false);
 
         slideMotor.setPower(1);
 
-        while (slideMotor.isBusy() && opModeIsActive()){
+        while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 1000){
             telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
             telemetry.addData("power", slideMotor.getPower());
             telemetry.addData("Target Position", slideMotor.getTargetPosition());
@@ -1321,7 +1322,7 @@ revColorSensor.enableLed(false);
         slideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         long moveStartTime = System.currentTimeMillis();
         slideMotor.setPower(-1);
-            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 2000) {
+            while (slideMotor.isBusy() && opModeIsActive() && System.currentTimeMillis() - moveStartTime < 700) {
                 telemetry.addData("In while loop in moveUpInch", slideMotor.getCurrentPosition());
                 telemetry.addData("power", slideMotor.getPower());
                 telemetry.addData("Target Position", slideMotor.getTargetPosition());
@@ -1350,34 +1351,90 @@ public void openCVInit(){
 
 }
 
-    public void moreGlyphs() {
+    public void moreGlyphsBlue(RelicRecoveryVuMark column) {
 
-        encoderMecanumDrive(0.35, 25, 25, 1000, 0);
-        sleep(750);
-        middleGlyphManipulator();
+        middleGlyphManipulator();//INCREASE LEFT VALUE TO CLOSE MORE, DECREASE RIGHT VALUE TO CLOSE MORE
+        intakeLeft.setPower(1);
+        intakeRight.setPower(-1);
+        encoderMecanumDrive(0.7, 25, 25, 1000, 0);
+        sleep(100);
 
         ElapsedTime runtime = new ElapsedTime();
         double begintime= runtime.seconds();
-        while (runtime.seconds() - begintime < 3 && opModeIsActive()) {
+        straightDrive(0.3);
+        while (runtime.seconds() - begintime < 2 && opModeIsActive()) {
             intakeLeft.setPower(1);
             intakeRight.setPower(-1);
-            straightDrive(0.25);
+            if(runtime.seconds() - begintime > 2) { //stop driving after 2 seconds, but keep intaking
+                stopMotors();
+            }
         }
-        stopMotors();
+        //stopMotors();
+
+        closeGlyphManipulator();
+        sleep(150);
+        encoderMecanumDrive(0.7,-15,-15,1000,0);
         intakeLeft.setPower(0);
         intakeRight.setPower(0);
-        closeGlyphManipulator();
-        sleep(75);
-        encoderMecanumDrive(0.5,-15,-15,1000,0);
         sleep(50);
-        gyroTurnREV(0.4,90);
-        encoderMecanumDrive(0.5,30,30,1000,0);
+
+        moveUpGlyph(1.9);
+
+        if(column == RelicRecoveryVuMark.LEFT || column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
+            gyroTurnREV(0.5, 91, 3.25);
+        }else if(column == RelicRecoveryVuMark.RIGHT){
+            gyroTurnREV(0.5, 100, 3.25);
+        }
+        encoderMecanumDrive(0.6,39,39,1000,0);
         sleep(100);
-        glyphOuttakeRolly(1.5);
+        glyphOuttakeRolly(1.0);
         encoderMecanumDrive(0.4,-5,-5,1000,0);
         openGlyphManipulator();
 
     }
+
+    public void moreGlyphsRed(RelicRecoveryVuMark column) {
+        middleGlyphManipulator();//INCREASE LEFT VALUE TO CLOSE MORE, DECREASE RIGHT VALUE TO CLOSE MORE
+        intakeLeft.setPower(1);
+        intakeRight.setPower(-1);
+        encoderMecanumDrive(0.7, 25, 25, 1000, 0);
+        sleep(100);
+
+        ElapsedTime runtime = new ElapsedTime();
+        double begintime= runtime.seconds();
+        straightDrive(0.3);
+        while (runtime.seconds() - begintime < 2 && opModeIsActive()) {
+            intakeLeft.setPower(1);
+            intakeRight.setPower(-1);
+            if(runtime.seconds() - begintime > 2) { //stop driving after 2 seconds, but keep intaking
+                stopMotors();
+            }
+        }
+        //stopMotors();
+
+        closeGlyphManipulator();
+        sleep(900);
+        encoderMecanumDrive(0.7,-15,-15,1000,0);
+        intakeLeft.setPower(0);
+        intakeRight.setPower(0);
+        sleep(50);
+
+        moveUpGlyph(1.9);
+
+        if(column == RelicRecoveryVuMark.RIGHT || column == RelicRecoveryVuMark.CENTER || column == RelicRecoveryVuMark.UNKNOWN) {
+            gyroTurnREV(0.5, 110, 4);
+        }else if(column == RelicRecoveryVuMark.LEFT){
+            gyroTurnREV(0.5, 80, 4);
+        }
+        encoderMecanumDrive(0.6,39,39,1000,0);
+        sleep(100);
+        glyphOuttakeRolly(1.0);
+        encoderMecanumDrive(0.4,-5,-5,1000,0);
+        openGlyphManipulator();
+
+    }
+
+
 
     @Override public void runOpMode() throws InterruptedException {}
 
