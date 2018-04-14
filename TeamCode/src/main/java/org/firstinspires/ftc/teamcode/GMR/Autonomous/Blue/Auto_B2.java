@@ -72,7 +72,7 @@ public class Auto_B2 extends OpMode {
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
 
-        robot = new Robot(hardwareMap, telemetry, false);
+        robot = new Robot(hardwareMap, telemetry, true);
 
         goalPosition = 0.25;
         position = 0.85;
@@ -83,7 +83,7 @@ public class Auto_B2 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
-        keyColumn = 1;
+        keyColumn = 0;
         columnDist = 0;
 
         time.reset();
@@ -93,10 +93,10 @@ public class Auto_B2 extends OpMode {
             currentSeconds = time.seconds();
             switch(state){
                 case TIME:
-                    state = States.ARMDOWN;
+                    state = States.GRAB;
                     goalSeconds = currentSeconds += 0.5;
                     break;
-                /*case GRAB:
+                case GRAB:
                     goalSeconds = currentSeconds += 5;
                     state = States.SCAN;
                     break;
@@ -106,7 +106,7 @@ public class Auto_B2 extends OpMode {
                         state = States.ARMDOWN;
                         goalSeconds = currentSeconds += 0.5;
                     }
-                    break;*/
+                    break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     leftArm.setPosition(goalPosition);
@@ -176,7 +176,7 @@ public class Auto_B2 extends OpMode {
                     } break;
 
                 case OFFSTONE:
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.5 )) {
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, 6.0 )) {
                         state = States.STRAFE;
                         completedStates += "OFFSTONE - ";
                     }
@@ -184,7 +184,7 @@ public class Auto_B2 extends OpMode {
                 case STRAFE:
                     //Turns left to face CryptoBox. WORKING
                     if (keyColumn == 1){
-                        columnDist = 1.0;
+                        columnDist = 2.0;
                     } else if (keyColumn == 2){
                         columnDist = 4.0;
                     } else if (keyColumn == 3){
@@ -201,16 +201,11 @@ public class Auto_B2 extends OpMode {
                         completedStates += "STRAFE - ";
                     }
                     break;
-                /*case COLUMNMOVE:
-                    if (robot.columnDrive(AllianceColor.BLUE, telemetry, 1)) {
-                        state = States.DRIVEBOX;
-                        completedStates += "COLUMNMOVE - ";
-                    }
-                    break;*/
+
                 case DRIVEBOX:
                     //Drives into CryptoBox
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, 1);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, 1.5);
                     } else{
                         isFinished = false;
                         state = States.DROP;

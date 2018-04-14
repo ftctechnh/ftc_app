@@ -72,7 +72,7 @@ public class Auto_R2 extends OpMode {
 
         gyroscope = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
-        robot = new Robot(hardwareMap, telemetry, false);
+        robot = new Robot(hardwareMap, telemetry, true);
 
         goalPosition = 0.5;
         position = 0;
@@ -83,7 +83,7 @@ public class Auto_R2 extends OpMode {
         state = States.TIME;
         isFinished = false;
 
-        keyColumn = 3;
+        keyColumn = 0;
         columnDist = 0;
 
         time.reset();
@@ -96,10 +96,10 @@ public class Auto_R2 extends OpMode {
             telemetry.update();
             switch(state){
                 case TIME:
-                    state = States.ARMDOWN;
+                    state = States.GRAB;
                     goalSeconds = currentSeconds += 0.5;
                     break;
-                /*case GRAB:
+                case GRAB:
                     state = States.SCAN;
                     goalSeconds = currentSeconds + 5.0;
                     break;
@@ -109,7 +109,7 @@ public class Auto_R2 extends OpMode {
                         state = States.ARMDOWN;
                         goalSeconds = currentSeconds += 0.5;
                     }
-                    break;*/
+                    break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
                     rightArm.setPosition(goalPosition);

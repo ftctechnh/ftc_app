@@ -105,7 +105,7 @@ public class Auto_R1 extends OpMode {
             switch(state){
                 case TIME:
                     time.reset();
-                    state = States.ARMDOWN;
+                    state = States.GRAB\;
                     goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:

@@ -107,7 +107,7 @@ public class Auto_B1 extends OpMode {
             switch(state){
                 case TIME:
                     //Starts the timer
-                    state = States.ARMDOWN;
+                    state = States.GRAB;
                     goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:
