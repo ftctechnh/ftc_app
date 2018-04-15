@@ -10,6 +10,7 @@ when                                      who                       Purpose/Chan
 3/29/18                                   Rohan                     Added a new object called constants and started replacing constant values in the program with the object.
 3/30/18                                   Rohan                     All numerical values are replaced by an object value. All values defined in Constants_For_TeleOp_Rolly.
 4/1/18                                    Rohan                     Added in the name of the program that this is a competition program.
+4/14/18                                   Rohan                     Added a glyph function to organize the program.
 
 =============================================================================================================================================*/
 package org.firstinspires.ftc.teamcode.ftc2017to2018season.TeleOp.In_Use;
