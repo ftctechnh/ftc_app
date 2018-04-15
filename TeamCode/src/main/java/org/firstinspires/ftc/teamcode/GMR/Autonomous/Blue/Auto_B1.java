@@ -66,8 +66,6 @@ public class Auto_B1 extends OpMode {
 
     private String stageCheck;
 
-    private List gyroValues = new ArrayList();
-
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -119,6 +117,7 @@ public class Auto_B1 extends OpMode {
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);
                     if(keyColumn != 0 || currentSeconds >= goalSeconds){
                         state = States.ARMDOWN;
+                        goalSeconds = currentSeconds + 1.0;
                     }
                     break;
                 case ARMDOWN:
@@ -150,7 +149,6 @@ public class Auto_B1 extends OpMode {
                     break;
                 case LEFTKNOCK:
                     //Knocks the left ball off of the pedestal WORKING
-                    gyroValues.add(robot.driveTrain.getYaw());
                     if(robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, turnPower, turnRadius)){
                         isFinished = false;
                         state = States.LEFTARMUP;

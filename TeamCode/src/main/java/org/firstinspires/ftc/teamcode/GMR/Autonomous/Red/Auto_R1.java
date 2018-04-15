@@ -105,7 +105,7 @@ public class Auto_R1 extends OpMode {
             switch(state){
                 case TIME:
                     time.reset();
-                    state = States.GRAB\;
+                    state = States.GRAB;
                     goalSeconds = currentSeconds += 0.5;
                     break;
                 case GRAB:
@@ -235,6 +235,7 @@ public class Auto_R1 extends OpMode {
                     robot.driveTrain.stop();
                     break;
             }
+            telemetry.addData("Key Column", keyColumn);
 
         }
 }
