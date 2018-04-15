@@ -89,11 +89,15 @@ Constants_For_TeleOp_Rolly constants = new Constants_For_TeleOp_Rolly();
 
     @Override
     public void loop() {
-        glyphIntake();
-        glyphManipulate();
+        Glyph();
         Drive();
         Slides();
         Relic();
+    }
+
+    public void Glyph() {
+        glyphIntake();
+        glyphManipulate();
     }
 
     public void glyphManipulate() {
@@ -239,10 +243,6 @@ else if (gamepad1.dpad_up){
     }
     public void Relic() {
         relicManipulator();
-    }
-    public void Glyph() {
-        glyphIntake();
-
     }
 
     public void slideMove() {
