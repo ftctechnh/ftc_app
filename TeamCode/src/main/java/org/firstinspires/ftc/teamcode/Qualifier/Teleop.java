@@ -739,16 +739,16 @@ public class Teleop extends OpMode {
         //telemetry.addData("liftPosition", gromit.glyphTrain.lift_motor.getCurrentPosition());
 //        telemetry.addData("R Color sensor", gromit.glyphTrain.sensorDistanceR.getDistance(DistanceUnit.CM));
 //        telemetry.addData("L Color sensor", gromit.glyphTrain.sensorDistanceL.getDistance(DistanceUnit.CM));
-        telemetry.addData("relicArmTicks", gromit.relicArm.relicArmMotor.getCurrentPosition());
-        telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getState());
-        telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getState());
-        telemetry.addData("Left Sharp", gromit.driveTrain.leftSharpSensor.getVoltage());
-        telemetry.addData("Right Sharp", gromit.driveTrain.rightSharpSensor.getVoltage());
+        //telemetry.addData("relicArmTicks", gromit.relicArm.relicArmMotor.getCurrentPosition());
+        //telemetry.addData("Front", gromit.glyphTrain.seeFrontBlock.getState());
+        //telemetry.addData("Middle ", gromit.glyphTrain.seeMiddleBlock.getState());
+        //telemetry.addData("Left Sharp", gromit.driveTrain.leftSharpSensor.getVoltage());
+        //telemetry.addData("Right Sharp", gromit.driveTrain.rightSharpSensor.getVoltage());
 //        telemetry.addData("Maxbotix (cm)", gromit.driveTrain.maxbotixSensor.getVoltage() * 783.0 );
 //        telemetry.addData("Maxbotix (in)", gromit.driveTrain.maxbotixSensor.getVoltage() * 300.0 );
 
 
-        telemetry.update();
+        //telemetry.update();
     }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
