@@ -123,14 +123,17 @@ public class GlyphTrain {
         glyphliftupper("bottom");
         resetkickGlyph();
         resetkickGlyph2();
-        hoopUp();
+        hoopInit();
         // reset encoder to zero for lift (assume you have it down)
         lift_motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         lift_motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift_motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     void hoopUp() {
-        glyph_hoop.setPosition(.98);
+        glyph_hoop.setPosition(.9);
+    }
+    void hoopInit() {
+        glyph_hoop.setPosition(.96);
     }
     void hoopDown() {
         glyph_hoop.setPosition(0.2);

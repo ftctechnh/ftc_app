@@ -363,8 +363,8 @@ public class MenuFileHandler {
         BlueBackDistance2Center = menuvalue[29];
 
         if (init) {
-            menulabel[30]= "BLUE Back Distance 2 RIGHT (33.5)";
-            menuvalue[30] = 33.5;
+            menulabel[30]= "BLUE Back Distance 2 RIGHT (34.5)";
+            menuvalue[30] = 34.5;
             menulowerlimit[30] = -70;
             menuupperlimit[30] =  70;
             menuincrement[30] = 0.5;
