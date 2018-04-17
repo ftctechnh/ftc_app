@@ -10,10 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "MiniBotFollow", group = "AutoMode")
+@TeleOp(name = "DartBeaconFollow", group = "AutoMode")
 @Disabled
 
-public class MiniBotFollow extends LinearOpMode {
+public class DartBeaconFollow extends LinearOpMode {
 
     DcMotor leftDrive;
     DcMotor rightDrive;

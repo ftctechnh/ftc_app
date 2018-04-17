@@ -5,13 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "MiniBot", group = "TeleOpMode")
+@TeleOp(name = "DartTeleOp", group = "TeleOpMode")
 @Disabled
 
-public class MiniBot extends OpMode
+public class DartTeleOp extends OpMode
 {
-    DcMotor leftDrive;
-    DcMotor rightDrive;
+    private DcMotor leftDrive;
+    private DcMotor rightDrive;
 
     @Override
     public void start() {

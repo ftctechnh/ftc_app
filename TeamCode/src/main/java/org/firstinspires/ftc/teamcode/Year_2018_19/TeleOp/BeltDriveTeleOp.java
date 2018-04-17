@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.Year_2018_19;
+package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.Year_2018_19.RobotHardware;
+import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.RobotHardware;
 
 @TeleOp(name="BeltDriveTeleOp", group="TeleOpMode")
 
