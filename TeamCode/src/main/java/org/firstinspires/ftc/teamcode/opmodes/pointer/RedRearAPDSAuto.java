@@ -10,8 +10,9 @@ import org.firstinspires.ftc.teamcode.opmodes.ADPSAuto;
 @Autonomous(name="Red Rear Auto", group="test")
 public class RedRearAPDSAuto extends ADPSAuto {
     @Override
-    public void _flipBits() {
+    public void init() {
         red = true;
         rear = true;
+        super.init();
     }
 }

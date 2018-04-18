@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
  */
 
 @Autonomous(name="Everything's Broken Drive", group="test")
-//@Disabled
+@Disabled
 public class SimpleDriveAuto extends OpMode {
     private BotHardware bot = new BotHardware(this);
     private AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
