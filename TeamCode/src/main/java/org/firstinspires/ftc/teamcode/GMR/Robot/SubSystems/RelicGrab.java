@@ -33,15 +33,15 @@ public class  RelicGrab {
         relicLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
-    public void relicLift(boolean leftBumper, float leftTrigger) {
+    public void relicLift(boolean leftBumper, float leftTrigger, Telemetry telemetry) {
         if (leftBumper) {
             relicLiftPosition = relicLift.getCurrentPosition();
             relicLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            relicLift.setPower(.8);
+            relicLift.setPower(-.8);
         } else if (leftTrigger > 0) {
             relicLiftPosition = relicLift.getCurrentPosition();
             relicLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            relicLift.setPower(-.8);
+            relicLift.setPower(.8);
         } else {
             if ((Math.abs(Math.abs(relicLiftPosition) - Math.abs(relicLift.getCurrentPosition()))) > 10) {
                 relicLiftPosition = relicLift.getCurrentPosition();
@@ -52,32 +52,35 @@ public class  RelicGrab {
                 relicLift.setTargetPosition(relicLiftPosition);
             }
         }
+        telemetry.addData("Current Relic Slide Position", relicLiftPosition);
     }
 
     public void setTilt(boolean y, boolean a, boolean b) {
         if (a && tiltPosition <= 1) {
             tiltPosition += 0.01;
         } else if (y && tiltPosition >= 0) {
-            tiltPosition -= 0.01;
+            tiltPosition = 0;
         } else if (b) {
             tiltPosition = 0.9;
         }
         relicTilt.setPosition(tiltPosition);
     }
 
-    public void setClamp(boolean rightBumper, float rightTrigger) {
+    public void setClamp(boolean rightBumper, float rightTrigger, boolean x) {
         if (rightBumper && clampPosition <= 1) {
-            clampPosition += 0.015;
+            clampPosition = 0.82;
         } else if (rightTrigger > 0 && clampPosition >= 0.45) {
-            clampPosition -= 0.015;
+            clampPosition = 0.3;
+        } else if (x) {
+            clampPosition = 1;
         }
         relicClamp.setPosition(clampPosition);
     }
 
-    public void relicGrab(boolean leftBumper, float leftTrigger, boolean dpadUp, boolean dpadDown, boolean y, boolean a, boolean rightBumper, float rightTrigger, boolean b) {
-        relicLift(leftBumper, leftTrigger);
+    public void relicGrab(boolean leftBumper, float leftTrigger, boolean dpadUp, boolean dpadDown, boolean y, boolean a, boolean rightBumper, float rightTrigger, boolean b, Telemetry telemetry, boolean x) {
+        relicLift(leftBumper, leftTrigger, telemetry);
         setTilt(y, a, b);
-        setClamp(rightBumper, rightTrigger);
+        setClamp(rightBumper, rightTrigger, x);
     }
 
     public void servoInfo(Telemetry telemetry) {

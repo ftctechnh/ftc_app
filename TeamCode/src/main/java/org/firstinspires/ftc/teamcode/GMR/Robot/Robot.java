@@ -114,6 +114,10 @@ public class Robot {
         leftColor.setPosition(0.85);
     }
 
+    public void setRelicTilt() {
+        relicTilt.setPosition(1);
+    }
+
     private RelicRecoveryVuMark getCurrentColumn(int columnPassed, AllianceColor color) {
         if (color == AllianceColor.RED) {
             switch (columnPassed) {
