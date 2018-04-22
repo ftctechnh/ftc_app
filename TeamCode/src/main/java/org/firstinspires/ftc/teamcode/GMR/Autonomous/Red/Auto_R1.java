@@ -235,6 +235,7 @@ public class Auto_R1 extends OpMode {
                     robot.driveTrain.stop();
                     break;
             }
+            telemetry.addData("Key Column", keyColumn);
 
         }
 }
