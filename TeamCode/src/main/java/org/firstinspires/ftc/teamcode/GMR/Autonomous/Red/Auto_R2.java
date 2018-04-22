@@ -192,7 +192,7 @@ public class Auto_R2 extends OpMode {
                     if(keyColumn == 1){
                         columnDist = 1.0;
                     } else if (keyColumn == 2){
-                        columnDist = 4.0;
+                        columnDist = 3.5;
                     } else if (keyColumn == 3){
                         columnDist = 6.0;
                     } else if (keyColumn == 0){
