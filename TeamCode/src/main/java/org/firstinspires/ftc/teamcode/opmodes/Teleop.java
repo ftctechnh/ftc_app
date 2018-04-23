@@ -86,6 +86,8 @@ public class Teleop extends OpMode {
         BotHardware.Motor.relic.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftPos = BotHardware.Motor.lift.motor.getCurrentPosition();
         relicPos = BotHardware.Motor.relic.motor.getCurrentPosition();
+        BotHardware.Motor.suckRight.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BotHardware.Motor.suckLeft.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void loop() {
