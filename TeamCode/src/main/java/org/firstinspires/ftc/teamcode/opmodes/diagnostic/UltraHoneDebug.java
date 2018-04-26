@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.MatbotixUltra;
-import org.firstinspires.ftc.teamcode.opmodes.ADPSAuto;
 
 /**
  * Created by Noah on 2/14/2018.

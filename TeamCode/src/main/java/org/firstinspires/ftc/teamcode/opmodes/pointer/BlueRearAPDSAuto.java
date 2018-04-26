@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.pointer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.opmodes.ADPSAuto;
+import org.firstinspires.ftc.teamcode.opmodes.old2018.ADPSAuto;
 
 /**
  * Created by Noah on 12/31/2017.

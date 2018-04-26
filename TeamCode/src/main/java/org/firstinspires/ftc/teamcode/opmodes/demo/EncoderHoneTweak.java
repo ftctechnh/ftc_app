@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.opmodes.demo;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -12,8 +11,6 @@ import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.UDPid;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
-import org.firstinspires.ftc.teamcode.opmodes.ADPSAuto;
-import org.firstinspires.ftc.teamcode.opmodes.UltraAuto;
 
 /**
  * Created by Noah on 3/27/2018.

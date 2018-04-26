@@ -2,7 +2,7 @@
     Main robot teleop program
  */
 
-package org.firstinspires.ftc.teamcode.opmodes.outdated;
+package org.firstinspires.ftc.teamcode.opmodes.old2017;
 
 import com.kauailabs.navx.ftc.AHRS;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;

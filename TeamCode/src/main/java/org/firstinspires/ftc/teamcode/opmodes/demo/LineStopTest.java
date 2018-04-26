@@ -14,8 +14,6 @@ import org.firstinspires.ftc.teamcode.libraries.GyroCorrectStep;
 import org.firstinspires.ftc.teamcode.libraries.SensorLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardware;
 import org.firstinspires.ftc.teamcode.libraries.hardware.StupidColor;
-import org.firstinspires.ftc.teamcode.opmodes.ADPSAuto;
-import org.firstinspires.ftc.teamcode.opmodes.UltraAuto;
 
 /**
  * Created by Noah on 4/6/2018.

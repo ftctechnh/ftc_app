@@ -30,45 +30,44 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.opmodes.outdated;
+package org.firstinspires.ftc.teamcode.opmodes.old2017;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
-@Autonomous(name="Blue Auto (Push Beacons)", group="Main")
+@Autonomous(name="Old Auto", group="Main")
 @Disabled
-public class BlueAutoPointer extends OpMode {
+public class DayZeroAuto extends LinearOpMode {
 
     BotHardwareOld robot = new BotHardwareOld();
 
-    LineDrive auto = new LineDrive(this, false, false);
-
     @Override
-    public void init(){
-        auto.init();
-    }
+    public void runOpMode() {
 
-    @Override
-    public void init_loop(){
-        auto.init_loop();
-    }
+        robot.init(this, false);
 
-    @Override
-    public void start(){
-        auto.start();
-    }
+        // launch first ball
+        robot.launcherMotor.setPower(1.0);
 
-    @Override
-    public void loop(){
-        auto.loop();
-    }
+        robot.waitForTick(2000);
 
-    @Override
-    public void stop(){
-        auto.stop();
+        robot.launcherMotor.setPower(0.0);
+
+        // load second ball
+        //robot.lifterMotor.setPower(-1.0);
+
+        robot.waitForTick(5000);
+
+        //robot.lifterMotor.setPower(0.0);
+
+        // launch second ball
+        robot.launcherMotor.setPower(1.0);
+
+        robot.waitForTick(2000);
+
+        robot.launcherMotor.setPower(0.0);
+
     }
 
 }

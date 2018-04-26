@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.outdated;
+package org.firstinspires.ftc.teamcode.opmodes.old2017;
 
 /**
  * Created by Robotics on 3/7/2017.
@@ -8,12 +8,12 @@ import com.qualcomm.robotcore.eventloop.opmode.*;
 
 import org.firstinspires.ftc.teamcode.libraries.hardware.BotHardwareOld;
 
-@Autonomous(name="Red Shoot Auto (Shoot Balls)", group="Main")
+@Autonomous(name="Blue Shoot Auto (Shoot Balls)", group="Main")
 @Disabled
-public class ShootAutoRed extends OpMode {
+public class ShootAutoBlue extends OpMode {
     BotHardwareOld robot = new BotHardwareOld();
 
-    ShootAuto auto = new ShootAuto(this, true);
+    ShootAuto auto = new ShootAuto(this, false);
 
     @Override
     public void init(){
