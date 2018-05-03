@@ -6,11 +6,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.opencv.core.Mat;
 
@@ -31,15 +32,22 @@ import java.util.List;
  * *----*
  */
 
-@Autonomous(name = "Fast As Possible")
+@TeleOp(name = "Fast as Possible")
 public class FastAsPossible extends OpMode implements SensorEventListener {
-    private static final double WHEEL_CIRCUMFRENCE_M = DistanceUnit.INCH.toCm(2.875) / 100 * Math.PI * 2;
+    private static final double WHEEL_CIRCUMFRENCE_M = DistanceUnit.INCH.toCm(2.875) / 100.0 * Math.PI;
+    private static final double Ka = 0.00001;
 
     private DcMotorEx leftMotor;
     private DcMotorEx rightMotor;
-    SensorManager man;
+    private SensorManager man;
 
-    List<float[]> lastVal = new LinkedList<>();
+    private float[] lastVal;
+
+    private double lastLeftPos;
+    private double lastRightPos;
+    private double lastLeftVel;
+    private double lastRightVel;
+    private double lastRuntime;
 
     public void init() {
         leftMotor = hardwareMap.get(DcMotorEx.class, "l");
@@ -47,8 +55,9 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
 
         man = (SensorManager)hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         final Sensor accel = man.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        man.registerListener(this, accel, 0);
+        man.registerListener(this, accel, 1000);
 
+        /*
         telemetry.addLine().addData("Accel", new Func<String>() {
             @Override public String value() {
                 final float[] ray = new float[3];
@@ -64,6 +73,7 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
                 return Arrays.toString(ray);
             }
         });
+        */
     }
 
     public void init_loop() {
@@ -75,7 +85,32 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
     }
 
     public void loop() {
-
+        final double leftPos = leftMotor.getCurrentPosition();
+        final double rightPos = rightMotor.getCurrentPosition();
+        final double runtime = getRuntime();
+        final double phoneAccel = getAverageAccel();
+        final double delta = runtime - lastRuntime;
+        final double leftVel = (leftPos - lastLeftPos) / delta;
+        final double rightVel = (rightPos - lastRightPos) / delta;
+        final double leftAccel = (leftVel - lastLeftVel) / delta * WHEEL_CIRCUMFRENCE_M;
+        final double rightAccel = (rightVel - lastRightVel) / delta * WHEEL_CIRCUMFRENCE_M;
+        //apply kA term to joystick
+        if(gamepad1.left_stick_y > 0) leftMotor.setPower(-gamepad1.left_stick_y - Ka * (phoneAccel - leftAccel));
+        if(gamepad1.right_stick_y > 0) rightMotor.setPower(-gamepad1.right_stick_y - Ka * (phoneAccel - rightAccel));
+        //set
+        lastRuntime = runtime;
+        lastLeftPos = leftPos;
+        lastRightPos = rightPos;
+        lastLeftVel = leftVel;
+        lastRightVel = rightVel;
+        //logs
+        telemetry.addData("Pos Left", leftPos);
+        telemetry.addData("Pos Right", rightPos);
+        telemetry.addData("Vel Left", leftVel);
+        telemetry.addData("Vel Right", rightVel);
+        telemetry.addData("Phone Accel", phoneAccel);
+        telemetry.addData("Left Accel", leftAccel);
+        telemetry.addData("Right Accel", rightAccel);
     }
 
     public void stop() {
@@ -86,11 +121,16 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        if(lastVal == null) lastVal.add(sensorEvent.values);
+        lastVal = sensorEvent.values;
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    private double getAverageAccel() {
+        //return lastVal[2] * 9.80665;
+        return lastVal[2];
     }
 }
