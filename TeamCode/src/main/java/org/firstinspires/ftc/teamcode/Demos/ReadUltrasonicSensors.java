@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.Demos;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.CompleteOldAutonomous;
-
 /**
  * Created by guberti on 1/16/2018.
  */
