@@ -50,8 +50,8 @@ public class Hardware267Bot
     public static final double BUTTON_LEFT = 0.5; //TODO: Find value
     public static final double BUTTON_RIGHT = 0.5; //TODO: Find value
     public static final double BUTTON_CENTER = 0.5; //TODO: Find value
-    public static final double RAMP_CLOSED =0;
-    public static final double RAMP_OPEN =0.4;
+    public static final double RAMP_CLOSED = 0;
+    public static final double RAMP_OPEN = 1.0;
     public enum ButtonPusherState { LEFT , RIGHT , CENTER }
 
     /* local OpMode members. */
