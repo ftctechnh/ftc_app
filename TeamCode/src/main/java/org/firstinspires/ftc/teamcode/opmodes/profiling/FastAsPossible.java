@@ -6,6 +6,9 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataCommand;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -39,6 +42,7 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
 
     private DcMotorEx leftMotor;
     private DcMotorEx rightMotor;
+    private LynxModule module;
     private SensorManager man;
 
     private float[] lastVal;
@@ -52,6 +56,7 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
     public void init() {
         leftMotor = hardwareMap.get(DcMotorEx.class, "l");
         rightMotor = hardwareMap.get(DcMotorEx.class, "r");
+        module = hardwareMap.get(LynxModule.class, "m");
 
         man = (SensorManager)hardwareMap.appContext.getSystemService(Context.SENSOR_SERVICE);
         final Sensor accel = man.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -85,32 +90,44 @@ public class FastAsPossible extends OpMode implements SensorEventListener {
     }
 
     public void loop() {
-        final double leftPos = leftMotor.getCurrentPosition();
-        final double rightPos = rightMotor.getCurrentPosition();
-        final double runtime = getRuntime();
-        final double phoneAccel = getAverageAccel();
-        final double delta = runtime - lastRuntime;
-        final double leftVel = (leftPos - lastLeftPos) / delta;
-        final double rightVel = (rightPos - lastRightPos) / delta;
-        final double leftAccel = (leftVel - lastLeftVel) / delta * WHEEL_CIRCUMFRENCE_M;
-        final double rightAccel = (rightVel - lastRightVel) / delta * WHEEL_CIRCUMFRENCE_M;
-        //apply kA term to joystick
-        if(gamepad1.left_stick_y > 0) leftMotor.setPower(-gamepad1.left_stick_y - Ka * (phoneAccel - leftAccel));
-        if(gamepad1.right_stick_y > 0) rightMotor.setPower(-gamepad1.right_stick_y - Ka * (phoneAccel - rightAccel));
-        //set
-        lastRuntime = runtime;
-        lastLeftPos = leftPos;
-        lastRightPos = rightPos;
-        lastLeftVel = leftVel;
-        lastRightVel = rightVel;
-        //logs
-        telemetry.addData("Pos Left", leftPos);
-        telemetry.addData("Pos Right", rightPos);
-        telemetry.addData("Vel Left", leftVel);
-        telemetry.addData("Vel Right", rightVel);
-        telemetry.addData("Phone Accel", phoneAccel);
-        telemetry.addData("Left Accel", leftAccel);
-        telemetry.addData("Right Accel", rightAccel);
+        try{
+            LynxGetBulkInputDataCommand command = new LynxGetBulkInputDataCommand(module);
+            LynxGetBulkInputDataResponse resp = command.sendReceive();
+            final double leftPos = resp.getEncoder(1);
+            final double rightPos = resp.getEncoder(0);
+            final double runtime = getRuntime();
+            final double phoneAccel = getAverageAccel();
+            final double delta = runtime - lastRuntime;
+            final double leftVel = resp.getVelocity(1);
+            final double rightVel = resp.getVelocity(0);
+            final double leftAccel = (leftVel - lastLeftVel) / delta * WHEEL_CIRCUMFRENCE_M;
+            final double rightAccel = (rightVel - lastRightVel) / delta * WHEEL_CIRCUMFRENCE_M;
+            //apply kA term to joystick
+            if(gamepad1.left_stick_y > 0) leftMotor.setPower(-gamepad1.left_stick_y - Ka * (phoneAccel - leftAccel));
+            if(gamepad1.right_stick_y > 0) rightMotor.setPower(-gamepad1.right_stick_y - Ka * (phoneAccel - rightAccel));
+            //set
+            lastRuntime = runtime;
+            lastLeftPos = leftPos;
+            lastRightPos = rightPos;
+            lastLeftVel = leftVel;
+            lastRightVel = rightVel;
+            //logs
+            telemetry.addData("Pos Left", leftPos);
+            telemetry.addData("Pos Right", rightPos);
+            telemetry.addData("Vel Left", leftVel);
+            telemetry.addData("Vel Right", rightVel);
+            telemetry.addData("Phone Accel", phoneAccel);
+            telemetry.addData("Left Accel", leftAccel);
+            telemetry.addData("Right Accel", rightAccel);
+
+        }
+        catch (Exception e) {
+            /* hmmmm */
+        }
+
+
+
+
     }
 
     public void stop() {

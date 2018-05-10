@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.libraries.hardware;
 import android.graphics.Path;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataCommand;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -127,6 +130,7 @@ public class BotHardware {
     private BNO055IMU imu;
     private IMUHeading heading;
 
+    private LynxModule module;
     //private BlinkyGlowLib blink;
 
     public BotHardware(OpMode mode) {
