@@ -4,13 +4,9 @@ import android.os.Environment;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -18,9 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Deprecated.PixyCam;
-import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestInterface;
-import org.firstinspires.ftc.teamcode.PIDTesting.PIDTestMashupPID;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,8 +31,6 @@ import java.util.concurrent.TimeUnit;
 public class NullbotHardware {
     // Alliance
     public Alliance color;
-    public StartingPosition startingPad;
-    boolean isTestChassis;
 
     // Motors
     public DcMotor frontLeft;
@@ -47,31 +38,7 @@ public class NullbotHardware {
     public DcMotor backLeft;
     public DcMotor backRight;
 
-    public PIDTestInterface[] driveInterface;
-
-    public DcMotorEx lift;
-    public DcMotorEx zType;
-
-    public DcMotor intakeLeft;
-    public DcMotor intakeRight;
-    public IntakeTarget intakeTarget;
-
-    // Servos
-    public Servo leftWhipSnake;
-    public Servo leftBlockClaw;
-    public Servo rightBlockClaw;
-    public Servo relicClaw;
-    public Servo relicClawFlipper;
-    public Servo leftIntakeFlipper;
-    public Servo rightIntakeFlipper;
-
-    public AnalogInput frontUltrasonic;
-    public AnalogInput leftUltrasonic;
-    public AnalogInput rightUltrasonic;
-    public ColorSensor colorSensor;
-
     // Sensors
-    public ManualHeadingAdjustmentController headingAdjuster;
 
     // Adjustment gamepad
     private Gamepad gp2;
@@ -90,7 +57,6 @@ public class NullbotHardware {
 
     // Utility mechanisms
     public DcMotor[] motorArr;
-    public final int hz = 100;
 
     public BNO055IMU imu;
     double gyroError;
@@ -108,7 +74,6 @@ public class NullbotHardware {
     private void init() {
 
         currentTick = 0;
-        isTestChassis = false;
 
         // Motor initialization
         frontLeft = hwMap.dcMotor.get("frontLeft");
@@ -117,40 +82,6 @@ public class NullbotHardware {
         backRight = hwMap.dcMotor.get("backRight");
 
         imu = hwMap.get(BNO055IMU.class, "primaryIMU");
-
-        frontUltrasonic = hwMap.get(AnalogInput.class, "frontUltrasonic");
-        leftUltrasonic = hwMap.get(AnalogInput.class, "leftUltrasonic");
-        rightUltrasonic = hwMap.get(AnalogInput.class, "rightUltrasonic");
-        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
-
-        if (!isTestChassis) {
-            lift = (DcMotorEx) hwMap.dcMotor.get("lift");
-            zType = (DcMotorEx) hwMap.dcMotor.get("zType");
-
-            intakeLeft = hwMap.dcMotor.get("intakeLeft");
-            intakeRight = hwMap.dcMotor.get("intakeRight");
-
-            leftWhipSnake = hwMap.servo.get("leftGemHitter");
-
-            leftBlockClaw = hwMap.servo.get("leftClaw");
-            rightBlockClaw = hwMap.servo.get("rightClaw");
-
-            relicClawFlipper = hwMap.servo.get("relicClawFlipper");
-            retractFlipper();
-
-            relicClaw = hwMap.servo.get("relicClaw");
-
-            leftIntakeFlipper = hwMap.servo.get("leftIntakeFlipper");
-            rightIntakeFlipper = hwMap.servo.get("rightIntakeFlipper");
-
-            //raiseWhipSnake();
-            openBlockClaw();
-            flattenRelicClaw();
-            relicFipperPosition = 80;
-            retractFlipper();
-        }
-
-        headingAdjuster = new ManualHeadingAdjustmentController(gp2);
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
@@ -163,14 +94,7 @@ public class NullbotHardware {
         motorArr[2] = backLeft;
         motorArr[3] = backRight;
 
-        driveInterface = new PIDTestInterface[4];
-
-        for (int i = 0; i < motorArr.length; i++) {
-            driveInterface[i] = new PIDTestMashupPID(motorArr[i], tel);
-        }
-
         initialized = true;
-
     }
 
     public void init(HardwareMap ahwMap, LinearOpMode oM, Gamepad gp2, Gamepad gp1) {
@@ -193,11 +117,6 @@ public class NullbotHardware {
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        if (!isTestChassis) {
-            setLiftMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            zType.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -221,12 +140,6 @@ public class NullbotHardware {
         tel.update();
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
-
-        if (!isTestChassis) {
-            setLiftMode(DcMotor.RunMode.RUN_TO_POSITION);
-            zType.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            setIntakeMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 
@@ -365,13 +278,6 @@ public class NullbotHardware {
         } catch (IOException e) {tel.log().add("Failed to write log tick!");}
     }
 
-    public void writePixyCamTick(PixyCam.Block blue, PixyCam.Block red) {
-        try {
-            oW.append("Blue: " + blue.toString() + " ----- Red: " + red.toString());
-            oW.append("\n");
-        } catch (IOException e) {tel.log().add("Failed to write log tick!");}
-    }
-
     public void flushLogs() throws IOException {
         oW.flush();
         fOut.flush();
@@ -429,100 +335,6 @@ public class NullbotHardware {
         return normAngle(angles.firstAngle - gyroError);
     }
 
-    public void raiseWhipSnake() {
-        raiseLeftWhipSnake();
-    }
-    public void lowerWhipSnake() {
-        lowerLeftWhipSnake();
-    }
-    public void lowerLeftWhipSnake() {leftWhipSnake.setPosition(0.45);}
-    public void raiseLeftWhipSnake() {leftWhipSnake.setPosition(0.02);}
-    public void almostRaiseWhipSnake() {leftWhipSnake.setPosition(0.09);}
-    public void almostLowerWhipSnake() {leftWhipSnake.setPosition(0.44);}
-
-    public void crunchBlockClaw() {
-        leftBlockClaw.setPosition(200.0/255.0);
-        rightBlockClaw.setPosition(100.0/255.0);
-    }
-
-    public void openBlockClaw() {
-        leftBlockClaw.setPosition(0.26);
-        rightBlockClaw.setPosition(0.85);
-    }
-
-    public void closeBlockClaw() {
-        leftBlockClaw.setPosition(0.4);
-        rightBlockClaw.setPosition(0.65);
-
-    }
-
-    public final double RELIC_CLAW_OPEN_POSITION = 0.29;
-    public final double RELIC_CLAW_CLOSED_POSITION = 0;
-    public boolean RELIC_CLAW_IS_OPEN = false;
-
-    public void flattenRelicClaw() {relicClaw.setPosition(0.65); RELIC_CLAW_IS_OPEN = true;}
-
-    public void openRelicClaw() {relicClaw.setPosition(RELIC_CLAW_OPEN_POSITION); RELIC_CLAW_IS_OPEN = true;}
-    public void closeRelicClaw() {relicClaw.setPosition(RELIC_CLAW_CLOSED_POSITION); RELIC_CLAW_IS_OPEN = false;}
-
-    public void toggleRelicClaw() {
-        if (RELIC_CLAW_IS_OPEN) {
-            closeRelicClaw();
-        } else {
-            openRelicClaw();
-        }
-    }
-
-    /*public double relicFipperPosition = 80;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 83.0/255.0;
-    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 74.0/255.0;*/
-
-    public double relicFipperPosition = 0.33;
-    public final double RELIC_CLAW_FLIPPER_EXTENDED_POSITION = 0.79;
-    public final double RELIC_CLAW_FLIPPER_RETRACTED_POSITION = 0.12;
-
-    public void extendFlipper() {
-        relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_EXTENDED_POSITION);
-        relicFipperPosition = RELIC_CLAW_FLIPPER_EXTENDED_POSITION;
-    }
-
-    public void retractFlipper() {
-        relicClawFlipper.setPosition(RELIC_CLAW_FLIPPER_RETRACTED_POSITION);
-        relicFipperPosition = RELIC_CLAW_FLIPPER_RETRACTED_POSITION;
-    }
-
-    public void toggleRelicClawFlipper() {
-        if (relicFipperPosition == RELIC_CLAW_FLIPPER_EXTENDED_POSITION) {
-            retractFlipper();
-        } else {
-            extendFlipper();
-        }
-    }
-
-    public void updateFlipperPos() {
-        relicClawFlipper.setPosition(relicFipperPosition);
-    }
-
-    public enum IntakeTarget {
-        RAISED, LOWERED
-    }
-
-    public void lowerIntake() {
-        leftIntakeFlipper.setPosition(0.7);
-        rightIntakeFlipper.setPosition(0.0);
-        intakeTarget = IntakeTarget.LOWERED;
-    }
-
-    public void raiseIntake() {
-        leftIntakeFlipper.setPosition(0.7 - (1.0/3.0) - (37.0/270.0));
-        rightIntakeFlipper.setPosition((1.0/3.0) + (27.0/270.0));
-        intakeTarget = IntakeTarget.RAISED;
-    }
-
-    public void setLiftMode(DcMotor.RunMode m) {
-        lift.setMode(m);
-    }
-
     public void setDriveMode(DcMotor.RunMode mode) {
         for (DcMotor motor : motorArr) {
             if (motor.getMode() != mode) {
@@ -535,16 +347,6 @@ public class NullbotHardware {
         if (m.getMode() != mode) {
             m.setMode(mode);
         }
-    }
-
-    public void setIntakeMode(DcMotor.RunMode m) {
-        intakeLeft.setMode(m);
-        intakeRight.setMode(m);
-    }
-
-    public void setIntakeSpeed(double s) {
-        intakeLeft.setPower(s);
-        intakeRight.setPower(s);
     }
 
     public double[] getDrivePowersFromAngle(double angle) {
