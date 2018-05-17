@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 public class MainTeleOp extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
+    RampingController rampController;
 
     final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster
 
@@ -22,8 +23,6 @@ public class MainTeleOp extends LinearOpMode {
     final double triggerThreshold = 0.10;
     final double minSlowModePower = 0.45;
     final int headingLockMS = 1000;
-
-    final int[] liftPresetPositions = new int[]{0, -650, -1280};
 
     double initialHeading;
     double desiredHeading;
@@ -36,17 +35,12 @@ public class MainTeleOp extends LinearOpMode {
     boolean wasGP2LeftBumperPressed;
     boolean wasGP2RightBumperPressed;
 
-    boolean wasLiftPosUpPressed;
-    boolean wasLiftPosDownPressed;
-
     boolean nonrelativeDriveModeEnabled;
+    int accelTime;
 
     boolean scale;
 
     ElapsedTime timeTillHeadingLock;
-
-    ConstrainedPIDMotor lift;
-    ConstrainedPIDMotor zType;
 
     ElapsedTime totalElapsedTime;
 
@@ -55,6 +49,7 @@ public class MainTeleOp extends LinearOpMode {
         robot.init(hardwareMap, this, gamepad1, gamepad2);
 
         waitForStart();
+        rampController = new RampingController(robot.motorArr, accelTime);
 
         initialHeading = robot.getGyroHeading() + Math.PI;
         desiredHeading = initialHeading;
@@ -139,17 +134,13 @@ public class MainTeleOp extends LinearOpMode {
                 }
             }
 
-            robot.setMotorSpeeds(unscaledMotorPowers);
-
-            telemetry.addLine()
-                    .addData("Current tick", totalElapsedTime.milliseconds());
-            telemetry.addLine().addData("Ztype seeking?", zType.seekingPosition);
-            telemetry.update(); // Send telemetry data to driver station
+            rampController.setMotorPowers(unscaledMotorPowers);
 
             // Run above code at 1Khz
             //robot.writeLogTick();
             //robot.waitForTick(1000 / robot.hz);
         }
+        rampController.quit();
         try {
             robot.closeLog();
         } catch (IOException e) {}
