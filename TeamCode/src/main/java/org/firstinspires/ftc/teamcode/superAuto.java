@@ -49,7 +49,6 @@ abstract public class superAuto extends LinearOpMode {
     static final float ridgeDepth = 4;
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
     static final int gyroFlipped = -1;
-
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
     BNO055IMU imu;
@@ -494,7 +493,6 @@ abstract public class superAuto extends LinearOpMode {
 
             curDistance = rangeSensor.getDistance(DistanceUnit.CM);
             double chgDistance = curDistance - trgDistance;
-
             double direction;
             if (chgDistance > 0) {
                 direction = 1;
