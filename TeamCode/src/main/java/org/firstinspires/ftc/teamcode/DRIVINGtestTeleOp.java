@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 
 @TeleOp(name = "Teaching", group = "agroup")
-@Disabled
 
 public class DRIVINGtestTeleOp extends LinearOpMode
 {
@@ -35,26 +34,59 @@ public class DRIVINGtestTeleOp extends LinearOpMode
 
         while(opModeIsActive()){
 
-            if (gamepad1.dpad_up && !gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right){
-                motorFrontLeft.setPower(gamepad1.right_trigger);
-                motorBackLeft.setPower(gamepad1.right_trigger);
-                motorFrontRight.setPower(gamepad1.right_trigger);
-                motorBackRight.setPower(gamepad1.right_trigger);
-            }
+            float dz = 0.2f;
 
-            if (!gamepad1.dpad_up && gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right){
-                motorFrontLeft.setPower(-gamepad1.right_trigger);
-                motorBackLeft.setPower(-gamepad1.right_trigger);
-                motorFrontRight.setPower(-gamepad1.right_trigger);
-                motorBackRight.setPower(-gamepad1.right_trigger);
-            }
+            gamepad1.setJoystickDeadzone(dz);
 
-            if (!gamepad1.dpad_up && !gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right){
-                motorFrontLeft.setPower(0);
-                motorBackLeft.setPower(0);
-                motorFrontRight.setPower(0);
-                motorBackRight.setPower(0);
-            }
+            //GamePad 1
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            telemetry.addData("r = ", r);
+            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            telemetry.addData("robotAngle = ", robotAngle);
+            double rightX = gamepad1.right_stick_x;
+            //telemetry.addData("rightX = ", rightX);
+            final double v1 = r * Math.cos(robotAngle) + rightX;
+            //telemetry.addData("front left power = ", v1);
+            final double v2 = r * Math.sin(robotAngle) - rightX;
+            //telemetry.addData("front right power = ", v2);
+            final double v3 = r * Math.sin(robotAngle) + rightX;
+            //telemetry.addData("back left power = ", v3);
+            final double v4 = r * Math.cos(robotAngle) - rightX;
+            //telemetry.addData("back right power = ", v4);
+
+            motorFrontLeft.setPower(v1);
+            motorFrontRight.setPower(v2);
+            motorBackLeft.setPower(v3);
+            motorBackRight.setPower(v4);
+
+//            if (gamepad1.dpad_up && !gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right) {
+//                motorFrontLeft.setPower(gamepad1.right_trigger);
+//                motorFrontRight.setPower(gamepad1.right_trigger);
+//                motorBackRight.setPower(gamepad1.right_trigger);
+//                motorBackLeft.setPower(gamepad1.right_trigger);
+//            }
+//
+//            if (!gamepad1.dpad_up && gamepad1.dpad_down && !gamepad1.dpad_left && !gamepad1.dpad_right) {
+//                motorFrontLeft.setPower(-gamepad1.right_trigger);
+//                motorFrontRight.setPower(-gamepad1.right_trigger);
+//                motorBackRight.setPower(-gamepad1.right_trigger);
+//                motorBackLeft.setPower(-gamepad1.right_trigger);
+//            }
+//
+//            if (!gamepad1.dpad_up && !gamepad1.dpad_down && gamepad1.dpad_left && !gamepad1.dpad_right) {
+//                motorFrontLeft.setPower(-gamepad1.right_trigger);
+//                motorFrontRight.setPower(gamepad1.right_trigger);
+//                motorBackRight.setPower(gamepad1.right_trigger);
+//                motorBackLeft.setPower(-gamepad1.right_trigger);
+//            }
+//
+//            if (!gamepad1.dpad_up && !gamepad1.dpad_down && !gamepad1.dpad_left && gamepad1.dpad_right) {
+//                motorFrontLeft.setPower(gamepad1.right_trigger);
+//                motorFrontRight.setPower(-gamepad1.right_trigger);
+//                motorBackRight.setPower(-gamepad1.right_trigger);
+//                motorBackLeft.setPower(gamepad1.right_trigger);
+//            }
+//
 
             idle();
         }

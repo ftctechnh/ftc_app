@@ -50,7 +50,6 @@ public class finalTeleOp extends LinearOpMode{
 
 
 
-
     @Override
     public void runOpMode() throws InterruptedException {
         motorFrontLeft = hardwareMap.dcMotor.get("MC1M1");
