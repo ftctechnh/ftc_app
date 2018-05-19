@@ -81,7 +81,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation 18:44", group ="Precciousssss")
+@Autonomous(name="Concept: Chips and Stones", group ="Precciousssss")
 
 public class Chips_and_Stones extends LinearOpMode {
 
