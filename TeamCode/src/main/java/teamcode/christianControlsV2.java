@@ -62,7 +62,7 @@ public class christianControlsV2 extends LinearOpMode {
         //Always True
         while (opModeIsActive() ) {
             elapsedTime = runtime.time();
-            
+
             if(prepareClamp)
             {
                 rightClampServo.setPosition(0);
@@ -89,13 +89,16 @@ public class christianControlsV2 extends LinearOpMode {
                 armServo.setPosition(.8);
             } else if (gamepad1.b) // middle arm position
             {
-                armServo.setPosition(.432);
+                armServo.setPosition(.4);
             } else if (gamepad1.y) {
                 armServo.setPosition(.225);
             } else if (gamepad1.dpad_down) {
                 lowerArm(armServo.getPosition());
             } else if (gamepad1.dpad_up) {
                 liftArm(armServo.getPosition());
+            }else if(gamepad1.right_bumper)
+            {
+                armServo.setPosition(.7);
             }
 
 
