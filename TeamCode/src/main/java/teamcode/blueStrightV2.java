@@ -199,9 +199,23 @@ public class blueStrightV2 extends LinearOpMode {
             sleep(500);
 
             robot.turnDegrees(-.5,-90);
+            double distance = 5;
 
-            double distance = (column - 1) * 8.5;
+            if (column == 1)
+            {
+                distance = 2.5;
+            }else if (column == 2)
+            {
+                distance = 8.5;
+            } else if (column == 3)
+            {
+                distance = 13.5;
+            }
+            /*
+            double distance = (column - 1) * 5 + 3.5;
+            */
             robot.driveForward(.5,distance,true);
+
 
             robot.turnDegrees(.5,90);
 
@@ -216,7 +230,9 @@ public class blueStrightV2 extends LinearOpMode {
 
             if(column == 1)
             {
-                robot.driveLateral(.5,5,true);
+                robot.driveLateral(.5,6,true);
+                robot.turnDegrees(.5,30);
+                robot.driveForward(.5,2,true);
             }
 
             updateTelemetry();
