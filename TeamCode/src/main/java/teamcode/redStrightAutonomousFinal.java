@@ -239,23 +239,23 @@ public class redStrightAutonomousFinal extends LinearOpMode {
                 turnOffMotors();
                 armServo.setPosition(LIFTEDARMPOSITION);
             }
-            else if (elapsedTime < TURNTOLINEUPWITHCOLUMNS)
+            else if (elapsedTime < TURNTOLINEUPWITHCOLUMNS)//0.15
             {
                 turn(-0.5);
             }
-            else if(elapsedTime < DRIVETOWARDSCOLUMNS)
+            else if(elapsedTime < DRIVETOWARDSCOLUMNS)//2.4
             {
                 drive(0, .5);
             }
-            else if(elapsedTime < TURNOFFMOTORS)
+            else if(elapsedTime < TURNOFFMOTORS)//.1
             {
                 turnOffMotors();
             }
-            else if (elapsedTime < PHASETHREEHALFHALF)
+            else if (elapsedTime < PHASETHREEHALFHALF)//.5
             {
                 armServo.setPosition(DOWNARMPOSITION);
             }
-            else if (elapsedTime < PHASEFOUR)
+            else if (elapsedTime < PHASEFOUR)//2
             {
                 drive(0, 0.5);
             }
