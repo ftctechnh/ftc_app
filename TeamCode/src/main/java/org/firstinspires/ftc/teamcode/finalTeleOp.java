@@ -61,20 +61,20 @@ public class finalTeleOp extends LinearOpMode{
 
 
         //Grabber
-        grabMotor = hardwareMap.get(DcMotor.class, "GDC");
-        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
-        grabTopRight = hardwareMap.get(Servo.class, "GTR");
-        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
-        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
+        grabMotor = hardwareMap.get(DcMotor.class, "GrabDC");
+//        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
+//        grabTopRight = hardwareMap.get(Servo.class, "GTR");
+//        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
+//        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
 
         //Relic
-        relicMotor = hardwareMap.get(DcMotor.class,"RDC");
-        relicArm = hardwareMap.get(Servo.class, "RA");
-        relicGrab = hardwareMap.get(Servo.class, "RG");
+        relicMotor = hardwareMap.get(DcMotor.class,"RelicDC");
+//        relicArm = hardwareMap.get(Servo.class, "RA");
+//        relicGrab = hardwareMap.get(Servo.class, "RG");
 
         //Jewewl
-        jewelArm = hardwareMap.get(Servo.class, "JA");
-        jewelKnock = hardwareMap.get(Servo.class, "JK");
+//        jewelArm = hardwareMap.get(Servo.class, "JA");
+//        jewelKnock = hardwareMap.get(Servo.class, "JK");
 
         //Varibales
         mode = 1;
@@ -84,12 +84,12 @@ public class finalTeleOp extends LinearOpMode{
         relicArmDelta = 0.01;
         relicArmPosition = 0.1;
         relicGrabDelta = 0.01;
-        relicArmPosition = 0;
+//        relicArmPosition = 0;
 
         //Initial positions
-        jewelArm.setPosition(0.77);
-        jewelKnock.setPosition(0);
-        relicArm.setPosition(0);
+//        jewelArm.setPosition(0.77);
+//        jewelKnock.setPosition(0);
+//        relicArm.setPosition(0);
 
 
 
@@ -160,56 +160,56 @@ public class finalTeleOp extends LinearOpMode{
                 if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                     grabMotor.setPower(0);
                 }
-//                if (gamepad2.dpad_up) {
-//                    while(grabMotor.getCurrentPosition() < grabberTop){
-//                        grabMotor.setPower(0.7);
-//                    }
-//                    grabMotor.setPower(0);
-//                }
-//
-//                if (gamepad2.dpad_down) {
-//                    while(grabMotor.getCurrentPosition() > grabberMiddle){
-//                        grabMotor.setPower(0.7);
-//                    }
-//                    grabMotor.setPower(0);
-//                }
-//
-//
-//                if (gamepad2.a) {
-//
-//                    while(grabMotor.getCurrentPosition() > grabberRest){
-//                        grabMotor.setPower(0.7);
-//                    }
-//                    grabMotor.setPower(0);
-//                }
+                if (gamepad2.dpad_up) {
+                    while(grabMotor.getCurrentPosition() < grabberTop){
+                        grabMotor.setPower(0.7);
+                    }
+                    grabMotor.setPower(0);
+                }
 
-                //GT CLOSE
+                if (gamepad2.dpad_down) {
+                    while(grabMotor.getCurrentPosition() > grabberMiddle){
+                        grabMotor.setPower(0.7);
+                    }
+                    grabMotor.setPower(0);
+                }
+
+
                 if (gamepad2.a) {
-                    grabTopLeft.setPosition(0.3);
-                    grabTopRight.setPosition(0.4);
+
+                    while(grabMotor.getCurrentPosition() > grabberRest){
+                        grabMotor.setPower(0.7);
+                    }
+                    grabMotor.setPower(0);
                 }
-                //GT OPEN
-                if (gamepad2.b) {
-                    grabTopLeft.setPosition(0.395);
-                    grabTopRight.setPosition(0.305);
-                }
-                //GB OPEN
-                if (gamepad2.left_bumper) {
-                    grabBottomLeft.setPosition(0.25);
-                    grabBottomRight.setPosition(0.25); //0.5
-                }
-                //GB CLOSE
-                if (gamepad2.right_bumper) {
-                    grabBottomLeft.setPosition(0.38);
-                    grabBottomRight.setPosition(0.35); //0.4
-                }
-                //EXTREME CLOSE
-                if (gamepad2.left_stick_button){
-                    grabBottomLeft.setPosition(0.8);
-                }
-                if (gamepad2.right_stick_button){
-                    grabBottomRight.setPosition(0.7); //0.1
-                }
+
+//                //GT CLOSE
+//                if (gamepad2.a) {
+//                    grabTopLeft.setPosition(0.3);
+//                    grabTopRight.setPosition(0.4);
+//                }
+//                //GT OPEN
+//                if (gamepad2.b) {
+//                    grabTopLeft.setPosition(0.395);
+//                    grabTopRight.setPosition(0.305);
+//                }
+//                //GB OPEN
+//                if (gamepad2.left_bumper) {
+//                    grabBottomLeft.setPosition(0.25);
+//                    grabBottomRight.setPosition(0.25); //0.5
+//                }
+//                //GB CLOSE
+//                if (gamepad2.right_bumper) {
+//                    grabBottomLeft.setPosition(0.38);
+//                    grabBottomRight.setPosition(0.35); //0.4
+//                }
+//                //EXTREME CLOSE
+//                if (gamepad2.left_stick_button){
+//                    grabBottomLeft.setPosition(0.8);
+//                }
+//                if (gamepad2.right_stick_button){
+//                    grabBottomRight.setPosition(0.7); //0.1
+//                }
 
 
                 telemetry.addData("Grab Motor Encoder: ", grabMotor.getCurrentPosition());
@@ -232,35 +232,35 @@ public class finalTeleOp extends LinearOpMode{
                     relicMotor.setPower(0);
                 }
 
-
-                //Relic Arm Servo Manual Mode
-                if (gamepad2.a) {
-                    relicArmPosition += relicArmDelta;
-                }
-                if (gamepad2.b) {
-                    relicArmPosition -= relicArmDelta;
-                }
-                if (gamepad2.left_stick_button) {
-                    relicArmPosition = 0.27;
-                }
-                relicArmPosition = Range.clip(relicArmPosition, 0, 0.9);
+//
+//                //Relic Arm Servo Manual Mode
+//                if (gamepad2.a) {
+//                    relicArmPosition += relicArmDelta;
+//                }
+//                if (gamepad2.b) {
+//                    relicArmPosition -= relicArmDelta;
+//                }
+//                if (gamepad2.left_stick_button) {
+//                    relicArmPosition = 0.27;
+//                }
+//                relicArmPosition = Range.clip(relicArmPosition, 0, 0.9);
                 relicArm.setPosition(relicArmPosition);
                 telemetry.addData("Relic Arm Servo: ", relicArm.getPosition());
 
 
 
                 //Relic Grab Servo Manual Mode
-                if (gamepad2.left_bumper) {
-                    relicGrabPosition += relicGrabDelta;
-                }
-                if (gamepad2.right_bumper) {
-                    relicGrabPosition -= relicGrabDelta;
-                }
-                if (gamepad2.right_stick_button) {
-                    relicGrabPosition = 0.38;
-                }
-                relicGrabPosition = Range.clip(relicGrabPosition, 0, 1);
-                relicGrab.setPosition(relicGrabPosition);
+//                if (gamepad2.left_bumper) {
+//                    relicGrabPosition += relicGrabDelta;
+//                }
+//                if (gamepad2.right_bumper) {
+//                    relicGrabPosition -= relicGrabDelta;
+//                }
+//                if (gamepad2.right_stick_button) {
+//                    relicGrabPosition = 0.38;
+//                }
+//                relicGrabPosition = Range.clip(relicGrabPosition, 0, 1);
+//                relicGrab.setPosition(relicGrabPosition);
                 telemetry.addData("Relic Grab Servo: ", relicGrab.getPosition());
 
 

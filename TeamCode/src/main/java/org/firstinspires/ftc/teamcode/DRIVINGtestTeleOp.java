@@ -71,8 +71,8 @@ public class DRIVINGtestTeleOp extends LinearOpMode
 //                motorFrontRight.setPower(-gamepad1.right_trigger);
 //                motorBackRight.setPower(-gamepad1.right_trigger);
 //                motorBackLeft.setPower(-gamepad1.right_trigger);
-//            }
-//
+    //            }
+    //
 //            if (!gamepad1.dpad_up && !gamepad1.dpad_down && gamepad1.dpad_left && !gamepad1.dpad_right) {
 //                motorFrontLeft.setPower(-gamepad1.right_trigger);
 //                motorFrontRight.setPower(gamepad1.right_trigger);
