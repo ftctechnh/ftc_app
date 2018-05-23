@@ -176,11 +176,23 @@ public class NewFinal extends LinearOpMode {
                 }
             }
 
-            //MODE-2
+            //MODE-2 [ENDGAME CODE]
             if (mode == 2) {
-                
-            }
+                //RELIC <EXPAND>
+                if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+                    relicMotor.setPower(0.7);
+                }
+                //RELIC <CONTRACT>
+                if (!gamepad2.dpad_up && gamepad2.dpad_down) {
+                    relicMotor.setPower(-0.7);
+                }
+                //RELIC <AUTO-STOP>
+                if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+                    relicMotor.setPower(0);
+                }
 
+                //-----INSERT CODE FOR RELIC ARM SERVO-----
+            }
         }
     }
 
