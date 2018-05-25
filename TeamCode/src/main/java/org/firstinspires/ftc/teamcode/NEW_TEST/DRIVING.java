@@ -27,8 +27,8 @@ public class DRIVING extends LinearOpMode {
         motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
-        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         mode = 1;
 

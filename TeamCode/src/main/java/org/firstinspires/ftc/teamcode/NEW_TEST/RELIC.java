@@ -145,12 +145,12 @@ public class RELIC extends LinearOpMode {
 
             /***/
 
-            if (gamepad1.dpad_left){
-                pos += 0.01;
+            if (gamepad1.a){
+                pos += 0.005;
             }
 
-            if (gamepad1.dpad_right){
-                pos -= 0.01;
+            if (gamepad1.b){
+                pos -= 0.005;
             }
 
             relicArm.setPosition(pos);

@@ -39,6 +39,8 @@ public class GRABBER extends LinearOpMode {
     private double gbrOPEN = 0.74;
     private double gbrGRAB = 0.27;
 
+    private int mode;
+
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -59,6 +61,8 @@ public class GRABBER extends LinearOpMode {
         grabTopRight.setPosition(gtrOPEN);
         grabBottomLeft.setPosition(gblOPEN);
         grabBottomRight.setPosition(gbrOPEN);
+
+        mode = 1;
 
         waitForStart();
 
