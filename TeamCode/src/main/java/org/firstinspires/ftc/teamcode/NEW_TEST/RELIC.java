@@ -39,8 +39,8 @@ public class RELIC extends LinearOpMode {
         relicMotor.setMode(RUN_USING_ENCODER);
         relicMotor.setDirection(REVERSE);
 
-        upperLimit = 0;
-        lowerLimit = 0;
+        upperLimit = 11100;
+        lowerLimit = 650;
 
         relicArm.setPosition(0.5);
         relicGrab.setPosition(0.5);
@@ -51,32 +51,99 @@ public class RELIC extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+//
+//            if (gamepad1.x) {
+//                relicMotor.setMode(STOP_AND_RESET_ENCODER);
+//                relicMotor.setMode(RUN_USING_ENCODER);
+//            }
+//
+//            if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+//                relicMotor.setPower(gamepad1.right_trigger);
+//                telemetry.addData("up", upperLimit);
+//                telemetry.update();
+//            }
+//            if (!gamepad1.dpad_up && gamepad1.dpad_down) {
+//                relicMotor.setPower(-gamepad1.right_trigger);
+//                telemetry.addData("down", upperLimit);
+//                telemetry.update();
+//            }
+//            if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+//                relicMotor.setPower(0);
+//                telemetry.addData("a-stop", upperLimit);
+//                telemetry.update();
+//            }
+//            if (gamepad1.a) {
+//                relicMotor.setPower(0);
+//                telemetry.addData("stop", upperLimit);
+//                telemetry.update();
+//            }
 
-            if (gamepad1.x) {
-                relicMotor.setMode(STOP_AND_RESET_ENCODER);
-                relicMotor.setMode(RUN_USING_ENCODER);
+            /***/
+            //WITHIN LIMIT
+            if (relicMotor.getCurrentPosition() < 11100 && relicMotor.getCurrentPosition() > 650) {
+                if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+                    relicMotor.setPower(gamepad1.right_trigger);
+                    telemetry.addData("up", upperLimit);
+                    telemetry.update();
+                }
+                if (!gamepad1.dpad_up && gamepad1.dpad_down) {
+                    relicMotor.setPower(-gamepad1.right_trigger);
+                    telemetry.addData("down", upperLimit);
+                    telemetry.update();
+                }
+                if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+                    relicMotor.setPower(0);
+                    telemetry.addData("a-stop", upperLimit);
+                    telemetry.update();
+                }
             }
 
-            if (gamepad1.dpad_up && !gamepad1.dpad_down) {
-                relicMotor.setPower(gamepad1.right_trigger);
-                telemetry.addData("up", upperLimit);
-                telemetry.update();
+            //UPPER LIMIT EXCEEDED
+            if (relicMotor.getCurrentPosition() >= 11100) {
+                if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+                    relicMotor.setPower(0.2);
+                    telemetry.addData("up <upper limit exceeded>", upperLimit);
+                    telemetry.update();
+                }
+                if (!gamepad1.dpad_up && gamepad1.dpad_down) {
+                    relicMotor.setPower(-gamepad1.right_trigger);
+                    telemetry.addData("down <upper limit exceeded>", upperLimit);
+                    telemetry.update();
+                }
+                if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+                    relicMotor.setPower(0);
+                    telemetry.addData("a-stop <upper limit ecxeeded>", upperLimit);
+                    telemetry.update();
+                }
             }
-            if (!gamepad1.dpad_up && gamepad1.dpad_down) {
-                relicMotor.setPower(-gamepad1.right_trigger);
-                telemetry.addData("down", upperLimit);
-                telemetry.update();
+
+            //LOWER LIMIT EXCEEDED
+            if (relicMotor.getCurrentPosition() <= 750) {
+                if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+                    relicMotor.setPower(gamepad1.right_trigger);
+                    telemetry.addData("up <lower limit exceeded>", lowerLimit);
+                    telemetry.update();
+                }
+                if (!gamepad1.dpad_up && gamepad1.dpad_down) {
+                    relicMotor.setPower(-0.2);
+                    telemetry.addData("down <lower limit exceeded>", lowerLimit);
+                    telemetry.update();
+                }
+                if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+                    relicMotor.setPower(0);
+                    telemetry.addData("a-stop <lower limit exceeded>", lowerLimit);
+                    telemetry.update();
+                }
             }
+
+            //AUTOMATIC STOP
             if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
                 relicMotor.setPower(0);
                 telemetry.addData("a-stop", upperLimit);
                 telemetry.update();
             }
-            if (gamepad1.a) {
-                relicMotor.setPower(0);
-                telemetry.addData("stop", upperLimit);
-                telemetry.update();
-            }
+
+            /***/
 
             if (gamepad1.dpad_left){
                 pos += 0.01;
@@ -88,17 +155,18 @@ public class RELIC extends LinearOpMode {
 
             relicArm.setPosition(pos);
 
-            if (gamepad1.left_bumper){
+            if (gamepad1.x){
                 pos2 += 0.01;
             }
 
-            if (gamepad1.right_bumper){
+            if (gamepad1.y){
                 pos2 -= 0.01;
             }
 
             relicGrab.setPosition(pos2);
 
             telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
+            telemetry.addData("RDC power: ", relicMotor.getPower());
             telemetry.addData("RA: ", relicArm.getPosition());
             telemetry.addData("RG: ", relicGrab.getPosition());
             telemetry.update();

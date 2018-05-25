@@ -27,8 +27,8 @@ public class DRIVING extends LinearOpMode {
         motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
-        motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-        motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotor.Direction.REVERSE);
 
         mode = 1;
 
@@ -77,6 +77,8 @@ public class DRIVING extends LinearOpMode {
             //MODE-2 <NEW ALGORITHM>
             if (mode == 2) {
                 telemetry.addLine("MODE-2 <NEW ALGORITHM>");
+                telemetry.addLine("This mode is incomplete.");
+                telemetry.update();
             }
 
             //MODE-3 <D-PAD / CLASSIC>
