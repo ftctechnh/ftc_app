@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
  * Created by anshnanda on 04/02/18.
  */
 
+@Disabled
 @TeleOp (name = "sensor value test", group = "test")
 
 public class sensorTest extends LinearOpMode{

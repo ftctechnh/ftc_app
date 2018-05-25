@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by shivaan on 20/1/18.
  */
 
+@Disabled
 @TeleOp(name = "classic driver mapping", group = "agroup")
 
 public class classicDriverMapping extends LinearOpMode{

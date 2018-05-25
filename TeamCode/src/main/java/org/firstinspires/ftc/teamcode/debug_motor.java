@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by shivaan on 19/5/18.
  */
 
+@Disabled
 @TeleOp(name = "Teach1ng", group = "agroup")
 
 public class debug_motor extends LinearOpMode

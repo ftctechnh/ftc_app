@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -91,11 +92,11 @@ public class finalTeleOp extends LinearOpMode{
 //        jewelKnock.setPosition(0);
 //        relicArm.setPosition(0);
 
-
-
         waitForStart();
 
         while (opModeIsActive()){
+
+            gamepad1.setJoystickDeadzone(0.3f);
 
             //GamePad 1
             double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);

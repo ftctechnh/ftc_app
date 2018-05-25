@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by shivaan on 10/02/18.
  */
 
+@Disabled
 @TeleOp(name = "grabTest", group = "test")
 
 public class grabTest extends LinearOpMode {
@@ -20,9 +22,9 @@ public class grabTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         //Grabber
-        grabMotor = hardwareMap.get(DcMotor.class, "GDC");
+        grabMotor = hardwareMap.get(DcMotor.class, "GrabDC");
 
-        grabMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        grabMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         telemetry.clear();
 
@@ -30,19 +32,15 @@ public class grabTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            pos = grabMotor.getCurrentPosition();
-            telemetry.addData("position:", pos);
-            telemetry.update();
-
-            if (gamepad1.dpad_up && !gamepad1.dpad_down){
-                grabMotor.setPower(gamepad1.right_trigger);
+            if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+                grabMotor.setPower(gamepad2.right_trigger);
             }
 
-            if (!gamepad1.dpad_up && gamepad1.dpad_down) {
-                grabMotor.setPower(-gamepad1.right_trigger);
+            if (!gamepad2.dpad_up && gamepad2.dpad_down) {
+                grabMotor.setPower(-gamepad2.right_trigger);
             }
 
-            if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+            if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                 grabMotor.setPower(0);
             }
         }

@@ -1,0 +1,109 @@
+package org.firstinspires.ftc.teamcode.NEW_TEST;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
+
+/**
+ * Created by shiva on 24-05-2018.
+ */
+
+@TeleOp(name = "Relic Test", group = "prototype")
+
+public class RELIC extends LinearOpMode {
+
+    //GRAB
+    private DcMotor relicMotor;
+    private Servo relicArm;
+    private Servo relicGrab;
+
+    private int upperLimit;
+    private int lowerLimit;
+
+    private double pos;
+    private double pos2;
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        relicMotor = hardwareMap.get(DcMotor.class, "RelicDC");
+        relicArm = hardwareMap.get(Servo.class, "RA");
+        relicGrab = hardwareMap.get(Servo.class, "RG");
+
+        relicMotor.setMode(STOP_AND_RESET_ENCODER);
+        relicMotor.setMode(RUN_USING_ENCODER);
+        relicMotor.setDirection(REVERSE);
+
+        upperLimit = 0;
+        lowerLimit = 0;
+
+        relicArm.setPosition(0.5);
+        relicGrab.setPosition(0.5);
+
+        pos = 0;
+        pos2 = 0;
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            if (gamepad1.x) {
+                relicMotor.setMode(STOP_AND_RESET_ENCODER);
+                relicMotor.setMode(RUN_USING_ENCODER);
+            }
+
+            if (gamepad1.dpad_up && !gamepad1.dpad_down) {
+                relicMotor.setPower(gamepad1.right_trigger);
+                telemetry.addData("up", upperLimit);
+                telemetry.update();
+            }
+            if (!gamepad1.dpad_up && gamepad1.dpad_down) {
+                relicMotor.setPower(-gamepad1.right_trigger);
+                telemetry.addData("down", upperLimit);
+                telemetry.update();
+            }
+            if (!gamepad1.dpad_up && !gamepad1.dpad_down) {
+                relicMotor.setPower(0);
+                telemetry.addData("a-stop", upperLimit);
+                telemetry.update();
+            }
+            if (gamepad1.a) {
+                relicMotor.setPower(0);
+                telemetry.addData("stop", upperLimit);
+                telemetry.update();
+            }
+
+            if (gamepad1.dpad_left){
+                pos += 0.01;
+            }
+
+            if (gamepad1.dpad_right){
+                pos -= 0.01;
+            }
+
+            relicArm.setPosition(pos);
+
+            if (gamepad1.left_bumper){
+                pos2 += 0.01;
+            }
+
+            if (gamepad1.right_bumper){
+                pos2 -= 0.01;
+            }
+
+            relicGrab.setPosition(pos2);
+
+            telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
+            telemetry.addData("RA: ", relicArm.getPosition());
+            telemetry.addData("RG: ", relicGrab.getPosition());
+            telemetry.update();
+
+        }
+
+    }
+}

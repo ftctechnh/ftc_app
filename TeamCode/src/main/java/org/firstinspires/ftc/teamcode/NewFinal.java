@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,7 +11,8 @@ import com.qualcomm.robotcore.util.Range;
  * Created by shiva on 22-05-2018.
  */
 
-@TeleOp(name = "final tele op", group = "final")
+@Disabled
+@TeleOp(name = "new final tele op", group = "final")
 
 public class NewFinal extends LinearOpMode {
 
@@ -56,25 +58,25 @@ public class NewFinal extends LinearOpMode {
 
         //Grabber
         grabMotor = hardwareMap.get(DcMotor.class, "GrabDC");
-        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
-        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
-        grabTopRight = hardwareMap.get(Servo.class, "GTR");
-        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
+//        grabTopLeft = hardwareMap.get(Servo.class, "GTL");
+//        grabBottomLeft = hardwareMap.get(Servo.class, "GBL");
+//        grabTopRight = hardwareMap.get(Servo.class, "GTR");
+//        grabBottomRight = hardwareMap.get(Servo.class, "GBR");
         grabberTop = 3500;
         grabberMiddle = 1500;
         grabberRest = 0;
 
         //Relic
         relicMotor = hardwareMap.get(DcMotor.class, "RelicDC");
-        relicArm = hardwareMap.get(Servo.class, "RA");
-        relicGrab = hardwareMap.get(Servo.class, "RG");
+//        relicArm = hardwareMap.get(Servo.class, "RA");
+//        relicGrab = hardwareMap.get(Servo.class, "RG");
         relicArmDelta = 0.01;
         relicArmPosition = 0.1;
         relicGrabDelta = 0.01;
 
         //Jewel
-        jewelArm = hardwareMap.get(Servo.class, "JA");
-        jewelKnock = hardwareMap.get(Servo.class, "JK");
+//        jewelArm = hardwareMap.get(Servo.class, "JA");
+//        jewelKnock = hardwareMap.get(Servo.class, "JK");
 
         mode = 1;
 
@@ -102,6 +104,11 @@ public class NewFinal extends LinearOpMode {
             motorFrontRight.setPower(v2);
             motorBackRight.setPower(v4);
             motorBackLeft.setPower(v3);
+
+            telemetry.addData("actual FL: ", motorFrontLeft.getPower());
+            telemetry.addData("actual BL: ", motorBackLeft.getPower());
+            telemetry.addData("actual FR: ", motorFrontRight.getPower());
+            telemetry.addData("actual BR: ", motorBackRight.getPower());
 
             //----------SECONDARY----------
 
