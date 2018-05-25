@@ -5,13 +5,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
 import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
 
-
-//@TeleOp(name="Main Tele-Op", group="_Competition")
 public class MainTeleOp extends LinearOpMode {
 
     NullbotHardware robot = new NullbotHardware();
@@ -24,6 +23,11 @@ public class MainTeleOp extends LinearOpMode {
     final double minSlowModePower = 0.45;
     final int headingLockMS = 1000;
 
+    final int[] liftPresetPositions = new int[]{0, 640, 1280};
+    final double[] trayFlipperLeftPositions = new double[] {0.25, 0.65, 0.55};
+    final double[] trayFlipperRightPositions = new double[] {0.75, 0.35, 0.45};
+    final double[] trayTailPositions = new double[] {0, 0.75};
+
     double initialHeading;
     double desiredHeading;
     double difference;
@@ -32,21 +36,34 @@ public class MainTeleOp extends LinearOpMode {
     double desiredMax;
     double heading;
 
-    boolean wasGP2LeftBumperPressed;
-    boolean wasGP2RightBumperPressed;
+    boolean wasGP1LeftBumperPressed;
+    boolean wasGP1LeftTriggerPressed;
+    boolean wasGP1APressed;
+    boolean wasGP1BPressed;
+    boolean wasGP1YPressed;
+
+    boolean wasGP1RightBumperPressed;
+    boolean wasGP1RightTriggerPressed;
 
     boolean nonrelativeDriveModeEnabled;
+    boolean slowMode;
     int accelTime;
 
-    boolean scale;
+    boolean intakeUp;
+    boolean flipperOut;
+    boolean spinningIntake;
+    boolean reversedIntake;
 
     ElapsedTime timeTillHeadingLock;
-
     ElapsedTime totalElapsedTime;
+
+    ConstrainedPIDMotor lift;
 
     @Override
     public void runOpMode() {
         robot.init(hardwareMap, this, gamepad1, gamepad2);
+
+        lift = new ConstrainedPIDMotor(robot.lift, 100, 1.0, 0.5, 0, -2500, telemetry, false);
 
         waitForStart();
         rampController = new RampingController(robot.motorArr, accelTime);
@@ -54,8 +71,21 @@ public class MainTeleOp extends LinearOpMode {
         initialHeading = robot.getGyroHeading() + Math.PI;
         desiredHeading = initialHeading;
 
-        wasGP2LeftBumperPressed = false;
-        wasGP2RightBumperPressed = false;
+        wasGP1LeftBumperPressed = false;
+        wasGP1LeftTriggerPressed = false;
+        wasGP1APressed = false;
+        wasGP1BPressed = false;
+        wasGP1YPressed = false;
+        slowMode = false;
+
+        wasGP1RightBumperPressed = false;
+        wasGP1RightTriggerPressed = false;
+
+        intakeUp = false;
+        flipperOut = false;
+        spinningIntake = false;
+        reversedIntake = false;
+        desiredMax = 1.0;
 
         timeTillHeadingLock = new ElapsedTime();
 
@@ -63,21 +93,6 @@ public class MainTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             robot.updateReadings();
-
-            scale = true;
-            // Calculate speed reduction
-            desiredMax = 1;
-
-            // Toggle slow mode
-            if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
-                desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
-                robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            } else {
-                robot.setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            wasGP2LeftBumperPressed = gamepad2.left_bumper;
-            wasGP2RightBumperPressed = gamepad2.right_bumper;
 
             boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
 
@@ -122,13 +137,13 @@ public class MainTeleOp extends LinearOpMode {
                 }
             }
 
-            if (scale) {
-                // Now, let's scale those powers
+            // Now, let's scale those powers
+            if (slowMode) {
                 double greatest = 0;
                 for (double d : unscaledMotorPowers) {
                     greatest = Math.max(greatest, Math.abs(d));
                 }
-                greatest /= desiredMax;
+                greatest /= 0.3;
                 for (int i = 0; i < unscaledMotorPowers.length; i++) {
                     unscaledMotorPowers[i] = chop(unscaledMotorPowers[i] / greatest);
                 }
@@ -136,14 +151,102 @@ public class MainTeleOp extends LinearOpMode {
 
             rampController.setMotorPowers(unscaledMotorPowers);
 
-            // Run above code at 1Khz
-            //robot.writeLogTick();
-            //robot.waitForTick(1000 / robot.hz);
+            // Now intake work
+            if (gamepad1.left_bumper && !wasGP1LeftBumperPressed) {
+                spinningIntake = !spinningIntake;
+                wasGP1LeftBumperPressed = true;
+                updateIntakePower();
+            }
+
+            // Flipper servos
+            if (gamepad1.left_trigger > triggerThreshold && !wasGP1LeftTriggerPressed) {
+                wasGP1LeftTriggerPressed = true;
+                intakeUp = !intakeUp;
+                updateTray();
+            }
+
+            if (gamepad1.right_bumper) {
+                robot.trayFlipperLeft.setPosition(trayFlipperLeftPositions[0] +
+                        (trayFlipperLeftPositions[1] - trayFlipperLeftPositions[0])/2.0);
+                robot.trayFlipperRight.setPosition(trayFlipperRightPositions[0] +
+                        (trayFlipperRightPositions[1] - trayFlipperRightPositions[0])/2.0);
+            }
+
+            // Jostle blocks
+            if (gamepad1.a && !wasGP1APressed) {
+                robot.trayFlipperLeft.setPosition(robot.trayFlipperLeft.getPosition() - 0.15);
+                robot.trayFlipperRight.setPosition(robot.trayFlipperRight.getPosition() + 0.15);
+                new Timer().schedule(new TimerTask() {
+                    @Override
+                    public void run() {
+                        robot.trayFlipperLeft.setPosition(trayFlipperLeftPositions[1]);
+                        robot.trayFlipperRight.setPosition(trayFlipperRightPositions[1]);
+                    }
+                }, 300);
+
+                wasGP1APressed = true;
+            }
+
+            if (gamepad1.y && !wasGP1YPressed) {
+                flipperOut = !flipperOut;
+                wasGP1YPressed = true;
+                int index = flipperOut ? 0 : 1;
+                robot.trayTail.setPosition(trayTailPositions[index]);
+            }
+
+            if (gamepad1.b && !wasGP1BPressed) {
+                wasGP1BPressed = true;
+                intakeUp = false;
+                robot.trayFlipperLeft.setPosition(trayFlipperLeftPositions[2]);
+                robot.trayFlipperRight.setPosition(trayFlipperRightPositions[2]);
+            }
+
+            // Lift
+            if (gamepad1.dpad_up) {
+                lift.setDirection(ConstrainedPIDMotor.Direction.FORWARD);
+            } else if (gamepad1.dpad_down) {
+                lift.setDirection(ConstrainedPIDMotor.Direction.BACKWARD);
+            } /*else if (gamepad1.right_bumper && !wasGP1RightBumperPressed) {
+                setLiftSeekPosition(1);
+                wasGP1RightBumperPressed = true;
+            } else if (gamepad1.right_trigger > triggerThreshold && !wasGP1RightTriggerPressed) {
+                wasGP1RightTriggerPressed = true;
+                setLiftSeekPosition(-1);
+            } */else {
+                lift.setDirection(ConstrainedPIDMotor.Direction.HOLD, false);
+            }
+
+            if (gamepad1.right_bumper && !wasGP1RightBumperPressed) {
+                wasGP1RightBumperPressed = true;
+                slowMode = !slowMode;
+                if (slowMode) {
+                    robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                } else {
+                    robot.setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                }
+            }
+
+            if (gamepad1.right_trigger > triggerThreshold && !wasGP1RightTriggerPressed) {
+                reversedIntake = true;
+                wasGP1RightTriggerPressed = true;
+                updateIntakePower();
+            } else if (gamepad1.right_trigger < triggerThreshold && wasGP1RightTriggerPressed) {
+                reversedIntake = false;
+                wasGP1RightTriggerPressed = false;
+                updateIntakePower();
+            }
+
+            if (!gamepad1.right_bumper) {wasGP1RightBumperPressed = false;}
+            //if (!(gamepad1.right_trigger > triggerThreshold)) {wasGP1RightTriggerPressed = false;}
+            if (!gamepad1.left_bumper) {wasGP1LeftBumperPressed = false;}
+            if (!(gamepad1.left_trigger > triggerThreshold)) {wasGP1LeftTriggerPressed = false;}
+            if (!gamepad1.a) {wasGP1APressed = false;}
+            if (!gamepad1.b) {wasGP1BPressed = false;}
+            if (!gamepad1.y) {wasGP1YPressed = false;}
+
+
         }
         rampController.quit();
-        try {
-            robot.closeLog();
-        } catch (IOException e) {}
 
     }
     private double chop(double d) { // Cutoff all signals being sent to the motor below a threshold
@@ -165,7 +268,6 @@ public class MainTeleOp extends LinearOpMode {
             controllerAngle = robot.normAngle(controllerAngle);
         } else {
             // If we're not moving, don't scale the values
-            scale = false;
             return new double[]{0, 0, 0, 0};
         }
 
@@ -178,5 +280,58 @@ public class MainTeleOp extends LinearOpMode {
         }
 
         return robot.getDrivePowersFromAngle(robotAngle);
+    }
+
+    private int getClosestTargetIndex(int[] targets, int current) {
+        int bestDistance = Integer.MAX_VALUE;
+        int best = 0;
+        for (int i = 0; i < targets.length; i++) {
+            int trialDist = Math.abs(current - targets[i]);
+            if (trialDist < bestDistance) {
+                bestDistance = trialDist;
+                best = i;
+            }
+        }
+
+        return best;
+    }
+
+    private void setLiftSeekPosition(int increment) {
+        int currentPosition = -lift.encoderOffset;
+
+        // Fix this
+        if (robot.lift.getMode() == DcMotor.RunMode.RUN_USING_ENCODER) {
+            // If we're in override mode, use the current position
+            currentPosition += robot.lift.getCurrentPosition();
+        } else if (lift.lockPos == robot.lift.getTargetPosition()){
+            // If we're locked to a position
+            currentPosition += lift.lockPos;
+        } else {
+            // If we're normally moving up or down
+            currentPosition += robot.lift.getCurrentPosition();
+        }
+
+        int currentIndex = getClosestTargetIndex(liftPresetPositions, currentPosition);
+
+        int desiredIndex = currentIndex + increment;
+        if (desiredIndex >= 0 && desiredIndex < liftPresetPositions.length) {
+            lift.lockPos = liftPresetPositions[desiredIndex] + lift.encoderOffset;
+        } else {
+            lift.lockPos = liftPresetPositions[currentIndex] + lift.encoderOffset;
+        }
+        lift.timer = new ElapsedTime(1000);
+    }
+    int invert(int i) {return i == 1 ? 0 : 1; }
+
+    private void updateTray() {
+        int index = intakeUp ? 0 : 1;
+        robot.trayFlipperLeft.setPosition(trayFlipperLeftPositions[index]);
+        robot.trayFlipperRight.setPosition(trayFlipperRightPositions[index]);
+    }
+
+    private void updateIntakePower() {
+        double speed = spinningIntake ? (reversedIntake ? -1 : 1) : 0;
+        robot.intakeLeft.setPower(speed);
+        robot.intakeRight.setPower(speed);
     }
 }

@@ -5,8 +5,10 @@ import android.os.Environment;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -37,6 +39,16 @@ public class NullbotHardware {
     public DcMotor frontRight;
     public DcMotor backLeft;
     public DcMotor backRight;
+
+    public DcMotorEx lift;
+    public DcMotor intakeLeft;
+    public DcMotor intakeRight;
+
+    // Servos
+    public Servo trayFlipperLeft;
+    public Servo trayFlipperRight;
+    public Servo trayTail;
+
 
     // Sensors
 
@@ -81,10 +93,19 @@ public class NullbotHardware {
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
+        lift = (DcMotorEx) hwMap.dcMotor.get("lift");
+        intakeLeft = hwMap.dcMotor.get("intakeLeft");
+        intakeRight = hwMap.dcMotor.get("intakeRight");
+
+        trayFlipperLeft = hwMap.servo.get("trayFlipperLeft");
+        trayFlipperRight = hwMap.servo.get("trayFlipperRight");
+        trayTail = hwMap.servo.get("trayTail");
+
         imu = hwMap.get(BNO055IMU.class, "primaryIMU");
 
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
+        intakeRight.setDirection(DcMotor.Direction.REVERSE);
 
         // MotorArr utility setup
         motorArr = new DcMotor[4];
