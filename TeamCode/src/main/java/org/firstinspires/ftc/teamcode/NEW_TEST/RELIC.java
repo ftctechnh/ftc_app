@@ -144,31 +144,32 @@ public class RELIC extends LinearOpMode {
                 telemetry.update();
             }
 
-            if (gamepad1.a){
+//            if (gamepad1.left_trigger > 0.5) {
+//                relicArm.setPosition(0.47);
+//            }
+
+            if (gamepad1.a && (gamepad1.left_trigger < 0.5)) {
                 pos += 0.005;
             }
 
-            if (gamepad1.b){
+            if (gamepad1.b && (gamepad1.left_trigger < 0.5)) {
                 pos -= 0.005;
             }
 
             pos = Range.clip(pos, 0, 1);
             relicArm.setPosition(pos);
 
-            if (gamepad1.x){
+            if (gamepad1.x) {
                 pos2 += 0.01;
             }
 
-            if (gamepad1.y){
+            if (gamepad1.y) {
                 pos2 -= 0.01;
             }
 
-            pos2 = Range.clip(pos2,0.4,0.73);
+            pos2 = Range.clip(pos2,0.4,1);
             relicGrab.setPosition(pos2);
 
-            if (gamepad1.left_trigger > 0.5) {'].'
-                relicArm.setPosition(0.47);
-            }
 
 
             telemetry.addData("RDC: ", relicMotor.getCurrentPosition());

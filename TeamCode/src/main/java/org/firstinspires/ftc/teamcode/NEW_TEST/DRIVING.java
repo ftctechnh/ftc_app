@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.NEW_TEST;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by shiva on 25/5/18.
@@ -17,7 +18,10 @@ public class DRIVING extends LinearOpMode {
     private DcMotor motorFrontRight;
     private DcMotor motorBackRight;
 
+    private Servo relicArm;
+
     private int mode;
+    private double pos;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -27,10 +31,14 @@ public class DRIVING extends LinearOpMode {
         motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
+        relicArm = hardwareMap.servo.get("RA");
+
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         mode = 1;
+
+        relicArm.setPosition(0.4);
 
         waitForStart();
 
