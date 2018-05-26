@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public abstract class AbstractDrivetrain {
 
-
     protected DcMotor lfDriveM = null;
     protected DcMotor rfDriveM = null;
     protected DcMotor lbDriveM = null;
@@ -36,7 +35,6 @@ public abstract class AbstractDrivetrain {
         stop();
 
         // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
         setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }

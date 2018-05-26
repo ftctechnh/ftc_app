@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 class MecanumDrivetrain extends AbstractDrivetrain {
 
-    private static final double WIDTH = 8;
-    private static final double LENGTH = 8.5;
+    private static final double WIDTH = 16;
+    private static final double LENGTH = 17;
     private static final double MAX_SPEED = 1.0;
 
     public MecanumDrivetrain(){
@@ -13,10 +13,10 @@ class MecanumDrivetrain extends AbstractDrivetrain {
     public void drive(double xVelocity, double yVelocity, double wVelocity){
         double speedScale = 1.0;
 
-        double lfVelocity = yVelocity - xVelocity + wVelocity*(WIDTH+LENGTH);
-        double rfVelocity = yVelocity + xVelocity - wVelocity*(WIDTH+LENGTH);
-        double lbVelocity = yVelocity - xVelocity - wVelocity*(WIDTH+LENGTH);
-        double rbVelocity = yVelocity + xVelocity + wVelocity*(WIDTH+LENGTH);
+        double lfVelocity = yVelocity - xVelocity + wVelocity*(WIDTH/2+LENGTH/2);
+        double rfVelocity = yVelocity + xVelocity - wVelocity*(WIDTH/2+LENGTH/2);
+        double lbVelocity = yVelocity - xVelocity - wVelocity*(WIDTH/2+LENGTH/2);
+        double rbVelocity = yVelocity + xVelocity + wVelocity*(WIDTH/2+LENGTH/2);
 
         double maxVelocity = findMax(lfVelocity,rfVelocity, lbVelocity, rbVelocity);
 
