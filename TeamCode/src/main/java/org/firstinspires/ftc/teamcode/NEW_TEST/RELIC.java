@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
+
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
@@ -78,7 +80,6 @@ public class RELIC extends LinearOpMode {
 //                telemetry.update();
 //            }
 
-            /***/
             //WITHIN LIMIT
             if (relicMotor.getCurrentPosition() < 11100 && relicMotor.getCurrentPosition() > 650) {
                 if (gamepad1.dpad_up && !gamepad1.dpad_down) {
@@ -143,8 +144,6 @@ public class RELIC extends LinearOpMode {
                 telemetry.update();
             }
 
-            /***/
-
             if (gamepad1.a){
                 pos += 0.005;
             }
@@ -153,6 +152,7 @@ public class RELIC extends LinearOpMode {
                 pos -= 0.005;
             }
 
+            pos = Range.clip(pos, 0, 1);
             relicArm.setPosition(pos);
 
             if (gamepad1.x){
@@ -163,7 +163,13 @@ public class RELIC extends LinearOpMode {
                 pos2 -= 0.01;
             }
 
+            pos2 = Range.clip(pos2,0.4,0.73);
             relicGrab.setPosition(pos2);
+
+            if (gamepad1.left_trigger > 0.5) {'].'
+                relicArm.setPosition(0.47);
+            }
+
 
             telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
             telemetry.addData("RDC power: ", relicMotor.getPower());
@@ -175,3 +181,5 @@ public class RELIC extends LinearOpMode {
 
     }
 }
+ // RG MAX = 0.41 MIN = 0.72
+ // RA 0.47 or 0.465
