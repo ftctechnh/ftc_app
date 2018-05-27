@@ -98,6 +98,8 @@ public class Auto_B1 extends OpMode {
         //Starts the timer WORKING
         time.reset();
 
+        robot.setRelicTilt();
+
     }
         @Override
         public void loop(){

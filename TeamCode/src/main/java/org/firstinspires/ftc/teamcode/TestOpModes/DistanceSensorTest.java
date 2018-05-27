@@ -17,7 +17,6 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
  * Created by pston on 1/3/2018
  */
 
-@TeleOp(name = "Range Sensor Test", group = "Sensor Test")
 public class DistanceSensorTest extends OpMode {
 
     private Robot robot;

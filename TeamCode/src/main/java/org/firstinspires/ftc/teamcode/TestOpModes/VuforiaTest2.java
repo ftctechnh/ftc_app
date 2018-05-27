@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 /**
  * Created by FTC 4316 on 1/14/2018
  */
-@TeleOp(name = "Vuforia Test 2", group = "Test")
+
 public class VuforiaTest2 extends OpMode {
     private OpenGLMatrix lastLocation = null;
     private VuforiaLocalizer vuforia;

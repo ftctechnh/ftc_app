@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 /**
  * Created by FTC 4316 on 10/29/2017
  */
-@TeleOp(name="Drive Train TeleOp test", group="Test")
+
 public class DriveTrainTeleOpTest extends OpMode {
 
     private DriveTrain driveTrain;

@@ -97,7 +97,7 @@ public class Robot {
         rightColor.setPosition(0);
         leftColor.setPosition(0.85);
 
-        relicTilt.setPosition(0.36);
+        relicTilt.setPosition(1);
         relicClamp.setPosition(0.4);
 
         driveTrain = new DriveTrain(leftFront, rightFront, leftRear, rightRear, gyro, telemetry);

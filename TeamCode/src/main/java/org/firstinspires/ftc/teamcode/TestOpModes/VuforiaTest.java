@@ -14,7 +14,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * Created by pston on 1/7/2018
  */
 
-@TeleOp(name = "Vuforia Test", group = "test")
 public class VuforiaTest extends OpMode {
 
     OpenGLMatrix lastLocation = null;

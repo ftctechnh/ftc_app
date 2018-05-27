@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
  * Created by FTC 4316 on 3/18/2018.
  */
 
-@TeleOp(name = "BlockHoldTest", group = "Test")
 public class BlockHoldTest extends OpMode {
     private Robot robot;
 

@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
  * Created by pston on 11/18/2017
  */
 
-@TeleOp(name = "Relic Recovery TeleOp V1", group = "test")
 public class RR_TeleOp_V1 extends OpMode {
 
     private Robot robot;

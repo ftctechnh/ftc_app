@@ -9,9 +9,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 
 /**
- * Created by FTC 4316 on 3/17/2018.
+ * Created by FTC 4316 on 3/17/2018
  */
-@TeleOp(name = "ColorSensorTest", group = "Test")
+
 public class ColorSensorTest extends OpMode {
 
     private ColorSensor colorSensor;

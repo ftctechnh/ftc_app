@@ -27,7 +27,7 @@ public class RR_TeleOP_Farber extends OpMode {
         robot.blockLift.slideHeight(gamepad1.left_bumper, gamepad1.left_trigger, gamepad1.a, gamepad1.b, gamepad1.y, telemetry);
         robot.driveTrain.setMotorPower(gamepad1.left_stick_x, -gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        robot.relicGrab.relicGrab(gamepad2.left_bumper, gamepad2.left_trigger, gamepad2.dpad_up, gamepad2.dpad_down, gamepad2.y, gamepad2.a, gamepad2.right_bumper, gamepad2.right_trigger, gamepad2.b, telemetry, gamepad2.x);
+        robot.relicGrab.relicGrab(gamepad2.left_bumper, gamepad2.left_trigger, gamepad2.y, gamepad2.a, gamepad2.right_bumper, gamepad2.right_trigger, gamepad2.b, telemetry, gamepad2.x);
         robot.relicGrab.servoInfo(telemetry);
         robot.setServos();
     }

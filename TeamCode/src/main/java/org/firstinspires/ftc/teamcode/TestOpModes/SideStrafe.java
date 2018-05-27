@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
  * Created by pston on 1/7/2018
  */
 
-@TeleOp(name = "Strafe Help", group = "test")
 public class SideStrafe extends OpMode {
 
     private Robot robot;
@@ -31,7 +30,7 @@ public class SideStrafe extends OpMode {
 
         robot.blockLift.lift(gamepad1.right_bumper, gamepad1.right_trigger, telemetry);
 
-        robot.relicGrab.relicGrab(gamepad2.left_bumper, gamepad2.left_trigger, gamepad2.dpad_up, gamepad2.dpad_down, gamepad2.y, gamepad2.a, gamepad2.right_bumper, gamepad2.right_trigger, gamepad2.b, telemetry, gamepad2.x);
+        robot.relicGrab.relicGrab(gamepad2.left_bumper, gamepad2.left_trigger, gamepad2.y, gamepad2.a, gamepad2.right_bumper, gamepad2.right_trigger, gamepad2.b, telemetry, gamepad2.x);
         robot.relicGrab.servoInfo(telemetry);
         robot.setServos();
         telemetry.addData("Raw Optical", rangeSensor.rawOptical());

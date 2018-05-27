@@ -88,6 +88,8 @@ public class Auto_R2 extends OpMode {
 
         time.reset();
 
+        robot.setRelicTilt();
+
     }
         @Override
         public void loop(){

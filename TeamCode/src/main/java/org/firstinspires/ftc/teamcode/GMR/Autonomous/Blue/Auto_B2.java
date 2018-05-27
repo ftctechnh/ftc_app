@@ -87,6 +87,8 @@ public class Auto_B2 extends OpMode {
         columnDist = 0;
 
         time.reset();
+
+        robot.setRelicTilt();
     }
         @Override
         public void loop(){

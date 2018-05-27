@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
  * Created by FTC 4316 on 3/17/2018.
  */
 
-@Autonomous(name = "ForwardTest", group = "Test")
+
 public class ForwardTest extends OpMode {
 
     private Robot robot;

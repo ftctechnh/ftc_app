@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by pston on 2/11/2018
  */
-@TeleOp(name = "Range Sensor Polling Test", group = "Test")
+
 public class RangeSensorPollingTest extends OpMode {
 
     private ModernRoboticsI2cRangeSensor rangeSensor;

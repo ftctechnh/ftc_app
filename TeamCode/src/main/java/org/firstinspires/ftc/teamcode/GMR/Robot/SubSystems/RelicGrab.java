@@ -25,8 +25,6 @@ public class  RelicGrab {
         this.relicClamp = relicClamp;
 
         this.relicLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        tiltPosition = 0.36;
         clampPosition = 0.40;
 
         relicLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -68,7 +66,7 @@ public class  RelicGrab {
 
     public void setClamp(boolean rightBumper, float rightTrigger, boolean x) {
         if (rightBumper && clampPosition <= 1) {
-            clampPosition = 0.82;
+            clampPosition = 0.9;
         } else if (rightTrigger > 0 && clampPosition >= 0.45) {
             clampPosition = 0.3;
         } else if (x) {
@@ -77,7 +75,7 @@ public class  RelicGrab {
         relicClamp.setPosition(clampPosition);
     }
 
-    public void relicGrab(boolean leftBumper, float leftTrigger, boolean dpadUp, boolean dpadDown, boolean y, boolean a, boolean rightBumper, float rightTrigger, boolean b, Telemetry telemetry, boolean x) {
+    public void relicGrab(boolean leftBumper, float leftTrigger, boolean y, boolean a, boolean rightBumper, float rightTrigger, boolean b, Telemetry telemetry, boolean x) {
         relicLift(leftBumper, leftTrigger, telemetry);
         setTilt(y, a, b);
         setClamp(rightBumper, rightTrigger, x);
