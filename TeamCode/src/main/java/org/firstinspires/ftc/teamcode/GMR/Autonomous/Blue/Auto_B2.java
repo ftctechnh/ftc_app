@@ -228,8 +228,15 @@ public class Auto_B2 extends OpMode {
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
                     } else{
                         isFinished = false;
-                        state = States.END;
+                        state = States.GLYPHPITTURN;
                     } break;
+                case GLYPHPITTURN:
+                    if (!isFinished) {
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 135);
+                    } else {
+                        isFinished = false;
+                        state = States.END;
+                    }break;
                 case END:
                     robot.driveTrain.stop();
                     break;

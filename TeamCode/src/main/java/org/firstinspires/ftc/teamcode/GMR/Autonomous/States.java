@@ -22,12 +22,6 @@ public enum States {
     END,
     GRAB,
     DROP,
-    LIFT,
-    CLOSE,
-    DRIVEFORWARD,
-    OPEN,
-    BACKUPFROMBLOCK,
-    ROTATE,
     OFFSTONE,
-    COLUMNMOVE,
+    GLYPHPITTURN
 }

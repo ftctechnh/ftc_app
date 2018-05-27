@@ -15,6 +15,8 @@ import org.firstinspires.ftc.teamcode.GMR.Robot.Robot;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.AllianceColor;
 import org.firstinspires.ftc.teamcode.GMR.Robot.SubSystems.DriveTrain;
 
+import static org.firstinspires.ftc.teamcode.GMR.Autonomous.States.END;
+
 /**
  * Created by FTC 4316 on 11/11/2017
  */
@@ -227,9 +229,15 @@ public class Auto_R2 extends OpMode {
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1);
                     } else{
                         isFinished = false;
-                        state = States.END;
+                        state = States.GLYPHPITTURN;
                     } break;
-
+                case GLYPHPITTURN:
+                    if (!isFinished) {
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 135);
+                    } else {
+                        isFinished = false;
+                        state = States.END;
+                    }break;
                 case END:
                     robot.driveTrain.stop();
                     break;
