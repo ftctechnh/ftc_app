@@ -166,7 +166,7 @@ public class RELIC extends LinearOpMode {
             pos2 = Range.clip(pos2,0.4,0.73);
             relicGrab.setPosition(pos2);
 
-            if (gamepad1.left_trigger > 0.5) {'].'
+            if (gamepad1.left_trigger > 0.5) {
                 relicArm.setPosition(0.47);
             }
 
