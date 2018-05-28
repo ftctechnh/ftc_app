@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.NEW_TEST;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
@@ -27,17 +26,29 @@ public class GRABBER extends LinearOpMode {
     private int upperLimit;
     private int lowerLimit;
 
-    private double gtlOPEN = 0.71;
-    private double gtlGRAB = 0.31;
+//    private double gtlOPEN = 0.71;
+//    private double gtlGRAB = 0.31;
+//
+//    private double gtrOPEN = 0.02;
+//    private double gtrGRAB = 0.37;
+//
+//    private double gblOPEN = 0.04;
+//    private double gblGRAB = 0.53;
+//
+//    private double gbrOPEN = 0.74;
+//    private double gbrGRAB = 0.27;
 
-    private double gtrOPEN = 0.02;
-    private double gtrGRAB = 0.37;
+    private double gtlOPEN;
+    private double gtlGRAB;
 
-    private double gblOPEN = 0.04;
-    private double gblGRAB = 0.53;
+    private double gtrOPEN;
+    private double gtrGRAB;
 
-    private double gbrOPEN = 0.74;
-    private double gbrGRAB = 0.27;
+    private double gblOPEN;
+    private double gblGRAB;
+
+    private double gbrOPEN;
+    private double gbrGRAB;
 
     private int mode;
 
@@ -56,6 +67,18 @@ public class GRABBER extends LinearOpMode {
 
         upperLimit = 5000;
         lowerLimit = 800;
+
+        gtlOPEN = 0.71;
+        gtlGRAB = 0.31;
+
+        gtrOPEN = 0.02;
+        gtrGRAB = 0.37;
+
+        gblOPEN = 0.04;
+        gblGRAB = 0.53;
+
+        gbrOPEN = 0.74;
+        gbrGRAB = 0.27;
 
         grabTopLeft.setPosition(gtlOPEN);
         grabTopRight.setPosition(gtrOPEN);
@@ -76,6 +99,29 @@ public class GRABBER extends LinearOpMode {
 //                grabMotor.setMode(STOP_AND_RESET_ENCODER);
 //                grabMotor.setMode(RUN_USING_ENCODER);
 //            }
+
+
+            //TOP SERVOS OPEN
+            if (gamepad1.a) {
+                grabTopLeft.setPosition(gtlOPEN);
+                grabTopRight.setPosition(gtrOPEN);
+            }
+            //TOP SERVOS GRAB
+            if (gamepad1.b) {
+                grabTopLeft.setPosition(gtlGRAB);
+                grabTopRight.setPosition(gtrGRAB);
+            }
+            //BOTTOM SERVOS OPEN
+            if (gamepad1.x) {
+                grabBottomLeft.setPosition(gblOPEN);
+                grabBottomRight.setPosition(gbrOPEN);
+            }
+            //BOTTOM SERVOS GRAB
+            if (gamepad1.y) {
+                grabBottomLeft.setPosition(gblGRAB);
+                grabBottomRight.setPosition(gbrGRAB);
+            }
+
 
             //GDC WITHIN LIMIT
             if (grabMotor.getCurrentPosition() < 5050 && grabMotor.getCurrentPosition() > 750) {
@@ -141,26 +187,7 @@ public class GRABBER extends LinearOpMode {
                 telemetry.update();
             }
 
-            //TOP SERVOS OPEN
-            if (gamepad1.a) {
-                grabTopLeft.setPosition(gtlOPEN);
-                grabTopRight.setPosition(gtrOPEN);
-            }
-            //TOP SERVOS GRAB
-            if (gamepad1.b) {
-                grabTopLeft.setPosition(gtlGRAB);
-                grabTopRight.setPosition(gtrGRAB);
-            }
-            //BOTTOM SERVOS OPEN
-            if (gamepad1.x) {
-                grabBottomLeft.setPosition(gblOPEN);
-                grabBottomRight.setPosition(gbrOPEN);
-            }
-            //BOTTOM SERVOS GRAB
-            if (gamepad1.y) {
-                grabBottomLeft.setPosition(gblGRAB);
-                grabBottomRight.setPosition(gbrGRAB);
-            }
+
 
             telemetry.addData("GDC: ", grabMotor.getCurrentPosition());
             telemetry.addData("GTL: ", grabTopLeft.getPosition());

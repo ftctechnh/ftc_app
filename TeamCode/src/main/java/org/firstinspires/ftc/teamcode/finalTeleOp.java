@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 /**
  * Created by anshnanda and shivaan on 11/02/18.
@@ -184,33 +182,33 @@ public class finalTeleOp extends LinearOpMode{
                     grabMotor.setPower(0);
                 }
 
-//                //GT CLOSE
-//                if (gamepad2.a) {
-//                    grabTopLeft.setPosition(0.3);
-//                    grabTopRight.setPosition(0.4);
-//                }
-//                //GT OPEN
-//                if (gamepad2.b) {
-//                    grabTopLeft.setPosition(0.395);
-//                    grabTopRight.setPosition(0.305);
-//                }
-//                //GB OPEN
-//                if (gamepad2.left_bumper) {
-//                    grabBottomLeft.setPosition(0.25);
-//                    grabBottomRight.setPosition(0.25); //0.5
-//                }
-//                //GB CLOSE
-//                if (gamepad2.right_bumper) {
-//                    grabBottomLeft.setPosition(0.38);
-//                    grabBottomRight.setPosition(0.35); //0.4
-//                }
-//                //EXTREME CLOSE
-//                if (gamepad2.left_stick_button){
-//                    grabBottomLeft.setPosition(0.8);
-//                }
-//                if (gamepad2.right_stick_button){
-//                    grabBottomRight.setPosition(0.7); //0.1
-//                }
+                //GT CLOSE
+                if (gamepad2.a) {
+                    grabTopLeft.setPosition(0.3);
+                    grabTopRight.setPosition(0.4);
+                }
+                //GT OPEN
+                if (gamepad2.b) {
+                    grabTopLeft.setPosition(0.395);
+                    grabTopRight.setPosition(0.305);
+                }
+                //GB OPEN
+                if (gamepad2.left_bumper) {
+                    grabBottomLeft.setPosition(0.25);
+                    grabBottomRight.setPosition(0.25); //0.5
+                }
+                //GB CLOSE
+                if (gamepad2.right_bumper) {
+                    grabBottomLeft.setPosition(0.38);
+                    grabBottomRight.setPosition(0.35); //0.4
+                }
+                //EXTREME CLOSE
+                if (gamepad2.left_stick_button){
+                    grabBottomLeft.setPosition(0.8);
+                }
+                if (gamepad2.right_stick_button){
+                    grabBottomRight.setPosition(0.7); //0.1
+                }
 
 
                 telemetry.addData("Grab Motor Encoder: ", grabMotor.getCurrentPosition());
