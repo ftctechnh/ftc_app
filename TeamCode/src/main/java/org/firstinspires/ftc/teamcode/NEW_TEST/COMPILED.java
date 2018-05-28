@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.NEW_TEST;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.Range;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
@@ -48,6 +48,9 @@ public class COMPILED extends LinearOpMode {
     private Servo relicArm;
     private Servo relicGrab;
 
+    private int upperLimit;
+    private int lowerLimit;
+
     private double pos;
     private double pos2;
 
@@ -90,8 +93,11 @@ public class COMPILED extends LinearOpMode {
         relicMotor.setMode(RUN_USING_ENCODER);
         relicMotor.setDirection(REVERSE);
 
-        relicArm.setPosition(0.5);
+        relicArm.setPosition(0);
         relicGrab.setPosition(0.5);
+
+        upperLimit = 11100;
+        lowerLimit = 650;
 
         pos = 0;
         pos2 = 0;
@@ -238,97 +244,106 @@ public class COMPILED extends LinearOpMode {
 
             if (mode == 2) {
                 //--------------------RELIC--------------------//
-                    //WITHIN LIMIT
+                //WITHIN LIMIT
                 if (relicMotor.getCurrentPosition() < 11100 && relicMotor.getCurrentPosition() > 650) {
                     if (gamepad2.dpad_up && !gamepad2.dpad_down) {
                         relicMotor.setPower(gamepad2.right_trigger);
-                        telemetry.addLine("up");
+                        telemetry.addData("up", upperLimit);
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && gamepad2.dpad_down) {
                         relicMotor.setPower(-gamepad2.right_trigger);
-                        telemetry.addLine("down");
+                        telemetry.addData("down", upperLimit);
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                         relicMotor.setPower(0);
-                        telemetry.addLine("a-stop");
+                        telemetry.addData("a-stop", upperLimit);
                         telemetry.update();
                     }
                 }
 
-                    //UPPER LIMIT EXCEEDED
+                //UPPER LIMIT EXCEEDED
                 if (relicMotor.getCurrentPosition() >= 11100) {
                     if (gamepad2.dpad_up && !gamepad2.dpad_down) {
                         relicMotor.setPower(0.2);
-                        telemetry.addLine("up <upper limit exceeded>");
+                        telemetry.addData("up <upper limit exceeded>", upperLimit);
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && gamepad2.dpad_down) {
                         relicMotor.setPower(-gamepad2.right_trigger);
-                        telemetry.addLine("down <upper limit exceeded>");
+                        telemetry.addData("down <upper limit exceeded>", upperLimit);
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                         relicMotor.setPower(0);
-                        telemetry.addLine("a-stop <upper limit ecxeeded>");
+                        telemetry.addData("a-stop <upper limit ecxeeded>", upperLimit);
                         telemetry.update();
                     }
                 }
 
-                    //LOWER LIMIT EXCEEDED
+                //LOWER LIMIT EXCEEDED
                 if (relicMotor.getCurrentPosition() <= 750) {
                     if (gamepad2.dpad_up && !gamepad2.dpad_down) {
                         relicMotor.setPower(gamepad2.right_trigger);
-                        telemetry.addLine("up <lower limit exceeded>");
+                        telemetry.addData("up <lower limit exceeded>", lowerLimit);
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && gamepad2.dpad_down) {
                         relicMotor.setPower(-0.2);
-                        telemetry.addLine("down <lower limit exceeded>");
+                        telemetry.addData("down <lower limit exceeded>", lowerLimit);
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                         relicMotor.setPower(0);
-                        telemetry.addLine("a-stop <lower limit exceeded>");
+                        telemetry.addData("a-stop <lower limit exceeded>", lowerLimit);
                         telemetry.update();
                     }
                 }
 
-                    //AUTOMATIC STOP
+                //AUTOMATIC STOP
                 if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                     relicMotor.setPower(0);
-                    telemetry.addLine("a-stop");
+                    telemetry.addData("a-stop", upperLimit);
                     telemetry.update();
                 }
 
-                    //Relic Arm
-                if (gamepad2.a){
+                if (gamepad2.a && (gamepad2.left_trigger < 0.5)) {
                     pos += 0.005;
                 }
 
-                if (gamepad2.b){
+                if (gamepad2.b && (gamepad2.left_trigger < 0.5)) {
                     pos -= 0.005;
                 }
 
+                pos = Range.clip(pos, 0, 1);
                 relicArm.setPosition(pos);
 
-                    //Relic Grab
-                if (gamepad2.left_bumper){
+                if (gamepad2.x) {
                     pos2 += 0.01;
                 }
 
-                if (gamepad2.right_bumper){
+                if (gamepad2.y) {
                     pos2 -= 0.01;
                 }
 
+                pos2 = Range.clip(pos2,0.4,1);
                 relicGrab.setPosition(pos2);
+
+
+                if (gamepad2.right_stick_button) {
+                    relicArm.setPosition(0.47);
+                    relicGrab.setPosition(0.5);
+                }
+
+
 
                 telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
                 telemetry.addData("RDC power: ", relicMotor.getPower());
                 telemetry.addData("RA: ", relicArm.getPosition());
                 telemetry.addData("RG: ", relicGrab.getPosition());
                 telemetry.update();
+
             }
         }
     }
