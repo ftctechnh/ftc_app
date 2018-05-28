@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,7 +48,7 @@ public class GYROTEST extends LinearOpMode{
     private static Servo jewelKnock;
 
     //SENSORS
-    private static ColorSensor jColor;
+    //private static ColorSensor jColor;
     private static ModernRoboticsI2cGyro gyro;
 
     private static double gtlOPEN = 0.4; /**change*/
@@ -100,14 +99,14 @@ public class GYROTEST extends LinearOpMode{
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
         //GRAB
-        grabDC = hardwareMap.dcMotor.get("GDC");
+        grabDC = hardwareMap.dcMotor.get("GrabDC");
         grabTopLeft = hardwareMap.servo.get("GTL");
         grabBottomLeft = hardwareMap.servo.get("GBL");
         grabTopRight = hardwareMap.servo.get("GTR");
         grabBottomRight = hardwareMap.servo.get("GBR");
 
         //RELIC
-        relicDc = hardwareMap.dcMotor.get("RDC");
+        relicDc = hardwareMap.dcMotor.get("RelicDC");
         relicArm = hardwareMap.servo.get("RA");
         relicGrab = hardwareMap.servo.get("RG");
 
@@ -128,8 +127,8 @@ public class GYROTEST extends LinearOpMode{
         motorBackLeft.setDirection(REVERSE);
 
         //SENSORS
-        jColor = hardwareMap.colorSensor.get("colF");
-        jColor.enableLed(true);
+//        jColor = hardwareMap.colorSensor.get("colF");
+//        jColor.enableLed(true);
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro.calibrate();
 
@@ -597,17 +596,21 @@ public class GYROTEST extends LinearOpMode{
         }
     }
 
-    public static void turnAbsolute(int target, double turnSpeed) {
+    public void turnAbsolute(int target, double turnSpeed) {
 
-        zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
+        zAccumulated = gyro.getHeading();  //Set variables to gyro readings
         //turnSpeed = 0.07;
 
-        while (Math.abs(zAccumulated - target) > 1) {  //Continue while the robot direction is further than three degrees from the target
+
+        while (Math.abs(zAccumulated - target) > 2) {  //Continue while the robot direction is further than three degrees from the target
             if (zAccumulated > target) {  //if gyro is positive, we will turn right
                 motorBackLeft.setPower(turnSpeed);
                 motorFrontLeft.setPower(turnSpeed);
                 motorBackRight.setPower(-turnSpeed);
                 motorFrontRight.setPower(-turnSpeed);
+
+                telemetry.addData("Gyro sensor: ", gyro.getHeading());
+                telemetry.update();
             }
 
             if (zAccumulated < target) {  //if gyro is positive, we will turn left
@@ -615,9 +618,19 @@ public class GYROTEST extends LinearOpMode{
                 motorFrontLeft.setPower(-turnSpeed);
                 motorBackRight.setPower(turnSpeed);
                 motorFrontRight.setPower(turnSpeed);
+
+                telemetry.addData("Gyro sensor: ", gyro.getHeading());
+                telemetry.update();
             }
 
+
+            telemetry.addData("Gyro sensor: ", gyro.getHeading());
+            telemetry.update();
+
             zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
+
+            telemetry.addData("Gyro sensor: ", gyro.getHeading());
+            telemetry.update();
         }
 
         motorBackLeft.setPower(0);

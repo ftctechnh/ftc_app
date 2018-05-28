@@ -100,7 +100,7 @@ public class COMPILED extends LinearOpMode {
         lowerLimit = 650;
 
         pos = 0;
-        pos2 = 0;
+        pos2 = 0.2;
 
         mode = 1;
 
@@ -266,7 +266,7 @@ public class COMPILED extends LinearOpMode {
                 //UPPER LIMIT EXCEEDED
                 if (relicMotor.getCurrentPosition() >= 11100) {
                     if (gamepad2.dpad_up && !gamepad2.dpad_down) {
-                        relicMotor.setPower(0.2);
+                        relicMotor.setPower(0.4);
                         telemetry.addData("up <upper limit exceeded>", upperLimit);
                         telemetry.update();
                     }
@@ -290,7 +290,7 @@ public class COMPILED extends LinearOpMode {
                         telemetry.update();
                     }
                     if (!gamepad2.dpad_up && gamepad2.dpad_down) {
-                        relicMotor.setPower(-0.2);
+                        relicMotor.setPower(-0.4);
                         telemetry.addData("down <lower limit exceeded>", lowerLimit);
                         telemetry.update();
                     }
@@ -319,21 +319,21 @@ public class COMPILED extends LinearOpMode {
                 pos = Range.clip(pos, 0, 1);
                 relicArm.setPosition(pos);
 
-                if (gamepad2.x) {
+                if (gamepad2.left_bumper) {
                     pos2 += 0.01;
                 }
 
-                if (gamepad2.y) {
+                if (gamepad2.right_bumper) {
                     pos2 -= 0.01;
                 }
 
-                pos2 = Range.clip(pos2,0.4,1);
+                pos2 = Range.clip(pos2,0,0.4);
                 relicGrab.setPosition(pos2);
 
 
                 if (gamepad2.right_stick_button) {
                     relicArm.setPosition(0.47);
-                    relicGrab.setPosition(0.5);
+                    relicGrab.setPosition(0.1);
                 }
 
 
