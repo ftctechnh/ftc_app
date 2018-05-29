@@ -214,7 +214,7 @@ public class TeleOP_Main extends LinearOpMode {
                 else
                     robot.Brat.setPower(0);
                 if (!gamepad2.dpad_down)
-                    robot.BratRetreat.setPower(0.18);
+                    robot.BratRetreat.setPower(0.16);
                 else
                     robot.BratRetreat.setPower(0);
             }
