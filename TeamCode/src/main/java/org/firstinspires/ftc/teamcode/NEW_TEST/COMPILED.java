@@ -373,8 +373,6 @@ public class COMPILED extends LinearOpMode {
                     relicGrab.setPosition(0.1);
                 }
 
-
-
                 telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
                 telemetry.addData("RDC power: ", relicMotor.getPower());
                 telemetry.addData("RA: ", relicArm.getPosition());
