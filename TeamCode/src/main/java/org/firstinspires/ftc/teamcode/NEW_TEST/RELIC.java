@@ -170,18 +170,13 @@ public class RELIC extends LinearOpMode {
             pos2 = Range.clip(pos2,0.4,1);
             relicGrab.setPosition(pos2);
 
-<<<<<<< HEAD
-            if (gamepad1.left_trigger > 0.5) {
-                relicArm.setPosition(0.47);
-            }
-=======
-
             if (gamepad1.left_trigger > 0.5) {
                 relicArm.setPosition(0.47);
             }
 
-
->>>>>>> eeb2f56eec44da48ac0e68a9d7046ba9016b6d38
+            if (gamepad1.left_trigger > 0.5) {
+                relicArm.setPosition(0.47);
+            }
 
             telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
             telemetry.addData("RDC power: ", relicMotor.getPower());
