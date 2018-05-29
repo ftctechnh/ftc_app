@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +26,7 @@ import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
  */
 
 @Autonomous(name = "Blue side position 1", group = "auto")
+@Disabled
 
 public class Blue1 extends LinearOpMode{
 
@@ -236,7 +238,7 @@ public class Blue1 extends LinearOpMode{
         telemetry.update();
 
         //Placement of block according to Vuforia
-        if (gridColum == 2){
+        if (gridColum == 2){ //MIDDLE
             //Move forward: MIDDLE
             BACKWARD(4100, 0.5);
             gyro.calibrate();
@@ -252,8 +254,8 @@ public class Blue1 extends LinearOpMode{
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
-
             grabTopRight.setPosition(0.3);
+
 
             BACKWARD(500, 0.5);
 
@@ -263,7 +265,7 @@ public class Blue1 extends LinearOpMode{
             BACKWARD(500,0.5);
         }
 
-        if (gridColum == 3){
+        if (gridColum == 3){ //LEFT
             //Move forward: LEFT
             BACKWARD(3080, 0.5);
             gyro.calibrate();
@@ -293,7 +295,7 @@ public class Blue1 extends LinearOpMode{
             BACKWARD(500,0.5);
         }
 
-        if (gridColum == 1){
+        if (gridColum == 1){ //RIGHT
             //Move forward: RIGHT
             BACKWARD(4920, 0.5);
             gyro.calibrate();
@@ -769,10 +771,10 @@ public class Blue1 extends LinearOpMode{
         }
     }
 
-    public static void turnAbsolute(int target, double turnSpeed) {
+    public static void turnAbsolute(int target) {
 
         zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
-        //turnSpeed = 0.07;
+        double turnSpeed = 0.07;
 
         while (Math.abs(zAccumulated - target) > 1) {  //Continue while the robot direction is further than three degrees from the target
             if (zAccumulated > target) {  //if gyro is positive, we will turn right

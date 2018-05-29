@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.NEW_TEST;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,6 +51,11 @@ public class GRABBER extends LinearOpMode {
     private double gbrOPEN;
     private double gbrGRAB;
 
+    private double posTL;
+    private double posTR;
+    private double posBL;
+    private double posBR;
+
     private int mode;
 
     @Override
@@ -80,10 +86,15 @@ public class GRABBER extends LinearOpMode {
         gbrOPEN = 0.74;
         gbrGRAB = 0.27;
 
-        grabTopLeft.setPosition(gtlOPEN);
-        grabTopRight.setPosition(gtrOPEN);
-        grabBottomLeft.setPosition(gblOPEN);
-        grabBottomRight.setPosition(gbrOPEN);
+        posTL = gtlOPEN;
+        posTR = gtrOPEN;
+        posBL = gblOPEN;
+        posBR = gbrOPEN;
+
+//        grabTopLeft.setPosition(gtlOPEN);
+//        grabTopRight.setPosition(gtrOPEN);
+//        grabBottomLeft.setPosition(gblOPEN);
+//        grabBottomRight.setPosition(gbrOPEN);
 
         mode = 1;
 
@@ -101,27 +112,51 @@ public class GRABBER extends LinearOpMode {
 //            }
 
 
-            //TOP SERVOS OPEN
-            if (gamepad1.a) {
-                grabTopLeft.setPosition(gtlOPEN);
-                grabTopRight.setPosition(gtrOPEN);
-            }
-            //TOP SERVOS GRAB
-            if (gamepad1.b) {
-                grabTopLeft.setPosition(gtlGRAB);
-                grabTopRight.setPosition(gtrGRAB);
-            }
-            //BOTTOM SERVOS OPEN
-            if (gamepad1.x) {
-                grabBottomLeft.setPosition(gblOPEN);
-                grabBottomRight.setPosition(gbrOPEN);
-            }
-            //BOTTOM SERVOS GRAB
-            if (gamepad1.y) {
-                grabBottomLeft.setPosition(gblGRAB);
-                grabBottomRight.setPosition(gbrGRAB);
+//            //TOP SERVOS OPEN
+//            if (gamepad1.a) {
+//                grabTopLeft.setPosition(gtlOPEN);
+//                grabTopRight.setPosition(gtrOPEN);
+//            }
+//            //TOP SERVOS GRAB
+//            if (gamepad1.b) {
+//                grabTopLeft.setPosition(gtlGRAB);
+//                grabTopRight.setPosition(gtrGRAB);
+//            }
+//            //BOTTOM SERVOS OPEN
+//            if (gamepad1.x) {
+//                grabBottomLeft.setPosition(gblOPEN);
+//                grabBottomRight.setPosition(gbrOPEN);
+//            }
+//            //BOTTOM SERVOS GRAB
+//            if (gamepad1.y) {
+//                grabBottomLeft.setPosition(gblGRAB);
+//                grabBottomRight.setPosition(gbrGRAB);
+//            }
+
+            if (gamepad1.a) { //Bottom OPEN
+                posBL -= 0.01;
+                posBR += 0.01;
             }
 
+            if (gamepad1.b) { //Bottom CLOSE
+                posBL += 0.01;
+                posBR -= 0.01;
+            }
+
+            if (gamepad1.x) { //Top OPEN
+                posTL += 0.01;
+                posTR -= 0.01;
+            }
+
+            if (gamepad1.y) { //Top CLOSE
+                posTL -= 0.01;
+                posTR += 0.01;
+            }
+
+            grabTopLeft.setPosition(posTL);
+            grabTopRight.setPosition(posTR);
+            grabBottomLeft.setPosition(posBL);
+            grabBottomRight.setPosition(posBR);
 
             //GDC WITHIN LIMIT
             if (grabMotor.getCurrentPosition() < 5050 && grabMotor.getCurrentPosition() > 750) {
