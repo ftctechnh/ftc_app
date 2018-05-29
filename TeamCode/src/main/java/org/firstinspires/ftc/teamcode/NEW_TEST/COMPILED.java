@@ -31,17 +31,17 @@ public class COMPILED extends LinearOpMode {
     private Servo grabBottomLeft;
     private Servo grabBottomRight;
 
-    private double gtlOPEN = 0.71;
-    private double gtlGRAB = 0.31;
+    private double gtlOPEN;
+    private double gtlGRAB;
 
-    private double gtrOPEN = 0.02;
-    private double gtrGRAB = 0.37;
+    private double gtrOPEN;
+    private double gtrGRAB;
 
-    private double gblOPEN = 0.04;
-    private double gblGRAB = 0.53;
+    private double gblOPEN;
+    private double gblGRAB;
 
-    private double gbrOPEN = 0.74;
-    private double gbrGRAB = 0.27;
+    private double gbrOPEN;
+    private double gbrGRAB;
 
     //RELIC
     private DcMotor relicMotor;
@@ -80,6 +80,18 @@ public class COMPILED extends LinearOpMode {
         grabMotor.setMode(RUN_USING_ENCODER);
         grabMotor.setDirection(REVERSE);
 
+        gtlOPEN = 0.61;
+        gtlGRAB = 0.24;
+
+        gtrOPEN = 0.12;
+        gtrGRAB = 0.49;
+
+        gblOPEN = 0.07;
+        gblGRAB = 0.39;
+
+        gbrOPEN = 0.71;
+        gbrGRAB = 0.27;
+
         grabTopLeft.setPosition(gtlOPEN);
         grabTopRight.setPosition(gtrOPEN);
         grabBottomLeft.setPosition(gblOPEN);
@@ -104,70 +116,94 @@ public class COMPILED extends LinearOpMode {
         pos2 = 0.2;
 
         mode = 1;
-        modeGamePad1 = 1;
+        //modeGamePad1 = 1;
 
         waitForStart();
 
         while (opModeIsActive()) {
 
+            //--------------------DRIVING---------------------//
+            double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            telemetry.addData("r = ", r);
+            double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+            telemetry.addData("robotAngle = ", robotAngle);
+            double rightX = gamepad1.right_stick_x;
+            //telemetry.addData("rightX = ", rightX);
+            final double v1 = r * Math.cos(robotAngle) + rightX;
+            telemetry.addData("front left power = ", v1);
+            final double v2 = r * Math.sin(robotAngle) - rightX;
+            telemetry.addData("front right power = ", v2);
+            final double v3 = r * Math.sin(robotAngle) + rightX;
+            telemetry.addData("back left power = ", v3);
+            final double v4 = r * Math.cos(robotAngle) - rightX;
+            telemetry.addData("back right power = ", v4);
+
+            telemetry.update();
+
+            motorFrontLeft.setPower(v1);
+            motorFrontRight.setPower(v2);
+            motorBackLeft.setPower(v3);
+            motorBackRight.setPower(v4);
+
             /**GAMEPAD-1*/
+//
+//            if (gamepad1.a) {
+//                modeGamePad1 = 1;
+//            }
+//            if (gamepad1.b) {
+//                modeGamePad1 = 2;
+//            }
 
-            if (gamepad1.a) {
-                modeGamePad1 = 1;
-            }
-            if (gamepad1.b) {
-                modeGamePad1 = 2;
-            }
-
-            if (modeGamePad1 == 1) {
+//            if (modeGamePad1 == 1) {
                 //--------------------DRIVING---------------------//
-                double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-                telemetry.addData("r = ", r);
-                double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-                telemetry.addData("robotAngle = ", robotAngle);
-                double rightX = gamepad1.right_stick_x;
-                //telemetry.addData("rightX = ", rightX);
-                final double v1 = r * Math.cos(robotAngle) + rightX;
-                telemetry.addData("front left power = ", v1);
-                final double v2 = r * Math.sin(robotAngle) - rightX;
-                telemetry.addData("front right power = ", v2);
-                final double v3 = r * Math.sin(robotAngle) + rightX;
-                telemetry.addData("back left power = ", v3);
-                final double v4 = r * Math.cos(robotAngle) - rightX;
-                telemetry.addData("back right power = ", v4);
+//                double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+//                telemetry.addData("r = ", r);
+//                double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+//                telemetry.addData("robotAngle = ", robotAngle);
+//                double rightX = gamepad1.right_stick_x;
+//                //telemetry.addData("rightX = ", rightX);
+//                final double v1 = r * Math.cos(robotAngle) + rightX;
+//                telemetry.addData("front left power = ", v1);
+//                final double v2 = r * Math.sin(robotAngle) - rightX;
+//                telemetry.addData("front right power = ", v2);
+//                final double v3 = r * Math.sin(robotAngle) + rightX;
+//                telemetry.addData("back left power = ", v3);
+//                final double v4 = r * Math.cos(robotAngle) - rightX;
+//                telemetry.addData("back right power = ", v4);
+//
+//                telemetry.update();
+//
+//                motorFrontLeft.setPower(v1);
+//                motorFrontRight.setPower(v2);
+//                motorBackLeft.setPower(v3);
+//                motorBackRight.setPower(v4);
+           // }
 
-                telemetry.update();
 
-                motorFrontLeft.setPower(v1);
-                motorFrontRight.setPower(v2);
-                motorBackLeft.setPower(v3);
-                motorBackRight.setPower(v4);
-            }
-
-            if (modeGamePad1 == 2){
-                //--------------------DRIVING---------------------//
-                double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-                telemetry.addData("r = ", r);
-                double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
-                telemetry.addData("robotAngle = ", robotAngle);
-                double rightX = gamepad1.right_stick_x;
-                //telemetry.addData("rightX = ", rightX);
-                final double v1 = r * Math.cos(robotAngle) + rightX;
-                telemetry.addData("front left power = ", v1);
-                final double v2 = r * Math.sin(robotAngle) - rightX;
-                telemetry.addData("front right power = ", v2);
-                final double v3 = r * Math.sin(robotAngle) + rightX;
-                telemetry.addData("back left power = ", v3);
-                final double v4 = r * Math.cos(robotAngle) - rightX;
-                telemetry.addData("back right power = ", v4);
-
-                telemetry.update();
-
-                motorFrontLeft.setPower(v3);
-                motorFrontRight.setPower(v4);
-                motorBackLeft.setPower(v1);
-                motorBackRight.setPower(v2);
-            }
+//            if (modeGamePad1 == 2){
+//                //--------------------DRIVING---------------------//
+//                double r = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+//                telemetry.addData("r = ", r);
+//                double robotAngle = Math.atan2(-gamepad1.left_stick_y, gamepad1.left_stick_x) - Math.PI / 4;
+//                telemetry.addData("robotAngle = ", robotAngle);
+//                double rightX = gamepad1.right_stick_x;
+//                //telemetry.addData("rightX = ", rightX);
+//                final double v1 = r * Math.cos(robotAngle) + rightX;
+//                telemetry.addData("front left power = ", v1);
+//                final double v2 = r * Math.sin(robotAngle) - rightX;
+//                telemetry.addData("front right power = ", v2);
+//                final double v3 = r * Math.sin(robotAngle) + rightX;
+//                telemetry.addData("back left power = ", v3);
+//                final double v4 = r * Math.cos(robotAngle) - rightX;
+//                telemetry.addData("back right power = ", v4);
+//
+//                telemetry.update();
+//
+//                motorFrontLeft.setPower(v3);
+//                motorFrontRight.setPower(v4);
+//                motorBackLeft.setPower(v1);
+//                motorBackRight.setPower(v2);
+//            }
 
 
 
@@ -269,6 +305,8 @@ public class COMPILED extends LinearOpMode {
                     grabBottomLeft.setPosition(gblGRAB);
                     grabBottomRight.setPosition(gbrGRAB);
                 }
+
+
 
                 telemetry.addData("GDC: ", grabMotor.getCurrentPosition());
                 telemetry.addData("GTL: ", grabTopLeft.getPosition());
