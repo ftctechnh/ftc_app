@@ -55,17 +55,17 @@ public class NEW_RED1 extends LinearOpMode{
     private static ColorSensor jColor;
     private static ModernRoboticsI2cGyro gyro;
 
-    private double gtlOPEN = 0.71;
-    private double gtlGRAB = 0.31;
+    private static double gtlOPEN = 0.4; /**change*/
+    private static double gtlCLOSE = 0.6; /**change*/
 
-    private double gtrOPEN = 0.02;
-    private double gtrGRAB = 0.37;
+    private static double gtrOPEN = 0.35; /**change*/
+    private static double gtrCLOSE = 0.4; /**change*/
 
-    private double gblOPEN = 0.04;
-    private double gblGRAB = 0.53;
+    private static double gblOPEN = 0.25; /**change*/
+    private static double gblCLOSE = 0.6; /**change*/
 
-    private double gbrOPEN = 0.74;
-    private double gbrGRAB = 0.27;
+    private static double gbrOPEN = 0.55; /**change*/
+    private static double gbrCLOSE = 0.4; /**change*/
 
     private static double jaUP = 0.69;
     private static double jaDOWN = 0.1;
@@ -103,14 +103,14 @@ public class NEW_RED1 extends LinearOpMode{
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
         //GRAB
-        grabDC = hardwareMap.dcMotor.get("GrabDC");
+        grabDC = hardwareMap.dcMotor.get("GDC");
         grabTopLeft = hardwareMap.servo.get("GTL");
         grabBottomLeft = hardwareMap.servo.get("GBL");
         grabTopRight = hardwareMap.servo.get("GTR");
         grabBottomRight = hardwareMap.servo.get("GBR");
 
         //RELIC
-        relicDc = hardwareMap.dcMotor.get("RelicDC");
+        relicDc = hardwareMap.dcMotor.get("RDC");
         relicArm = hardwareMap.servo.get("RA");
         relicGrab = hardwareMap.servo.get("RG");
 
@@ -135,7 +135,7 @@ public class NEW_RED1 extends LinearOpMode{
         //jColor.setI2cAddress(I2cAddr.create8bit(0x3c));  /**check I2c address*/
         jColor.enableLed(true);
         gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-
+        gyro.calibrate();
 
         //STARTING VALUES
         grabBottomLeft.setPosition(gblOPEN);
@@ -160,18 +160,7 @@ public class NEW_RED1 extends LinearOpMode{
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         /**</VUFORIA>*/
 
-
-        //GYRO CALIBRATE
-        gyro.calibrate();
-        while (!isStopRequested() && gyro.isCalibrating()) {
-            sleep(80);
-            idle();
-        }
-        telemetry.addData("Gyro value: ", gyro.getHeading());
-        telemetry.update();
-
         waitForStart();
-
 
         //VUFORIA
         relicTrackables.activate();
@@ -250,17 +239,13 @@ public class NEW_RED1 extends LinearOpMode{
         if (gridColum == 2){
             //Move forward: MIDDLE
             FORWARD(4000, 0.5); /**change*/
-            //GYRO CALIBRATE
             gyro.calibrate();
-            while (!isStopRequested() && gyro.isCalibrating()) {
-                sleep(80);
-                idle();
-            }
-            telemetry.addData("Gyro value: ", gyro.getHeading());
+            telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
-            //AXISRIGHT(2500); /**change*/
-            turnAbsolute(90, 0.07);
+            AXISRIGHT(2500); /**change*/
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
             //Move towards safezone
             FORWARD(1270, 0.5); /**change*/
@@ -282,18 +267,13 @@ public class NEW_RED1 extends LinearOpMode{
         if (gridColum == 1){
             //Move forward: RIGHT
             FORWARD(3080, 0.5); /**change*/
-
-            //GYRO CALIBRATE
             gyro.calibrate();
-            while (!isStopRequested() && gyro.isCalibrating()) {
-                sleep(80);
-                idle();
-            }
-            telemetry.addData("Gyro value: ", gyro.getHeading());
+            telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
-            //AXISRIGHT(2500); /**change*/
-            turnAbsolute(90, 0.07);
+            AXISRIGHT(2500); /**change*/
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
             //Move towards safezone
             FORWARD(1270, 0.5); /**change*/
@@ -317,18 +297,13 @@ public class NEW_RED1 extends LinearOpMode{
         if (gridColum == 3){
             //Move forward: LEFT
             FORWARD(4750, 0.5); /**change*/
-
-            //GYRO CALIBRATE
             gyro.calibrate();
-            while (!isStopRequested() && gyro.isCalibrating()) {
-                sleep(80);
-                idle();
-            }
-            telemetry.addData("Gyro value: ", gyro.getHeading());
+            telemetry.addData("Gyro val:", gyro.getHeading());
             telemetry.update();
 
-            //AXISRIGHT(2500); /**change*/
-            turnAbsolute(90, 0.07);
+            AXISRIGHT(2500); /**change*/
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
             //Move towards safezone
             FORWARD(1270, 0.5); /**change*/
@@ -792,21 +767,17 @@ public class NEW_RED1 extends LinearOpMode{
         }
     }
 
-    public void turnAbsolute(int target, double turnSpeed) {
+    public static void turnAbsolute(int target, double turnSpeed) {
 
-        zAccumulated = gyro.getHeading();  //Set variables to gyro readings
+        zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
         //turnSpeed = 0.07;
 
-
-        while (Math.abs(zAccumulated - target) > 2) {  //Continue while the robot direction is further than three degrees from the target
+        while (Math.abs(zAccumulated - target) > 1) {  //Continue while the robot direction is further than three degrees from the target
             if (zAccumulated > target) {  //if gyro is positive, we will turn right
                 motorBackLeft.setPower(turnSpeed);
                 motorFrontLeft.setPower(turnSpeed);
                 motorBackRight.setPower(-turnSpeed);
                 motorFrontRight.setPower(-turnSpeed);
-
-                telemetry.addData("Gyro sensor: ", gyro.getHeading());
-                telemetry.update();
             }
 
             if (zAccumulated < target) {  //if gyro is positive, we will turn left
@@ -814,19 +785,9 @@ public class NEW_RED1 extends LinearOpMode{
                 motorFrontLeft.setPower(-turnSpeed);
                 motorBackRight.setPower(turnSpeed);
                 motorFrontRight.setPower(turnSpeed);
-
-                telemetry.addData("Gyro sensor: ", gyro.getHeading());
-                telemetry.update();
             }
 
-
-            telemetry.addData("Gyro sensor: ", gyro.getHeading());
-            telemetry.update();
-
             zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
-
-            telemetry.addData("Gyro sensor: ", gyro.getHeading());
-            telemetry.update();
         }
 
         motorBackLeft.setPower(0);
@@ -835,7 +796,11 @@ public class NEW_RED1 extends LinearOpMode{
         motorFrontRight.setPower(0);
 
     }
+<<<<<<< HEAD
     //    public static void GYROAXISRIGHT(int targetVal) {
+=======
+//    public static void GYROAXISRIGHT(int targetVal) {
+>>>>>>> parent of 7a75e81... Red1 besides the grabber values done
 //        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
