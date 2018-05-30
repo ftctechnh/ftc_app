@@ -82,7 +82,7 @@ public class NEW_RED1 extends LinearOpMode{
     private static double raCLOSE = 0; /**change*/
     private static double rgCLOSE = 0; /**change*/
 
-    private int gridColum = 0;
+    private int gridColum = 2;
 
     private static int zAccumulated;
 

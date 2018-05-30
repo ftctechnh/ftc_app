@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.NEW_TEST;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by shiva on 25/5/18.
@@ -18,7 +17,7 @@ public class DRIVING extends LinearOpMode {
     private DcMotor motorFrontRight;
     private DcMotor motorBackRight;
 
-    private Servo relicArm;
+//    private Servo relicArm;
 
     private int mode;
     private double pos;
@@ -31,14 +30,14 @@ public class DRIVING extends LinearOpMode {
         motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
-        relicArm = hardwareMap.servo.get("RA");
+//        relicArm = hardwareMap.servo.get("RA");
 
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         mode = 1;
 
-        relicArm.setPosition(0.4);
+//        relicArm.setPosition(0.4);
 
         waitForStart();
 
@@ -74,12 +73,30 @@ public class DRIVING extends LinearOpMode {
                 final double v4 = r * Math.cos(robotAngle) - rightX;
                 telemetry.addData("back right power = ", v4);
 
+
+                telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
+                telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
+                telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
+                telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
                 telemetry.update();
 
                 motorFrontLeft.setPower(v1);
                 motorFrontRight.setPower(v2);
                 motorBackLeft.setPower(v3);
                 motorBackRight.setPower(v4);
+
+                if (gamepad1.y){
+
+                    motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                    motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                }
             }
 
             //MODE-2 <NEW ALGORITHM>
@@ -218,4 +235,5 @@ public class DRIVING extends LinearOpMode {
             }
         }
     }
+
 }
