@@ -327,8 +327,8 @@ public class COMPILED extends LinearOpMode {
                         telemetry.update();
                     }
                     if (gamepad2.dpad_up && !gamepad2.dpad_down) {
-                        grabMotor.setPower(0r);
-                        telemetry.addLine("up <upper limit stop>");
+                        grabMotor.setPower(0);
+                        telemetry.addLine("stop <upper limit stop>");
                         telemetry.update();
                     }
                 }
