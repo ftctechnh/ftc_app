@@ -608,7 +608,7 @@ public class GYROTEST extends LinearOpMode{
                 motorBackRight.setPower(-turnSpeed);
                 motorFrontRight.setPower(-turnSpeed);
 
-                telemetry.addData("Gyro sensor: ", gyro.getHeading());
+                telemetry.addData("Gyro sensor: ", gyro.getIntegratedZValue());
                 telemetry.update();
             }
 
@@ -618,7 +618,7 @@ public class GYROTEST extends LinearOpMode{
                 motorBackRight.setPower(turnSpeed);
                 motorFrontRight.setPower(turnSpeed);
 
-                telemetry.addData("Gyro sensor: ", gyro.getHeading());
+                telemetry.addData("Gyro sensor: ", gyro.getIntegratedZValue());
                 telemetry.update();
             }
 

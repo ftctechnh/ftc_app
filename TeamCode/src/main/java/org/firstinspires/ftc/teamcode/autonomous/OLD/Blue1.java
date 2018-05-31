@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.OLD;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -21,16 +21,14 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
-//VUFORIA
-
 /**
- * Created by shiva on 14-02-2018.
+ * Created by anshnanda on 16/02/18.
  */
 
-@Autonomous(name = "Red side position 2", group = "auto")
+@Autonomous(name = "Blue side position 1", group = "auto")
 @Disabled
 
-public class Red2 extends LinearOpMode{
+public class Blue1 extends LinearOpMode{
 
     //DRIVE
     private static DcMotor motorFrontLeft;
@@ -98,7 +96,8 @@ public class Red2 extends LinearOpMode{
     VuforiaLocalizer vuforia;
 
     @Override
-    public void runOpMode() throws  InterruptedException{
+
+    public void runOpMode() throws InterruptedException{
 
         //DRIVE
         motorFrontLeft = hardwareMap.dcMotor.get("MC1M1");
@@ -153,7 +152,7 @@ public class Red2 extends LinearOpMode{
         jewelArm.setPosition(jaUP);
         jewelKnock.setPosition(jkRIGHT);
 
-        /**<VUFORIA>*/
+        //VUFORIA
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
@@ -162,25 +161,19 @@ public class Red2 extends LinearOpMode{
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        /**</VUFORIA>*/
+
 
         waitForStart();
 
-        //VUFORIA
+        //Vuforia start
         relicTrackables.activate();
 
-//        telemetry.addData("JA:", jewelArm.getPosition());
-        //      telemetry.update();
-
-
-        //JEWEL KNOCK FOR BLUE SIDE
+        //JEWEL KNOCK FOR RED SIDE
         jewelKnock.setPosition(jkCENTER);
 
         do{
             jaPos -= 0.02;
             jewelArm.setPosition(jaPos);
-            // telemetry.addData("JA:", jewelArm.getPosition());
-            // telemetry.update();
         } while (jewelArm.getPosition() > jaDOWN);
 
         Thread.sleep(800);
@@ -188,7 +181,7 @@ public class Red2 extends LinearOpMode{
         //telemetry.addData("blue: ", jColor.blue());
         //telemetry.update();
 
-        if (jColor.blue() < 3){
+        if (jColor.red() < 3){
             jewelKnock.setPosition(jkLEFT);
         }
         else {
@@ -209,7 +202,6 @@ public class Red2 extends LinearOpMode{
 
         Thread.sleep(1000);
 
-        /**<VUFORIA>*/
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -230,12 +222,13 @@ public class Red2 extends LinearOpMode{
             telemetry.addData("VuMark", "not visible");
         }
         telemetry.update();
-        /**</VUFORIA>*/
+
 
         //Grip the block and lift
         grabTopLeft.setPosition(0.3);
         grabTopRight.setPosition(0.4);
-        GRABUP(1700);
+        GRABUP(1600);
+
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
@@ -244,96 +237,112 @@ public class Red2 extends LinearOpMode{
         telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
         telemetry.update();
 
-        if (gridColum == 2){
+        //Placement of block according to Vuforia
+        if (gridColum == 2){ //MIDDLE
+            //Move forward: MIDDLE
+            BACKWARD(4100, 0.5);
+            gyro.calibrate();
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
-            FORWARD(2800, 0.5);
-            //middle
-            SWAYLEFT(2000);
+            AXISRIGHT(2545);
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
             //Move towards safezone
-            FORWARD(750, 0.5);
+            FORWARD(1270, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
             grabTopRight.setPosition(0.3);
 
-            BACKWARD(580);
 
-            FORWARD(580, 0.5);
-            BACKWARD(580);
-
-            FORWARD(625, 0.5);
-            BACKWARD(500);
-
-        }
-
-        if (gridColum == 1){
-            FORWARD(2800, 0.5);
-            //right
-            SWAYLEFT(950);
-
-            //Move towards safezone
-            FORWARD(750, 0.5);
-
-            //Drop glyph
-            grabTopLeft.setPosition(0.4);
-            grabTopRight.setPosition(0.3);
-
-            BACKWARD(580);
+            BACKWARD(500, 0.5);
 
             FORWARD(500, 0.5);
-            BACKWARD(580);
-
-            SWAYLEFT(600);
-
-            FORWARD(570, 0.5);
-            BACKWARD(500);
+            BACKWARD(500,0.5);
+            FORWARD(570,0.5);
+            BACKWARD(500,0.5);
         }
 
-        if (gridColum == 3){
-            FORWARD(2700, 0.5);
-            //left
-            SWAYLEFT(2900);
-            STOP();
+        if (gridColum == 3){ //LEFT
+            //Move forward: LEFT
+            BACKWARD(3080, 0.5);
+            gyro.calibrate();
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
-            Thread.sleep(1000);
+            AXISRIGHT(2450);
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
 
             //Move towards safezone
-            FORWARD(750, 0.5);
+            FORWARD(1270, 0.5);
 
             //Drop glyph
             grabTopLeft.setPosition(0.4);
             grabTopRight.setPosition(0.3);
 
-            BACKWARD(580);
+            BACKWARD(500, 0.5);
 
             FORWARD(500, 0.5);
-            BACKWARD(580);
+            BACKWARD(500,0.5);
 
+            //FOR RIGHT SIDE
             SWAYRIGHT(600);
 
-            FORWARD(570, 0.5);
-            BACKWARD(500);
-
+            FORWARD(570, 0.1);
+            BACKWARD(500,0.5);
         }
 
-        //Degrees travlled at this point
+        if (gridColum == 1){ //RIGHT
+            //Move forward: RIGHT
+            BACKWARD(4920, 0.5);
+            gyro.calibrate();
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
+
+            AXISRIGHT(2500);
+            telemetry.addData("Gyro val:", gyro.getHeading());
+            telemetry.update();
+
+            //Move towards safezone
+            FORWARD(1270, 0.5);
+
+            //Drop glyph
+            grabTopLeft.setPosition(0.4);
+            grabTopRight.setPosition(0.3);
+
+            BACKWARD(500, 0.5);
+
+            FORWARD(500, 0.5);
+            BACKWARD(500,0.5);
+
+            //FOR LEFT SIDE
+            SWAYLEFT(600);
+
+            FORWARD(570,0.5);
+            BACKWARD(500,0.5);
+        }
+
+        //Degrees travllled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
         telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
         telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
         telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
         telemetry.update();
-
         Thread.sleep(5000);
 
-        //Degrees travlled at this point
+        //Degrees travllled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
         telemetry.addData("front right degrees = ",motorFrontRight.getCurrentPosition());
         telemetry.addData("back left degrees = ", motorBackLeft.getCurrentPosition());
         telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
         telemetry.update();
-    }
 
+
+
+    }
 
 
     public static void FORWARD(int degrees, double power) {
@@ -367,13 +376,13 @@ public class Red2 extends LinearOpMode{
             //wait till motors done doing its thing
         }
 
-        motorBackRight.setPower(0);
         motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
     }
 
-    public static void BACKWARD(int degrees) {
+    public static void BACKWARD(int degrees, double power) {
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -384,10 +393,10 @@ public class Red2 extends LinearOpMode{
         motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        motorFrontLeft.setPower(-1);
-        motorBackLeft.setPower(-1);
-        motorFrontRight.setPower(-1);
-        motorBackRight.setPower(-1);
+        motorFrontLeft.setPower(-power);
+        motorBackLeft.setPower(-power);
+        motorFrontRight.setPower(-power);
+        motorBackRight.setPower(-power);
 
         motorBackLeft.setTargetPosition(-degrees);
         motorFrontRight.setTargetPosition(-degrees);
@@ -402,12 +411,10 @@ public class Red2 extends LinearOpMode{
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
         }
-
-        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
-
+        motorBackRight.setPower(0);
     }
 
     public static void AXISLEFT(int degrees) {
@@ -622,23 +629,6 @@ public class Red2 extends LinearOpMode{
         motorBackRight.setPower(0);
     }
 
-    public static void STOP() {
-        motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        motorBackRight.setPower(0);
-        motorFrontLeft.setPower(0);
-        motorBackLeft.setPower(0);
-        motorFrontRight.setPower(0);
-    }
-
     public static void SWAYLEFT(int degrees) {
         motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -668,12 +658,10 @@ public class Red2 extends LinearOpMode{
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
         }
-
-        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
-
+        motorBackRight.setPower(0);
 
     }
 
@@ -688,10 +676,10 @@ public class Red2 extends LinearOpMode{
         motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        motorFrontLeft.setPower(1);
-        motorBackLeft.setPower(-1);
-        motorFrontRight.setPower(-1);
-        motorBackRight.setPower(1);
+        motorFrontLeft.setPower(0.7);
+        motorBackLeft.setPower(-0.7);
+        motorFrontRight.setPower(-0.7);
+        motorBackRight.setPower(0.7);
 
         motorFrontLeft.setTargetPosition(degrees);
         motorBackLeft.setTargetPosition(-degrees);
@@ -706,16 +694,11 @@ public class Red2 extends LinearOpMode{
         while (motorFrontLeft.isBusy() && motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontRight.isBusy()) {
             //wait till motors done doing its thing
         }
-
-        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontRight.setPower(0);
-
+        motorBackRight.setPower(0);
     }
-
-
-
     public static void GRABUP(int degrees) {
         grabDC.setMode(STOP_AND_RESET_ENCODER);
         grabDC.setMode(RUN_USING_ENCODER);
@@ -788,10 +771,10 @@ public class Red2 extends LinearOpMode{
         }
     }
 
-    public static void turnAbsolute(int target, double turnSpeed) {
+    public static void turnAbsolute(int target) {
 
         zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
-        //turnSpeed = 0.07;
+        double turnSpeed = 0.07;
 
         while (Math.abs(zAccumulated - target) > 1) {  //Continue while the robot direction is further than three degrees from the target
             if (zAccumulated > target) {  //if gyro is positive, we will turn right
@@ -858,5 +841,4 @@ public class Red2 extends LinearOpMode{
 //        motorFrontRight.setPower(0);
 //        motorBackRight.setPower(0);
 //    }
-
 }

@@ -51,6 +51,10 @@ public class COMPILED extends LinearOpMode {
     private Servo relicArm;
     private Servo relicGrab;
 
+    //JEWEL
+    private static Servo jewelArm;
+    private static Servo jewelKnock;
+
     private int upperLimit;
     private int lowerLimit;
 
@@ -59,6 +63,7 @@ public class COMPILED extends LinearOpMode {
 
     private int mode;
     private int modeGamePad1;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -114,6 +119,13 @@ public class COMPILED extends LinearOpMode {
 
         relicArm.setPosition(0);
         relicGrab.setPosition(0.5);
+
+        //JEWEL
+        jewelKnock = hardwareMap.servo.get("JK");
+        jewelArm = hardwareMap.servo.get("JA");
+
+        jewelArm.setPosition(0.69);
+        jewelKnock.setPosition(0.27);
 
         upperLimit = 11100;
         lowerLimit = 650;
@@ -280,6 +292,43 @@ public class COMPILED extends LinearOpMode {
                     if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
                         grabMotor.setPower(0);
                         telemetry.addLine("a-stop <lower limit exceeded>");
+                        telemetry.update();
+                    }
+                }
+
+                    //LOWER LIMIT STOP
+                if (grabMotor.getCurrentPosition() <= 300) {
+                    if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+                        grabMotor.setPower(0);
+                        telemetry.addLine("stopped <lower limit stop>");
+                        telemetry.update();
+                    }
+                    if (!gamepad2.dpad_up && gamepad2.dpad_down) {
+                        grabMotor.setPower(0);
+                        telemetry.addLine("stopped <lower limit stop>");
+                        telemetry.update();
+                    }
+                    if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+                        grabMotor.setPower(gamepad2.right_trigger);
+                        telemetry.addLine("up <lower limit stop>");
+                        telemetry.update();
+                    }
+                }
+                    //UPPER LIMIT STOP
+                if (grabMotor.getCurrentPosition() >= 5300) {
+                    if (!gamepad2.dpad_up && !gamepad2.dpad_down) {
+                        grabMotor.setPower(0);
+                        telemetry.addLine("stopped <upper limit stop>");
+                        telemetry.update();
+                    }
+                    if (!gamepad2.dpad_up && gamepad2.dpad_down) {
+                        grabMotor.setPower(-gamepad2.right_trigger);
+                        telemetry.addLine("down <upper limit stop>");
+                        telemetry.update();
+                    }
+                    if (gamepad2.dpad_up && !gamepad2.dpad_down) {
+                        grabMotor.setPower(0r);
+                        telemetry.addLine("up <upper limit stop>");
                         telemetry.update();
                     }
                 }
