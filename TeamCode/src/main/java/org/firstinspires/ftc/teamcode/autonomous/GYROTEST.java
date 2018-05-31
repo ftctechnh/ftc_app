@@ -15,7 +15,6 @@ import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
 
-//VUFORIA
 
 /**
  * Created by anshnanda on 28-05-2018.
@@ -598,7 +597,7 @@ public class GYROTEST extends LinearOpMode{
 
     public void turnAbsolute(int target, double turnSpeed) {
 
-        zAccumulated = gyro.getHeading();  //Set variables to gyro readings
+        zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
         //turnSpeed = 0.07;
 
 
@@ -624,12 +623,12 @@ public class GYROTEST extends LinearOpMode{
             }
 
 
-            telemetry.addData("Gyro sensor: ", gyro.getHeading());
+            telemetry.addData("Gyro sensor: ", gyro.getIntegratedZValue());
             telemetry.update();
 
             zAccumulated = gyro.getIntegratedZValue();  //Set variables to gyro readings
 
-            telemetry.addData("Gyro sensor: ", gyro.getHeading());
+            telemetry.addData("Gyro sensor: ", gyro.getIntegratedZValue());
             telemetry.update();
         }
 
