@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_USING_ENCODER;
+import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
+
 /**
  * Created by shiva on 25/5/18.
  */
@@ -42,6 +45,19 @@ public class DRIVING extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()) {
+
+            //RESET ENCODERS
+            if (gamepad1.y) {
+                motorFrontLeft.setMode(STOP_AND_RESET_ENCODER);
+                motorFrontRight.setMode(STOP_AND_RESET_ENCODER);
+                motorBackLeft.setMode(STOP_AND_RESET_ENCODER);
+                motorBackRight.setMode(STOP_AND_RESET_ENCODER);
+
+                motorFrontLeft.setMode(RUN_USING_ENCODER);
+                motorFrontRight.setMode(RUN_USING_ENCODER);
+                motorBackLeft.setMode(RUN_USING_ENCODER);
+                motorBackRight.setMode(RUN_USING_ENCODER);
+            }
 
             //SET MODE
             if (gamepad1.a) {
@@ -87,10 +103,10 @@ public class DRIVING extends LinearOpMode {
 
                 if (gamepad1.y){
 
-                    motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                    motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                    motorBackLeft.setMode(STOP_AND_RESET_ENCODER);
+                    motorFrontLeft.setMode(STOP_AND_RESET_ENCODER);
+                    motorBackRight.setMode(STOP_AND_RESET_ENCODER);
+                    motorFrontRight.setMode(STOP_AND_RESET_ENCODER);
 
                     motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -233,6 +249,13 @@ public class DRIVING extends LinearOpMode {
                 }
 
             }
+
+            telemetry.addData("FL: ", motorFrontLeft.getCurrentPosition());
+            telemetry.addData("FR: ", motorFrontRight.getCurrentPosition());
+            telemetry.addData("BL: ", motorBackLeft.getCurrentPosition());
+            telemetry.addData("BR: ", motorBackRight.getCurrentPosition());
+            telemetry.update();
+
         }
     }
 

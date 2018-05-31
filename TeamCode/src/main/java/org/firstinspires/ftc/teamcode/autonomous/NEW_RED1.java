@@ -55,17 +55,17 @@ public class NEW_RED1 extends LinearOpMode{
     private static ColorSensor jColor;
     private static ModernRoboticsI2cGyro gyro;
 
-    private double gtlOPEN = 0.71;
-    private double gtlGRAB = 0.31;
+    private double gtlOPEN = 0.61;
+    private double gtlGRAB = 0.24;
 
-    private double gtrOPEN = 0.02;
-    private double gtrGRAB = 0.37;
+    private double gtrOPEN = 0.12;
+    private double gtrGRAB = 0.49;
 
-    private double gblOPEN = 0.04;
-    private double gblGRAB = 0.53;
+    private double gblOPEN = 0.07;
+    private double gblGRAB = 0.39;
 
-    private double gbrOPEN = 0.74;
-    private double gbrGRAB = 0.27;
+    private double gbrOPEN = 0.71;
+    private double gbrGRAB = 0.31;
 
     private static double jaUP = 0.69;
     private static double jaDOWN = 0.1;
@@ -75,14 +75,14 @@ public class NEW_RED1 extends LinearOpMode{
     private static double jkLEFT = 0.69;
     private static double jkINITIAL = 0;
 
-    private static double raINITIAL = 0; /**change*/
-    private static double rgINTITIAL = 0; /**change*/
-    private static double raOPEN = 0; /**change*/
-    private static double rgOPEN = 1; /**change*/
-    private static double raCLOSE = 0; /**change*/
-    private static double rgCLOSE = 0; /**change*/
+//    private static double raINITIAL = 0; /**change*/
+//    private static double rgINTITIAL = 0; /**change*/
+//    private static double raOPEN = 0; /**change*/
+//    private static double rgOPEN = 1; /**change*/
+//    private static double raCLOSE = 0; /**change*/
+//    private static double rgCLOSE = 0; /**change*/
 
-    private int gridColum = 2;
+    private int gridColumn = 2;
 
     private static int zAccumulated;
 
@@ -143,8 +143,8 @@ public class NEW_RED1 extends LinearOpMode{
         grabTopRight.setPosition(gtrOPEN);
         grabBottomRight.setPosition(gbrOPEN);
 
-        relicArm.setPosition(raINITIAL);
-        relicGrab.setPosition(rgINTITIAL);
+//        relicArm.setPosition(raINITIAL);
+//        relicGrab.setPosition(rgINTITIAL);
 
         jewelArm.setPosition(jaUP);
         jewelKnock.setPosition(jkRIGHT);
@@ -217,16 +217,16 @@ public class NEW_RED1 extends LinearOpMode{
         if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "%s visible", vuMark);
             if (vuMark == RelicRecoveryVuMark.CENTER){
-                gridColum = 2;
+                gridColumn = 2;
             }
             else if (vuMark == RelicRecoveryVuMark.RIGHT){
-                gridColum = 1;
+                gridColumn = 1;
             }
             else if (vuMark == RelicRecoveryVuMark.LEFT){
-                gridColum = 3;
+                gridColumn = 3;
             }
             else {
-                telemetry.addData("error", gridColum);
+                telemetry.addData("error", gridColumn);
             }
         }
         else {
@@ -247,7 +247,7 @@ public class NEW_RED1 extends LinearOpMode{
         grabTopRight.setPosition(0.4); /**change*/
         GRABUP(1600); /**change*/
 
-        if (gridColum == 2){
+        if (gridColumn == 2){
             //Move forward: MIDDLE
             FORWARD(4000, 0.5); /**change*/
             //GYRO CALIBRATE
@@ -279,7 +279,7 @@ public class NEW_RED1 extends LinearOpMode{
             BACKWARD(500); /**change*/
         }
 
-        if (gridColum == 1){
+        if (gridColumn == 1){
             //Move forward: RIGHT
             FORWARD(3080, 0.5); /**change*/
 
@@ -314,7 +314,7 @@ public class NEW_RED1 extends LinearOpMode{
             BACKWARD(500); /**change*/
         }
 
-        if (gridColum == 3){
+        if (gridColumn == 3){
             //Move forward: LEFT
             FORWARD(4750, 0.5); /**change*/
 
