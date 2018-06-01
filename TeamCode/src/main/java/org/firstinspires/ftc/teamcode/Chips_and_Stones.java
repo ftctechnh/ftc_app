@@ -141,11 +141,17 @@ public class Chips_and_Stones extends LinearOpMode {
          * documentation directory.
          */
         VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("FTC_2016-17");
-        VuforiaTrackable redTarget = stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
+        VuforiaTrackable redClose2Ramp = stonesAndChips.get(3);
+        redClose2Ramp.setName("RedTarget");  // gears
 
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
+        VuforiaTrackable redFarFromRamp = stonesAndChips.get(1);
+        redFarFromRamp.setName("RedTarget");  // tools
+
+        VuforiaTrackable blueFarFromRamp = stonesAndChips.get(2);
+        blueFarFromRamp.setName("RedTarget");  // legos
+
+        VuforiaTrackable blueClose2Ramp = stonesAndChips.get(0);
+        blueClose2Ramp.setName("BlueTarget");  // wheels
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
         List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
@@ -218,32 +224,54 @@ public class Chips_and_Stones extends LinearOpMode {
          * - Then we rotate it  90 around the field's Z access to face it away from the audience.
          * - Finally, we translate it back along the X axis towards the red audience wall.
          */
-        OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
+        OpenGLMatrix redClose2RampLoc = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth/2, 0, 0)
+                .translation(-mmFTCFieldWidth/2, -298.333f, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
-        redTarget.setLocation(redTargetLocationOnField);
-        RobotLog.ii(TAG, "Red Target=%s", format(redTargetLocationOnField));
+        redClose2Ramp.setLocation(redClose2RampLoc);
+        RobotLog.ii(TAG, "Red Close to Ramp=%s", format(redClose2RampLoc));
+
+        OpenGLMatrix redFarFromRampLoc = OpenGLMatrix
+                /* Then we translate the target off to the RED WALL. Our translation here
+                is a negative translation in X.*/
+                .translation(-mmFTCFieldWidth/2, 895, 0)
+                .multiplied(Orientation.getRotationMatrix(
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        redFarFromRamp.setLocation(redFarFromRampLoc);
+        RobotLog.ii(TAG, "Red Far From Ramp=%s", format(redFarFromRampLoc));
+
+        OpenGLMatrix blueClose2RampLoc = OpenGLMatrix
+                /* Then we translate the target off to the RED WALL. Our translation here
+                is a negative translation in X.*/
+                .translation(298.333f,-mmFTCFieldWidth/2,0)
+                .multiplied(Orientation.getRotationMatrix(
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                        AxesReference.EXTRINSIC, AxesOrder.XZX,
+                        AngleUnit.DEGREES, 90, 90, 0));
+        blueClose2Ramp.setLocation(blueClose2RampLoc);
+        RobotLog.ii(TAG, "Blue Close To Ramp=%s", format(blueClose2RampLoc));
 
         /*
          * To place the Stones Target on the Blue Audience wall:
          * - First we rotate it 90 around the field's X axis to flip it upright
          * - Finally, we translate it along the Y axis towards the blue audience wall.
          */
-        OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
+        OpenGLMatrix blueFarFromRampLoc= OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
+                .translation(-895, mmFTCFieldWidth/2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
-        blueTarget.setLocation(blueTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(blueTargetLocationOnField));
+        blueFarFromRamp.setLocation(blueFarFromRampLoc);
+        RobotLog.ii(TAG, "Blue Far From Ramp =%s", format(blueFarFromRampLoc));
 
         /**
          * Create a transformation matrix describing where the phone is on the robot. Here, we
@@ -269,8 +297,11 @@ public class Chips_and_Stones extends LinearOpMode {
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
          */
-        ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)redClose2Ramp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)redFarFromRamp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)blueClose2Ramp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        ((VuforiaTrackableDefaultListener)blueFarFromRamp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+
 
         /**
          * A brief tutorial: here's how all the math is going to work:
