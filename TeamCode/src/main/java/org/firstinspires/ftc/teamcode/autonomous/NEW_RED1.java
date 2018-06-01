@@ -107,7 +107,7 @@ public class NEW_RED1 extends LinearOpMode{
         gbrOPEN = 0.71;
         gbrGRAB = 0.31;
 
-        gridColumn = 2;
+        gridColumn = 3;
 
         //DRIVING
         motorFrontLeft = hardwareMap.dcMotor.get("MC1M1");
@@ -151,20 +151,20 @@ public class NEW_RED1 extends LinearOpMode{
         //jColor.setI2cAddress(I2cAddr.create8bit(0x3c));  /**check I2c address*/
         jColor.enableLed(true);
 
-        gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
-        telemetry.log().add("Gyro Calibrating. Do Not Move!");
-        gyro.calibrate();
-        // Wait until the gyro calibration is complete
-        timer.reset();
-        while (!isStopRequested() && gyro.isCalibrating())  {
-            telemetry.addData("calibrating", "%s", Math.round(timer.seconds())%2==0 ? "|.." : "..|");
-            telemetry.update();
-            sleep(50);
-        }
-        telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
-        telemetry.clear(); telemetry.update();
-        telemetry.addData("Gyro value: ", gyro.getHeading());
-        telemetry.update();
+//        gyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+//        telemetry.log().add("Gyro Calibrating. Do Not Move!");
+//        gyro.calibrate();
+//        // Wait until the gyro calibration is complete
+//        timer.reset();
+//        while (!isStopRequested() && gyro.isCalibrating())  {
+//            telemetry.addData("calibrating", "%s", Math.round(timer.seconds())%2==0 ? "|.." : "..|");
+//            telemetry.update();
+//            sleep(50);
+//        }
+//        telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
+//        telemetry.clear(); telemetry.update();
+//        telemetry.addData("Gyro value: ", gyro.getHeading());
+//        telemetry.update();
 
 
         //STARTING VALUES
@@ -270,7 +270,7 @@ public class NEW_RED1 extends LinearOpMode{
         grabTopLeft.setPosition(gtlGRAB);
         grabTopRight.setPosition(gtrGRAB);
 
-        GRABUP(1400);
+        GRABUP(1550);
 
         telemetry.addData("Grab motor encoder: ", grabMotor.getCurrentPosition());
         telemetry.update();
@@ -280,7 +280,7 @@ public class NEW_RED1 extends LinearOpMode{
             FORWARD(3900, 0.5); /**change*/
 
             //Lower grabber
-            GRABDOWN(1200);
+            GRABDOWN(1400);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -290,16 +290,18 @@ public class NEW_RED1 extends LinearOpMode{
             AXISRIGHT(2300); /**change*/
 
             //Move towards safezone
-            FORWARD(1270, 0.5); /**change*/
+            FORWARD(450, 0.5); /**change*/
 
             //Drop glyph
             grabTopLeft.setPosition(gtlOPEN);
             grabTopRight.setPosition(gtrOPEN);
 
+            FORWARD(820, 0.5);
+
             BACKWARD(500); /**change*/
 
-            FORWARD(500, 0.5); /**change*/
-            BACKWARD(500); /**change*/
+            FORWARD(600, 0.5); /**change*/
+            BACKWARD(550); /**change*/
 
             FORWARD(570, 0.5); /**change*/
             BACKWARD(500); /**change*/
@@ -310,7 +312,7 @@ public class NEW_RED1 extends LinearOpMode{
             FORWARD(3080, 0.5); /**change*/
 
             //Lower grabber
-            GRABDOWN(1200);
+            GRABDOWN(1400);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -320,18 +322,18 @@ public class NEW_RED1 extends LinearOpMode{
             AXISRIGHT(2300); /**change*/
 
             //Move towards safezone
-            FORWARD(500, 0.5); /**change*/
+            FORWARD(450, 0.5); /**change*/
 
             //Drop glyph
             grabTopLeft.setPosition(gtlOPEN);
             grabTopRight.setPosition(gtrOPEN);
 
-            FORWARD(770, 0.5); /**change*/
+            FORWARD(820, 0.5); /**change*/
 
             BACKWARD(500); /**change*/
 
-            FORWARD(500, 0.5); /**change*/
-            BACKWARD(500); /**change*/
+            FORWARD(600, 0.5); /**change*/
+            BACKWARD(550); /**change*/
 
             //FOR RIGHT SIDE
             SWAYLEFT(650); /**change*/
@@ -341,33 +343,37 @@ public class NEW_RED1 extends LinearOpMode{
         }
 
         if (gridColumn == 3){
-            //Move forward: LEFT
-            FORWARD(4750, 0.5); /**change*/
+            //Move forward: MIDDLE
+            FORWARD(4800, 0.5); /**change*/
+
+            //Lower grabber
+            GRABDOWN(1400);
 
             //GYRO CALIBRATE
-            gyro.resetZAxisIntegrator();
-            telemetry.addData("Gyro value: ", gyro.getHeading());
-            telemetry.update();
+//            gyro.resetZAxisIntegrator();
+//            telemetry.addData("Gyro value: ", gyro.getHeading());
+//            telemetry.update();
 
-            //AXISRIGHT(2500); /**change*/
-            turnAbsolute(90, 0.07);
+            AXISRIGHT(2200); /**change*/
 
             //Move towards safezone
-            FORWARD(1270, 0.5); /**change*/
+            FORWARD(450, 0.5); /**change*/
 
             //Drop glyph
             grabTopLeft.setPosition(gtlOPEN);
             grabTopRight.setPosition(gtrOPEN);
 
+            FORWARD(820, 0.5); /**change*/
+
             BACKWARD(500); /**change*/
 
             FORWARD(600, 0.5); /**change*/
-            BACKWARD(500); /**change*/
+            BACKWARD(550); /**change*/
 
             //FOR LEFT SIDE
             SWAYRIGHT(650); /**change*/
 
-            FORWARD(570,0.5); /**change*/
+            FORWARD(570, 0.5); /**change*/
             BACKWARD(500); /**change*/
         }
         //Degrees travlled at this point
@@ -401,9 +407,9 @@ public class NEW_RED1 extends LinearOpMode{
 
 
         motorFrontRight.setPower(power);
-        motorBackRight.setPower(power);
-        motorFrontLeft.setPower(power);
         motorBackLeft.setPower(power);
+        motorFrontLeft.setPower(power);
+        motorBackRight.setPower(power);
 
         motorBackLeft.setTargetPosition(degrees);
         motorFrontRight.setTargetPosition(degrees);
