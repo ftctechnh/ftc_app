@@ -253,7 +253,7 @@ public class Chips_and_Stones extends LinearOpMode {
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 90, 0));
+                        AngleUnit.DEGREES, 90, 0, 0));
         blueClose2Ramp.setLocation(blueClose2RampLoc);
         RobotLog.ii(TAG, "Blue Close To Ramp=%s", format(blueClose2RampLoc));
 
