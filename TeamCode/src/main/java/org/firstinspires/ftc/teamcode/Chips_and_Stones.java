@@ -330,6 +330,10 @@ public class Chips_and_Stones extends LinearOpMode {
         /** Start tracking the data sets we care about. */
         stonesAndChips.activate();
 
+        float robotX;
+        float robotY;
+        float robotBearing;
+
         while (opModeIsActive()) {
 
             for (VuforiaTrackable trackable : allTrackables) {
@@ -351,6 +355,25 @@ public class Chips_and_Stones extends LinearOpMode {
             if (lastLocation != null) {
                 //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
                 telemetry.addData("Pos", format(lastLocation));
+
+                //DRC Test Code from FTC Forum
+
+                VectorF trans = lastLocation.getTranslation();
+                Orientation rot = Orientation.getOrientation(lastLocation, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+                robotX = trans.get(0);
+                robotY = trans.get(1);
+                robotBearing = rot.thirdAngle;
+                if (robotBearing < 0)
+                        {
+                            robotBearing = 360 + robotBearing;
+                        }
+                telemetry.addData( "X: ", robotX);
+                telemetry.addData( "Y: ", robotY);
+                telemetry.addData( "Bearing: ", robotBearing);
+
+                //End Test Code
+
+
             } else {
                 telemetry.addData("Pos", "Unknown");
             }
