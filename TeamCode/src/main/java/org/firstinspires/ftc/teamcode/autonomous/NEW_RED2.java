@@ -723,9 +723,9 @@ public class NEW_RED2 extends LinearOpMode {
         grabMotor.setMode(RUN_USING_ENCODER);
 
 
-        grabMotor.setPower(-1);
+        grabMotor.setPower(1);
 
-        grabMotor.setTargetPosition(-degrees);
+        grabMotor.setTargetPosition(degrees);
 
         grabMotor.setMode(RUN_TO_POSITION);
 
@@ -739,9 +739,9 @@ public class NEW_RED2 extends LinearOpMode {
         grabMotor.setMode(STOP_AND_RESET_ENCODER);
         grabMotor.setMode(RUN_USING_ENCODER);
 
-        grabMotor.setPower(0.75);
+        grabMotor.setPower(-0.75);
 
-        grabMotor.setTargetPosition(degrees);
+        grabMotor.setTargetPosition(-degrees);
 
         grabMotor.setMode(RUN_TO_POSITION);
 

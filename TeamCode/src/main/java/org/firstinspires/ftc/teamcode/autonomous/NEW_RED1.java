@@ -89,7 +89,7 @@ public class NEW_RED1 extends LinearOpMode{
     ElapsedTime timer = new ElapsedTime();
 
     OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia;
+//    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() throws  InterruptedException{
@@ -180,14 +180,14 @@ public class NEW_RED1 extends LinearOpMode{
         jewelKnock.setPosition(jkRIGHT);
 
         /**<VUFORIA>*/
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+//        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
+//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+//        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+//        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         /**</VUFORIA>*/
 
 
@@ -197,7 +197,7 @@ public class NEW_RED1 extends LinearOpMode{
 
 
         //VUFORIA
-        relicTrackables.activate();
+//        relicTrackables.activate();
 
         //JEWEL KNOCK FOR BLUE SIDE
         jewelKnock.setPosition(jkCENTER);
@@ -753,9 +753,9 @@ public class NEW_RED1 extends LinearOpMode{
         grabMotor.setMode(RUN_USING_ENCODER);
 
 
-        grabMotor.setPower(-1);
+        grabMotor.setPower(1);
 
-        grabMotor.setTargetPosition(-degrees);
+        grabMotor.setTargetPosition(degrees);
 
         grabMotor.setMode(RUN_TO_POSITION);
 
@@ -769,9 +769,9 @@ public class NEW_RED1 extends LinearOpMode{
         grabMotor.setMode(STOP_AND_RESET_ENCODER);
         grabMotor.setMode(RUN_USING_ENCODER);
 
-        grabMotor.setPower(0.75);
+        grabMotor.setPower(-0.75);
 
-        grabMotor.setTargetPosition(degrees);
+        grabMotor.setTargetPosition(-degrees);
 
         grabMotor.setMode(RUN_TO_POSITION);
 

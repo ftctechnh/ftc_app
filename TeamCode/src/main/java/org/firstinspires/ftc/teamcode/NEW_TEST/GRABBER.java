@@ -69,7 +69,6 @@ public class GRABBER extends LinearOpMode {
 
         grabMotor.setMode(STOP_AND_RESET_ENCODER);
         grabMotor.setMode(RUN_USING_ENCODER);
-        grabMotor.setDirection(REVERSE);
 
         upperLimit = 5000;
         lowerLimit = 800;

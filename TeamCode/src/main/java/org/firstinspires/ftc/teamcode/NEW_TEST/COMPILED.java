@@ -86,7 +86,6 @@ public class COMPILED extends LinearOpMode {
 
         grabMotor.setMode(STOP_AND_RESET_ENCODER);
         grabMotor.setMode(RUN_USING_ENCODER);
-        grabMotor.setDirection(REVERSE);
 
         gtlOPEN = 0.61;
         gtlGRAB = 0.24;
