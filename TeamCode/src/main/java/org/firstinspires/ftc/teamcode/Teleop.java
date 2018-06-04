@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Basic: Iterative OpMode", group = "Iterative Opmode")
-@Disabled
+@TeleOp(name = "MecanumTeleop", group = "Iterative Opmode")
+//@Disabled
 public class Teleop extends OpMode {
 
     // Declare OpMode members.
@@ -42,7 +42,7 @@ public class Teleop extends OpMode {
 
         yVelocity = -gamepad1.left_stick_y;
         xVelocity = gamepad1.left_stick_x;
-        wVelocity = gamepad1.right_stick_y;
+        wVelocity = gamepad1.right_stick_x;
         yVelocity = Range.clip(yVelocity, -1.0, 1.0);
         xVelocity = Range.clip(xVelocity, -1.0, 1.0);
         wVelocity = Range.clip(wVelocity, -1.0, 1.0);

@@ -3,18 +3,19 @@ package org.firstinspires.ftc.teamcode;
 class MecanumDrivetrain extends AbstractDrivetrain {
 
     private static final double WIDTH = 16;
-    private static final double LENGTH = 17;
+    private static final double LENGTH = 5;
     private static final double MAX_SPEED = 1.0;
 
     public MecanumDrivetrain(){
     }
 
     // Moves the drive train using the given x, y, and rotational velocities
+    @Override
     public void drive(double xVelocity, double yVelocity, double wVelocity){
         double speedScale = 1.0;
 
-        double lfVelocity = yVelocity - xVelocity + wVelocity*(WIDTH/2+LENGTH/2);
-        double rfVelocity = yVelocity + xVelocity - wVelocity*(WIDTH/2+LENGTH/2);
+        double rfVelocity = yVelocity - xVelocity + wVelocity*(WIDTH/2+LENGTH/2);
+        double lfVelocity = yVelocity + xVelocity - wVelocity*(WIDTH/2+LENGTH/2);
         double lbVelocity = yVelocity - xVelocity - wVelocity*(WIDTH/2+LENGTH/2);
         double rbVelocity = yVelocity + xVelocity + wVelocity*(WIDTH/2+LENGTH/2);
 
@@ -31,6 +32,7 @@ class MecanumDrivetrain extends AbstractDrivetrain {
 
     }
 
+    @Override
     public void encoderDrive(double xDist, double yDist, double wDist, double maxSpeed){
         // TODO: Implement
     }
