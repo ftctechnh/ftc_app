@@ -33,14 +33,12 @@ public class DRIVING extends LinearOpMode {
         motorFrontRight = hardwareMap.dcMotor.get("MC2M1");
         motorBackRight = hardwareMap.dcMotor.get("MC2M2");
 
-//        relicArm = hardwareMap.servo.get("RA");
 
         motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         mode = 1;
 
-//        relicArm.setPosition(0.4);
 
         waitForStart();
 
