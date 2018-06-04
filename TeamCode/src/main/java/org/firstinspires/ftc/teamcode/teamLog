@@ -1,0 +1,11 @@
+Sep. 24
+Cloned team repository from the official repository
+Official repository: https://github.com/ftctechnh/ftc_app
+Team repository: https://github.com/FTC12457/ftc_app
+
+Usage:
+git clone --depth=1 https://github.com/FTC12457/ftc_app.git
+
+Sept. 30
+Team attended the FTC leadership training
+
