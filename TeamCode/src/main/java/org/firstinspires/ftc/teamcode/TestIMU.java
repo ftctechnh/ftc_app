@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 //Created to demonstrate both opmodes, used as an example mostly.
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
@@ -12,11 +11,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name = "Original Autopark in Auto", group = "concept")
 public class TestIMU extends LinearOpMode
 {
-    private TankBase robot;
+    private ParadeBot robot;
     @Override
     public void runOpMode() throws InterruptedException
     {
-        robot = new TankBase(hardwareMap);
+        robot = new ParadeBot(hardwareMap);
         waitForStart();
         while(opModeIsActive())
         {

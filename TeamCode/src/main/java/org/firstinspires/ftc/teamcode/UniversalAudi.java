@@ -12,11 +12,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class UniversalAudi extends LinearOpMode
 {
     NewRobot newRobot;
-    TankBase robot;
+    ParadeBot robot;
     public void runOpMode()
     {
         newRobot = new NewRobot(hardwareMap);
-        robot = new TankBase(hardwareMap);
+        robot = new ParadeBot(hardwareMap);
         waitForStart();
         sleep(300);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
