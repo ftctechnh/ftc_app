@@ -107,18 +107,12 @@ public class Auto_R1 extends OpMode {
             switch(state){
                 case TIME:
                     time.reset();
-                    state = States.GRAB;
-                    goalSeconds = currentSeconds += 0.5;
-                    break;
-                case GRAB:
                     state = States.SCAN;
-                    goalSeconds = currentSeconds += 5.0;
+                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
-                    if(keyColumn != 0 || currentSeconds >= goalSeconds){
-                        state = States.ARMDOWN;
-                    }
+                    state = States.ARMDOWN;
                     break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
@@ -236,10 +230,73 @@ public class Auto_R1 extends OpMode {
                 case GLYPHPITTURN:
                     if (!isFinished) {
                         isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
-                    }else {
+                    } else{
                         isFinished = false;
                         state = States.END;
+                    } break;
+                case GRAB:
+                    robot.blockLift.grab(false, 1);
+                    state = States.GLYPHPITDRIVE;
+                    break;
+                case GLYPHPITDRIVE:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 8.0);
+                    } else{
+                        isFinished = false;
+                        state = States.HOLD;
+                        goalSeconds = currentSeconds += 5.0;
                     }break;
+                case HOLD:
+                    if(currentSeconds >= goalSeconds) {
+                        robot.blockLift.grab(false, 0);
+                        state = States.CRYPTODRIVE;
+                    }break;
+                case CRYPTODRIVE:
+                    if (!isFinished){
+                        robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 4.0);
+                    } else{
+                        isFinished = false;
+                        state = States.CRYPTOTURN;
+                    }break;
+                case CRYPTOTURN:
+                    if (!isFinished){
+                        robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
+                    } else{
+                        isFinished = false;
+                        state = States.SLIDELIFT;
+                    }break;
+                case SLIDELIFT:
+                    robot.blockLift.slideHeight(false, 0,false,true, false, telemetry);
+                    state = States.DRIVEBOX2;
+                    break;
+                case DRIVEBOX2:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1.5);
+                    } else{
+                        isFinished = false;
+                        state = States.DROP2;
+                        goalSeconds = currentSeconds += 1.0;
+                    } break;
+                case DROP2:
+                    robot.blockLift.grab(true, 0);
+                    if (currentSeconds >= goalSeconds) {
+                        state = States.DRIVEBACK2;
+                        robot.blockLift.grab(false, 0);
+                    } break;
+                case DRIVEBACK2:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
+                    } else{
+                        isFinished = false;
+                        state = States.GLYPHPITTURN2;
+                    } break;
+                case GLYPHPITTURN2:
+                    if (!isFinished) {
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
+                    } else{
+                        isFinished = false;
+                        state = States.END;
+                    } break;
                 case END:
                     robot.driveTrain.stop();
                     break;

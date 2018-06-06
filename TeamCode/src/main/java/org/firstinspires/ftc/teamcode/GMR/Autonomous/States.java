@@ -20,8 +20,17 @@ public enum States {
     DRIVEBACK,
     STRAFE,
     END,
-    GRAB,
     DROP,
     OFFSTONE,
-    GLYPHPITTURN
+    GLYPHPITTURN,
+    GRAB,
+    GLYPHPITDRIVE,
+    HOLD,
+    CRYPTOTURN,
+    CRYPTODRIVE,
+    SLIDELIFT,
+    DRIVEBOX2,
+    DROP2,
+    DRIVEBACK2,
+    GLYPHPITTURN2
 }

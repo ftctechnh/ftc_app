@@ -121,6 +121,11 @@ public class DriveTrain {
         this.rightFront.setPower(Range.clip((y-x-z),-1,1));
         this.leftRear.setPower(Range.clip(-(y-x+z),-1,1));
         this.rightRear.setPower(Range.clip((y+x-z), -1, 1));
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  
     }
 
     //A zoned drive that makes it easier to move in the sixteen different directions listed, using the joystick

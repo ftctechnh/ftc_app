@@ -95,12 +95,8 @@ public class Auto_B2 extends OpMode {
             currentSeconds = time.seconds();
             switch(state){
                 case TIME:
-                    state = States.GRAB;
-                    goalSeconds = currentSeconds += 0.5;
-                    break;
-                case GRAB:
-                    goalSeconds = currentSeconds += 5;
                     state = States.SCAN;
+                    goalSeconds = currentSeconds += 5.5;
                     break;
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);

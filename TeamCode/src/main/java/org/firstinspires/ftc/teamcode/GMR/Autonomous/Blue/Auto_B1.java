@@ -107,13 +107,8 @@ public class Auto_B1 extends OpMode {
             switch(state){
                 case TIME:
                     //Starts the timer
-                    state = States.GRAB;
-                    goalSeconds = currentSeconds += 0.5;
-                    break;
-                case GRAB:
                     state = States.SCAN;
-                    goalSeconds = currentSeconds + 5.0;
-                    stageCheck += "Grab - ";
+                    goalSeconds = currentSeconds += 5.5;
                     break;
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.BLUE);

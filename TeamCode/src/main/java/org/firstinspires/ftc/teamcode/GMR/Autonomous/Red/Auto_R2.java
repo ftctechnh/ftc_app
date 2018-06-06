@@ -100,12 +100,8 @@ public class Auto_R2 extends OpMode {
             telemetry.update();
             switch(state){
                 case TIME:
-                    state = States.GRAB;
-                    goalSeconds = currentSeconds += 0.5;
-                    break;
-                case GRAB:
                     state = States.SCAN;
-                    goalSeconds = currentSeconds + 5.0;
+                    goalSeconds = currentSeconds += 5.5;
                     break;
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
