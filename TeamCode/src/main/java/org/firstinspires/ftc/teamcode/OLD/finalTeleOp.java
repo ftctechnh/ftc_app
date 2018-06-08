@@ -266,7 +266,6 @@ public class finalTeleOp extends LinearOpMode{
                 telemetry.addData("Relic DC Encoder: ", grabMotor.getCurrentPosition());
             }
 
-
             telemetry.update();
 
         }

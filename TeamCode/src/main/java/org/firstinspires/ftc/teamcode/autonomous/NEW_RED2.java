@@ -290,7 +290,7 @@ public class NEW_RED2 extends LinearOpMode {
 
             AXISRIGHT(4500);
             BACKWARD(600);
-            GRABDOWN(150);
+            GRABDOWN(200);
         }
 
         if (gridColumn == 1){
@@ -300,7 +300,7 @@ public class NEW_RED2 extends LinearOpMode {
             Thread.sleep(1000);
 
             //right
-            SWAYLEFT(1000);
+            SWAYLEFT(700);
 
             Thread.sleep(1000);
 
@@ -322,7 +322,7 @@ public class NEW_RED2 extends LinearOpMode {
 
             AXISRIGHT(4500);
             BACKWARD(600);
-            GRABDOWN(150);
+            GRABDOWN(200);
 
         }
 
@@ -354,7 +354,7 @@ public class NEW_RED2 extends LinearOpMode {
 
             AXISRIGHT(4500);
             BACKWARD(600);
-            GRABDOWN(150);
+            GRABDOWN(200);
         }
 
         //Degrees travlled at this point
