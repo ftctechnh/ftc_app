@@ -291,7 +291,10 @@ public class NEW_BLUE1 extends LinearOpMode {
             BACKWARD(550); /**change*/
 
             FORWARD(570, 0.5); /**change*/
-            BACKWARD(500); /**change*/
+            BACKWARD(1000); /**change*/
+
+            AXISRIGHT(4500);
+            BACKWARD(650);
 
         }
 
@@ -356,7 +359,10 @@ public class NEW_BLUE1 extends LinearOpMode {
             SWAYRIGHT(650); /**change*/
 
             FORWARD(570,0.5); /**change*/
-            BACKWARD(500); /**change*/
+            BACKWARD(1000); /**change*/
+
+            AXISRIGHT(4500);
+            BACKWARD(650);
 
         }
 
@@ -423,7 +429,10 @@ public class NEW_BLUE1 extends LinearOpMode {
             SWAYLEFT(650); /**change*/
 
             FORWARD(570, 0.5); /**change*/
-            BACKWARD(500); /**change*/
+            BACKWARD(1000); /**change*/
+
+            AXISRIGHT(4500);
+            BACKWARD(650);
 
         }
 
