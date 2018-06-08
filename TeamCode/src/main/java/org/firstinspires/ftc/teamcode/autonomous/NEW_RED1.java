@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
@@ -66,7 +67,7 @@ public class NEW_RED1 extends LinearOpMode{
     private double gbrOPEN;
     private double gbrGRAB;
 
-    private static double jaUP = 0.69;
+    private static double jaUP = 0.635;
     private static double jaDOWN = 0.1;
 
     private static double jkCENTER = 0.5;
@@ -89,7 +90,7 @@ public class NEW_RED1 extends LinearOpMode{
     ElapsedTime timer = new ElapsedTime();
 
     OpenGLMatrix lastLocation = null;
-//    VuforiaLocalizer vuforia;
+    VuforiaLocalizer vuforia;
 
     @Override
     public void runOpMode() throws  InterruptedException{
@@ -180,14 +181,14 @@ public class NEW_RED1 extends LinearOpMode{
         jewelKnock.setPosition(jkRIGHT);
 
         /**<VUFORIA>*/
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-//        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
-//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-//        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-//        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         /**</VUFORIA>*/
 
 
@@ -197,7 +198,7 @@ public class NEW_RED1 extends LinearOpMode{
 
 
         //VUFORIA
-//        relicTrackables.activate();
+        relicTrackables.activate();
 
         //JEWEL KNOCK FOR BLUE SIDE
         jewelKnock.setPosition(jkCENTER);
@@ -236,26 +237,26 @@ public class NEW_RED1 extends LinearOpMode{
         Thread.sleep(1000);
 
         /**<VUFORIA>*/
-//        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-//            telemetry.addData("VuMark", "%s visible", vuMark);
-//            if (vuMark == RelicRecoveryVuMark.CENTER){
-//                gridColumn = 2;
-//            }
-//            else if (vuMark == RelicRecoveryVuMark.RIGHT){
-//                gridColumn = 1;
-//            }
-//            else if (vuMark == RelicRecoveryVuMark.LEFT){
-//                gridColumn = 3;
-//            }
-//            else {
-//                telemetry.addData("error", gridColumn);
-//            }
-//        }
-//        else {
-//            telemetry.addData("VuMark", "not visible");
-//        }
-        //telemetry.update();
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            if (vuMark == RelicRecoveryVuMark.CENTER){
+                gridColumn = 2;
+            }
+            else if (vuMark == RelicRecoveryVuMark.RIGHT){
+                gridColumn = 1;
+            }
+            else if (vuMark == RelicRecoveryVuMark.LEFT){
+                gridColumn = 3;
+            }
+            else {
+                telemetry.addData("error", gridColumn);
+            }
+        }
+        else {
+            telemetry.addData("VuMark", "not visible");
+        }
+        telemetry.update();
         /**</VUFORIA>*/
 
         //Degrees travlled at this point
@@ -280,7 +281,7 @@ public class NEW_RED1 extends LinearOpMode{
             FORWARD(3900, 0.5); /**change*/
 
             //Lower grabber
-            GRABDOWN(1400);
+            GRABDOWN(1200);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -304,7 +305,11 @@ public class NEW_RED1 extends LinearOpMode{
             BACKWARD(550); /**change*/
 
             FORWARD(570, 0.5); /**change*/
-            BACKWARD(500); /**change*/
+            BACKWARD(1000); /**change*/
+
+            AXISRIGHT(4600);
+            BACKWARD(500);
+            GRABDOWN(200);
         }
 
         if (gridColumn == 1){
@@ -312,7 +317,7 @@ public class NEW_RED1 extends LinearOpMode{
             FORWARD(3080, 0.5); /**change*/
 
             //Lower grabber
-            GRABDOWN(1400);
+            GRABDOWN(1200);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -340,6 +345,10 @@ public class NEW_RED1 extends LinearOpMode{
 
             FORWARD(570,0.5); /**change*/
             BACKWARD(500); /**change*/
+
+            AXISRIGHT(4600);
+            BACKWARD(500);
+            GRABDOWN(200);
         }
 
         if (gridColumn == 3){
@@ -347,7 +356,7 @@ public class NEW_RED1 extends LinearOpMode{
             FORWARD(4800, 0.5); /**change*/
 
             //Lower grabber
-            GRABDOWN(1400);
+            GRABDOWN(1200);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -375,6 +384,10 @@ public class NEW_RED1 extends LinearOpMode{
 
             FORWARD(570, 0.5); /**change*/
             BACKWARD(500); /**change*/
+
+            AXISRIGHT(4600);
+            BACKWARD(500);
+            GRABDOWN(200);
         }
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());

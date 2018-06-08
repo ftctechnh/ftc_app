@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.NEW_TEST;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -17,6 +18,8 @@ public class JEWEL extends LinearOpMode {
     private Servo jewelArm;
     private Servo jewelKnock;
 
+    private static ColorSensor jColor;
+
     private double pos;
     private double pos2;
 
@@ -25,6 +28,9 @@ public class JEWEL extends LinearOpMode {
 
         jewelArm = hardwareMap.get(Servo.class, "JA");
         jewelKnock = hardwareMap.get(Servo.class, "JK");
+
+        jColor = hardwareMap.colorSensor.get("colF");
+        jColor.enableLed(true);
 
         jewelArm.setPosition(0.5);
         jewelKnock.setPosition(0.5);
@@ -60,6 +66,8 @@ public class JEWEL extends LinearOpMode {
 
             telemetry.addData("JA: ", jewelArm.getPosition());
             telemetry.addData("JK: ", jewelKnock.getPosition());
+            telemetry.addData("Color sensor value: ", jColor.blue());
+
             telemetry.update();
 
         }

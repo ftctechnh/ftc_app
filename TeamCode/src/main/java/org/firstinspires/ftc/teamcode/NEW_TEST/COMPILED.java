@@ -123,7 +123,7 @@ public class COMPILED extends LinearOpMode {
         jewelKnock = hardwareMap.servo.get("JK");
         jewelArm = hardwareMap.servo.get("JA");
 
-        jewelArm.setPosition(0.69);
+        jewelArm.setPosition(0.635);
         jewelKnock.setPosition(0.27);
 
         upperLimit = 11100;

@@ -61,7 +61,7 @@ public class NEW_BLUE2 extends LinearOpMode {
     private double gbrOPEN;
     private double gbrGRAB;
 
-    private static double jaUP = 0.69;
+    private static double jaUP = 0.635;
     private static double jaDOWN = 0.1;
 
     private static double jkCENTER = 0.5;
@@ -175,16 +175,16 @@ public class NEW_BLUE2 extends LinearOpMode {
         jewelArm.setPosition(jaUP);
         jewelKnock.setPosition(jkRIGHT);
 
-//        /**<VUFORIA>*/
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-//        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
-//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-//        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-//        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-//        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-//        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-//        /**</VUFORIA>*/
+        /**<VUFORIA>*/
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "ASg9+Lf/////AAAAmSV/ZiXUrU22pM3b5qOg2oJoTEYLmeQoyo7QENEfWgcz+LnuTsVPHDypRkMZI88hbCcjqmV3oD33An5LQK/c4B8mdl+wiHLQlpgTcgfkmzSnMJRx0fA7+iVlor2ascTwNhmDjt38DUHzm70ZVZQC8N5e8Ajp8YBieWUEL4+zaOJzi4dzaog/5nrVMpOdMwjLsLC1x4RaU89j6browKc84rzHYCrwwohZpxiiBNlqLfyCbIRzP99E3nVQ7BlnrzSP8WDdfjhMj6sRIxDXCEgHhrDW+xYmQ+qc8tjW5St1pTO9IZj31SLYupSCN7n0otW1FIyc9TTJZM4FKAOSbMboniQsSTve+9EaHMGfhVbcQf/M";
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+        this.vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
+        /**</VUFORIA>*/
 
 
 
@@ -193,7 +193,7 @@ public class NEW_BLUE2 extends LinearOpMode {
 
 
         //VUFORIA
-//        relicTrackables.activate();
+        relicTrackables.activate();
 
         //JEWEL KNOCK FOR BLUE SIDE
         jewelKnock.setPosition(jkCENTER);
@@ -230,24 +230,24 @@ public class NEW_BLUE2 extends LinearOpMode {
 
         Thread.sleep(1000);
 
-//        /**<VUFORIA>*/
-//        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-//        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
-//            telemetry.addData("VuMark", "%s visible", vuMark);
-//            if (vuMark == RelicRecoveryVuMark.CENTER) {
-//                gridColumn = 2;
-//            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
-//                gridColumn = 1;
-//            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
-//                gridColumn = 3;
-//            } else {
-//                telemetry.addData("error", gridColumn);
-//            }
-//        } else {
-//            telemetry.addData("VuMark", "not visible");
-//        }
-//        telemetry.update();
-//        /**</VUFORIA>*/
+        /**<VUFORIA>*/
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("VuMark", "%s visible", vuMark);
+            if (vuMark == RelicRecoveryVuMark.CENTER) {
+                gridColumn = 2;
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                gridColumn = 1;
+            } else if (vuMark == RelicRecoveryVuMark.LEFT) {
+                gridColumn = 3;
+            } else {
+                telemetry.addData("error", gridColumn);
+            }
+        } else {
+            telemetry.addData("VuMark", "not visible");
+        }
+        telemetry.update();
+        /**</VUFORIA>*/
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
