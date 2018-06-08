@@ -210,9 +210,10 @@ public class NEW_BLUE2 extends LinearOpMode {
         //telemetry.addData("blue: ", jColor.blue());
         //telemetry.update();
 
-        if (jColor.blue() < 3) {
+        if (jColor.red() < 3){
             jewelKnock.setPosition(jkLEFT);
-        } else {
+        }
+        else {
             jewelKnock.setPosition(jkRIGHT);
         }
 
