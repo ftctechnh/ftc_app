@@ -125,7 +125,7 @@ public class DriveTrain {
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);  
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     //A zoned drive that makes it easier to move in the sixteen different directions listed, using the joystick
