@@ -110,11 +110,11 @@ public class Auto_R1 extends OpMode {
                 case TIME:
                     time.reset();
                     state = States.SCAN;
-                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case SCAN:
                     keyColumn = robot.vision.keyColumnDetect(AllianceColor.RED);
                     state = States.ARMDOWN;
+                    goalSeconds = currentSeconds += 0.5;
                     break;
                 case ARMDOWN:
                     //Lowers right arm WORKING
