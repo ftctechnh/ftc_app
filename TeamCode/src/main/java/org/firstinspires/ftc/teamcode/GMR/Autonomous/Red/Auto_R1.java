@@ -62,6 +62,8 @@ public class Auto_R1 extends OpMode {
 
     private double columnDist;
 
+    private double gyroBeforeGlyphPit;
+
     @Override
     public void init() {
         rightFront = hardwareMap.dcMotor.get("rightfront");
@@ -236,6 +238,7 @@ public class Auto_R1 extends OpMode {
                     } break;
                 case GRAB:
                     robot.blockLift.grab(false, 1);
+                    gyroBeforeGlyphPit = robot.driveTrain.getYaw();
                     state = States.GLYPHPITDRIVE;
                     break;
                 case GLYPHPITDRIVE:
@@ -249,8 +252,15 @@ public class Auto_R1 extends OpMode {
                 case HOLD:
                     if(currentSeconds >= goalSeconds) {
                         robot.blockLift.grab(false, 0);
-                        state = States.CRYPTODRIVE;
+                        state = States.STRAIGHTEN;
                     }break;
+                case STRAIGHTEN:
+                    if (!isFinished) {
+                        isFinished = robot.driveTrain.straighten(gyroBeforeGlyphPit);
+                    } else {
+                        isFinished = false;
+                        state = States.CRYPTODRIVE;
+                    }
                 case CRYPTODRIVE:
                     if (!isFinished){
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 5.5);
