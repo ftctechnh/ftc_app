@@ -222,7 +222,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case DRIVEBACK:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 2.0);
                     } else{
                         isFinished = false;
                         state = States.GLYPHPITTURN;
@@ -240,7 +240,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case GLYPHPITDRIVE:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 7.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 6.5);
                     } else{
                         isFinished = false;
                         state = States.HOLD;
@@ -253,7 +253,7 @@ public class Auto_R1 extends OpMode {
                     }break;
                 case CRYPTODRIVE:
                     if (!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 6.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 5.5);
                     } else{
                         isFinished = false;
                         state = States.CRYPTOTURN;
@@ -271,7 +271,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case DRIVEBOX2:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 1.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 2.0);
                     } else{
                         isFinished = false;
                         state = States.DROP2;
@@ -285,7 +285,7 @@ public class Auto_R1 extends OpMode {
                     } break;
                 case DRIVEBACK2:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1.5);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 2.0);
                     } else{
                         isFinished = false;
                         state = States.GLYPHPITTURN2;
