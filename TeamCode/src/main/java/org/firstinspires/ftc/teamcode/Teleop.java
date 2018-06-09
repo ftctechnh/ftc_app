@@ -40,9 +40,9 @@ public class Teleop extends OpMode {
         double yVelocity;
         double wVelocity;
 
-        yVelocity = -gamepad1.left_stick_y;
-        xVelocity = gamepad1.left_stick_x;
-        wVelocity = gamepad1.right_stick_x;
+        yVelocity = -gamepad1.left_stick_y*Math.abs(gamepad1.left_stick_y);
+        xVelocity = gamepad1.left_stick_x*Math.abs(gamepad1.left_stick_x);
+        wVelocity = gamepad1.right_stick_x*Math.abs(gamepad1.right_stick_x);
         yVelocity = Range.clip(yVelocity, -1.0, 1.0);
         xVelocity = Range.clip(xVelocity, -1.0, 1.0);
         wVelocity = Range.clip(wVelocity, -1.0, 1.0);
