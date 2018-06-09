@@ -232,7 +232,7 @@ public class Auto_R1 extends OpMode {
                         isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
                     } else{
                         isFinished = false;
-                        state = States.END;
+                        state = States.GRAB;
                     } break;
                 case GRAB:
                     robot.blockLift.grab(false, 1);
@@ -244,7 +244,7 @@ public class Auto_R1 extends OpMode {
                     } else{
                         isFinished = false;
                         state = States.HOLD;
-                        goalSeconds = currentSeconds += 5.0;
+                        goalSeconds = currentSeconds += 2.5;
                     }break;
                 case HOLD:
                     if(currentSeconds >= goalSeconds) {
@@ -253,14 +253,14 @@ public class Auto_R1 extends OpMode {
                     }break;
                 case CRYPTODRIVE:
                     if (!isFinished){
-                        robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 4.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 4.0);
                     } else{
                         isFinished = false;
                         state = States.CRYPTOTURN;
                     }break;
                 case CRYPTOTURN:
                     if (!isFinished){
-                        robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
                     } else{
                         isFinished = false;
                         state = States.SLIDELIFT;
