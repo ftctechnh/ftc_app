@@ -68,7 +68,7 @@ public class NEW_RED1 extends LinearOpMode{
     private double gbrGRAB;
 
     private static double jaUP = 0.635;
-    private static double jaDOWN = 0.1;
+    private static double jaDOWN = 0.08;
 
     private static double jkCENTER = 0.5;
     private static double jkRIGHT = 0.27;

@@ -62,7 +62,7 @@ public class NEW_BLUE1 extends LinearOpMode {
     private double gbrGRAB;
 
     private static double jaUP = 0.635;
-    private static double jaDOWN = 0.1;
+    private static double jaDOWN = 0.08;
 
     private static double jkCENTER = 0.5;
     private static double jkRIGHT = 0.27;
@@ -299,33 +299,6 @@ public class NEW_BLUE1 extends LinearOpMode {
 
         }
 
-        //Placement of block according to Vuforia
-//        if (gridColum == 2){ //MIDDLE
-//            //Move forward: MIDDLE
-//            BACKWARD(4100, 0.5);
-//            gyro.calibrate();
-//            telemetry.addData("Gyro val:", gyro.getHeading());
-//            telemetry.update();
-//
-//            AXISRIGHT(2545);
-//            telemetry.addData("Gyro val:", gyro.getHeading());
-//            telemetry.update();
-//
-//            //Move towards safezone
-//            FORWARD(1270, 0.5);
-//
-//            //Drop glyph
-//            grabTopLeft.setPosition(0.4);
-//            grabTopRight.setPosition(0.3);
-//
-//
-//            BACKWARD(500, 0.5);
-//
-//            FORWARD(500, 0.5);
-//            BACKWARD(500,0.5);
-//            FORWARD(570,0.5);
-//            BACKWARD(500,0.5);
-//        }
 
         if (gridColumn == 1){
 
@@ -367,35 +340,6 @@ public class NEW_BLUE1 extends LinearOpMode {
 
         }
 
-        //        if (gridColum == 1){ //RIGHT
-//            //Move forward: RIGHT
-//            BACKWARD(4920, 0.5);
-//            gyro.calibrate();
-//            telemetry.addData("Gyro val:", gyro.getHeading());
-//            telemetry.update();
-//
-//            AXISRIGHT(2500);
-//            telemetry.addData("Gyro val:", gyro.getHeading());
-//            telemetry.update();
-//
-//            //Move towards safezone
-//            FORWARD(1270, 0.5);
-//
-//            //Drop glyph
-//            grabTopLeft.setPosition(0.4);
-//            grabTopRight.setPosition(0.3);
-//
-//            BACKWARD(500, 0.5);
-//
-//            FORWARD(500, 0.5);
-//            BACKWARD(500,0.5);
-//
-//            //FOR LEFT SIDE
-//            SWAYLEFT(600);
-//
-//            FORWARD(570,0.5);
-//            BACKWARD(500,0.5);
-//        }
 
         if (gridColumn == 3){
 
@@ -437,35 +381,6 @@ public class NEW_BLUE1 extends LinearOpMode {
 
         }
 
-//        if (gridColum == 3){ //LEFT
-//            //Move forward: LEFT
-//            BACKWARD(3080, 0.5);
-//            gyro.calibrate();
-//            telemetry.addData("Gyro val:", gyro.getHeading());
-//            telemetry.update();
-//
-//            AXISRIGHT(2450);
-//            telemetry.addData("Gyro val:", gyro.getHeading());
-//            telemetry.update();
-//
-//            //Move towards safezone
-//            FORWARD(1270, 0.5);
-//
-//            //Drop glyph
-//            grabTopLeft.setPosition(0.4);
-//            grabTopRight.setPosition(0.3);
-//
-//            BACKWARD(500, 0.5);
-//
-//            FORWARD(500, 0.5);
-//            BACKWARD(500,0.5);
-//
-//            //FOR RIGHT SIDE
-//            SWAYRIGHT(600);
-//
-//            FORWARD(570, 0.1);
-//            BACKWARD(500,0.5);
-//        }
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());
@@ -474,7 +389,6 @@ public class NEW_BLUE1 extends LinearOpMode {
         telemetry.addData("back right degrees = ", motorBackRight.getCurrentPosition());
         telemetry.update();
 
-        Thread.sleep(5000);
 
         //Degrees travlled at this point
         telemetry.addData("front left degrees = ", motorFrontLeft.getCurrentPosition());

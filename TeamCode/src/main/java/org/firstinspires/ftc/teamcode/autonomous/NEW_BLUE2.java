@@ -62,7 +62,7 @@ public class NEW_BLUE2 extends LinearOpMode {
     private double gbrGRAB;
 
     private static double jaUP = 0.635;
-    private static double jaDOWN = 0.1;
+    private static double jaDOWN = 0.08;
 
     private static double jkCENTER = 0.5;
     private static double jkRIGHT = 0.27;
@@ -262,21 +262,16 @@ public class NEW_BLUE2 extends LinearOpMode {
         grabTopRight.setPosition(gtrGRAB);
         GRABUP(1605);
 
-        if (gridColumn == 2) {
+        if (gridColumn == 2) { //CENTER
 
             //GET OFF BALANCING STONE
-            BACKWARD(2500); /**change*/
+            BACKWARD(2600); /**change*/
 
             //180
             AXISLEFT(4450); /**change*/
 
             //Lower grabber
             GRABDOWN(1400);
-
-            //GYRO CALIBRATE
-//            gyro.resetZAxisIntegrator();
-//            telemetry.addData("Gyro value: ", gyro.getHeading());
-//            telemetry.update();
 
             Thread.sleep(1000);
 
@@ -300,63 +295,22 @@ public class NEW_BLUE2 extends LinearOpMode {
             FORWARD(570, 0.5); /**change*/
             BACKWARD(500); /**change*/
 
+            AXISRIGHT(4450);
+            GRABDOWN(150);
+
         }
 
-        if (gridColumn == 1){
+        if (gridColumn == 1){ //RIGHT
+
 
             //GET OFF BALANCING STONE
-            BACKWARD(2500); /**change*/
+            BACKWARD(2600); /**change*/
 
             //180
             AXISLEFT(4450); /**change*/
 
             //Lower grabber
             GRABDOWN(1300);
-
-            //GYRO CALIBRATE
-//            gyro.resetZAxisIntegrator();
-//            telemetry.addData("Gyro value: ", gyro.getHeading());
-//            telemetry.update();
-
-            //TO LEFT
-            SWAYRIGHT(1000);
-
-            //Move towards safezone
-            FORWARD(450, 0.5); /**change*/
-
-            //Drop glyph
-            grabTopLeft.setPosition(gtlOPEN);
-            grabTopRight.setPosition(gtrOPEN);
-
-            FORWARD(820, 0.5);
-
-            BACKWARD(500); /**change*/
-
-            FORWARD(600, 0.5); /**change*/
-            BACKWARD(550); /**change*/
-
-            SWAYRIGHT(1200);
-
-            FORWARD(570, 0.5); /**change*/
-            BACKWARD(500); /**change*/
-
-        }
-
-        if (gridColumn == 3){
-
-            //GET OFF BALANCING STONE
-            BACKWARD(2500); /**change*/
-
-            //180
-            AXISLEFT(4450); /**change*/
-
-            //Lower grabber
-            GRABDOWN(1300);
-
-            //GYRO CALIBRATE
-//            gyro.resetZAxisIntegrator();
-//            telemetry.addData("Gyro value: ", gyro.getHeading());
-//            telemetry.update();
 
             //TO LEFT
             SWAYRIGHT(3000);
@@ -379,6 +333,49 @@ public class NEW_BLUE2 extends LinearOpMode {
 
             FORWARD(570, 0.5); /**change*/
             BACKWARD(500); /**change*/
+
+            AXISRIGHT(4450);
+            GRABDOWN(150);
+
+        }
+
+        if (gridColumn == 3){ //LEFT
+            //GET OFF BALANCING STONE
+            BACKWARD(2600); /**change*/
+
+            //180
+            AXISLEFT(4450); /**change*/
+
+            //Lower grabber
+            GRABDOWN(1300);
+
+            //GYRO CALIBRATE
+            //TO LEFT
+            SWAYRIGHT(1000);
+
+            //Move towards safezone
+            FORWARD(450, 0.5); /**change*/
+
+            //Drop glyph
+            grabTopLeft.setPosition(gtlOPEN);
+            grabTopRight.setPosition(gtrOPEN);
+
+            FORWARD(820, 0.5);
+
+            BACKWARD(500); /**change*/
+
+            FORWARD(600, 0.5); /**change*/
+            BACKWARD(550); /**change*/
+
+            SWAYRIGHT(1200);
+
+            FORWARD(570, 0.5); /**change*/
+            BACKWARD(500); /**change*/
+
+            AXISRIGHT(4450);
+            GRABDOWN(150);
+
+
         }
 
         //Degrees travlled at this point

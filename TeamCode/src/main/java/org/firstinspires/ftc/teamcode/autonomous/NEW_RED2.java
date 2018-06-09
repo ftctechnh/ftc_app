@@ -62,7 +62,7 @@ public class NEW_RED2 extends LinearOpMode {
     private double gbrGRAB;
 
     private static double jaUP = 0.635;
-    private static double jaDOWN = 0.1;
+    private static double jaDOWN = 0.08;
 
     private static double jkCENTER = 0.5;
     private static double jkRIGHT = 0.27;
@@ -263,7 +263,7 @@ public class NEW_RED2 extends LinearOpMode {
 
         if (gridColumn == 2){
 
-            FORWARD(2300, 0.5); /**test and change if required \increase by 100 ticks\*/
+            FORWARD(2300, 0.5);
 
             Thread.sleep(1000);
 
@@ -291,6 +291,7 @@ public class NEW_RED2 extends LinearOpMode {
             AXISRIGHT(4500);
             BACKWARD(600);
             GRABDOWN(200);
+
         }
 
         if (gridColumn == 1){
