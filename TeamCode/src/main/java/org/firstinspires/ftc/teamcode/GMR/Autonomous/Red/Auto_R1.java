@@ -235,15 +235,18 @@ public class Auto_R1 extends OpMode {
                             isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
                         } else{
                             isFinished = false;
+                            state = States.GLYPHPITTURN;
                         }
                     } else if(keyColumn == 3){
                         if(!isFinished){
                             isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 2.5);
                         } else{
                             isFinished = false;
+                            state = States.GLYPHPITTURN;
                         }
+                    } else{
+                        state = States.GLYPHPITTURN;
                     }
-                    state = States.GLYPHPITTURN;
                     break;
                 case GLYPHPITTURN:
                     if (!isFinished) {
