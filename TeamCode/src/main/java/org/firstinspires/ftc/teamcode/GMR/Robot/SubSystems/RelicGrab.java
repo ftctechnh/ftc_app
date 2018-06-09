@@ -57,7 +57,7 @@ public class  RelicGrab {
         if (a && tiltPosition <= 1) {
             tiltPosition += 0.01;
         } else if (y && tiltPosition >= 0) {
-            tiltPosition = 0;
+            tiltPosition = 0.16;
         } else if (b) {
             tiltPosition = 0.9;
         }
