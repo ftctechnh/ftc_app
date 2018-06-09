@@ -32,5 +32,6 @@ public enum States {
     DRIVEBOX2,
     DROP2,
     DRIVEBACK2,
-    GLYPHPITTURN2
+    GLYPHPITTURN2,
+    STRAIGHTEN
 }

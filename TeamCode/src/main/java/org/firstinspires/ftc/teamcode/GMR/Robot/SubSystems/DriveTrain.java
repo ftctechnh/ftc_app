@@ -568,6 +568,7 @@ public class DriveTrain {
             }
             return false;
         } else {
+            stop();
             return true;
         }
     }
