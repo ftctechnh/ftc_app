@@ -301,9 +301,12 @@ public class Auto_R1 extends OpMode {
                             isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
                         } else{
                             isFinished = false;
+                            state = States.DRIVEBOX2;
                         }
+                    } else {
+                        isFinished = false;
+                        state = States.DRIVEBOX2;
                     }
-                    state = States.DRIVEBOX2;
                     break;
                 case DRIVEBOX2:
                     if(!isFinished){
