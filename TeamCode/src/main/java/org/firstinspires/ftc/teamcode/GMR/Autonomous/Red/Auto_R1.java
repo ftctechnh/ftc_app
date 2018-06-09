@@ -240,7 +240,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case GLYPHPITDRIVE:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 8.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 7.0);
                     } else{
                         isFinished = false;
                         state = States.HOLD;
@@ -253,7 +253,7 @@ public class Auto_R1 extends OpMode {
                     }break;
                 case CRYPTODRIVE:
                     if (!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 4.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 6.0);
                     } else{
                         isFinished = false;
                         state = States.CRYPTOTURN;
