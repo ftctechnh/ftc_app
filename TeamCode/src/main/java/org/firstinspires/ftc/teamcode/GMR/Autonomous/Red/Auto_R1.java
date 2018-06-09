@@ -292,12 +292,8 @@ public class Auto_R1 extends OpMode {
                         isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
                     } else{
                         isFinished = false;
-                        state = States.SLIDELIFT;
+                        state = States.ALTCOLUMN;
                     }break;
-                case SLIDELIFT:
-                    robot.blockLift.slideHeight(false, 0,false,true, false, telemetry);
-                    state = States.ALTCOLUMN;
-                    break;
                 case ALTCOLUMN:
                     if(keyColumn == 2 || keyColumn == 0){
                         if(!isFinished){

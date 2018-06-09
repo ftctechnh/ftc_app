@@ -29,7 +29,6 @@ public enum States {
     HOLD,
     CRYPTOTURN,
     CRYPTODRIVE,
-    SLIDELIFT,
     ALTCOLUMN,
     DRIVEBOX2,
     DROP2,
