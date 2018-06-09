@@ -227,8 +227,24 @@ public class Auto_R1 extends OpMode {
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 2.0);
                     } else{
                         isFinished = false;
-                        state = States.GLYPHPITTURN;
+                        state = States.CENTER;
                     } break;
+                case CENTER:
+                    if(keyColumn == 1){
+                        if(!isFinished){
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
+                        } else{
+                            isFinished = false;
+                        }
+                    } else if(keyColumn == 3){
+                        if(!isFinished){
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 2.5);
+                        } else{
+                            isFinished = false;
+                        }
+                    }
+                    state = States.GLYPHPITTURN;
+                    break;
                 case GLYPHPITTURN:
                     if (!isFinished) {
                         isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
@@ -260,7 +276,7 @@ public class Auto_R1 extends OpMode {
                     } else {
                         isFinished = false;
                         state = States.CRYPTODRIVE;
-                    }
+                    }break;
                 case CRYPTODRIVE:
                     if (!isFinished){
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 5.5);
@@ -277,6 +293,16 @@ public class Auto_R1 extends OpMode {
                     }break;
                 case SLIDELIFT:
                     robot.blockLift.slideHeight(false, 0,false,true, false, telemetry);
+                    state = States.ALTCOLUMN;
+                    break;
+                case ALTCOLUMN:
+                    if(keyColumn == 2 || keyColumn == 0){
+                        if(!isFinished){
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
+                        } else{
+                            isFinished = false;
+                        }
+                    }
                     state = States.DRIVEBOX2;
                     break;
                 case DRIVEBOX2:
