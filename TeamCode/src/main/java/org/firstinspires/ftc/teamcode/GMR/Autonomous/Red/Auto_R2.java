@@ -56,6 +56,8 @@ public class Auto_R2 extends OpMode {
 
     private float endUltrasonic;
 
+    private double gyroBeforeGlyphPit;
+
     private int keyColumn;
     private double columnDist;
 
@@ -225,15 +227,118 @@ public class Auto_R2 extends OpMode {
                         isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 1);
                     } else{
                         isFinished = false;
-                        state = States.GLYPHPITTURN;
+                        state = States.CENTER;
                     } break;
+                case CENTER:
+                    if(keyColumn == 1){
+                        if(!isFinished){
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
+                        } else{
+                            isFinished = false;
+                            state = States.GLYPHPITTURN;
+                        }
+                    } else if(keyColumn == 3){
+                        if(!isFinished){
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 2.5);
+                        } else{
+                            isFinished = false;
+                            state = States.GLYPHPITTURN;
+                        }
+                    } else{
+                        state = States.GLYPHPITTURN;
+                    }
+                    break;
                 case GLYPHPITTURN:
                     if (!isFinished) {
-                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 135);
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
+                    } else{
+                        isFinished = false;
+                        state = States.GRAB;
+                    } break;
+                case GRAB:
+                    robot.blockLift.grab(false, 1);
+                    gyroBeforeGlyphPit = robot.driveTrain.getYaw();
+                    state = States.GLYPHPITDRIVE;
+                    break;
+                case GLYPHPITDRIVE:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.4, 6.5);
+                    } else{
+                        isFinished = false;
+                        state = States.HOLD;
+                        goalSeconds = currentSeconds += 2.5;
+                    }break;
+                case HOLD:
+                    if(currentSeconds >= goalSeconds) {
+                        robot.blockLift.grab(false, 0);
+                        state = States.STRAIGHTEN;
+                    }break;
+                case STRAIGHTEN:
+                    if (!isFinished) {
+                        isFinished = robot.driveTrain.straighten(gyroBeforeGlyphPit);
                     } else {
                         isFinished = false;
-                        state = States.END;
+                        state = States.CRYPTODRIVE;
                     }break;
+                case CRYPTODRIVE:
+                    if (!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 5.5);
+                    } else{
+                        isFinished = false;
+                        state = States.CRYPTOTURN;
+                    }break;
+                case CRYPTOTURN:
+                    if (!isFinished){
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
+                    } else{
+                        isFinished = false;
+                        state = States.SLIDELIFT;
+                    }break;
+                case SLIDELIFT:
+                    robot.blockLift.slideHeight(false, 0,false,true, false, telemetry);
+                    state = States.ALTCOLUMN;
+                    break;
+                case ALTCOLUMN:
+                    if(keyColumn == 2 || keyColumn == 0){
+                        if(!isFinished){
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
+                        } else{
+                            isFinished = false;
+                            state = States.DRIVEBOX2;
+                        }
+                    } else {
+                        isFinished = false;
+                        state = States.DRIVEBOX2;
+                    }
+                    break;
+                case DRIVEBOX2:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 2.0);
+                    } else{
+                        isFinished = false;
+                        state = States.DROP2;
+                        goalSeconds = currentSeconds += 1.0;
+                    } break;
+                case DROP2:
+                    robot.blockLift.grab(true, 0);
+                    if (currentSeconds >= goalSeconds) {
+                        state = States.DRIVEBACK2;
+                        robot.blockLift.grab(false, 0);
+                    } break;
+                case DRIVEBACK2:
+                    if(!isFinished){
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 2.0);
+                    } else{
+                        isFinished = false;
+                        state = States.GLYPHPITTURN2;
+                    } break;
+                case GLYPHPITTURN2:
+                    if (!isFinished) {
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
+                    } else{
+                        isFinished = false;
+                        state = States.END;
+                    } break;
                 case END:
                     robot.driveTrain.stop();
                     break;
