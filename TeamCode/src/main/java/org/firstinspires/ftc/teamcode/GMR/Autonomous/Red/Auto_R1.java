@@ -194,14 +194,14 @@ public class Auto_R1 extends OpMode {
                         columnDist += 7;
                     }
 
-                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.2, columnDist)) {
+                    if(robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.3, columnDist)) {
                         state = States.TURNBOX;
                     }
                     break;
                 case TURNBOX:
                     //Turns left to face CryptoBox. UNTESTED
                     if(!isFinished){
-                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.25, 90);
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.35, 90);
                     } else{
                         isFinished = false;
                         state = States.DRIVEBOX;
@@ -209,7 +209,7 @@ public class Auto_R1 extends OpMode {
                 case DRIVEBOX:
                     //Drives into the CryptoBox
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 3);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.35, 3);
                     } else{
                         isFinished = false;
                         state = States.DROP;
@@ -224,7 +224,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case DRIVEBACK:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 2.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 2.0);
                     } else{
                         isFinished = false;
                         state = States.CENTER;
@@ -232,14 +232,14 @@ public class Auto_R1 extends OpMode {
                 case CENTER:
                     if(keyColumn == 1){
                         if(!isFinished){
-                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.4, 2.5);
                         } else{
                             isFinished = false;
                             state = States.GLYPHPITTURN;
                         }
                     } else if(keyColumn == 3){
                         if(!isFinished){
-                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.3, 2.5);
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.E, 0.4, 2.5);
                         } else{
                             isFinished = false;
                             state = States.GLYPHPITTURN;
@@ -250,7 +250,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case GLYPHPITTURN:
                     if (!isFinished) {
-                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.4, 180);
                     } else{
                         isFinished = false;
                         state = States.GRAB;
@@ -289,7 +289,7 @@ public class Auto_R1 extends OpMode {
                     }break;
                 case CRYPTOTURN:
                     if (!isFinished){
-                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.3, 180);
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNRIGHT, 0.4, 180);
                     } else{
                         isFinished = false;
                         state = States.ALTCOLUMN;
@@ -297,7 +297,7 @@ public class Auto_R1 extends OpMode {
                 case ALTCOLUMN:
                     if(keyColumn == 2 || keyColumn == 0){
                         if(!isFinished){
-                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.3, 2.5);
+                            isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.W, 0.4, 2.5);
                         } else{
                             isFinished = false;
                             state = States.DRIVEBOX2;
@@ -309,7 +309,7 @@ public class Auto_R1 extends OpMode {
                     break;
                 case DRIVEBOX2:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.25, 2.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.N, 0.35, 2.0);
                     } else{
                         isFinished = false;
                         state = States.DROP2;
@@ -323,14 +323,14 @@ public class Auto_R1 extends OpMode {
                     } break;
                 case DRIVEBACK2:
                     if(!isFinished){
-                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.3, 2.0);
+                        isFinished = robot.driveTrain.encoderDrive(DriveTrain.Direction.S, 0.4, 2.0);
                     } else{
                         isFinished = false;
                         state = States.GLYPHPITTURN2;
                     } break;
                 case GLYPHPITTURN2:
                     if (!isFinished) {
-                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.3, 180);
+                        isFinished = robot.driveTrain.gyroTurn(DriveTrain.Direction.TURNLEFT, 0.4, 180);
                     } else{
                         isFinished = false;
                         state = States.END;
