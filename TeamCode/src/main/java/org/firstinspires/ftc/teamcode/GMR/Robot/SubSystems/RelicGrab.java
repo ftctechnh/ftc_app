@@ -59,7 +59,7 @@ public class  RelicGrab {
         } else if (y && tiltPosition >= 0) {
             tiltPosition = 0.16;
         } else if (b) {
-            tiltPosition = 0.9;
+            tiltPosition = 0.95;
         }
         relicTilt.setPosition(tiltPosition);
     }
