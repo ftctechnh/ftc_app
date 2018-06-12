@@ -106,9 +106,9 @@ public abstract class RelicAutoMode extends MeccyAutoMode {
     public void autoNorth(int key){
         startAuto(key);
         //
-        double distance = 10;
+        double distance = 9.9;
         if (key == -1){
-            distance = distance + 11;
+            distance = distance + 11.42;
         }
         //
         telemetry.addLine("Distance: " + distance);
