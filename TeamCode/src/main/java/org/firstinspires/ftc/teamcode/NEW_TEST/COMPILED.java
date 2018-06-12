@@ -117,7 +117,7 @@ public class COMPILED extends LinearOpMode {
         relicMotor.setDirection(REVERSE);
 
         relicArm.setPosition(0);
-        relicGrab.setPosition(0.5);
+        relicGrab.setPosition(0);
 
         //JEWEL
         jewelKnock = hardwareMap.servo.get("JK");
@@ -130,7 +130,7 @@ public class COMPILED extends LinearOpMode {
         lowerLimit = 650;
 
         pos = 0;
-        pos2 = 0.2;
+        pos2 = 0;
 
         mode = 1;
         //modeGamePad1 = 1;
