@@ -31,14 +31,12 @@ public abstract class testClass extends LinearOpMode{ //Step 2, extends..., ligh
         //
         while (opModeIsActive()){
             //
-            left.setPower(gamepad1.left_stick_y);
-            right.setPower(gamepad1.right_stick_y);
-            //
-            if (wall.isPressed()){
-                telemetry.addData("Touching wall.", "");
-            }else{
-                telemetry.addData("Nothing detected.", "");
+            if (!(gamepad1.left_stick_y > 0 && gamepad1.right_stick_y > 0 && wall.isPressed())) {
+                left.setPower(gamepad1.left_stick_y);
+                right.setPower(gamepad1.right_stick_y);
             }
+            //
+            telemetry.addData("Wall: ", wall.isPressed());
             //
         }
         //
