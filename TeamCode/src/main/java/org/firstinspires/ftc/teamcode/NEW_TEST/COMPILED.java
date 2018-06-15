@@ -43,6 +43,11 @@ public class COMPILED extends LinearOpMode {
     private double gbrOPEN;
     private double gbrGRAB;
 
+    private double gtrMID;
+    private double gtlMID;
+    private double gbrMID;
+    private double gblMID;
+
     private int tMode;
     private int bMode;
 
@@ -63,6 +68,9 @@ public class COMPILED extends LinearOpMode {
 
     private int mode;
     private int modeGamePad1;
+
+    private double relicArmVal;
+    private double relicGrabVal;
 
 
     @Override
@@ -99,6 +107,11 @@ public class COMPILED extends LinearOpMode {
         gbrOPEN = 0.71;
         gbrGRAB = 0.31;
 
+        gtrMID = 0.36;
+        gtlMID = 0.37;
+        gbrMID = 0.69;
+        gblMID = 0.09;
+
         tMode = 0;
         bMode = 0;
 
@@ -124,7 +137,7 @@ public class COMPILED extends LinearOpMode {
         jewelArm = hardwareMap.servo.get("JA");
 
         jewelArm.setPosition(0.635);
-        jewelKnock.setPosition(0.27);
+        jewelKnock.setPosition(0.05);
 
         upperLimit = 11100;
         lowerLimit = 650;
@@ -133,6 +146,9 @@ public class COMPILED extends LinearOpMode {
         pos2 = 0;
 
         mode = 1;
+
+        relicArmVal = 0;
+        relicGrabVal = 0;
         //modeGamePad1 = 1;
 
         waitForStart();
@@ -364,6 +380,14 @@ public class COMPILED extends LinearOpMode {
                     bMode = 1;
                 }
 
+                if (gamepad2.right_stick_button){
+                    tMode = 2;
+                }
+
+                if (gamepad2.left_stick_button){
+                    bMode = 2;
+                }
+
                 if (tMode == 0) { //TOP OPEN
                     grabTopLeft.setPosition(gtlOPEN);
                     grabTopRight.setPosition(gtrOPEN);
@@ -380,6 +404,15 @@ public class COMPILED extends LinearOpMode {
                     grabBottomLeft.setPosition(gblGRAB);
                     grabBottomRight.setPosition(gbrGRAB);
                 }
+                if (tMode == 2) {
+                    grabTopRight.setPosition(gtrMID);
+                    grabTopLeft.setPosition(gtlMID);
+                }
+                if (bMode == 2) {
+                    grabBottomRight.setPosition(gbrMID);
+                    grabBottomLeft.setPosition(gblMID);
+                }
+
 
                 telemetry.addData("GDC: ", grabMotor.getCurrentPosition());
                 telemetry.addData("GTL: ", grabTopLeft.getPosition());
@@ -479,10 +512,20 @@ public class COMPILED extends LinearOpMode {
                 relicGrab.setPosition(pos2);
 
 
-                if (gamepad2.right_stick_button) {
-                    relicArm.setPosition(0.47);
-                    relicGrab.setPosition(0.1);
+                if (gamepad2.left_stick_button) {
+                    pos = 0.37;
+                    pos2 = 0.03;
                 }
+
+                pos = Range.clip(pos, 0, 1);
+                relicArm.setPosition(pos);
+                pos2 = Range.clip(pos2,0,0.4);
+                relicGrab.setPosition(pos2);
+
+                if (gamepad2.right_stick_button){
+
+                }
+
 
                 telemetry.addData("RDC: ", relicMotor.getCurrentPosition());
                 telemetry.addData("RDC power: ", relicMotor.getPower());
