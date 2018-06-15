@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.HardwareSensorMap;
  */
 
 @TeleOp(name="testClass",group="evolve") //Step 1, @Teleop, name & group, Okay to import
-public abstract class testClass extends LinearOpMode{ //Step 2, extends..., light bulb>make abstract
+public class testClass extends LinearOpMode{ //Step 2, extends..., light bulb>make abstract
     //
     DcMotor left;
     DcMotor right;
@@ -21,9 +21,9 @@ public abstract class testClass extends LinearOpMode{ //Step 2, extends..., ligh
     //
     public void runOpMode() throws InterruptedException { //Step 4, runOpMode
         //
-        hardwareMap.dcMotor.get("left");
-        hardwareMap.dcMotor.get("right");
-        hardwareMap.touchSensor.get("wall");
+        left = hardwareMap.dcMotor.get("left");
+        right = hardwareMap.dcMotor.get("right");
+        wall = hardwareMap.touchSensor.get("wall");
         //
         right.setDirection(DcMotorSimple.Direction.REVERSE);
         //
@@ -31,12 +31,16 @@ public abstract class testClass extends LinearOpMode{ //Step 2, extends..., ligh
         //
         while (opModeIsActive()){
             //
-            if (!(gamepad1.left_stick_y > 0 && gamepad1.right_stick_y > 0 && wall.isPressed())) {
-                left.setPower(gamepad1.left_stick_y);
-                right.setPower(gamepad1.right_stick_y);
+            if (!((gamepad1.left_stick_y > 0 || gamepad1.right_stick_y > 0) && wall.isPressed())) {
+                left.setPower(gamepad1.right_stick_y);
+                right.setPower(gamepad1.left_stick_y);
             }
             //
             telemetry.addData("Wall: ", wall.isPressed());
+            telemetry.addData("left", gamepad1.right_stick_y);
+            telemetry.addData("right", gamepad1.left_stick_y);
+            telemetry.addData("go", !((gamepad1.left_stick_y > 0 || gamepad1.right_stick_y > 0) && wall.isPressed()));
+            telemetry.update();
             //
         }
         //
