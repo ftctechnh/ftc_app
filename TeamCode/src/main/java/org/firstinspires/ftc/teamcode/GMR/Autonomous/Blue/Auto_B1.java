@@ -64,7 +64,7 @@ public class Auto_B1 extends OpMode {
     private int keyColumn;
     private double columnDist;
 
-    private double gyroBeforeGlyphPit;
+    private float gyroBeforeGlyphPit;
 
     private String stageCheck;
 
