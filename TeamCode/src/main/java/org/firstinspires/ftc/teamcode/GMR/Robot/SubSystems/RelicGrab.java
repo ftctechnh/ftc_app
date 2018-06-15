@@ -85,7 +85,7 @@ public class  RelicGrab {
         if (rightBumper && clampPosition <= 1) {
             clampPosition = 0.3;
         } else if (rightTrigger > 0 && clampPosition <= 0.45) {
-            clampPosition = 0.9;
+            clampPosition = 1;
         }
         relicClamp.setPosition(clampPosition);
     }
