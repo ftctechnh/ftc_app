@@ -46,7 +46,7 @@ public class Robot {
     private DcMotor relicLift;
     private Servo slideLift;
     private Servo relicTilt;
-    private Servo relicClamp;
+    public Servo relicClamp;
 
     private Servo rightColor;
     private Servo leftColor;
@@ -116,6 +116,7 @@ public class Robot {
 
     public void setRelicTilt() {
         relicTilt.setPosition(1);
+        relicClamp.setPosition(1);
     }
 
     private RelicRecoveryVuMark getCurrentColumn(int columnPassed, AllianceColor color) {

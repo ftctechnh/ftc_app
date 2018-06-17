@@ -19,6 +19,7 @@ public class RR_TeleOP_Farber extends OpMode {
     public void init() {
         robot = new Robot(hardwareMap, telemetry, false);
         robot.setRelicTilt();
+        robot.relicClamp.setPosition(1);
     }
 
     @Override

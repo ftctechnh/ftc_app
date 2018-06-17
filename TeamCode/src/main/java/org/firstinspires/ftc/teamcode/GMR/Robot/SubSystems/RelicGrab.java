@@ -76,15 +76,15 @@ public class  RelicGrab {
         } else if (y && tiltPosition >= 0) {
             tiltPosition = 0.2;
         } else if (b) {
-            tiltPosition = 0.95;
+            tiltPosition = 0.915;
         }
         relicTilt.setPosition(tiltPosition);
     }
 
     public void setClamp(boolean rightBumper, float rightTrigger) {
         if (rightBumper && clampPosition <= 1) {
-            clampPosition = 0.3;
-        } else if (rightTrigger > 0 && clampPosition <= 0.45) {
+            clampPosition = 0.4;
+        } else if (rightTrigger > 0) {
             clampPosition = 1;
         }
         relicClamp.setPosition(clampPosition);
