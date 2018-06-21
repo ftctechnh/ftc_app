@@ -32,12 +32,12 @@ public class MecanumDriveTeleOp extends OpMode
     //Called repeatedly after robot starts.
     public void loop()
     {
-        if (gamepad1.left_bumper) //If left bumper.
+        if (gamepad1.left_bumper) //If left bumper pressed
         {
             //Power low
             power = 0.5;
         }
-        else if (gamepad1.right_bumper) //If right bumper.
+        else if (gamepad1.right_bumper) //If right bumper pressed
         {
             //Power high
             power = 1;
