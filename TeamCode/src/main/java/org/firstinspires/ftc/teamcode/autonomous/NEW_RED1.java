@@ -174,7 +174,7 @@ public class NEW_RED1 extends LinearOpMode{
         grabTopRight.setPosition(gtrOPEN);
         grabBottomRight.setPosition(gbrOPEN);
 
-//        relicArm.setPosition(raINITIAL);
+        relicArm.setPosition(0.05);
 //        relicGrab.setPosition(rgINTITIAL);
 
         jewelArm.setPosition(jaUP);
@@ -278,7 +278,7 @@ public class NEW_RED1 extends LinearOpMode{
 
         if (gridColumn == 2){
             //Move forward: MIDDLE
-            FORWARD(3900, 0.5); /**change*/
+            FORWARD(4100, 0.5); //3900
 
             //Lower grabber
             GRABDOWN(1200);
@@ -314,7 +314,7 @@ public class NEW_RED1 extends LinearOpMode{
 
         if (gridColumn == 1){
             //Move forward: RIGHT
-            FORWARD(3080, 0.5); /**change*/
+            FORWARD(3280, 0.5); //3080
 
             //Lower grabber
             GRABDOWN(1200);
@@ -352,8 +352,8 @@ public class NEW_RED1 extends LinearOpMode{
         }
 
         if (gridColumn == 3){
-            //Move forward: MIDDLE
-            FORWARD(4800, 0.5); /**change*/
+            //Move forward: LEFT
+            FORWARD(5000, 0.5); //4800
 
             //Lower grabber
             GRABDOWN(1200);

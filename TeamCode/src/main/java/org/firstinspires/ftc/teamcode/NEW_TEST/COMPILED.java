@@ -129,7 +129,7 @@ public class COMPILED extends LinearOpMode {
         relicMotor.setMode(RUN_USING_ENCODER);
         relicMotor.setDirection(REVERSE);
 
-        relicArm.setPosition(0);
+        relicArm.setPosition(0.05);
         relicGrab.setPosition(0);
 
         //JEWEL

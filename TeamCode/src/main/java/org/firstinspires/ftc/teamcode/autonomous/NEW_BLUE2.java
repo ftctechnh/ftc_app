@@ -169,7 +169,7 @@ public class NEW_BLUE2 extends LinearOpMode {
         grabTopRight.setPosition(gtrOPEN);
         grabBottomRight.setPosition(gbrOPEN);
 
-//        relicArm.setPosition(raINITIAL);
+        relicArm.setPosition(0.05);
 //        relicGrab.setPosition(rgINTITIAL);
 
         jewelArm.setPosition(jaUP);
