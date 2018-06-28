@@ -34,7 +34,7 @@ public class RobotHardware
     public RobotHardware() {}
 
     /**
-     * Initializes the RobotHardware with a hardware map and then init the hardware.
+     * Initializes the TileRunnerRobotHardware with a hardware map and then init the hardware.
      * @param ahMap The hardwareMap
      */
     public RobotHardware(HardwareMap ahMap)

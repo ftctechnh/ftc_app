@@ -1,23 +1,22 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.RobotHardware;
+import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.TileRunnerRobotHardware;
 
 @TeleOp(name="MecanumDriveTeleOp", group="TeleOpMode")
 
 public class MecanumDriveTeleOp extends OpMode
 {
     //Creates robot hardware.
-    RobotHardware myRobot = new RobotHardware();
+    TileRunnerRobotHardware robot = new TileRunnerRobotHardware();
 
     double power = 0.5;
 
     //Robot initiates hardware and components.
     public void init()
     {
-        myRobot.init(hardwareMap);
+        robot.init(hardwareMap);
         telemetry.addData("Status", "Robot has initiated!");
         telemetry.update();
     }
@@ -46,18 +45,18 @@ public class MecanumDriveTeleOp extends OpMode
         if (gamepad1.left_stick_y <= -0.5) //If left stick forward
         {
             //Move forward
-            myRobot.topLeftMotor.setPower(power);
-            myRobot.topRightMotor.setPower(power);
-            myRobot.bottomLeftMotor.setPower(power);
-            myRobot.bottomRightMotor.setPower(power);
+            robot.topLeftMotor.setPower(power);
+            robot.topRightMotor.setPower(power);
+            robot.bottomLeftMotor.setPower(power);
+            robot.bottomRightMotor.setPower(power);
         }
         else if (gamepad1.left_stick_y >= 0.5) //If left stick backward
         {
             //Move backward
-            myRobot.topLeftMotor.setPower(-power);
-            myRobot.topRightMotor.setPower(-power);
-            myRobot.bottomLeftMotor.setPower(-power);
-            myRobot.bottomRightMotor.setPower(-power);
+            robot.topLeftMotor.setPower(-power);
+            robot.topRightMotor.setPower(-power);
+            robot.bottomLeftMotor.setPower(-power);
+            robot.bottomRightMotor.setPower(-power);
         }
         else
         {
@@ -67,18 +66,18 @@ public class MecanumDriveTeleOp extends OpMode
         if (gamepad1.left_stick_x <= -0.5) //If left stick left
         {
             //Strafe left
-            myRobot.topLeftMotor.setPower(power);
-            myRobot.topRightMotor.setPower(-power);
-            myRobot.bottomLeftMotor.setPower(-power);
-            myRobot.bottomRightMotor.setPower(power);
+            robot.topLeftMotor.setPower(power);
+            robot.topRightMotor.setPower(-power);
+            robot.bottomLeftMotor.setPower(-power);
+            robot.bottomRightMotor.setPower(power);
         }
         else if (gamepad1.left_stick_x >= 0.5) //If left stick right
         {
             //Strafe right
-            myRobot.topLeftMotor.setPower(-power);
-            myRobot.topRightMotor.setPower(power);
-            myRobot.bottomLeftMotor.setPower(power);
-            myRobot.bottomRightMotor.setPower(-power);
+            robot.topLeftMotor.setPower(-power);
+            robot.topRightMotor.setPower(power);
+            robot.bottomLeftMotor.setPower(power);
+            robot.bottomRightMotor.setPower(-power);
         }
         else
         {
@@ -88,18 +87,18 @@ public class MecanumDriveTeleOp extends OpMode
         if(gamepad1.right_stick_x <= -0.5) //If right stick left
         {
             //Rotate left
-            myRobot.topLeftMotor.setPower(-power);
-            myRobot.topRightMotor.setPower(power);
-            myRobot.bottomLeftMotor.setPower(-power);
-            myRobot.bottomRightMotor.setPower(power);
+            robot.topLeftMotor.setPower(-power);
+            robot.topRightMotor.setPower(power);
+            robot.bottomLeftMotor.setPower(-power);
+            robot.bottomRightMotor.setPower(power);
         }
         else if (gamepad1.right_stick_x >= 0.5) //If right stick right
         {
             //Rotate right
-            myRobot.topLeftMotor.setPower(power);
-            myRobot.topRightMotor.setPower(-power);
-            myRobot.bottomLeftMotor.setPower(power);
-            myRobot.bottomRightMotor.setPower(-power);
+            robot.topLeftMotor.setPower(power);
+            robot.topRightMotor.setPower(-power);
+            robot.bottomLeftMotor.setPower(power);
+            robot.bottomRightMotor.setPower(-power);
         }
         else
         {

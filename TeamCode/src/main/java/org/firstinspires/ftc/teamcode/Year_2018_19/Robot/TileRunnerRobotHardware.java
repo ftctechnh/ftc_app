@@ -3,8 +3,9 @@ package org.firstinspires.ftc.teamcode.Year_2018_19.Robot;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
-public class RobotHardware
+public class TileRunnerRobotHardware
 {
     //The hardware map.
     HardwareMap hwMap;
@@ -14,9 +15,10 @@ public class RobotHardware
     public DcMotor topRightMotor;
     public DcMotor bottomLeftMotor;
     public DcMotor bottomRightMotor;
+    public Servo flagServo;
 
     //Constructor.
-    public RobotHardware() {}
+    public TileRunnerRobotHardware() {}
 
     //Hardware and components initiates.
     public void init(HardwareMap ahwMap)
@@ -27,6 +29,7 @@ public class RobotHardware
         topRightMotor = hwMap.get(DcMotor.class, "topRightMotor");
         bottomLeftMotor = hwMap.get(DcMotor.class, "bottomLeftMotor");
         bottomRightMotor = hwMap.get(DcMotor.class, "bottomRightMotor");
+        flagServo = hwMap.get(Servo.class, "flagServo");
 
         topRightMotor.setDirection(DcMotor.Direction.REVERSE);
         bottomRightMotor.setDirection(DcMotor.Direction.REVERSE);
