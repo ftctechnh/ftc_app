@@ -148,7 +148,7 @@ public class Chips_and_Stones extends LinearOpMode {
         redFarFromRamp.setName("RedTarget");  // tools
 
         VuforiaTrackable blueFarFromRamp = stonesAndChips.get(2);
-        blueFarFromRamp.setName("RedTarget");  // legos
+        blueFarFromRamp.setName("BlueTarget");  // legos
 
         VuforiaTrackable blueClose2Ramp = stonesAndChips.get(0);
         blueClose2Ramp.setName("BlueTarget");  // wheels
