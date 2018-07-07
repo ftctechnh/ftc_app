@@ -362,13 +362,13 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
-    void readIMU()
+    public double getHeading()
     {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double currentHeading =   (gyroFlipped)* angles.firstAngle;
         telemetry.addData("Heading", currentHeading);
         telemetry.update();
-
+        return currentHeading;
     }
 
 
@@ -479,6 +479,31 @@ abstract public class superAuto extends LinearOpMode {
         telemetry.update();
     }
 
+    public double Vuforia_JoystickX(double X, double Y, double Theta)
+    {
+        double JoystickX = (X*Math.cos(Theta))- (Y*Math.sin(Theta));
+        telemetry.addData("JoystickX", "%d", JoystickX);
+        return JoystickX;
+    }
+
+    public double Vuforia_JoystickY(double X, double Y, double Theta)
+    {
+        double JoystickY = (X*Math.sin(Theta))+(Y*Math.cos(Theta));
+        telemetry.addData("JoystickY", "%d", JoystickY);
+        return JoystickY;
+
+    }
+    void goToPoint(double DestinationX, double DestinationY)
+    {
+        double Theta = Math.toRadians(getHeading());
+        double CurrentX = -500; //Eventually I would like to directly take the readings. These #s are made up...
+        double CurrentY = -500;
+        double X = (DestinationX - CurrentX);
+        double Y = (DestinationY - CurrentY);
+        Vuforia_JoystickX(X,Y, Theta);
+        Vuforia_JoystickY(X,Y, Theta);
+        telemetry.update();
+    }
 
     void distCorrector(double trgDistance) {
 
