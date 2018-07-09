@@ -5,12 +5,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public abstract class AbstractDrivetrain {
 
-    protected DcMotor lfDriveM = null;
-    protected DcMotor rfDriveM = null;
-    protected DcMotor lbDriveM = null;
-    protected DcMotor rbDriveM = null;
-
-    protected HardwareMap hwMap =  null;
+    protected DcMotor lfDriveM, rfDriveM, lbDriveM, rbDriveM;
+    protected HardwareMap hwMap;
 
     public AbstractDrivetrain(){
 
@@ -22,10 +18,10 @@ public abstract class AbstractDrivetrain {
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        this.lfDriveM  = hwMap.get(DcMotor.class, "fl_drive");
-        this.rfDriveM = hwMap.get(DcMotor.class, "fr_drive");
-        this.lbDriveM  = hwMap.get(DcMotor.class, "bl_drive");
-        this.rbDriveM = hwMap.get(DcMotor.class, "br_drive");
+        this.lfDriveM  = hwMap.get(DcMotor.class, "FL");
+        this.rfDriveM = hwMap.get(DcMotor.class, "FR");
+        this.lbDriveM  = hwMap.get(DcMotor.class, "BL");
+        this.rbDriveM = hwMap.get(DcMotor.class, "BR");
         lfDriveM.setDirection(DcMotor.Direction.FORWARD);
         lbDriveM.setDirection(DcMotor.Direction.FORWARD);
         rfDriveM.setDirection(DcMotor.Direction.REVERSE);
@@ -35,7 +31,13 @@ public abstract class AbstractDrivetrain {
         stop();
 
         // Set all motors to run without encoders.
-        setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        setMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        lfDriveM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lbDriveM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rfDriveM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rbDriveM.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     }
 
