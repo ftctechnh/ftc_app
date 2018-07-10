@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\Steven\Documents\ftc_app\FtcRobotController\build\intermediates\bundles\default\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6155dbd5fdcfaccfc4930350945d150503312bfe">
+        <dex dex="C:\Users\Steven\Documents\ftc_app\TeamCode\build\intermediates\pre-dexed\debug\classes_845213d42d110b80dea43d61fab1aeb6807c431f.jar" />
+    </item>
+
+</items>

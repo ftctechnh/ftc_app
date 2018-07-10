@@ -1,0 +1,10 @@
+There are two kinds of Tests in this folder:
+1. Research and Development
+2. Troubleshoot/Reusable
+
+1. These are the kind of programs we use to see if new ways of programming or if new electronics we're using
+are viable. It's more of the MAJOR STUFF. Like switching from modern robotics to REV.
+Once we finish testing, we either document what we learned and/or copy over the program to our in progress folders
+
+2. These are programs that we can use again and again just to see what's breaking down on our robot, or to see how
+a new sensor works.

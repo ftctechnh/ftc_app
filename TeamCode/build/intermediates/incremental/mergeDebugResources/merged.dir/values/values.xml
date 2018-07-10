@@ -1,0 +1,931 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="app_theme_colors">
+        <item>@color/medium_light_red</item>
+        <item>@color/medium_light_green</item>
+        <item>@color/medium_light_blue</item>
+        <item>@color/medium_light_purple</item>
+        <item>@color/medium_light_orange</item>
+        <item>@color/medium_light_teal</item>
+    </array>
+    <integer-array name="app_theme_ids">
+      <item>@style/AppThemeRedRC</item>
+      <item>@style/AppThemeGreenRC</item>
+      <item>@style/AppThemeBlueRC</item>
+      <item>@style/AppThemePurpleRC</item>
+      <item>@style/AppThemeOrangeRC</item>
+      <item>@style/AppThemeTealRC</item>
+  </integer-array>
+    <string-array name="app_theme_names">
+        <item>Red</item>
+        <item>Green</item>
+        <item>Blue</item>
+        <item>Purple</item>
+        <item>Orange</item>
+        <item>Teal</item>
+    </string-array>
+    <string-array name="app_theme_tokens">
+        <item>@string/tokenThemeRed</item>
+        <item>@string/tokenThemeGreen</item>
+        <item>@string/tokenThemeBlue</item>
+        <item>@string/tokenThemePurple</item>
+        <item>@string/tokenThemeOrange</item>
+        <item>@string/tokenThemeTeal</item>
+    </string-array>
+    <string-array name="choice_array_analogInput">
+    <item>NOTHING</item>
+    <item>OPTICAL_DISTANCE_SENSOR</item>
+    <item>ANALOG_INPUT</item>
+    <item>MR_ANALOG_TOUCH_SENSOR</item>
+  </string-array>
+    <string-array name="choice_array_analogOutput">
+    <item>NOTHING</item>
+    <item>ANALOG_OUTPUT</item>
+  </string-array>
+    <string-array name="choice_array_digital_device">
+    <item>NOTHING</item>
+    <item>TOUCH_SENSOR</item>
+    <item>LED</item>
+    <item>DIGITAL_DEVICE</item>
+  </string-array>
+    <string-array name="choice_array_digital_device_lynx">
+    <item>NOTHING</item>
+    <item>LED</item>
+    <item>DIGITAL_DEVICE</item>
+  </string-array>
+    <string-array name="choice_array_legacy_module">
+    <item>GYRO</item>
+    <item>TOUCH_SENSOR</item>
+    <item>COMPASS</item>
+    <item>IR_SEEKER</item>
+    <item>LIGHT_SENSOR</item>
+    <item>ACCELEROMETER</item>
+    <item>ULTRASONIC_SENSOR</item>
+    <item>MOTOR_CONTROLLER</item>
+    <item>SERVO_CONTROLLER</item>
+    <item>MATRIX_CONTROLLER</item>
+    <item>TOUCH_SENSOR_MULTIPLEXER</item>
+    <item>COLOR_SENSOR</item>
+    <item>NOTHING</item>
+  </string-array>
+    <string-array name="choice_array_servo">
+    <item>NOTHING</item>
+    <item>SERVO</item>
+    <item>CONTINUOUS_ROTATION_SERVO</item>
+  </string-array>
+    <string-array name="device_interface_module_options_array">
+    <item>PWM Devices|EDIT_PWM_PORT</item>
+    <item>I2C Devices|EDIT_I2C_PORT</item>
+    <item>Analog Input Devices|EDIT_ANALOG_INPUT</item>
+    <item>Digital Devices|EDIT_DIGITAL</item>
+    <item>Analog Output Devices|EDIT_ANALOG_OUTPUT</item>
+  </string-array>
+    <string-array name="lynx_module_options_array">
+    <item>Motors|EDIT_MOTOR_LIST</item>
+    <item>Servos|EDIT_SERVO_LIST</item>
+    <item>Digital Devices|EDIT_DIGITAL</item>
+    <item>PWM Devices|EDIT_PWM_PORT</item>
+    <item>Analog Input Devices|EDIT_ANALOG_INPUT</item>
+    <item>I2C Bus 0|EDIT_I2C_BUS0</item>
+    <item>I2C Bus 1|EDIT_I2C_BUS1</item>
+    <item>I2C Bus 2|EDIT_I2C_BUS2</item>
+    <item>I2C Bus 3|EDIT_I2C_BUS3</item>
+  </string-array>
+    <string-array name="wifi_direct_channels">
+        <item>Auto – device selects channel|0</item>
+        <item>Channel  1 – 2.412 GHz|1</item>
+        <item>Channel  2 – 2.417 GHz|2</item>
+        <item>Channel  3 – 2.422 GHz|3</item>
+        <item>Channel  4 – 2.427 GHz|4</item>
+        <item>Channel  5 – 2.432 GHz|5</item>
+        <item>Channel  6 – 2.437 GHz|6</item>
+        <item>Channel  7 – 2.442 GHz|7</item>
+        <item>Channel  8 – 2.447 GHz|8</item>
+        <item>Channel  9 – 2.452 GHz|9</item>
+        <item>Channel 10 – 2.457 GHz|10</item>
+        <item>Channel 11 – 2.462 GHz|11</item>
+        <!--
+        <item>5GHz, Channel 36</item>
+        <item>5GHz, Channel 40</item>
+        <item>5GHz, Channel 44</item>
+        <item>5GHz, Channel 48</item>
+        -->
+        <!--
+        <item>5GHz, Channel 149</item>
+        <item>5GHz, Channel 153</item>
+        <item>5GHz, Channel 157</item>
+        <item>5GHz, Channel 161</item>
+        -->
+    </string-array>
+    <attr format="color" name="backgroundAlmostDark"/>
+    <attr format="color" name="backgroundDark"/>
+    <attr format="color" name="backgroundLight"/>
+    <attr format="color" name="backgroundMedium"/>
+    <attr format="color" name="backgroundMediumDark"/>
+    <attr format="color" name="backgroundMediumLight"/>
+    <attr format="color" name="backgroundMediumMedium"/>
+    <attr format="color" name="backgroundVeryDark"/>
+    <attr format="color" name="backgroundVeryVeryDark"/>
+    <attr format="color" name="feedbackBackground"/>
+    <attr format="color" name="feedbackBorder"/>
+    <attr format="reference" name="feedbackShape"/>
+    <attr format="color" name="lineBright"/>
+    <attr format="color" name="lineLight"/>
+    <attr format="color" name="textBright"/>
+    <attr format="color" name="textLight"/>
+    <attr format="color" name="textMedium"/>
+    <attr format="color" name="textMediumAlmostDark"/>
+    <attr format="color" name="textMediumDark"/>
+    <attr format="color" name="textMediumLight"/>
+    <attr format="color" name="textMediumMedium"/>
+    <attr format="color" name="textVeryDark"/>
+    <attr format="color" name="textVeryVeryDark"/>
+    <attr format="color" name="textWhite"/>
+    <color name="active_button_green">#4a9e21</color>
+    <color name="almost_dark_blue">#100c49</color>
+    <color name="almost_dark_green">#0c4b0c</color>
+    <color name="almost_dark_orange">#4b270c</color>
+    <color name="almost_dark_purple">#270c4b</color>
+    <color name="almost_dark_red">#490c10</color>
+    <color name="almost_dark_teal">#0c3a4b</color>
+    <color name="background_black">#000000</color>
+    <color name="background_dark_gray">#444444</color>
+    <color name="background_orange">#ff9000</color>
+    <color name="background_white">#ffffff</color>
+    <color name="border_orange">#ff6700</color>
+    <color name="bright_blue">#190aff</color>
+    <color name="bright_green">#0aff0a</color>
+    <color name="bright_orange">#ff740a</color>
+    <color name="bright_purple">#740aff</color>
+    <color name="bright_red">#ff0a19</color>
+    <color name="bright_teal">#0abeff</color>
+    <color name="dark_blue">#06014e</color>
+    <color name="dark_green">#014b01</color>
+    <color name="dark_orange">#4b2101</color>
+    <color name="dark_purple">#21014b</color>
+    <color name="dark_red">#4e0106</color>
+    <color name="dark_teal">#01384b</color>
+    <color name="firstblue">#009cd7</color>
+    <color name="firstgreen">#00a651</color>
+    <color name="firstorgange">#f57e25</color>
+    <color name="firstred">#ed1c24</color>
+    <color name="inactive_button_gray">#666666</color>
+    <color name="info_shadow">#A8A8A8</color>
+    <color name="light_blue">#1005bf</color>
+    <color name="light_green">#05bd05</color>
+    <color name="light_orange">#bd5505</color>
+    <color name="light_purple">#5505bd</color>
+    <color name="light_red">#bf0510</color>
+    <color name="light_teal">#059bd1</color>
+    <color name="line_gray">#aaaaaa</color>
+    <color name="medium_blue">#150e79</color>
+    <color name="medium_dark_blue">#070253</color>
+    <color name="medium_dark_green">#025502</color>
+    <color name="medium_dark_orange">#552602</color>
+    <color name="medium_dark_purple">#260255</color>
+    <color name="medium_dark_red">#530207</color>
+    <color name="medium_dark_teal">#023f55</color>
+    <color name="medium_green">#0e770e</color>
+    <color name="medium_light_blue">#0e04a6</color>
+    <color name="medium_light_green">#04a404</color>
+    <color name="medium_light_orange">#a44904</color>
+    <color name="medium_light_purple">#4904a4</color>
+    <color name="medium_light_red">#a6040e</color>
+    <color name="medium_light_teal">#0588b8</color>
+    <color name="medium_medium_blue">#080262</color>
+    <color name="medium_medium_green">#026402</color>
+    <color name="medium_medium_orange">#642c02</color>
+    <color name="medium_medium_purple">#2c0264</color>
+    <color name="medium_medium_red">#620208</color>
+    <color name="medium_medium_teal">#025978</color>
+    <color name="medium_orange">#a95414</color>
+    <color name="medium_purple">#3b0e77</color>
+    <color name="medium_red">#790e15</color>
+    <color name="medium_teal">#106989</color>
+    <color name="text_error">@color/bright_red</color>
+    <color name="text_okay">#009900</color>
+    <color name="text_toast">@color/text_white</color>
+    <color name="text_warning">#ff8000</color>
+    <color name="text_white">#FFFFFFFF</color>
+    <color name="very_dark_blue">#06023f</color>
+    <color name="very_dark_green">#024002</color>
+    <color name="very_dark_orange">#401d02</color>
+    <color name="very_dark_purple">#1d0240</color>
+    <color name="very_dark_red">#3f0206</color>
+    <color name="very_dark_teal">#023040</color>
+    <color name="very_very_dark_blue">#04012d</color>
+    <color name="very_very_dark_green">#012d01</color>
+    <color name="very_very_dark_orange">#2d1401</color>
+    <color name="very_very_dark_purple">#14012d</color>
+    <color name="very_very_dark_red">#2d0104</color>
+    <color name="very_very_dark_teal">#01212d</color>
+    <declare-styleable name="CameraBridgeViewBase"><attr format="boolean" name="show_fps"/><attr format="integer" name="camera_id">
+          <enum name="any" value="-1"/>
+          <enum name="back" value="99"/>
+          <enum name="front" value="98"/>
+       </attr></declare-styleable>
+    <declare-styleable name="ColorListPreference"><attr format="reference" name="colors"/></declare-styleable>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">5dp</dimen>
+    <string name="VUFORIA_INIT_ERROR_DEVICE_NOT_SUPPORTED">Failed to initialize Vuforia. This device is not supported.</string>
+    <string name="VUFORIA_INIT_ERROR_NO_CAMERA_ACCESS">Failed to initialize Vuforia. Camera not accessible</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_CANCELED_KEY">This app license key has been canceled and may no longer be used. Please get a new license key.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_INVALID_KEY">Invalid Key used. Please make sure you are using a valid Vuforia App Key.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_MISMATCH_KEY">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_MISSING_KEY">Vuforia App key is missing. Please get a valid key, by logging into your account at developer.vuforia.com and creating a new project.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_NO_NETWORK_PERMANENT">No network available. Please make sure you are connected to the Internet.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_NO_NETWORK_TRANSIENT">Unable to contact server. Please try again later.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_PRODUCT_TYPE_MISMATCH">Vuforia App key is not valid for this product. Please get a valid key, by logging into your account at developer.vuforia.com and choosing the right product type during project creation.</string>
+    <string name="VUFORIA_INIT_LICENSE_ERROR_UNKNOWN_ERROR">Failed to initialize Vuforia.</string>
+    <string name="about_activity">About</string>
+    <string name="about_app_version">App Version</string>
+    <string name="about_build_time">App Build Time</string>
+    <string name="about_library_version">Library Version</string>
+    <string name="about_menu_item">About</string>
+    <string name="about_network_connection_info">Network Connection Config Information</string>
+    <string name="about_network_protocol_version">Robot Wifi Protocol Version</string>
+    <string name="about_wifi_connected">Connected</string>
+    <string name="about_wifi_direct_info">Wifi Direct Config Information</string>
+    <string name="about_wifi_group_owner">Group Owner</string>
+    <string name="about_wifi_ip">IP Address</string>
+    <string name="about_wifi_is_group_owner">Group Owner: this phone</string>
+    <string name="about_wifi_name">Name</string>
+    <string name="about_wifi_no_info">No connection information</string>
+    <string name="about_wifi_passphrase">Passphrase</string>
+    <string name="action_configuration">Configure Robot</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_wifi_channel_selector">Wifi Direct Channel Selection</string>
+    <string name="actionlistenerfailure_busy">Error: BUSY</string>
+    <string name="actionlistenerfailure_error">Error</string>
+    <string name="actionlistenerfailure_nop2p">WifiDirect not supported</string>
+    <string name="actionlistenerfailure_nosevicerequests">Error: no service requests</string>
+    <string name="actionlistenerfailure_nowifi">Wifi is disabled</string>
+    <string name="actionlistenerfailure_unknown">Error: UNKNOWN</string>
+    <string name="activeConfigCaption">Active Configuration:</string>
+    <string name="active_connections_label">Active connections:</string>
+    <string name="adafruit_imu_description">an Adafruit IMU</string>
+    <string name="adafruit_imu_name">Adafruit IMU</string>
+    <string name="adafruit_imu_xmltag">AdafruitBNO055IMU</string>
+    <string name="add_motor_controller_menu_item">Add Motor Controller</string>
+    <string name="add_servo_controller_menu_item">Add Servo Controller</string>
+    <string name="alertLynxFirmwareUpdateFailed">Firmware update of Expansion Hub %s failed. Please try again.</string>
+    <string name="alertLynxFirmwareUpdateFailedTitle">Firmware Update Failed</string>
+    <string name="alertMessageNoActionGetContent">Your device lacks system support for selecting files.</string>
+    <string name="alertTitleRobotControllerConsole">Robot Controller Console</string>
+    <string name="appNameDriverStation">Driver Station</string>
+    <string name="appNameRobotController">Robot Controller</string>
+    <string name="appNameUnknown">Unknown Application</string>
+    <string name="appThemeChangeRestartNotifyDS">App color scheme has changed. The driver station will restart.</string>
+    <string name="appThemeChangeRestartNotifyRC">App color scheme has changed. The robot controller will restart.</string>
+    <string name="app_name">FTC Robot Controller</string>
+    <string name="attached">Attached</string>
+    <string name="availableConfigListCaption">Available configurations:</string>
+    <string name="availableConfigsInfoMessage">These are the configurations the Hardware Wizard was able to find. You can edit each configuration by clicking the edit button. The \'Activate\' button will set that configuration as the current one, which will be used to start the robot.</string>
+    <string name="availableModuleListCaption">Available Expansion Hubs:</string>
+    <string name="availableTemplateListCaption">Available templates:</string>
+    <string name="blocks_activity">Blocks</string>
+    <string name="blocks_menu_item">Blocks</string>
+    <string name="buttonExitWithoutSaving">Exit Without Saving</string>
+    <string name="buttonNameAdd">Add</string>
+    <string name="buttonNameCancel">Cancel</string>
+    <string name="buttonNameConfigure">Config</string>
+    <string name="buttonNameConfigureModuleAddress">Configure Address</string>
+    <string name="buttonNameDone">Done</string>
+    <string name="buttonNameFix">Fix</string>
+    <string name="buttonNameInfo">Info</string>
+    <string name="buttonNameNew">New</string>
+    <string name="buttonNameOK">OK</string>
+    <string name="buttonNameSave">Save</string>
+    <string name="buttonNameScan">Scan</string>
+    <string name="buttonNameSwap">Swap</string>
+    <string name="captionAvailableSwapDevices">Available USB controllers to swap with:</string>
+    <string name="captionAvailableUsbDevices">USB Devices in configuration:</string>
+    <string name="choice_prompt">Which sensor is attached?</string>
+    <string name="choice_prompt_analogInput">Which sensor is attached?</string>
+    <string name="choice_prompt_analogOutput">Which sensor is attached?</string>
+    <string name="choice_prompt_digital_device">Which sensor is attached?</string>
+    <string name="choice_prompt_i2c">Which sensor is attached?</string>
+    <string name="choice_prompt_module_address">Choose new module address</string>
+    <string name="choice_prompt_motor">Which kind of motor is attached?</string>
+    <string name="choice_prompt_servo">Which kind of servo is attached?</string>
+    <string name="clear_remembered_groups">Clear Remembered Groups</string>
+    <string name="configDirtyLabel">"(unsaved) %s"</string>
+    <string name="configFailedToOpenDeviceManager">Failed to open the Device Manager</string>
+    <string name="configFromTemplateInfoMessage">Several robot configuration templates are available. Configuring your robot using one of these templates is the fastest way to get a new robot up and running.</string>
+    <string name="configFromTemplateInfoTitle">Configure from Template</string>
+    <string name="configGivingUpOnCommand">Giving up on command %1$s(%2$d) after %3$d attempts</string>
+    <string name="configNameEmpty">Configuration name is empty.</string>
+    <string name="configNameExists">\'%s\' already exists.</string>
+    <string name="configNameIllegalCharacters">\'%s\' contains illegal characters.</string>
+    <string name="configNamePromptBanter">Please enter a name for the robot configuration.</string>
+    <string name="configNamePromptTitle">Save Configuration</string>
+    <string name="configNameReadOnly">\'%s\' is read-only.</string>
+    <string name="configNameReserved">\'%s\' is a reserved configuration name.</string>
+    <string name="configNameWhitespace">\'%s\' has leading or trailing whitespace.</string>
+    <string name="configTemplateInstructions">Press \'Config\' to add a configuration to your robot using a template. Press \'Info\' to learn what devices a template needs.</string>
+    <string name="configToDeleteDoesNotExist">"Configuration does not exist: %s"</string>
+    <string name="configTypeAdafruitColorSensor">Adafruit Color Sensor</string>
+    <string name="configTypeAnalogInput">Analog Input</string>
+    <string name="configTypeAnalogOutput">Analog Output</string>
+    <string name="configTypeColorSensor">Color Sensor</string>
+    <string name="configTypeContinuousRotationServo">Continuous Rotation Servo</string>
+    <string name="configTypeDeviceInterfaceModule">Device Interface Module</string>
+    <string name="configTypeDigitalDevice">Digital Device</string>
+    <string name="configTypeGyro">Gyro</string>
+    <string name="configTypeHTAccelerometer">HT Accelerometer</string>
+    <string name="configTypeHTColorSensor">HT Color Sensor</string>
+    <string name="configTypeHTCompass">HT Compass</string>
+    <string name="configTypeHTGyro">HT Gyro</string>
+    <string name="configTypeHTIrSeeker">HT IR Seeker</string>
+    <string name="configTypeHTLightSensor">HT Light Sensor</string>
+    <string name="configTypeHTTouchSensorMultiplexer">HT Touch Sensor Mux</string>
+    <string name="configTypeI2cDevice">I2C Device</string>
+    <string name="configTypeI2cDeviceSynch">I2C Device (Synchronous)</string>
+    <string name="configTypeIrSeekerV3">MR IR Seeker v3</string>
+    <string name="configTypeLED">LED</string>
+    <string name="configTypeLegacyModuleController">Legacy Module Controller</string>
+    <string name="configTypeLynxColorSensor">REV Color/Range Sensor</string>
+    <string name="configTypeLynxModule">Expansion Hub</string>
+    <string name="configTypeLynxUSBDevice">Expansion Hub Portal</string>
+    <string name="configTypeMRColorSensor">MR Color Sensor</string>
+    <string name="configTypeMRGyro">MR Gyro</string>
+    <string name="configTypeMRTouchSensor">MR Touch Sensor</string>
+    <string name="configTypeMatrixController">Matrix Controller</string>
+    <string name="configTypeMotor">Motor</string>
+    <string name="configTypeMotorController">Motor Controller</string>
+    <string name="configTypeNXTTouchSensor">NXT Touch Sensor</string>
+    <string name="configTypeNXTUltrasonicSensor">NXT Ultrasonic Sensor</string>
+    <string name="configTypeNothing">Nothing</string>
+    <string name="configTypeOpticalDistanceSensor">MR Optical Distance Sensor</string>
+    <string name="configTypePulseWidthDevice">Pulse Width Device</string>
+    <string name="configTypeServo">Servo</string>
+    <string name="configTypeServoController">Servo Controller</string>
+    <string name="configTypeUnknown">[Unknown]</string>
+    <string name="configurationNotSaved">Configuration not saved.</string>
+    <string name="configureFromTemplate">Configure from Template</string>
+    <string name="configure_activity">Configure Robot</string>
+    <string name="configure_menu_item">Configure Robot</string>
+    <string name="configure_robot_menu_item">Configure Robot</string>
+    <string name="configure_settings">Change Channel</string>
+    <string name="confirmConfigDeleteMessage">Are you sure you want to delete this configuration?</string>
+    <string name="confirmConfigDeleteTitle">Confirm Configuration Delete</string>
+    <string name="connection_owner_default">NONE</string>
+    <string name="connection_owner_password_default">password</string>
+    <string name="controllerPortConnectionInfoFormat">%1$s; port %2$d</string>
+    <string name="counted_device_interface_module_name">Device Interface Module %d</string>
+    <string name="counted_imu_name">imu %d</string>
+    <string name="counted_legacy_module_name">Legacy Module %d</string>
+    <string name="counted_lynx_module_name">Expansion Hub %d</string>
+    <string name="counted_lynx_usb_device_name">Expansion Hub Portal %d</string>
+    <string name="counted_motor_controller_name">Motor Controller %d</string>
+    <string name="counted_servo_controller_name">Servo Controller %d</string>
+    <string name="defaultOpModeName">Stop Robot</string>
+    <string name="default_port">0</string>
+    <string name="descriptionLynxEmbeddedModule">Embedded Expansion Hub</string>
+    <string name="deviceDisplayNameUnknownUSBDevice">unknown USB device [%s]</string>
+    <string name="deviceInterfaceModuleName">Device Interface Module</string>
+    <string name="device_info">Device Info</string>
+    <string name="device_name_format_ds">0000-%s-DS</string>
+    <string name="device_name_format_rc">0000-%s-RC</string>
+    <string name="device_type">Device Types</string>
+    <string name="dialogMessagePleaseWait">Please wait...</string>
+    <string name="displayNameMatrixMotorController">Matrix Motor Controller</string>
+    <string name="displayNameMatrixServoController">Matrix Servo Controller</string>
+    <string name="display_server_log_button">Display Server Log</string>
+    <string name="edit_analog_input_devices_activity">Edit Analog Input Devices</string>
+    <string name="edit_analog_input_devices_activity_lynx">Edit Analog Input Devices (Expansion Hub)</string>
+    <string name="edit_analog_output_devices_activity">Edit Analog Output Devices</string>
+    <string name="edit_controller">Edit Controller</string>
+    <string name="edit_core_device_interface_module_controller_activity">Edit Core Device Interface Module Controller</string>
+    <string name="edit_digital_devices_activity">Edit Digital Devices</string>
+    <string name="edit_digital_devices_activity_lynx">Edit Digital Devices (Expansion Hub)</string>
+    <string name="edit_i2c_devices_activity">Edit I2c Devices</string>
+    <string name="edit_legacy_module_controller_activity">Edit Legacy Module Controller</string>
+    <string name="edit_lynx_module_controller_activity">Edit Expansion Hub</string>
+    <string name="edit_lynx_usb_device_activity">Edit Master Expansion Hub</string>
+    <string name="edit_matrix_controller_activity">Edit Matrix Controller</string>
+    <string name="edit_motor_controller_activity">Edit Motor Controller</string>
+    <string name="edit_motor_controller_menu_item">Edit Motor Controller</string>
+    <string name="edit_pwm_devices_activity">Edit PWM Devices</string>
+    <string name="edit_servo_controller_activity">Edit Servo Controller</string>
+    <string name="edit_swap_devices_activity">Swap USB Devices</string>
+    <string name="errorConfigurationNotFound">"Configuration not found: %s"</string>
+    <string name="errorExpansionHubIsMissing">Expansion Hub \"%s\" is missing</string>
+    <string name="errorFailedToOpenDeviceManager">Failed to open the Device Manager</string>
+    <string name="errorOpModeStuck">OpMode \'%1$s\' stuck in %2$s. Restarting robot controller app.</string>
+    <string name="errorParsingConfiguration">"Error parsing configuration: %s"</string>
+    <string name="error_text_error">Error: %s</string>
+    <string name="error_text_warning">Warning: %s</string>
+    <string name="exit_menu_item">Exit</string>
+    <string name="expansionHubFirmwareUpdateMessage">Updating Expansion Hub %1$s firmware with \"%2$s\". Please do not unplug.</string>
+    <string name="file_activate_button">Activate</string>
+    <string name="file_delete_button">Delete</string>
+    <string name="file_edit_button">Edit</string>
+    <string name="file_prompt">Choose Configuration File</string>
+    <string name="filename_editText">Filename</string>
+    <string name="fixFailDuplicate">Unable to fix \"%1$s\": no unique replacement %2$s attached</string>
+    <string name="fixFailNoneAvailable">Unable to fix \"%1$s\": no replacement %2$s attached</string>
+    <string name="ftcConfigScanning">Scanning…</string>
+    <string name="ftcConfigScanningFailed">The scan for devices on the USB bus failed.</string>
+    <string name="globalErrorFailedToCreateRobot">unable to create robot</string>
+    <string name="globalErrorFailedToStartRobot">failed to start robot</string>
+    <string name="group_owner">Group Owner: </string>
+    <string name="help_content">No help available yet.</string>
+    <string name="help_menu_item">Help</string>
+    <string name="hide_server_log_button">Hide Server Log</string>
+    <string name="hwDeviceDescriptionAndConnection">\"%1$s [%2$s]\"</string>
+    <string name="hwPoorlyNamedDevice">an attached device</string>
+    <string name="incompatibleAppsError">Incompatible apps: %1$s=v%2$d vs %3$s=v%4$d</string>
+    <string name="input_name_hint">Enter device name here</string>
+    <string name="input_name_label">Device name</string>
+    <string name="inspection_activity">Inspection Mode</string>
+    <string name="inspection_mode_menu_item">Self Inspect</string>
+    <string name="launch_wifi_settings">Wifi Settings...</string>
+    <string name="legacy_controller_name">Enter the name for this legacy module here</string>
+    <string name="load_menu_item">Load Configuration File</string>
+    <string name="log_label">Server log:</string>
+    <string name="lynxAnalogInputControllerDisplayName">Expansion Hub Analog Input Controller</string>
+    <string name="lynxDcMotorControllerDisplayName">Expansion Hub DC Motor Controller</string>
+    <string name="lynxDigitalChannelControllerDisplayName">Expansion Hub Digital Channel Controller</string>
+    <string name="lynxFirmwareUpdateReadme">Place any downloaded Expansion Hub firmware updates you wish to install in this folder. You can then install those updates using the Advanced Settings menu on the Driver Station or Robot Controller.</string>
+    <string name="lynxI2cDeviceSynchDisplayName">Expansion Hub I2C Device</string>
+    <string name="lynxModuleDisplayName">Expansion Hub</string>
+    <string name="lynxPwmOutputControllerDisplayName">Expansion Hub Pwm Controller</string>
+    <string name="lynxServoControllerDisplayName">Expansion Hub Servo Controller</string>
+    <string name="lynxUnavailableFWVersionString">unknown firmware</string>
+    <string name="lynxVoltageSensorDisplayName">Expansion Hub Voltage Sensor</string>
+    <string name="lynx_address_format_module_address">Current address: %d</string>
+    <string name="lynx_address_format_new_module_address">New address: %d</string>
+    <string name="lynx_address_format_no_change">&lt;No change></string>
+    <string name="lynx_address_format_not_changeable">&lt;Not changeable></string>
+    <string name="lynx_address_instructions_no_devices">No Expansion Hubs are connected. Please connect one or more Expansion Hubs, and try again.</string>
+    <string name="lynx_address_instructions_static">Each Expansion Hub connected to a robot controller over the same USB connection (wired or embedded) must have a hub address which is unique within that connection. This screen allows these persistent hub addresses to be changed.</string>
+    <string name="lynx_address_instructions_update">Expansion Hubs with the following serial numbers and addresses are currently connected. To change the address of a hub, select a new address from the dropdown.</string>
+    <string name="lynx_embedded_imu_description">an embedded IMU</string>
+    <string name="lynx_embedded_imu_name">REV Expansion Hub IMU</string>
+    <string name="lynx_embedded_imu_xmltag">LynxEmbeddedIMU</string>
+    <string name="lynx_fw_instructions_no_binary">No Expansion Hub firmware update files were found on the robot controller. Please download firmware updates to \"%s\", and try again.</string>
+    <string name="lynx_fw_instructions_no_devices">Expansion Hub firmware update file \"%s\" was found, but no Expansion Hubs are connected. Please connect one or more Expansion Hubs, and try again.</string>
+    <string name="lynx_fw_instructions_update">Expansion Hub firmware update file \"%1$s\" was found, as were Expansion Hubs with the following serial numbers:\n\n%2$s\nClick on the button below to update the firmware of these Expansion Hubs.</string>
+    <string name="matrix_controller_name">Matrix Controller</string>
+    <string name="matrix_controller_name_prompt">Enter the name for this matrix controller here</string>
+    <string name="matrix_motor_title">Motors</string>
+    <string name="matrix_name_prompt">Matrix name</string>
+    <string name="matrix_port0">1</string>
+    <string name="matrix_port1">2</string>
+    <string name="matrix_port2">3</string>
+    <string name="matrix_port3">4</string>
+    <string name="matrix_port4">1</string>
+    <string name="matrix_port5">2</string>
+    <string name="matrix_port6">3</string>
+    <string name="matrix_port7">4</string>
+    <string name="matrix_servo_title">Servos</string>
+    <string name="moduleDisplayNameCDIM">Modern Robotics USB Core Device Interface Module</string>
+    <string name="moduleDisplayNameLegacyModule">Modern Robotics USB Legacy Module</string>
+    <string name="moduleDisplayNameLynxUsbDevice">REV Robotics USB Expansion Hub Portal</string>
+    <string name="moduleDisplayNameMotorController">Modern Robotics USB DC Motor Controller</string>
+    <string name="moduleDisplayNameServoController">Modern Robotics USB Servo Controller</string>
+    <string name="motor">Motor</string>
+    <string name="motor_controller_name">Motor Controller</string>
+    <string name="motor_controller_name_prompt">Enter the name for this motor controller here</string>
+    <string name="motor_name">Enter motor name here</string>
+    <string name="motor_name_prompt">Motor name</string>
+    <string name="motor_port">1</string>
+    <string name="motor_port1">1</string>
+    <string name="motor_port2">2</string>
+    <string name="msgAlertBeforeScan">If you scan, your current unsaved changes may be lost.</string>
+    <string name="msgInfoHowToUse">These are the devices discovered on the USB bus. You can click on the name of each device to edit the information relating to that device. Make sure each device has a unique name. The names should match what you use in your OpMode code. Scroll down to see more devices if there are any.</string>
+    <string name="msgInfoSave">Clicking the Save button will create a configuration in the \"/sdcard/FIRST/\" folder inside the robot controller phone. This configuration will be used to initialize the robot.</string>
+    <string name="name_prompt_text">Enter name</string>
+    <string name="name_prompt_undertext">Device name</string>
+    <string name="networkStatusActive">active</string>
+    <string name="networkStatusCreatedAPConnection">active on SSID: %s</string>
+    <string name="networkStatusEnabled">enabled</string>
+    <string name="networkStatusError">error</string>
+    <string name="networkStatusFormat">"Network: %1$s%2$s"</string>
+    <string name="networkStatusInactive">inactive</string>
+    <string name="networkStatusInternalError">internal error</string>
+    <string name="networkStatusUnknown">unknown</string>
+    <string name="network_name_label">Connect your laptop\'s wireless adapter to the following network:</string>
+    <string name="network_not_ok">Network not OK.</string>
+    <string name="noCurrentConfigFile">&lt;No Config Set></string>
+    <string name="noDeviceAttached">NO DEVICE ATTACHED</string>
+    <string name="noDevicesFoundMessage">In order to find devices: \n    1. Attach a robot \n    2. Press the \'Scan\' button</string>
+    <string name="noDevicesFoundTitle">No Devices Found</string>
+    <string name="noFilesFoundMessage">In order to proceed, you must create a new configuration</string>
+    <string name="noFilesFoundTitle">No Configurations Found.</string>
+    <string name="noRememberedGroupsFound">&lt;No remembered groups found></string>
+    <string name="noSerialNumber">USB serial number unknown</string>
+    <string name="noTemplatesFoundMessage">No configuration templates were found.</string>
+    <string name="noTemplatesFoundTitle">No Templates Found</string>
+    <string name="noVoltageSensor">no voltage sensor</string>
+    <string name="notAllDevicesFoundMessage">Not all the USB devices needed for this configuration were found. The ones missing are annotated as \'%s\'.</string>
+    <string name="notAllDevicesFoundTitle">Some Devices Not Found</string>
+    <string name="not_available">&lt;NOT AVAILABLE></string>
+    <string name="nxtDcMotorControllerName">Hitechnic DC Motor Controller</string>
+    <string name="nxtServoControllerName">Hitechnic Servo Controller</string>
+    <string name="packageName">@string/packageNameRobotController</string>
+    <string name="packageNameDriverStation" translatable="false">com.qualcomm.ftcdriverstation</string>
+    <string name="packageNameRobotController" translatable="false">com.qualcomm.ftcrobotcontroller</string>
+    <string name="passphrase_label">Use the following passphrase to gain access to the network:</string>
+    <string name="peerStatusConnected">connected</string>
+    <string name="peerStatusDisconnected">disconnected</string>
+    <string name="port">Port</string>
+    <string name="pref_app_theme">pref_app_theme</string>
+    <string name="pref_app_theme_rc">pref_app_theme_rc</string>
+    <string name="pref_autostarted_robot_controller">pref_autostarted_robot_controller</string>
+    <string name="pref_connection_owner_identity">pref_connection_owner_identity</string>
+    <string name="pref_connection_owner_password">pref_connection_owner_password</string>
+    <string name="pref_debug_driver_station_logs">pref_debug_driver_station_logs</string>
+    <string name="pref_device_name">pref_device_name</string>
+    <string name="pref_device_name_old">pref_device_name_old</string>
+    <string name="pref_device_name_rc">pref_device_name_rc</string>
+    <string name="pref_device_name_rc_display">pref_device_name_rc_display</string>
+    <string name="pref_device_name_tracking">pref_device_name_tracking</string>
+    <string name="pref_gamepad_user1_type_key">pref_gamepad_user1_type</string>
+    <string name="pref_gamepad_user2_type_key">pref_gamepad_user2_type</string>
+    <string name="pref_hardware_config_filename">pref_hardware_config_filename</string>
+    <string name="pref_has_independent_phone_battery">pref_has_independent_phone_battery</string>
+    <string name="pref_has_independent_phone_battery_rc">pref_has_independent_phone_battery_rc</string>
+    <string name="pref_launch_advanced_rc_settings">pref_launch_advanced_rc_settings</string>
+    <string name="pref_launch_inspect_ds">pref_launch_inspect_ds</string>
+    <string name="pref_launch_inspect_rc">pref_launch_inspect_rc</string>
+    <string name="pref_launch_lynx_address_update">pref_launch_lynx_address_update</string>
+    <string name="pref_launch_lynx_firmware_update">pref_launch_lynx_firmware_update</string>
+    <string name="pref_launch_viewlogs">pref_launch_viewlogs</string>
+    <string name="pref_launch_wifi_channel_edit">pref_launch_wifi_channel_edit</string>
+    <string name="pref_launch_wifi_remembered_groups_edit">pref_launch_wifi_remembered_groups_edit</string>
+    <string name="pref_network_connection_type">pref_network_connection_type</string>
+    <string name="pref_pair_rc">pref_pair_rc</string>
+    <string name="pref_rc_connected">pref_rc_connected</string>
+    <string name="pref_sound_on_off">pref_sound_on_off</string>
+    <string name="pref_sound_on_off_rc">pref_sound_on_off_rc</string>
+    <string name="pref_wifip2p_channel">pref_wifip2p_channel</string>
+    <string name="pref_wifip2p_groupowner_connectedto">pref_wifip2p_groupowner_connectedto</string>
+    <string name="pref_wifip2p_groupowner_lastconnectedto">pref_wifip2p_groupowner_lastconnectedto</string>
+    <string name="pref_wifip2p_groupowner_map">pref_wifip2p_groupowner_map</string>
+    <string name="pref_wifip2p_remote_channel_change_works">pref_wifip2p_remote_channel_change_works</string>
+    <string name="prefcat_configure_ds">Driver Station Settings</string>
+    <string name="prefcat_configure_robot">Robot Controller Settings</string>
+    <string name="prefcat_gamepad">Gamepads</string>
+    <string name="prefcat_logging">Logging</string>
+    <string name="prefcat_wifi_config">Network Configuration</string>
+    <string name="prefcat_wifi_settings">Wifi Settings</string>
+    <string name="prefedit_app_theme_ds">Driver Station Color Scheme</string>
+    <string name="prefedit_app_theme_rc">Robot Controller Color Scheme</string>
+    <string name="prefedit_app_theme_summary_ds">Change the color scheme of the driver station. Note: the app will restart if the color scheme is changed</string>
+    <string name="prefedit_app_theme_summary_rc">Change the color scheme of the robot controller. Note: the app will restart if the color scheme is changed</string>
+    <string name="prefedit_change_wifi_channel">Change Wifi Channel</string>
+    <string name="prefedit_clear_remembered_groups_summary">Clears remembered Wifi Direct groups from the robot controller</string>
+    <string name="prefedit_debug_driver_station_logs">Log Internal Events</string>
+    <string name="prefedit_debug_driver_station_logs_summary">Record low-level internal events to the log. This may generate a large log volume.</string>
+    <string name="prefedit_device_name">Device Name</string>
+    <string name="prefedit_device_name_ds">Driver Station Name</string>
+    <string name="prefedit_device_name_rc">Robot Controller Name</string>
+    <string name="prefedit_device_name_summary">Change the name of this device</string>
+    <string name="prefedit_device_name_summary_ds">Change the name of the driver station</string>
+    <string name="prefedit_device_name_summary_rc">Change the name of the robot controller</string>
+    <string name="prefedit_edit_wifi_channel_summary">Changes the Wifi channel on which the robot controller operates</string>
+    <string name="prefedit_gamepad_user1_type">Gamepad #1 Type</string>
+    <string name="prefedit_gamepad_user2_type">Gamepad #2 Type</string>
+    <string name="prefedit_launch_inspect_ds">Inspect Driver Station</string>
+    <string name="prefedit_launch_inspect_ds_summary">Creates a self-inspection report for the driver station</string>
+    <string name="prefedit_launch_inspect_rc">Inspect Robot Controller</string>
+    <string name="prefedit_launch_inspect_rc_summary">Creates a self-inspection report for the robot controller</string>
+    <string name="prefedit_pair_rc">Pair with Robot Controller</string>
+    <string name="prefedit_pair_rc_summary">Change the robot controller this driver station is paired with</string>
+    <string name="prefedit_remembered_groups">Clear Wifi Direct Groups</string>
+    <string name="prefedit_sound_on_off">Sound</string>
+    <string name="prefedit_sound_on_off_summary">Turn app sounds on or off</string>
+    <string name="prefedit_sound_on_off_summary_rc">Turn robot controller app sounds on or off</string>
+    <string name="prefedit_view_logs">View Logs</string>
+    <string name="prefedit_view_logs_summary">Shows recently-logged activity of the robot controller.</string>
+    <string name="preferred_imu_name">imu</string>
+    <string name="program_and_manage_activity">Program &amp; Manage</string>
+    <string name="program_and_manage_menu_item">Program &amp; Manage</string>
+    <string name="programming_and_manage">Program &amp; Manage</string>
+    <string name="programming_mode">Programming Mode</string>
+    <string name="programming_mode_activity">Programming Mode</string>
+    <string name="programming_mode_menu_item">Programming Mode</string>
+    <string name="progressPleaseWait">Please wait</string>
+    <string name="progressUpdatingDeviceFirmware">Updating Expansion Hub firmware (%s)</string>
+    <string name="quotes">\"%s\"</string>
+    <string name="readOnlyConfigFeedback">read-only</string>
+    <string name="readOnlyExplanation">Read-only configurations can be edited, but must be saved under a new name.</string>
+    <string name="readXML_text">Select an XML file to instantiate a Robot from that file</string>
+    <string name="rescanButton_text">Press the \'Scan\' button to rescan for attached devices</string>
+    <string name="restart_robot_menu_item">Restart Robot</string>
+    <string name="restore_settings">Restore Saved WiFi Settings</string>
+    <string name="rev_core_hex_name">REV Robotics Core Hex Motor</string>
+    <string name="rev_core_hex_xmltag">RevRoboticsCoreHexMotor</string>
+    <string name="rev_distributor">REV Robotics</string>
+    <string name="rev_hd_hex_name">REV Robotics HD Hex Motor</string>
+    <string name="rev_hd_hex_xmltag">RevRoboticsHDHexMotor</string>
+    <string name="robotControllerAppUpdateReadme">When running on a REV Control Hub (and only on a Control Hub, not merely a robot controller phone), any Android applications (APK files) found in this folder will be automatically installed when the system boots. Once successfully installed, each APK is deleted so as to not be reinstalled on subsequent boots.</string>
+    <string name="robotStateEmergencyStop">EMERGENCY STOP</string>
+    <string name="robotStateInit">initializing</string>
+    <string name="robotStateInternalError">internal error</string>
+    <string name="robotStateNotStarted">stopped</string>
+    <string name="robotStateRunning">running</string>
+    <string name="robotStateStopped">stopped</string>
+    <string name="robotStateUnknown">unknown</string>
+    <string name="robotStatusFormat">Robot Status: %1$s%2$s</string>
+    <string name="robotStatusInternalError">internal error</string>
+    <string name="robotStatusNetworkTimedOut">network timed out</string>
+    <string name="robotStatusScanningUSB">scanning for USB devices</string>
+    <string name="robotStatusStartingRobot">starting robot</string>
+    <string name="robotStatusUnableToStartRobot">unable to start robot</string>
+    <string name="robotStatusUnknown">unknown</string>
+    <string name="robotStatusWaitingOnNetworkConnection">waiting for network to become active</string>
+    <string name="robotStatusWaitingOnWifi">waiting for Wifi to enable</string>
+    <string name="robotStatusWaitingOnWifiDirect">waiting for Wifi Direct to enable</string>
+    <string name="row_port0">0</string>
+    <string name="row_port1">1</string>
+    <string name="row_port2">2</string>
+    <string name="row_port3">3</string>
+    <string name="row_port4">4</string>
+    <string name="row_port5">5</string>
+    <string name="row_port6">6</string>
+    <string name="saveButton_text">Press the \'Save\' button to persistently save the current configuration</string>
+    <string name="saveChangesMessage">Save your changes before exiting this configuration? If you click \'Exit Without Saving\' your changes will be lost.</string>
+    <string name="saveChangesMessageScreen">Save your changes before exiting this screen? If you click \'Exit Without Saving\' your changes will be lost.</string>
+    <string name="saveChangesTitle">Save Changes?</string>
+    <string name="save_configuration">Save Configuration</string>
+    <string name="serialNumberNotAttached">" (not attached)"</string>
+    <string name="server_not_ok">Server not OK.</string>
+    <string name="server_ok">Server OK (Running since %1$s)</string>
+    <string name="server_status_label">Server status:</string>
+    <string name="server_url_label">Once connected, enter the following address into your web browser:</string>
+    <string name="servo_controller_name">Servo Controller</string>
+    <string name="servo_controller_name_prompt">Enter the name for this servo controller here</string>
+    <string name="servo_name">Enter servo name here</string>
+    <string name="servo_name_prompt">Servo name</string>
+    <string name="servo_port">1</string>
+    <string name="setWifiChannelFailure">Unable to change Wifi Direct channel to \'%s\'</string>
+    <string name="setWifiChannelSuccess">Changed Wifi Direct channel to \'%s\'</string>
+    <string name="settings_activity">Settings</string>
+    <string name="settings_menu_item">Settings</string>
+    <string name="stringManufacturer">Manufacturer:</string>
+    <string name="stringModel">Model:</string>
+    <string name="string_WifiChannelHeading">Instructions:</string>
+    <string name="string_WifiChannelInstructions">Click on an item to change the Wifi Direct channel.</string>
+    <string name="string_WifiRememberedGroupsInstructions">The Robot Controller contains the following Wifi Direct remembered groups. Click on the button at the bottom to clear these groups. Clearing groups in this way can at times help alleviate network connectivity issues.</string>
+    <string name="summaryAdvancedRCSettings">Change advanced settings of the robot controller</string>
+    <string name="summaryLynxAddressUpdate">Change the persistent hub address of one or more Expansion Hubs</string>
+    <string name="summaryLynxFirmwareUpdate">Updates the firmware all currently attached Expansion Hubs</string>
+    <string name="swapPrompt">Choose the USB controller you want to swap \'%s\' with, or press \'Cancel\'</string>
+    <string name="templateConfigurationInstructions">To configure your robot using %1$s, attach the following devices, then press the \'Config\' button:\n%2$s</string>
+    <string name="templateConfigureConfigurationInstructionsTitle">Configuration Instructions</string>
+    <string name="templateConfigureDuplicateNameExceptionMessage">Found %s\n Please fix and re-save</string>
+    <string name="templateConfigureFailedToOpenUSBScanManager">Failed to open the USB Scan Manager</string>
+    <string name="templateConfigureNoDescriptionAvailable">No configuration description available</string>
+    <string name="templateConfigureNoDevicesFoundMessage">To configure a K9USBBot, attach the following, then press the K9USBBot button:\n%1$s\n\nTo configure a K9LegacyBot, attach the following, then press the K9LegacyBot button:\n%2$s</string>
+    <string name="templateConfigureNoDevicesFoundTitle">No USB Devices Found</string>
+    <string name="templateConfigureNothing">nothing</string>
+    <string name="templateConfigureWrongDevicesFoundMessage">Found: \n%1$s\nRequired:\n%2$s</string>
+    <string name="templateConfigureWrongDevicesFoundTitle">Incorrect USB Devices Found</string>
+    <string name="titleAdvancedRCSettings">Advanced Settings</string>
+    <string name="titleAdvancedRCSettings2">Advanced Robot Controller Settings</string>
+    <string name="titleDevices">Devices</string>
+    <string name="titleInspectionReportDS">Driver Station\nInspection Report</string>
+    <string name="titleInspectionReportRC">Robot Controller\nInspection Report</string>
+    <string name="titleLynxFirmwareUpdate">Expansion Hub Firmware Update</string>
+    <string name="titleLynxModuleAddressUpdate">Expansion Hub Address Change</string>
+    <string name="titleSaveConfiguration">Save Configuration</string>
+    <string name="titleText_view">Device type</string>
+    <string name="titleUnsavedChanges">Unsaved Changes</string>
+    <string name="title_activity_config_wifi_direct">Configure Wifi Direct</string>
+    <string name="title_activity_configfromtemplate">Configure from Template</string>
+    <string name="title_activity_load">Load Configuration File</string>
+    <string name="title_activity_wifi_channel_selector">Wifi Channel Selection</string>
+    <string name="title_activity_wifi_remembered_groups_editor">Wifi Remembered Groups Editor</string>
+    <string name="toastCantCreateRobotConfigFilesDir">Can\'t create the Robot Config Files directory!</string>
+    <string name="toastConfigureRobotBeforeProgrammingMode">You must Configure Robot before starting Programming Mode.</string>
+    <string name="toastDisconnectedFromWifiDirect">Successfully disconnected from WiFi Direct</string>
+    <string name="toastDuplicateName">Found %s</string>
+    <string name="toastErrorDisconnectingFromWifiDirect">There was an error disconnecting from WiFi Direct</string>
+    <string name="toastLynxAddressChangeComplete">Change of Expansion Hub addresses complete.</string>
+    <string name="toastLynxAddressChangeFailed">Change of Expansion Hub %s address failed.</string>
+    <string name="toastLynxAddressChangeNothingToDo">No Expansion Hub address changes indicated.</string>
+    <string name="toastLynxFirmwareUpdateSuccessful">Firmware update of Expansion Hub %s succeeded.</string>
+    <string name="toastOpModeStuck">OpMode stuck in %s. Restarting robot controller app.</string>
+    <string name="toastRebootRC">Rebooting Robot Controller</string>
+    <string name="toastRestartRobotComplete">Restart Robot Complete</string>
+    <string name="toastRestartingRobot">Restarting Robot</string>
+    <string name="toastSaved">Saved</string>
+    <string name="toastUnableToLaunchZTEWifiChannelEditor">Unable to launch ZTE WifiChannelEditor</string>
+    <string name="toastWebViewDownloadFile">Downloading %1$s</string>
+    <string name="toastWebViewDownloadsComplete">Downloads Complete</string>
+    <string name="toastWifiConfigurationComplete">Configuration Complete</string>
+    <string name="toastWifiP2pChannelChangeRequestedDS">Asked Robot Controller to change to channel \'%s\'. A restart of the Driver Station may be needed.</string>
+    <string name="toastWifiP2pRememberedGroupsCleared">Wifi Direct remembered groups have been cleared from the robot controller.</string>
+    <string name="tokenThemeBlue">blue</string>
+    <string name="tokenThemeGreen">green</string>
+    <string name="tokenThemeOrange">orange</string>
+    <string name="tokenThemePurple">purple</string>
+    <string name="tokenThemeRed">red</string>
+    <string name="tokenThemeTeal">teal</string>
+    <string name="unhealthyDevice">problem with %s</string>
+    <string name="unknown_wifi_direct_channel">Unknown channel</string>
+    <string name="update_lynx_firmware">Update Expansion Hub Firmware</string>
+    <string name="userSensorTypeBusDefault">port</string>
+    <string name="view_logs_activity">View Logs</string>
+    <string name="warningProblemCommunicatingWithUSBDevice">problem communicating with %s</string>
+    <string name="warningUSBDeviceDetached">%s detached</string>
+    <string name="warningUnableToOpen">unable to open %s</string>
+    <string name="webViewDownloadRequestDescription">Download file...</string>
+    <string name="wifi_direct_bad_device_name">The Wifi-Direct device name contains non-printable characters. Please go into the Wifi-Direct settings menu and rename this device.</string>
+    <string name="wifi_direct_update_settings">Please wait while we update the Wifi Direct settings on this device.</string>
+    <string name="writeXML_prompt">Select an XML file to instantiate a Robot from that file</string>
+    <string name="writeXML_text">Press this button to write the current configuration to an XML file</string>
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!-- Theme customizations available in newer API levels can go in res/values-vXX/styles.xml,
+        while customizations related to backward-compatibility can go here. -->
+    </style>
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textViewStyle">@style/FtcTextViewStyle</item>
+        <item name="android:buttonStyle">@style/FtcButtonStyle</item>
+        <item name="textWhite">@color/text_white</item>
+    </style>
+    <style name="AppTheme.Blue">
+        <item name="textBright">@color/bright_blue</item>
+        <item name="textLight">@color/light_blue</item>
+        <item name="textMedium">@color/medium_blue</item>
+        <item name="textMediumDark">@color/medium_dark_blue</item>
+        <item name="textVeryDark">@color/very_dark_blue</item>
+        <item name="textVeryVeryDark">@color/very_very_dark_blue</item>
+
+        <item name="backgroundLight">@color/light_blue</item>
+        <item name="backgroundMediumLight">@color/medium_light_blue</item>
+        <item name="backgroundMedium">@color/medium_blue</item>
+        <item name="backgroundMediumMedium">@color/medium_medium_blue</item>
+        <item name="backgroundMediumDark">@color/medium_dark_blue</item>
+        <item name="backgroundAlmostDark">@color/almost_dark_blue</item>
+        <item name="backgroundDark">@color/dark_blue</item>
+        <item name="backgroundVeryDark">@color/very_dark_blue</item>
+        <item name="backgroundVeryVeryDark">@color/very_very_dark_blue</item>
+        <item name="lineBright">@color/bright_blue</item>
+        <item name="lineLight">@color/light_blue</item>
+        <item name="feedbackBackground">@color/background_orange</item>
+        <item name="feedbackBorder">@color/border_orange</item>
+        <item name="feedbackShape">@drawable/feedback_shape_orange</item>
+    </style>
+    <style name="AppTheme.Green">
+        <item name="textBright">@color/bright_green</item>
+        <item name="textLight">@color/light_green</item>
+        <item name="textMedium">@color/medium_green</item>
+        <item name="textMediumDark">@color/medium_dark_green</item>
+        <item name="textVeryDark">@color/very_dark_green</item>
+        <item name="textVeryVeryDark">@color/very_very_dark_green</item>
+
+        <item name="backgroundLight">@color/light_green</item>
+        <item name="backgroundMediumLight">@color/medium_light_green</item>
+        <item name="backgroundMedium">@color/medium_green</item>
+        <item name="backgroundMediumMedium">@color/medium_medium_green</item>
+        <item name="backgroundMediumDark">@color/medium_dark_green</item>
+        <item name="backgroundAlmostDark">@color/almost_dark_green</item>
+        <item name="backgroundDark">@color/dark_green</item>
+        <item name="backgroundVeryDark">@color/very_dark_green</item>
+        <item name="backgroundVeryVeryDark">@color/very_very_dark_green</item>
+        <item name="lineBright">@color/bright_green</item>
+        <item name="lineLight">@color/light_green</item>
+        <item name="feedbackBackground">@color/background_orange</item>
+        <item name="feedbackBorder">@color/border_orange</item>
+        <item name="feedbackShape">@drawable/feedback_shape_orange</item>
+    </style>
+    <style name="AppTheme.Orange">
+        <item name="textBright">@color/bright_orange</item>
+        <item name="textLight">@color/light_orange</item>
+        <item name="textMedium">@color/medium_orange</item>
+        <item name="textMediumDark">@color/medium_dark_orange</item>
+        <item name="textVeryDark">@color/very_dark_orange</item>
+        <item name="textVeryVeryDark">@color/very_very_dark_orange</item>
+
+        <item name="backgroundLight">@color/light_orange</item>
+        <item name="backgroundMediumLight">@color/medium_light_orange</item>
+        <item name="backgroundMedium">@color/medium_orange</item>
+        <item name="backgroundMediumMedium">@color/medium_medium_orange</item>
+        <item name="backgroundMediumDark">@color/medium_dark_orange</item>
+        <item name="backgroundAlmostDark">@color/almost_dark_orange</item>
+        <item name="backgroundDark">@color/dark_orange</item>
+        <item name="backgroundVeryDark">@color/very_dark_orange</item>
+        <item name="backgroundVeryVeryDark">@color/very_very_dark_orange</item>
+        <item name="lineBright">@color/bright_orange</item>
+        <item name="lineLight">@color/light_orange</item>
+        <item name="feedbackBackground">@color/background_orange</item>
+        <item name="feedbackBorder">@color/border_orange</item>
+        <item name="feedbackShape">@drawable/feedback_shape_orange</item>
+    </style>
+    <style name="AppTheme.Purple">
+        <item name="textBright">@color/bright_purple</item>
+        <item name="textLight">@color/light_purple</item>
+        <item name="textMedium">@color/medium_purple</item>
+        <item name="textMediumDark">@color/medium_dark_purple</item>
+        <item name="textVeryDark">@color/very_dark_purple</item>
+        <item name="textVeryVeryDark">@color/very_very_dark_purple</item>
+
+        <item name="backgroundLight">@color/light_purple</item>
+        <item name="backgroundMediumLight">@color/medium_light_purple</item>
+        <item name="backgroundMedium">@color/medium_purple</item>
+        <item name="backgroundMediumMedium">@color/medium_medium_purple</item>
+        <item name="backgroundMediumDark">@color/medium_dark_purple</item>
+        <item name="backgroundAlmostDark">@color/almost_dark_purple</item>
+        <item name="backgroundDark">@color/dark_purple</item>
+        <item name="backgroundVeryDark">@color/very_dark_purple</item>
+        <item name="backgroundVeryVeryDark">@color/very_very_dark_purple</item>
+        <item name="lineBright">@color/bright_purple</item>
+        <item name="lineLight">@color/light_purple</item>
+        <item name="feedbackBackground">@color/background_orange</item>
+        <item name="feedbackBorder">@color/border_orange</item>
+        <item name="feedbackShape">@drawable/feedback_shape_orange</item>
+    </style>
+    <style name="AppTheme.Red">
+        <item name="textBright">@color/bright_red</item>
+        <item name="textLight">@color/light_red</item>
+        <item name="textMedium">@color/medium_red</item>
+        <item name="textMediumDark">@color/medium_dark_red</item>
+        <item name="textVeryDark">@color/very_dark_red</item>
+        <item name="textVeryVeryDark">@color/very_very_dark_red</item>
+
+        <item name="backgroundLight">@color/light_red</item>
+        <item name="backgroundMediumLight">@color/medium_light_red</item>
+        <item name="backgroundMedium">@color/medium_red</item>
+        <item name="backgroundMediumMedium">@color/medium_medium_red</item>
+        <item name="backgroundMediumDark">@color/medium_dark_red</item>
+        <item name="backgroundAlmostDark">@color/almost_dark_red</item>
+        <item name="backgroundDark">@color/dark_red</item>
+        <item name="backgroundVeryDark">@color/very_dark_red</item>
+        <item name="backgroundVeryVeryDark">@color/very_very_dark_red</item>
+        <item name="lineBright">@color/bright_red</item>
+        <item name="lineLight">@color/light_red</item>
+        <item name="feedbackBackground">@color/background_orange</item>
+        <item name="feedbackBorder">@color/border_orange</item>
+        <item name="feedbackShape">@drawable/feedback_shape_orange</item>
+    </style>
+    <style name="AppTheme.Teal">
+        <item name="textBright">@color/bright_teal</item>
+        <item name="textLight">@color/light_teal</item>
+        <item name="textMedium">@color/medium_teal</item>
+        <item name="textMediumDark">@color/medium_dark_teal</item>
+        <item name="textVeryDark">@color/very_dark_teal</item>
+        <item name="textVeryVeryDark">@color/very_very_dark_teal</item>
+
+        <item name="backgroundLight">@color/light_teal</item>
+        <item name="backgroundMediumLight">@color/medium_light_teal</item>
+        <item name="backgroundMedium">@color/medium_teal</item>
+        <item name="backgroundMediumMedium">@color/medium_medium_teal</item>
+        <item name="backgroundMediumDark">@color/medium_dark_teal</item>
+        <item name="backgroundAlmostDark">@color/almost_dark_teal</item>
+        <item name="backgroundDark">@color/dark_teal</item>
+        <item name="backgroundVeryDark">@color/very_dark_teal</item>
+        <item name="backgroundVeryVeryDark">@color/very_very_dark_teal</item>
+        <item name="lineBright">@color/bright_teal</item>
+        <item name="lineLight">@color/light_teal</item>
+        <item name="feedbackBackground">@color/background_orange</item>
+        <item name="feedbackBorder">@color/border_orange</item>
+        <item name="feedbackShape">@drawable/feedback_shape_orange</item>
+    </style>
+    <style name="AppThemeBlueRC" parent="AppTheme.Blue">
+    </style>
+    <style name="AppThemeGreenRC" parent="AppTheme.Green">
+    </style>
+    <style name="AppThemeOrangeRC" parent="AppTheme.Orange">
+    </style>
+    <style name="AppThemePurpleRC" parent="AppTheme.Purple">
+    </style>
+    <style name="AppThemeRedRC" parent="AppTheme.Red">
+    </style>
+    <style name="AppThemeTealRC" parent="AppTheme.Teal">
+    </style>
+    <style name="ConfigWifiDirectDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:background">@color/background_black</item>
+        <item name="android:textColor">?attr/textWhite</item>
+        <item name="android:windowBackground">?attr/backgroundVeryDark</item>
+    </style>
+    <style name="FeedbackButton" parent="android:Widget.Button">
+        <item name="android:textColor">?attr/feedbackBorder</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="FeedbackText" parent="FtcTextViewStyle">
+        <item name="android:textColor">?attr/textWhite</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="FtcButtonStyle" parent="android:Widget.Holo.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="FtcTextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+    </style>
+    <style name="FtcTextViewStyleBold" parent="android:Widget.TextView">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="OpModeDialogTextAppearance" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textColor">?android:attr/textColorAlertDialogListItem</item>
+    </style>
+</resources>
