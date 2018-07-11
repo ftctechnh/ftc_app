@@ -12,12 +12,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class ParadeBotTele extends OpMode
 {
     private ParadeBot tank;
+    private float rValue, lValue;
+    private boolean toggleSpeedMode = true;
+
 
     public void init()
     {
         tank = new ParadeBot(hardwareMap);
-        gamepad1.setJoystickDeadzone(.5f);
-        gamepad2.setJoystickDeadzone(.5f);
+        gamepad1.setJoystickDeadzone(.4f);
+        gamepad2.setJoystickDeadzone(.4f);
     }
 
     public void start()
@@ -27,22 +30,32 @@ public class ParadeBotTele extends OpMode
 
     public void loop()
     {
+        if (toggleSpeedMode)
+        {
+            telemetry.addData("Speed mode = ON", null);
+            rValue = gamepad1.right_stick_y;
+            lValue = gamepad1.left_stick_y;
+        }
+        else
+        {
+            telemetry.addData("speed mode = OFF", null);
+            rValue = gamepad1.right_stick_y/2;
+            lValue = gamepad1.left_stick_y/2;
+        }
+        /* Outputs for debugging
         telemetry.addData("Radian Velocity Left", tank.getDriveLeftOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("radian v right", tank.getDriveRightOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("LJoyStick= ", gamepad1.left_stick_y);
         telemetry.addData("RJoyStick= ", gamepad1.right_stick_y);
         telemetry.addData("REncoders= ", tank.getRightEncoderPos());
         telemetry.addData("LEncoders= ", tank.getLeftEncoderPos());
-        if(gamepad1.y)
+        */
+        telemetry.update();
+        tank.driveMotors(lValue, rValue);
+        if (gamepad1.a)
         {
-            tank.driveMotors(1, 1);
+            toggleSpeedMode = !toggleSpeedMode;
         }
-        else if(gamepad1.x)
-        {
-            tank.driveMotors(-1,-1);
-        }
-        else
-        tank.driveMotors(-gamepad1.right_stick_y, -gamepad1.left_stick_y);
     }
 
     public void stop()
