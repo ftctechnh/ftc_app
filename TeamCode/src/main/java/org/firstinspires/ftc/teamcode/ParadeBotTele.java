@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,16 +8,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 /**
  * Created by Jeremy on 7/30/2017.
  */
-@TeleOp(name = "TankTestTele", group = "Test")
-public class TestTeleOp extends OpMode
+@TeleOp(name = "ParadeBot", group = "Test")
+public class ParadeBotTele extends OpMode
 {
-    private TankBase tank;
+    private ParadeBot tank;
+    private float rValue, lValue;
+    private boolean toggleSpeedMode = true;
+
 
     public void init()
     {
-        tank = new TankBase(hardwareMap);
-        gamepad1.setJoystickDeadzone(.1f);
-        gamepad2.setJoystickDeadzone(.1f);
+        tank = new ParadeBot(hardwareMap);
+        gamepad1.setJoystickDeadzone(.4f);
+        gamepad2.setJoystickDeadzone(.4f);
     }
 
     public void start()
@@ -28,14 +30,32 @@ public class TestTeleOp extends OpMode
 
     public void loop()
     {
-        telemetry.addData("Expected velcoity ", 3 * Math.PI);
+        if (toggleSpeedMode)
+        {
+            telemetry.addData("Speed mode = ON", null);
+            rValue = gamepad1.right_stick_y;
+            lValue = gamepad1.left_stick_y;
+        }
+        else
+        {
+            telemetry.addData("speed mode = OFF", null);
+            rValue = gamepad1.right_stick_y/2;
+            lValue = gamepad1.left_stick_y/2;
+        }
+        /* Outputs for debugging
         telemetry.addData("Radian Velocity Left", tank.getDriveLeftOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("radian v right", tank.getDriveRightOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("LJoyStick= ", gamepad1.left_stick_y);
         telemetry.addData("RJoyStick= ", gamepad1.right_stick_y);
         telemetry.addData("REncoders= ", tank.getRightEncoderPos());
         telemetry.addData("LEncoders= ", tank.getLeftEncoderPos());
-        tank.driveMotors(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        */
+        telemetry.update();
+        tank.driveMotors(lValue, rValue);
+        if (gamepad1.a)
+        {
+            toggleSpeedMode = !toggleSpeedMode;
+        }
     }
 
     public void stop()

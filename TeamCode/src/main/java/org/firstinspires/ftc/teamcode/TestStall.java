@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,10 +13,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 @TeleOp(name = "Test Stall Prog Base",group = "Auto")
 public class TestStall extends LinearOpMode
 {
-    TankBase robot;
+    ParadeBot robot;
     public void runOpMode()
     {
-        robot = new TankBase(hardwareMap);
+        robot = new ParadeBot(hardwareMap);
         waitForStart();
         robot.driveStraight_In_Stall(35, .5, telemetry);
         while(!gamepad1.a)

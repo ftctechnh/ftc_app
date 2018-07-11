@@ -20,7 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 /**
  * Created by Jeremy on 6/11/2017.
  */
-public class TankBase
+public class ParadeBot
 {
     private DcMotorImplEx driveLeftOne = null;
     private DcMotorImplEx driveRightOne = null;
@@ -36,9 +36,8 @@ public class TankBase
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
     private float wheelCircCm = (float)(9.8* Math.PI);
 
-    public TankBase(HardwareMap hMap)
+    public ParadeBot(HardwareMap hMap)
     {
-
         imu = (hMap.get(BNO055IMU.class, "imu"));
         initIMU();
 
@@ -55,10 +54,7 @@ public class TankBase
         driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
-/*
-        driveRightOne.setDirection(DcMotorSimple.Direction.REVERSE);
-        driveLeftOne.setDirection(DcMotorSimple.Direction.REVERSE);
-*/
+
         stopAllMotors();
         updateIMUValues();
     }

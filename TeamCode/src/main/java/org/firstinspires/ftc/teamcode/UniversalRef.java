@@ -12,11 +12,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public class UniversalRef extends LinearOpMode
 {
     NewRobot newRobot;
-    TankBase robot;
+    ParadeBot robot;
     public void runOpMode() {
         char cipher;
         newRobot = new NewRobot(hardwareMap);
-        TankBase robot = new TankBase(hardwareMap);
+        ParadeBot robot = new ParadeBot(hardwareMap);
         waitForStart();
         sleep(300);
         char colorOfPlatform = newRobot.getColor(newRobot.getFloorColorSens());
