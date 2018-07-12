@@ -72,6 +72,8 @@ class MecanumDrivetrain extends AbstractDrivetrain{
         }
     }
 
+
+
     // Helper function for power scaling in the drive method
     private double findMax(double... vals) {
         double max = Double.NEGATIVE_INFINITY;

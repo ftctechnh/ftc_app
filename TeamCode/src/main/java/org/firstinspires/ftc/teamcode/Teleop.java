@@ -1,18 +1,20 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+//import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "MecanumTeleop", group = "Iterative Opmode")
+@TeleOp(name = "CRITeleop", group = "Iterative Opmode")
 //@Disabled
 public class Teleop extends OpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private Robot robot = new Robot();
+    private enum HopperPosition {Idle, level, up};
+    private HopperPosition hopperPosition = HopperPosition.Idle;
 
 
     @Override
@@ -48,6 +50,33 @@ public class Teleop extends OpMode {
         wVelocity = Range.clip(wVelocity, -1.0, 1.0);
 
         robot.drive(xVelocity, yVelocity, wVelocity);
+
+        robot.runIntake(gamepad2.left_stick_y);
+        robot.runLift(gamepad2.right_stick_y);
+
+        if(gamepad2.a){
+            hopperPosition = HopperPosition.Idle;
+        } else if(gamepad2.x){
+            hopperPosition = HopperPosition.level;
+        } else if(gamepad2.y){
+            hopperPosition = HopperPosition.up;
+        }
+
+        switch(hopperPosition){
+            case Idle:
+                robot.setHopperPosition(0.65);
+                break;
+            case level:
+                robot.setHopperPosition(0.5);
+                break;
+            case up:
+                robot.setHopperPosition(0);
+                break;
+            default:
+                robot.setHopperPosition(0.5);
+                break;
+        }
+
 
         // Show the elapsed game time and velocities.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
