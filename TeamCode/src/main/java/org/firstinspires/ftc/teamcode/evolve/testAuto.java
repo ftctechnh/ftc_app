@@ -55,7 +55,15 @@ public class testAuto extends LinearOpMode{ //Step 2, extends..., light bulb>mak
             }
         }
         //
-        //put stuff here
+        left.setPower(1);
+        right.setPower(1);
+        //
+        while(ir.getStrength() < 1){
+            telemetry.addData("ir", ir.getStrength());
+            telemetry.update();
+        }
+        //
+
     }
     //
     public void turn(double power){

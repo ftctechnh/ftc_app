@@ -8,12 +8,10 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.teamcode.HardwareSensorMap;
 
-/**
- * Created by Eric on 6/10/2018.
- */
+//Created by Eric on 6/10/2018.
 
-@TeleOp(name="testClass",group="evolve") //Step 1, @Teleop, name & group, Okay to import
-public class testClass extends LinearOpMode{ //Step 2, extends..., light bulb>make abstract
+@TeleOp(name="answerKey",group="evolve") //Step 1, @Teleop, name & group, Okay to import
+public class answerKey extends LinearOpMode{ //Step 2, extends..., light bulb>make abstract
     //
     DcMotor left;
     DcMotor right;

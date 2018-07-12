@@ -11,6 +11,8 @@ public class TeleOp1 extends LinearOpMode{ //2. /
     Welcome to Evolve!
 
     This is called a comment, and it allows us to write anything in the code.
+    Make a comment using // or /*   */
+    /*
 
     Let's start by setting up our program
 
@@ -62,7 +64,7 @@ public class TeleOp1 extends LinearOpMode{ //2. /
 
         //7. type here
 
-        while (opModeIsActive()){//8.
+        while (opModeIsActive()){//8. /
 
             //9. example: test.setPower(gamepad1.right_stick_y);'
             //left
