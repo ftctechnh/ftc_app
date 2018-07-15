@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
 class MecanumDrivetrain extends AbstractDrivetrain{
@@ -11,6 +14,7 @@ class MecanumDrivetrain extends AbstractDrivetrain{
     private static final double MAX_SPEED = 1.0;
 
     private Robot robot;
+    private ElapsedTime gyroTimer = new ElapsedTime();
 
     public MecanumDrivetrain(Robot r) {
         robot = r;
@@ -40,8 +44,7 @@ class MecanumDrivetrain extends AbstractDrivetrain{
     }
 
     @Override
-    public void encoderDrive(double xDist, double yDist, double wDist, double maxSpeed) {
-        // TODO: Implement
+    public void encoderDrive(double yDist, double maxSpeed) {
         int ENCODER_CPR = 1120; // Encoder counts per Revolution
         double gearRatio = 1.5; // [Gear Ratio]:1
         double circumference = 12.5; // Wheel circumference (in inches)
@@ -72,7 +75,44 @@ class MecanumDrivetrain extends AbstractDrivetrain{
         }
     }
 
+    @Override
+    public void gyroTurn(int wDist, double maxSpeed){
+        updateIMU();
+        int targetHeading = wDist - (int)angles.firstAngle;
 
+        targetHeading += targetHeading > 180 ? -360 : targetHeading < -180 ? 360 : 0;
+
+        int[] headingList = {targetHeading - 2, targetHeading - 1, targetHeading,
+                targetHeading + 1, targetHeading + 2};
+
+        for(int i = 0; i < headingList.length; i++) {
+            headingList[i] += headingList[i] < -180 ? 360 :
+                    headingList[i] > 180 ? -360 : 0;
+        }
+
+        while(shouldKeepTurning2(headingList)){
+            updateIMU();
+            if(wDist < 0){
+                maxSpeed = -1*maxSpeed;
+            }
+            drive(0,0, maxSpeed);
+        }
+    }
+
+
+    private boolean shouldKeepTurning2(int[] listOfHeadings) {
+        for(int heading : listOfHeadings) {
+            if(heading == (int)-angles.firstAngle) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private void updateIMU() {
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+    }
 
     // Helper function for power scaling in the drive method
     private double findMax(double... vals) {

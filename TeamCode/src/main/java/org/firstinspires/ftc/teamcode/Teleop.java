@@ -15,6 +15,8 @@ public class Teleop extends OpMode {
     private Robot robot = new Robot();
     private enum HopperPosition {Idle, level, up};
     private HopperPosition hopperPosition = HopperPosition.Idle;
+    int gripper = 1;
+    boolean bPressedBefore = false;
 
 
     @Override
@@ -44,15 +46,15 @@ public class Teleop extends OpMode {
 
         yVelocity = gamepad1.left_stick_y*Math.abs(gamepad1.left_stick_y);
         xVelocity = gamepad1.left_stick_x*Math.abs(gamepad1.left_stick_x);
-        wVelocity = gamepad1.right_stick_x*Math.abs(gamepad1.right_stick_x)*2/3;
+        wVelocity = gamepad1.right_stick_x*Math.abs(gamepad1.right_stick_x)/2;
         yVelocity = Range.clip(yVelocity, -1.0, 1.0);
         xVelocity = Range.clip(xVelocity, -1.0, 1.0);
         wVelocity = Range.clip(wVelocity, -1.0, 1.0);
 
         robot.drive(xVelocity, yVelocity, wVelocity);
 
-        robot.runIntake(gamepad2.left_stick_y);
-        robot.runLift(gamepad2.right_stick_y);
+        robot.runIntake(gamepad2.right_stick_y);
+        robot.runLift(gamepad2.left_stick_y);
 
         if(gamepad2.a){
             hopperPosition = HopperPosition.Idle;
@@ -67,14 +69,36 @@ public class Teleop extends OpMode {
                 robot.setHopperPosition(0.65);
                 break;
             case level:
-                robot.setHopperPosition(0.5);
+                robot.setHopperPosition(0.4);
                 break;
             case up:
                 robot.setHopperPosition(0);
                 break;
             default:
-                robot.setHopperPosition(0.5);
+                robot.setHopperPosition(0.4);
                 break;
+        }
+
+        if(gamepad2.b && !bPressedBefore){
+            if(gripper == 1 ){
+                gripper = 2;
+                bPressedBefore = true;
+            }
+            else{
+                gripper = 1;
+                bPressedBefore = true;
+            }
+        }
+        if(!gamepad2.b){
+            bPressedBefore = false;
+        }
+
+        switch(gripper){
+            case 1:
+                robot.setGripperPosition(0);
+                break;
+            case 2:
+                robot.setGripperPosition(0.65);
         }
 
 

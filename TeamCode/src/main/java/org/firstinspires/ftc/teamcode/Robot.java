@@ -12,7 +12,7 @@ public class Robot {
     private HardwareMap hwMap =  null;
     OpMode opMode;
     private DcMotor lIntake, rIntake, lift;
-    private Servo hopper;
+    private Servo hopper, gripper;
 
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap, OpMode op) {
@@ -23,8 +23,9 @@ public class Robot {
         lIntake = hwMap.get(DcMotor.class, "LI");
         rIntake = hwMap.get(DcMotor.class, "RI");
         lift = hwMap.get(DcMotor.class, "lift");
-        hopper = hwMap.get(Servo.class, "hopper");
 
+        hopper = hwMap.get(Servo.class, "hopper");
+        gripper = hwMap.get(Servo.class, "gripper");
 
         drivetrain.init((ahwMap));
     }
@@ -35,7 +36,7 @@ public class Robot {
     }
 
     public void encoderDrive(double yDist, double maxSpeed){
-        drivetrain.encoderDrive(0, yDist, 0, maxSpeed);
+        drivetrain.encoderDrive(yDist, maxSpeed);
     }
 
     public void runIntake(double power){
@@ -50,5 +51,11 @@ public class Robot {
     public void setHopperPosition(double position){
         hopper.setPosition(position);
     }
+
+    public void setGripperPosition(double position){
+        gripper.setPosition(position);
+    }
+
+
 
 }
