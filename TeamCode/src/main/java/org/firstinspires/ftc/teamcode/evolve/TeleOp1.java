@@ -5,9 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 //This is a comment
 
-//@TeleOp (name = "teleOp1", group = "evolve") //1. Remove the slashes before "@TeleOp"' to start
-public class TeleOp1 extends LinearOpMode{ //2. /
-    /*
+/*
     Welcome to Evolve!
 
     This is called a comment, and it allows us to write anything in the code.
@@ -47,6 +45,9 @@ public class TeleOp1 extends LinearOpMode{ //2. /
 
     Step 10 - remove slashes before "telemetry"'
      */
+
+//@TeleOp (name = "teleOp1", group = "evolve") //1. Remove the slashes before "@TeleOp"' to start
+public class TeleOp1 extends LinearOpMode{ //2. /
 
     //3. example: DcMotor test;'
     //right
