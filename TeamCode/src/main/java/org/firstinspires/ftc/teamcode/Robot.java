@@ -57,6 +57,7 @@ public class Robot {
         gripper.setPosition(0.65);
         jewelPivot.setPosition(1);
         jewelArm.setPosition(0.98);
+        drivetrain = new MecanumDrivetrain(this);
 
         drivetrain.init((ahwMap));
     }
