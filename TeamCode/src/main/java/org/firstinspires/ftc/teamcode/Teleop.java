@@ -13,10 +13,10 @@ public class Teleop extends OpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private Robot robot = new Robot();
-    private enum HopperPosition {Idle, level, up};
+    private enum HopperPosition {Idle, level, up}
     private HopperPosition hopperPosition = HopperPosition.Idle;
-    int gripper = 1;
-    boolean bPressedBefore = false;
+    private int gripper = 1;
+    private boolean bPressedBefore = false;
 
 
     @Override
@@ -35,6 +35,8 @@ public class Teleop extends OpMode {
 
     @Override
     public void start() {
+        robot.setJewelArmPosition(0.8);
+        robot.setJewelPivotPosition(0.75);
         runtime.reset();
     }
 

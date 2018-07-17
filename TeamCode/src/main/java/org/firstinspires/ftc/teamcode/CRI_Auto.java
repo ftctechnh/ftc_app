@@ -16,7 +16,7 @@ public class CRI_Auto extends LinearOpMode {
 
         waitForStart();
 
-        robot.encoderDrive(20, 0.75);
+        robot.gyroTurn(90, 0.3);
         sleep(5000);
 
     }

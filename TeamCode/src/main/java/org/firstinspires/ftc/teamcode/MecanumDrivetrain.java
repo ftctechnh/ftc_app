@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -15,9 +16,11 @@ class MecanumDrivetrain extends AbstractDrivetrain{
 
     private Robot robot;
     private ElapsedTime gyroTimer = new ElapsedTime();
+    private LinearOpMode linOp;
 
     public MecanumDrivetrain(Robot r) {
         robot = r;
+        linOp = (LinearOpMode)robot.opMode;
     }
 
     // Moves the drive train using the given x, y, and rotational velocities
@@ -56,7 +59,7 @@ class MecanumDrivetrain extends AbstractDrivetrain{
 
         if (yDist > 0) {
             while (rfDriveM.getCurrentPosition() < rTarget - 5 &&
-                    lfDriveM.getCurrentPosition() < lTarget - 5 ){
+                    lfDriveM.getCurrentPosition() < lTarget - 5 && linOp.opModeIsActive()){
                 drive(0, -maxSpeed, 0);
                 robot.opMode.telemetry.addData("1. rPosition", rfDriveM.getCurrentPosition());
                 robot.opMode.telemetry.addData("2. rTarget", rTarget);
@@ -65,7 +68,7 @@ class MecanumDrivetrain extends AbstractDrivetrain{
             super.stop();
         } else if (yDist < 0) {
             while (rfDriveM.getCurrentPosition() > rTarget + 5 &&
-                    lfDriveM.getCurrentPosition() > lTarget + 5) {
+                    lfDriveM.getCurrentPosition() > lTarget + 5 && linOp.opModeIsActive()) {
                 drive(0, maxSpeed, 0);
                 robot.opMode.telemetry.addData("1. rpPosition", rfDriveM.getCurrentPosition());
                 robot.opMode.telemetry.addData("2. rTarget", rTarget);
@@ -78,37 +81,66 @@ class MecanumDrivetrain extends AbstractDrivetrain{
     @Override
     public void gyroTurn(int wDist, double maxSpeed){
         updateIMU();
-        int targetHeading = wDist - (int)angles.firstAngle;
+        double kp = 0.002;
 
+        // define and normalize target heading
+        int targetHeading = wDist - (int)angles.firstAngle;
         targetHeading += targetHeading > 180 ? -360 : targetHeading < -180 ? 360 : 0;
 
-        int[] headingList = {targetHeading - 2, targetHeading - 1, targetHeading,
-                targetHeading + 1, targetHeading + 2};
+        // define and normalize current heading
+        int currentHeading = (int)angles.firstAngle;
+        currentHeading  += currentHeading < -180 ? 360 : currentHeading > 180 ? -360 : 0;
 
-        for(int i = 0; i < headingList.length; i++) {
-            headingList[i] += headingList[i] < -180 ? 360 :
-                    headingList[i] > 180 ? -360 : 0;
-        }
+        // initialize heading list
+        int[] headingList = {currentHeading, currentHeading, currentHeading,
+                currentHeading, currentHeading};
 
-        while(shouldKeepTurning2(headingList)){
-            updateIMU();
-            if(wDist < 0){
-                maxSpeed = -1*maxSpeed;
-            }
-            drive(0,0, maxSpeed);
+        int error = targetHeading - currentHeading;
+        error += error > 180 ? -360 : error < -180 ? 360 : 0;
+
+        double power;
+
+
+        while(shouldKeepTurning2(headingList, targetHeading) && linOp.opModeIsActive()){
+            updateIMU(); // update heading
+
+            // update and normalize current heading
+            currentHeading = (int)angles.firstAngle;
+            currentHeading  += currentHeading < -180 ? 360 : currentHeading > 180 ? -360 : 0;
+
+            error = targetHeading - currentHeading;
+            error += error > 180 ? -360 : error < -180 ? 360 : 0;
+
+            power = error*kp;
+
+            power += error > 0 ? 0.15 : error < 0 ? -0.15 : 0;
+
+            updateHeadingList(headingList, currentHeading);// update heading list
+
+            robot.opMode.telemetry.addData("Angle: ", currentHeading);
+            robot.opMode.telemetry.addData("Target:", targetHeading);
+            robot.opMode.telemetry.update();
+
+            drive(0,0, power);
         }
     }
 
+    private void updateHeadingList(int[] headingList, int currentHeading){
+        for (int i = 0; i < headingList.length-1; i++) {
+            headingList[i] = headingList[i+1];
+        }
+        headingList[headingList.length-1] = currentHeading;
+    }
 
-    private boolean shouldKeepTurning2(int[] listOfHeadings) {
+    private boolean shouldKeepTurning2(int[] listOfHeadings, int targetHeading) {
         for(int heading : listOfHeadings) {
-            if(heading == (int)-angles.firstAngle) {
-                return false;
+            if(heading != targetHeading) {
+                return true;
             }
         }
-
-        return true;
+        return false;
     }
+
 
     private void updateIMU() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
