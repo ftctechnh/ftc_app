@@ -14,9 +14,12 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
     Let's start by setting up our program
 
-    Step 1 - remove the slashes before "@TeleOp"'
+    Step 1 - name the program
+        type @TeleOp (name="TeleOp1",group="evolve"
 
-    Step 2 - extends LinearOpMode
+    Step 2 -  Identifies the type of program as linear
+        already done:  extends LinearOpMode
+
 
     Step 3 - add the hardware
         A. - say what you're adding (use DcMotor and TouchSensor)
@@ -24,29 +27,34 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
         B. - name the part (like test)
             example: DcMotor test;'
 
-    Step 4 - public void runOpMode() throws InterruptedException {}
+    Step 4 - mark the start of the program
+        type public void runOpMode() throws InterruptedException
 
-    Step 5 - hardwareMap
+    Step 5 - match your names to the real hardware
         A. - name =
 
         B. - hardwareMap.part.get("name");
             example: test = hardwareMap.dcMotor.get("test");'
 
-    Step 6 - remove the slashes before "right.setDirection"'
+    Step 6 - reverse one of the motor
+        type "right.setDirection(DcMotorSimple.Direction.REVERSE);"'
 
-    Step 7 - type "waitForStart();"'
+    Step 7 - mark where the program runs
+        type "waitForStart();"'
 
-    Step 8 - while(opModeIsActive()){
+    Step 8 - make sure the program is active
+        while(opModeIsActive()){
 
-    Step 9 - controls
+    Step 9 - use the controls
         A. - left.setPower(gamepad1.right_stick_y);
 
         B. - right.setPower(gamepad1.left_stick_y);
 
-    Step 10 - remove slashes before "telemetry"'
+    Step 10 - add debugging output by uncommenting
+        remove slashes before "telemetry"'
      */
 
-//@TeleOp (name = "teleOp1", group = "evolve") //1. Remove the slashes before "@TeleOp"' to start
+//1. Type here
 public class TeleOp1 extends LinearOpMode{ //2. /
 
     //3. example: DcMotor test;'
@@ -61,7 +69,7 @@ public class TeleOp1 extends LinearOpMode{ //2. /
         //left
         //wall
 
-        //right.setDirection(DcMotorSimple.Direction.REVERSE); //6. Remove the slashes
+        //6. Type here
 
         //7. type here
 
