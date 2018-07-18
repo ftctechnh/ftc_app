@@ -14,6 +14,7 @@ public class ParadeBotTele extends OpMode
     private ParadeBot tank;
     private float rValue, lValue;
     private boolean toggleSpeedMode = true;
+    private boolean hasSpeedModeBeenActivated = false;
 
 
     public void init()
@@ -54,7 +55,15 @@ public class ParadeBotTele extends OpMode
         tank.driveMotors(lValue, rValue);
         if (gamepad1.a)
         {
-            toggleSpeedMode = !toggleSpeedMode;
+            if (!hasSpeedModeBeenActivated)
+            {
+                toggleSpeedMode = !toggleSpeedMode;
+                hasSpeedModeBeenActivated = true;
+            }
+        }
+        else
+        {
+            hasSpeedModeBeenActivated = false;
         }
     }
 
