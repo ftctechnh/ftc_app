@@ -523,8 +523,10 @@ public class COMPILED extends LinearOpMode {
                 relicGrab.setPosition(pos2);
 
                 if (gamepad2.right_stick_button){
-
+                    pos = 0.37;
                 }
+                pos = Range.clip(pos, 0, 1);
+                relicArm.setPosition(pos);
 
 
                 telemetry.addData("RDC: ", relicMotor.getCurrentPosition());

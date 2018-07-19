@@ -267,7 +267,7 @@ public class NEW_BLUE1 extends LinearOpMode {
             BACKWARD(3950); /**change*/
 
             //Lower grabber
-            GRABDOWN(1400);
+            GRABDOWN(1300);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -295,58 +295,18 @@ public class NEW_BLUE1 extends LinearOpMode {
 
             AXISRIGHT(4500);
             BACKWARD(650);
+            GRABDOWN(300);
 
         }
 
 
         if (gridColumn == 1){
 
-            //Move forward: RIGHT
-            BACKWARD(3000); /**change*/
+//Move forward: RIGHT
+            BACKWARD(4950); /**change*/
 
             //Lower grabber
-            GRABDOWN(1400);
-
-            //GYRO CALIBRATE
-//            gyro.resetZAxisIntegrator();
-//            telemetry.addData("Gyro value: ", gyro.getHeading());
-//            telemetry.update();
-
-            AXISRIGHT(2300); /**change*/
-
-            //Move towards safezone
-            FORWARD(450, 0.5); /**change*/
-
-            //Drop glyph
-            grabTopLeft.setPosition(gtlOPEN);
-            grabTopRight.setPosition(gtrOPEN);
-
-            FORWARD(820, 0.5); /**change*/
-
-            BACKWARD(500); /**change*/
-
-            FORWARD(600, 0.5); /**change*/
-            BACKWARD(550); /**change*/
-
-            //FOR RIGHT SIDE
-            SWAYRIGHT(650); /**change*/
-
-            FORWARD(570,0.5); /**change*/
-            BACKWARD(1000); /**change*/
-
-            AXISRIGHT(4500);
-            BACKWARD(650);
-
-        }
-
-
-        if (gridColumn == 3){
-
-            //Move forward: MIDDLE
-            BACKWARD(4850); /**change*/
-
-            //Lower grabber
-            GRABDOWN(1400);
+            GRABDOWN(1300);
 
             //GYRO CALIBRATE
 //            gyro.resetZAxisIntegrator();
@@ -377,6 +337,51 @@ public class NEW_BLUE1 extends LinearOpMode {
 
             AXISRIGHT(4500);
             BACKWARD(650);
+            GRABDOWN(300);
+
+        }
+
+
+        if (gridColumn == 3){
+
+            //Move forward: LEFT
+            BACKWARD(3000); /**change*/
+
+            //Lower grabber
+            GRABDOWN(1300);
+
+            //GYRO CALIBRATE
+//            gyro.resetZAxisIntegrator();
+//            telemetry.addData("Gyro value: ", gyro.getHeading());
+//            telemetry.update();
+
+            AXISRIGHT(2300); /**change*/
+
+            //Move towards safezone
+            FORWARD(450, 0.5); /**change*/
+
+            //Drop glyph
+            grabTopLeft.setPosition(gtlOPEN);
+            grabTopRight.setPosition(gtrOPEN);
+
+            FORWARD(820, 0.5); /**change*/
+
+            BACKWARD(500); /**change*/
+
+            FORWARD(600, 0.5); /**change*/
+            BACKWARD(550); /**change*/
+
+            //FOR RIGHT SIDE
+            SWAYRIGHT(650); /**change*/
+
+            FORWARD(570,0.5); /**change*/
+            BACKWARD(1000); /**change*/
+
+            AXISRIGHT(4500);
+            BACKWARD(650);
+            GRABDOWN(300);
+
+
 
         }
 
