@@ -61,7 +61,7 @@ public abstract class AbstractDrivetrain {
 
     public abstract void encoderDrive(double yDist, double maxSpeed);
 
-    public abstract void gyroTurn(int wDist, double maxSpeed);
+    public abstract void gyroTurn(int wDist, String direction);
 
     public void stop(){
         lfDriveM.setPower(0);

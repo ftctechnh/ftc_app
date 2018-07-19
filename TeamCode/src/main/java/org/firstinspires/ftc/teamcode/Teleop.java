@@ -35,8 +35,7 @@ public class Teleop extends OpMode {
 
     @Override
     public void start() {
-        robot.setJewelArmPosition(0.8);
-        robot.setJewelPivotPosition(0.75);
+        robot.setJewelPivotPosition(0.5);
         runtime.reset();
     }
 
@@ -101,6 +100,13 @@ public class Teleop extends OpMode {
                 break;
             case 2:
                 robot.setGripperPosition(0.65);
+        }
+
+        if(gamepad1.b){
+            robot.setJewelArmPosition(0);
+        }
+        else{
+            robot.setJewelArmPosition(0.75);
         }
 
 

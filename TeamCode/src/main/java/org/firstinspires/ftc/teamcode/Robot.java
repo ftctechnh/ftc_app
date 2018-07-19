@@ -4,7 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import static java.lang.Thread.sleep;
 
 public class Robot {
 
@@ -14,6 +22,17 @@ public class Robot {
     OpMode opMode;
     private DcMotor lIntake, rIntake, lift;
     private Servo hopper, gripper, jewelPivot, jewelArm;
+
+    private ColorSensor colorSensor;
+
+    private ClosableVuforiaLocalizer vuforia;
+    private ElapsedTime vutimer = new ElapsedTime();
+    String vuforiaLicenseKey = "Ae3H91v/////AAAAGT+4TPU5r02VnQxesioVLr0qQzNtgdYskxP7aL6/" +
+            "yt9VozCBUcQrSjwec5opfpOWEuc55kDXNNSRJjLAnjGPeaku9j4nOfe7tWxio/xj/uNdPX7fEHD0j5b" +
+            "5M1OgX/bkWoUV6pUTAsKj4GaaAKIf76vnX36boqJ7BaMJNuhkYhoQJWdVqwFOC4veNcABzJRw4mQmfO" +
+            "3dfPvNVjxDl8kgdBEQOZRi9kFDy9w3cTLatSGZne3IvyaYYd8uckzPnQb5Mgel3ORjar/84qO+GBmG2" +
+            "vDhmiv+vkY4gbCtS0em5LM+7CIMuZa5vO9GmtqXyNsoCp9zpPlgZHc1OJ7javiI5jAzWEKCPjZcmLAkSs7k+amw";
+
 
     public void init(HardwareMap ahwMap, LinearOpMode linOp) {
         // Save reference to Hardware map
@@ -29,9 +48,11 @@ public class Robot {
         jewelPivot = hwMap.get(Servo.class, "jewelPivot");
         jewelArm = hwMap.get(Servo.class, "jewelArm");
 
+        colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
+
         hopper.setPosition(0.5);
         gripper.setPosition(0.65);
-        jewelPivot.setPosition(1);
+        jewelPivot.setPosition(0.5);
         jewelArm.setPosition(0.98);
         drivetrain = new MecanumDrivetrain(this);
 
@@ -55,7 +76,7 @@ public class Robot {
 
         hopper.setPosition(0.5);
         gripper.setPosition(0.65);
-        jewelPivot.setPosition(1);
+        jewelPivot.setPosition(0.5);
         jewelArm.setPosition(0.98);
         drivetrain = new MecanumDrivetrain(this);
 
@@ -72,8 +93,8 @@ public class Robot {
         drivetrain.encoderDrive(yDist, maxSpeed);
     }
 
-    public void gyroTurn(int wDist, double maxSpeed){
-        drivetrain.gyroTurn(wDist, maxSpeed);
+    public void gyroTurn(int wDist, String direction){
+        drivetrain.gyroTurn(wDist, direction);
     }
 
     public void runIntake(double power){
@@ -99,6 +120,125 @@ public class Robot {
 
     public void setJewelArmPosition(double position){
         jewelArm.setPosition(position);
+    }
+
+    public void bumpJewel(String alliance){
+
+        // move arm to between jewels.
+        if(alliance.equals("blue")){
+            jewelPivot.setPosition(0.5);
+            try{
+                sleep(500);
+            }catch(InterruptedException e){
+                opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
+            }
+            jewelArm.setPosition(0.27);
+        }
+
+
+        float[] hsvValues = new float[3];
+        final float values[] = hsvValues;
+
+        colorSensor.enableLed(true);
+        opMode.telemetry.addLine("raw Android color: ")
+                .addData("a", "%02x", colorSensor.alpha())
+                .addData("r", "%02x", colorSensor.red())
+                .addData("g", "%02x", colorSensor.green())
+                .addData("b", "%02x", colorSensor.blue());
+        opMode.telemetry.update();
+
+        try{
+            sleep(2000);
+        }catch(InterruptedException e){
+            opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
+            opMode.telemetry.update();
+        }
+
+
+        if(alliance.equals("blue")){
+            if(colorSensor.red() > colorSensor.blue()){
+                jewelPivot.setPosition(0.58);
+            }
+            else if(colorSensor.red() < colorSensor.blue()){
+                jewelPivot.setPosition(0.42);
+            }
+        }
+        else if(alliance.equals("red")){
+            if(colorSensor.red() > colorSensor.blue()){
+                jewelPivot.setPosition(0.42);
+            }
+            else if(colorSensor.red() < colorSensor.blue()){
+                jewelPivot.setPosition(0.58);
+            }
+        }
+
+        try{
+            sleep(2000);
+        }catch(InterruptedException e){
+            opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
+            opMode.telemetry.update();
+        }
+
+        jewelArm.setPosition(0.8);
+        jewelPivot.setPosition(0.5);
+
+
+    }
+
+
+    public String activateVuforia () {
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName()); // Get the camera!
+        VuforiaLocalizer.Parameters parameters_Vuf = new VuforiaLocalizer.Parameters(cameraMonitorViewId);  // Prepare the parameters
+        parameters_Vuf.vuforiaLicenseKey = vuforiaLicenseKey;
+        parameters_Vuf.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;  // Look through the inward facing camera
+        this.vuforia = new ClosableVuforiaLocalizer(parameters_Vuf);             // Apply Parameters
+
+        VuforiaTrackables Cryptokey = this.vuforia.loadTrackablesFromAsset("RelicVuMark");  // Create VuMarks from Pictograph
+        VuforiaTrackable Targets = Cryptokey.get(0);
+        Targets.setName("Targets");
+
+        Cryptokey.activate();
+        opMode.telemetry.addData("Searching for Key", "...");
+        opMode.telemetry.update();
+        String vufkey = decryptKey(Targets);
+        opMode.telemetry.addData("Key Found", vufkey);
+        opMode.telemetry.update();
+
+        this.vuforia.close();
+        return vufkey;
+    }
+
+
+    private String decryptKey(VuforiaTrackable cryptokeys) {
+
+        String key = "";
+        vutimer.reset();
+        RelicRecoveryVuMark vuMark;
+        while (((LinearOpMode) opMode).isStarted()) {
+            vuMark = RelicRecoveryVuMark.from(cryptokeys);
+
+            if (vuMark == RelicRecoveryVuMark.LEFT) {       //Store which cryptokey is found and
+                key = "KeyLeft";            //update the telemetry accordingly.
+                opMode.telemetry.addData("Spotted Key", "Left!");
+                opMode.telemetry.update();
+            } else if (vuMark == RelicRecoveryVuMark.CENTER) {
+                key = "KeyCenter";
+                opMode.telemetry.addData("Spotted Key", "Center!");
+                opMode.telemetry.update();
+            } else if (vuMark == RelicRecoveryVuMark.RIGHT) {
+                key = "KeyRight";
+                opMode.telemetry.addData("Spotted Key", "Right!");
+                opMode.telemetry.update();
+            } else {
+                key = "KeyUnknown";
+                opMode.telemetry.addData("Spotted Key", "Unknown");
+                opMode.telemetry.update();
+            }
+            if(((LinearOpMode) opMode).isStopRequested() || key != "KeyUnknown" || vutimer.time() > 3) {
+                break;           //Stop this code if a stop is requested, or if the VuMark has been
+            }                    //found, or if more than 3 seconds have passed.
+        }
+        return key;
     }
 
 
