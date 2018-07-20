@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import Jama.Matrix;
 import java.lang.Math;
 
 import static java.lang.Math.cos;

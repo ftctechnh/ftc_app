@@ -11,5 +11,5 @@
 // Include common definitions from above.
 apply from: '../build.common.gradle'
 dependencies {
-    compile files('C:/Users/jxfio/OneDrive/Documents/GitHub/ftc_app/libs/Jama-1.0.3.jar')
+
 }
