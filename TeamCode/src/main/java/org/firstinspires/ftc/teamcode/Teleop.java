@@ -36,11 +36,14 @@ public class Teleop extends OpMode {
     @Override
     public void start() {
         robot.setJewelPivotPosition(0.5);
+        robot.setJewelArmPosition(0.8);
         runtime.reset();
     }
 
     @Override
     public void loop() {
+
+        // DRIVER CODE
         double xVelocity;
         double yVelocity;
         double wVelocity;
@@ -54,9 +57,16 @@ public class Teleop extends OpMode {
 
         robot.drive(xVelocity, yVelocity, wVelocity);
 
+
+        // OPERATOR CODE
+
+        // Glyph intake
         robot.runIntake(gamepad2.right_stick_y);
+
+        // Hopper lift
         robot.runLift(gamepad2.left_stick_y);
 
+        // Hopper positions
         if(gamepad2.a){
             hopperPosition = HopperPosition.Idle;
         } else if(gamepad2.x){
@@ -80,6 +90,7 @@ public class Teleop extends OpMode {
                 break;
         }
 
+        // Hopper gripper
         if(gamepad2.b && !bPressedBefore){
             if(gripper == 1 ){
                 gripper = 2;
@@ -99,14 +110,31 @@ public class Teleop extends OpMode {
                 robot.setGripperPosition(0);
                 break;
             case 2:
-                robot.setGripperPosition(0.65);
+                robot.setGripperPosition(0.6);
         }
 
-        if(gamepad1.b){
-            robot.setJewelArmPosition(0);
+        // Relic extension
+        if(gamepad2.dpad_up){
+            robot.runRelic(-1);
         }
-        else{
-            robot.setJewelArmPosition(0.75);
+        else if (gamepad2.dpad_down){
+            robot.runRelic(1);
+        } else{
+            robot.runRelic(0);
+        }
+
+        // Relic arm
+        if(gamepad2.left_bumper){
+            robot.setRelicArmPosition(0.35);
+        } else if (gamepad2.left_trigger>0.5){
+            robot.setRelicArmPosition(1);
+        }
+
+        // Relic gripper
+        if(gamepad2.right_bumper){
+            robot.setRelicGripperPosition(0.65);
+        } else if (gamepad2.right_trigger>0.5){
+            robot.setRelicGripperPosition(1);
         }
 
 

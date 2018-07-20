@@ -20,8 +20,8 @@ public class Robot {
 
     private HardwareMap hwMap =  null;
     OpMode opMode;
-    private DcMotor lIntake, rIntake, lift;
-    private Servo hopper, gripper, jewelPivot, jewelArm;
+    private DcMotor lIntake, rIntake, lift, relic;
+    private Servo hopper, gripper, jewelPivot, jewelArm, relicGripper, relicArm;
 
     private ColorSensor colorSensor;
 
@@ -42,18 +42,24 @@ public class Robot {
         lIntake = hwMap.get(DcMotor.class, "LI");
         rIntake = hwMap.get(DcMotor.class, "RI");
         lift = hwMap.get(DcMotor.class, "lift");
+        relic = hwMap.get(DcMotor.class, "relic");
 
         hopper = hwMap.get(Servo.class, "hopper");
         gripper = hwMap.get(Servo.class, "gripper");
         jewelPivot = hwMap.get(Servo.class, "jewelPivot");
         jewelArm = hwMap.get(Servo.class, "jewelArm");
+        relicGripper = hwMap.get(Servo.class, "rGripper");
+        relicArm = hwMap.get(Servo.class, "rArm");
 
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
 
-        hopper.setPosition(0.5);
+        hopper.setPosition(0.4);
         gripper.setPosition(0.65);
         jewelPivot.setPosition(0.5);
         jewelArm.setPosition(0.98);
+        relicGripper.setPosition(0.6);
+        relicArm.setPosition(1);
+
         drivetrain = new MecanumDrivetrain(this);
 
         drivetrain.init((ahwMap));
@@ -68,16 +74,22 @@ public class Robot {
         lIntake = hwMap.get(DcMotor.class, "LI");
         rIntake = hwMap.get(DcMotor.class, "RI");
         lift = hwMap.get(DcMotor.class, "lift");
+        relic = hwMap.get(DcMotor.class, "relic");
 
         hopper = hwMap.get(Servo.class, "hopper");
         gripper = hwMap.get(Servo.class, "gripper");
         jewelPivot = hwMap.get(Servo.class, "jewelPivot");
         jewelArm = hwMap.get(Servo.class, "jewelArm");
+        relicGripper = hwMap.get(Servo.class, "rGripper");
+        relicArm = hwMap.get(Servo.class, "rArm");
 
-        hopper.setPosition(0.5);
+        hopper.setPosition(0.4);
         gripper.setPosition(0.65);
         jewelPivot.setPosition(0.5);
         jewelArm.setPosition(0.98);
+        relicGripper.setPosition(0.6);
+        relicArm.setPosition(1);
+
         drivetrain = new MecanumDrivetrain(this);
 
         drivetrain.init((ahwMap));
@@ -106,6 +118,10 @@ public class Robot {
         lift.setPower(power);
     }
 
+    public void runRelic(double power){
+        relic.setPower(power);
+    }
+
     public void setHopperPosition(double position){
         hopper.setPosition(position);
     }
@@ -122,18 +138,42 @@ public class Robot {
         jewelArm.setPosition(position);
     }
 
+    public void setRelicGripperPosition(double position){
+        relicGripper.setPosition(position);
+    }
+
+    public void setRelicArmPosition(double position){
+        relicArm.setPosition(position);
+    }
+
     public void bumpJewel(String alliance){
 
-        // move arm to between jewels.
-        if(alliance.equals("blue")){
-            jewelPivot.setPosition(0.5);
-            try{
-                sleep(500);
-            }catch(InterruptedException e){
-                opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
-            }
-            jewelArm.setPosition(0.27);
+        jewelArm.setPosition(0.8);
+        try{
+            sleep(300);
+        }catch(InterruptedException e){
+            opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
         }
+
+        jewelPivot.setPosition(0.7);
+        try{
+            sleep(300);
+        }catch(InterruptedException e){
+            opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
+        }
+        jewelArm.setPosition(0.32);
+        try{
+            sleep(500);
+        }catch(InterruptedException e){
+            opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
+        }
+        jewelPivot.setPosition(0.6);
+        try{
+            sleep(300);
+        }catch(InterruptedException e){
+            opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
+        }
+        jewelArm.setPosition(0.27);
 
 
         float[] hsvValues = new float[3];
@@ -148,7 +188,7 @@ public class Robot {
         opMode.telemetry.update();
 
         try{
-            sleep(2000);
+            sleep(500);
         }catch(InterruptedException e){
             opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
             opMode.telemetry.update();
@@ -157,23 +197,23 @@ public class Robot {
 
         if(alliance.equals("blue")){
             if(colorSensor.red() > colorSensor.blue()){
-                jewelPivot.setPosition(0.58);
+                jewelPivot.setPosition(0.8);
             }
             else if(colorSensor.red() < colorSensor.blue()){
-                jewelPivot.setPosition(0.42);
+                jewelPivot.setPosition(0.4);
             }
         }
         else if(alliance.equals("red")){
             if(colorSensor.red() > colorSensor.blue()){
-                jewelPivot.setPosition(0.42);
+                jewelPivot.setPosition(0.4);
             }
             else if(colorSensor.red() < colorSensor.blue()){
-                jewelPivot.setPosition(0.58);
+                jewelPivot.setPosition(0.8);
             }
         }
 
         try{
-            sleep(2000);
+            sleep(500);
         }catch(InterruptedException e){
             opMode.telemetry.addLine("I broke from sleep. :( (bumpJewel function)");
             opMode.telemetry.update();

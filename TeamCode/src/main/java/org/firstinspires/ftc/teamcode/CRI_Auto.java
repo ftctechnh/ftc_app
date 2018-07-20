@@ -9,8 +9,6 @@ public class CRI_Auto extends LinearOpMode {
 
     private Robot robot = new Robot();
 
-    private boolean pictographScanned = false;
-
     private int selection;
     private int setAlliance;
     private int setBumpType;
@@ -130,11 +128,18 @@ public class CRI_Auto extends LinearOpMode {
         telemetry.update();
         robot.setJewelPivotPosition(0.5);
 
+        // release intake slides
+        robot.runLift(1);
+        sleep(400);
+        robot.runLift(-1);
+        sleep(400);
+        robot.runLift(0);
+
         // drive off the ramp
-        robot.encoderDrive(20, 0.2);
+        robot.encoderDrive(20, 0.15);
         sleep(500);
 
-        robot.gyroTurn(90, "RIGHT");
+        robot.gyroTurn(88, "RIGHT");
 
         // raise hopper
         robot.setHopperPosition(0);
@@ -142,22 +147,22 @@ public class CRI_Auto extends LinearOpMode {
 
         // drive to column
         if(cryptoKey.equals("KeyLeft")){
-            robot.encoderDrive(8, 0.2);
+            robot.encoderDrive(11, 0.2);
         }
         else if(cryptoKey.equals("KeyRight")){
-            robot.encoderDrive(16, 0.2);
+            robot.encoderDrive(17, 0.2);
         }
         else if(cryptoKey.equals("KeyCenter")){
-            robot.encoderDrive(12, 0.2);
+            robot.encoderDrive(14, 0.2);
         }
         else if(cryptoKey.equals("KeyUnknown")){
-            robot.encoderDrive(12, 0.2);
+            robot.encoderDrive(14, 0.2);
         }
 
         sleep(500);
 
         // turn away
-        robot.gyroTurn(50, "RIGHT");
+        robot.gyroTurn(45, "RIGHT");
         sleep(500);
 
         // drive back into column
@@ -170,10 +175,43 @@ public class CRI_Auto extends LinearOpMode {
 
         // drive away from column
         robot.encoderDrive(7, 0.2);
+        robot.setGripperPosition(0.65);
+        sleep(500);
+
+        robot.setHopperPosition(0.65);
         sleep(500);
 
         // turn to parallel with cryptobox
-        robot.gyroTurn(-50, "LEFT");
+        robot.gyroTurn(-45, "LEFT");
+
+        robot.setGripperPosition(0);
+        sleep(500);
+
+        robot.runIntake(-1);
+        sleep(1200);
+        robot.runIntake(0);
+        robot.setGripperPosition(0.65);
+
+        robot.encoderDrive(25, 0.2);
+        robot.setHopperPosition(0);
+
+
+        sleep(500);
+        // turn away
+        robot.gyroTurn(45, "RIGHT");
+        sleep(500);
+
+        // drive back into column
+        robot.encoderDrive(-7, 0.2);
+        sleep(500);
+
+        // release glyph
+        robot.setGripperPosition(0);
+        sleep(500);
+
+        // drive away from column
+        robot.encoderDrive(7, 0.2);
+        robot.setGripperPosition(0.65);
         sleep(500);
 
     }
