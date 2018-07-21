@@ -41,10 +41,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+//import org.firstinspires.ftc.ftccommon.external.navigation.VuforiaTrackables.RelicRecoveryVuMark;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,16 +136,14 @@ public class Computervision extends LinearOpMode {
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        VuforiaTrackable redTarget = stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaTrackable relicTemplate = relicTrackables.get(0);
+        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
+        telemetry.addData(">", "Press Play to start"); telemetry.update();
+        waitForStart();
+        relicTrackables.activate();
 
-        /** For convenience, gather together all the trackable objects in one easily-iterable collection */
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(stonesAndChips);
 
         /**
          * We use units of mm here because that's the recommended units of measurement for the
@@ -212,12 +212,12 @@ public class Computervision extends LinearOpMode {
          * - Then we rotate it  90 around the field's Z access to face it away from the audience.
          * - Finally, we translate it back along the X axis towards the red audience wall.
          */
-        OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
+        /* OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
-                is a negative translation in X.*/
+                is a negative translation in X.
                 .translation(-mmFTCFieldWidth/2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
-                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 90, 0));
         redTarget.setLocation(redTargetLocationOnField);
@@ -228,12 +228,12 @@ public class Computervision extends LinearOpMode {
         * - First we rotate it 90 around the field's X axis to flip it upright
         * - Finally, we translate it along the Y axis towards the blue audience wall.
         */
-        OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
+        //OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
-                Our translation here is a positive translation in Y.*/
+                Our translation here is a positive translation in Y.
                 .translation(0, mmFTCFieldWidth/2, 0)
                 .multiplied(Orientation.getRotationMatrix(
-                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
+                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
                         AngleUnit.DEGREES, 90, 0, 0));
         blueTarget.setLocation(blueTargetLocationOnField);
@@ -250,7 +250,7 @@ public class Computervision extends LinearOpMode {
          * are then CCW, and negative rotations CW. An example: consider looking down the positive Z
          * axis towards the origin. A positive rotation about Z (ie: a rotation parallel to the the X-Y
          * plane) is then CCW, as one would normally expect from the usual classic 2D geometry.
-         */
+
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(mmBotWidth/2,0,0)
                 .multiplied(Orientation.getRotationMatrix(
@@ -258,12 +258,12 @@ public class Computervision extends LinearOpMode {
                         AngleUnit.DEGREES, -90, 0, 0));
         RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
 
-        /**
+
          * Let the trackable listeners we care about know where the phone is. We know that each
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
-         */
-        ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+
+         ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
 
         /**
@@ -285,22 +285,23 @@ public class Computervision extends LinearOpMode {
          * @see VuforiaTrackableDefaultListener#getRobotLocation()
          */
 
+
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
         waitForStart();
 
         /** Start tracking the data sets we care about. */
-        stonesAndChips.activate();
+        relicTrackables.activate();
 
         while (opModeIsActive()) {
 
-            for (VuforiaTrackable trackable : allTrackables) {
+           /* for (VuforiaTrackable trackable : allTrackables) {
                 /**
                  * getUpdatedRobotLocation() will return null if no new information is available since
                  * the last time that call was made, or if the trackable is not currently visible.
                  * getRobotLocation() will return null if the trackable is not currently visible.
-                 */
+
                 telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
@@ -311,12 +312,20 @@ public class Computervision extends LinearOpMode {
             /**
              * Provide feedback as to where the robot was last located (if we know).
              */
-            if (lastLocation != null) {
+
+            RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+            if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
+/* Found an instance of the template. In the actual game, you will probably
+* loop until this condition occurs, then move on to act accordingly depending * on which VuMark was visible. */
+                telemetry.addData("VuMark", "%s visible", vuMark);
+            }
+
+            /* if (lastLocation != null) {
                 //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
                 telemetry.addData("Pos", format(lastLocation));
             } else {
                 telemetry.addData("Pos", "Unknown");
-            }
+            }*/
             telemetry.update();
         }
     }
@@ -325,7 +334,8 @@ public class Computervision extends LinearOpMode {
      * A simple utility that extracts positioning information from a transformation matrix
      * and formats it in a form palatable to a human being.
      */
-    String format(OpenGLMatrix transformationMatrix) {
-        return transformationMatrix.formatAsTransform();
-    }
+    //String format(OpenGLMatrix transformationMatrix) {
+        //return transformationMatrix.formatAsTransform();
 }
+
+//super helpful website https://www.firstinspires.org/sites/default/files/uploads/resource_library/ftc/using-vumarks.pdf
