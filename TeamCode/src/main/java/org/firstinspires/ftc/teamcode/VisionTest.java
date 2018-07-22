@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -84,7 +85,9 @@ import java.util.List;
 
 @Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
 public class VisionTest extends LinearOpMode {
-
+    private DcMotor ADrive;
+    private DcMotor BDrive;
+    private DcMotor CDrive;
     public static final String TAG = "Vuforia Navigation Sample";
 
     OpenGLMatrix lastLocation = null;
@@ -102,7 +105,9 @@ public class VisionTest extends LinearOpMode {
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
+        ADrive = hardwareMap.get(DcMotor.class, "A");
+        BDrive = hardwareMap.get(DcMotor.class, "B");
+        CDrive = hardwareMap.get(DcMotor.class, "C");
 
         /*
          * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -171,8 +176,15 @@ public class VisionTest extends LinearOpMode {
                 * loop until this condition occurs, then move on to act accordingly depending
                 * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
+                ADrive.setPower(0);
+                BDrive.setPower(.5);
+                CDrive.setPower(-.5);
 
-
+            }
+            else {
+                ADrive.setPower(.5);
+                BDrive.setPower(.5);
+                CDrive.setPower(.5);
             }
 
             telemetry.update();
