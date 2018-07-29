@@ -1,0 +1,5 @@
+When you import or open the project for the first time, you might get some errors. If you do, they are most likely because the version of the Android SDK and build tools that the project uses by default are not installed. The FTC app usually uses an older version of these instead of the latest versions which is what you get when you install Android Studio from scratch. To fix this issue, look in the Windows on the bottom left of Android Studio under the tab "Sync". There you will find some things highlighed in red with error messgaes. Click on the root message that says something like "<project_name>:sync failed". On the bottom right screen you will see the details of the error and some suggestion to fix it. The suggest is a link to install the appropriate SDK and/or build tool version which is missing. Click on it and follow any on screen instructions. You might need to do this a couple of times until all the missing components are installed. 
+
+Error message detail example.
+"Failed to find Build Tools revision 26.1.1
+Install Build Tools 26.1.1 and sync project"
