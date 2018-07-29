@@ -1,0 +1,11 @@
+// Sync our forked branch with the FTC App main branch (latest version)
+git fetch upstream
+git checkout master
+git merge upstream/master
+
+// Reset the master branch to the FTC App main branch (latest version)
+git remote add upstream https://github.com/ftctechnh/ftc_app.git
+git fetch upstream
+git checkout master
+git reset --hard upstream/master  
+git push origin master --force 
