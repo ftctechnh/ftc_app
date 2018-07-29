@@ -46,6 +46,31 @@ For technical questions regarding the SDK, please visit the FTC Technology forum
 # Release Information
 **************************************************************************************
 
+Version 3.7 (built on 18.03.12)
+
+Changes include:
+ * Interim fix to allow FTC apps to run on Android Nougat (7.x) devices.
+
+**************************************************************************************
+# Release Information
+**************************************************************************************
+
+Version 3.6 (built on 17.12.18)
+
+Changes include:
+ * Blocks Changes
+     - Uses updated Google Blockly software to allow users to edit their op modes on Apple iOS devices (including iPad and iPhone).
+     - Improvement in Blocks tool to handle corrupt op mode files.
+     - Autonomous op modes should no longer get switched back to tele-op after re-opening them to be edited.
+     - The system can now detect type mismatches during runtime and alert the user with a message on the Driver Station.
+ * Updated javadoc documentation for setPower() method to reflect correct range of values (-1 to +1).
+ * Modified VuforiaLocalizerImpl to allow for user rendering of frames
+     - Added a user-overrideable onRenderFrame() method which gets called by the class's renderFrame() method.
+
+**************************************************************************************
+# Release Information
+**************************************************************************************
+
 Version 3.5 (built on 17.10.30)
 
 Changes with version 3.5 include:
