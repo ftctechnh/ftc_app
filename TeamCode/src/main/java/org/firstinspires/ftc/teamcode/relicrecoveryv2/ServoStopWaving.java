@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @Autonomous(name="ServoStopWaving",group="Jeff" )
+@Disabled
 public class ServoStopWaving extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {

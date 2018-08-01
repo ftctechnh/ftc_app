@@ -16,4 +16,22 @@ apply from: '../build.common.gradle'
 
 android {
     buildToolsVersion '25.0.0'
+
+
+    def versionPropsFile = file('\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\apkcounter.properties')
+
+    if(versionPropsFile.canRead()){
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+        versionProps['VERSION_CODE']=code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+    }
+    else{
+        throw new GradleException("Could not read version.properties!")
+    }
 }

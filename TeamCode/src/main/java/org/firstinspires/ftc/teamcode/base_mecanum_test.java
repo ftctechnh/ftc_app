@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import static java.lang.Math.abs;
  */
 
 @TeleOp(name="base_mecanum_test",group="mecanum" )
+@Disabled
 public class base_mecanum_test extends LinearOpMode {
     HardwareSensorMap robot   = new HardwareSensorMap();   // Use a Pushbot's hardware
     //power variables

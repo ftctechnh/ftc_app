@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
  */
 
 @TeleOp(name="Touch_Sensor_Check",group="Testing" )
+@Disabled
 public class TouchSensorCheck extends LinearOpMode{
 
     DigitalChannel sq0;

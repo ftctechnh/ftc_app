@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -29,6 +30,7 @@ import java.util.Locale;
  * Created by TPR on 12/14/17.
  */
 @TeleOp(name="GyroTest",group="Test" )
+@Disabled
 public class GyroTest extends MeccyMode{
     //
     /*

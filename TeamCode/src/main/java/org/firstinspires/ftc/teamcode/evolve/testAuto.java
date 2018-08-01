@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IrSeekerSensor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by Eric on 6/10/2018.
  */
@@ -25,49 +27,88 @@ public class testAuto extends LinearOpMode{ //Step 2, extends..., light bulb>mak
         left = hardwareMap.dcMotor.get("left");
         right = hardwareMap.dcMotor.get("right");
         wall = hardwareMap.touchSensor.get("wall");
-        wall = hardwareMap.touchSensor.get("wall");
+        ir = hardwareMap.irSeekerSensor.get("ir");
         //
         right.setDirection(DcMotorSimple.Direction.REVERSE);
         //
         waitForStart();
         //
-        if (ir.getAngle() > 0){
-            turn(-1);
-            while(ir.getAngle() != 0){}
-            turn(0);
-        }else if (ir.getAngle() <= 0){
-            turn(1);
-            while (ir.getAngle() != 0){}
-            turn(0);
-        }else{
-            turn(1);
-            while (!ir.signalDetected()){}
-            turn(0);
+        //while (opModeIsActive()) {
             //
-            if (ir.getAngle() > 0){
-                turn(-1);
-                while(ir.getAngle() != 0){}
+            if (ir.getAngle() > 0) {
+                find(1);
+            } else if (ir.getAngle() <= 0) {
+                find(-1);
+            } else {
+                turn(-.1);
+                telemetry.addData("no signal", "");
+                telemetry.update();
+                //
+                while (!ir.signalDetected()) {}
                 turn(0);
-            }else if (ir.getAngle() <= 0){
-                turn(1);
-                while (ir.getAngle() != 0){}
-                turn(0);
+                //
+                if (ir.getAngle() > 0) {
+                    find(1);
+                } else if (ir.getAngle() <= 0) {
+                    find(-1);
+                }
+            //}
+            //
+            left.setPower(.1);
+            right.setPower(.1);
+            //
+            //
+            while (ir.getStrength() < .25 && opModeIsActive()) {
+                telemetry.addData("done!", "");
+                telemetry.addData("ir", ir.getStrength());
+                telemetry.update();
             }
+            //
+            left.setPower(0);
+            right.setPower(0);
         }
-        //
-        left.setPower(1);
-        right.setPower(1);
-        //
-        while(ir.getStrength() < 1){
-            telemetry.addData("ir", ir.getStrength());
-            telemetry.update();
-        }
-        //
-
     }
+
+    private boolean keepTurning() {
+        return
+                 (!withinRange((int)(ir.getAngle()))
+                || ir.getStrength() < .05
+                && opModeIsActive());
+    }
+
     //
     public void turn(double power){
-        left.setPower(power);
-        right.setPower(-power);
+        left.setPower(-power);
+        right.setPower(power);
+    }
+    //
+    public boolean withinRange(int dir){
+        boolean withinRange = false;
+        //
+        if (-10 < dir && dir < 10){
+            withinRange = true;
+        }
+        //
+        return withinRange;
+    }
+    //
+    public void find(int direction){
+        turn(.1 * direction);
+        telemetry.addData("direction", direction);
+        telemetry.update();
+        //
+        while (keepTurning()) {
+            if (-100 < ir.getAngle() && ir.getAngle() < 100 && ir.getStrength() > 0.5){
+                turn(.1 * direction * (ir.getAngle() / (100 * direction)));
+                telemetry.addData("power", ir.getAngle() / (100 * direction));
+            }else{
+                turn(.1 * direction);
+                telemetry.addData("power", 1);
+            }
+            telemetry.addData("angle", ir.getAngle());
+            telemetry.addData("stop?", withinRange((int)ir.getAngle()));
+            telemetry.update();
+        }
+        turn(0);
     }
 }

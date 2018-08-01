@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
@@ -25,6 +26,7 @@ import java.util.Random;
  * Created by TPR on 12/14/17.
  */
 @TeleOp(name="RelicTelyOp",group="Jeff" )
+@Disabled
 public class RelicTelyMode  extends MeccyMode{
     //
     PengwinFin pengwinFin;

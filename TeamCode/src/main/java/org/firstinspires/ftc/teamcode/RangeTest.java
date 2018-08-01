@@ -19,6 +19,7 @@ public class RangeTest{
 }*/
 
 @Autonomous(name = "RangeTest", group = "Sensor")
+@Disabled
    // comment out or remove  this line to enable this opmode
 public class RangeTest extends LinearOpMode {
 

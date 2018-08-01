@@ -53,6 +53,7 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
 @Autonomous(name = "DSTest", group = "Test")
+@Disabled
 public class DSTest extends LinearOpMode {
     DistanceSensor distanceSensor;
     DistanceSensor distanceSensor2;

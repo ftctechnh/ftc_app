@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.motors.NeveRest40Gearmotor;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +15,7 @@ import static java.lang.Math.abs;
  */
 
 @TeleOp(name="mecanum_test",group="BBBot" )
+@Disabled
 public class mecanum_test extends LinearOpMode {
     HardwareSensorMap robot   = new HardwareSensorMap();   // Use a Pushbot's hardware
     DcMotor leftRear;

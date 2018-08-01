@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.relicrecoveryv2;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 /**
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * DEFAULT IS RED
  */
 @Autonomous(name = "GyroAutoMode", group = "Autos")
+@Disabled
 public class GyroAutoTest extends MeccyAutoMode {
     //PengwinFin pengwinFin;
     PengwinWing pengwinWing;

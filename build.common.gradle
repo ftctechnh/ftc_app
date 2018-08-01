@@ -23,7 +23,6 @@ android {
 
     compileSdkVersion 23
     buildToolsVersion '25.0.3'
-
     signingConfigs {
         debug {
             keyAlias 'androiddebugkey'

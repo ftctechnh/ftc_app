@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.relicrecoveryv2.PengwinWing;
  * Created by wildgirls on 2/8/2018.
  */
 @TeleOp(name="Mission Impossible",group="Jeff" )
+@Disabled
 public class MissionImpossible extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
