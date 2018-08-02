@@ -10,6 +10,7 @@ public class TileRunnerTeleOpNEW extends LinearOpMode
 {
     TileRunnerRobotHardware robot = new TileRunnerRobotHardware();
 
+    @Override
     public void runOpMode() throws InterruptedException
     {
         robot.init(hardwareMap);
@@ -28,15 +29,14 @@ public class TileRunnerTeleOpNEW extends LinearOpMode
             robot.topRightMotor.setPower(-gamepad1.right_stick_y); //Controls top right motor
             robot.bottomRightMotor.setPower(-gamepad1.right_stick_y); //Controls bottom right motor
             FlagWave();
-            idle();
         }
     }
 
     public void FlagWave() throws InterruptedException
     {
-        Thread.sleep(1000);
+        sleep(1000);
         robot.flagServo.setPosition(0.6);
-        Thread.sleep(1000);
+        sleep(1000);
         robot.flagServo.setPosition(0.3);
     }
 }
