@@ -19,7 +19,7 @@ public abstract class RobotBase {
 
     private HardWareMap hardWareMap;
     private LinearOpMode opmode;
-    private TelMet
+    private TelMet tele;
 
     public abstract void stop();
 
