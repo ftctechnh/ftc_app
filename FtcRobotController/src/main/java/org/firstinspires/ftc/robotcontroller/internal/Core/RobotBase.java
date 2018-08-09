@@ -14,15 +14,15 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public abstract class RobotBase {
 
     public RobotBase (final HardwareMap hwm, final LinearOpMode op){
-        hardWareMap = hwm;
+        hardwareMap = hwm;
         opMode = op;
     }
 
-    private HardwareMap hardWareMap;
+    private HardwareMap hardwareMap;
     private LinearOpMode opMode;
 
     public HardwareMap getRobotHardwareMap(){
-        return hardWareMap;
+        return hardwareMap;
     }
     public LinearOpMode getRobotOpMode(){
         return opMode;

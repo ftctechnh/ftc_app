@@ -33,8 +33,7 @@ public final class HardwareMapper
     public DcMotor mapMotor(final String NAME, final DcMotorSimple.Direction DIRECTION)
     {
         DcMotor tempMotor;
-
-        tempMotor = robot.hardware.dcMotor.get(NAME);
+        tempMotor = robot.hardwareMap.dcMotor.get(NAME);
         tempMotor.setDirection(DIRECTION);
 
         return tempMotor;
@@ -48,7 +47,7 @@ public final class HardwareMapper
     {
         Servo tempServo;
 
-        tempServo = robot.hardware.servo.get(NAME);
+        tempServo = robot.hardwareMap.servo.get(NAME);
         tempServo.setDirection(DIRECTION);
 
         return tempServo;
@@ -62,7 +61,7 @@ public final class HardwareMapper
     {
         CRServo tempCRServo;
 
-        tempCRServo = robot.hardware.crservo.get(NAME);
+        tempCRServo = robot.hardwareMap.crservo.get(NAME);
         tempCRServo.setDirection(DIRECTION);
 
         return tempCRServo;
@@ -99,7 +98,7 @@ public final class HardwareMapper
     {
         BNO055IMU tempIMU;                            // REV Internal IMU to be mapped
 
-        tempIMU = robot.hardware.get(BNO055IMU.class , NAME);
+        tempIMU = robot.hardwareMap.get(BNO055IMU.class , NAME);
         tempIMU.initialize(PARAMETERS);
 
         return tempIMU;
