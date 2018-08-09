@@ -2,6 +2,7 @@ package org.firstinspires.ftc.robotcontroller.internal.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 
 /**
  *
@@ -15,12 +16,18 @@ public abstract class RobotBase {
 
     public RobotBase (final HardWareMap hwm, final LinearOpMode op){
         hardWareMap = hwm;
-        opmode = op;
+        opMode = op;
     }
 
     private HardWareMap hardWareMap;
-    private LinearOpMode opmode;
-    private Telemetry tele;
+    private LinearOpMode opMode;
+
+    public HardWareMap getRobotHardwareMap(){
+        return hardWareMap;
+    }
+    public LinearOpMode getRobotOpMode(){
+        return opMode;
+    }
 
     public abstract void stop();
 
