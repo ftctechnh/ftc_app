@@ -18,11 +18,11 @@ public abstract class RobotBase {
         opMode = op;
     }
 
-    private HardwareMap hardwareMap;
-    private LinearOpMode opMode;
+    public HardwareMap hardwareMap;
+    public LinearOpMode opMode;
 
     public HardwareMap getRobotHardwareMap(){
-        return hardwareMap;
+        return hardWareMap;
     }
     public LinearOpMode getRobotOpMode(){
         return opMode;
