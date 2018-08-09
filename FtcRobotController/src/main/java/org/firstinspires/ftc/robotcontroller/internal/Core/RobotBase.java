@@ -13,12 +13,14 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 public abstract class RobotBase {
 
     public RobotBase (final HardWareMap hwm, final LinearOpMode op){
-
+        hardWareMap = hwm;
+        opmode = op;
     }
 
     private HardWareMap hardWareMap;
+    private LinearOpMode opmode;
+    private TelMet
 
-
-
+    public abstract void stop();
 
 }
