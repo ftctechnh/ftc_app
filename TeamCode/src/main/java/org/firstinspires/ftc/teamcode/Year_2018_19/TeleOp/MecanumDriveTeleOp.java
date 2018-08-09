@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.TileRunnerRobotHardware;
 
 @TeleOp(name="MecanumDriveTeleOp", group="TeleOpMode")
+@Disabled
 
 public class MecanumDriveTeleOp extends OpMode
 {

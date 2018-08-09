@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Year_2017_18.Robot.RobotHardware;
 
 @TeleOp(name = "BarbTeleOp", group = "TeleOpMode")
-//@Disabled
+@Disabled
 
 public class BarbTeleOp extends OpMode
 {

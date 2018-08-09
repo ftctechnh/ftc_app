@@ -1,12 +1,16 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.sun.tools.doclint.Checker;
+
 import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.TileRunnerRobotHardware;
 
-@TeleOp(name="TileRunnerTele", group="TeleOpMode")
+@TeleOp(name="TileRunnerTeleOpWIP", group="TeleOpMode")
+@Disabled
 
-public class TileRunnerTeleOpNEW extends LinearOpMode
+public class TileRunnerTeleOpWIP extends LinearOpMode
 {
     TileRunnerRobotHardware robot = new TileRunnerRobotHardware();
 
@@ -28,7 +32,15 @@ public class TileRunnerTeleOpNEW extends LinearOpMode
             robot.bottomLeftMotor.setPower(-gamepad1.left_stick_y); //Controls bottom left motor
             robot.topRightMotor.setPower(-gamepad1.right_stick_y); //Controls top right motor
             robot.bottomRightMotor.setPower(-gamepad1.right_stick_y); //Controls bottom right motor
-            FlagWave();
+        }
+
+        if (gamepad1.a)
+        {
+            robot.flagServo.setPosition(0.7);
+        }
+        else if (gamepad1.b)
+        {
+            robot.flagServo.setPosition(0.3);
         }
     }
 
