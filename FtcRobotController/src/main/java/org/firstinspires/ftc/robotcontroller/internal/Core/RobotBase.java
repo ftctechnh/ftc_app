@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.robotcontroller.internal.Core;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.TelMet;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /**
  *
@@ -20,7 +20,7 @@ public abstract class RobotBase {
 
     private HardWareMap hardWareMap;
     private LinearOpMode opmode;
-    private TelMet tele;
+    private Telemetry tele;
 
     public abstract void stop();
 
