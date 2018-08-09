@@ -20,7 +20,7 @@ public abstract class RobotBase {
 
     public HardwareMap hardwareMap;
     public LinearOpMode opMode;
-    
+
     public abstract void stop();
 
 }
