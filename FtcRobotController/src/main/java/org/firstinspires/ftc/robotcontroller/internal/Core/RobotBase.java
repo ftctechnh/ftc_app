@@ -20,14 +20,7 @@ public abstract class RobotBase {
 
     public HardwareMap hardwareMap;
     public LinearOpMode opMode;
-
-    public HardwareMap getRobotHardwareMap(){
-        return hardWareMap;
-    }
-    public LinearOpMode getRobotOpMode(){
-        return opMode;
-    }
-
+    
     public abstract void stop();
 
 }
