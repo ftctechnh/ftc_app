@@ -61,15 +61,32 @@ public class demoRobotBenjamin extends LinearOpMode {
 
             //Arm servo control
             if (gamepad1.left_bumper) {
-                if (armPosition != 0) {
-                    servo0.setPosition(armPosition - 0.05);
+                if (armPosition >= 0) {
+                    if (armPosition < 0.05) {
+                        armPosition = 0.05;
+                    }
+                    double pos = armPosition - 0.05;
+                    telemetry.addData("Go-to Arm Position: ", pos);
+                    servo0.setPosition(pos);
+
                 }
             }
             else if (gamepad1.right_bumper) {
-                if (armPosition != 1) {
-                    servo0.setPosition(armPosition + 0.05);
+                if (armPosition <= 1) {
+                    if (armPosition > 0.95) {
+                        armPosition = 0.95;
+                    }
+                    double pos = armPosition + 0.05;
+                    telemetry.addData("Go-to Arm Position: ", pos);
+                    servo0.setPosition(pos);
+
                 }
             }
+
+            telemetry.addData("Final Arm Position: ", servo0.getPosition());
+            telemetry.addData("Status", "Running");
+            telemetry.update();
+
 
         }
 

@@ -8,10 +8,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 //the name of the Op Mode in the Driver's Station
-@Autonomous(name= "demoRobotColorBenjamin", group= "Linear Opmode")
+@Autonomous(name= "demoRobotAutoColorBenjamin", group= "Linear Opmode")
 
 //okay now onto the class finally
-public class demoRobotColorBenjamin extends LinearOpMode {
+public class demoRobotAutoColorBenjamin extends LinearOpMode {
 
     // declaring hardware
     // variable type, Hardware type, variable name
@@ -28,6 +28,8 @@ public class demoRobotColorBenjamin extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
+
+        
     }
 
     private void initialize(){
