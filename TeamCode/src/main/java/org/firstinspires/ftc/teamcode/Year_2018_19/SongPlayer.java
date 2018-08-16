@@ -10,7 +10,7 @@ public class SongPlayer {
     private static MediaPlayer mediaPlayer = null;
 
     public static void playMusic(Context context) {
-        if (mediaPlayer == null) mediaPlayer = MediaPlayer.create(context, R.raw.music);
+        mediaPlayer = MediaPlayer.create(context, R.raw.music);
         mediaPlayer.seekTo(0);
         mediaPlayer.start();
     }
@@ -24,13 +24,13 @@ public class SongPlayer {
     }
 
     public static void playBB8Sound(Context context) {
-        if (mediaPlayer == null) mediaPlayer = MediaPlayer.create(context, R.raw.BB8);
+        mediaPlayer = MediaPlayer.create(context, R.raw.bb8);
         mediaPlayer.seekTo(0);
         mediaPlayer.start();
     }
 
     public static void playR2D2Sound (Context context) {
-        if (mediaPlayer == null) mediaPlayer = MediaPlayer.create(context, R.raw.R2D2);
+        mediaPlayer = MediaPlayer.create(context, R.raw.r2d2);
         mediaPlayer.seekTo(0);
         mediaPlayer.start();
     }
