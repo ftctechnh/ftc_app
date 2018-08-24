@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="ModernRoboticsTeleOp", group="TeleOpMode")
@@ -18,6 +19,7 @@ public class ModernRoboticsTeleOp extends OpMode {
     {
         leftDrive = hardwareMap.get(DcMotor.class, "leftDrive");
         rightDrive =  hardwareMap.get(DcMotor.class, "rightDrive");
+        leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         telemetry.addData("Status", "Robot has initialized!");
     }
 
