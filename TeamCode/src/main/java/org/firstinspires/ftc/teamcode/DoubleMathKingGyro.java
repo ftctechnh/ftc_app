@@ -20,41 +20,76 @@ public class DoubleMathKingGyro extends LinearOpMode{
         //Telemetry initialized message
         telemetry.addData(  "Status",   "Initialized");
         telemetry.update();
-        //Motor definitions
+
+        //Hardware definitions
         motor1 = hardwareMap.get(DcMotor.class,"motor1");
         motor2 = hardwareMap.get(DcMotor.class,"motor2");
         motor3 = hardwareMap.get(DcMotor.class,"motor3");
         motor4 = hardwareMap.get(DcMotor.class,"motor4");
         gyro = hardwareMap.get(GyroSensor.class,"gyro");
+
+        //Motor List
         DcMotor[] motors = {motor1, motor3, motor2, motor4};
+
         //Base angle/Zero position angle
         int base_angle = 0;
+
         //Array zero position
         int base = 0;
+
         //Wait until phone interrupt
         waitForStart();
+
         //While loop for robot operation
         while (opModeIsActive()){
             //Power variable (0,1), average drive train motor speed
             double power = 0.1;
+
             //Gamepad's left stick x and y values
             double left_y = -gamepad1.left_stick_y;
             double left_x = gamepad1.left_stick_x;
+
             //Gamepad's left and right trigger values
             double left_t = gamepad1.left_trigger;
             double right_t = gamepad1.right_trigger;
+
             //Boolean for distance reset
             double g_angle = gyro.getRotationFraction();
             if ((Math.abs(g_angle)-base_angle-90) > 0){
                 base_angle += 90;
                 base += 2;
             }
-            //x component vector: calls motors 2 and 4
+
+            /*
+            The motors are paired and power based on being the x or y component
+            of the vector.
+
+            The - on the left_x or left_y ensures that the "paired" motors run in
+            tandem.
+
+            The difference left_t-right_t calculates the delta between the right
+            and left triggers. They are not multiplied as the motors are supposed
+            to run in a circle.
+
+            The sum of the left_(x/y) and the trigger difference allows for movement
+            on the x y plane with added rotation. Think drifting.
+
+            All of this is multiplied by the power variable allowing fine power
+            control.
+             */
+
+            //x component vector
+            //motor 2
             motors[(2+base_angle)%4].setPower(power*(-left_x+left_t-right_t));
+            //motor4
             motors[(3+base_angle)%4].setPower(power*(left_x+left_t-right_t));
-            //y vector: calls motors 1 and 3
+
+            //y vector
+            //motor1
             motors[(0+base_angle)%4].setPower(power*(left_y+left_t-right_t));
+            //motor3
             motors[(1+base_angle)%4].setPower(power*(-left_y+left_t-right_t));
+
             //More telemetry. Adds left stick values and trigger values
             telemetry.addLine()
                     .addData("right_y", left_y)
