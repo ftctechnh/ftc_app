@@ -2,8 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.Range;
-import org.firstinspires.ftc.robotcore.internal.ui.GamepadUser;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name="TeamBoolean", group="Basic OP Mode")
+@Disabled
+
 public class TeamBoolean extends LinearOpMode {
 
     private DcMotor motor1 = null;

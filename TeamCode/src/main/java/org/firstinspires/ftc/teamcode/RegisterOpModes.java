@@ -51,6 +51,7 @@ public class RegisterOpModes
         manager.register( "DoubleMathKing", DoubleMathKing.class);
         manager.register("GyroTest",    GyroTest.class);
         manager.register("TouchTest",   TouchTest.class);
+        manager.register("DoubleMathKingGyro", DoubleMathKingGyro.class);
         // Un-comment any line to enable that sample.
         // Or add your own lines to register your Team opmodes.
 

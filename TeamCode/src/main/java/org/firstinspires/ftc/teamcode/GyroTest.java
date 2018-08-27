@@ -4,6 +4,11 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+@TeleOp(name="Gyro Test", group="Sensor Test")
+@Disabled
 
 public class GyroTest extends LinearOpMode {
     IntegratingGyroscope gyro;

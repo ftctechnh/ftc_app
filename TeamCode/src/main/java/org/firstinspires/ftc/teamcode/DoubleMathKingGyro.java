@@ -2,20 +2,19 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-//import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-//import com.qualcomm.robotcore.util.ElapsedTime;
-//import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="Double Math King", group="Basic OP Mode")
+@TeleOp(name="Double Math King Gyro", group="Basic OP Mode")
 @Disabled
 
-public class DoubleMathKing extends LinearOpMode{
+public class DoubleMathKingGyro extends LinearOpMode{
     //Initializes motor variables
     private DcMotor motor1 = null;
     private DcMotor motor2 = null;
     private DcMotor motor3 = null;
     private DcMotor motor4 = null;
+    private GyroSensor gyro = null;
 
     public void runOpMode(){
         //Telemetry initialized message
@@ -26,6 +25,12 @@ public class DoubleMathKing extends LinearOpMode{
         motor2 = hardwareMap.get(DcMotor.class,"motor2");
         motor3 = hardwareMap.get(DcMotor.class,"motor3");
         motor4 = hardwareMap.get(DcMotor.class,"motor4");
+        gyro = hardwareMap.get(GyroSensor.class,"gyro");
+        DcMotor[] motors = {motor1, motor3, motor2, motor4};
+        //Base angle/Zero position angle
+        int base_angle = 0;
+        //Array zero position
+        int base = 0;
         //Wait until phone interrupt
         waitForStart();
         //While loop for robot operation
@@ -38,16 +43,18 @@ public class DoubleMathKing extends LinearOpMode{
             //Gamepad's left and right trigger values
             double left_t = gamepad1.left_trigger;
             double right_t = gamepad1.right_trigger;
-            //x component vector
-            //The sum of trigger and stick values are added and multiplied by power
-            //motor2 and motor4 are paired with motor2 left_x = motor4 -left_x for inline movement
-            //left_t-right_t are not multiplied by - since all motors are rotating the same way
-            motor2.setPower(power*(-left_x+left_t-right_t));
-            motor4.setPower(power*(left_x+left_t-right_t));
-            //y vector
-            //Same setup as above but with the y direction
-            motor1.setPower(power*(left_y+left_t-right_t));
-            motor3.setPower(power*(-left_y+left_t-right_t));
+            //Boolean for distance reset
+            double g_angle = gyro.getRotationFraction();
+            if ((Math.abs(g_angle)-base_angle-90) > 0){
+                base_angle += 90;
+                base += 2;
+            }
+            //x component vector: calls motors 2 and 4
+            motors[(2+base_angle)%4].setPower(power*(-left_x+left_t-right_t));
+            motors[(3+base_angle)%4].setPower(power*(left_x+left_t-right_t));
+            //y vector: calls motors 1 and 3
+            motors[(0+base_angle)%4].setPower(power*(left_y+left_t-right_t));
+            motors[(1+base_angle)%4].setPower(power*(-left_y+left_t-right_t));
             //More telemetry. Adds left stick values and trigger values
             telemetry.addLine()
                     .addData("right_y", left_y)
@@ -55,8 +62,10 @@ public class DoubleMathKing extends LinearOpMode{
             telemetry.addLine()
                     .addData("left trigger", left_t)
                     .addData("right trigger", right_t);
+            telemetry.addLine()
+                    .addData("angle", g_angle);
 
             telemetry.update();
-            }
         }
+    }
 }
