@@ -81,7 +81,7 @@ public class DoubleMathKingGyro extends LinearOpMode{
             if (gamepad1.atRest()){
                 base_time = timer.nanoseconds();
             } else {
-                double power = sigmoid((timer.nanoseconds()- base_time)/timer.SECOND_IN_NANO,false);
+                double power = sigmoid((timer.nanoseconds()- base_time)/timer.SECOND_IN_NANO,false, false);
                 /*
                 The motors are paired and power based on being the x or y component
                 of the vector.
