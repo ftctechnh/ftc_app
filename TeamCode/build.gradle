@@ -13,3 +13,9 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
