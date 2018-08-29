@@ -1,23 +1,24 @@
-package org.firstinspires.ftc.teamcode.Demos;
+package org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.Demos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.NullbotHardware;
+import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
 
 /**
  * Created by guberti on 10/27/2017.
  */
 @Disabled
 public class DriveOffTable extends LinearOpMode {
-    NullbotHardware robot = new NullbotHardware();
+    QuadWheelHardware robot   = new QuadWheelHardware(this);
+
     @Override
     public void runOpMode() throws InterruptedException {
         telemetry.addLine("Please don't run this code");
         telemetry.addLine("You don't want to be the next Aman");
         telemetry.update();
-        robot.init(hardwareMap, this, gamepad1, gamepad2);
+        robot.init();
 
         //IN HONOR OF HENRY MENG'S VALIANT HUMILIATION AND USAGE OF WHILE(TRUE)
         while(true) {

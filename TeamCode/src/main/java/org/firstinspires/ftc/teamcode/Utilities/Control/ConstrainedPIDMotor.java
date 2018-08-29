@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Utilities.Control;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotor.RunMode;
@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import static org.firstinspires.ftc.teamcode.ConstrainedPIDMotor.Direction.HOLD;
+import static org.firstinspires.ftc.teamcode.Utilities.Control.ConstrainedPIDMotor.Direction.HOLD;
 
 public class ConstrainedPIDMotor {
 
@@ -15,14 +15,14 @@ public class ConstrainedPIDMotor {
         FORWARD, BACKWARD, HOLD, COAST
     }
     DcMotorEx m;
-    ElapsedTime timer;
+    public ElapsedTime timer;
     int timeTillLock;
-    int lockPos;
+    public int lockPos;
     double forwardRunSpeed;
     double backwardRunSpeed;
     int min;
     int max;
-    int encoderOffset;
+    public int encoderOffset;
     public boolean override;
     boolean unlockAtZero;
     Telemetry logging;

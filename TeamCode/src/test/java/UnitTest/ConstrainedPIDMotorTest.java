@@ -1,9 +1,11 @@
+package UnitTest;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.ConstrainedPIDMotor;
-import org.firstinspires.ftc.teamcode.Mocks.MockDcMotor;
+import org.firstinspires.ftc.teamcode.Utilities.Control.ConstrainedPIDMotor;
+import TestUtilities.MockDcMotor;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

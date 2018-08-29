@@ -1,6 +1,8 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Utilities.Logging;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
+
+import org.firstinspires.ftc.teamcode.Hardware.BaseHardware;
 
 /**
  * Created by guberti on 6/6/2017.
@@ -24,7 +26,7 @@ public class LogTick {
 
     Long tick;
 
-    public LogTick(Gamepad g1, NullbotHardware hardware) {
+    public LogTick(Gamepad g1, BaseHardware hardware) {
         frontLeftPos = hardware.motorArr[0].getCurrentPosition();
         frontLeftPower = hardware.motorArr[0].getPower();
         frontRightPos = hardware.motorArr[1].getCurrentPosition();

@@ -1,3 +1,5 @@
+package UnitTest;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -6,8 +8,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Mocks.MockDcMotor;
-import org.firstinspires.ftc.teamcode.NullbotHardware;
+import TestUtilities.MockDcMotor;
+import org.firstinspires.ftc.teamcode.Hardware.BaseHardware;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -20,7 +22,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class HardwareUtilityFunctionsTest {
-    NullbotHardware robot = new NullbotHardware();
+    BaseHardware robot = new BaseHardware();
 
     @Test
     public void hardwareUtilities_WaitTick_OperatesNormally() {
