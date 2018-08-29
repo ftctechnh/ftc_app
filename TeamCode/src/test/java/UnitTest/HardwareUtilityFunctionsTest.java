@@ -8,9 +8,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import TestUtilities.MockDcMotor;
 import org.firstinspires.ftc.teamcode.Hardware.BaseHardware;
 import org.junit.Test;
+
+import TestUtilities.MockDcMotor;
+import TestUtilities.MockLinearOpMode;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class HardwareUtilityFunctionsTest {
-    BaseHardware robot = new BaseHardware();
+    BaseHardware robot = new BaseHardware(new MockLinearOpMode());
 
     @Test
     public void hardwareUtilities_WaitTick_OperatesNormally() {

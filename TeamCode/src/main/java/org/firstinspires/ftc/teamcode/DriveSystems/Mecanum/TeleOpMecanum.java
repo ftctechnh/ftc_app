@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
+import org.firstinspires.ftc.teamcode.Hardware.MecanumHardware;
 import org.firstinspires.ftc.teamcode.Utilities.Control.ConstrainedPIDMotor;
 import org.firstinspires.ftc.teamcode.Utilities.Control.RampingController;
 
@@ -14,7 +14,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.BaseHardware.getAngleDiffe
 
 public class TeleOpMecanum extends LinearOpMode {
 
-    QuadWheelHardware robot = new QuadWheelHardware(this);
+    MecanumHardware robot = new MecanumHardware(this);
     RampingController rampController;
 
     final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster

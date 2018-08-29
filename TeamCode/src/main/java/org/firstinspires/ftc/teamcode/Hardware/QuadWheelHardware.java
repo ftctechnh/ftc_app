@@ -20,6 +20,9 @@ public class QuadWheelHardware extends BaseHardware {
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
+
         super.init();
     }
 }
