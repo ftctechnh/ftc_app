@@ -1,18 +1,18 @@
-package org.firstinspires.ftc.teamcode.Demos;
+package org.firstinspires.ftc.teamcode.DriveSystems.QuadWheel;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.NullbotHardware;
+import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
 
 import java.util.concurrent.TimeUnit;
 
-@Autonomous(name="Nullbot: Test wheel friction", group="Diagnostics")
-public class NullbotTestWheelFriction extends LinearOpMode {
+@Autonomous(name="Quad - Test Wheel Friction", group="Diagnostics")
+public class TestWheelFriction extends LinearOpMode {
 
-    NullbotHardware robot   = new NullbotHardware();
+    QuadWheelHardware robot   = new QuadWheelHardware(this);
     private ElapsedTime runtime = new ElapsedTime();
 
     // Important, do not remove
@@ -24,7 +24,7 @@ public class NullbotTestWheelFriction extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        robot.init(hardwareMap, this, gamepad1, gamepad2);
+        robot.init();
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

@@ -1,20 +1,20 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.DriveSystems.Mecanum;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import java.io.IOException;
+import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
+import org.firstinspires.ftc.teamcode.Utilities.Control.ConstrainedPIDMotor;
+import org.firstinspires.ftc.teamcode.Utilities.Control.RampingController;
 
-import static org.firstinspires.ftc.teamcode.NullbotHardware.clamp;
-import static org.firstinspires.ftc.teamcode.NullbotHardware.getAngleDifference;
+import static org.firstinspires.ftc.teamcode.Hardware.BaseHardware.clamp;
+import static org.firstinspires.ftc.teamcode.Hardware.BaseHardware.getAngleDifference;
 
+public class TeleOpMecanum extends LinearOpMode {
 
-//@TeleOp(name="Main Tele-Op", group="_Competition")
-public class MainTeleOp extends LinearOpMode {
-
-    NullbotHardware robot = new NullbotHardware();
+    QuadWheelHardware robot = new QuadWheelHardware(this);
     RampingController rampController;
 
     final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster
@@ -29,24 +29,34 @@ public class MainTeleOp extends LinearOpMode {
     double difference;
 
     double turnSpeed;
-    double desiredMax;
     double heading;
 
-    boolean wasGP2LeftBumperPressed;
-    boolean wasGP2RightBumperPressed;
+    boolean wasGP1LeftBumperPressed;
+    boolean wasGP1LeftTriggerPressed;
+    boolean wasGP1APressed;
+    boolean wasGP1BPressed;
+    boolean wasGP1YPressed;
 
-    boolean nonrelativeDriveModeEnabled;
-    int accelTime;
+    boolean wasGP1RightBumperPressed;
+    boolean wasGP1RightTriggerPressed;
 
-    boolean scale;
+    public boolean nonrelativeDriveModeEnabled;
+    boolean slowMode;
+    public int accelTime;
+
+    boolean intakeUp;
+    boolean flipperOut;
+    boolean spinningIntake;
+    boolean reversedIntake;
 
     ElapsedTime timeTillHeadingLock;
-
     ElapsedTime totalElapsedTime;
+
+    ConstrainedPIDMotor lift;
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, gamepad1, gamepad2);
+        robot.init();
 
         waitForStart();
         rampController = new RampingController(robot.motorArr, accelTime);
@@ -54,8 +64,20 @@ public class MainTeleOp extends LinearOpMode {
         initialHeading = robot.getGyroHeading() + Math.PI;
         desiredHeading = initialHeading;
 
-        wasGP2LeftBumperPressed = false;
-        wasGP2RightBumperPressed = false;
+        wasGP1LeftBumperPressed = false;
+        wasGP1LeftTriggerPressed = false;
+        wasGP1APressed = false;
+        wasGP1BPressed = false;
+        wasGP1YPressed = false;
+        slowMode = false;
+
+        wasGP1RightBumperPressed = false;
+        wasGP1RightTriggerPressed = false;
+
+        intakeUp = false;
+        flipperOut = false;
+        spinningIntake = false;
+        reversedIntake = false;
 
         timeTillHeadingLock = new ElapsedTime();
 
@@ -63,21 +85,6 @@ public class MainTeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             robot.updateReadings();
-
-            scale = true;
-            // Calculate speed reduction
-            desiredMax = 1;
-
-            // Toggle slow mode
-            if (gamepad1.left_trigger > triggerThreshold) {// Left trigger activates slow mode
-                desiredMax = minSlowModePower + ((1 - minSlowModePower) * (1 - gamepad1.left_trigger));
-                robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            } else {
-                robot.setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            wasGP2LeftBumperPressed = gamepad2.left_bumper;
-            wasGP2RightBumperPressed = gamepad2.right_bumper;
 
             boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
 
@@ -122,13 +129,13 @@ public class MainTeleOp extends LinearOpMode {
                 }
             }
 
-            if (scale) {
-                // Now, let's scale those powers
+            // Now, let's scale those powers
+            if (slowMode) {
                 double greatest = 0;
                 for (double d : unscaledMotorPowers) {
                     greatest = Math.max(greatest, Math.abs(d));
                 }
-                greatest /= desiredMax;
+                greatest /= 0.3;
                 for (int i = 0; i < unscaledMotorPowers.length; i++) {
                     unscaledMotorPowers[i] = chop(unscaledMotorPowers[i] / greatest);
                 }
@@ -136,14 +143,26 @@ public class MainTeleOp extends LinearOpMode {
 
             rampController.setMotorPowers(unscaledMotorPowers);
 
-            // Run above code at 1Khz
-            //robot.writeLogTick();
-            //robot.waitForTick(1000 / robot.hz);
+            if (gamepad1.right_bumper && !wasGP1RightBumperPressed) {
+                wasGP1RightBumperPressed = true;
+                slowMode = !slowMode;
+                if (slowMode) {
+                    robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                } else {
+                    robot.setDriveMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                }
+            }
+
+            if (!gamepad1.right_bumper) {wasGP1RightBumperPressed = false;}
+            if (!gamepad1.left_bumper) {wasGP1LeftBumperPressed = false;}
+            if (!(gamepad1.left_trigger > triggerThreshold)) {wasGP1LeftTriggerPressed = false;}
+            if (!gamepad1.a) {wasGP1APressed = false;}
+            if (!gamepad1.b) {wasGP1BPressed = false;}
+            if (!gamepad1.y) {wasGP1YPressed = false;}
+
+
         }
         rampController.quit();
-        try {
-            robot.closeLog();
-        } catch (IOException e) {}
 
     }
     private double chop(double d) { // Cutoff all signals being sent to the motor below a threshold
@@ -165,7 +184,6 @@ public class MainTeleOp extends LinearOpMode {
             controllerAngle = robot.normAngle(controllerAngle);
         } else {
             // If we're not moving, don't scale the values
-            scale = false;
             return new double[]{0, 0, 0, 0};
         }
 
@@ -178,5 +196,19 @@ public class MainTeleOp extends LinearOpMode {
         }
 
         return robot.getDrivePowersFromAngle(robotAngle);
+    }
+
+    private int getClosestTargetIndex(int[] targets, int current) {
+        int bestDistance = Integer.MAX_VALUE;
+        int best = 0;
+        for (int i = 0; i < targets.length; i++) {
+            int trialDist = Math.abs(current - targets[i]);
+            if (trialDist < bestDistance) {
+                bestDistance = trialDist;
+                best = i;
+            }
+        }
+
+        return best;
     }
 }

@@ -1,11 +1,8 @@
-package org.firstinspires.ftc.teamcode;
-
-import android.os.Environment;
+package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,100 +11,51 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import org.firstinspires.ftc.teamcode.Utilities.Startup.Alliance;
 
 
 // This is NOT an opmode
 
-public class NullbotHardware {
-    // Alliance
-    public Alliance color;
-
-    // Motors
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
+public class BaseHardware {
 
     // Sensors
-
-    // Adjustment gamepad
-    private Gamepad gp2;
-    private Gamepad gp1;
+    public BNO055IMU imu;
+    public Orientation angles; // Used to read IMU
 
     // Telemetry
     public Telemetry tel;
     public long currentTick;
 
-    File file; // Our logfile
+    // Utility mechanisms
+    public DcMotor[] motorArr;
+    LinearOpMode opMode;
+    HardwareMap hwMap;
+    public Alliance color;
+    ElapsedTime period = new ElapsedTime();
+    boolean initialized = false;
+
+    /*File file; // Our logfile
     FileOutputStream fOut;
     OutputStreamWriter oW;
     LinearOpMode opMode;
-    ScheduledExecutorService loggerThread;
-    AccelerationIntegrator integrator;
+    ScheduledExecutorService loggerThread;*/
 
-    // Utility mechanisms
-    public DcMotor[] motorArr;
 
-    public BNO055IMU imu;
-    double gyroError;
-
-    // State used for updating telemetry
-    public Orientation angles;
-
-    public boolean initialized = false;
-
-    // Local vars
-    HardwareMap hwMap = null;
-    private ElapsedTime period = new ElapsedTime();
-
-    public NullbotHardware(){}
-    private void init() {
-
+    public BaseHardware(LinearOpMode opMode) {
+        this.opMode = opMode;
+        tel = opMode.telemetry;
+        hwMap = opMode.hardwareMap;
         currentTick = 0;
+    }
 
-        // Motor initialization
-        frontLeft = hwMap.dcMotor.get("frontLeft");
-        frontRight = hwMap.dcMotor.get("frontRight");
-        backLeft = hwMap.dcMotor.get("backLeft");
-        backRight = hwMap.dcMotor.get("backRight");
-
+    public void init() {
         imu = hwMap.get(BNO055IMU.class, "primaryIMU");
-
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
-
-        // MotorArr utility setup
-        motorArr = new DcMotor[4];
-
-        motorArr[0] = frontLeft;
-        motorArr[1] = frontRight;
-        motorArr[2] = backLeft;
-        motorArr[3] = backRight;
-
+        calibrateGyro();
+        resetMotorEncoders();
         initialized = true;
     }
 
-    public void init(HardwareMap ahwMap, LinearOpMode oM, Gamepad gp2, Gamepad gp1) {
-        hwMap = ahwMap;
-        tel = oM.telemetry;
-        opMode = oM;
-        this.gp2 = gp2;
-        this.gp1 = gp1;
-        init();
-        calibrate();
-    }
-
-    private void calibrate() {
+    private void calibrateGyro() {
         // Calibration
         ElapsedTime calibrationTimer = new ElapsedTime();
 
@@ -120,24 +68,17 @@ public class NullbotHardware {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-
-        integrator = new AccelerationIntegrator();
-
-        parameters.accelerationIntegrationAlgorithm = integrator;
-
         imu.initialize(parameters);
-
-        ///imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
-
+        sleep(100);
         updateReadings();
+    }
 
-        //sleep(500);
-
-        tel.log().add("Gyro calibration complete");
-        //initialCompassHeading = Math.toRadians(compass.getDirection());
-        gyroError = 0;
-        tel.log().add("Compass heading locked");
-        tel.update();
+    void resetMotorEncoders() {
+        for (DcMotor motor : motorArr) {
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        sleep(100);
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -212,80 +153,7 @@ public class NullbotHardware {
     }
 
     public void updateReadings() {
-        //integrator.update(imu.getLinearAcceleration());
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
-    }
-
-    /**
-     * Writes the current logs out to a file
-     *
-     */
-
-    final static String[] headings = new String[]{"Tick", "Heading",
-            "Gamepad 1 Left Stick X", "Gamepad 1 Left Stick Y",
-            "Gamepad 1 Right Stick X", "Gamepad 1 Right Stick Y",
-            "Front Left Motor Power", "Front Left Motor Position",
-            "Front Right Motor Power", "Front Right Motor Position",
-            "Back Left Motor Power", "Back Left Motor Position",
-            "Back Right Motor Power", "Back Right Motor Position",
-            "Z-Type Motor Power", "Z-Type Motor Position", "Z-Type Motor Mode",
-            "Lift Motor Power", "Lift Motor Position", "Lift Motor Mode",
-            "Left Block Claw Position", "Right Block Claw Position",
-            "Left Whip Snake Position", "Right Whip Snake Position",
-            "Relic Claw Position", "Relic Claw Flipper Position"};
-
-    public void openLogFile() {
-        final File path =
-                Environment.getExternalStoragePublicDirectory
-                        (
-                                Environment.DIRECTORY_DOCUMENTS + "/PixyCamLogs/"
-                        );
-        if (!path.exists()) {path.mkdirs();}
-
-        String DTS = DateFormat.getDateTimeInstance().format(new Date());
-        file = new File(path, "Pixycam-log-" + DTS + "-" + opMode.getClass().getSimpleName() + ".txt");
-
-        try
-        {
-            file.createNewFile();
-            fOut = new FileOutputStream(file);
-            oW = new OutputStreamWriter(fOut);
-            for (String h : headings) {
-                oW.append(h);
-                oW.append(",");
-            }
-            oW.append("\n");
-        }
-        catch (IOException e)
-        {}
-
-        loggerThread = Executors.newSingleThreadScheduledExecutor();
-        loggerThread.scheduleAtFixedRate(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    flushLogs();
-                } catch (IOException e) {}
-            }
-        }, 0, 1, TimeUnit.SECONDS);
-
-    }
-    public void writeLogTick() {
-        LogTick l = new LogTick(gp1,this);
-        try {
-            oW.append(l.toString());
-            oW.append("\n");
-        } catch (IOException e) {tel.log().add("Failed to write log tick!");}
-    }
-
-    public void flushLogs() throws IOException {
-        oW.flush();
-        fOut.flush();
-    }
-    public void closeLog() throws IOException {
-        flushLogs();
-        oW.close();
-        fOut.close();
     }
 
     /**
@@ -332,7 +200,7 @@ public class NullbotHardware {
      * @return    The error adjusted gyro position, between 0 and 2pi radians
      */
     public double getGyroHeading() {
-        return normAngle(angles.firstAngle - gyroError);
+        return normAngle(angles.firstAngle);
     }
 
     public void setDriveMode(DcMotor.RunMode mode) {

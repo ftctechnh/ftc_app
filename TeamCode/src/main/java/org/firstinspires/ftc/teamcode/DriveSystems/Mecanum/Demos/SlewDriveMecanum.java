@@ -1,21 +1,21 @@
-package org.firstinspires.ftc.teamcode.Demos;
+package org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.Demos;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.MainTeleOp;
-import org.firstinspires.ftc.teamcode.NullbotHardware;
+import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.TeleOpMecanum;
+import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
 
 /**
  * Created by guberti on 12/8/2017.
  */
-@TeleOp(name="DEMO Slew drive", group="Demo")
-public class SlewDrive extends MainTeleOp {
-    NullbotHardware robot = new NullbotHardware();
+@TeleOp(name="MecanumDemo - Slew Drive", group="MecanumDemo")
+public class SlewDriveMecanum extends TeleOpMecanum {
+    QuadWheelHardware robot = new QuadWheelHardware(this);
 
     @Override
     public void runOpMode() {
-        robot.init(hardwareMap, this, gamepad1, gamepad2);
+        robot.init();
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();
