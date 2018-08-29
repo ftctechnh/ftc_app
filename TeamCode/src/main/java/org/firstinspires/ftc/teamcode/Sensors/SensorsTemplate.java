@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SubAssembly.Sensors;
+package org.firstinspires.ftc.teamcode.Sensors;
 
 /**
  * Created by Nicholas on 8/29/2018.
@@ -7,16 +7,10 @@ package org.firstinspires.ftc.teamcode.SubAssembly.Sensors;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.SubAssembly.Sample.SampleTemplate;
-import org.firstinspires.ftc.teamcode.Utilities.EnumWrapper;
-import org.firstinspires.ftc.teamcode.Utilities.ServoControl;
-
-import java.util.EnumMap;
 
 /* Sub Assembly Class
  */
