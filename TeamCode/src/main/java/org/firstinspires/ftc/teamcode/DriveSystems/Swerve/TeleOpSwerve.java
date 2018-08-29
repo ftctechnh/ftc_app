@@ -10,6 +10,7 @@ public class TeleOpSwerve extends LinearOpMode {
     SwerveHardware robot = new SwerveHardware(this);
     RampingController rampController;
     int accelTime = 250;
+    public boolean nonrelativeDriveMode;
     Module[] modules = new Module[4];
 
     final double turnVolatility = 2; // Higher number makes turning more jerklike, but faster
@@ -45,22 +46,37 @@ public class TeleOpSwerve extends LinearOpMode {
 
             // Determine desired heading
             // This is ugly, but I can't think of anything better
-            double ctrlFrac = -1;
-            if      (gamepad1.dpad_up    && gamepad1.dpad_left) {ctrlFrac = 1/8;}
-            else if (gamepad1.dpad_left  && gamepad1.dpad_down) {ctrlFrac = 3/8;}
-            else if (gamepad1.dpad_down && gamepad1.dpad_right) {ctrlFrac = 5/8;}
-            else if (gamepad1.dpad_right && gamepad1.dpad_up  ) {ctrlFrac = 7/8;}
-            else if (gamepad1.dpad_up)    {ctrlFrac = 0;}
-            else if (gamepad1.dpad_left)  {ctrlFrac = 1/4;}
-            else if (gamepad1.dpad_down)  {ctrlFrac = 1/2;}
-            else if (gamepad1.dpad_right) {ctrlFrac = 3/4;}
+            double turnSpeed;
 
-            if (ctrlFrac >= 0) {
-                desiredHeading = robot.normAngle(initialHeading + Math.PI * 2 * ctrlFrac);
+            if (nonrelativeDriveMode) {
+                double ctrlFrac = -1;
+                if (gamepad1.dpad_up && gamepad1.dpad_left) {
+                    ctrlFrac = 1 / 8;
+                } else if (gamepad1.dpad_left && gamepad1.dpad_down) {
+                    ctrlFrac = 3 / 8;
+                } else if (gamepad1.dpad_down && gamepad1.dpad_right) {
+                    ctrlFrac = 5 / 8;
+                } else if (gamepad1.dpad_right && gamepad1.dpad_up) {
+                    ctrlFrac = 7 / 8;
+                } else if (gamepad1.dpad_up) {
+                    ctrlFrac = 0;
+                } else if (gamepad1.dpad_left) {
+                    ctrlFrac = 1 / 4;
+                } else if (gamepad1.dpad_down) {
+                    ctrlFrac = 1 / 2;
+                } else if (gamepad1.dpad_right) {
+                    ctrlFrac = 3 / 4;
+                }
+
+                if (ctrlFrac >= 0) {
+                    desiredHeading = robot.normAngle(initialHeading + Math.PI * 2 * ctrlFrac);
+                }
+
+                double heading = robot.getGyroHeading();
+                turnSpeed = robot.normAngle(desiredHeading - heading) / Math.PI;
+            } else {
+                turnSpeed = gamepad1.right_stick_x;
             }
-
-            double heading = robot.getGyroHeading();
-            double turnSpeed = robot.normAngle(desiredHeading - heading)/Math.PI;
 
             Vector vector = new Vector(gamepad1.left_stick_y, gamepad1.left_stick_x, turnSpeed);
 
