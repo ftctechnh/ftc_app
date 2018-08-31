@@ -28,8 +28,8 @@ public class BaseHardware {
 
     // Utility mechanisms
     public DcMotor[] motorArr;
-    LinearOpMode opMode;
-    HardwareMap hwMap;
+    public LinearOpMode opMode;
+    public HardwareMap hwMap;
     public Alliance color;
     ElapsedTime period = new ElapsedTime();
     boolean initialized = false;
@@ -49,28 +49,23 @@ public class BaseHardware {
     }
 
     public void init() {
-        imu = hwMap.get(BNO055IMU.class, "primaryIMU");
+        imu = opMode.hardwareMap.get(BNO055IMU.class, "primaryIMU");
         calibrateGyro();
-        resetMotorEncoders();
         initialized = true;
     }
 
     private void calibrateGyro() {
         // Calibration
-        ElapsedTime calibrationTimer = new ElapsedTime();
-
         tel.log().add("Gyro Calibrating. Do Not Move!!");
-        //gyro.calibrate();
 
-        for (DcMotor motor : motorArr) {
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         imu.initialize(parameters);
         sleep(100);
         updateReadings();
+        tel.log().add("Gyro Calibration Complete.");
+
     }
 
     void resetMotorEncoders() {
@@ -216,15 +211,5 @@ public class BaseHardware {
             m.setMode(mode);
         }
     }
-
-    public double[] getDrivePowersFromAngle(double angle) {
-        double[] unscaledPowers = new double[4];
-        unscaledPowers[0] = Math.sin(angle + Math.PI / 4);
-        unscaledPowers[1] = Math.cos(angle + Math.PI / 4);
-        unscaledPowers[2] = unscaledPowers[1];
-        unscaledPowers[3] = unscaledPowers[0];
-        return unscaledPowers;
-    }
-
 }
 

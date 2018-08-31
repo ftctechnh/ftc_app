@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @Autonomous(name="Quad - Test Wheel Friction", group="Diagnostics")
 public class TestWheelFriction extends LinearOpMode {
 
-    QuadWheelHardware robot   = new QuadWheelHardware(this);
+    QuadWheelHardware robot;
     private ElapsedTime runtime = new ElapsedTime();
 
     // Important, do not remove
@@ -23,8 +23,9 @@ public class TestWheelFriction extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-
+        robot = new QuadWheelHardware(this);
         robot.init();
+        telemetry.log().add("Finished initialization");
 
         for (DcMotor m : robot.motorArr) {
             m.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

@@ -15,14 +15,24 @@ public class QuadWheelHardware extends BaseHardware {
 
     @Override
     public void init() {
+
+        super.init();
+
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
         backRight = hwMap.dcMotor.get("backRight");
 
+        motorArr = new DcMotor[] {frontLeft, frontRight, backLeft, backRight};
+        tel.log().add("Initialized motor array");
+
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
-        super.init();
+        resetMotorEncoders();
+
+        for (DcMotor m : motorArr) {
+            m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
     }
 }

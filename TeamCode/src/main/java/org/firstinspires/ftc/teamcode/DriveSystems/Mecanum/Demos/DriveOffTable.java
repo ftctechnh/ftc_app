@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
+import org.firstinspires.ftc.teamcode.Hardware.MecanumHardware;
 
 /**
  * Created by guberti on 10/27/2017.
  */
 @Disabled
 public class DriveOffTable extends LinearOpMode {
-    QuadWheelHardware robot   = new QuadWheelHardware(this);
+    MecanumHardware robot   = new MecanumHardware(this);
 
     @Override
     public void runOpMode() throws InterruptedException {

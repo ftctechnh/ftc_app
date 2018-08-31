@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.TeleOpMecanum;
-import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
+import org.firstinspires.ftc.teamcode.Hardware.MecanumHardware;
 
 /**
  * Created by guberti on 12/8/2017.
  */
 @TeleOp(name="MecanumDemo - Slew Drive", group="MecanumDemo")
 public class SlewDriveMecanum extends TeleOpMecanum {
-    QuadWheelHardware robot = new QuadWheelHardware(this);
+    MecanumHardware robot = new MecanumHardware(this);
 
     @Override
     public void runOpMode() {
