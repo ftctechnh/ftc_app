@@ -56,8 +56,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = HardwareMap.get("tankleftmtr");
-    private DcMotor rightDrive = null;
+    private DcMotor leftDrive = hardwareMap.get(DcMotor.class,"tankleftmtr");
+    private DcMotor rightDrive = hardwareMap.get(DcMotor.class,"tankrightmtr");
 
     @Override
     public void runOpMode() {
@@ -67,8 +67,6 @@ public class BasicOpMode_Linear extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
