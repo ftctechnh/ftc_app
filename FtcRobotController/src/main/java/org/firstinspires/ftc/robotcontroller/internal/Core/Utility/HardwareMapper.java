@@ -70,15 +70,15 @@ public final class HardwareMapper
     Maps a colorsensor with the name and address that are passed in as parameters.
     The servo that will be mapped is returned.
      */
-//    public ColorSensor mapColorSensor(final String NAME, final int ADDRESS)
-//    {
-//        ColorSensor tempColor;
-//
-//        tempColor = (ColorSensor)robot.hardware.colorSensor.get(NAME);
-//        tempColor.setI2cAddress(I2cAddr.create8bit(ADDRESS));
-//
-//        return tempColor;
-//    }
+    public ColorSensor mapColorSensor(final String NAME, final int ADDRESS)
+    {
+        ColorSensor tempColor;
+
+        tempColor = robot.hardwareMap.colorSensor.get(NAME);
+        tempColor.setI2cAddress(I2cAddr.create8bit(ADDRESS));
+
+        return tempColor;
+    }
 
     /*
     Maps a colorsensor with the name and address that are passed in as parameters.
