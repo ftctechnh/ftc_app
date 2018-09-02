@@ -3,6 +3,7 @@ package org.firstinspires.ftc.robotcontroller.internal.Core.Sensors;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 
 import org.firstinspires.ftc.robotcontroller.internal.Core.RobotBase;
+import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.Color.ColorID;
 import org.firstinspires.ftc.robotcontroller.internal.Core.Utility.HardwareMapper;
 
 /**
@@ -38,6 +39,30 @@ public final class REVColorSensor
         return color.alpha();
     }
 
-    //Returns color that the sensor detects.
 
+    //Returns color that the sensor detects.
+    ColorID getColor()
+    {
+        final int BUFFER = 5;
+        if(color.red() > color.blue() + BUFFER)
+        {
+            return ColorID.RED;
+
+        }
+        else if(color.blue() > color.red() + BUFFER)
+        {
+            return ColorID.BLUE;
+        }
+        else if(color.alpha() > 10)
+        {
+            return ColorID.WHITE;
+        }
+        else
+            return ColorID.UNKNOWN;
+    }
+
+    void toggleLED(final boolean LED_ON)
+    {
+        color.enableLed(LED_ON);
+    }
 }

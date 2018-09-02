@@ -88,7 +88,7 @@ public final class HardwareMapper
 //    {
 //
 //        return mapColorSensor(NAME,ColorSensor.ADDRESS_I2C_DEFAULT.get8Bit());
-//    }
+//    }*/
 
     /*
     Maps a REVIMU with the name and parameters that are passed in as parameters.
