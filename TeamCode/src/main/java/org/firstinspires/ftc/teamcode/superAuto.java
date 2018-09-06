@@ -53,6 +53,7 @@ abstract public class superAuto extends LinearOpMode {
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
     Orientation angles;
     Acceleration gravity;
 

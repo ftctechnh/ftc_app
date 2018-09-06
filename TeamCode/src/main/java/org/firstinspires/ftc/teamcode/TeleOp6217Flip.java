@@ -31,6 +31,7 @@ public class TeleOp6217Flip extends OpMode
     DcMotor motorSlide;
     Servo servoThumb;
     Servo servoWrist;
+    CRServo servoBagArm;
 
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
@@ -81,6 +82,10 @@ public class TeleOp6217Flip extends OpMode
         motorSlide.setDirection(DcMotor.Direction.FORWARD);
         servoWrist = hardwareMap.servo.get("servoWrist");
         servoThumb = hardwareMap.servo.get("servoThumb");
+
+        //Bag Arm
+        servoBagArm = hardwareMap.crservo.get("servoBagArm");
+        servoBagArm.setDirection(CRServo.Direction.FORWARD);
     }
 
     /*
@@ -233,6 +238,16 @@ public class TeleOp6217Flip extends OpMode
             motorBL.setPower(0);
         }
 
+        // CR Servo Bag Arm
+        if(dpad_up){
+        servoBagArm.setPower(1);
+        }
+        else if(dpad_up) {
+            servoBagArm.setPower(-1);
+        }
+        else {
+            servoBagArm.setPower(0);
+        }
 
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Write telemetry back to driver station
