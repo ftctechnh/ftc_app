@@ -36,7 +36,7 @@ public class Teleop extends OpMode {
     @Override
     public void start() {
         robot.setJewelPivotPosition(0.5);
-        robot.setJewelArmPosition(0.8);
+        robot.setJewelArmPosition(0.78);
         runtime.reset();
     }
 
@@ -56,6 +56,10 @@ public class Teleop extends OpMode {
         wVelocity = Range.clip(wVelocity, -1.0, 1.0);
 
         robot.drive(xVelocity, yVelocity, wVelocity);
+
+        if(gamepad1.b){
+            robot.setJewelArmPosition(0.78);
+        }
 
 
         // OPERATOR CODE
@@ -77,16 +81,16 @@ public class Teleop extends OpMode {
 
         switch(hopperPosition){
             case Idle:
-                robot.setHopperPosition(0.65);
+                robot.setHopperPosition(0.54);
                 break;
             case level:
-                robot.setHopperPosition(0.4);
+                robot.setHopperPosition(0.33);
                 break;
             case up:
                 robot.setHopperPosition(0);
                 break;
             default:
-                robot.setHopperPosition(0.4);
+                robot.setHopperPosition(0.33);
                 break;
         }
 

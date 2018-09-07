@@ -53,10 +53,10 @@ public class Robot {
 
         colorSensor = hwMap.get(ColorSensor.class, "sensor_color");
 
-        hopper.setPosition(0.4);
+        hopper.setPosition(0.33);
         gripper.setPosition(0.65);
         jewelPivot.setPosition(0.5);
-        jewelArm.setPosition(0.98);
+        jewelArm.setPosition(0.78);
         relicGripper.setPosition(0.6);
         relicArm.setPosition(1);
 
@@ -83,7 +83,7 @@ public class Robot {
         relicGripper = hwMap.get(Servo.class, "rGripper");
         relicArm = hwMap.get(Servo.class, "rArm");
 
-        hopper.setPosition(0.4);
+        hopper.setPosition(0.33);
         gripper.setPosition(0.65);
         jewelPivot.setPosition(0.5);
         jewelArm.setPosition(0.98);

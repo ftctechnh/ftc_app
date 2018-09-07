@@ -12,6 +12,7 @@ public class CRI_Red_Front_Auto extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot.init(hardwareMap, this);
+        robot.setJewelArmPosition(0.98);
         sleep(500);
 
         waitForStart();
@@ -93,12 +94,12 @@ public class CRI_Red_Front_Auto extends LinearOpMode {
 
 
         robot.runIntake(-1);
-        robot.encoderDrive(42, 0.3);
+        robot.encoderDrive(30, 0.3);
         sleep(2000);
-        robot.encoderDrive(7, 0.2);
-        sleep(2000);
+//        robot.encoderDrive(7, 0.2);
+//        sleep(2000);
         robot.runIntake(1);
-        sleep(100);
+        sleep(200);
         robot.runIntake(-1);
         if(cryptoKey.equals("KeyRight")){
 //            robot.gyroTurn(5, "RIGHT");
@@ -106,9 +107,12 @@ public class CRI_Red_Front_Auto extends LinearOpMode {
             robot.gyroTurn(-7, "LEFT");
         }
         sleep(300);
-        robot.encoderDrive(-57, 0.3);
-        sleep(1000);
+        robot.encoderDrive(-30, 0.3);
 
+        robot.runIntake(1);
+        sleep(200);
+        robot.runIntake(-1);
+        sleep(1000);
         // raise hopper
         robot.setHopperPosition(0);
         sleep(2000);
