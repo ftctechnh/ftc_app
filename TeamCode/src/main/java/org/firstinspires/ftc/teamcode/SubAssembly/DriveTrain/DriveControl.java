@@ -32,11 +32,11 @@ public class DriveControl {
         telemetry.addLine(name + " initialize");
 
         /* Map hardware devices */
-        Battery = hardwareMap.voltageSensor.get("Lower hub 3");
+        Battery = hardwareMap.voltageSensor.get("Expansion Hub 2");
 
         right = hardwareMap.dcMotor.get("leftWheel");
         left = hardwareMap.dcMotor.get("rightWheel");
-        left.setDirection(DcMotor.Direction.REVERSE);
+        right.setDirection(DcMotor.Direction.REVERSE);
 
         right.setPower(0);
         left.setPower(0);

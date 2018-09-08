@@ -36,9 +36,13 @@ public class DriveTest extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-            if (egamepad1.dpad_up.pressed) {
+            if (egamepad1.dpad_up.state) {
                 Drive.moveForward(speed);
-            } else {
+            }
+            if (egamepad1.dpad_down.state) {
+                Drive.moveBackward(speed);
+            }
+            else {
                 Drive.stop(speed);
             }
 
