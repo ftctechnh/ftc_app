@@ -57,14 +57,14 @@ public class DriveControl {
 
     //setting power to turn left
     public void turnLeft(double speed) {
-        right.setPower(1);
-        left.setPower(-1);
+        right.setPower(-1);
+        left.setPower(1);
     }
 
     //setting power to turn right
     public void turnRight(double speed) {
-        right.setPower(-1);
-        left.setPower(1);
+        right.setPower(1);
+        left.setPower(-1);
     }
 
     //setting power to 0
