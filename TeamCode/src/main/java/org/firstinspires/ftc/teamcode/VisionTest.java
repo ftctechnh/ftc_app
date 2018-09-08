@@ -83,7 +83,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
+@Autonomous(name="VisionTest", group ="Concept")
 public class VisionTest extends LinearOpMode {
     private DcMotor ADrive;
     private DcMotor BDrive;
@@ -167,9 +167,9 @@ public class VisionTest extends LinearOpMode {
 
         /** Start tracking the data sets we care about. */
         relicTrackables.activate();
-
+        double count = 0;
         while (opModeIsActive()) {
-
+            count = count + 1;
             RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN) {
                 /* Found an instance of the template. In the actual game, you will probably
@@ -177,14 +177,15 @@ public class VisionTest extends LinearOpMode {
                 * on which VuMark was visible. */
                 telemetry.addData("VuMark", "%s visible", vuMark);
                 ADrive.setPower(0);
-                BDrive.setPower(.5);
-                CDrive.setPower(-.5);
+                BDrive.setPower(.25);
+                CDrive.setPower(-.25);
 
             }
             else {
-                ADrive.setPower(.5);
-                BDrive.setPower(.5);
-                CDrive.setPower(.5);
+
+                ADrive.setPower(.1);
+                BDrive.setPower(.1);
+                CDrive.setPower(.1);
             }
 
             telemetry.update();

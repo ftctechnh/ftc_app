@@ -82,7 +82,7 @@ import java.util.List;
  * is explained below.
  */
 
-@Autonomous(name="Concept: Vuforia Navigation", group ="Concept")
+@Autonomous(name="Computer Vision", group ="Concept")
 public class ComputerVision extends LinearOpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
