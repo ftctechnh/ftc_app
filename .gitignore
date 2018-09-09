@@ -26,3 +26,8 @@ build/
 
 *ASUS_PC_01*
 
+*.gradle
+*.gradle
+*.properties
+*.gradle
+*.properties
