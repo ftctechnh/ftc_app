@@ -1,43 +1,42 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.ModernRoboticsRobot;
 
 @TeleOp(name="ModernRoboticsTeleOp", group="TeleOpMode")
 //@Disabled
 
 public class ModernRoboticsTeleOp extends OpMode {
 
-    public DcMotor leftDrive;
-    public DcMotor rightDrive;
+    private ModernRoboticsRobot robot = new ModernRoboticsRobot();
 
     @Override
     public void init()
     {
-        leftDrive = hardwareMap.get(DcMotor.class, "leftDrive");
-        rightDrive =  hardwareMap.get(DcMotor.class, "rightDrive");
-        leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        robot.init(hardwareMap);
         telemetry.addData("Status", "Robot has initialized!");
+        telemetry.update();
     }
 
     @Override
     public void start()
     {
         telemetry.addData("Status", "Robot has started running!");
+        telemetry.update();
     }
 
     @Override
     public void loop()
     {
-        leftDrive.setPower(-gamepad1.left_stick_y);
-        rightDrive.setPower(-gamepad1.right_stick_y);
+        robot.leftDrive.setPower(-gamepad1.left_stick_y);
+        robot.rightDrive.setPower(-gamepad1.right_stick_y);
     }
 
     @Override
     public void stop() {
+        robot.safetyStop();
         telemetry.addData("Status", "Robot has stopped!");
+        telemetry.update();
     }
 }

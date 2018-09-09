@@ -29,12 +29,12 @@ public class RobotHardware
     public ElapsedTime runTime = new ElapsedTime();
 
 
-    HardwareMap hwMap =  null;
+    private HardwareMap hwMap =  null;
 
     public RobotHardware() {}
 
     /**
-     * Initializes the TileRunnerRobotHardware with a hardware map and then init the hardware.
+     * Initializes the TileRunnerRobot with a hardware map and then init the hardware.
      * @param ahMap The hardwareMap
      */
     public RobotHardware(HardwareMap ahMap)

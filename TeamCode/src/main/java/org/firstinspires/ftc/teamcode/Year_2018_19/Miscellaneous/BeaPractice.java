@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode.Year_2018_19;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+package org.firstinspires.ftc.teamcode.Year_2018_19.Miscellaneous;
 
-@TeleOp(name = "BeaPractice1", group = "TeleOp mode")
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+
+@TeleOp(name = "BeaPractice1", group = "TeleOpMode")
+@Disabled
 
 public class BeaPractice extends OpMode
 {
 
-    public DcMotor Bob;
-    public DcMotor Richard;
+    private DcMotor Bob;
+    private DcMotor Richard;
 
     public void init ()
     {
@@ -29,7 +28,7 @@ public class BeaPractice extends OpMode
 
     public void loop ()
     {
-
+        //Roba: Make the motors move when the gamepad's left analog is moved!
     }
 
     public void stop ()
