@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.ModernRoboticsRobot;
 
@@ -31,6 +32,11 @@ public class ModernRoboticsTeleOp extends OpMode {
     {
         robot.leftDrive.setPower(-gamepad1.left_stick_y);
         robot.rightDrive.setPower(-gamepad1.right_stick_y);
+
+        telemetry.addData("Left Drive", robot.leftDrive.getPower());
+        telemetry.addData("Right Drive", robot.rightDrive.getPower());
+
+        telemetry.update();
     }
 
     @Override

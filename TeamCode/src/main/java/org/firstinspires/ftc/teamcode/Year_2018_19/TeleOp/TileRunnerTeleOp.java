@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.TileRunnerRobot;
 
 @TeleOp(name="TileRunnerTeleOp", group="TeleOpMode")
+//@Disabled
 
 public class TileRunnerTeleOp extends OpMode
 {
@@ -50,6 +52,15 @@ public class TileRunnerTeleOp extends OpMode
         else if (gamepad1.y) {
             robot.stopMusic();
         }
+
+        telemetry.addData("Front Left Drive", robot.frontLeftDrive.getPower());
+        telemetry.addData("Front Right Drive", robot.frontRightDrive.getPower());
+        telemetry.addData("Back Left Drive", robot.backLeftDrive.getPower());
+        telemetry.addData("Back Right Drive", robot.backRightDrive.getPower());
+
+        telemetry.addData("Flag Servo", robot.flagServo.getPosition());
+
+        telemetry.update();
     }
 
     //Robot ends.

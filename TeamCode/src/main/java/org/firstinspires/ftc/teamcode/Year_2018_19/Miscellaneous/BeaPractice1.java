@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp(name = "BeaPractice1", group = "TeleOpMode")
 @Disabled
 
-public class BeaPractice extends OpMode
+public class BeaPractice1 extends OpMode
 {
 
     private DcMotor Bob;
@@ -28,7 +28,7 @@ public class BeaPractice extends OpMode
 
     public void loop ()
     {
-        //Roba: Make the motors move when the gamepad's left analog is moved!
+        //TODO: Make the drive motors move when the gamepad's left and right analogs are moved!
     }
 
     public void stop ()

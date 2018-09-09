@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Year_2018_19.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.Year_2018_19.Robot.MecanumDriveRobot;
 
@@ -100,6 +101,21 @@ public class MecanumDriveTeleOp extends OpMode
         else if (gamepad1.y) {
             robot.stopMusic();
         }
+
+        telemetry.addData("Front Left Drive", robot.frontLeftDrive.getPower());
+        telemetry.addData("Front Right Drive", robot.frontRightDrive.getPower());
+        telemetry.addData("Back Left Drive", robot.backLeftDrive.getPower());
+        telemetry.addData("Back Right Drive", robot.backRightDrive.getPower());
+
+        telemetry.addData("Gyro Sensor X", robot.gyroSensor.rawX());
+        telemetry.addData("Gyro Sensor Y", robot.gyroSensor.rawY());
+        telemetry.addData("Gyro Sensor Z", robot.gyroSensor.rawZ());
+
+        telemetry.addData("Line Follower Red Color", robot.lineFollower.red());
+        telemetry.addData("Line Follower Green Color", robot.lineFollower.green());
+        telemetry.addData("Line Follower Blue Color", robot.lineFollower.blue());
+
+        telemetry.update();
     }
 
     //Robot ends.
