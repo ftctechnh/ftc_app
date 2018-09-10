@@ -28,6 +28,7 @@ public class MecanumDriveRobot
 
     //The hardware data.
     public double drivePower = 0.5;
+    public String alliance = null;
 
     //Set up commands here.
     public void init(HardwareMap hwMap)    //Hardware and components initiates.
