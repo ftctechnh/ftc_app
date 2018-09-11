@@ -19,6 +19,7 @@ public class CoordinateConverter {
     private double x;
     private double y;
 
+    //Types of coordinate systems.
     public final static int POLAR = 0;
     public final static int CARTESIAN = 1;
 

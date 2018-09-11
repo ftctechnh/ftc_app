@@ -9,6 +9,7 @@ public class Color
 {
     public enum ColorID
     {
+        //Types of colors
         RED("RED"),
         BLUE("BLUE"),
         GREEN("GREEN"),
