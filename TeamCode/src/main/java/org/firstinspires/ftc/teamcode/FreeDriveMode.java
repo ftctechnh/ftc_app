@@ -11,19 +11,16 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @TeleOp
 public class FreeDriveMode extends LinearOpMode {
 
-    //Declare left and right to be of type Motor
-    private DcMotor left;
-    private DcMotor right;
+    //Declare drive to be of type DriveBase
+    private DriveBase drive;
 
     /** Run when Init is pressed */
     @Override
     public void runOpMode(){
 
-        //Initialize the motors to the devices "leftMotor" and "rightMotor".
-        //To change which motors those are, look in Configure Robot on one of the phones
-        //TBH don't remember which phone.
-        left = hardwareMap.get(DcMotor.class, "leftMotor");
-        right = hardwareMap.get(DcMotor.class, "rightMotor");
+        //Set drive to a DriveBase object, which lets us control the motors that move the whole
+        //robot. Pass hardwareMap as an argument so that DriveBase can find the motors.
+        drive = new DriveBase(hardwareMap);
 
         //Set the driver station to say "Meep! Initialized!"
         telemetry.addData("Status", "Meep! Initialized!");
@@ -35,14 +32,12 @@ public class FreeDriveMode extends LinearOpMode {
         //Do this until you click stop
         while(opModeIsActive()){
             //set these variables to wherever the gamepad sticks are at.
-            //Negative because the motors are backwards
-            float leftPower = -gamepad1.left_stick_y;
-            float rightPower = -gamepad1.right_stick_y;
+            float leftStick = gamepad1.left_stick_y;
+            float rightStick = gamepad1.right_stick_y;
             //Set the motors power to those
-            left.setPower(leftPower);
-            right.setPower(rightPower);
+            drive.set(leftStick, rightStick);
             //Set the driver station to say what the gamepad stick values are.
-            telemetry.addData("Status", "Left: "+leftPower+", Right: "+rightPower);
+            telemetry.addData("Status", "Left: "+leftStick+", Right: "+rightStick);
             telemetry.update();
         }
     }
