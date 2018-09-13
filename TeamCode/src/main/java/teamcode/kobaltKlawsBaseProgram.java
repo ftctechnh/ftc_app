@@ -21,6 +21,9 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
     @Override
     public void runOpMode() {
 
+        double armPosition;
+        double armLength;
+
         //run the initialize block
         this.initialize();
 
@@ -37,6 +40,10 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
             double rightPower;
             double drive = -gamepad1.left_stick_y;
             double turn = gamepad1.right_stick_x;
+
+            double grabberPosition;
+
+
 
 
             if (drive !=0){
@@ -59,7 +66,7 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
             this.motor2.setPower(rightPower);
 
             if (gamepad1.x) {
-                double grabberPosition = this.servo1.getPosition();
+                grabberPosition = this.servo1.getPosition();
                 if (grabberPosition == 0) {
                     this.servo1.setPosition(0.5);
                     this.servo2.setPosition(0.5);
@@ -69,6 +76,12 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
                     this.servo2.setPosition(0);
                     //If grabber is open, close grabber
                 }
+            }
+
+            if (gamepad1.y) {
+                /*repeat until arm position equals 90
+                this.motor4.setPower(
+                 */
             }
 
             telemetry.addData("Status", "Running");
@@ -90,12 +103,16 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
 
         motor1.setDirection(DcMotor.Direction.FORWARD);
         motor2.setDirection(DcMotor.Direction.FORWARD);
+        motor3.setDirection(DcMotor.Direction.FORWARD);
+        motor4.setDirection(DcMotor.Direction.FORWARD);
 
         servo1.setDirection(Servo.Direction.FORWARD);
         servo2.setDirection(Servo.Direction.REVERSE);
 
         this.servo1.setPosition(0);
         this.servo2.setPosition(0);
+
+        //TO DO: Figure out how to set reference arm position and length
 
         telemetry.addData("Status", "Online");
         telemetry.update();
