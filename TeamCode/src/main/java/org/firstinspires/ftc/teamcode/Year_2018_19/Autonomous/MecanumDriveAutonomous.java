@@ -16,6 +16,12 @@ public class MecanumDriveAutonomous extends LinearOpMode
     {
         robot.init(hardwareMap);
         robot.playR2D2Sound(this.hardwareMap.appContext);
+
+        if (gamepad1.b && gamepad1.left_stick_button) {robot.alliance = "Red Left Alliance";} //Red Left Alliance
+        else if (gamepad1.b && gamepad1.right_stick_button) {robot.alliance = "Red Right Alliance";} //Red Right Alliance
+        else if (gamepad1.x && gamepad1.left_stick_button) {robot.alliance = "Blue Left Alliance";} //Blue Left Alliance
+        else if (gamepad1.x && gamepad1.right_stick_button) {robot.alliance = "Blue Right Alliance";} //Blue Right Alliance
+
         telemetry.addData("Status", "Robot has initialied!");
         telemetry.update();
 
@@ -23,6 +29,23 @@ public class MecanumDriveAutonomous extends LinearOpMode
         robot.playBB8Sound(this.hardwareMap.appContext);
         telemetry.addData("Status", "Robot has started!");
         telemetry.update();
+
+        if (robot.alliance == "Red Left Alliance")
+        {
+            BlueLeftAlliance();
+        }
+        else if (robot.alliance == "Red Right Alliance")
+        {
+            BlueRightAlliance();
+        }
+        else if (robot.alliance == "Blue Left Alliance")
+        {
+            RedLeftAlliance();
+        }
+        else if (robot.alliance == "Blue Right Alliance")
+        {
+            RedRightAlliance();
+        }
 
         sleep (1000);
 
