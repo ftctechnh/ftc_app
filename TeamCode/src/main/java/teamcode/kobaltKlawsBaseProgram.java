@@ -14,9 +14,9 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
     private DcMotor motor1;
     private DcMotor motor2;
     private DcMotor motor3;
+    private DcMotor motor4;
     private Servo servo1;
     private Servo servo2;
-    private Servo servo3;
 
     @Override
     public void runOpMode() {
@@ -29,6 +29,8 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
 
         while(opModeIsActive()){
 
+
+            //Drive System
 
             //double is a variable type that supports decimals
             double leftPower;
@@ -56,6 +58,19 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
             this.motor1.setPower(leftPower);
             this.motor2.setPower(rightPower);
 
+            if (gamepad1.x) {
+                double grabberPosition = this.servo1.getPosition();
+                if (grabberPosition == 0) {
+                    this.servo1.setPosition(0.5);
+                    this.servo2.setPosition(0.5);
+                    //If grabber is closed, open grabber
+                } else if (grabberPosition == 0.5) {
+                    this.servo1.setPosition(0);
+                    this.servo2.setPosition(0);
+                    //If grabber is open, close grabber
+                }
+            }
+
             telemetry.addData("Status", "Running");
             telemetry.update();
         }
@@ -68,13 +83,19 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
         //also initializing the hardware?
         this.motor1 = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.motor2 = hardwareMap.get (DcMotor.class, "RightDriveMotor");
-        this.motor3 = hardwareMap.get (DcMotor.class, "ArmMotor");
-        this.servo1 = hardwareMap.get (Servo.class, "");
-        this.servo2 = hardwareMap.get (Servo.class, "");
-        this.servo2 = hardwareMap.get (Servo.class, "");
+        this.motor3 = hardwareMap.get (DcMotor.class, "ArmMotorExtend");
+        this.motor4 = hardwareMap.get (DcMotor.class, "ArmMotorSwing");
+        this.servo1 = hardwareMap.get (Servo.class, "GrabberServoLeft");
+        this.servo2 = hardwareMap.get (Servo.class, "GrabberServoRight");
 
         motor1.setDirection(DcMotor.Direction.FORWARD);
         motor2.setDirection(DcMotor.Direction.FORWARD);
+
+        servo1.setDirection(Servo.Direction.FORWARD);
+        servo2.setDirection(Servo.Direction.REVERSE);
+
+        this.servo1.setPosition(0);
+        this.servo2.setPosition(0);
 
         telemetry.addData("Status", "Online");
         telemetry.update();
