@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "kobaltKlawsBaseProgram", group = "Linear OpMode")
+@TeleOp(name = "kobaltKlawsBaseProgramBenjamin", group = "Linear OpMode")
 
-public class kobaltKlawsBaseProgram extends LinearOpMode{
+public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor motor1;
