@@ -55,7 +55,7 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
             }
             this.motor1.setPower(leftPower);
             this.motor2.setPower(rightPower);
-            
+
             telemetry.addData("Status", "Running");
             telemetry.update();
         }
