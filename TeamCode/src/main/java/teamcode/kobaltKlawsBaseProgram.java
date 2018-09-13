@@ -30,6 +30,8 @@ public class kobaltKlawsBaseProgram extends LinearOpMode{
         while(opModeIsActive()){
             telemetry.addData("Status", "Running");
             telemetry.update();
+
+            
         }
     }
 
