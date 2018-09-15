@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -13,6 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
@@ -36,6 +37,10 @@ public class ParadeBot
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
     private float wheelCircCm = (float)(9.8* Math.PI);
 
+    private DistanceSensor frontLeftDistSens;
+    private DistanceSensor frontRightDistSens;
+
+
     public ParadeBot(HardwareMap hMap)
     {
         imu = (hMap.get(BNO055IMU.class, "imu"));
@@ -55,6 +60,8 @@ public class ParadeBot
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        frontLeftDistSens = hMap.get(DistanceSensor.class, "frontLeftDistSens");
+        frontRightDistSens = hMap.get(DistanceSensor.class, "frontRightDistSens");
         stopAllMotors();
         updateIMUValues();
     }
@@ -448,6 +455,14 @@ public class ParadeBot
         gravity  = imu.getGravity();
     }
 
+    public double getDistFromFrontLeft_In()
+    {
+        return frontLeftDistSens.getDistance(DistanceUnit.INCH);
+    }
+    public double getDistFromFrontRight_In()
+    {
+        return frontRightDistSens.getDistance(DistanceUnit.INCH);
+    }
     private void resetDriveEncoders()//sets encoders to 0 for motors
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -462,4 +477,24 @@ public class ParadeBot
     }
 
     public DcMotorImplEx getDriveRightOne() {return driveRightOne;}
+
+    public DistanceSensor getFrontLeftDistSens()
+    {
+        return frontLeftDistSens;
+    }
+
+    public void setFrontLeftDistSens(DistanceSensor frontLeftDistSens)
+    {
+        this.frontLeftDistSens = frontLeftDistSens;
+    }
+
+    public DistanceSensor getFrontRightDistSens()
+    {
+        return frontRightDistSens;
+    }
+
+    public void setFrontRightDistSens(DistanceSensor frontRightDistSens)
+    {
+        this.frontRightDistSens = frontRightDistSens;
+    }
 }
