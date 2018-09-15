@@ -13,7 +13,7 @@ public class ParadeBotTele extends OpMode
 {
     private ParadeBot tank;
     private float rValue, lValue;
-    private boolean toggleSpeedMode = true;
+    private boolean toggleSpeedMode = false;
     private boolean hasSpeedModeBeenActivated = false;
 
 
@@ -31,6 +31,7 @@ public class ParadeBotTele extends OpMode
 
     public void loop()
     {
+
         if (toggleSpeedMode)
         {
             telemetry.addData("Speed mode = ON", null);
@@ -40,19 +41,21 @@ public class ParadeBotTele extends OpMode
         else
         {
             telemetry.addData("speed mode = OFF", null);
-            rValue = gamepad1.right_stick_y/2;
-            lValue = gamepad1.left_stick_y/2;
+            rValue = gamepad1.right_stick_y * .5f;
+            lValue = gamepad1.left_stick_y * .5f;
         }
-        /* Outputs for debugging
+
         telemetry.addData("Radian Velocity Left", tank.getDriveLeftOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("radian v right", tank.getDriveRightOne().getVelocity(AngleUnit.RADIANS));
         telemetry.addData("LJoyStick= ", gamepad1.left_stick_y);
         telemetry.addData("RJoyStick= ", gamepad1.right_stick_y);
         telemetry.addData("REncoders= ", tank.getRightEncoderPos());
         telemetry.addData("LEncoders= ", tank.getLeftEncoderPos());
-        */
+        telemetry.addData("Distance from Front Left (in)= ", tank.getDistFromFrontLeft_In());
+        telemetry.addData("Distance from Front Right (in)= ", tank.getDistFromFrontRight_In());
         telemetry.update();
         tank.driveMotors(lValue, rValue);
+
         if (gamepad1.a)
         {
             if (!hasSpeedModeBeenActivated)
