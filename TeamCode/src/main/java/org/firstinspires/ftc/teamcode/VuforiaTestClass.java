@@ -33,10 +33,10 @@ public class VuforiaTestClass
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
         VuforiaTrackables stonesAndChips = vuforia.loadTrackablesFromAsset("RoverRuckus");
-        VuforiaTrackable BluePerimeter = stonesAndChips.get(0);
-        VuforiaTrackable RedPerimeter = stonesAndChips.get(1);
-        VuforiaTrackable FrontPerimeter = stonesAndChips.get(2);
-        VuforiaTrackable BackPerimeter = stonesAndChips.get(3);
+        BluePerimeter = stonesAndChips.get(0);
+        RedPerimeter = stonesAndChips.get(1);
+        FrontPerimeter = stonesAndChips.get(2);
+        BackPerimeter = stonesAndChips.get(3);
     }
 
 }
