@@ -8,7 +8,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 
-public class MainTeleOp {
+public class MainTeleOp extends LinearOpMode{
+    // Motors
+    protected DcMotor motor0;
+    protected DcMotor motor1;
+
+    // Servos
+
+    // Color sensors
+    protected LynxI2cColorRangeSensor color0;
+
     private void initOpMode() {
         //initialize all the motors
         motor0 = hardwareMap.get(DcMotor.class, "motor0");
@@ -16,8 +25,6 @@ public class MainTeleOp {
         // Sensors initialization
         color0 = hardwareMap.get(LynxI2cColorRangeSensor.class, "color0");
 
-        // initialize the spool encoders
-        spoolMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 

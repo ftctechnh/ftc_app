@@ -12,16 +12,20 @@ public class MainAutonomous extends LinearOpMode{
 
     @Override
     public void runOpMode(){
+        initOpMode();
+    }
+
+    protected void initOpMode() {
 
     }
 
-    public void lower(){}
+    protected void lower(){}
 
-    public void turnLeft(int degrees){}
+    protected void turnLeft(int degrees){}
 
-    public void turnRight(int degrees){}
+    protected void turnRight(int degrees){}
 
-    public void moveForward(int inches){}
+    protected void moveForward(int inches){}
 
-    public void moveBackward(int inches){}
+    protected void moveBackward(int inches){}
 }
