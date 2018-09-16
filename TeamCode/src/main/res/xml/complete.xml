@@ -6,8 +6,8 @@
             <NeveRest20Gearmotor name="motorFR" port="1" />
             <NeveRest20Gearmotor name="motorBL" port="2" />
             <NeveRest20Gearmotor name="motorBR" port="3" />
-            <Servo name="servoWrist" port="3"/>
-            <Servo name="servoThumb" port="2"/>
+            <!--<Servo name="servoWrist" port="3"/>-->
+            <ContinuousRotationServo name="servoBagArm" port="2"/>
             <Servo name="servoFlicker" port="1" />
             <Servo name="servoTapper" port="0" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />

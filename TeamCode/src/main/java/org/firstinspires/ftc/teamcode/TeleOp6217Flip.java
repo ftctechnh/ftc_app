@@ -15,7 +15,7 @@ import com.qualcomm.robotcore.util.Range;
 
 import static java.lang.Math.abs;
 
-@TeleOp(name="Preciousss: TeleOp6217Flip", group="Preciousss")
+@TeleOp(name="Preciousss: TeleOp6217Flip_17:00", group="Preciousss")
 
 public class TeleOp6217Flip extends OpMode
 {
@@ -29,8 +29,8 @@ public class TeleOp6217Flip extends OpMode
     DcMotor motorFlip;
     Servo servoTapper;
     DcMotor motorSlide;
-    Servo servoThumb;
-    Servo servoWrist;
+    //Servo servoThumb;
+   // Servo servoWrist;
     CRServo servoBagArm;
 
    /* IntegratingGyroscope gyro;
@@ -80,8 +80,8 @@ public class TeleOp6217Flip extends OpMode
         //Relic Arm
         motorSlide = hardwareMap.dcMotor.get("motorSlide");
         motorSlide.setDirection(DcMotor.Direction.FORWARD);
-        servoWrist = hardwareMap.servo.get("servoWrist");
-        servoThumb = hardwareMap.servo.get("servoThumb");
+        //servoWrist = hardwareMap.servo.get("servoWrist");
+        //servoThumb = hardwareMap.servo.get("servoThumb");
 
         //Bag Arm
         servoBagArm = hardwareMap.crservo.get("servoBagArm");
@@ -94,7 +94,7 @@ public class TeleOp6217Flip extends OpMode
     @Override
     public void init_loop() {
         // Start wrist in stowed position
-        servoWrist.setPosition(.85);
+        //servoWrist.setPosition(.85);
     }
 
     /*
@@ -154,11 +154,11 @@ public class TeleOp6217Flip extends OpMode
 
         //  Loading Glyphs
         // Directions will require testing
-        if (dpad_up && !b) {
+        if (dpad_up && !b && !x) {
             motorConL.setPower(.7);
             motorConR.setPower(-.7);
 
-        } else if (dpad_down && ! b ) {
+        } else if (dpad_down && ! b && !x ) {
             motorConL.setPower(-.7);
             motorConR.setPower(.7);
 
@@ -205,17 +205,17 @@ public class TeleOp6217Flip extends OpMode
             motorSlide.setPower(0);
         }
 
-        if (b && leftPad ){
+        /*if (b && leftPad ){
             servoThumb.setPosition(0);
         }
         else if (b && rightPad){
             servoThumb.setPosition(1);
-        }
+        } */
         if(b && dpad_up){
-            servoWrist.setPosition(1);
+            //servoWrist.setPosition(1);
         }
         else if (b && dpad_down){
-            servoWrist.setPosition(.4);
+            //servoWrist.setPosition(.4);
         }
 
         //  Driving
@@ -239,10 +239,10 @@ public class TeleOp6217Flip extends OpMode
         }
 
         // CR Servo Bag Arm
-        if(dpad_up){
+       if(dpad_up && x){
         servoBagArm.setPower(1);
         }
-        else if(dpad_up) {
+        else if(dpad_down && x) {
             servoBagArm.setPower(-1);
         }
         else {
