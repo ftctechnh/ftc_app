@@ -48,7 +48,7 @@ public class LogQueue {
 
     public File getFile(BaseHardware hardware) {
         final File path = Environment.getExternalStorageDirectory();
-        if (!path.exists()) {path.mkdirs();hardware.opMode.telemetry.log().add("Made dir");}
+        if (!path.exists()) {path.mkdirs();/*hardware.opMode.telemetry.log().add("Made dir");*/}
 
         long time = System.currentTimeMillis();
         String hardwareType = hardware.getClass().getSimpleName();
