@@ -8,7 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Hardware.BaseHardware;
+import org.firstinspires.ftc.teamcode.Hardware.MecanumHardware;
 import org.junit.Test;
 
 import TestUtilities.MockDcMotor;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class HardwareUtilityFunctionsTest {
-    BaseHardware robot = new BaseHardware(new MockLinearOpMode());
+    MecanumHardware robot = new MecanumHardware(new MockLinearOpMode());
 
     @Test
     public void hardwareUtilities_WaitTick_OperatesNormally() {
