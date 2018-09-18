@@ -14,7 +14,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class LogQueue {
 
-    final String FOLDER = "FIRST/LOGS";
+    final String FOLDER = "FIRST/LOGS/";
     final int CAPACITY = 128;
 
     ArrayBlockingQueue<Object[]> queue;
@@ -43,12 +43,12 @@ public class LogQueue {
 
         fileWriter = new FileWriter(getFile(hardware));
         logManager = new AsyncLogWriter(fileWriter, queue);
-        logManager.run();
+        logManager.start();
     }
 
     public File getFile(BaseHardware hardware) {
         final File path = Environment.getExternalStorageDirectory();
-        if (!path.exists()) {path.mkdirs();/*hardware.opMode.telemetry.log().add("Made dir");*/}
+        if (!path.exists()) {path.mkdirs();}
 
         long time = System.currentTimeMillis();
         String hardwareType = hardware.getClass().getSimpleName();
@@ -69,6 +69,7 @@ public class LogQueue {
             for (int i = 0; i < fields.length; i++) {
                 readings[gamepadNum + i] = fields[i].get(g);
             }
+            gamepadNum += 1;
         }
 
         queue.add(readings);
