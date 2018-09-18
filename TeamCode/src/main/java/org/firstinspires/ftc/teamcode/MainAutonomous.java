@@ -8,16 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
  */
 
 @Autonomous
-public class MainAutonomous extends LinearOpMode{
+public abstract class MainAutonomous extends LinearOpMode{
 
-    @Override
-    public void runOpMode(){
-        initOpMode();
-    }
-
-    protected void initOpMode() {
-
-    }
+    protected void initOpMode() {}
 
     protected void lower(){}
 

@@ -5,7 +5,6 @@
  */
 buildscript {
     repositories {
-        google()
         jcenter()
         google()
     }
@@ -14,4 +13,10 @@ buildscript {
     }
 }
 
+allprojects {
+    repositories {
+        jcenter()
+        google()
+    }
+}
 
