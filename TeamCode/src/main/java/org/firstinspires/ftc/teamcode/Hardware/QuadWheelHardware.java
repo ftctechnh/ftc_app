@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 public class QuadWheelHardware extends BaseHardware {
     public DcMotor frontLeft;
@@ -26,8 +27,11 @@ public class QuadWheelHardware extends BaseHardware {
         motorArr = new DcMotor[] {frontLeft, frontRight, backLeft, backRight};
         tel.log().add("Initialized motor array");
 
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        //frontRight.setDirection(DcMotor.Direction.REVERSE);
+        //backRight.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         resetMotorEncoders();
 

@@ -83,6 +83,8 @@ public class TeleOpMecanum extends LinearOpMode {
         totalElapsedTime = new ElapsedTime();
 
         while (opModeIsActive()) {
+            long startTime = System.currentTimeMillis();
+
             robot.updateReadings();
 
             boolean turnRelevant = Math.abs(gamepad1.right_stick_x) > 0.25;
@@ -95,7 +97,7 @@ public class TeleOpMecanum extends LinearOpMode {
                 turnSpeed = 0;
 
                 if (turnRelevant) {
-                    turnSpeed = gamepad1.right_stick_x;
+                    turnSpeed = -gamepad1.right_stick_x;
                     if (gamepad1.left_trigger > triggerThreshold) {
                         turnSpeed *= 0.32;
                     }
@@ -159,9 +161,13 @@ public class TeleOpMecanum extends LinearOpMode {
             if (!gamepad1.b) {wasGP1BPressed = false;}
             if (!gamepad1.y) {wasGP1YPressed = false;}
 
-
+            robot.updateLogs();
+            long endTime = System.currentTimeMillis();
+            telemetry.addData("Loop time", endTime - startTime);
+            telemetry.update();
         }
         rampController.quit();
+        robot.stop();
 
     }
     private double chop(double d) { // Cutoff all signals being sent to the motor below a threshold

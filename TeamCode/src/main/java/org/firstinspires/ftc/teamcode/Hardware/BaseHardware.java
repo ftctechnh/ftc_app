@@ -11,7 +11,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Utilities.Logging.LogQueue;
 import org.firstinspires.ftc.teamcode.Utilities.Startup.Alliance;
+
+import java.io.IOException;
 
 
 // This is NOT an opmode
@@ -33,12 +36,7 @@ public class BaseHardware {
     public Alliance color;
     ElapsedTime period = new ElapsedTime();
     boolean initialized = false;
-
-    /*File file; // Our logfile
-    FileOutputStream fOut;
-    OutputStreamWriter oW;
-    LinearOpMode opMode;
-    ScheduledExecutorService loggerThread;*/
+    LogQueue logger;
 
 
     public BaseHardware(LinearOpMode opMode) {
@@ -46,6 +44,14 @@ public class BaseHardware {
         tel = opMode.telemetry;
         hwMap = opMode.hardwareMap;
         currentTick = 0;
+        try {
+            logger = new LogQueue(this);
+        } catch (IOException e) {
+            tel.log().add("Recieved 'IOException'");
+            tel.log().add(e.toString());
+        } catch (NoSuchFieldException e) {
+            tel.log().add("Recieved 'NoSuchFieldException'");
+        }
     }
 
     public void init() {
@@ -143,8 +149,12 @@ public class BaseHardware {
 
         // Reset the cycle clock for the next pass.
         period.reset();
-
         updateReadings();
+        try {
+            logger.update();
+        } catch (IllegalAccessException e) {
+            tel.log().add("Recieved 'IllegalAccessException'");
+        }
     }
 
     public void updateReadings() {
@@ -209,6 +219,18 @@ public class BaseHardware {
     public void setMotorMode(DcMotor m, DcMotor.RunMode mode) {
         if (m.getMode() != mode) {
             m.setMode(mode);
+        }
+    }
+
+    public void stop() {
+        logger.shutdown();
+    }
+
+    public void updateLogs() {
+        try {
+            logger.update();
+        } catch (IllegalAccessException e) {
+            tel.log().add("Recieved 'IllegalAccessException'");
         }
     }
 }
