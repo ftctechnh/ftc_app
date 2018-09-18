@@ -7,8 +7,8 @@
 <!-- The package name here determines the package for your R class and your BuildConfig class -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.qualcomm.ftcrobotcontroller"
-    android:versionCode="25"
-    android:versionName="3.5" >
+    android:versionCode="28"
+    android:versionName="4.0" >
 
     <uses-sdk
         android:minSdkVersion="19"
@@ -40,8 +40,15 @@
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         android:required="true" />
+    <!--
+       "Allows applications to access serial ports via the SerialManager.". So, uncertain we need,
+       as we don't use the SerialManager.
+    -->
     <uses-permission
         android:name="android.permission.SERIAL_PORT"
+        android:required="true" /> <!-- see AppUtil.setTimeZone() -->
+    <uses-permission
+        android:name="android.permission.SET_TIME_ZONE"
         android:required="true" />
     <!--
   Note: we suspect that this (android.permission.WAKE_LOCK) is no
@@ -75,11 +82,9 @@
         android:name="org.firstinspires.ftc.robotcore.internal.system.RobotApplication"
         android:allowBackup="true"
         android:debuggable="true"
-        android:exported="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
-        android:testOnly="true"
         android:theme="@style/AppThemeRedRC" > <!-- The main robot controller activity -->
         <activity
             android:name="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
@@ -182,6 +187,10 @@
             android:label="@string/about_activity" >
         </activity>
         <activity
+            android:name="com.qualcomm.ftccommon.FtcAboutActivity"
+            android:label="@string/ftc_about_activity" >
+        </activity>
+        <activity
             android:name="com.qualcomm.ftccommon.configuration.EditSwapUsbDevices"
             android:configChanges="orientation|screenSize"
             android:label="@string/edit_swap_devices_activity"
@@ -254,6 +263,12 @@
             android:windowSoftInputMode="stateHidden|adjustResize" >
         </activity>
         <activity
+            android:name="com.qualcomm.ftccommon.configuration.EditWebcamActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="@string/edit_webcam_activity"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+        </activity>
+        <activity
             android:name="com.qualcomm.ftccommon.configuration.EditPWMDevicesActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/edit_pwm_devices_activity"
@@ -310,8 +325,6 @@
         <service
             android:name="org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService"
             android:enabled="true" />
-
-        <uses-library android:name="android.test.runner" />
 
         <activity
             android:name="org.firstinspires.inspection.DsInspectionActivity"
