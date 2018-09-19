@@ -39,7 +39,7 @@ public class LogQueue {
             fields[i] = Gamepad.class.getField(GAMEPAD_PROPERTIES[i]);
         }
 
-        propLength = GAMEPAD_PROPERTIES.length*2;
+        propLength = GAMEPAD_PROPERTIES.length;
 
         fileWriter = new FileWriter(getFile(hardware));
         logManager = new AsyncLogWriter(fileWriter, queue);
@@ -64,11 +64,10 @@ public class LogQueue {
         Object[] readings = new Object[propLength];
         int gamepadNum = 0;
 
-        for (Gamepad g : new Gamepad[] {hardware.opMode.gamepad1, hardware.opMode.gamepad2}) {
+        for (Gamepad g : new Gamepad[] {hardware.opMode.gamepad1}) {
             for (int i = 0; i < fields.length; i++) {
                 readings[gamepadNum + i] = fields[i].get(g);
             }
-            gamepadNum += 1;
         }
 
         queue.add(readings);
