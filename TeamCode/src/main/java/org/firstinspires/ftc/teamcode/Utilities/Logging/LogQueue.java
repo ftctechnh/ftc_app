@@ -53,7 +53,7 @@ public class LogQueue {
         long time = System.currentTimeMillis();
         String hardwareType = hardware.getClass().getSimpleName();
         String opMode = hardware.opMode.getClass().getSimpleName();
-        String name = FOLDER + time + "-" + hardwareType + "-" + opMode + ".csv";
+        String name = time + "-" + hardwareType + "-" + opMode + ".csv";
         return new File(folder, name);
     }
 
