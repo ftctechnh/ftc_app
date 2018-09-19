@@ -24,6 +24,10 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         double armPosition;
         double armLength;
 
+        //establishes and sets starting motor positions
+        double extendMotorPosition = this.motor3.getCurrentPosition();
+        double swingMotorPosition = this.motor4.getCurrentPosition();
+
         //run the initialize block
         this.initialize();
 
@@ -79,9 +83,69 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
             }
 
             if (gamepad1.y) {
-                /*repeat until arm position equals 90
-                this.motor4.setPower(
-                 */
+                //Sets motor to work with position
+                motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                /*Goes to top position
+
+                motor4.setTargetPosition();
+                motor4.setPower(1.0);
+
+                */
+            }
+
+            if (gamepad1.b) {
+                //Sets motor to work with position
+                motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                /*Goes to middle or hang position
+
+                motor4.setTargetPosition();
+                motor4.setPower(1.0);
+
+                */
+            }
+
+            if (gamepad1.a) {
+                //Sets motor to work with position
+                motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                /*Goes to bottom position
+                motor4.setTargetPosition();
+                motor4.setPower(1.0);
+
+                */
+                swingMotorPosition = motor4.getCurrentPosition();
+            }
+
+            if (gamepad1.left_bumper) {
+                //Sets motor to work with encoder and speed
+                motor3.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+
+                //Moves the arm up until the left bumper is released or the arm hits the upper limit
+                /*while(gamepad1.left_bumper){
+                    this.motor3.setPower(1.0);
+                    [something to prevent runtime errors]
+                }
+                this.motor3.setPower(0);
+
+                */
+
+            }
+
+            if (gamepad1.right_bumper) {
+                //Sets motor to work with encoder and speed
+                motor3.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+
+                //Moves the arm up until the left bumper is released or the arm hits the upper limit
+                /*while(gamepad1.right_bumper || ){
+                    this.motor3.setPower(1.0);
+                    [something to prevent runtime errors]
+                }
+                this.motor3.setPower(0);
+
+                */
+
             }
 
             telemetry.addData("Status", "Running");
@@ -112,9 +176,23 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         this.servo1.setPosition(0);
         this.servo2.setPosition(0);
 
+
+        //Sets arm motors to work with position
+        motor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Sets motors to starting hang positions
+        //motor3.setTargetPosition();
+        //motor3.setPower(1.0);
+        //motor4.setTargetPosition();
+        //motor4.setPower(1.0);
+
+
         //TO DO: Figure out how to set reference arm position and length
 
         telemetry.addData("Status", "Online");
+        //telemetry.addData("Arm Position", extendMotorPosition);
+        //telemetry.addData("Arm Length", swingMotorPosition + 90);
         telemetry.update();
     }
 }
