@@ -114,7 +114,7 @@ public class ConceptVuMarkIdentification extends LinearOpMode {
         /**
          * Instantiate the Vuforia engine
          */
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
 
         /**
