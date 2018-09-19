@@ -110,7 +110,7 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.+'
-    testCompile 'org.mockito:mockito-core:2.+'
+    testImplementation group: 'junit', name: 'junit', version: '4.+'
+    testImplementation 'org.mockito:mockito-core:2.+'
 }
 apply from: 'build.release.gradle'
