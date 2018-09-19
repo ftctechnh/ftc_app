@@ -61,7 +61,9 @@ public class LogQueue {
         // First, we'll write controller information, then chassis information, then sensor
         // information, then other info
 
-        Object[] readings = new Object[propLength];
+        // This is a really space inefficient way of writing data
+        // If this becomes a problem, we'll need to fix it later
+        Object[] readings = new Object[propLength + 8];
         int gamepadNum = 0;
 
         for (Gamepad g : new Gamepad[] {hardware.opMode.gamepad1}) {
@@ -69,6 +71,12 @@ public class LogQueue {
                 readings[gamepadNum + i] = fields[i].get(g);
             }
         }
+
+        for (int i = 0; i < 4; i++) {
+            readings[propLength + 2*i] = hardware.bulkDataResponse.getVelocity(i);
+            readings[propLength + 2*i + 1] = hardware.bulkDataResponse.getEncoder(i);
+        }
+        //readings[propLength+8] = bytesToHex(hardware.bulkDataResponse.toPayloadByteArray());
 
         queue.add(readings);
         // Will automatically update AsyncLogWriter

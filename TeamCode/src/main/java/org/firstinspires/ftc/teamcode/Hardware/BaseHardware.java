@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.hardware.lynx.LynxNackException;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataCommand;
+import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -22,8 +26,10 @@ import java.io.IOException;
 public class BaseHardware {
 
     // Sensors
+    public LynxModule wheelHub;
     public BNO055IMU imu;
     public Orientation angles; // Used to read IMU
+    public LynxGetBulkInputDataResponse bulkDataResponse;
 
     // Telemetry
     public Telemetry tel;
@@ -55,6 +61,7 @@ public class BaseHardware {
     }
 
     public void init() {
+        wheelHub = hwMap.get(LynxModule.class, "motorController");
         imu = opMode.hardwareMap.get(BNO055IMU.class, "primaryIMU");
         calibrateGyro();
         initialized = true;
@@ -71,10 +78,9 @@ public class BaseHardware {
         sleep(100);
         updateReadings();
         tel.log().add("Gyro Calibration Complete.");
-
     }
 
-    void resetMotorEncoders() {
+    public void resetMotorEncoders() {
         for (DcMotor motor : motorArr) {
             motor.setPower(0);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -82,6 +88,17 @@ public class BaseHardware {
         sleep(100);
         for (DcMotor motor : motorArr) {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+    }
+
+    public void updateREVHubReadings() {
+        LynxGetBulkInputDataCommand bulkDataInput = new LynxGetBulkInputDataCommand(wheelHub);
+        try {
+            bulkDataResponse = bulkDataInput.sendReceive();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (LynxNackException e) {
+            e.printStackTrace();
         }
     }
 
@@ -227,11 +244,15 @@ public class BaseHardware {
     }
 
     public void updateLogs() {
+        if (bulkDataResponse == null) {
+            updateREVHubReadings();
+        }
         try {
             logger.update();
         } catch (IllegalAccessException e) {
             tel.log().add("Recieved 'IllegalAccessException'");
         }
+        bulkDataResponse = null; // Reset it
     }
 }
 
