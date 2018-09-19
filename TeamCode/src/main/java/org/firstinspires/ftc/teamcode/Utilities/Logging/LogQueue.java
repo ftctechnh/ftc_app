@@ -47,15 +47,14 @@ public class LogQueue {
     }
 
     public File getFile(BaseHardware hardware) {
-        final File base = Environment.getExternalStorageDirectory();
+        final File folder = new File(Environment.getExternalStorageDirectory().toString(), FOLDER);
+        if (!folder.exists()) {folder.mkdirs();}
 
         long time = System.currentTimeMillis();
         String hardwareType = hardware.getClass().getSimpleName();
         String opMode = hardware.opMode.getClass().getSimpleName();
         String name = FOLDER + time + "-" + hardwareType + "-" + opMode + ".csv";
-        File f = new File(base, name);
-        if (!f.exists()) {f.mkdirs();}
-        return f;
+        return new File(folder, name);
     }
 
     public void update() throws IllegalAccessException {
