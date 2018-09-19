@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.util.Range;
 public class TestDrive extends LinearOpMode {
     static final double threshold = 0.3;
     private ElapsedTime runtime = new ElapsedTime();
+    private double sensitivity = .5;
     private double rightx = 0;
     private double leftx = 0;
     private double lefty = 0;
@@ -22,9 +23,9 @@ public class TestDrive extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
-            lefty = Range.clip(gamepad1.left_stick_y, -1, 1);
-            rightx = Range.clip(gamepad1.right_stick_x, -1, 1);
-            leftx = Range.clip(gamepad1.left_stick_x, -1, 1);
+            lefty = Range.clip(gamepad1.left_stick_y, -1, 1) * sensitivity;
+            rightx = Range.clip(gamepad1.right_stick_x, -1, 1) * sensitivity;
+            leftx = Range.clip(gamepad1.left_stick_x, -1, 1) * sensitivity;
             if (Math.abs(gamepad1.left_stick_y) > threshold) {
                 robot.drive(-lefty, -lefty, -lefty, -lefty);
             } else if (Math.abs(gamepad1.left_stick_x) > threshold) {
@@ -34,10 +35,12 @@ public class TestDrive extends LinearOpMode {
             } else {
                 robot.drive(0, 0, 0, 0);
             }
-            if(gamepad1.a) {
+            if (Range.clip(gamepad1.right_trigger, 0, 1) > threshold) {
                 robot.nom(1);
-            } else if (gamepad1.y) {
+            } else if (Range.clip(gamepad1.left_trigger, 0, 1) > threshold) {
                 robot.nom(-1);
+            } else {
+                robot.nom(0);
             }
             idle();
         }
