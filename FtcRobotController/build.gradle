@@ -10,8 +10,8 @@ android {
         targetSdkVersion 19
     }
 
-    compileSdkVersion 19
     buildToolsVersion '26.0.2'
+    compileSdkVersion 23
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
