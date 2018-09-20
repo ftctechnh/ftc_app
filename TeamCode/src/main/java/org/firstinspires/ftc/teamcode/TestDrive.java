@@ -19,10 +19,12 @@ public class TestDrive extends LinearOpMode {
         telemetry.update();
         runtime.reset();
         robot.resetTicks();
-        telemetry.addData("status", "initialized");
+        telemetry.addData("Status", "Binitialization bas been bompleted");
         telemetry.update();
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
+            telemetry.addData("angle", robot.angle());
+            telemetry.addData("distance", robot.sensorOneDist());
             lefty = Range.clip(gamepad1.left_stick_y, -1, 1) * sensitivity;
             rightx = Range.clip(gamepad1.right_stick_x, -1, 1) * sensitivity;
             leftx = Range.clip(gamepad1.left_stick_x, -1, 1) * sensitivity;
@@ -42,6 +44,7 @@ public class TestDrive extends LinearOpMode {
             } else {
                 robot.nom(0);
             }
+            telemetry.update();
             idle();
         }
         robot.drive(0, 0, 0, 0);
