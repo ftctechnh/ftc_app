@@ -11,25 +11,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.systems.tools.Direction;
-import org.firstinspires.ftc.teamcode.systems.tools.DriveSystem;
-
 
 /**
  * Created by Mahim on 12/4/2017.
  */
 
 public class MecanumDriveSystem {
-    private DcMotor                     frontLeftMotor;
-    private DcMotor                     rearLeftMotor;
-    private DcMotor                     frontRightMotor;
-    private DcMotor                     rearRightMotor;
-    private BNO055IMU                   imu;
+    private DcMotor   frontLeftMotor;
+    private DcMotor   rearLeftMotor;
+    private DcMotor   frontRightMotor;
+    private DcMotor   rearRightMotor;
+    private BNO055IMU imu;
 
     public MecanumDriveSystem(HardwareMap hardwareMap) {
-        this.frontLeftMotor             = hardwareMap.get(DcMotor.class,"front left motor");
-        this.rearLeftMotor              = hardwareMap.get(DcMotor.class,"rear left motor");
-        this.frontRightMotor            = hardwareMap.get(DcMotor.class,"front right motor");
-        this.rearRightMotor             = hardwareMap.get(DcMotor.class,"rear right motor");
+        this.frontLeftMotor  = hardwareMap.get(DcMotor.class,"front left motor");
+        this.rearLeftMotor   = hardwareMap.get(DcMotor.class,"rear left motor");
+        this.frontRightMotor = hardwareMap.get(DcMotor.class,"front right motor");
+        this.rearRightMotor  = hardwareMap.get(DcMotor.class,"rear right motor");
         this.rearRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         this.frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
