@@ -4,6 +4,7 @@ import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp
 
@@ -11,19 +12,31 @@ public class MainTeleOp extends LinearOpMode{
     // Motors
     protected DcMotor rightDriveMotor;
     protected DcMotor leftDriveMotor;
+    protected DcMotor intakeSlideMotor;
+    protected DcMotor liftSlideMotor;
+    protected DcMotor intake0Motor;
+    protected DcMotor intake1Motor;
 
     // Servos
+    protected Servo depositServo;
 
     // Color sensors
-    protected LynxI2cColorRangeSensor color0;
+    protected LynxI2cColorRangeSensor sampleSensor;
 
     private void initOpMode() {
         //initialize all the motors
         rightDriveMotor = hardwareMap.get(DcMotor.class, "rightDriveMotor");
         leftDriveMotor = hardwareMap.get(DcMotor.class, "leftDriveMotor");
+        intakeSlideMotor = hardwareMap.get(DcMotor.class, "intakeSlideMotor");
+        liftSlideMotor = hardwareMap.get(DcMotor.class, "liftSlideMotor");
+        intake0Motor = hardwareMap.get(DcMotor.class, "intake0Motor");
+        intake1Motor = hardwareMap.get(DcMotor.class, "intake1Motor");
+
+        //initialize the servos
+        depositServo = hardwareMap.get(Servo.class, "depositServo");
 
         // Sensors initialization
-        color0 = hardwareMap.get(LynxI2cColorRangeSensor.class, "color0");
+        sampleSensor = hardwareMap.get(LynxI2cColorRangeSensor.class, "sampleSensor");
 
 
     }
