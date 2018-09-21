@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Iterator;
 import java.util.Set;
 
-@TeleOp(name="Monsieur Mallah Motor OpMode", group="Iterative Opmode")
+@TeleOp(name="Monsieur Mallah Motor OpMode", group="MonsieurMallah")
 public class MonsieurMallahMotorTest extends OpMode {
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
@@ -55,8 +56,18 @@ public class MonsieurMallahMotorTest extends OpMode {
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
         parameters.loggingTag = "bosch";
+        parameters.calibrationDataFile = "MonsieurMallahCalibration.json"; // see the calibration sample opmode
         boolean boschInit = bosch.initialize(parameters);
         telemetry.addData("Gyro", "bosch init=" + boschInit);
+
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+
 
         // Initialize the motors.
         if (runMotors) {
@@ -91,7 +102,7 @@ public class MonsieurMallahMotorTest extends OpMode {
         runtime.reset();
 
         // Start the sampling thread.
-        bosch.startAccelerationIntegration(null, null, 10);
+        bosch.startAccelerationIntegration(new Position(), new Velocity(), 1000);
     }
 
     /*
@@ -143,9 +154,15 @@ public class MonsieurMallahMotorTest extends OpMode {
        // Acceleration oa = bosch.getOverallAcceleration();
         //telemetry.addData("Gyro", "oa: " + oa);
         Acceleration la = bosch.getLinearAcceleration();
-        telemetry.addData("Gyro", "la: " + la);
+        double linear_force  = Math.sqrt(la.xAccel*la.xAccel
+                + la.yAccel*la.yAccel
+                + la.zAccel*la.zAccel);
+        telemetry.addData("Gyro", "la: " + la + "(" + linear_force + ")");
         Acceleration ga = bosch.getGravity();
-        telemetry.addData("Gyro", "ga: " + ga);
+        double gravity_force  = Math.sqrt(ga.xAccel*ga.xAccel
+                + ga.yAccel*ga.yAccel
+                + ga.zAccel*ga.zAccel);
+        telemetry.addData("Gyro", "ga: " + ga + "(" + gravity_force + ")");
         Position pos = bosch.getPosition();
         telemetry.addData("Gyro", "pos: " + pos);
         Velocity v = bosch.getVelocity();
@@ -153,11 +170,13 @@ public class MonsieurMallahMotorTest extends OpMode {
         Acceleration accel = bosch.getAcceleration();
         telemetry.addData("Gyro", "accel: " + accel);
         Temperature temp = bosch.getTemperature();
-        telemetry.addData("Gyro", "temp: " + temp);
+        telemetry.addData("Gyro", "temp: " + temp.temperature + " " + temp.unit.toString());
         MagneticFlux flux = bosch.getMagneticFieldStrength();
         telemetry.addData("Gyro", "flux: " + flux);
         BNO055IMU.SystemStatus status = bosch.getSystemStatus();
         telemetry.addData("Gyro", "status (" + bosch.isSystemCalibrated() + "): " + status);
+        BNO055IMU.CalibrationStatus cstatus = bosch.getCalibrationStatus();
+        telemetry.addData("Gyro", "cstatus: " + cstatus);
     }
 
     /*
