@@ -29,6 +29,18 @@ public class BeaPractice1 extends OpMode
     public void loop ()
     {
         //TODO: Make the drive motors move when the gamepad's left and right analogs are moved!
+
+    /*    if ( gamepad1.left_stick_y < -0.5 )
+        {
+            Bob.setPower(1);
+        }
+        else if ( gamepad1.right_stick_y < -0.5 )
+        {
+           Richard.setPower(1);
+        }
+        */
+        Bob.setPower( -gamepad1.left_stick_y );
+        Richard.setPower( -gamepad1.right_stick_y );
     }
 
     public void stop ()
