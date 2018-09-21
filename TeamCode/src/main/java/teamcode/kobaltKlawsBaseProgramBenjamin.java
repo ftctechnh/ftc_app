@@ -150,33 +150,57 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
             }
 
-            if (gamepad1.left_trigger >= 0) {
+            if (gamepad1.right_stick_y >= 0) {
                 //Sets motor to work with encoder and speed
                 SwingArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm up until the left trigger is released or the arm hits the upper limit
-                while(gamepad1.left_trigger > 0 || swingMotorPosition <= 90){
+                while(gamepad1.right_stick_y > 0 || swingMotorPosition <= 90){
 
                     swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
                     SwingArmMotor.setTargetPosition(swingMotorPosition + 5);
-                    this.SwingArmMotor.setPower(gamepad1.left_trigger);
+                    this.SwingArmMotor.setPower(gamepad1.right_stick_y);
 
                 }
 
-            } else if (gamepad1.right_trigger >= 0) {
+            } else if (gamepad1.right_stick_y <= 0) {
                 //Sets motor to work with encoder and speed
                 SwingArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm down until the right bumper is released or the arm hits the lower limit
-                while(gamepad1.right_trigger > 0 || swingMotorPosition <= 0 ){
+                while(gamepad1.right_stick_y < 0 || swingMotorPosition <= 0 ){
 
                     swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
                     SwingArmMotor.setTargetPosition(swingMotorPosition - 5);
-                    this.ExtendArmMotor.setPower(-gamepad1.right_trigger);
+                    this.ExtendArmMotor.setPower(-gamepad1.right_stick_y);
 
                 }
 
             }
+
+            /*
+
+            if (gamepad1.right_stick_x >= 0) {
+
+                //Rotates the arm right until the left trigger is released or the arm hits the upper limit
+                while(gamepad1.right_stick_x > 0 || this.RotateArmServo.getPosition() <= 90){
+
+                    this.RotateArmServo.setPosition(this.RotateArmServo.getPosition() + 0.05);
+
+                }
+
+            } else if (gamepad1.right_stick_y <= 0) {
+
+                //Rotates the arm left until the right bumper is released or the arm hits the lower limit
+                while(gamepad1.right_stick_x < 0 || this.RotateArmServo.getPosition() <= -90 ){
+
+                    this.RotateArmServo.setPosition(this.RotateArmServo.getPosition() - 0.05);
+
+                }
+
+            }
+
+             */
 
 
             //Gives stats and updates
@@ -196,19 +220,20 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
         this.ExtendArmMotor = hardwareMap.get (DcMotor.class, "ExtendArmMotor");
         this.SwingArmMotor = hardwareMap.get (DcMotor.class, "SwingArmMotor");
+        //this.RotateArmServo = hardwareMap.get (DcMotor.class, "RotateArmMotor");
         this.GrabberServoLeft = hardwareMap.get (Servo.class, "GrabberServoLeft");
         this.GrabberServoRight = hardwareMap.get (Servo.class, "GrabberServoRight");
 
+
+        //Sets correct directions for motors and servos
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         ExtendArmMotor.setDirection(DcMotor.Direction.FORWARD);
         SwingArmMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        //RotateArmMotor.setDirection(Servo.Direction.FORWARD);
         GrabberServoLeft.setDirection(Servo.Direction.FORWARD);
         GrabberServoRight.setDirection(Servo.Direction.REVERSE);
-
-        this.GrabberServoLeft.setPosition(0);
-        this.GrabberServoRight.setPosition(0);
 
 
         //Sets arm motors to work with position
