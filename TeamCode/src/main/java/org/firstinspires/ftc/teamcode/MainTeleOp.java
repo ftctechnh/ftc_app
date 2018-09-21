@@ -10,20 +10,33 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class MainTeleOp extends LinearOpMode{
     // Motors
-    protected DcMotor motor0;
-    protected DcMotor motor1;
+    protected DcMotor rightDriveMotor;
+    protected DcMotor leftDriveMotor;
+    protected DcMotor intakeSlideMotor;
+    protected DcMotor liftSlideMotor;
+    protected DcMotor intake0Motor;
+    protected DcMotor intake1Motor;
 
     // Servos
+    protected Servo depositServo;
 
     // Color sensors
-    protected LynxI2cColorRangeSensor color0;
+    protected LynxI2cColorRangeSensor sampleSensor;
 
     private void initOpMode() {
         //initialize all the motors
-        motor0 = hardwareMap.get(DcMotor.class, "driveTrainMotorLeft");
+        rightDriveMotor = hardwareMap.get(DcMotor.class, "rightDriveMotor");
+        leftDriveMotor = hardwareMap.get(DcMotor.class, "leftDriveMotor");
+        intakeSlideMotor = hardwareMap.get(DcMotor.class, "intakeSlideMotor");
+        liftSlideMotor = hardwareMap.get(DcMotor.class, "liftSlideMotor");
+        intake0Motor = hardwareMap.get(DcMotor.class, "intake0Motor");
+        intake1Motor = hardwareMap.get(DcMotor.class, "intake1Motor");
+
+        //initialize the servos
+        depositServo = hardwareMap.get(Servo.class, "depositServo");
 
         // Sensors initialization
-        color0 = hardwareMap.get(LynxI2cColorRangeSensor.class, "color0");
+        sampleSensor = hardwareMap.get(LynxI2cColorRangeSensor.class, "sampleSensor");
 
 
     }
@@ -40,8 +53,10 @@ public class MainTeleOp extends LinearOpMode{
         }
     }
 
-    double slow=2;
-//driver 1
+    // slow variable to allow for 'slowmode' - allowing the robot to go slower.
+    double slow = 1.66;
+
+//controller 1
     private void drive() {
         if (gamepad1.right_bumper) {
             slow = 1;
@@ -50,23 +65,33 @@ public class MainTeleOp extends LinearOpMode{
             slow = 1.66;
         }
 
-        motor0.setPower(gamepad1.left_stick_y / slow);
-        motor1.setPower(-1 * gamepad1.left_stick_y / slow);
+        rightDriveMotor.setPower(gamepad1.left_stick_y / slow);
+        leftDriveMotor.setPower(-1 * gamepad1.left_stick_y / slow);
 
         if (gamepad1.right_stick_x != 0) {
-            motor0.setPower(gamepad1.right_stick_x / slow * 2);
-            motor1.setPower(gamepad1.right_stick_x / slow * 2);
+            rightDriveMotor.setPower(gamepad1.right_stick_x / slow * 2);
+            leftDriveMotor.setPower(gamepad1.right_stick_x / slow * 2);
         }
     }
-//driver 2
+
+//controller 2
     private void intake() {
+        //Skeleton is there, but I don't know how the args in the setPower() function work so that's up to someone else
+        /*if (gamepad2.left_stick_y != 0) {
+            intakeSlideMotor.setPower(/*gamepad2.left_stick_y / slow * 2);
+
+        if (gamepad2.right_trigger != 0) {
+            intake0Motor.setPower(/*gamepad1.right_trigger / slow * 2);
+            intake1Motor.setPower(/*gamepad1.right_trigger / slow * 2);*/
 
     }
-//driver 2
+
+//controller 2
     private void lift() {
 
     }
-//driver 2
+
+//controller 2
     private void deposit() {
 
     }
