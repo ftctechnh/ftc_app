@@ -76,6 +76,13 @@ public class MainTeleOp extends LinearOpMode{
 
 //controller 2
     private void intake() {
+        //Skeleton is there, but I don't know how the args in the setPower() function work so that's up to someone else
+        /*if (gamepad2.left_stick_y != 0) {
+            intakeSlideMotor.setPower(/*gamepad2.left_stick_y / slow * 2);
+
+        if (gamepad2.right_trigger != 0) {
+            intake0Motor.setPower(/*gamepad1.right_trigger / slow * 2);
+            intake1Motor.setPower(/*gamepad1.right_trigger / slow * 2);*/
 
     }
 
