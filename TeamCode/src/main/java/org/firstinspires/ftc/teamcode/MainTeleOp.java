@@ -20,7 +20,7 @@ public class MainTeleOp extends LinearOpMode{
 
     private void initOpMode() {
         //initialize all the motors
-        motor0 = hardwareMap.get(DcMotor.class, "motor0");
+        motor0 = hardwareMap.get(DcMotor.class, "driveTrainMotorLeft");
 
         // Sensors initialization
         color0 = hardwareMap.get(LynxI2cColorRangeSensor.class, "color0");
