@@ -32,6 +32,13 @@ public abstract class MainAutonomous extends LinearOpMode {
         // raising the robot here
     }
 
+    /**
+     *this method makes the robot turn left or right
+     * For ex: to turn left you call the method turn(-90)
+     * To turn right you call the method turn(90)
+     * 
+     * @param degrees
+     */
     protected void turn(int degrees) {
 
         driveTrainMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -51,6 +58,13 @@ public abstract class MainAutonomous extends LinearOpMode {
     }
 
 
+    /**
+     * This method helps move forward or backwords.
+     * For ex: to move forward 5 inches, you call the method moveInch(5)
+     * To move backwards 5 inches, you call the method moveInch(-5)
+     *
+     * @param inches
+     */
     protected void moveInch(int inches) {
 
         driveTrainMotorLeft.setDirection(DcMotor.Direction.FORWARD);
