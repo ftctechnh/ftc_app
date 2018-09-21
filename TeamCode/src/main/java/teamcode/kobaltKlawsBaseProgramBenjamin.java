@@ -18,15 +18,16 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
     private Servo servo1;
     private Servo servo2;
 
+    //establishes and sets starting motor positions
+    double extendMotorPosition = this.motor3.getCurrentPosition();
+    double swingMotorPosition = this.motor4.getCurrentPosition();
+
     @Override
     public void runOpMode() {
 
-        double armPosition;
-        double armLength;
 
-        //establishes and sets starting motor positions
-        double extendMotorPosition = this.motor3.getCurrentPosition();
-        double swingMotorPosition = this.motor4.getCurrentPosition();
+
+
 
         //run the initialize block
         this.initialize();
@@ -123,8 +124,9 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
                 motor3.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
 
                 //Moves the arm up until the left bumper is released or the arm hits the upper limit
-                /*while(gamepad1.left_bumper){
+                /*while(gamepad1.left_bumper || extendMotorPosition >= [upper limit]){
                     this.motor3.setPower(1.0);
+                    swingMotorPosition = this.motor4.getCurrentPosition
                     [something to prevent runtime errors]
                 }
                 this.motor3.setPower(0);
@@ -137,9 +139,10 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
                 //Sets motor to work with encoder and speed
                 motor3.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
 
-                //Moves the arm up until the left bumper is released or the arm hits the upper limit
-                /*while(gamepad1.right_bumper || ){
-                    this.motor3.setPower(1.0);
+                //Moves the arm down until the right bumper is released or the arm hits the lower limit
+                /*while(gamepad1.right_bumper || extendMotorPosition <= [lower limit] ){
+                    this.motor3.setPower(-1.0);
+                    swingMotorPosition = this.motor4.getCurrentPosition
                     [something to prevent runtime errors]
                 }
                 this.motor3.setPower(0);
@@ -148,7 +151,43 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
             }
 
+            if (gamepad1.left_trigger >= 0) {
+                //Sets motor to work with encoder and speed
+                motor4.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+
+                //Moves the arm up until the left trigger is released or the arm hits the upper limit
+                /*while(gamepad1.left_bumper || swingMotorPosition >= [upper limit]){
+                    this.motor4.setPower(gamepad1.left_trigger);
+                    swingMotorPosition = this.motor4.getCurrentPosition
+                    [something to prevent runtime errors]
+                }
+                this.motor4.setPower(0);
+
+                */
+
+            }
+
+            if (gamepad1.right_trigger >= 0) {
+                //Sets motor to work with encoder and speed
+                motor4.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+
+                //Moves the arm down until the right bumper is released or the arm hits the lower limit
+                /*while(gamepad1.right_trigger || swingMotorPosition <= [lower limit] ){
+                    this.motor3.setPower(-1.0);
+                    swingMotorPosition = this.motor4.getCurrentPosition
+                    [something to prevent runtime errors]
+                }
+                this.motor4.setPower(0);
+
+                */
+
+            }
+
+
+            //Gives stats and updates
             telemetry.addData("Status", "Running");
+            telemetry.addData("Arm Position", extendMotorPosition);
+            telemetry.addData("Arm Length", swingMotorPosition );
             telemetry.update();
         }
     }
@@ -191,8 +230,8 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         //TO DO: Figure out how to set reference arm position and length
 
         telemetry.addData("Status", "Online");
-        //telemetry.addData("Arm Position", extendMotorPosition);
-        //telemetry.addData("Arm Length", swingMotorPosition + 90);
+        telemetry.addData("Arm Position", extendMotorPosition);
+        telemetry.addData("Arm Length", swingMotorPosition);
         telemetry.update();
     }
 }
