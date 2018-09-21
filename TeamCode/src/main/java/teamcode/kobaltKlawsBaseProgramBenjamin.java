@@ -23,6 +23,10 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
     int extendMotorPosition = this.ExtendArmMotor.getCurrentPosition();
     int swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
 
+    //establishes grabber positions
+    boolean leftGrabberOpen;
+    boolean rightGrabberOpen;
+
     @Override
     public void runOpMode() {
 
@@ -42,8 +46,6 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
             double rightPower;
             double drive = -gamepad1.left_stick_y / 2;
             double turn = gamepad1.left_stick_x / 2;
-
-            double grabberPosition;
 
 
 
@@ -67,90 +69,84 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
             this.LeftDriveMotor.setPower(leftPower);
             this.RightDriveMotor.setPower(rightPower);
 
-            //TO DO: Change so servos work independently, with bumpers. Use booleans.
-            if (gamepad1.x) {
-                grabberPosition = this.GrabberServoLeft.getPosition();
-                if (grabberPosition == 0) {
+
+            //Arm System
+
+            if (gamepad1.left_bumper) {
+                if (leftGrabberOpen = false) {
+
                     this.GrabberServoLeft.setPosition(0.5);
-                    this.GrabberServoRight.setPosition(0.5);
+                    leftGrabberOpen = true;
                     //If grabber is closed, open grabber
-                } else if (grabberPosition == 0.5) {
+
+                } else if (leftGrabberOpen = true) {
+
                     this.GrabberServoLeft.setPosition(0);
-                    this.GrabberServoRight.setPosition(0);
+                    leftGrabberOpen = false;
                     //If grabber is open, close grabber
+
+                }
+            } else if (gamepad1.right_bumper) {
+                if (rightGrabberOpen = false) {
+
+                    this.GrabberServoRight.setPosition(0.5);
+                    rightGrabberOpen = true;
+                    //If grabber is closed, open grabber
+
+                } else if (rightGrabberOpen = true) {
+
+                    this.GrabberServoRight.setPosition(0);
+                    rightGrabberOpen = false;
+                    //If grabber is open, close grabber
+
                 }
             }
 
-            //TO DO: Refactor preset positions so a single method is used for all three
             if (gamepad1.y) {
-                //Sets motor to work with position
-                SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                /*Goes to top position
+                //Goes to top position and length
+                //quickArm();
 
-                SwingArmMotor.setTargetPosition();
-                SwingArmMotor.setPower(1.0);
+            }else if (gamepad1.b) {
 
-                */
-                swingMotorPosition = SwingArmMotor.getCurrentPosition();
+                //Goes to hang position and length
+                //quickArm();
+
+            }else if (gamepad1.a) {
+
+                //Goes to movement position and hang
+                //quickArm();
+
             }
 
-            if (gamepad1.b) {
-                //Sets motor to work with position
-                SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-                /*Goes to middle or hang position
 
-                SwingArmMotor.setTargetPosition();
-                SwingArmMotor.setPower(1.0);
-
-                */
-                swingMotorPosition = SwingArmMotor.getCurrentPosition();
-            }
-
-            if (gamepad1.a) {
-                //Sets motor to work with position
-                SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                /*Goes to bottom position
-                SwingArmMotor.setTargetPosition();
-                SwingArmMotor.setPower(1.0);
-
-                */
-                swingMotorPosition = SwingArmMotor.getCurrentPosition();
-            }
-
-            //TO DO: Change extending to work with vertical d-pad
-            if (gamepad1.left_bumper) {
+            if (gamepad1.dpad_up) {
                 //Sets motor to work with encoder and speed
                 ExtendArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm up until the left bumper is released or the arm hits the upper limit
-                /*while(gamepad1.left_bumper || extendMotorPosition <= [upper limit]){
-                    this.ExtendArmMotor.setPower(1.0);
-                    extendMotorPosition = this.SwingArmMotor.getCurrentPosition
-                    [something to prevent runtime errors]
+                while(gamepad1.left_bumper && extendMotorPosition <= 90){
+
+                    extendMotorPosition = this.SwingArmMotor.getCurrentPosition();
+                    ExtendArmMotor.setTargetPosition(extendMotorPosition + 5);
+                    this.ExtendArmMotor.setPower(0.5);
+
                 }
-                this.ExtendArmMotor.setPower(0);
 
-                */
-
-            }
-
-            if (gamepad1.right_bumper) {
+            }else if (gamepad1.dpad_down) {
                 //Sets motor to work with encoder and speed
                 ExtendArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm down until the right bumper is released or the arm hits the lower limit
-                /*while(gamepad1.right_bumper || extendMotorPosition >= 0 ){
+                while(gamepad1.right_bumper || extendMotorPosition >= 0 ){
 
-                    this.ExtendArmMotor.setPower(-0.5);
                     extendMotorPosition = this.SwingArmMotor.getCurrentPosition();
-                    //[something to prevent runtime errors]
-                }
-                this.ExtendArmMotor.setPower(0);
+                    ExtendArmMotor.setTargetPosition(extendMotorPosition - 5);
+                    this.ExtendArmMotor.setPower(-0.5);
 
-                */
+
+                }
 
             }
 
@@ -167,11 +163,9 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
                 }
 
-
-
             } else if (gamepad1.right_trigger >= 0) {
                 //Sets motor to work with encoder and speed
-                SwingArmMotor.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+                SwingArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm down until the right bumper is released or the arm hits the lower limit
                 while(gamepad1.right_trigger > 0 || swingMotorPosition <= 0 ){
@@ -181,8 +175,6 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
                     this.ExtendArmMotor.setPower(-gamepad1.right_trigger);
 
                 }
-
-
 
             }
 
@@ -223,11 +215,11 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         ExtendArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //Sets motors to starting hang positions
-        //ExtendArmMotor.setTargetPosition();
-        //ExtendArmMotor.setPower(1.0);
-        //SwingArmMotor.setTargetPosition();
-        //SwingArmMotor.setPower(1.0);
+        //Sets grabber servos to open
+        this.GrabberServoLeft.setPosition(0);
+        leftGrabberOpen = true;
+        this.GrabberServoRight.setPosition(0);
+        rightGrabberOpen = true;
 
 
         //TO DO: Figure out how to set reference arm position and length
@@ -236,5 +228,23 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         telemetry.addData("Arm Position", extendMotorPosition);
         telemetry.addData("Arm Length", swingMotorPosition);
         telemetry.update();
+    }
+
+    public void quickArm(int position, int length){
+
+        //Sets motor to work with position
+        SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ExtendArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Goes to specified position and length
+        SwingArmMotor.setTargetPosition(position);
+        SwingArmMotor.setPower(1.0);
+        ExtendArmMotor.setTargetPosition(length);
+        ExtendArmMotor.setPower(1.0);
+
+        //Re-grabs encoder positions for future reference
+        swingMotorPosition = SwingArmMotor.getCurrentPosition();
+        extendMotorPosition = ExtendArmMotor.getCurrentPosition();
+
     }
 }
