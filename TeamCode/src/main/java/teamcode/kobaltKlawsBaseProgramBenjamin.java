@@ -11,23 +11,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor motor1;
-    private DcMotor motor2;
-    private DcMotor motor3;
-    private DcMotor motor4;
-    private Servo servo1;
-    private Servo servo2;
+    private DcMotor LeftDriveMotor;
+    private DcMotor RightDriveMotor;
+    private DcMotor ExtendArmMotor;
+    private DcMotor SwingArmMotor;
+    //private Servo RotateArmServo;
+    private Servo GrabberServoLeft;
+    private Servo GrabberServoRight;
 
     //establishes and sets starting motor positions
-    double extendMotorPosition = this.motor3.getCurrentPosition();
-    double swingMotorPosition = this.motor4.getCurrentPosition();
+    int extendMotorPosition = this.ExtendArmMotor.getCurrentPosition();
+    int swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
 
     @Override
     public void runOpMode() {
-
-
-
-
 
         //run the initialize block
         this.initialize();
@@ -43,8 +40,8 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
             //double is a variable type that supports decimals
             double leftPower;
             double rightPower;
-            double drive = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
+            double drive = -gamepad1.left_stick_y / 2;
+            double turn = gamepad1.left_stick_x / 2;
 
             double grabberPosition;
 
@@ -52,13 +49,13 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
 
             if (drive !=0){
-                leftPower = (-drive/2);
-                rightPower = (-drive/2);
+                leftPower = (-drive);
+                rightPower = (-drive);
                 //if drive is not 0, set both motor powers to the value of drive
             }
             else if (turn !=0){
-                leftPower = (drive - (turn/2));
-                rightPower = (drive + (turn/2));
+                leftPower = (drive - turn);
+                rightPower = (drive + turn);
                 //if the drive if reports false, it runs this turn block
             }
             else {
@@ -67,69 +64,74 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
                 //if neither of these if statements report true it sets the motor powers to 0
                 // if you don't push a stick, the robot don't move
             }
-            this.motor1.setPower(leftPower);
-            this.motor2.setPower(rightPower);
+            this.LeftDriveMotor.setPower(leftPower);
+            this.RightDriveMotor.setPower(rightPower);
 
+            //TO DO: Change so servos work independently, with bumpers. Use booleans.
             if (gamepad1.x) {
-                grabberPosition = this.servo1.getPosition();
+                grabberPosition = this.GrabberServoLeft.getPosition();
                 if (grabberPosition == 0) {
-                    this.servo1.setPosition(0.5);
-                    this.servo2.setPosition(0.5);
+                    this.GrabberServoLeft.setPosition(0.5);
+                    this.GrabberServoRight.setPosition(0.5);
                     //If grabber is closed, open grabber
                 } else if (grabberPosition == 0.5) {
-                    this.servo1.setPosition(0);
-                    this.servo2.setPosition(0);
+                    this.GrabberServoLeft.setPosition(0);
+                    this.GrabberServoRight.setPosition(0);
                     //If grabber is open, close grabber
                 }
             }
 
+            //TO DO: Refactor preset positions so a single method is used for all three
             if (gamepad1.y) {
                 //Sets motor to work with position
-                motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 /*Goes to top position
 
-                motor4.setTargetPosition();
-                motor4.setPower(1.0);
+                SwingArmMotor.setTargetPosition();
+                SwingArmMotor.setPower(1.0);
 
                 */
+                swingMotorPosition = SwingArmMotor.getCurrentPosition();
             }
 
             if (gamepad1.b) {
                 //Sets motor to work with position
-                motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 /*Goes to middle or hang position
 
-                motor4.setTargetPosition();
-                motor4.setPower(1.0);
+                SwingArmMotor.setTargetPosition();
+                SwingArmMotor.setPower(1.0);
 
                 */
+                swingMotorPosition = SwingArmMotor.getCurrentPosition();
             }
 
             if (gamepad1.a) {
                 //Sets motor to work with position
-                motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 /*Goes to bottom position
-                motor4.setTargetPosition();
-                motor4.setPower(1.0);
+                SwingArmMotor.setTargetPosition();
+                SwingArmMotor.setPower(1.0);
 
                 */
-                swingMotorPosition = motor4.getCurrentPosition();
+                swingMotorPosition = SwingArmMotor.getCurrentPosition();
             }
 
+            //TO DO: Change extending to work with vertical d-pad
             if (gamepad1.left_bumper) {
                 //Sets motor to work with encoder and speed
-                motor3.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+                ExtendArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm up until the left bumper is released or the arm hits the upper limit
-                /*while(gamepad1.left_bumper || extendMotorPosition >= [upper limit]){
-                    this.motor3.setPower(1.0);
-                    swingMotorPosition = this.motor4.getCurrentPosition
+                /*while(gamepad1.left_bumper || extendMotorPosition <= [upper limit]){
+                    this.ExtendArmMotor.setPower(1.0);
+                    extendMotorPosition = this.SwingArmMotor.getCurrentPosition
                     [something to prevent runtime errors]
                 }
-                this.motor3.setPower(0);
+                this.ExtendArmMotor.setPower(0);
 
                 */
 
@@ -137,15 +139,16 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
             if (gamepad1.right_bumper) {
                 //Sets motor to work with encoder and speed
-                motor3.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+                ExtendArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm down until the right bumper is released or the arm hits the lower limit
-                /*while(gamepad1.right_bumper || extendMotorPosition <= [lower limit] ){
-                    this.motor3.setPower(-1.0);
-                    swingMotorPosition = this.motor4.getCurrentPosition
-                    [something to prevent runtime errors]
+                /*while(gamepad1.right_bumper || extendMotorPosition >= 0 ){
+
+                    this.ExtendArmMotor.setPower(-0.5);
+                    extendMotorPosition = this.SwingArmMotor.getCurrentPosition();
+                    //[something to prevent runtime errors]
                 }
-                this.motor3.setPower(0);
+                this.ExtendArmMotor.setPower(0);
 
                 */
 
@@ -153,33 +156,33 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
             if (gamepad1.left_trigger >= 0) {
                 //Sets motor to work with encoder and speed
-                motor4.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+                SwingArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm up until the left trigger is released or the arm hits the upper limit
-                /*while(gamepad1.left_bumper || swingMotorPosition >= [upper limit]){
-                    this.motor4.setPower(gamepad1.left_trigger);
-                    swingMotorPosition = this.motor4.getCurrentPosition
-                    [something to prevent runtime errors]
+                while(gamepad1.left_trigger > 0 || swingMotorPosition <= 90){
+
+                    swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
+                    SwingArmMotor.setTargetPosition(swingMotorPosition + 5);
+                    this.SwingArmMotor.setPower(gamepad1.left_trigger);
+
                 }
-                this.motor4.setPower(0);
 
-                */
 
-            }
 
-            if (gamepad1.right_trigger >= 0) {
+            } else if (gamepad1.right_trigger >= 0) {
                 //Sets motor to work with encoder and speed
-                motor4.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
+                SwingArmMotor.setMode((DcMotor.RunMode.RUN_USING_ENCODER));
 
                 //Moves the arm down until the right bumper is released or the arm hits the lower limit
-                /*while(gamepad1.right_trigger || swingMotorPosition <= [lower limit] ){
-                    this.motor3.setPower(-1.0);
-                    swingMotorPosition = this.motor4.getCurrentPosition
-                    [something to prevent runtime errors]
-                }
-                this.motor4.setPower(0);
+                while(gamepad1.right_trigger > 0 || swingMotorPosition <= 0 ){
 
-                */
+                    swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
+                    SwingArmMotor.setTargetPosition(swingMotorPosition - 5);
+                    this.ExtendArmMotor.setPower(-gamepad1.right_trigger);
+
+                }
+
+
 
             }
 
@@ -197,34 +200,34 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
         //giving internal hardware an external name for the app config
         //also initializing the hardware?
-        this.motor1 = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
-        this.motor2 = hardwareMap.get (DcMotor.class, "RightDriveMotor");
-        this.motor3 = hardwareMap.get (DcMotor.class, "ArmMotorExtend");
-        this.motor4 = hardwareMap.get (DcMotor.class, "ArmMotorSwing");
-        this.servo1 = hardwareMap.get (Servo.class, "GrabberServoLeft");
-        this.servo2 = hardwareMap.get (Servo.class, "GrabberServoRight");
+        this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
+        this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
+        this.ExtendArmMotor = hardwareMap.get (DcMotor.class, "ExtendArmMotor");
+        this.SwingArmMotor = hardwareMap.get (DcMotor.class, "SwingArmMotor");
+        this.GrabberServoLeft = hardwareMap.get (Servo.class, "GrabberServoLeft");
+        this.GrabberServoRight = hardwareMap.get (Servo.class, "GrabberServoRight");
 
-        motor1.setDirection(DcMotor.Direction.FORWARD);
-        motor2.setDirection(DcMotor.Direction.FORWARD);
-        motor3.setDirection(DcMotor.Direction.FORWARD);
-        motor4.setDirection(DcMotor.Direction.FORWARD);
+        LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        ExtendArmMotor.setDirection(DcMotor.Direction.FORWARD);
+        SwingArmMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        servo1.setDirection(Servo.Direction.FORWARD);
-        servo2.setDirection(Servo.Direction.REVERSE);
+        GrabberServoLeft.setDirection(Servo.Direction.FORWARD);
+        GrabberServoRight.setDirection(Servo.Direction.REVERSE);
 
-        this.servo1.setPosition(0);
-        this.servo2.setPosition(0);
+        this.GrabberServoLeft.setPosition(0);
+        this.GrabberServoRight.setPosition(0);
 
 
         //Sets arm motors to work with position
-        motor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor4.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ExtendArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Sets motors to starting hang positions
-        //motor3.setTargetPosition();
-        //motor3.setPower(1.0);
-        //motor4.setTargetPosition();
-        //motor4.setPower(1.0);
+        //ExtendArmMotor.setTargetPosition();
+        //ExtendArmMotor.setPower(1.0);
+        //SwingArmMotor.setTargetPosition();
+        //SwingArmMotor.setPower(1.0);
 
 
         //TO DO: Figure out how to set reference arm position and length
