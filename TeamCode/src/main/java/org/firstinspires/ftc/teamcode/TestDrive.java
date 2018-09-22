@@ -23,7 +23,7 @@ public class TestDrive extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
-            telemetry.addData("angle", robot.angle());
+            telemetry.addData("angle", robot.getAngle());
             telemetry.addData("distance", robot.sensorOneDist());
             lefty = Range.clip(gamepad1.left_stick_y, -1, 1) * sensitivity;
             rightx = Range.clip(gamepad1.right_stick_x, -1, 1) * sensitivity;
@@ -35,7 +35,7 @@ public class TestDrive extends LinearOpMode {
             }  else if (Math.abs(gamepad1.right_stick_x) > threshold) {
                 robot.drive(-rightx, -rightx, rightx, rightx);
             } else {
-                robot.drive(0, 0, 0, 0);
+                robot.stop();
             }
             if (Range.clip(gamepad1.right_trigger, 0, 1) > threshold) {
                 robot.nom(1);
@@ -47,7 +47,7 @@ public class TestDrive extends LinearOpMode {
             telemetry.update();
             idle();
         }
-        robot.drive(0, 0, 0, 0);
+        robot.stop();
     }
     public double map(double x, double in_min, double in_max, double out_min, double out_max) {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;

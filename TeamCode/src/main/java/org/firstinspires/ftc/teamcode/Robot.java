@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -34,7 +33,9 @@ public class Robot {
     private BNO055IMU imu;
     private Rev2mDistanceSensor sensor1;
     BNO055IMU.Parameters parameters;
-    Orientation angles;
+    private Orientation lastAngles;
+    private Orientation currentAngles;
+    private double globalAngle = 0;
     int encoderPos = 0;
     /**
      * plug left encoder into frontleft, right encoder into frontright, center encoder into backleft (arbitary assignments)
@@ -60,8 +61,8 @@ public class Robot {
         BL.setDirection(DcMotorSimple.Direction.FORWARD);
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
+        sensor1 = (Rev2mDistanceSensor) hwMap.get(DistanceSensor.class, "sensor1");
         if (initSensors) {
-            sensor1 = (Rev2mDistanceSensor) hwMap.get(DistanceSensor.class, "sensor1");
             imu = hwMap.get(BNO055IMU.class, "imu");
             parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -79,10 +80,17 @@ public class Robot {
         FR.setPower(fr);
         BR.setPower(br);
     }
-    public double angle() {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+    public void resetAngle() {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
     }
+    public double getAngle() {
+        currentAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle += AngleUnit.normalizeDegrees(currentAngles.firstAngle - lastAngles.firstAngle);
+        lastAngles = currentAngles;
+        return globalAngle;
+    }
+
     public void resetTicks() {
         encoderPos = BL.getCurrentPosition();
     }
@@ -94,5 +102,8 @@ public class Robot {
     }
     public double sensorOneDist() {
         return sensor1.getDistance(DistanceUnit.INCH);
+    }
+    public void stop() {
+        drive(0, 0, 0, 0);
     }
 }
