@@ -133,6 +133,14 @@ public class VuforiaFunctions
         return rotation.thirdAngle;
     }
 
+    public float getYawDegTo360()
+    {
+        if (rotation.thirdAngle < 0)
+            return rotation.thirdAngle + 360f;
+        else
+            return rotation.thirdAngle;
+    }
+
     public String getCurrentNameOfTargetSeen()
     {
         return currentNameOfTargetSeen;
