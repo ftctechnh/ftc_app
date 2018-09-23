@@ -496,6 +496,8 @@ abstract public class superAuto extends LinearOpMode {
     }
     void goToPoint(double DestinationX, double DestinationY)
     {
+        //Used to convert the readings into positive or negative x,y values which will be multiplied by said power scalar
+        //The above methods are used in this bigger method
         double Theta = Math.toRadians(getHeading());
         double CurrentX = -500; //Eventually I would like to directly take the readings. These #s are made up...
         double CurrentY = -500;
