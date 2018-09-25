@@ -25,22 +25,22 @@ public final class R {
         public static int backgroundMediumMedium = 0x7f040007;
         public static int backgroundVeryDark = 0x7f040008;
         public static int backgroundVeryVeryDark = 0x7f040009;
-        public static int colors = 0x7f04000a;
-        public static int feedbackBackground = 0x7f04000b;
-        public static int feedbackBorder = 0x7f04000c;
-        public static int feedbackShape = 0x7f04000d;
-        public static int lineBright = 0x7f04000e;
-        public static int lineLight = 0x7f04000f;
-        public static int textBright = 0x7f040010;
-        public static int textLight = 0x7f040011;
-        public static int textMedium = 0x7f040012;
-        public static int textMediumAlmostDark = 0x7f040013;
-        public static int textMediumDark = 0x7f040014;
-        public static int textMediumLight = 0x7f040015;
-        public static int textMediumMedium = 0x7f040016;
-        public static int textVeryDark = 0x7f040017;
-        public static int textVeryVeryDark = 0x7f040018;
-        public static int textWhite = 0x7f040019;
+        public static int colors = 0x7f04000b;
+        public static int feedbackBackground = 0x7f04000c;
+        public static int feedbackBorder = 0x7f04000d;
+        public static int feedbackShape = 0x7f04000e;
+        public static int lineBright = 0x7f04000f;
+        public static int lineLight = 0x7f040010;
+        public static int textBright = 0x7f040012;
+        public static int textLight = 0x7f040013;
+        public static int textMedium = 0x7f040014;
+        public static int textMediumAlmostDark = 0x7f040015;
+        public static int textMediumDark = 0x7f040016;
+        public static int textMediumLight = 0x7f040017;
+        public static int textMediumMedium = 0x7f040018;
+        public static int textVeryDark = 0x7f040019;
+        public static int textVeryVeryDark = 0x7f04001a;
+        public static int textWhite = 0x7f04001b;
     }
     public static final class color {
         public static int active_button_green = 0x7f060001;
@@ -126,16 +126,16 @@ public final class R {
         public static int feedback_shape_orange = 0x7f090003;
     }
     public static final class id {
-        public static int colorSwatch = 0x7f0c0024;
-        public static int countdownDescription = 0x7f0c002c;
-        public static int countdownNumber = 0x7f0c002d;
-        public static int feedback = 0x7f0c003a;
-        public static int feedbackOKButton = 0x7f0c003d;
-        public static int feedbackText0 = 0x7f0c003e;
-        public static int feedbackText1 = 0x7f0c003f;
-        public static int loadingIndicator = 0x7f0c006c;
-        public static int loadingIndicatorOverlay = 0x7f0c006d;
-        public static int wifiDisabledNotification = 0x7f0c00d1;
+        public static int colorSwatch = 0x7f0c0026;
+        public static int countdownDescription = 0x7f0c002e;
+        public static int countdownNumber = 0x7f0c002f;
+        public static int feedback = 0x7f0c003c;
+        public static int feedbackOKButton = 0x7f0c003f;
+        public static int feedbackText0 = 0x7f0c0040;
+        public static int feedbackText1 = 0x7f0c0041;
+        public static int loadingIndicator = 0x7f0c006f;
+        public static int loadingIndicatorOverlay = 0x7f0c0070;
+        public static int wifiDisabledNotification = 0x7f0c00d4;
     }
     public static final class layout {
         public static int color_list_preference_line_item = 0x7f0f0017;
@@ -475,7 +475,7 @@ public final class R {
         public static int OpModeDialogTextAppearance = 0x7f160015;
     }
     public static final class styleable {
-        public static int[] ColorListPreference = { 0x7f04000a };
+        public static int[] ColorListPreference = { 0x7f04000b };
         public static int ColorListPreference_colors = 0;
     }
     public static final class xml {

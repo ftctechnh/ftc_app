@@ -25,22 +25,22 @@ public final class R {
         public static final int backgroundMediumMedium = 0x7f020006;
         public static final int backgroundVeryDark = 0x7f020007;
         public static final int backgroundVeryVeryDark = 0x7f020008;
-        public static final int colors = 0x7f020009;
-        public static final int feedbackBackground = 0x7f02000a;
-        public static final int feedbackBorder = 0x7f02000b;
-        public static final int feedbackShape = 0x7f02000c;
-        public static final int lineBright = 0x7f02000d;
-        public static final int lineLight = 0x7f02000e;
-        public static final int textBright = 0x7f02000f;
-        public static final int textLight = 0x7f020010;
-        public static final int textMedium = 0x7f020011;
-        public static final int textMediumAlmostDark = 0x7f020012;
-        public static final int textMediumDark = 0x7f020013;
-        public static final int textMediumLight = 0x7f020014;
-        public static final int textMediumMedium = 0x7f020015;
-        public static final int textVeryDark = 0x7f020016;
-        public static final int textVeryVeryDark = 0x7f020017;
-        public static final int textWhite = 0x7f020018;
+        public static final int colors = 0x7f02000a;
+        public static final int feedbackBackground = 0x7f02000b;
+        public static final int feedbackBorder = 0x7f02000c;
+        public static final int feedbackShape = 0x7f02000d;
+        public static final int lineBright = 0x7f02000e;
+        public static final int lineLight = 0x7f02000f;
+        public static final int textBright = 0x7f020011;
+        public static final int textLight = 0x7f020012;
+        public static final int textMedium = 0x7f020013;
+        public static final int textMediumAlmostDark = 0x7f020014;
+        public static final int textMediumDark = 0x7f020015;
+        public static final int textMediumLight = 0x7f020016;
+        public static final int textMediumMedium = 0x7f020017;
+        public static final int textVeryDark = 0x7f020018;
+        public static final int textVeryVeryDark = 0x7f020019;
+        public static final int textWhite = 0x7f02001a;
     }
     public static final class color {
         public static final int active_button_green = 0x7f030000;
@@ -126,16 +126,16 @@ public final class R {
         public static final int feedback_shape_orange = 0x7f050002;
     }
     public static final class id {
-        public static final int colorSwatch = 0x7f060023;
-        public static final int countdownDescription = 0x7f06002b;
-        public static final int countdownNumber = 0x7f06002c;
-        public static final int feedback = 0x7f060039;
-        public static final int feedbackOKButton = 0x7f06003c;
-        public static final int feedbackText0 = 0x7f06003d;
-        public static final int feedbackText1 = 0x7f06003e;
-        public static final int loadingIndicator = 0x7f06006b;
-        public static final int loadingIndicatorOverlay = 0x7f06006c;
-        public static final int wifiDisabledNotification = 0x7f0600d0;
+        public static final int colorSwatch = 0x7f060025;
+        public static final int countdownDescription = 0x7f06002d;
+        public static final int countdownNumber = 0x7f06002e;
+        public static final int feedback = 0x7f06003b;
+        public static final int feedbackOKButton = 0x7f06003e;
+        public static final int feedbackText0 = 0x7f06003f;
+        public static final int feedbackText1 = 0x7f060040;
+        public static final int loadingIndicator = 0x7f06006e;
+        public static final int loadingIndicatorOverlay = 0x7f06006f;
+        public static final int wifiDisabledNotification = 0x7f0600d3;
     }
     public static final class layout {
         public static final int color_list_preference_line_item = 0x7f070016;
@@ -475,7 +475,7 @@ public final class R {
         public static final int OpModeDialogTextAppearance = 0x7f0b0014;
     }
     public static final class styleable {
-        public static final int[] ColorListPreference = { 0x7f020009 };
+        public static final int[] ColorListPreference = { 0x7f02000a };
         public static final int ColorListPreference_colors = 0;
     }
     public static final class xml {
