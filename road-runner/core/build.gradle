@@ -1,0 +1,181 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:0.9.17"
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.4'
+    }
+}
+
+plugins {
+    id 'kotlin'
+    id 'maven-publish'
+}
+apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+repositories {
+    jcenter()
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+sourceSets {
+    integrationTest {
+        java {
+            compileClasspath += main.output + test.output
+            runtimeClasspath += main.output + test.output
+            srcDir file('src/integration-test/kotlin')
+        }
+        resources.srcDir file('src/integration-test/resources')
+    }
+}
+
+configurations {
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+    integrationTestImplementation.extendsFrom testImplementation
+}
+
+dokka {
+    moduleName = 'core'
+    outputFormat = 'html'
+    outputDirectory = "$buildDir/kdoc"
+
+    includes = ['packages.md']
+
+    jdkVersion = 8
+
+    linkMapping {
+        dir = "src/main/kotlin"
+        url = "https://github.com/acmerobotics/motion-planner/blob/master/core/src/main/kotlin"
+        suffix = "#L"
+    }
+}
+
+task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+    outputFormat = 'javadoc'
+    outputDirectory = "$buildDir/javadoc"
+}
+
+dokka.dependsOn dokkaJavadoc
+
+shadowJar {
+    baseName = 'road-runner-core'
+    destinationDir = buildDir
+    classifier = null
+    version = road_runner_version
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    implementation "org.apache.commons:commons-math3:3.6.1"
+
+    implementation "com.fasterxml.jackson.core:jackson-databind:2.9.6"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.6"
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.6"
+
+    testImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+
+    testImplementation "org.knowm.xchart:xchart:3.5.2"
+
+    integrationTestImplementation "org.junit.jupiter:junit-jupiter-api:5.2.0"
+    integrationTestRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:5.2.0"
+
+    integrationTestImplementation "org.knowm.xchart:xchart:3.5.2"
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+task dokkaJar(type: Jar) {
+    from dokka
+    classifier = 'javadoc'
+}
+
+def pomConfig = {
+    licenses {
+        license {
+            name "The MIT License"
+            url "https://opensource.org/licenses/MIT"
+            distribution "repo"
+        }
+    }
+    developers {
+        developer {
+            id "rbrott"
+            name "Ryan Brott"
+            email "rcbrott@gmail.com"
+        }
+    }
+
+    scm {
+        url "https://github.com/acmerobotics/road-runner"
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact dokkaJar
+            groupId = 'com.acmerobotics.roadrunner'
+            artifactId = 'core'
+            version road_runner_version
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', '2D mobile robot motion planning library written in Kotlin')
+                root.appendNode('name', 'Road Runner')
+                root.appendNode('url', 'https://github.com/acmerobotics/road-runner')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'road-runner'
+        userOrg = 'acmerobotics'
+        licenses = ['MIT']
+        vcsUrl = 'https://github.com/acmerobotics/road-runner.git'
+        version {
+            name = road_runner_version
+            released  = new Date()
+        }
+        publications = ['maven']
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    outputs.upToDateWhen { false }
+}
+
+tasks["clean"].doFirst {
+    delete file("graphs")
+    delete file("csv")
+}

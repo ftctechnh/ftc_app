@@ -1,0 +1,18 @@
+<idea-plugin>
+    <name>Road Runner Path Designer</name>
+    <id>com.acmerobotics.roadrunner</id>
+
+    <description><![CDATA[
+    Convenient UI for ACME Robotics' <a href="https://github.com/acmerobotics/road-runner">motion planning library</a>.
+    ]]></description>
+
+    <version>0.1-SNAPSHOT</version>
+
+    <vendor email="goacmerobotics@gmail.com" url="https://goacmerobotics.com">ACME Robotics</vendor>
+
+    <depends>com.intellij.modules.java</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Path Designer" anchor="right" factoryClass="com.acmerobotics.roadrunner.plugin.PathDesignerToolWindowFactory"/>
+    </extensions>
+</idea-plugin>

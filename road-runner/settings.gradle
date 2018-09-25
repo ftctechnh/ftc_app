@@ -1,0 +1,4 @@
+rootProject.name = 'road-runner'
+include ':core'
+include ':gui'
+include ':plugin'
