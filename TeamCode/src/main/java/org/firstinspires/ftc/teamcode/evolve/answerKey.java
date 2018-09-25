@@ -32,7 +32,7 @@ public class answerKey extends LinearOpMode{ //Step 2, extends..., light bulb>ma
         //
         while (opModeIsActive()){
             //
-            if (!((gamepad1.left_stick_y < 0 || gamepad1.right_stick_y < 0) && wall.isPressed())) {
+            if (!((-gamepad1.left_stick_y > 0 || -gamepad1.right_stick_y > 0) && wall.isPressed())) {
                 left.setPower(-gamepad1.right_stick_y);
                 right.setPower(-gamepad1.left_stick_y);
             }else{
