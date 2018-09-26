@@ -2,15 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Created by Rohan Mathur on 9/24/18.
+ * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="ReleaseTest", group="Pushbot")
+@TeleOp(name="MechanumTest", group="Pushbot")
 
-public class ReleaseTest extends LinearOpMode {
+public class MechanumTest extends LinearOpMode {
 
 	/* Declare OpMode members. */
 	HardwarePushbotTest robot   = new HardwarePushbotTest();   // Use a Pushbot's hardware
@@ -28,21 +27,19 @@ public class ReleaseTest extends LinearOpMode {
 		waitForStart();
 
 		while(opModeIsActive()) {
-			telemetry.addData("Servo Position", robot.threader.getPosition());
-			if (gamepad1.a) {
-				robot.threader.setPosition(1);
-				telemetry.addData("Servo Position", robot.threader.getPosition());
-			}
-			else{
-				robot.threader.setPosition(0.5);
-				telemetry.addData("Servo Position", robot.threader.getPosition());
-			}
+			if(gamepad1.left_stick_y != 0){
 
-			if(gamepad1.b){
-				robot.door.setPosition(1);
 			}
 		}
 
 	}
 
+	public void runMotor(int motorNum, double speed){
+		switch (motorNum){
+			case 0: robot.motor0.setPower(speed);
+			case 1: robot.motor1.setPower(speed);
+			case 2: robot.motor2.setPower(speed);
+			case 3: robot.motor3.setPower(speed);
+		}
+	}
 }

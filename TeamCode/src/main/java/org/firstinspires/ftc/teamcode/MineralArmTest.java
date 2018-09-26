@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /**
- * Created by Rohan Mathur on 9/24/18.
+ * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="ReleaseTest", group="Pushbot")
+@TeleOp(name="MineralArmTest", group="Pushbot")
 
-public class ReleaseTest extends LinearOpMode {
+public class MineralArmTest extends LinearOpMode {
 
 	/* Declare OpMode members. */
 	HardwarePushbotTest robot   = new HardwarePushbotTest();   // Use a Pushbot's hardware
@@ -28,18 +28,18 @@ public class ReleaseTest extends LinearOpMode {
 		waitForStart();
 
 		while(opModeIsActive()) {
-			telemetry.addData("Servo Position", robot.threader.getPosition());
-			if (gamepad1.a) {
-				robot.threader.setPosition(1);
-				telemetry.addData("Servo Position", robot.threader.getPosition());
+			if(gamepad1.a){
+				robot.motor0.setPower(1);
 			}
 			else{
-				robot.threader.setPosition(0.5);
-				telemetry.addData("Servo Position", robot.threader.getPosition());
+				robot.motor0.setPower(0);
 			}
 
 			if(gamepad1.b){
-				robot.door.setPosition(1);
+				robot.motor1.setPower(1);
+			}
+			else{
+				robot.motor1.setPower(0);
 			}
 		}
 
