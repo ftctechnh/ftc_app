@@ -125,7 +125,8 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
                 //Sets motor to work with encoder and speed
                 ExtendArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
-                //Moves the arm up until the left bumper is released or the arm hits the upper limit
+                //Moves the arm up until the d-pad is changed/released or the arm hits the upper
+                // limit
                 while(gamepad1.left_bumper && extendMotorPosition <= 90){
 
                     extendMotorPosition = this.SwingArmMotor.getCurrentPosition();
@@ -138,7 +139,8 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
                 //Sets motor to work with encoder and speed
                 ExtendArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
-                //Moves the arm down until the right bumper is released or the arm hits the lower limit
+                //Moves the arm down until the d-pad is changed/released or the arm hit the lower
+                // limit
                 while(gamepad1.right_bumper || extendMotorPosition >= 0 ){
 
                     extendMotorPosition = this.SwingArmMotor.getCurrentPosition();
@@ -189,7 +191,7 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
                 }
 
-            } else if (gamepad1.right_stick_y <= 0) {
+            } else if (gamepad1.right_stick_x <= 0) {
 
                 //Rotates the arm left until the right bumper is released or the arm hits the lower limit
                 while(gamepad1.right_stick_x < 0 || this.RotateArmServo.getPosition() <= -90 ){
@@ -215,7 +217,6 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
     private void initialize(){
 
         //giving internal hardware an external name for the app config
-        //also initializing the hardware?
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
         this.ExtendArmMotor = hardwareMap.get (DcMotor.class, "ExtendArmMotor");
@@ -236,6 +237,7 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         GrabberServoRight.setDirection(Servo.Direction.REVERSE);
 
 
+
         //Sets arm motors to work with position
         ExtendArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         SwingArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -246,9 +248,12 @@ public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
         this.GrabberServoRight.setPosition(0);
         rightGrabberOpen = true;
 
+        //Gets the current arm motor positions so driver can make sure motors are properly
+        // calibrated.
+        extendMotorPosition = this.ExtendArmMotor.getCurrentPosition();
+        swingMotorPosition = this.SwingArmMotor.getCurrentPosition();
 
-        //TO DO: Figure out how to set reference arm position and length
-
+        //Tells the driver station the arm motor positions and that the robot is ready.
         telemetry.addData("Status", "Online");
         telemetry.addData("Arm Position", extendMotorPosition);
         telemetry.addData("Arm Length", swingMotorPosition);
