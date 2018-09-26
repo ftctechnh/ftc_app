@@ -26,3 +26,10 @@ build/
 
 *ASUS_PC_01*
 
+.idea/workspace.xml
+.idea/modules.xml
+FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+FtcRobotController/build/intermediates/incremental/packageDebugResources/merger.xml
+TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties
+TeamCode/build/intermediates/incremental/mergeDebugResources/merger.xml
+TeamCode/build/outputs/logs/manifest-merger-debug-report.txt
