@@ -33,3 +33,12 @@ FtcRobotController/build/intermediates/incremental/packageDebugResources/merger.
 TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties
 TeamCode/build/intermediates/incremental/mergeDebugResources/merger.xml
 TeamCode/build/outputs/logs/manifest-merger-debug-report.txt
+TeamCode/build/intermediates/incremental/mergeDebugResources/compile-file-map.properties
+FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+FtcRobotController/build/generated/source/r/debug/org/firstinspires/inspection/R.java
+FtcRobotController/build/generated/source/r/debug/com/qualcomm/robotcore/R.java
+FtcRobotController/build/generated/source/r/debug/com/qualcomm/hardware/R.java
+FtcRobotController/build/generated/source/r/debug/com/qualcomm/ftcrobotcontroller/R.java
+FtcRobotController/build/generated/source/r/debug/com/qualcomm/ftccommon/R.java
+FtcRobotController/build/generated/source/r/debug/com/google/blocks/R.java
+.idea/workspace.xml
