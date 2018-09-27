@@ -6,6 +6,7 @@ public class MecanumHardware extends QuadWheelHardware {
     public MecanumHardware(LinearOpMode opMode) {
         super(opMode);
     }
+
     public double[] getDrivePowersFromAngle(double angle) {
         double[] unscaledPowers = new double[4];
         unscaledPowers[0] = Math.sin(angle + Math.PI / 4);

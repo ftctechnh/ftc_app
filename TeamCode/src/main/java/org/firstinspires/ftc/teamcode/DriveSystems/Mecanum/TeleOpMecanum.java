@@ -182,23 +182,28 @@ public class TeleOpMecanum extends LinearOpMode {
         return Math.sqrt(g.left_stick_x*g.left_stick_x + g.left_stick_y*g.left_stick_y);
     }
 
-    public double[] getDesiredDirection() {
+    public double[] getDesiredDirection() { //Reads controller, checks other variables, etcetera. Returns desired angle in relation to
         double controllerAngle;
         if (getLeftStickDist(gamepad1) > triggerThreshold) {
             controllerAngle = Math.atan2(gamepad1.left_stick_y, gamepad1.left_stick_x) + Math.PI/2;
-            controllerAngle = robot.normAngle(controllerAngle);
-        } else {
-            // If we're not moving, don't scale the values
-            return new double[]{0, 0, 0, 0};
-        }
+            controllerAngle = robot.normAngle(controllerAngle); //normalize angle returns value between pi and 2pi
+        } else return new double[]{0, 0, 0, 0};
 
-        double robotAngle;
+
+        double robotAngle; //desired angle in relation to self
 
         if (nonrelativeDriveModeEnabled) { // Right trigger activates nonrelative drive
             robotAngle = robot.normAngle(controllerAngle + heading);
         } else { // Default is relative drive
             robotAngle = controllerAngle;
         }
+
+
+        double headingInterval = Math.PI / 4;
+        robotAngle = Math.round(robotAngle / headingInterval) * headingInterval;
+
+
+
 
         return robot.getDrivePowersFromAngle(robotAngle);
     }
