@@ -103,6 +103,7 @@ public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode
             {
                 clawOffset += CLAW_SPEED;
             }
+
             else if (gamepad1.x)
             {
                 clawOffset -= CLAW_SPEED;
