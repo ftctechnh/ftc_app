@@ -2,18 +2,23 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by Recharged Orange on 9/27/2018.
  */
 @TeleOp(name = "mecenum test")
 
-public class MecanumTest extends LinearOpMode{
+public class MecanumTest extends LinearOpMode {
 
+    private DcMotor leftBack;
+    private DcMotor leftFront;
+    private DcMotor rightFront;
+    private DcMotor rightBack;
 
-    double drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
-    double strafe = gamepad1.left_stick_x;
-    double rotate = gamepad1.right_stick_x;
+    double drive ;
+    double strafe;
+    double rotate;
 
 
     double frontLeftPower;
@@ -21,31 +26,51 @@ public class MecanumTest extends LinearOpMode{
     double frontRightPower;
     double backRightPower;
 
+    @Override
+    public void runOpMode() {
 
 
-    public void runOpMode(){
-
+        initialization();
         waitForStart();
-    while (opModeIsActive()){
-
+        while (opModeIsActive()) {
+            mecanumDrive();
+        }
     }
-    }
 
 
+    public void mecanumDrive() {
 
-    public void mecanumDrive(){
+        drive = -gamepad1.left_stick_y;
+        strafe = gamepad1.left_stick_x;
+        rotate = gamepad1.right_stick_x;
 
         // You might have to play with the + or - depending on how your motors are installed
-        frontLeftPower = drive + strafe + rotate;
-        backLeftPower = drive - strafe + rotate;
-        frontRightPower = drive - strafe - rotate;
-        backRightPower = drive + strafe - rotate;
+        frontLeftPower = drive + strafe - rotate;
+        backLeftPower = drive - strafe - rotate;
+        frontRightPower = drive - strafe + rotate;
+        backRightPower = drive + strafe + rotate;
+
+        leftBack.setPower(backLeftPower);
+        leftFront.setPower(frontLeftPower);
+        rightBack.setPower(backRightPower);
+        rightFront.setPower(frontRightPower);
 
     }
 
 
+    public void initialization() {
 
 
+        leftBack = hardwareMap.dcMotor.get("leftBack");
+        leftFront = hardwareMap.dcMotor.get("leftFront");
+        rightFront = hardwareMap.dcMotor.get("rightFront");
+        rightBack = hardwareMap.dcMotor.get("rightBack");
+
+    }
+
+    public void controls() {
+
+    }
 
 
 }

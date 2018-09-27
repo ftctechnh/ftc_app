@@ -7,11 +7,11 @@ import com.sun.tools.javac.tree.DCTree;
 
 import static java.lang.Math.abs;
 
-@TeleOp(name = "Basic: Linear OpMode", group = "Linear Opmode")
+//@TeleOp(name = "Basic: Linear OpMode", group = "Linear Opmode")
 
 
-public class Test extends LinearOpMode {
-    public void test() {
+public class Test  {
+   /* public void test() {
         double Speed = -gamepad1.left_stick_y;
         double Turn = gamepad1.left_stick_x;
         double Strafe = gamepad1.right_stick_x;
@@ -47,5 +47,5 @@ public class Test extends LinearOpMode {
     }
 
     public void runOpMode() {
-    }
+    }*/
 }
