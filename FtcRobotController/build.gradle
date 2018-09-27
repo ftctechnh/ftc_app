@@ -22,6 +22,8 @@ repositories {
     flatDir {
         dirs '../libs'
     }
+    mavenCentral()
+    google()
 }
 
 apply from: 'build.release.gradle'

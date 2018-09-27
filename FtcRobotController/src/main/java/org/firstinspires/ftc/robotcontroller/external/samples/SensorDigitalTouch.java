@@ -78,7 +78,8 @@ public class SensorDigitalTouch extends LinearOpMode {
             // if the digital channel returns true it's HIGH and the button is unpressed.
             if (digitalTouch.getState() == true) {
                 telemetry.addData("Digital Touch", "Is Not Pressed");
-            } else {
+            }
+            else {
                 telemetry.addData("Digital Touch", "Is Pressed");
             }
 
