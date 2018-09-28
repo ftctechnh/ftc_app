@@ -11,10 +11,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class kobaltKlawsBaseProgramBenjamin extends LinearOpMode{
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor LeftDriveMotor;
-    private DcMotor RightDriveMotor;
-    private DcMotor ExtendArmMotor;
-    private DcMotor SwingArmMotor;
+    private DcMotor LeftDriveMotor; //motor 0
+    private DcMotor RightDriveMotor; //motor 1
+    private DcMotor ExtendArmMotor; //motor 2
+    private DcMotor SwingArmMotor; //motor 3
     //private Servo RotateArmServo;
     private Servo GrabberServoLeft;
     private Servo GrabberServoRight;
