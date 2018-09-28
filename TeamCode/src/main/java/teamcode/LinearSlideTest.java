@@ -9,7 +9,11 @@ public class LinearSlideTest extends LinearOpMode {
     private DcMotor motor1;
 
     public void runOpMode() {
+
         initialize();
+        waitForStart();
+
+
 
         //Always True
         while (opModeIsActive() ) {
