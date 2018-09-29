@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.robotutil.Functions;
+import org.firstinspires.ftc.teamcode.robotutil.Utils;
 
 /**
  * Created by pranav on 2/2/18.
@@ -36,7 +36,7 @@ public class BlockPushTask extends TaskThread{
             if (opMode.gamepad2.a || opMode.gamepad1.a){
                 blockPush.setPosition(.7);
             }
-            Functions.waitFor(100);
+            Utils.waitFor(100);
             opMode.telemetry.addData("position: ",pos);
             //touchState = String.valueOf(cryptoTouch.getState());
             opMode.telemetry.addData("TouchSensor", touchState);

@@ -13,3 +13,12 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+
+//dependencies {
+//    compile 'org.openftc:rev-extensions-2:1.0'
+//}
+
+
+android {
+    buildToolsVersion '27.0.3'
+}

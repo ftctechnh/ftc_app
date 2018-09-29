@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.robotutil.Functions;
+import org.firstinspires.ftc.teamcode.robotutil.Utils;
 
 /**
  * Created by antonlin on 1/13/18.
@@ -45,7 +45,7 @@ public class FlipTask extends TaskThread {
             } else if(pos == 3){
                 pos = 2;
             }
-            Functions.waitFor(200);
+            Utils.waitFor(200);
             opMode.telemetry.addData("position: ",pos);
 //            opMode.telemetry.update();
 

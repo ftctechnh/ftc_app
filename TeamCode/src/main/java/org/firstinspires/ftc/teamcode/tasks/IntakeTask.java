@@ -48,22 +48,22 @@ public class IntakeTask extends TaskThread {
     public void tankControl() {
 //        if (opMode.gamepad1.dpad_up || opMode.gamepad2.dpad_up) {
 //            lpower += 0.05;
-//            Functions.waitFor(checkDelay );
+//            Utils.waitFor(checkDelay );
 //
 //        }
 //        if (opMode.gamepad2.dpad_down || opMode.gamepad1.dpad_down) {
 //            lpower += -0.05;
-//            Functions.waitFor(checkDelay );
+//            Utils.waitFor(checkDelay );
 //
 //        }
 //        if (opMode.gamepad2.y) {
 //            rpower += 0.05;
-//            Functions.waitFor(checkDelay );
+//            Utils.waitFor(checkDelay );
 //
 //        }
 //        if (opMode.gamepad2.a) {
 //            rpower += -0.05;
-//            Functions.waitFor(checkDelay );
+//            Utils.waitFor(checkDelay );
 //
 //        }
 

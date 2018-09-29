@@ -5,6 +5,11 @@ package org.firstinspires.ftc.teamcode.robotutil;
  */
 
 public class Values {
+
+    public static double ticksPerInch = 100;
+
+    public static double gyroTurnErrorMargin = 3;
+    public static double minRotationPower = 0.07;
     //Driving distance/point
     public static double driveKp = 0.0;
     public static double driveKi = 0.0;

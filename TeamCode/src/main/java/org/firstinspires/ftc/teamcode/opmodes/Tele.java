@@ -30,33 +30,29 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.robotutil;
+package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
+import org.firstinspires.ftc.teamcode.tasks.DriveTrainTask;
 
-public abstract class Functions extends LinearOpMode {
-    static int average;
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Threaded Teleop")
+public class Tele extends LinearOpMode {
+    private DriveTrainTask driveTrainTask;
 
-    static DcMotor rFmotor, rBmotor, lFmotor, lBmotor;
-    static GyroSensor gyro;
-    static ColorSensor lineColor;
-    public static boolean pusherDown;
-    public static double pusherDownPos = 1, pusherUpPos = 0, liftDownPos = .75, liftUpPos = 0, sideWallUpPos = 0, sideWallDownPos = .9;
-    static int redThreshold = 50;
-    static int blueThreshold = 80;
-    static int blueAmbientThreshold = 10;
-    static int redAmbientThreshold = 10;
-    static int differentialThreshold = 10;
-    static double adjustmentSpeed = 0.2;
+    public void runOpMode() throws InterruptedException{
+        initialize();
+        telemetry.addData("Ready!", "");
+        telemetry.update();
+        waitForStart();
+        long startTime = System.currentTimeMillis();
+        driveTrainTask.start();
 
-    public static void waitFor(int mill) {
-        try {
-            Thread.sleep(mill);
-        } catch (Exception e) {
-            Thread.currentThread().interrupt();
+        while(opModeIsActive() && !isStopRequested()) {
+            telemetry.update();
         }
     }
+        private void initialize(){
+            driveTrainTask = new DriveTrainTask(this);
+
+        }
 }
