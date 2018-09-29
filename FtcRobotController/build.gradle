@@ -11,10 +11,7 @@ android {
     }
 
     compileSdkVersion 23
-<<<<<<< HEAD
     buildToolsVersion '27.0.3'
-=======
->>>>>>> 612f456b1020dac06adbc24b050e2a612fc6c756
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -27,6 +24,7 @@ repositories {
         dirs '../libs'
     }
     jcenter()
+    google()
 }
 
 apply from: 'build.release.gradle'
