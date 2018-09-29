@@ -50,6 +50,7 @@ public class Tele extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()) {
             telemetry.update();
         }
+        driveTrainTask.running = false;
     }
         private void initialize(){
             driveTrainTask = new DriveTrainTask(this);
