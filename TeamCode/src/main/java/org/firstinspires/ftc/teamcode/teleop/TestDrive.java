@@ -1,13 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import org.firstinspires.ftc.teamcode.chassis.Robot;
 
 @TeleOp(name = "Drive v1")
 public class TestDrive extends LinearOpMode {
-    static final double threshold = 0.3;
+    private static final double threshold = 0.15;
     private ElapsedTime runtime = new ElapsedTime();
     private double sensitivity = .5;
     private double rightx = 0;
