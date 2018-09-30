@@ -53,7 +53,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="Preciousss: VuMark Tst", group ="Preciousss")
+@Autonomous(name="Preciousss: VuMark Tst 18:31", group ="Preciousss")
 public class VuforiaTST extends LinearOpMode {
 
     public static final String TAG = "Vuforia VuMark";
@@ -69,12 +69,12 @@ public class VuforiaTST extends LinearOpMode {
     @Override public void runOpMode() {
 
         /*
-         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * AHHHHHH to start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
         // OR...  Do Not Activate the Camera Monitor View, to save power
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
@@ -90,11 +90,13 @@ public class VuforiaTST extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code onthe next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = "Ac+mNz7/////AAAAGarZm7vF6EvSku/Zvonu0Dtf199jWYNFXcXymm3KQ4XngzMBntb" +
-                "NeMXt0qCPqACXugivtrYvwDU3VhMDRJwlwdMi4C2F6Su/8LZBrPIFtxUtr7MMagebQM/+4CSUIOQQdKNpdBttrX8yWM" +
-                "SrdyfnkNhh/vhXpQd7pXWwJ02UcnEVT1CiLeyTcl+bJUo1+xNonNaNEs8861zxmtO2TBtf9gyXhunlM6lpBJjC6nYWQ3" +
-                "BM2DOODFNz2EU3F3N1WxnOvCERQ+c934JKPajgCrNs5dquSo1wpcr0Kkf3u29hzK0DornR8s9j03g8Ea7q5cYN8WLn/e" +
-                "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
+        parameters.vuforiaLicenseKey = "AYhHUgX/////AAABmTO0" +
+                "g2PsdUqpg5xo96O7OkOB7qrwOjE24wV71lIm/MF9g96" +
+                "awd677rj7LrgQKUJAewgWkAAxn1MUJtUyiq9iesjKF+QNXlKr5qCAb69hI2" +
+                "68sYjjCJ+PqVBtMrlcIG1F4l2osl9zIk9tYAYfLXKlT351h1yRW" +
+                "1AqAdHJaHwt861ztrh4EW/1WjOV3/yT4SDtrJivhfmU0c51IqPUEJ0xqbWFr2saxvS/cSk" +
+                "H4e+hFIImM/jIw5JkaizeznuFTATnWTq9Spp/EhPPaQXJtScNP3DDaNDdfiqT9opwsxuQlEe" +
+                "1YF19sHjtenGD7/PcUlQXVS+VKbxaSqd/Cnq4+/3bOuhNzFoTVbBKZ16DQ9EZeCJM";
 
         /*
          * We also indicate which camera on the RC that we wish to use.
@@ -110,7 +112,9 @@ public class VuforiaTST extends LinearOpMode {
          * but differ in their instance id information.
          * @see VuMarkInstanceId
          */
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+
+
+        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
@@ -120,7 +124,6 @@ public class VuforiaTST extends LinearOpMode {
         int t = 0;
 
         relicTrackables.activate();
-
         while (opModeIsActive()) {
 
             /**

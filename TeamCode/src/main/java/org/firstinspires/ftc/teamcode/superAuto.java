@@ -13,9 +13,12 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -26,9 +29,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+
+import static com.sun.tools.javac.util.Constants.format;
 
 abstract public class superAuto extends LinearOpMode {
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
@@ -192,6 +200,107 @@ abstract public class superAuto extends LinearOpMode {
                 });
     }
 
+
+    void congfigVuforia() {
+         final String TAG = "Vuforia Navigation Sample";
+        OpenGLMatrix lastLocation = null;
+        VuforiaLocalizer vuforia;
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = "Ac+mNz7/////AAAAGarZm7vF6EvSku/Zvonu0Dtf199jWYNFXcXymm3KQ4XngzMBntb" +
+                    "NeMXt0qCPqACXugivtrYvwDU3VhMDRJwlwdMi4C2F6Su/8LZBrPIFtxUtr7MMagebQM/+4CSUIOQQdKNpdBttrX8yWM" +
+                    "SrdyfnkNhh/vhXpQd7pXWwJ02UcnEVT1CiLeyTcl+bJUo1+xNonNaNEs8861zxmtO2TBtf9gyXhunlM6lpBJjC6nYWQ3" +
+                    "BM2DOODFNz2EU3F3N1WxnOvCERQ+c934JKPajgCrNs5dquSo1wpcr0Kkf3u29hzK0DornR8s9j03g8Ea7q5cYN8WLn/e" +
+                    "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
+        //PUT NEW KEY HERE^^^^^
+         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
+            VuforiaTrackables stonesAndChips = vuforia.loadTrackablesFromAsset("FTC_2016-17");
+            VuforiaTrackable redClose2Ramp = stonesAndChips.get(3);
+            redClose2Ramp.setName("RedTarget");  // gears
+
+            VuforiaTrackable redFarFromRamp = stonesAndChips.get(1);
+            redFarFromRamp.setName("RedTarget");  // tools
+
+            VuforiaTrackable blueFarFromRamp = stonesAndChips.get(2);
+            blueFarFromRamp.setName("BlueTarget");  // legos
+
+            VuforiaTrackable blueClose2Ramp = stonesAndChips.get(0);
+            blueClose2Ramp.setName("BlueTarget");  // wheels
+
+            /** For convenience, gather together all the trackable objects in one easily-iterable collection */
+            List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+            allTrackables.addAll(stonesAndChips);
+            float mmPerInch        = 25.4f;
+            float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
+            float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
+            OpenGLMatrix redClose2RampLoc = OpenGLMatrix
+                    /* Then we translate the target off to the RED WALL. Our translation here
+                    is a negative translation in X.*/
+                    .translation(-mmFTCFieldWidth/2, -298.333f, 0)
+                    .multiplied(Orientation.getRotationMatrix(
+                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                            AxesReference.EXTRINSIC, AxesOrder.XZX,
+                            AngleUnit.DEGREES, 90, 90, 0));
+            redClose2Ramp.setLocation(redClose2RampLoc);
+            RobotLog.ii(TAG, "Red Close to Ramp=%s", format(redClose2RampLoc));
+
+            OpenGLMatrix redFarFromRampLoc = OpenGLMatrix
+                    /* Then we translate the target off to the RED WALL. Our translation here
+                    is a negative translation in X.*/
+                    .translation(-mmFTCFieldWidth/2, 895, 0)
+                    .multiplied(Orientation.getRotationMatrix(
+                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                            AxesReference.EXTRINSIC, AxesOrder.XZX,
+                            AngleUnit.DEGREES, 90, 90, 0));
+            redFarFromRamp.setLocation(redFarFromRampLoc);
+            RobotLog.ii(TAG, "Red Far From Ramp=%s", format(redFarFromRampLoc));
+
+            OpenGLMatrix blueClose2RampLoc = OpenGLMatrix
+                    /* Then we translate the target off to the RED WALL. Our translation here
+                    is a negative translation in X.*/
+                    .translation(298.333f,-mmFTCFieldWidth/2,0)
+                    .multiplied(Orientation.getRotationMatrix(
+                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
+                            AxesReference.EXTRINSIC, AxesOrder.XZX,
+                            AngleUnit.DEGREES, 90, 0, 0));
+            blueClose2Ramp.setLocation(blueClose2RampLoc);
+            RobotLog.ii(TAG, "Blue Close To Ramp=%s", format(blueClose2RampLoc));
+
+            /*
+             * To place the Stones Target on the Blue Audience wall:
+             * - First we rotate it 90 around the field's X axis to flip it upright
+             * - Finally, we translate it along the Y axis towards the blue audience wall.
+             */
+            OpenGLMatrix blueFarFromRampLoc= OpenGLMatrix
+                    /* Then we translate the target off to the Blue Audience wall.
+                    Our translation here is a positive translation in Y.*/
+                    .translation(-895, mmFTCFieldWidth/2, 0)
+                    .multiplied(Orientation.getRotationMatrix(
+                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
+                            AxesReference.EXTRINSIC, AxesOrder.XZX,
+                            AngleUnit.DEGREES, 90, 0, 0));
+            blueFarFromRamp.setLocation(blueFarFromRampLoc);
+            RobotLog.ii(TAG, "Blue Far From Ramp =%s", format(blueFarFromRampLoc));
+            OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
+                    .translation(mmBotWidth/2,0,0)
+                    .multiplied(Orientation.getRotationMatrix(
+                            AxesReference.EXTRINSIC, AxesOrder.YZY,
+                            AngleUnit.DEGREES, -90, 0, 0));
+            RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
+            ((VuforiaTrackableDefaultListener)redClose2Ramp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+            ((VuforiaTrackableDefaultListener)redFarFromRamp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+            ((VuforiaTrackableDefaultListener)blueClose2Ramp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+            ((VuforiaTrackableDefaultListener)blueFarFromRamp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+
+            /** Wait for the game to begin */
+            /** Start tracking the data sets we care about. */
+            stonesAndChips.activate();
+
+            float robotX;
+            float robotY;
+            float robotBearing;
+    }
 
     void cryptoState(int targetHeading, float basePosx, float basePosy) {
         runtime.reset();
@@ -498,6 +607,7 @@ abstract public class superAuto extends LinearOpMode {
     {
         //Used to convert the readings into positive or negative x,y values which will be multiplied by said power scalar
         //The above methods are used in this bigger method
+
         double Theta = Math.toRadians(getHeading());
         double CurrentX = -500; //Eventually I would like to directly take the readings. These #s are made up...
         double CurrentY = -500;
