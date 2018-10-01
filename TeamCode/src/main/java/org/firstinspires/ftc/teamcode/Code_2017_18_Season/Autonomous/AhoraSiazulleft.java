@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Code_2017_18_Season.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name = "Rojo Right", group = "Bacon Autonomous!")
+@Autonomous(name = "Azul Left", group = "Bacon Autonomous!")
 //@Disabled
-public class AhoraSirojoright extends LinearOpMode {
+public class AhoraSiazulleft extends LinearOpMode {
     /* Declare all devices since hardware class isn't working */
     DcMotor frontLeftMotor;
     DcMotor backLeftMotor;
@@ -55,8 +55,8 @@ public class AhoraSirojoright extends LinearOpMode {
     double BackLeftPower = 0;
 
     //    String teamColorPosition = "BlueRight";
-//    String teamColorPosition = "BlueLeft";
-    String teamColorPosition = "RedRight";
+    String teamColorPosition = "BlueLeft";
+//    String teamColorPosition = "RedRight";
 //    String teamColorPosition = "RedLeft";
 
     /*{@link #vuforia} is the variable we will use to store our instance of the Vuforia localization engine.*/
@@ -227,6 +227,14 @@ public class AhoraSirojoright extends LinearOpMode {
                 sleep(30);
                 break;
             case "BlueLeft":
+                /* Get off balance board & rotate 180*/
+                runToPositionWheels(2200, .7, "Forward");
+                sleep(1500);
+                runWithoutEncoder();
+                rotate(-88, .6);
+                /* Rotate properly for vuMark */
+                keyAlignment(teamColorPosition, vuMark);
+                sleep(30);
                 break;
             case "RedRight":
                 runToPositionWheels(2200, .7, "Backward");
@@ -239,6 +247,7 @@ public class AhoraSirojoright extends LinearOpMode {
                 /* Get off balance board & rotate 180*/
                 runToPositionWheels(2200, .7, "Backward");
                 sleep(1500);
+                runWithoutEncoder();
                 rotate(88, .6);
                 /* Rotate properly for vuMark */
                 keyAlignment(teamColorPosition, vuMark);
@@ -271,7 +280,6 @@ public class AhoraSirojoright extends LinearOpMode {
 
         }
     }
-
 
     /* This method is the switch case for vuMark alignment */
     public void vumarkSwitch(RelicRecoveryVuMark vuMark, int leftRotate, int centerRotate, int rightRotate, double power) {
@@ -372,6 +380,7 @@ public class AhoraSirojoright extends LinearOpMode {
         sleep(2000);
 
     }
+
 
     /* This resets the encoders on the wheels to RUN_WITHOUT_ENCODER */
     public void runWithoutEncoder() {
