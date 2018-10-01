@@ -1,16 +1,18 @@
-package org.firstinspires.ftc.teamcode.Teleops;
+package org.firstinspires.ftc.teamcode.Code_2017_18_Season.Teleops;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
-@TeleOp(name = "Tom Tom Teleop 2 Player", group = "bacon")
+@TeleOp(name = "Tom Tom Teleop 1 Player", group = "bacon")
 //@Disabled
-public class TomTomTeleopDos extends LinearOpMode {
+public class TomTomTeleop extends LinearOpMode {
     /* All hardware & variables */
 
     /* Declare all objects */
@@ -61,31 +63,25 @@ public class TomTomTeleopDos extends LinearOpMode {
     /* While OpMode is Active Loop */
 
         while (opModeIsActive()) {
+
             /* Talk to the drivers & coach */
-            telemetry.addLine("Hi~♪");
-//            telemetry.addData("Wheel Control", "X is the toggle");
-//            telemetry.addData("Tray Moving Controls", "Use the D-Pad ↑ & ↓ buttons!");
-//            telemetry.addData("Tray Flipping Controls", "Hold A for out, release for in");
-            telemetry.addData("Front Left:", frontLeftMotor.getPower());
-            telemetry.addData("Front Right:", frontRightMotor.getPower());
-            telemetry.addData("Back Left:", backLeftMotor.getPower());
-            telemetry.addData("Back Right:", backRightMotor.getPower());
+            telemetry.addLine("Hi! I'm OctoBot!");
             telemetry.update();
 
         /* Use bumpers to rotate octopus head */
-            if (gamepad2.right_bumper) {
-                if (0 == loopCount % 500) {
+            if (gamepad1.right_bumper) {
+                if (0 == loopCount % 700) {
                     servoPos = servoPos + .1;
                     if (servoPos > 1) {
                         servoPos = 1;
                     }
+                    
                     octoServo.setPosition(servoPos);
                 }
                 loopCount++;
             }
-
-            if (gamepad2.left_bumper) {
-                if (0 == loopCount % 500) {
+            if (gamepad1.left_bumper) {
+                if (0 == loopCount % 700) {
                     servoPos = servoPos - .1;
                     if (servoPos < 0) {
                         servoPos = 0;
