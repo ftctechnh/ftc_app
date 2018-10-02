@@ -15,10 +15,10 @@
 apply from: '../build.common.gradle'
 
 android {
-    buildToolsVersion '25.0.0'
+    buildToolsVersion '27.0.3'
 
 
-    def versionPropsFile = file('\\src\\main\\java\\org\\firstinspires\\ftc\\teamcode\\apkcounter.properties')
+    def versionPropsFile = file('apkcounter.properties')
 
     if(versionPropsFile.canRead()){
         def Properties versionProps = new Properties()
@@ -32,6 +32,6 @@ android {
 
     }
     else{
-        throw new GradleException("Could not read version.properties!")
+        throw new FileNotFoundException("Could not read apk counter file!")
     }
 }
