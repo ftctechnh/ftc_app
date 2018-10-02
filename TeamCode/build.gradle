@@ -27,5 +27,4 @@ dependencies {
     testImplementation 'org.powermock:powermock-core:1.6.2'
     testImplementation 'org.powermock:powermock-module-junit4:1.6.2'
     testImplementation 'org.powermock:powermock-api-mockito:1.6.2'
-    testCompile 'org.junit.jupiter:junit-jupiter-api:5.2.0'
 }
