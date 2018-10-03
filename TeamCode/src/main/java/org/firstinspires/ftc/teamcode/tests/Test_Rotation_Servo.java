@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
-@TeleOp(name = "Test Rotation Servo", group = "bacon")
+@TeleOp(name = "Test Rotation Servo", group = "Tests")
 //@Disabled
 public class Test_Rotation_Servo extends LinearOpMode {
 

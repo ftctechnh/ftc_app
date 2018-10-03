@@ -46,7 +46,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * @see <a href="http://modernroboticsinc.com/range-sensor">MR Range Sensor</a>
  */
-@TeleOp(name = "Sensor: MR range sensor", group = "Sensor")
+@TeleOp(name = "Sensor: MR range sensor", group = "Tests")
 //@Disabled   // comment out or remove this line to enable this opmode
 public class Range_Sensor extends LinearOpMode {
 
