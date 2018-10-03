@@ -59,8 +59,8 @@ public class kobaltKlawsDriveOnly extends LinearOpMode {
             telemetry.addData("Status", "Running");
             telemetry.addData("Left Power: ", leftPower);
             telemetry.addData("Right Power: ", rightPower);
-            telemetry.addData("Left Wheel: ", LeftDriveMotor.getCurrentPosition());
-            telemetry.addData("Right Wheel: ", RightDriveMotor.getCurrentPosition());
+            telemetry.addData("Left Wheel Position: ", LeftDriveMotor.getCurrentPosition());
+            telemetry.addData("Right Wheel Position: ", RightDriveMotor.getCurrentPosition());
             telemetry.update();
         }
     }
