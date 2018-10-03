@@ -58,7 +58,7 @@ public class kobaltKlawsDriveOnly extends LinearOpMode {
 
                     leftPower = 1.0;
                     rightPower = 1.0;
-                    //If left joystick is 
+                    //If left joystick is
 
             } else if (gamepad1.left_stick_y < 0 && gamepad1.left_stick_x <= 0.5 &&
                     gamepad1.left_stick_x >= -0.5){
