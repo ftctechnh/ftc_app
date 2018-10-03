@@ -36,6 +36,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name="Minibot")
+@Disabled
 public class Minibot extends OpMode{
 
     /* Declare OpMode members. */

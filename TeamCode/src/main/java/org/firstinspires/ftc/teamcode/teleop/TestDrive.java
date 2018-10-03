@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.chassis.Robot;
 import org.firstinspires.ftc.teamcode.misc.FtcUtils;
 import org.firstinspires.ftc.teamcode.misc.RobotConstants;
 
-@TeleOp(name = "Drive v1")
+@TeleOp(name = "Drive")
 public class TestDrive extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private double sensitivity = .5;
@@ -18,12 +18,11 @@ public class TestDrive extends LinearOpMode {
     private Robot robot = new Robot();
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, false);
-        telemetry.update();
-        runtime.reset();
         telemetry.addData("Status", "Binitialization bas been bompleted");
         telemetry.update();
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
+            telemetry.addData("nom servo pos", robot.nomServoPos());
             lefty = FtcUtils.motorScale(gamepad1.left_stick_y) * sensitivity;
             rightx = FtcUtils.motorScale(gamepad1.right_stick_x) * sensitivity;
             leftx = FtcUtils.motorScale(gamepad1.left_stick_x) * sensitivity;
@@ -48,9 +47,17 @@ public class TestDrive extends LinearOpMode {
             } else {
                 robot.extend(0);
             }
-            if (gamepad1.a) {
+            if (gamepad2.y) {
                 if (robot.nomServoPos() != RobotConstants.NOMSERVO_UP)
                     robot.nomServo(RobotConstants.NOMSERVO_UP);
+            }
+            if (gamepad2.a) {
+                if (robot.nomServoPos() != RobotConstants.NOMSERVO_DOWN)
+                    robot.nomServo(RobotConstants.NOMSERVO_DOWN);
+            }
+            if (gamepad2.b) {
+                if (robot.nomServoPos() != RobotConstants.NOMSERVO_NEUTRAL)
+                    robot.nomServo(RobotConstants.NOMSERVO_NEUTRAL);
             }
             telemetry.update();
             idle();

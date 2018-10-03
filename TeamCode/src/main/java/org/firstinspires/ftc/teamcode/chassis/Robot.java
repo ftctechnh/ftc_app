@@ -23,12 +23,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.teamcode.misc.FtcUtils;
+import org.firstinspires.ftc.teamcode.misc.RobotConstants;
 
 /**
  * Created by Marco on 4/13/18.
  */
 public class Robot {
-    static final DcMotor.ZeroPowerBehavior ZERO_POWER_BEHAVIOR = DcMotor.ZeroPowerBehavior.BRAKE;
     HardwareMap hwMap;
     ElapsedTime clock = new ElapsedTime();
     private BNO055IMU imu;
@@ -47,26 +47,30 @@ public class Robot {
     private Servo nomServo = null;
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
-        FR = hwMap.get(DcMotor.class, "FR");
-        FL = hwMap.get(DcMotor.class, "FL");
+        FR = hwMap.get(DcMotor.class, "BL");
+        FL = hwMap.get(DcMotor.class, "BR");
         nom = hwMap.get(DcMotor.class, "nom");
-        BR = hwMap.get(DcMotor.class, "BR");
-        BL = hwMap.get(DcMotor.class, "BL");
+        extend = hwMap.get(DcMotor.class, "extend");
+        BR = hwMap.get(DcMotor.class, "FL");
+        BL = hwMap.get(DcMotor.class, "FR");
         nomServo = hwMap.get(Servo.class, "nomServo");
-        FR.setZeroPowerBehavior(ZERO_POWER_BEHAVIOR);
-        FL.setZeroPowerBehavior(ZERO_POWER_BEHAVIOR);
-        BR.setZeroPowerBehavior(ZERO_POWER_BEHAVIOR);
-        BL.setZeroPowerBehavior(ZERO_POWER_BEHAVIOR);
-        nom.setDirection(DcMotorSimple.Direction.REVERSE);
-        extend.setDirection(DcMotorSimple.Direction.FORWARD);
+        FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        nom.setDirection(DcMotorSimple.Direction.FORWARD);
+        extend.setDirection(DcMotorSimple.Direction.REVERSE);
         FL.setDirection(DcMotorSimple.Direction.FORWARD);
         BL.setDirection(DcMotorSimple.Direction.FORWARD);
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
+
        // sensor1 = (Rev2mDistanceSensor) hwMap.get(DistanceSensor.class, "sensor1");
         resetTicks();
+        nomServo(RobotConstants.NOMSERVO_UP);
         if (initSensors) {
-            imu = hwMap.get(BNO055IMU.class, "imu");
+            imu = hwMap.get(BNO055IMU.class, "imu 1");
             parameters = new BNO055IMU.Parameters();
             parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
             parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -111,7 +115,7 @@ public class Robot {
         nomServo.setPosition(pos);
     }
     public double nomServoPos() {
-        return FtcUtils.roundTwoDecimalPlaces(nomServo.getPosition());
+        return /*FtcUtils.roundTwoDecimalPlaces(*/nomServo.getPosition();
     }
     public double sensorOneDist() {
         return sensor1.getDistance(DistanceUnit.INCH);
