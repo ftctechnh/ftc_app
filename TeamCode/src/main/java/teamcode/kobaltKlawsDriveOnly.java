@@ -34,23 +34,58 @@ public class kobaltKlawsDriveOnly extends LinearOpMode {
             double leftPower;
             double rightPower;
             double drive = gamepad1.left_stick_y;
-            double turn = gamepad1.left_stick_x;
+            //double turn = gamepad1.left_stick_x;
 
 
-            if (drive != 0) {
+            /*if (drive != 0) {
                 leftPower = (drive);
                 rightPower = (drive);
                 //if drive is not 0, set both motor powers to the value of drive
-            } else if (turn != 0) {
-                leftPower = (drive - turn);
-                rightPower = (drive + turn);
+            //} else if (turn != 0) {
+                //leftPower = (drive - turn);
+                //rightPower = (drive + turn);
                 //if the drive if reports false, it runs this turn block
             } else {
                 leftPower = 0;
                 rightPower = 0;
                 //if neither of these if statements report true it sets the motor powers to 0
                 // if you don't push a stick, the robot don't move
+            }*/
+
+
+            if (gamepad1.left_stick_y > 0 && gamepad1.left_stick_x <= 0.5 &&
+                    gamepad1.left_stick_x >= -0.5){
+
+                    leftPower = 1.0;
+                    rightPower = 1.0;
+                    //If left joystick is 
+
+            } else if (gamepad1.left_stick_y < 0 && gamepad1.left_stick_x <= 0.5 &&
+                    gamepad1.left_stick_x >= -0.5){
+
+                    leftPower = -1.0;
+                    rightPower = -1.0;
+
+            } else if (gamepad1.left_stick_x > 0 && gamepad1.left_stick_y <= 0.5 &&
+                    gamepad1.left_stick_y >= -0.5){
+
+                    leftPower = 1.0;
+                    rightPower = 0.0;
+
+            } else if (gamepad1.left_stick_x < 0 && gamepad1.left_stick_y <= 0.5 &&
+                    gamepad1.left_stick_y >= -0.5){
+
+                    leftPower = 0.0;
+                    rightPower = 1.0;
+
+            } else {
+                leftPower = 0;
+                rightPower = 0;
+                //if neither of these if statements report true it sets the motor powers to 0
+                // if you don't push a stick, the robot don't move
             }
+
+
             this.LeftDriveMotor.setPower(leftPower);
             this.RightDriveMotor.setPower(rightPower);
 
