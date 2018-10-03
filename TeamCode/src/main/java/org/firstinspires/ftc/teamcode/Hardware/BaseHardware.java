@@ -95,15 +95,10 @@ public class BaseHardware {
         LynxGetBulkInputDataCommand bulkDataInput = new LynxGetBulkInputDataCommand(wheelHub);
         try {
             bulkDataResponse = bulkDataInput.sendReceive();
-            tel.addData("Payload bytes", bulkDataResponse.toPayloadByteArray());
-
         } catch (InterruptedException e) {
             e.printStackTrace();
-            tel.log().add("LynxGetBulk interrupted");
-            tel.update();
         } catch (LynxNackException e) {
             e.printStackTrace();
-            tel.log().add("LynxGetBulk crashed");
         }
     }
 
@@ -176,8 +171,6 @@ public class BaseHardware {
             logger.update();
         } catch (IllegalAccessException e) {
             tel.log().add("Recieved 'IllegalAccessException'");
-        } catch (IOException e) {
-            tel.log().add("Recieved 'IOException'");
         }
     }
 
@@ -258,8 +251,6 @@ public class BaseHardware {
             logger.update();
         } catch (IllegalAccessException e) {
             tel.log().add("Recieved 'IllegalAccessException'");
-        } catch (IOException e) {
-            tel.log().add("Recieved 'IOException'");
         }
         bulkDataResponse = null; // Reset it
     }

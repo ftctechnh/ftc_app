@@ -43,7 +43,7 @@ public class LogQueue {
 
         fileWriter = new FileWriter(getFile(hardware));
         logManager = new AsyncLogWriter(fileWriter, queue);
-        logManager.run();
+        logManager.start();
     }
 
     public File getFile(BaseHardware hardware) {
@@ -57,13 +57,13 @@ public class LogQueue {
         return new File(folder, name);
     }
 
-    public void update() throws IllegalAccessException, IOException {
+    public void update() throws IllegalAccessException {
         // First, we'll write controller information, then chassis information, then sensor
         // information, then other info
 
         // This is a really space inefficient way of writing data
         // If this becomes a problem, we'll need to fix it later
-        Object[] readings = new Object[propLength];
+        Object[] readings = new Object[propLength + 8];
         int gamepadNum = 0;
 
         for (Gamepad g : new Gamepad[] {hardware.opMode.gamepad1}) {
@@ -71,18 +71,14 @@ public class LogQueue {
                 readings[gamepadNum + i] = fields[i].get(g);
             }
         }
-        /*for (int i = 0; i < 4; i++) {
-            readings[propLength + 2*i] = new Integer(hardware.bulkDataResponse.getVelocity(i));
-            readings[propLength + 2*i + 1] = new Integer(hardware.bulkDataResponse.getEncoder(i));
-        }*/
+
+        for (int i = 0; i < 4; i++) {
+            readings[propLength + 2*i] = hardware.bulkDataResponse.getVelocity(i);
+            readings[propLength + 2*i + 1] = hardware.bulkDataResponse.getEncoder(i);
+        }
+        //readings[propLength+8] = bytesToHex(hardware.bulkDataResponse.toPayloadByteArray());
 
         queue.add(readings);
-
-        /*for (Object o : readings) {
-            logManager.fw.write(o.toString() + ",");
-        }
-        logManager.fw.write("\n");*/
-        hardware.opMode.telemetry.addData("Wheel encoder", hardware.bulkDataResponse.getEncoder(0));
         // Will automatically update AsyncLogWriter
     }
 
