@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Code_2017_18_Season.Autonomous;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -24,7 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "Azul Right", group = "Bacon Autonomous!")
-//@Disabled
+@Disabled
 public class AhoraSiWey extends LinearOpMode {
     /* Declare all devices since hardware class isn't working */
     DcMotor frontLeftMotor;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Code_2017_18_Season.Teleops;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -9,7 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
 @TeleOp(name = "Tom Tom Teleop 2 Player", group = "bacon")
-//@Disabled
+@Disabled
 public class TomTomTeleopDos extends LinearOpMode {
     /* All hardware & variables */
 

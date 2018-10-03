@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Code_2017_18_Season.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -21,7 +22,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 @Autonomous(name = "Rojo Left", group = "Bacon Autonomous!")
-//@Disabled
+@Disabled
 public class AhoraSirojoleft extends LinearOpMode {
     /* This is all the Hardware */
     /* Declare all devices since hardware class isn't working */

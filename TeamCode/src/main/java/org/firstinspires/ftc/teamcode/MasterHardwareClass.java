@@ -1,71 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 //This class defines all the specific hardware for our robot.
 
 public class MasterHardwareClass {
     /* Public OpMode members. */
-    public DcMotor frontLeftMotor = null;
-    public DcMotor frontRightMotor = null;
-    public DcMotor backLeftMotor = null;
-    public DcMotor backRightMotor = null;
-    public DcMotor verticalArmMotor = null;
-    public DcMotor clawMotor = null;
-    public DcMotor slowMotor = null;
-    public DcMotor fastMotor = null;
-    public Servo   trayServo = null;
-    public Servo gemServo;
+    public DcMotor myMotor = null;
+    public Servo myServo = null;
+    public DigitalChannel myTouchSensor = null;
+    public ColorSensor myColorSensor = null;
     public BNO055IMU imu;
 
-    /* Give place holder values for the motors and the grabber servo */
-    double FrontLeftPower = 0;
-    double FrontRightPower = 0;
-    double BackRightPower = 0;
-    double BackLeftPower = 0;
-    double VerticalArmPower = 0;
-    double ClawPower = 0;
-
-    /*These values are used for the drive*/
-    double verticalMax = 5900;
-    double verticalMin = 300;
-    double slowPower = 1;
-    double fastPower = 1;
-    double trayOut = 0;
-    double trayIn = 1;
-    boolean up;
-
-    /* Define values for teleop bumper control */
-    static double nobumper = 1.5;
-    static double bumperSlowest = 3.2;
-    static double bumperFastest = 1.0;
-
-    /* Define values used in knocking the jewels */
-    static double xPosUp = 0;
-    static double xPosDown = .5;
-
     /* Define hardwaremap */
-    HardwareMap hwMap = null;
+    HardwareMap hardwareMap = null;
 
     /* Constructor */
     public MasterHardwareClass() {
@@ -76,41 +32,33 @@ public class MasterHardwareClass {
     public void init(HardwareMap ahwMap) {
 
         // Save reference to Hardware map
-        hwMap = ahwMap;
+        hardwareMap = ahwMap;
 
-        // Define and Initialize Hardware
-        frontLeftMotor = hwMap.dcMotor.get("FL");
-        frontRightMotor = hwMap.dcMotor.get("FR");
-        backLeftMotor = hwMap.dcMotor.get("BL");
-        backRightMotor = hwMap.dcMotor.get("BR");
-        verticalArmMotor = hwMap.dcMotor.get("VAM");
-        clawMotor = hwMap.dcMotor.get("CM");
-        gemServo = hwMap.servo.get("gemservo");
-        imu = hwMap.get(BNO055IMU.class, "imu");
+        // Get color sensor from xml/configuration
+        myMotor = hardwareMap.dcMotor.get("MM");
+        myServo = hardwareMap.servo.get("MS");
+        myTouchSensor = hardwareMap.get(DigitalChannel.class, "MTS");
+        myColorSensor = hardwareMap.colorSensor.get("MCS");
 
-        // Set all hardware to default position
-        frontLeftMotor.setPower(0);
-        frontRightMotor.setPower(0);
-        backLeftMotor.setPower(0);
-        backRightMotor.setPower(0);
-        verticalArmMotor.setPower(0);
-        clawMotor.setPower(0);
+        /* Set the digital channel to input. */
+        myTouchSensor.setMode(DigitalChannel.Mode.INPUT);
 
-        /* Reverse the direction of the front right and back right motors */
-        frontRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        backRightMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        verticalArmMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Set hardward to it's default position
+        myMotor.setPower(0);
+        myServo.setPosition(.5);
 
 
-        // Set proper encoder state for all motor
-        frontLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frontRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backLeftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        backRightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    /* Set parameters for the gyro (imu)*/
+        BNO055IMU.Parameters imuparameters = new BNO055IMU.Parameters();
+
+        imuparameters.mode = BNO055IMU.SensorMode.IMU;
+        imuparameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imuparameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imuparameters.loggingEnabled = false;
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
     }
 }

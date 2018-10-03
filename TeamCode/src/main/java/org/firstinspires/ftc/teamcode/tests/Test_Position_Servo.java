@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * ☺ Hi! Esto es el codigo para el 24 Febrero! ☺
  */
-@TeleOp(name = "Test Position Servo", group = "bacon")
+@TeleOp(name = "Test Position Servo", group = "Tests")
 //@Disabled
 public class Test_Position_Servo extends LinearOpMode {
 

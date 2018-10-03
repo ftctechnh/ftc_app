@@ -66,7 +66,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
  * is explained in {@link ConceptVuforiaNavigation}.
  */
 
-@Autonomous(name="BACON vumark", group ="Concept")
+@Autonomous(name="BACON vumark", group ="Tests")
 //@Disabled
 public class BACONImageSensor extends LinearOpMode {
 
