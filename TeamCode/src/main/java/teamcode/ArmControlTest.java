@@ -1,15 +1,17 @@
 package teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+@TeleOp(name="ArmControlTest", group="Linear Opmode")
 public class ArmControlTest extends LinearOpMode {
     //hardware
-    private DcMotor armMotorBase;
+    //private DcMotor armMotorBase;
     private Servo armServoBase;
     private Servo armServoTop;
-    private Servo armServoClaw;
+    //private Servo armServoClaw;
     //set positions
 
     @Override
@@ -18,6 +20,8 @@ public class ArmControlTest extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
         initialize();
+        waitForStart();
+
         while(opModeIsActive()){
             if (gamepad1.a) { //folded
                 armServoBase.setPosition(0);
@@ -31,20 +35,20 @@ public class ArmControlTest extends LinearOpMode {
     }
 
     public void setMotor () {
-        armMotorBase.setTargetPosition(100);
-        armMotorBase.setPower(0.5);
+        //armMotorBase.setTargetPosition(100);
+        //armMotorBase.setPower(0.5);
     }
 
     public void initialize() {
-        armMotorBase = hardwareMap.get(DcMotor.class, "armMotorBase");
+        //armMotorBase = hardwareMap.get(DcMotor.class, "armMotorBase");
         armServoBase = hardwareMap.get(Servo.class, "armServoBase");
         armServoTop = hardwareMap.get(Servo.class, "armServoTop");
-        armServoClaw = hardwareMap.get(Servo.class, "armServoClaw");
-        armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        armMotorBase.setDirection(DcMotor.Direction.FORWARD);
-        armServoBase.setDirection(Servo.Direction.FORWARD);
+        //armServoClaw = hardwareMap.get(Servo.class, "armServoClaw");
+        //armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //armMotorBase.setDirection(DcMotor.Direction.FORWARD);
+        armServoBase.setDirection(Servo.Direction.REVERSE);
         armServoTop.setDirection(Servo.Direction.FORWARD);
-        armServoClaw.setDirection(Servo.Direction.FORWARD);
+        //armServoClaw.setDirection(Servo.Direction.FORWARD);
 
 
 
