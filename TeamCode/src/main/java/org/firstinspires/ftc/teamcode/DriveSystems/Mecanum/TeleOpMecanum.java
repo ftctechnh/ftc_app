@@ -54,6 +54,9 @@ public class TeleOpMecanum extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        telemetry.log().add("Got here");
+        telemetry.update();
+
         robot = new MecanumHardware(this);
         robot.init();
 
