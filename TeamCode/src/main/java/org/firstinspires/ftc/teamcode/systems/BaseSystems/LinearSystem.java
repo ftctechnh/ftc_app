@@ -25,9 +25,9 @@ public abstract class LinearSystem extends System {
         }
     }
 
-    public abstract void goToPosition(double targetPosition);
+    public abstract void goToPosition(double targetPosition, double power);
 
-    public void goToPosition(int targetPosition) {
-        goToPosition(positions[targetPosition]);
+    public void goToPosition(int targetPosition, double power) {
+        goToPosition(positions[targetPosition], power);
     }
 }
