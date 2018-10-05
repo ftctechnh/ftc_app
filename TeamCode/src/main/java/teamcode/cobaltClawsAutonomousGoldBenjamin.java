@@ -3,6 +3,7 @@ package teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -78,7 +79,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
 
         //Sets correct directions for motors and servos
-        LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        LeftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         ExtendArmMotor.setDirection(DcMotor.Direction.FORWARD);
         SwingArmMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -121,11 +122,21 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
         RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
         LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
 
-        LeftDriveMotor.setTargetPosition   (-distance);
-        RightDriveMotor.setTargetPosition  (distance);
 
-        LeftDriveMotor.setPower(speed);
-        RightDriveMotor.setPower(speed);
+        if(direction == "F") {
+
+            LeftDriveMotor.setTargetPosition(distance);
+            RightDriveMotor.setTargetPosition(distance);
+
+        } else if(direction == "B") {
+
+            LeftDriveMotor.setTargetPosition(-distance);
+            RightDriveMotor.setTargetPosition(-distance);
+
+        }
+
+        LeftDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);
 
 
         //prevents other action until motors have reached positions
@@ -148,9 +159,6 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         }
 
-        LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
-
 
         //Stops motors, ready for next action
         LeftDriveMotor.setPower(0);
@@ -160,7 +168,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
     public void turn(String direction, int distance, double speed){
 
-        if(direction == "left"){// left
+        if(direction == "L"){// left
 
             //Resets the encoders and does a left point turn for the inputted degrees
             RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -192,7 +200,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         }
 
-        if(direction == "right"){// right
+        if(direction == "R"){// right
 
             //Resets the encoders and does a right point turn for the inputted degrees
             RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
