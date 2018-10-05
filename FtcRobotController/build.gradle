@@ -11,7 +11,10 @@ android {
     }
 
     compileSdkVersion 23
+<<<<<<< HEAD
     buildToolsVersion '27.0.3'
+=======
+>>>>>>> 2018/TitaniumTalons
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
