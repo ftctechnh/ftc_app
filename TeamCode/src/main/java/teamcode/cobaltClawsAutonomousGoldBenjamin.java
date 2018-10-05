@@ -47,7 +47,15 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
             /*
 
-            move
+            move(distance to front of items, 0.8);
+            detect and move gold cube
+            turn(left, away from items, 0.8);
+            move(forward, 0.8);
+            turn(right, toward depot, 0.8;
+            move(to depot, 0.8);
+            put marker in depot
+            turn(left, toward opposite color crater, 0.8);
+            move(to opposite color crater, 0.8);
 
              */
 
@@ -106,6 +114,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
     public void move(int distance, double speed){
 
 
+        //Resets encoder and moves the inputted degrees
         RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -115,13 +124,18 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
         LeftDriveMotor.setTargetPosition   (-distance);
         RightDriveMotor.setTargetPosition  (distance);
 
+        LeftDriveMotor.setPower(speed);
+        RightDriveMotor.setPower(speed);
 
+
+        //prevents other action until motors have reached positions
         while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
             //Loop body can be empty
 
         }
 
+        //Stops motors, ready for next action
         LeftDriveMotor.setPower(0);
         RightDriveMotor.setPower(0);
 
@@ -131,6 +145,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         if(direction == "left"){// left
 
+            //Resets the encoders and does a left point turn for the inputted degrees
             RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -142,14 +157,18 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
             RightDriveMotor.setTargetPosition  (distance);
             LeftDriveMotor.setTargetPosition   (distance);
 
+            LeftDriveMotor.setPower(speed);
+            RightDriveMotor.setPower(-speed);
 
 
+            //prevents other action until motors have reached positions
             while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
                 //Loop body can be empty
 
             }
 
+            //Stops motors, ready for next action
             LeftDriveMotor.setPower(0);
             RightDriveMotor.setPower(0);
 
@@ -158,7 +177,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         if(direction == "right"){// right
 
-
+            //Resets the encoders and does a right point turn for the inputted degrees
             RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -169,13 +188,18 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
             RightDriveMotor.setTargetPosition  (-distance);
             LeftDriveMotor.setTargetPosition   (-distance);
 
+            LeftDriveMotor.setPower(-speed);
+            RightDriveMotor.setPower(speed);
 
+
+            //prevents other action until motors have reached positions
             while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
                 //Loop body can be empty
 
             }
 
+            //Stops motors, ready for next action
             LeftDriveMotor.setPower(0);
             RightDriveMotor.setPower(0);
 
