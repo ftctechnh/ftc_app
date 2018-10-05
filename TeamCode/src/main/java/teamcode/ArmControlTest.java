@@ -49,13 +49,6 @@ public class ArmControlTest extends LinearOpMode {
         armServoBase.setDirection(Servo.Direction.REVERSE);
         armServoTop.setDirection(Servo.Direction.FORWARD);
         //armServoClaw.setDirection(Servo.Direction.FORWARD);
-
-
-
-
-
-
-
     }
 }
 
