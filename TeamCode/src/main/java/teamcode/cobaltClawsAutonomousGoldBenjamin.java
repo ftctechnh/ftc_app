@@ -111,7 +111,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
         telemetry.update();
     }
 
-    public void move(int distance, double speed){
+    public void move(String direction, int distance, double speed){
 
 
         //Resets encoder and moves the inputted degrees
@@ -129,11 +129,28 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
 
         //prevents other action until motors have reached positions
+        double currentSpeed = (speed / 4);
+
         while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
             //Loop body can be empty
+            telemetry.update();
+
+            if(currentSpeed < speed){
+
+                currentSpeed = currentSpeed + 0.005;
+
+            }
+
+            LeftDriveMotor.setPower(currentSpeed);
+            RightDriveMotor.setPower(currentSpeed);
+
 
         }
+
+        LeftDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);
+
 
         //Stops motors, ready for next action
         LeftDriveMotor.setPower(0);
