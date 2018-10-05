@@ -189,7 +189,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
             //prevents other action until motors have reached positions
             while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
-                //Loop body can be empty
+                telemetry.update();
 
             }
 
@@ -220,7 +220,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
             //prevents other action until motors have reached positions
             while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
-                //Loop body can be empty
+                telemetry.update();
 
             }
 

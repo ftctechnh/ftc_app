@@ -111,7 +111,7 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
         telemetry.update();
     }
 
-    public void move(int distance, double speed){
+    public void move(String direction, int distance, double speed){
 
 
         //Resets encoder and moves the inputted degrees
@@ -121,19 +121,43 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
         RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
         LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
 
-        LeftDriveMotor.setTargetPosition   (-distance);
-        RightDriveMotor.setTargetPosition  (distance);
 
-        LeftDriveMotor.setPower(speed);
-        RightDriveMotor.setPower(speed);
+        if(direction == "F") {
+
+            LeftDriveMotor.setTargetPosition(distance);
+            RightDriveMotor.setTargetPosition(distance);
+
+        } else if(direction == "B") {
+
+            LeftDriveMotor.setTargetPosition(-distance);
+            RightDriveMotor.setTargetPosition(-distance);
+
+        }
+
+        LeftDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);
 
 
         //prevents other action until motors have reached positions
+        double currentSpeed = (speed / 4);
+
         while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
             //Loop body can be empty
+            telemetry.update();
+
+            if(currentSpeed < speed){
+
+                currentSpeed = currentSpeed + 0.005;
+
+            }
+
+            LeftDriveMotor.setPower(currentSpeed);
+            RightDriveMotor.setPower(currentSpeed);
+
 
         }
+
 
         //Stops motors, ready for next action
         LeftDriveMotor.setPower(0);
@@ -143,7 +167,7 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
 
     public void turn(String direction, int distance, double speed){
 
-        if(direction == "left"){// left
+        if(direction == "L"){// left
 
             //Resets the encoders and does a left point turn for the inputted degrees
             RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -161,11 +185,10 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
             RightDriveMotor.setPower(-speed);
 
 
-
             //prevents other action until motors have reached positions
             while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
-                //Loop body can be empty
+                telemetry.update();
 
             }
 
@@ -176,8 +199,7 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
 
         }
 
-        if(direction == "right"){// right
-
+        if(direction == "R"){// right
 
             //Resets the encoders and does a right point turn for the inputted degrees
             RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -197,7 +219,7 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
             //prevents other action until motors have reached positions
             while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
 
-                //Loop body can be empty
+                telemetry.update();
 
             }
 
