@@ -33,7 +33,7 @@ public class cobaltClawsDriveOnly extends LinearOpMode {
             //double is a variable type that supports decimals
             double leftPower;
             double rightPower;
-            double drive = gamepad1.left_stick_y;
+            //double drive = gamepad1.left_stick_y;
             //double turn = gamepad1.left_stick_x;
 
 
@@ -56,32 +56,35 @@ public class cobaltClawsDriveOnly extends LinearOpMode {
             if (gamepad1.left_stick_y > 0 && gamepad1.left_stick_x <= 0.5 &&
                     gamepad1.left_stick_x >= -0.5){
 
-                    leftPower = 1.0;
-                    rightPower = 1.0;
-                    //If left joystick is
+                    leftPower = 0.8;
+                    rightPower = 0.8;
+                    //If left joystick is in the upper hemisphere and center, drive forwards
 
             } else if (gamepad1.left_stick_y < 0 && gamepad1.left_stick_x <= 0.5 &&
                     gamepad1.left_stick_x >= -0.5){
 
-                    leftPower = -1.0;
-                    rightPower = -1.0;
+                    leftPower = -0.8;
+                    rightPower = -0.8;
+                    //If left joystick is in the lower hemisphere and center, drive backwards
 
             } else if (gamepad1.left_stick_x > 0 && gamepad1.left_stick_y <= 0.5 &&
                     gamepad1.left_stick_y >= -0.5){
 
-                    leftPower = 1.0;
+                    leftPower = 0.8;
                     rightPower = 0.0;
+                    //If left joystick is in the right hemisphere and right-center, turn right
 
             } else if (gamepad1.left_stick_x < 0 && gamepad1.left_stick_y <= 0.5 &&
                     gamepad1.left_stick_y >= -0.5){
 
                     leftPower = 0.0;
-                    rightPower = 1.0;
+                    rightPower = 0.8;
+                    //If left joystick is in the left hemisphere and left-center, turn left
 
             } else {
                 leftPower = 0;
                 rightPower = 0;
-                //if neither of these if statements report true it sets the motor powers to 0
+                // if the left joystick is in neutral, stop motors
                 // if you don't push a stick, the robot don't move
             }
 
