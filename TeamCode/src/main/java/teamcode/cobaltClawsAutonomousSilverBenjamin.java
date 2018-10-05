@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "cobaltClawsAutonomousBenjamin", group = "Linear OpMode")
+@Autonomous(name = "cobaltClawsAutonomousGoldBenjamin", group = "Linear OpMode")
 
-public class cobaltClawsAutonomousBenjamin extends LinearOpMode {
+public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor LeftDriveMotor; //motor 0
@@ -27,11 +27,11 @@ public class cobaltClawsAutonomousBenjamin extends LinearOpMode {
     boolean leftGrabberOpen;
     boolean rightGrabberOpen;
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
-                                                        / (WHEEL_DIAMETER_INCHES * 3.1415);
+    //static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
+    //static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
+    //static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    //static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
+    //                                                    / (WHEEL_DIAMETER_INCHES * 3.1415);
 
     @Override
     public void runOpMode() {
@@ -45,8 +45,13 @@ public class cobaltClawsAutonomousBenjamin extends LinearOpMode {
 
         while(opModeIsActive()) {
 
+            /*
 
-            
+            move
+
+             */
+
+
         }
 
 
