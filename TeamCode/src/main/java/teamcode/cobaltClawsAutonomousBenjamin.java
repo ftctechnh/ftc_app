@@ -92,4 +92,84 @@ public class cobaltClawsAutonomousBenjamin extends LinearOpMode {
         telemetry.update();
     }
 
+    public void move(int distance, double speed){
+
+
+        RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+        LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+
+        LeftDriveMotor.setTargetPosition   (-distance);
+        RightDriveMotor.setTargetPosition  (distance);
+
+
+        while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
+
+            //Loop body can be empty
+
+        }
+
+        LeftDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);
+
+    }
+
+    public void turn(String direction, int distance, double speed){
+
+        if(direction == "left"){// left
+
+            RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+
+            RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+            LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            RightDriveMotor.setTargetPosition  (distance);
+            LeftDriveMotor.setTargetPosition   (distance);
+
+
+
+            while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
+
+                //Loop body can be empty
+
+            }
+
+            LeftDriveMotor.setPower(0);
+            RightDriveMotor.setPower(0);
+
+
+        }
+
+        if(direction == "right"){// right
+
+
+            RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+            RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+            LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+
+
+            RightDriveMotor.setTargetPosition  (-distance);
+            LeftDriveMotor.setTargetPosition   (-distance);
+
+
+            while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
+
+                //Loop body can be empty
+
+            }
+
+            LeftDriveMotor.setPower(0);
+            RightDriveMotor.setPower(0);
+
+        }
+
+    }
+
 }
