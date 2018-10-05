@@ -1,3 +1,4 @@
+
 package teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -12,7 +13,10 @@ public class ArmControlTest extends LinearOpMode {
     private Servo armServoBase;
     private Servo armServoTop;
     //private Servo armServoClaw;
-    //set positions
+
+    //private int armMotorBasePosition;
+    private double armServoBasePosition;
+    private double armServoTopPosition;
 
     @Override
     //runop calls other methods to control arm- main method
@@ -23,21 +27,38 @@ public class ArmControlTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            if (gamepad1.a) { //folded
-                armServoBase.setPosition(0);
-                armServoTop.setPosition(0);
+            if (gamepad1.right_stick_y != 0) {
+                int val = gamepad1.right_stick_y > 0 ? 5 : -5;
+                //armMotorBasePosition += val;
+                //setMotor(armMotorBasePosition, .25);
+            }
+            else if (gamepad1.x) {
+                armServoBasePosition += 0.1;
+                armServoBase.setPosition(armServoBasePosition);
 
-            } else if (gamepad1.b) { //straight
-                armServoBase.setPosition(1);
-                armServoTop.setPosition(1);
+            }
+            else if (gamepad1.a) {
+                armServoBasePosition -= 0.1;
+                armServoBase.setPosition(armServoBasePosition);
+
+            }
+            else if (gamepad1.y) {
+                armServoTopPosition -= 0.1;
+                armServoTop.setPosition(armServoTopPosition);
+            }
+            else if (gamepad1.b) {
+                armServoTopPosition += 0.1;
+                armServoTop.setPosition(armServoTopPosition);
             }
         }
     }
 
-    public void setMotor () {
-        //armMotorBase.setTargetPosition(100);
-        //armMotorBase.setPower(0.5);
+    /*
+    public void setMotor (int position, double speed) {
+        armMotorBase.setTargetPosition(position);
+        armMotorBase.setPower(speed);
     }
+    */
 
     public void initialize() {
         //armMotorBase = hardwareMap.get(DcMotor.class, "armMotorBase");
@@ -46,29 +67,14 @@ public class ArmControlTest extends LinearOpMode {
         //armServoClaw = hardwareMap.get(Servo.class, "armServoClaw");
         //armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //armMotorBase.setDirection(DcMotor.Direction.FORWARD);
+        //armMotorBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armServoBase.setDirection(Servo.Direction.REVERSE);
         armServoTop.setDirection(Servo.Direction.FORWARD);
         //armServoClaw.setDirection(Servo.Direction.FORWARD);
+
+        //armMotorBasePosition = 0;
+        armServoBasePosition = 0;
+        armServoTopPosition = 0;
     }
 }
-
-/*
-public class LinearSlideTest extends LinearOpMode {
-    private DcMotor motor1;
-
-    public void runOpMode() {
-        initialize();
-
-        //Always True
-        while (opModeIsActive() ) {
-            float joystickY = gamepad1.right_stick_y;
-            motor1.setPower(joystickY);
-        }
-    }
-
-    public void initialize() {
-        motor1 = hardwareMap.get(DcMotor.class, "motor1");
-        motor1.setDirection(DcMotor.Direction.FORWARD);
-    }
-}
-*/
