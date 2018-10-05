@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.control.PIDCoefficients;
 import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryLoader;
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -24,10 +25,7 @@ public class SplineFollowOpMode extends LinearOpMode {
 
         MecanumConstraints constraints = new MecanumConstraints(baseConstraints, drive.getTrackWidth(), drive.getWheelBase());
 
-        Trajectory trajectory = new TrajectoryBuilder(new Pose2d(0, 0, 0), constraints)
-                .splineTo(new Pose2d(40, 40, 0))
-                .build();
-
+        Trajectory trajectory = TrajectoryLoader.load();
         // TODO: tune kV, kA, and kStatic in the following follower
         // then tune the PID coefficients after you verify the open loop response is roughly correct
         MecanumPIDVAFollower follower = new MecanumPIDVAFollower(
