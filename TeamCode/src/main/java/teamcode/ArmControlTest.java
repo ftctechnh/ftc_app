@@ -27,6 +27,7 @@ public class ArmControlTest extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
+
             if (gamepad1.right_stick_y != 0) {
                 int val = gamepad1.right_stick_y > 0 ? 5 : -5;
                 //armMotorBasePosition += val;
@@ -34,21 +35,27 @@ public class ArmControlTest extends LinearOpMode {
             }
             else if (gamepad1.x) {
                 armServoBasePosition += 0.1;
-                armServoBase.setPosition(armServoBasePosition);
-
+                //armServoBase.setPosition(armServoBasePosition);
+                armServoBase.setPosition(1);
+                sleep(200);
             }
             else if (gamepad1.a) {
                 armServoBasePosition -= 0.1;
-                armServoBase.setPosition(armServoBasePosition);
-
+                //armServoBase.setPosition(armServoBasePosition);
+                armServoBase.setPosition(0);
+                sleep(200);
             }
             else if (gamepad1.y) {
                 armServoTopPosition -= 0.1;
-                armServoTop.setPosition(armServoTopPosition);
+                //armServoTop.setPosition(armServoTopPosition);
+                armServoTop.setPosition(0);
+                sleep(200);
             }
             else if (gamepad1.b) {
                 armServoTopPosition += 0.1;
-                armServoTop.setPosition(armServoTopPosition);
+                //armServoTop.setPosition(armServoTopPosition);
+                armServoTop.setPosition(1);
+                sleep(200);
             }
         }
     }
