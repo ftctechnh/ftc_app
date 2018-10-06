@@ -132,4 +132,9 @@ public class HardwareUtilityFunctionsTest {
             assertEquals(DIAGONAL2_EXPECTED[i], powers[2], DELTA);
         }
     }
+
+    @Test
+    public void hardwareUtilities_DoNothing() {
+        assertEquals(0, 0);
+    }
 }
