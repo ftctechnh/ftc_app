@@ -91,6 +91,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * is explained below.
  */
 
+
 @TeleOp(name="Concept: Vuforia Rover Nav", group ="Concept")
 public class VuforiaNavRoverRuckus extends LinearOpMode {
 
@@ -121,10 +122,7 @@ public class VuforiaNavRoverRuckus extends LinearOpMode {
     // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
     // Valid choices are:  BACK or FRONT
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-
-    private OpenGLMatrix lastLocation = null; private static final float mmPerInch        = 25.4f;
-    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-    private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+    private OpenGLMatrix lastLocation = null;
     private boolean targetVisible = false;
 
     /**
@@ -277,6 +275,10 @@ public class VuforiaNavRoverRuckus extends LinearOpMode {
 
         /** Start tracking the data sets we care about. */
         targetsRoverRuckus.activate();
+
+
+        //THIS IS WHERE WE STOPPED IN THE conifgVuforiaRoverkRuckus method
+
         while (opModeIsActive()) {
 
             // check all the trackable target to see which one (if any) is visible.
