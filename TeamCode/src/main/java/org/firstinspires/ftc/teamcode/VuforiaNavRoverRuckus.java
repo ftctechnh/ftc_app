@@ -122,7 +122,9 @@ public class VuforiaNavRoverRuckus extends LinearOpMode {
     // Valid choices are:  BACK or FRONT
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
-    private OpenGLMatrix lastLocation = null;
+    private OpenGLMatrix lastLocation = null; private static final float mmPerInch        = 25.4f;
+    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+    private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
     private boolean targetVisible = false;
 
     /**
