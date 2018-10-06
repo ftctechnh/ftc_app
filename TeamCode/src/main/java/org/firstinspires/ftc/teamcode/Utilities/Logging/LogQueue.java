@@ -30,7 +30,7 @@ public class LogQueue {
 
     int propLength;
 
-    public LogQueue(BaseHardware hardware) throws NoSuchFieldException, IOException {
+    public LogQueue(BaseHardware hardware) throws NoSuchFieldException {//} IOException {
         this.hardware = hardware;
         queue = new ArrayBlockingQueue<>(CAPACITY * 2);
 
@@ -41,9 +41,9 @@ public class LogQueue {
 
         propLength = GAMEPAD_PROPERTIES.length;
 
-        fileWriter = new FileWriter(getFile(hardware));
-        logManager = new AsyncLogWriter(fileWriter, queue);
-        logManager.start();
+        //fileWriter = new FileWriter(getFile(hardware));
+        //logManager = new AsyncLogWriter(fileWriter, queue);
+        //logManager.start();
     }
 
     public File getFile(BaseHardware hardware) {
@@ -66,7 +66,7 @@ public class LogQueue {
         Object[] readings = new Object[propLength + 8];
         int gamepadNum = 0;
 
-        for (Gamepad g : new Gamepad[] {hardware.opMode.gamepad1}) {
+        /*for (Gamepad g : new Gamepad[] {hardware.opMode.gamepad1}) {
             for (int i = 0; i < fields.length; i++) {
                 readings[gamepadNum + i] = fields[i].get(g);
             }
@@ -80,9 +80,10 @@ public class LogQueue {
 
         queue.add(readings);
         // Will automatically update AsyncLogWriter
+        */
     }
 
     public void shutdown() {
-        logManager.terminate();
+    //logManager.terminate();
     }
 }

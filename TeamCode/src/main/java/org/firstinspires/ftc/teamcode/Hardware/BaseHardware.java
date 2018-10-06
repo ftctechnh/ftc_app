@@ -52,10 +52,10 @@ public class BaseHardware {
         currentTick = 0;
         try {
             logger = new LogQueue(this);
-        } catch (IOException e) {
+        } /*catch (IOException e) {
             tel.log().add("Recieved 'IOException'");
             tel.log().add(e.toString());
-        } catch (NoSuchFieldException e) {
+        }*/ catch (NoSuchFieldException e) {
             tel.log().add("Recieved 'NoSuchFieldException'");
         }
     }

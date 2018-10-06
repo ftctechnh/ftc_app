@@ -18,7 +18,7 @@ import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.RoadRunner
 public class SplineFollowOpMode extends LinearOpMode {
     @Override
     public void runOpMode() {
-        RoadRunnerMecanumInterface drive = new RoadRunnerMecanumInterface(hardwareMap);
+        /*RoadRunnerMecanumInterface drive = new RoadRunnerMecanumInterface(hardwareMap);
         // change these constraints to something reasonable for your drive
         DriveConstraints baseConstraints = new DriveConstraints(20.0,
                 30.0, Math.PI / 2, Math.PI / 2);
@@ -44,6 +44,6 @@ public class SplineFollowOpMode extends LinearOpMode {
 
             follower.update(currentPose);
             drive.updatePoseEstimate();
-        }
+        }*/
     }
 }

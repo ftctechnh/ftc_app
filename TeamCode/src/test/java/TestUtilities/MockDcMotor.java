@@ -1,9 +1,11 @@
 package TestUtilities;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
-import com.qualcomm.robotcore.hardware.configuration.MotorConfigurationType;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
@@ -32,7 +34,6 @@ public class MockDcMotor implements DcMotorEx {
 
     @Override
     public void setMotorType(MotorConfigurationType motorType) {
-
     }
 
     @Override
@@ -155,7 +156,13 @@ public class MockDcMotor implements DcMotorEx {
     public boolean isMotorEnabled() {return false;}
 
     @Override
+    public void setVelocity(double angularRate) {}
+
+    @Override
     public void setVelocity(double angularRate, AngleUnit unit) {}
+
+    @Override
+    public double getVelocity() { return 0; }
 
     @Override
     public double getVelocity(AngleUnit unit) {return 0;}
@@ -165,6 +172,18 @@ public class MockDcMotor implements DcMotorEx {
 
     @Override
     public PIDCoefficients getPIDCoefficients(RunMode mode) {return null;}
+
+    @Override
+    public PIDFCoefficients getPIDFCoefficients(RunMode mode) {return null;}
+
+    @Override
+    public void setPIDFCoefficients(DcMotor.RunMode mode, PIDFCoefficients pidfCoefficients) {}
+
+    @Override
+    public void setVelocityPIDFCoefficients(double p, double i, double d, double f) {}
+
+    @Override
+    public void setPositionPIDFCoefficients(double p) {}
 
     @Override
     public void setTargetPositionTolerance(int tolerance) {}
