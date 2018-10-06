@@ -22,14 +22,70 @@ public class MechanumTest extends LinearOpMode {
 		 * Initialize the drive system variables.
 		 * The init() method of the hardware class does all the work here
 		 */
+
+
 		robot.init(hardwareMap);
 
 		waitForStart();
 
 		while(opModeIsActive()) {
-			if(gamepad1.left_stick_y != 0){
+			telemetry.update();
 
+			double xValL = gamepad1.left_stick_x;
+			double yValL = gamepad1.left_stick_x;
+
+			double xValR = gamepad1.right_stick_x;
+
+
+			//Move forward or backwards, set all motors to positive (forwards) or negative (backwards)
+			if(yValL != 0){
+				//Set all motors to forwards
+				for(int i = 0; i<4; i++){
+					runMotor(i,yValL);
+				}
 			}
+			else{
+				for(int i = 0; i<4; i++){
+					runMotor(i,0);
+				}
+			}
+
+			//Strafing, wheels move inwards on the side of movement, and outwards on the opposite side
+			/*
+			If left_stick moved to the right, value is positive:
+				motor0 and motor3 move forwards
+				motor1 and motor2 move backwards
+			And visa versa
+			 */
+			if(xValL != 0){
+				runMotor(0,xValL);
+				runMotor(3,xValL);
+				runMotor(1,xValL*-1);
+				runMotor(2,xValL*-1);
+			}
+			else{
+				for(int i = 0; i<4; i++){
+					runMotor(i,0);
+				}
+			}
+
+			//Turning, wheels on direction of turn move backwards, and opposite sides move forwards
+			if(xValR != 0){
+				runMotor(0,xValR);
+				runMotor(2,xValR);
+				runMotor(1,xValR*-1);
+				runMotor(3,xValR*-1);
+			}
+			else{
+				for(int i = 0; i<4; i++){
+					runMotor(i,0);
+				}
+			}
+
+			telemetry.addData("motor0",robot.motor0.getCurrentPosition());
+			telemetry.addData("motor1",robot.motor1.getCurrentPosition());
+			telemetry.addData("motor2",robot.motor2.getCurrentPosition());
+			telemetry.addData("motor3",robot.motor3.getCurrentPosition());
 		}
 
 	}

@@ -1,34 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.sun.tools.javac.tree.DCTree;
-
-import static org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot.MID_SERVO;
 
 /**
  * Created by Rohan Mathur on 9/15/18.
  */
-public class HardwarePushbotTest
+public class ColorHardware
 {
 	/* Public OpMode members. */
-	public CRServo threader = null;
-	public Servo door =		null;
 
 	public DcMotor motor0 =	null;
-	public DcMotor motor1 = null;
-	public DcMotor motor2 = null;
-	public DcMotor motor3 = null;
+	public ColorSensor color;
 
 	/* local OpMode members. */
-	HardwareMap hwMap           =  null;
+	HardwareMap hwMap =  null;
 
 	/* Constructor */
-	public HardwarePushbotTest(){
+	public ColorHardware(){
 
 	}
 
@@ -37,12 +29,9 @@ public class HardwarePushbotTest
 		// Save reference to Hardware map
 		hwMap = ahwMap;
 
-		threader = hwMap.get(CRServo.class, "threader");
-		threader.setPower(0);
+		color = hwMap.get(ColorSensor.class, "color");
 
-		door = hwMap.get(Servo.class, "door");
-		door.setPosition(0.5);
-
+		motor0 = hwMap.get(DcMotor.class, "motor0");
 /*		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

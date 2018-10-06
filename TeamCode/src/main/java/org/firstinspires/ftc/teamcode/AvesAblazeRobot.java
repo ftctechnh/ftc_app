@@ -15,7 +15,7 @@ public abstract class AvesAblazeRobot {
 	public double diameter;
 
 	//drives forever at "a" degrees
-	public void drive(double a){
+	public void strafe(double a){
 
 	}
 
@@ -25,7 +25,7 @@ public abstract class AvesAblazeRobot {
 	}
 
 	//drive forward "d" inches
-	public void drived(double d){
+	public void drive(double d){
 
 	}
 
@@ -35,12 +35,12 @@ public abstract class AvesAblazeRobot {
 	}
 
 	//Drive to coordinate (newX, newY)
-	public void drivexy(double newX, double newY){
+	public void moveTo(double newX, double newY){
 
 	}
 
 	//Drive "d" inches at "a" degrees
-	public void driveda(double d, double a){
+	public void drive(double d, double a){
 
 	}
 
@@ -55,12 +55,12 @@ public abstract class AvesAblazeRobot {
 	}
 
 	//returns if the color sensor detects yellow
-	public boolean isYellow(){
+	public boolean seesYellow(){
 		return false;
 	}
 
 	//returns if the color sensor detects white
-	public boolean isWhite(){
+	public boolean seesWhite(){
 		return false;
 	}
 

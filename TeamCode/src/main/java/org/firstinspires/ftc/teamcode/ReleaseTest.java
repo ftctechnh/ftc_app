@@ -28,19 +28,23 @@ public class ReleaseTest extends LinearOpMode {
 		waitForStart();
 
 		while(opModeIsActive()) {
-			telemetry.addData("Servo Position", robot.threader.getPosition());
-			if (gamepad1.a) {
-				robot.threader.setPosition(1);
-				telemetry.addData("Servo Position", robot.threader.getPosition());
+			if (gamepad1.dpad_up) {
+				robot.threader.setPower(100);
+			}
+			else if (gamepad1.dpad_down) {
+				robot.threader.setPower(-0.5);
 			}
 			else{
-				robot.threader.setPosition(0.5);
-				telemetry.addData("Servo Position", robot.threader.getPosition());
+				robot.threader.setPower(0);
 			}
 
-			if(gamepad1.b){
+			if(gamepad1.a){
 				robot.door.setPosition(1);
 			}
+			if(gamepad1.b){
+				robot.door.setPosition(0);
+			}
+			telemetry.update();
 		}
 
 	}
