@@ -14,31 +14,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+import org.firstinspires.ftc.robotcore.internal.android.dex.util.ExceptionWithContext;
 
 //import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 
 public class DriveTrainNew {
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     private DcMotor lDrive,rDrive;
-    private IMU imu;
+    private IMUNew imu;
     private LinearOpMode opMode;
-    private DcMotor[] driveMotors  = new DcMotor[2];
+    private DcMotor[] driveMotors;
 
     public DriveTrainNew(LinearOpMode opMode) {
         this.opMode = opMode;
         lDrive = opMode.hardwareMap.dcMotor.get("lDrive");
         rDrive = opMode.hardwareMap.dcMotor.get("rDrive");
 
+        rDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        lDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        BNO055IMU adaImu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
-        this.imu = new IMU(adaImu);
+        this.imu = new IMUNew("imu",this.opMode);
 
-        this.driveMotors[0] = rDrive;
-        this.driveMotors[1] = lDrive;
-
+        this.driveMotors = new DcMotor[]{lDrive,rDrive};
 
         initMotors();
-
+        this.imu.init();
     }
 
     public void initMotors(){
@@ -87,8 +87,8 @@ public class DriveTrainNew {
     }
 
     public void setPowers(double lPower, double rPower){
-        rDrive.setPower(lPower);
-        lDrive.setPower(rPower);
+        lDrive.setPower(lPower);
+        rDrive.setPower(rPower);
     }
 
 
@@ -165,73 +165,19 @@ public class DriveTrainNew {
         return target - current;
     }
 
-//
-//    public double rotateIMURamp(int degrees,Direction direction, double power, int timeoutS, Telemetry telemetry) {
-//        //public double rotateIMURamp(int degrees, double power, int timeoutS, IMU imu, Telemetry telemetry) {
-//        //COUNTERCLOCKWISE IS POSITIVE DEGREES
-//        double heading;
-//        int e;
-//        long endtime = System.currentTimeMillis() + (timeoutS * 1000);
-//        double start = imu.getAngle();
+
+//    public double rotateIMU(double degrees,Direction direction, double power, double timeoutS, Telemetry telemetry) throws Exception{
+//        double start = imu.getAngle(Axis.HEADING);
 //        double target;
 //        if(direction == Direction.CW){
-//            target = start + Math.abs(degrees);
+//            target = start+degrees;
+//        }else if (direction == Direction.CCW){
+//            target = start - degrees;
 //        }else{
-//            target = start - Math.abs(degrees);
+//
+//            target = start;
 //        }
 //
-//        if ( target < 0) {
-//            target += 360;
-//        } else if (target >=360 ) {
-//            target -=360;
-//        }
-//        telemetry.clear();
-//        telemetry.addData("Start", start);
-//        telemetry.addData("Target", target);
-//
-//        if (Math.abs(degrees) <= Values.gyroTurnErrorMargin ){
-//            telemetry.addData("Too small to turn ", degrees);
-//            telemetry.update();
-//            return start;
-//        }
-//        telemetry.update();
-//        do {
-//            heading = imu.getAngle();
-//            if ( degrees > 0 ) { // Turn clockwise
-//                e = headingCWError((int) start, degrees, (int) heading); // Heading error
-//            } else { // turn counter clockwise
-//                e = headingCCWError((int) start, -degrees, (int) heading); // Heading error
-//            }
-//            if ( e > 0 ) {
-//                setPowers(Math.max(Values.minRotationPower, power * powerAdjust(e)),-Math.max(Values.minRotationPower, power * powerAdjust(e)));
-//            } else {  // overshoot
-//                setPowers(-Math.max(Values.minRotationPower, power * powerAdjust(e)),Math.max(Values.minRotationPower, power * powerAdjust(e)));
-//            }
-//            if (Math.abs(e) <= Values.gyroTurnErrorMargin) {
-//                this.stopAll();
-//                Utils.waitFor(100); // wait for 500 msec.
-//                heading = imu.getAngle(); // read heading again
-//                if ( degrees > 0 ) { // Turn clockwise
-//                    e = headingCWError((int) start, degrees, (int) heading); // Heading error
-//                } else { // turn counter clockwise
-//                    e = headingCCWError((int) start, -degrees, (int) heading); // Heading error
-//                }
-//            }
-//
-//            telemetry.clear();
-//            telemetry.addData("Start", start);
-//            telemetry.addData("Heading", imu.getAngle());
-//            telemetry.addData("Target", target);
-//            telemetry.addData("timeout", timeoutS * 1000);
-//            telemetry.addData("End Time", endtime);
-//            telemetry.addData("Error", e);
-//            telemetry.update();
-//        } while ((Math.abs(e) > Values.gyroTurnErrorMargin) &&  (System.currentTimeMillis() < endtime) && opMode.opModeIsActive());
-//
-//        this.stopAll();
-//        return heading;
-//
-////      setDriveMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //
 //    }
 
