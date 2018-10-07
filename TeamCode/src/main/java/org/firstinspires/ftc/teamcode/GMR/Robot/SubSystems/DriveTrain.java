@@ -61,6 +61,8 @@ public class DriveTrain {
     private float yaw;
 
     private float currentYaw;
+
+    private boolean isTurning = false;
     //////////////////////////////////// CONSTRUCT
 
     //calls the second constructor of DriveTrain and passes a reference to the hardware map, telemetry, the 4 string names of the motors in the order left front, right front, left back, right back and the port reference to the gyro.
@@ -121,6 +123,25 @@ public class DriveTrain {
         this.rightFront.setPower(Range.clip((y-x-z),-1,1));
         this.leftRear.setPower(Range.clip(-(y-x+z),-1,1));
         this.rightRear.setPower(Range.clip((y+x-z), -1, 1));
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setMotorPowerSlow(double x, double y, double z){
+        /*
+        Guide to motor Powers:
+        Left Front: - (y + x + Z)
+        Right Front: y - x - z
+        Left Rear: y + x - z
+        Right Rear: - (y - x + z)
+         */
+        this.leftFront.setPower(Range.clip(-(y+x+z),-0.2,0.2));
+        this.rightFront.setPower(Range.clip((y-x-z),-0.2,0.2));
+        this.leftRear.setPower(Range.clip(-(y-x+z),-0.2,0.21));
+        this.rightRear.setPower(Range.clip((y+x-z), -0.2, 0.2));
 
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -558,19 +579,24 @@ public class DriveTrain {
         rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public boolean straighten(double goal) {
-        yaw = this.getYaw();
-        if (yaw > (goal - 1) && yaw < (goal + 1)) {
-            if (yaw > (goal - 1)) {
-                drive(Direction.TURNLEFT, 0.2);
-            } else if (yaw < (goal + 1)) {
-                drive(Direction.TURNRIGHT, 0.2);
+    public boolean straighten(float goalDegrees) {
+        if (!(currentYaw < (goalDegrees + gyroRange) && currentYaw > (goalDegrees - gyroRange))) {
+            if (goalDegrees < getYaw()) {
+                if (isTurning = false) {
+                    gyroTurn(Direction.TURNLEFT, .3, (goalDegrees - getYaw()));
+                    isTurning = true;
+                }
+            } else {
+                if (isTurning = false) {
+                    gyroTurn(Direction.TURNRIGHT, .3, (goalDegrees + getYaw()));
+                    isTurning = true;
+                }
             }
-            return false;
         } else {
-            stop();
+            isTurning = false;
             return true;
         }
+        return false;
     }
 
     public void displayEncoders() {

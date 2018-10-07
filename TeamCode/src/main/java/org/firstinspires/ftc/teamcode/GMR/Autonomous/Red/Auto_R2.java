@@ -56,7 +56,7 @@ public class Auto_R2 extends OpMode {
 
     private float endUltrasonic;
 
-    private double gyroBeforeGlyphPit;
+    private float gyroBeforeGlyphPit;
 
     private int keyColumn;
     private double columnDist;

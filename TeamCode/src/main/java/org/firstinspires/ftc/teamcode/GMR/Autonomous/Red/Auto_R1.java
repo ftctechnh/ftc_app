@@ -62,7 +62,7 @@ public class Auto_R1 extends OpMode {
 
     private double columnDist;
 
-    private double gyroBeforeGlyphPit;
+    private float gyroBeforeGlyphPit;
 
     @Override
     public void init() {
