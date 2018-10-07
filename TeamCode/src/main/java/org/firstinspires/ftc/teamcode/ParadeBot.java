@@ -71,11 +71,12 @@ public class ParadeBot
 
     public void driveStraight_In(float inches, double pow)
     {
-        float encTarget = 88.3378f * inches - 357.7886f;
+        float encTarget = 88.3378f * Math.abs(inches) - 357.7886f;
+
+        if (pow < 0)
+            inches = -inches;
 
         resetEncoders();
-        //Notes: We are using Andymark Neverrest 40
-        // 1120 counts per rev
 
         if(inches < 0)
         {
@@ -350,7 +351,13 @@ public class ParadeBot
 
     public void pivot_IMU(float degrees_In, double pow)
     {
-        float degreesToStopAt =  1.0661f * degrees_In - 21.0936f; // at .8 pow
+        float degreesToStopAt;
+
+        if(degrees_In > 0)
+            degreesToStopAt = Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);// at .8 pow
+        else
+            degreesToStopAt = -Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);
+
 
         while (degreesToStopAt > 180)
         {
