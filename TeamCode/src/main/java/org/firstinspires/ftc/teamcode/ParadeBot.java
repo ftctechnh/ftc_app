@@ -72,15 +72,7 @@ public class ParadeBot
     public void driveStraight_In(float inches, double pow)
     {
         float encTarget = 88.3378f * inches - 357.7886f;
-
-        if(inches > 0)
-            encTarget = inches;
-        else if (inches < 0)
-            encTarget = inches;
-        else
-            encTarget = inches;
-        //You get the number of encoder counts per unit and multiply it by how far you want to go
-
+        
         resetEncoders();
         //Notes: We are using Andymark Neverrest 40
         // 1120 counts per rev
