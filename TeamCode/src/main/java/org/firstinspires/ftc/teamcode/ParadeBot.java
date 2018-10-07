@@ -49,12 +49,8 @@ public class ParadeBot
         driveLeftOne = hMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hMap.get(DcMotorImplEx.class, "driveRightOne");
 
-        driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         resetEncoders();
 
-        driveRightOne.setVelocity(0, AngleUnit.RADIANS);
-        driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
 
@@ -75,18 +71,12 @@ public class ParadeBot
 
     public void driveStraight_In(float inches, double pow)
     {
-        float encTarget;
-        if(inches > 0)
-            encTarget = inches;
-        else if (inches < 0)
-            encTarget = inches;
-        else
-            encTarget = inches;
-        //You get the number of encoder counts per unit and multiply it by how far you want to go
+        float encTarget = 88.3378f * Math.abs(inches) - 357.7886f;
+
+        if (pow < 0)
+            inches = -inches;
 
         resetEncoders();
-        //Notes: We are using Andymark Neverrest 40
-        // 1120 counts per rev
 
         if(inches < 0)
         {
@@ -329,14 +319,12 @@ public class ParadeBot
 
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
-        float degToRad = degrees * (float) Math.PI / 180.0f; // converts it to Radians
+        resetEncoders();
 
-        float encTarget = (roboDiameterCm / 2 * degToRad) * (encCountsPerRev / wheelCircCm)/2;
+        float encTarget = degrees;
         //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
         //second set gets encoder counts per centimeter
         //we divide it by two at the end to compensate for using two motors
-
-        resetEncoders();
 
         //It pivots in the direction of how to unit circle spins
         if (degrees < 0) //Pivot Clockwise
@@ -344,43 +332,54 @@ public class ParadeBot
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
 
-            while (driveLeftOne.getCurrentPosition() > encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
-
         }
         else //CounterClockwise
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-
-            while (driveLeftOne.getCurrentPosition() < encTarget && driveRightOne.getCurrentPosition() < encTarget) {}
         }
+
+        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget)) {}
 
         stopAllMotors();
     }
 
-    public void pivot_IMU(float degrees, double pow)
+    public void pivot_IMU(float degrees_IN)
     {
-        while (degrees > 180)
+        pivot_IMU(degrees_IN, .8);
+    }
+
+    public void pivot_IMU(float degrees_In, double pow)
+    {
+        float degreesToStopAt;
+
+        if(degrees_In > 0)
+            degreesToStopAt = Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);// at .8 pow
+        else
+            degreesToStopAt = -Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);
+
+
+        while (degreesToStopAt > 180)
         {
-            degrees -= 360;
+            degreesToStopAt -= 360;
         }
-        while (degrees <-180)
+        while (degreesToStopAt <-180)
         {
-            degrees += 360;
+            degreesToStopAt += 360;
         }
 
         initIMU();
-        if (degrees < 0)
+        if (degreesToStopAt < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
-            while(getYaw() > degrees) {}
+            while(getYaw() > degreesToStopAt) {}
         }
         else
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-            while(getYaw() < degrees) {}
+            while(getYaw() < degreesToStopAt) {}
         }
 
         stopAllMotors();
