@@ -80,4 +80,21 @@ public class OpticalNavDriver extends I2cDeviceSynchDevice<I2cDeviceSynch> {
     public void write(Register r, byte[] b) {
         deviceClient.write(r.byteValue, b);
     }
+
+
+    public short[] getDeltaXY() {
+        byte xlo = read(Register.DELTA_X_LO, 1)[0];
+        byte ylo = read(Register.DELTA_Y_LO, 1)[0];
+        byte xyhi = read(Register.DELTA_XY_HI, 1)[0];
+
+
+        byte ymask = (byte) 0b00001111;
+        byte xmask = (byte) 0b11110000;
+
+        short xbits = (short) (xlo | ((xyhi & xmask) << 4));
+        short ybits = (short) (ylo | ((xyhi & ymask) << 8));
+
+
+        return new short[]{xbits, ybits};
+    }
 }
