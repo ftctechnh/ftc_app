@@ -12,10 +12,13 @@ public class FollowWall extends LinearOpMode
     ParadeBot paradeBot;
     public void runOpMode()
     {
-        /*measure distance from sensor from wall
-        switch (distanceWall)
-        {
-            case 'l' //l is left away from wall
+        paradeBot = new ParadeBot(hardwareMap);
+        double distRight = paradeBot.getDistFromFrontRight_In();
+        double distFront = paradeBot.getDistFromFrontRight_In();
+        telemetry.addData("distance right = ", distRight);
+        telemetry.addData("distance front = ", distFront);
+        telemetry.update();
 
+        
     }
 }
