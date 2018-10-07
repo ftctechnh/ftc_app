@@ -52,13 +52,14 @@ public class ParadeBot
         driveRightOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         driveLeftOne.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         resetEncoders();
-        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         driveRightOne.setVelocity(0, AngleUnit.RADIANS);
         driveLeftOne.setVelocity(0, AngleUnit.RADIANS);
         driveRightOne.setDirection(DcMotorSimple.Direction.FORWARD);
         driveLeftOne.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         frontLeftDistSens = hMap.get(DistanceSensor.class, "frontLeftDistSens");
         frontRightDistSens = hMap.get(DistanceSensor.class, "frontRightDistSens");
@@ -75,12 +76,12 @@ public class ParadeBot
     public void driveStraight_In(float inches, double pow)
     {
         float encTarget;
-        if(inches > 1)
-            encTarget = encCountsPerRev / wheelCircIn * (inches-1);
-        else if (inches < -1)
-            encTarget = encCountsPerRev / wheelCircIn * (inches+1);
+        if(inches > 0)
+            encTarget = inches;
+        else if (inches < 0)
+            encTarget = inches;
         else
-            encTarget = encCountsPerRev / wheelCircCm * inches;
+            encTarget = inches;
         //You get the number of encoder counts per unit and multiply it by how far you want to go
 
         resetEncoders();
@@ -91,16 +92,14 @@ public class ParadeBot
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-
-            while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget) {}
         }
         else
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
-
-            while(driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget){}
         }
+
+        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget)) {}
 
         stopAllMotors();
     }
