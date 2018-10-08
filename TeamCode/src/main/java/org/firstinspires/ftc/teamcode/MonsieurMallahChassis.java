@@ -21,10 +21,20 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 @TeleOp(name="Monsieur Mallah Chassis", group="MonsieurMallah")
 public class MonsieurMallahChassis extends OpMode {
 
-    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double MAX_POS     =  1.0;     // Maximum rotational position
-    static final double MIN_POS     =  0.0;     // Minimum rotational position
+    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int CYCLE_MS = 50;     // period of each cycle
+    static final double MAX_POS = 1.0;     // Maximum rotational position
+    static final double MIN_POS = 0.0;     // Minimum rotational position
+
+    //constants from encoder sample
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
+
 
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
@@ -45,6 +55,7 @@ public class MonsieurMallahChassis extends OpMode {
     // Hack stuff.
     private boolean useGyroscope = false;
     private boolean useMotors = true;
+    private boolean useEncoders = true;
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -73,7 +84,16 @@ public class MonsieurMallahChassis extends OpMode {
             // Reverse the motor that runs backwards when connected directly to the battery
             motorLeft.setDirection(DcMotor.Direction.REVERSE);
             motorRight.setDirection(DcMotor.Direction.FORWARD);
+
+            if (useEncoders) {
+                motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
         }
+
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -120,19 +140,19 @@ public class MonsieurMallahChassis extends OpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            double leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            double rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            double turn = gamepad1.right_stick_x;
+            double leftPower = Range.clip(drive + turn, -1.0, 1.0);
+            double rightPower = Range.clip(drive - turn, -1.0, 1.0);
             motorLeft.setPower(leftPower);
             motorRight.setPower(rightPower);
 
             // Control the sweeper.
-            boolean suckIn =  gamepad1.right_bumper;
-            boolean suckOut =  gamepad1.left_bumper;
+            boolean suckIn = gamepad1.right_bumper;
+            boolean suckOut = gamepad1.left_bumper;
             double suckPower = 0.0;
             if (suckIn) {
                 suckPower = -1.0;
-            } else if(suckOut){
+            } else if (suckOut) {
                 suckPower = 1.0;
             }
             sweeper.setPower(suckPower);
@@ -143,7 +163,7 @@ public class MonsieurMallahChassis extends OpMode {
             double pullPower = 0.0;
             if ((pullUp > 0.0) && (pullDown == 0.0)) {
                 pullPower = -1.0;
-            } else if ((pullDown > 0.0) && (pullUp == 0.0)){
+            } else if ((pullDown > 0.0) && (pullUp == 0.0)) {
                 pullPower = 1.0;
             }
             arm.setPower(pullPower);
@@ -151,19 +171,31 @@ public class MonsieurMallahChassis extends OpMode {
             // control the hand
             if (gamepad1.dpad_up) {
                 // Keep stepping up until we hit the max value.
-                angleHand += INCREMENT ;
+                angleHand += INCREMENT;
                 angleHand = Math.min(angleHand, MAX_POS);
-            }
-            else if (gamepad1.dpad_down){
+            } else if (gamepad1.dpad_down) {
                 // Keep stepping down until we hit the min value.
-                angleHand -= INCREMENT ;
+                angleHand -= INCREMENT;
                 angleHand = Math.max(angleHand, MIN_POS);
             }
             servoHand.setPosition(angleHand);
 
+            // HACK: If press the secret  y key, go forward 12 inchses to test encider.
+            if (useEncoders) {
+                boolean encodertest = gamepad1.y;
+                if (encodertest) {
+                    double speed = 1;
+                    encoderDrive(speed, 12, 12);
+                    encoderDrive(speed, 12, -12);
+                    encoderDrive(speed, 12, 12);
+                    encoderDrive(speed,5,5);
+                }
+            }
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
+                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
             telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
             telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
             telemetry.addData("Hand", " angle %5.2f", angleHand);
@@ -201,14 +233,14 @@ public class MonsieurMallahChassis extends OpMode {
         // Acceleration oa = bosch.getOverallAcceleration();
         //telemetry.addData("Gyro", "oa: " + oa);
         Acceleration la = bosch.getLinearAcceleration();
-        double linear_force  = Math.sqrt(la.xAccel*la.xAccel
-                + la.yAccel*la.yAccel
-                + la.zAccel*la.zAccel);
+        double linear_force = Math.sqrt(la.xAccel * la.xAccel
+                + la.yAccel * la.yAccel
+                + la.zAccel * la.zAccel);
         telemetry.addData("Gyro", "la: " + la + "(" + linear_force + ")");
         Acceleration ga = bosch.getGravity();
-        double gravity_force  = Math.sqrt(ga.xAccel*ga.xAccel
-                + ga.yAccel*ga.yAccel
-                + ga.zAccel*ga.zAccel);
+        double gravity_force = Math.sqrt(ga.xAccel * ga.xAccel
+                + ga.yAccel * ga.yAccel
+                + ga.zAccel * ga.zAccel);
         telemetry.addData("Gyro", "ga: " + ga + "(" + gravity_force + ")");
         Position pos = bosch.getPosition();
         telemetry.addData("Gyro", "pos: " + pos);
@@ -225,4 +257,71 @@ public class MonsieurMallahChassis extends OpMode {
         BNO055IMU.CalibrationStatus cstatus = bosch.getCalibrationStatus();
         telemetry.addData("Gyro", "cstatus: " + cstatus);
     }
+
+
+    /*
+     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Encoders are not reset as the move is based on the current position.
+     *  Move will stop if any of three conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Move runs out of time
+     *  3) Driver stops the opmode running.
+     */
+    public void encoderDrive(double speed,
+                             double leftInches, double rightInches) {
+        int newLeftTarget;
+        int newRightTarget;
+
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = motorRight.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        newRightTarget = motorLeft.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        motorRight.setTargetPosition(newLeftTarget);
+        motorLeft.setTargetPosition(newRightTarget);
+
+        // Turn On RUN_TO_POSITION
+        motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // reset the timeout time and start motion.
+        runtime.reset();
+        motorRight.setPower(Math.abs(speed));
+        motorLeft.setPower(Math.abs(speed));
+
+        // keep looping while we are still active, and there is time left, and both motors are running.
+        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+        // its target position, the motion will stop.  This is "safer" in the event that the robot will
+        // always end the motion as soon as possible.
+        // However, if you require that BOTH motors have finished their moves before the robot continues
+        // onto the next step, use (isBusy() || isBusy()) in the loop test.
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) &&
+                (motorRight.isBusy() && motorLeft.isBusy())) {
+
+            // Display it for the driver.
+            telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            telemetry.addData("Path2", "Running at %7d :%7d",
+                    motorRight.getCurrentPosition(),
+                    motorLeft.getCurrentPosition());
+            telemetry.update();
+           sleep(100);
+        }
+
+        // Stop all motion;
+        motorRight.setPower(0);
+        motorLeft.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+
+    public final void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
+
