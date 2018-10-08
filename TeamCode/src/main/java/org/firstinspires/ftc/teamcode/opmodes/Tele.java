@@ -34,11 +34,12 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.tasks.DriveTrainTask;
+import org.firstinspires.ftc.teamcode.tasks.SweeperTask;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Threaded Teleop")
 public class Tele extends LinearOpMode {
     private DriveTrainTask driveTrainTask;
-
+    private SweeperTask sweeperTask;
     public void runOpMode() throws InterruptedException{
         initialize();
         telemetry.addData("Ready!", "");
@@ -46,14 +47,17 @@ public class Tele extends LinearOpMode {
         waitForStart();
         long startTime = System.currentTimeMillis();
         driveTrainTask.start();
+        sweeperTask.start();
 
         while(opModeIsActive() && !isStopRequested()) {
             telemetry.update();
         }
         driveTrainTask.running = false;
+        sweeperTask.running = false;
     }
         private void initialize(){
             driveTrainTask = new DriveTrainTask(this);
+            sweeperTask = new SweeperTask(this);
 
         }
 

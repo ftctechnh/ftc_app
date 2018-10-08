@@ -31,7 +31,7 @@ public class DriveTrainNew {
         rDrive = opMode.hardwareMap.dcMotor.get("rDrive");
 
         rDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        lDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        lDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         this.imu = new IMUNew("imu",this.opMode);
 

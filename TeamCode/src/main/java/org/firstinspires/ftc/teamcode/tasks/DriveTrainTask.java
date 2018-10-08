@@ -25,7 +25,7 @@ public class DriveTrainTask extends TaskThread {
     public void run() {
         timer.reset();
         while (opMode.opModeIsActive() && this.running) {
-            dt.setPowers(opMode.gamepad1.left_stick_y,opMode.gamepad1.right_stick_y);
+            dt.setPowers(opMode.gamepad1.left_stick_y, opMode.gamepad1.right_stick_y);
         }
         dt.setPowers(0,0);
     }
