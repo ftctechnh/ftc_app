@@ -51,10 +51,10 @@ public class GoldAlignDetector extends DogeCVDetector {
     public double alignSize = 100;
 
     public DogeCV.AreaScoringMethod areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA;
-    public DogeCVColorFilter yellowFilter   = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
-    public RatioScorer      ratioScorer        = new RatioScorer(1.0, 3);
-    public MaxAreaScorer    maxAreaScorer      = new MaxAreaScorer( 0.01);
-    public PerfectAreaScorer perfectAreaScorer = new PerfectAreaScorer(5000,0.05);
+    public DogeCVColorFilter yellowFilter   = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW); // The detector uses a gold Levi color filter to locate the gold mineral
+    public RatioScorer      ratioScorer        = new RatioScorer(1.0, 3); // Used to find perfect squares
+    public MaxAreaScorer    maxAreaScorer      = new MaxAreaScorer( 0.01); // Looks for large objects in the frame
+    public PerfectAreaScorer perfectAreaScorer = new PerfectAreaScorer(5000,0.05); // Used to find fine-tuned size objects
 
     public GoldAlignDetector() {
         super();
@@ -62,19 +62,20 @@ public class GoldAlignDetector extends DogeCVDetector {
     }
 
     @Override
-    public Mat process(Mat input) {
+    public Mat process(Mat input) { // Extracting the data that we need
         if(input.channels() < 0 || input.cols() <= 0){
             Log.e("DogeCV", "Bad INPUT MAT!");
 
         }
-        input.copyTo(workingMat);
-        input.release();
+        input.copyTo(workingMat); // Getting the image frame and storing it in a Mat
+        input.release(); //Running the yellow Levi filter (looking for yellow areas in the image frame)
 
         Imgproc.GaussianBlur(workingMat,workingMat,new Size(5,5),0);
         yellowFilter.process(workingMat.clone(),maskYellow);
 
         List<MatOfPoint> contoursYellow = new ArrayList<>();
 
+        // Draws contours which outline the gold mineral and its shape on screen
         Imgproc.findContours(maskYellow, contoursYellow, hiarchy, Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
         Imgproc.drawContours(workingMat,contoursYellow,-1,new Scalar(230,70,70),2);
 
@@ -96,7 +97,7 @@ public class GoldAlignDetector extends DogeCVDetector {
             }
         }
 
-
+        // Calculates the x-position
         double alignX = (getAdjustedSize().width / 2) + alignPosOffset;
         double alignXMin = alignX - (alignSize / 2);
         double alignXMax = alignX +(alignSize / 2);
@@ -111,7 +112,7 @@ public class GoldAlignDetector extends DogeCVDetector {
             xPos = bestRect.x + (bestRect.width / 2);
             goldXPos = xPos;
             Imgproc.circle(workingMat, new Point( xPos, bestRect.y + (bestRect.height / 2)), 5, new Scalar(0,255,0),2);
-            if(xPos < alignXMax && xPos > alignXMin){
+            if(xPos < alignXMax && xPos > alignXMin){ //Determines whether the robot is aligned with the gold block
                 aligned = true;
             }else{
                 aligned = false;
@@ -163,7 +164,7 @@ public class GoldAlignDetector extends DogeCVDetector {
         return goldXPos;
     }
 
-
+// Returns whether the gold mineral is inside the frame or not
     public boolean isFound() {
         return found;
     }
