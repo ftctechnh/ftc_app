@@ -25,7 +25,7 @@ public class SplineFollowOpMode extends LinearOpMode {
 
         MecanumConstraints constraints = new MecanumConstraints(baseConstraints, drive.getTrackWidth(), drive.getWheelBase());
 
-        Trajectory trajectory = TrajectoryLoader.load();
+        //Trajectory trajectory = TrajectoryLoader.load();
         // TODO: tune kV, kA, and kStatic in the following follower
         // then tune the PID coefficients after you verify the open loop response is roughly correct
         MecanumPIDVAFollower follower = new MecanumPIDVAFollower(
@@ -38,7 +38,7 @@ public class SplineFollowOpMode extends LinearOpMode {
 
         waitForStart();
 
-        follower.followTrajectory(trajectory);
+        //follower.followTrajectory(trajectory);
         while (opModeIsActive() && follower.isFollowing()) {
             Pose2d currentPose = drive.getPoseEstimate();
 
