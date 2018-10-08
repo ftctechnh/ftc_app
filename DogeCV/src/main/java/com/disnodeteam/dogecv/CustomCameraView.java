@@ -50,6 +50,7 @@ public class CustomCameraView extends JavaCameraView {
 
     public CustomCameraView(Context context, int cameraId) {
         super(context, cameraId);
+        enableFpsMeter();
     }
 
     @Override

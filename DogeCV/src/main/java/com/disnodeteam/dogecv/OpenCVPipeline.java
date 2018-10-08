@@ -39,7 +39,6 @@ import org.opencv.core.Mat;
  * copy or use the software.
  * -------------------------------------------------------------------------------------
  * This is a base class for an OpenCV pipeline loop. In most cases, one would want to override processFrame() with their own function.
- * TODO: consider more functionality in here, relating to camera parameter manipulation? For most cases it's not needed.
  */
 
 public abstract class OpenCVPipeline implements CameraBridgeViewBase.CvCameraViewListener2 {
@@ -84,6 +83,7 @@ public abstract class OpenCVPipeline implements CameraBridgeViewBase.CvCameraVie
         final Activity activity = (Activity) context;
         final Context finalContext = context;
         final CameraBridgeViewBase.CvCameraViewListener2 self = this;
+
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -94,12 +94,13 @@ public abstract class OpenCVPipeline implements CameraBridgeViewBase.CvCameraVie
                     cameraView = new CustomCameraView(finalContext, cameraIndex);
                     cameraView.setCameraIndex(cameraIndex);
                     cameraView.setCvCameraViewListener(self);
+                    cameraView.enableFpsMeter();
+
                 }
                 inited = true;
             }
         });
     }
-    //TODO: allow other JavaCameraViews to be used, with the stipulation that they must already be instantiated from a UI thread
 
     /**
      * Attaches the underlying JavaCameraView to the screen and the camera using the set {@link ViewDisplay} to do so, essentially starting OpenCV processing.

@@ -83,6 +83,13 @@ public class Lines {
         return line;
     }
 
+    /**
+     * Extends a list of lines as vector, increasing the Euclidean distance of point 2 from point 1 by moving only point 2.
+     * @param lines The lines to be modified
+     * @param lengthFinal The final desired Euclidean length of the line
+     * @param size The size of the working image
+     * @return A new list of lines object of the appropriate length
+     */
     public static List<Line> vectorExtend(List<Line> lines, double lengthFinal, Size size) {
         List<Line> newLines = new ArrayList<Line>();
         for (Line line : lines) {
@@ -91,6 +98,13 @@ public class Lines {
         return newLines;
     }
 
+    /**
+     * Linearly extends a line in both directions by the given portion of its length
+     * @param line The line to be modified
+     * @param scale The length of the line will be extended by the line's length divided by twice this value
+     * @param size The size of the image
+     * @return
+     */
     public static Line linearExtend(Line line, double scale, Size size) {
         scale *= 2;
         double xN1 = line.x1 + (line.x1 - line.x2)/scale;
@@ -102,6 +116,13 @@ public class Lines {
         return new Line(p1, p2);
     }
 
+    /**
+     * Linearly extends a lines in both directions by the given portion of its length
+     * @param lines The lines to be modified
+     * @param scale The length of the lines will be extended by the line's length divided by twice this value
+     * @param size The size of the image
+     * @return
+     */
     public static List<Line> linearExtend(List<Line> lines, double scale, Size size) {
         List<Line> newLines = new ArrayList<Line>();
         for (Line line : lines) {
@@ -110,6 +131,13 @@ public class Lines {
         return newLines;
     }
 
+    /**
+     * Constructs a line given a center point, an angle in the plane, and a length
+     * @param point The center point of the line
+     * @param angle The desired angle of the line, in degrees
+     * @param length The desired length of the line, in pixels
+     * @return The constructed line
+     */
     public static Line constructLine(Point point, double angle, double length) {
         double dx = Math.cos(angle*Math.PI/180);
         double dy = Math.sin(angle*Math.PI/180);
@@ -120,6 +148,14 @@ public class Lines {
 
     //Multiple Lines
     static LineSegmentDetector detector = Imgproc.createLineSegmentDetector(Imgproc.LSD_REFINE_STD, 0.8, 0.6,2.0, 22.5, 0, 0.7, 32);
+
+    /**
+     * Modern OpenCV line segment detection - far better than Canny, but must be carefully adjusted.
+     * @param original The original image to be scanned, as an RGB image
+     * @param scale The factor by which the image is to be downscaled
+     * @param minLength The minimum line segment length to be returned
+     * @return A List of Lines found
+     */
     public static List<Line> getOpenCvLines(Mat original, int scale, double minLength) {
         Mat raw = new Mat();
         Imgproc.resize(original.clone(), raw, new Size((int) (original.size().width/scale), (int) (original.size().height/scale)));
@@ -130,9 +166,6 @@ public class Lines {
         Imgproc.blur(raw, raw, new Size(3,3));
         //Line Segment Detection 2
         Mat linesM1 = new Mat();
-        //LineSegmentDetector detector = Imgproc.createLineSegmentDetector(Imgproc.LSD_REFINE_ADV, 0.6, 0.3, 2.6, 22.5, 0, 0.3,256);
-        //LineSegmentDetector detector = Imgproc.createLineSegmentDetector(Imgproc.LSD_REFINE_STD, 0.5, 0.4,2.0, 19.5, 0, 0.6, 32);
-        //Reference for final glyph detection
 
         detector.detect(raw, linesM1);
         ArrayList<Line> lines = new ArrayList<Line>();

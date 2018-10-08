@@ -10,9 +10,15 @@ import org.opencv.core.Mat;
  * Created by Victo on 12/17/2017.
  */
 
-public class BlankDetector extends OpenCVPipeline {
+public class BlankDetector extends DogeCVDetector {
     @Override
-    public Mat processFrame(Mat rgba, Mat gray) {
-        return rgba;
+    public Mat process(Mat input) {
+        // Process frame
+        return input;
+    }
+
+    @Override
+    public void useDefaults() {
+        // Add in your scorers here.
     }
 }

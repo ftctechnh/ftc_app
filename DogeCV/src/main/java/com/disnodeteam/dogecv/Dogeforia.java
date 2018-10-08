@@ -46,7 +46,7 @@ import java.util.logging.Logger;
 import static com.vuforia.Vuforia.setFrameFormat;
 
 /**
- * Created by Victo on 9/12/2018.
+ * An implementation of Vuforia intended to be cross-compatible with OpenCV (and DogeCV by extension)
  */
 
 public class Dogeforia extends VuforiaLocalizerImpl {
@@ -63,9 +63,6 @@ public class Dogeforia extends VuforiaLocalizerImpl {
     BlockingQueue<CloseableFrame> frames;
     public Dogeforia(Parameters parameters) {
         super(parameters);
-
-
-
     }
 
     public void setDogeCVDetector(DogeCVDetector detector){
@@ -126,6 +123,9 @@ public class Dogeforia extends VuforiaLocalizerImpl {
                 VuforiaTrackablesImpl trackables = loadedTrackableSets.get(0);
                 int count = 0;
                 for(VuforiaTrackable trackable : trackables){
+                    if(trackable == null || ((VuforiaTrackableDefaultListener)trackable.getListener()) == null){
+                        continue;
+                    }
                     if(((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()){
                         Imgproc.putText(outMat,"Vuforia: " + trackable.getName(), new Point(10,50 * count + 50),0,2,new Scalar(0,255,0),3);
                         count++;

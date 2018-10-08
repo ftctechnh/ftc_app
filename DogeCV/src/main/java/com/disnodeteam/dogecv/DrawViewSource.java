@@ -33,25 +33,21 @@ public class DrawViewSource extends View {
     private Bitmap bitmap;
 
     public DrawViewSource(Context context) {
-        // TODO Auto-generated constructor stub
         super(context);
         init(context, null, 0);
     }
 
     public DrawViewSource(Context context, AttributeSet attrs) {
-        // TODO Auto-generated constructor stub
         super(context, attrs);
         init(context, attrs, 0);
     }
 
     public DrawViewSource(Context context, AttributeSet attrs, int defStyleAttr) {
-        // TODO Auto-generated constructor stub
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
-        // TODO Auto-generated method stub
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
 
@@ -66,7 +62,6 @@ public class DrawViewSource extends View {
     public DrawViewSource(Context context, AttributeSet attrs,
                           int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
-        // TODO Auto-generated constructor stub
     }
 
     /*
@@ -80,7 +75,6 @@ public class DrawViewSource extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // TODO Auto-generated method stub
         super.onDraw(canvas);
 
         canvas.drawColor(0, android.graphics.PorterDuff.Mode.CLEAR);
