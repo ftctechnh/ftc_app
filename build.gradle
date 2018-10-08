@@ -9,8 +9,14 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.3'
+        classpath 'com.android.tools.build:gradle:3.2.0'
     }
 }
-
+//Added to attempt to fix aapt2 error 10/8/18
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
 
