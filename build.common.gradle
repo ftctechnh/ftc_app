@@ -20,7 +20,14 @@ import java.util.regex.Pattern
 apply plugin: 'com.android.application'
 
 android {
-
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a'
+            universalApk true
+        }
+    }
     compileSdkVersion 23
 
     signingConfigs {
@@ -73,7 +80,7 @@ android {
             // Disable debugging for release versions so it can be uploaded to Google Play.
             //debuggable true
             ndk {
-                abiFilters "armeabi-v7a"
+                abiFilters "armeabi-v7a", 'x86'
             }
         }
         debug {
@@ -81,7 +88,7 @@ android {
             jniDebuggable true
             renderscriptDebuggable true
             ndk {
-                abiFilters "armeabi-v7a"
+                abiFilters "armeabi-v7a", "x86"
             }
         }
     }
