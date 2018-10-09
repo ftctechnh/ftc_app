@@ -118,6 +118,24 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
+
+
+
+        robot.leftDrive.setPower(1);
+        double position = 1;
+        while (opModeIsActive() && robot.leftDrive.getCurrentPosition() < position) {
+            //keep running
+        }
+        robot.leftDrive.setPower(0);
+
+        while (opModeIsActive() && robot.rightDrive.getCurrentPosition() < 300);
+
+
+
+
+
+
     }
 
     /*
@@ -126,8 +144,10 @@ public class PushbotAutoDriveByEncoder_Linear extends LinearOpMode {
      *  Move will stop if any of three conditions occur:
      *  1) Move gets to the desired position
      *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
+     *  3) Driver stops the opmode running
      */
+
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {

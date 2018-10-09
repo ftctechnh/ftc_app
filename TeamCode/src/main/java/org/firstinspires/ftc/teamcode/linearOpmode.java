@@ -12,7 +12,7 @@ public class linearOpmode extends LinearOpMode {
     // declarations go here
     public void runOpMode () {
 
-        //init goes here
+        //initialization goes here
         waitForStart();//driver hits play
         while (opModeIsActive()) {//while driver has not hit stop
 
