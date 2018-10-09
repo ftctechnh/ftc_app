@@ -37,13 +37,13 @@ public class HardwarePushbotTest
 		// Save reference to Hardware map
 		hwMap = ahwMap;
 
-		threader = hwMap.get(CRServo.class, "threader");
+/*		threader = hwMap.get(CRServo.class, "threader");
 		threader.setPower(0);
 
 		door = hwMap.get(Servo.class, "door");
-		door.setPosition(0.5);
+		door.setPosition(0.5);*/
 
-/*		motor0 = hwMap.get(DcMotor.class, "motor0");
+		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -57,7 +57,25 @@ public class HardwarePushbotTest
 
 		motor3 = hwMap.get(DcMotor.class, "motor3");
 		motor3.setDirection(DcMotor.Direction.FORWARD);
-		motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
+		motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+	}
+	public void rotate(double power){
+		motor0.setPower(power);
+		motor1.setPower(power);
+		motor2.setPower(power);
+		motor3.setPower(power);
+	}
+	public void moveLeftRight(double power){
+		motor0.setPower(power);
+		motor1.setPower(power);
+		motor2.setPower(-power);
+		motor3.setPower(-power);
+	}
+	public void moveUpDown(double power){
+		motor0.setPower(-power);
+		motor1.setPower(power);
+		motor2.setPower(-power);
+		motor3.setPower(power);
 	}
 }
 

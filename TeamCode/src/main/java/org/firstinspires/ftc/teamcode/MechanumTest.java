@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -8,7 +9,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by Rohan Mathur on 9/26/18.
  */
 @TeleOp(name="MechanumTest", group="Pushbot")
-
+@Disabled
 public class MechanumTest extends LinearOpMode {
 
 	/* Declare OpMode members. */
@@ -32,7 +33,7 @@ public class MechanumTest extends LinearOpMode {
 			telemetry.update();
 
 			double xValL = gamepad1.left_stick_x;
-			double yValL = gamepad1.left_stick_x;
+			double yValL = gamepad1.left_stick_y;
 
 			double xValR = gamepad1.right_stick_x;
 
@@ -45,9 +46,7 @@ public class MechanumTest extends LinearOpMode {
 				}
 			}
 			else{
-				for(int i = 0; i<4; i++){
-					runMotor(i,0);
-				}
+
 			}
 
 			//Strafing, wheels move inwards on the side of movement, and outwards on the opposite side
@@ -64,9 +63,7 @@ public class MechanumTest extends LinearOpMode {
 				runMotor(2,xValL*-1);
 			}
 			else{
-				for(int i = 0; i<4; i++){
-					runMotor(i,0);
-				}
+
 			}
 
 			//Turning, wheels on direction of turn move backwards, and opposite sides move forwards
@@ -77,15 +74,19 @@ public class MechanumTest extends LinearOpMode {
 				runMotor(3,xValR*-1);
 			}
 			else{
-				for(int i = 0; i<4; i++){
-					runMotor(i,0);
-				}
+
 			}
 
 			telemetry.addData("motor0",robot.motor0.getCurrentPosition());
 			telemetry.addData("motor1",robot.motor1.getCurrentPosition());
 			telemetry.addData("motor2",robot.motor2.getCurrentPosition());
 			telemetry.addData("motor3",robot.motor3.getCurrentPosition());
+
+			telemetry.addData("xValL", xValL);
+			telemetry.addData("yValL", yValL);
+			telemetry.addData("xValR", xValR);
+
+			telemetry.update();
 		}
 
 	}

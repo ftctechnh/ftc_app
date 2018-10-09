@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -23,32 +24,31 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * Created by Rohan Mathur on 9/17/18.
  */
-public class AvesAblazeHardwarePushbot extends AvesAblazeRobot {
-	private static final String VUFORIA_KEY = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
-	VuforiaLocalizer vuforia;
-	// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+public class AvesAblazeHardwarePushbot {
+	private static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
+	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
 	// We will define some constants and conversions here
-	private static final float mmPerInch        = 25.4f;
-	private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-	private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+	public static final float mmPerInch        = 25.4f;
+	public static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+	public static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
 	VuforiaTrackables targetsRoverRuckus;
 	List<VuforiaTrackable> allTrackables;
 	VuforiaTrackable currentTrackable;
 	// Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
 	// Valid choices are:  BACK or FRONT
-	private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+	public static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
-	private OpenGLMatrix lastLocation = null;
-	private boolean targetVisible = false;
+	public OpenGLMatrix lastLocation = null;
+	public boolean targetVisible = false;
 
 	HardwareMap hwMap;
 
 	/* Initialize standard Hardware interfaces */
 	public void init(HardwareMap ahwMap) {
+		hwMap=ahwMap;
 		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
-		// VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
 		parameters.vuforiaLicenseKey = VUFORIA_KEY ;
 		parameters.cameraDirection   = CAMERA_CHOICE;
@@ -161,8 +161,8 @@ public class AvesAblazeHardwarePushbot extends AvesAblazeRobot {
 		 * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
 		 */
 
-		final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-		final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
+		final int CAMERA_FORWARD_DISPLACEMENT  = 0;   // eg: Camera is 110 mm in front of robot center
+		final int CAMERA_VERTICAL_DISPLACEMENT = 0;   // eg: Camera is 200 mm above ground
 		final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
 		OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
@@ -184,14 +184,12 @@ public class AvesAblazeHardwarePushbot extends AvesAblazeRobot {
 	public boolean resetCoordinates(){
 		targetsRoverRuckus.activate();
 		targetVisible=false;
-		while (!targetVisible) {
 
 			// check all the trackable target to see which one (if any) is visible.
-			targetVisible = false;
 			for (VuforiaTrackable trackable : allTrackables) {
 				if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
 					targetVisible = true;
-					currentTrackable=trackable;
+					currentTrackable = trackable;
 					// getUpdatedRobotLocation() will return null if no new information is available since
 					// the last time that call was made, or if the trackable is not currently visible.
 					OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
@@ -201,7 +199,7 @@ public class AvesAblazeHardwarePushbot extends AvesAblazeRobot {
 					return targetVisible;
 				}
 			}
-		}
-		return false;
+		return targetVisible;
 	}
+
 }
