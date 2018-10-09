@@ -45,6 +45,7 @@ public class Robot {
     private DcMotor extend = null;
     private DcMotor BL = null;
     private Servo nomServo = null;
+    private DcMotor catapult = null;
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
         FR = hwMap.get(DcMotor.class, "BL");
@@ -54,6 +55,8 @@ public class Robot {
         BR = hwMap.get(DcMotor.class, "FL");
         BL = hwMap.get(DcMotor.class, "FR");
         nomServo = hwMap.get(Servo.class, "nomServo");
+        catapult = hwMap.get(DcMotor.class, "catapult");
+        catapult.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -61,6 +64,7 @@ public class Robot {
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         nom.setDirection(DcMotorSimple.Direction.FORWARD);
         extend.setDirection(DcMotorSimple.Direction.REVERSE);
+        catapult.setDirection(DcMotorSimple.Direction.REVERSE);
         FL.setDirection(DcMotorSimple.Direction.FORWARD);
         BL.setDirection(DcMotorSimple.Direction.FORWARD);
         FR.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -107,6 +111,9 @@ public class Robot {
     }
     public void nom(double power) {
         nom.setPower(power);
+    }
+    public void catapult(double power) {
+        catapult.setPower(power);
     }
     public void extend(double power) {
         extend.setPower(power);

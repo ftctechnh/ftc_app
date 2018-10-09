@@ -42,6 +42,11 @@ public class TestDrive extends LinearOpMode {
             } else {
                 robot.nom(0);
             }
+            if (Math.abs(FtcUtils.motorScale(gamepad2.right_stick_y)) > RobotConstants.threshold) {
+                robot.catapult(FtcUtils.motorScale(gamepad2.right_stick_y) * .65);
+            } else {
+                robot.catapult(0);
+            }
             if (Math.abs(FtcUtils.motorScale(gamepad2.left_stick_y)) > RobotConstants.threshold) {
                 robot.extend(FtcUtils.motorScale(gamepad2.left_stick_y));
             } else {
