@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.systems;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
@@ -19,7 +20,10 @@ import java.util.List;
 public class MecanumDriveSystem extends DriveSystem4Wheel {
 
     private final IScale JOYSTICK_SCALE = new LinearScale(0.62, 0);
-    private static double RAMP_POWER_CUTOFF = 0.3;
+    private static double TURN_RAMP_POWER_CUTOFF = 0.1;
+    private static double RAMP_POWER_CUTOFF = 0.1;
+
+    private double rampLength;
 
     public IMUSystem imuSystem;
 
@@ -31,8 +35,9 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
 
-        imuSystem = new IMUSystem(opMode);
+        rampLength = config.getInt(""); // ramp length in ticks
 
+        imuSystem = new IMUSystem(opMode);
         initialHeading = Math.toRadians(imuSystem.getHeading());
 
         this.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -126,32 +131,36 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         mecanumDriveXY(x, y);
     }
 
-    public void driveToPositionInches(double ticks, double power, double rampLength)
-    {
-        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks, power));
+    public void driveToPositionInches(double ticks, double power) {
+        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Ramp the power from power to RAMP_POWER_CUTOFF from (ticks / 10) (changed from rampLength) to 0
+        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks / 10, power));
 
         setTargetPosition((int) ticks);
-        setPower(0.1);
 
-        while (anyMotorsBusy())
-        {
-            int minDistance = getDistanceFromTarget();
+        setPower(power);
+        powerItem.setValue(power);
+
+        while (anyMotorsBusy()) {
+            int distance = getDistanceFromTarget();
 
             // ramp assumes the distance away from the target is positive,
             // so we make it positive here and account for the direction when
             // the motor power is set.
             double direction = 1.0;
-            if (minDistance < 0)
-            {
-                minDistance = -minDistance;
+            if (distance < 0) {
+                distance = -distance;
                 direction = -1.0;
             }
 
-            double scaledPower = ramp.scaleX(minDistance);
+            double scaledPower = ramp.scaleX(distance);
 
             setPower(direction * scaledPower);
+            telemetry.update();
         }
         setPower(0);
+        telemetry.update();
     }
 
     // I changed which distance the motors standardize to from the min to the max
@@ -169,6 +178,57 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             return d1;
         } else {
             return d2;
+        }
+    }
+
+    public void turn(double degrees, double maxPower) {
+
+        double heading = imuSystem.getHeading();
+        double targetHeading = 0;
+
+        if ((degrees % 360) > 180) {
+            targetHeading = heading + ((degrees % 360) - 360);
+        } else {
+            targetHeading = heading + (degrees % 360);
+        }
+
+        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Between 90 (changed from 130) and 2 degrees away from the target
+        // we want to slow down from maxPower to 0.1
+        ExponentialRamp ramp = new ExponentialRamp(new Point(2.0, TURN_RAMP_POWER_CUTOFF), new Point(90, maxPower));
+
+        while (Math.abs(computeDegreesDiff(targetHeading, heading)) > 1) {
+            telemetry.update();
+            double power = getTurnPower(ramp, targetHeading, heading);
+            telemetry.addLine("heading: " + heading);
+            telemetry.addLine("target heading: " + targetHeading);
+            telemetry.addLine("power: " + power);
+
+            tankDrive(power, -power);
+            heading = imuSystem.getHeading();
+        }
+        this.setPower(0);
+    }
+
+    public void tankDrive(double leftPower, double rightPower) {
+        this.motorFrontLeft.run(leftPower);
+        this.motorBackLeft.run(leftPower);
+        this.motorFrontRight.run(rightPower);
+        this.motorBackRight.run(rightPower);
+    }
+
+    private double computeDegreesDiff(double targetHeading, double heading) {
+        return targetHeading - heading;
+    }
+
+    private double getTurnPower(Ramp ramp, double targetHeading, double heading) {
+        double diff = computeDegreesDiff(targetHeading, heading);
+
+        if (diff < 0) {
+            return -ramp.scaleX(diff);
+        } else {
+            return ramp.scaleX(diff);
         }
     }
 }
