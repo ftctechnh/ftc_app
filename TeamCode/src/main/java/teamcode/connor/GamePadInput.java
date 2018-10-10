@@ -12,7 +12,7 @@ public class GamePadInput {
      */
     private static final double DEFAULT_DRIVE_SPEED_MULTIPLIER = 0.5;
 
-    public static final double ARM_SPEED = 0.01;
+    public static final double ARM_DELTA = 0.1;
 
     /**
      * the main game pad used to control the robot
@@ -81,10 +81,10 @@ public class GamePadInput {
 */
 
         if(gamePad.dpad_up){
-            HardwareManager.extendArm(ARM_SPEED);
+            HardwareManager.extendArm(ARM_DELTA);
         }
         else if (gamePad.dpad_down) {
-            HardwareManager.extendArm(-ARM_SPEED);
+            HardwareManager.extendArm(-ARM_DELTA);
         }
 
 

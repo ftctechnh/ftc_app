@@ -68,20 +68,21 @@ public final class HardwareManager {
     }
 
     public static void setArmState(double motorPos, double servo0Pos, double servo1Pos, double servo2Pos, double servo3Pos){
-        armMotor.setPower(motorPos);
+        armMotor.setPower(0.25);
+        //armMotor.setTargetPosition();
         armServo0.setPosition(servo0Pos);
         armServo1.setPosition(servo1Pos);
         armServo2.setPosition(servo2Pos);
         armServo3.setPosition(servo3Pos);
     }
 
-    public static void extendArm(double amount){
+    public static void extendArm(double delta){
         double motorPos = armMotor.getPower();
         double servo0Pos = armServo0.getPosition();
         double servo1Pos = armServo0.getPosition();
         double servo2Pos = armServo0.getPosition();
         double servo3Pos = armServo0.getPosition();
-        setArmState(motorPos+amount,servo0Pos+amount,servo1Pos+amount,servo2Pos+amount,servo3Pos+amount);
+        setArmState(motorPos+delta,servo0Pos+delta,servo1Pos+delta,servo2Pos+delta,servo3Pos+delta);
     }
 
 }

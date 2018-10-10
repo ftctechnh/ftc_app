@@ -20,9 +20,6 @@ public class ConnorRobot extends LinearOpMode {
         telemetry.update();
         waitForStart();
         while (opModeIsActive()) {
-            telemetry.addData("Status", "Inside loop");
-            telemetry.update();
-
             GamePadInput.update(); // performs update operations based on game pad input
         }
     }
