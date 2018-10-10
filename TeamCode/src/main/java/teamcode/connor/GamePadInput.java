@@ -1,5 +1,6 @@
 package teamcode.connor;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 /**
@@ -7,15 +8,18 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  */
 public class GamePadInput {
     /**
-     * The standard speed multiplier when turbo mod is not active
+     * the standard drive speed multiplier when turbo mod is not active
      */
     private static final double DEFAULT_DRIVE_SPEED_MULTIPLIER = 0.5;
+
+    public static final double ARM_SPEED = 0.01;
+
     /**
      * the main game pad used to control the robot
      */
     private static Gamepad gamePad;
     /**
-     * The current multiplier which limits the speed of the drive motors so as to prevent the robot from accelerating too fast
+     * the current multiplier which limits the speed of the drive motors so as to prevent the robot from accelerating too fast
      */
     private static double driveSpeedModifier;
     /**
@@ -23,7 +27,7 @@ public class GamePadInput {
      */
     private static boolean leftBumperDown;
     /**
-     * if turbo mode has been activated, removing speed handicaps on the motors
+     * if turbo mode has been activated to remove speed handicaps on the motors
      */
     private static boolean turboActive;
 
@@ -40,6 +44,7 @@ public class GamePadInput {
      * A method to be called from a LinearOpMode repeatedly to handle game pad input
      */
     public static void update() {
+        /*
         // determines if the left bumper was pressed down this "frame" and handles it accordingly
         if (gamePad.left_bumper) {
             if (!leftBumperDown) {
@@ -73,6 +78,17 @@ public class GamePadInput {
         powerL *= driveSpeedModifier;
         powerR *= driveSpeedModifier;
         HardwareManager.setDrivePower(powerL, powerR);
+*/
+
+        if(gamePad.dpad_up){
+            HardwareManager.extendArm(ARM_SPEED);
+        }
+        else if (gamePad.dpad_down) {
+            HardwareManager.extendArm(-ARM_SPEED);
+        }
+
+
+
     }
 
 }

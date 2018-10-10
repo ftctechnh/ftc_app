@@ -16,7 +16,8 @@ public class ConnorRobot extends LinearOpMode {
     @Override
     public void runOpMode() {
         instance = this; // assigns a static variable to the current instance
-        initialize();
+        telemetry.addData("Status", "Online");
+        telemetry.update();
         waitForStart();
         while (opModeIsActive()) {
             telemetry.addData("Status", "Inside loop");
@@ -26,11 +27,5 @@ public class ConnorRobot extends LinearOpMode {
         }
     }
 
-
-    private void initialize() {
-        //Tells the driver station the arm motor positions and that the robot is ready.
-        telemetry.addData("Status", "Online");
-        telemetry.update();
-    }
 }
 
