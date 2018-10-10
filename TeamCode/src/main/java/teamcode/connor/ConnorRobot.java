@@ -11,6 +11,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp(name = "ConnorRobot", group = "Linear OpMode")
 public class ConnorRobot extends LinearOpMode {
 
+    public static final long MILIS_PER_FRAME = 100L;
+
     public static ConnorRobot instance; // a static variable holding a reference to the instance in use
 
     @Override
@@ -21,6 +23,7 @@ public class ConnorRobot extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             GamePadInput.update(); // performs update operations based on game pad input
+            sleep(MILIS_PER_FRAME);
         }
     }
 
