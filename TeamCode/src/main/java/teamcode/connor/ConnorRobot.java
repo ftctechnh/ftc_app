@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name = "Connor Robot", group = "Linear OpMode")
-
+@TeleOp(name = "ConnorRobot", group = "Linear OpMode")
 public class ConnorRobot extends LinearOpMode {
 
     public static ConnorRobot instance; // a static variable holding a reference to the instance in use
@@ -17,18 +16,13 @@ public class ConnorRobot extends LinearOpMode {
     @Override
     public void runOpMode() {
         instance = this; // assigns a static variable to the current instance
-        initialize();
+        telemetry.addData("Status", "Online");
+        telemetry.update();
         waitForStart();
         while (opModeIsActive()) {
             GamePadInput.update(); // performs update operations based on game pad input
         }
     }
 
-
-    private void initialize() {
-        //Tells the driver station the arm motor positions and that the robot is ready.
-        telemetry.addData("Status", "Online");
-        telemetry.update();
-    }
 }
 
