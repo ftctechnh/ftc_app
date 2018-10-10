@@ -40,7 +40,6 @@ public class DriveControl {
 
         right.setPower(0);
         left.setPower(0);
-
     }
 
     //setting power to move forward
