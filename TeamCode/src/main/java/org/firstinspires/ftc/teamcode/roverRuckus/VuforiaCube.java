@@ -33,8 +33,24 @@ public class VuforiaCube extends LinearOpMode {
     //
     public void runOpMode(){
         //
-        VuforiaTrackables bloackTrackies = this.vuforia.loadTrackablesFromAsset("Block_OT");
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        //
+        telemetry.addData("Part", "1");
+        telemetry.update();
+        sleep(10000);
+        //
+        VuforiaTrackables bloackTrackies = this.vuforia.loadTrackablesFromAsset("block1");
+        //
+        telemetry.addData("Part", "2");
+        telemetry.update();
+        sleep(10000);
+        //
         VuforiaTrackable blockTrackable = bloackTrackies.get(0);
+        //
+        telemetry.addData("Part", "3");
+        telemetry.update();
+        sleep(10000);
         //
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
