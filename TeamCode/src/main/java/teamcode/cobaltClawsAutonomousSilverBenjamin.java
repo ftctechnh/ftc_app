@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "cobaltClawsAutonomousGoldBenjamin", group = "Linear OpMode")
+@Autonomous(name = "cobaltClawsAutonomousSilverBenjamin", group = "Linear OpMode")
 
 public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
 
