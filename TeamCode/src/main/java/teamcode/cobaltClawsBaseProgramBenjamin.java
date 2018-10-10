@@ -22,7 +22,10 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
     private Servo GrabberServoRight;
 
     //establishes and sets starting motor positions
-    int armPosition = this.ArmMotor.getCurrentPosition();
+    int armInitialPosition = 0;
+    double armMaximumPosition = 600;
+
+    int armPosition;
 
     //establishes grabber positions
     boolean leftGrabberOpen;
@@ -143,10 +146,11 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
                 //Moves the arm up until the d-pad is changed/released or the arm hits the upper
                 // limit
-                while(gamepad1.left_bumper && armPosition <= 90){
+                while(gamepad1.dpad_up && armPosition <= armMaximumPosition){
 
                     ArmMotor.setTargetPosition(armPosition + 1);
                     this.ArmMotor.setPower(0.5);
+                    armPosition = this.ArmMotor.getCurrentPosition();
 
                     ArmServoTop.setPosition(this.ArmServoTop.getPosition() + 0.05);
                     ArmServoBottom.setPosition(this.ArmServoBottom.getPosition() + 0.05);
@@ -160,10 +164,11 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
                 //Moves the arm down until the d-pad is changed/released or the arm hit the lower
                 // limit
-                while(gamepad1.right_bumper || armPosition >= 0 ){
+                while(gamepad1.dpad_down || armPosition >= armInitialPosition ){
 
                     ArmMotor.setTargetPosition(armPosition - 1);
                     this.ArmMotor.setPower(0.5);
+                    armPosition = this.ArmMotor.getCurrentPosition();
 
                     ArmServoTop.setPosition(this.ArmServoTop.getPosition() - 0.05);
                     ArmServoBottom.setPosition(this.ArmServoBottom.getPosition() - 0.05);
@@ -225,7 +230,7 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
         //Tells the driver station the arm motor positions and that the robot is ready.
         telemetry.addData("Status", "Online");
-        //telemetry.addData("Arm Position", armPosition);
+        telemetry.addData("Arm Position: ", armPosition);
         telemetry.update();
     }
 
