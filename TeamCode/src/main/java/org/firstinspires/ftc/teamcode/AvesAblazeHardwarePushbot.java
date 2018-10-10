@@ -1,7 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -27,6 +30,15 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 public class AvesAblazeHardwarePushbot {
 	private static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
 	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
+
+	DcMotor motor0;
+	DcMotor motor1;
+	DcMotor motor2;
+	DcMotor motor3;
+
+	Servo door;
+	CRServo marker;
+
 	// We will define some constants and conversions here
 	public static final float mmPerInch        = 25.4f;
 	public static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
@@ -46,6 +58,24 @@ public class AvesAblazeHardwarePushbot {
 	/* Initialize standard Hardware interfaces */
 	public void init(HardwareMap ahwMap) {
 		hwMap=ahwMap;
+		door=hwMap.get(Servo.class, "door");
+		marker=hwMap.get(CRServo.class, "marker");
+
+		motor0 = hwMap.get(DcMotor.class, "motor0");
+		motor0.setDirection(DcMotor.Direction.FORWARD);
+		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		motor1 = hwMap.get(DcMotor.class, "motor1");
+		motor1.setDirection(DcMotor.Direction.FORWARD);
+		motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		motor2 = hwMap.get(DcMotor.class, "motor2");
+		motor2.setDirection(DcMotor.Direction.FORWARD);
+		motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		motor3 = hwMap.get(DcMotor.class, "motor3");
+		motor3.setDirection(DcMotor.Direction.FORWARD);
+		motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -180,7 +210,24 @@ public class AvesAblazeHardwarePushbot {
 		hwMap = ahwMap;
 
 	}
-
+	public void rotate(double power){
+		motor0.setPower(power);
+		motor1.setPower(power);
+		motor2.setPower(power);
+		motor3.setPower(power);
+	}
+	public void moveLeftRight(double power){
+		motor0.setPower(power);
+		motor1.setPower(power);
+		motor2.setPower(-power);
+		motor3.setPower(-power);
+	}
+	public void moveUpDown(double power){
+		motor0.setPower(-power);
+		motor1.setPower(power);
+		motor2.setPower(-power);
+		motor3.setPower(power);
+	}
 	public boolean resetCoordinates(){
 		targetsRoverRuckus.activate();
 		targetVisible=false;
