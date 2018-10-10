@@ -44,7 +44,7 @@ public class GamePadInput {
      * A method to be called from a LinearOpMode repeatedly to handle game pad input
      */
     public static void update() {
-        /*
+
         // determines if the left bumper was pressed down this "frame" and handles it accordingly
         if (gamePad.left_bumper) {
             if (!leftBumperDown) {
@@ -78,7 +78,7 @@ public class GamePadInput {
         powerL *= driveSpeedModifier;
         powerR *= driveSpeedModifier;
         HardwareManager.setDrivePower(powerL, powerR);
-*/
+/*
 
         if(gamePad.dpad_up){
             HardwareManager.extendArm(ARM_SPEED);
@@ -87,7 +87,7 @@ public class GamePadInput {
             HardwareManager.extendArm(-ARM_SPEED);
         }
 
-
+*/
 
     }
 
