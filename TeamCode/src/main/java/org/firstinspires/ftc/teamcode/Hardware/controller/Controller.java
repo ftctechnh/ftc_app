@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware.controller;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.teamcode.config.ConfigParser;
+import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 
 /**
  * Created by EvanCoulson on 11/3/17.

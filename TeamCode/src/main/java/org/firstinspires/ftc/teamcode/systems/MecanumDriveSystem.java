@@ -23,8 +23,6 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     private static double TURN_RAMP_POWER_CUTOFF = 0.1;
     private static double RAMP_POWER_CUTOFF = 0.1;
 
-    private double rampLength;
-
     public IMUSystem imuSystem;
 
     Telemetry.Item distanceItem;
@@ -34,8 +32,6 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
 
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
-
-        rampLength = config.getInt(""); // ramp length in ticks
 
         imuSystem = new IMUSystem(opMode);
         initialHeading = Math.toRadians(imuSystem.getHeading());

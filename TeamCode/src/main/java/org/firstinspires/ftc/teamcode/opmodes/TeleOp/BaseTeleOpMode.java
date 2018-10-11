@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 public abstract class BaseTeleOpMode extends OpMode
 {
-    protected final ConfigParser config;
+    //protected final ConfigParser config;
     protected Controller controller1;
     protected Controller controller2;
     protected MecanumDriveSystem driveSystem;
@@ -23,7 +23,7 @@ public abstract class BaseTeleOpMode extends OpMode
     {
         //this.logger = new Logger(this, opModeName);
         //logger.setLoggingServices(LoggingService.FILE);
-        this.config = new ConfigParser(opModeName + ".omc");
+        //this.config = new ConfigParser(opModeName + ".omc");
     }
 
     public void initBaseSystems()

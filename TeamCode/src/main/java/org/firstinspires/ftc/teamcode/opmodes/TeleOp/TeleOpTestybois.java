@@ -34,7 +34,7 @@ public class TeleOpTestybois extends BaseTeleOpMode {
     public void init() {
         this.initBaseSystems();
         controller1.setTriggerValue(TriggerType.LEFT, 0.5f);
-        this.superDrive = config.getBoolean("superDrive");
+        this.superDrive = false; //config.getBoolean("superDrive");
         lastButtonTelemetryItem = telemetry.addData("LastButton", "none");
     }
 

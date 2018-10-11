@@ -12,14 +12,14 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 public abstract class BaseAutonomousOpMode extends LinearOpMode
 {
-    public ConfigParser config;
+    //public ConfigParser config;
     public MecanumDriveSystem driveSystem;
     public IMUSystem imuSystem;
     //public Eye eye;
 
     public BaseAutonomousOpMode(String opModeName)
     {
-        config = new ConfigParser(opModeName + ".omc");
+        //config = new ConfigParser(opModeName + ".omc");
         telemetry.setMsTransmissionInterval(200);
     }
 
