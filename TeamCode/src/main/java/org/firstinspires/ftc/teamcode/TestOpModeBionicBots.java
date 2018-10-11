@@ -12,7 +12,7 @@ public class TestOpModeBionicBots extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+private DcMotor rightDrive = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
