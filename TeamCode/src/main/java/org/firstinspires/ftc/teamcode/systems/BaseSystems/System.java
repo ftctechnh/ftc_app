@@ -11,13 +11,13 @@ public abstract class System {
     String systemName;
 
     protected HardwareMap map;
-    public ConfigParser config;
+    //public ConfigParser config;
     public Telemetry telemetry;
 
     public System(OpMode opMode, String systemName) {
         this.systemName = systemName;
         this.map = opMode.hardwareMap;
         this.telemetry = opMode.telemetry;
-        this.config = new ConfigParser(systemName + ".omc");
+        //this.config = new ConfigParser(systemName + ".omc");
     }
 }

@@ -17,11 +17,11 @@ public abstract class LinearSystem extends System {
     public LinearSystem(OpMode opMode, String systemName) {
         super(opMode, systemName);
 
-        this.positions = new double[config.getInt("arraySize")];
+        //this.positions = new double[config.getInt("arraySize")];
         this.max = positions.length - 1;
 
         for (int i = 0; i < positions.length; i++) {
-            positions[i] = config.getDouble("position" + i);
+            //positions[i] = config.getDouble("position" + i);
         }
     }
 
