@@ -10,22 +10,29 @@ public class ConceptAutonomousDepot extends LinearOpMode
     ParadeBot walle;
     public void runOpMode()
     {
-        walle = new ParadeBot(hardwareMap);
+
+        walle = new ParadeBot(hardwareMap, this);
+        waitForStart();
+
         // have servos move robot down to the ground
-        walle.driveStraight_In(36);
-        while(walle.getDistFromFrontLeft_In() > 8 && walle.getDistFromFrontRight_In() > 8)
+        walle.driveStraight_In(36, .4f);
+        walle.stopDriveMotors();
+        sleep(500);
+
+        while(walle.getDistFromFront_In() > 24 && walle.getDistFromRight_In() > 24)
         {
-            walle.driveMotors(.7f, .7f);
+            telemetry.addData("leftdist",walle.getDistFromFront_In());
+            telemetry.addData("righdist",walle.getDistFromRight_In());
+            telemetry.update();
+
+            walle.driveMotorsAuto(.2f, .4f);
         }
         walle.stopDriveMotors();
-        walle.driveStraight_In(5f);
+
         //drop marker into depot
-        walle.pivot_IMU(-35f);
+        walle.pivot_IMU(-60f);
         //insert wall hug program
         // stop robot when distance sensor says the robot is X inches from wall
-
-
-
     }
 }
 
