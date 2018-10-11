@@ -3,17 +3,15 @@ package org.firstinspires.ftc.teamcode.SubAssembly.Blade;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.SubAssembly.Blade.BladeConfig;
 import org.firstinspires.ftc.teamcode.Utilities.EnumWrapper;
 import org.firstinspires.ftc.teamcode.Utilities.ServoControl;
 
 import java.util.EnumMap;
 
 /* Sub Assembly Class*/
-public class BladeConfig {
+public class BladeControl {
 
     /* Declare private class object */
     private Telemetry telemetry = null;         /* local copy of telemetry object from opmode class */
@@ -36,7 +34,7 @@ public class BladeConfig {
 
 
     /* Subassembly constructor */
-    public BladeConfig(LinearOpMode opMode) {
+    public BladeControl(LinearOpMode opMode) {
         /* Set local copies from opmode class */
         telemetry = opMode.telemetry;
         hardwareMap = opMode.hardwareMap;
