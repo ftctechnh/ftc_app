@@ -29,12 +29,12 @@ public final class HardwareManager {
 
     private static void initHardware() {
         HardwareMap hardwareMap = ConnorRobot.instance.hardwareMap;
-        /*driveMotorL = hardwareMap.get(DcMotor.class, "LeftDriveMotor");
+        driveMotorL = hardwareMap.get(DcMotor.class, "LeftDriveMotor");
         driveMotorR = hardwareMap.get(DcMotor.class, "RightDriveMotor");
         //Sets correct directions for drive motors
         driveMotorL.setDirection(DcMotor.Direction.REVERSE);
         driveMotorR.setDirection(DcMotor.Direction.FORWARD);
-        */
+        /*
         armMotor = hardwareMap.get(DcMotor.class, "ArmMotor");
         armMotor.setDirection(DcMotor.Direction.FORWARD);
 
@@ -54,6 +54,7 @@ public final class HardwareManager {
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armServo2.setPosition(0);
         armServo3.setPosition(0);
+        */
     }
 
     /**
