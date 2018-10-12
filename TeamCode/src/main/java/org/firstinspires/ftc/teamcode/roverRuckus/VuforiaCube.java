@@ -73,10 +73,20 @@ public class VuforiaCube extends LinearOpMode {
         //
         while (opModeIsActive()){
             if (((VuforiaTrackableDefaultListener)blockTrackable.getListener()).isVisible()) {
-                //
+                telemetry.addData("Visible Target", blockTrackable.getName());
+                targetVisible = true;
+
+                // getUpdatedRobotLocation() will return null if no new information is available since
+                // the last time that call was made, or if the trackable is not currently visible.
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)blockTrackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
+                }
+                break;
+            }
+
+            if (targetVisible) {
+                //
                     VectorF translation = lastLocation.getTranslation();
                     something = translation.get(0);
                     somethingElse = translation.get(1);
@@ -85,7 +95,6 @@ public class VuforiaCube extends LinearOpMode {
                     firstAngle = orientation.firstAngle;
                     secondAngle = orientation.secondAngle;
                     thirdAngle = orientation.thirdAngle;
-                }
                 //
             }
             telemetry.addData("Cube?", lastLocation != null);
