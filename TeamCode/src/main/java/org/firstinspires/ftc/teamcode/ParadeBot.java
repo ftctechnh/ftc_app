@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -37,11 +39,22 @@ public class ParadeBot
     private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
     private float wheelCircCm = (float)(9.8* Math.PI);
 
-    private DistanceSensor frontLeftDistSens;
-    private DistanceSensor frontRightDistSens;
+    private DistanceSensor frontDistSens, frontRightDistSens;
 
+    LinearOpMode linearOpMode;
+
+    public ParadeBot(HardwareMap hMap, LinearOpMode linearOpModeIN)
+    {
+        linearOpMode = linearOpModeIN;
+        initSensorsAndMotors(hMap);
+    }
 
     public ParadeBot(HardwareMap hMap)
+    {
+        initSensorsAndMotors(hMap);
+    }
+
+    private void initSensorsAndMotors(HardwareMap hMap)
     {
         imu = (hMap.get(BNO055IMU.class, "imu"));
         initIMU();
@@ -57,7 +70,7 @@ public class ParadeBot
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        frontLeftDistSens = hMap.get(DistanceSensor.class, "frontLeftDistSens");
+        frontDistSens = hMap.get(DistanceSensor.class, "frontLeftDistSens");
         frontRightDistSens = hMap.get(DistanceSensor.class, "frontRightDistSens");
         stopAllMotors();
         updateIMUValues();
@@ -67,7 +80,6 @@ public class ParadeBot
     {
         driveStraight_In(inches,.75);
     }
-
 
     public void driveStraight_In(float inches, double pow)
     {
@@ -89,7 +101,7 @@ public class ParadeBot
             driveLeftOne.setPower(-Math.abs(pow));
         }
 
-        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget)) {}
+        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget) && !linearOpMode.isStopRequested()) {}
 
         stopAllMotors();
     }
@@ -373,13 +385,19 @@ public class ParadeBot
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
-            while(getYaw() > degreesToStopAt) {}
+            while(getYaw() > degreesToStopAt && !linearOpMode.isStopRequested())
+            {
+                linearOpMode.sleep(1);
+            }
         }
         else
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-            while(getYaw() < degreesToStopAt) {}
+            while(getYaw() < degreesToStopAt && !linearOpMode.isStopRequested())
+            {
+                linearOpMode.sleep(1);
+            }
         }
 
         stopAllMotors();
@@ -453,11 +471,11 @@ public class ParadeBot
         gravity  = imu.getGravity();
     }
 
-    public double getDistFromFrontLeft_In()
+    public double getDistFromFront_In()
     {
-        return frontLeftDistSens.getDistance(DistanceUnit.INCH);
+        return frontDistSens.getDistance(DistanceUnit.INCH);
     }
-    public double getDistFromFrontRight_In()
+    public double getDistFromRight_In()
     {
         return frontRightDistSens.getDistance(DistanceUnit.INCH);
     }
@@ -478,12 +496,12 @@ public class ParadeBot
 
     public DistanceSensor getFrontLeftDistSens()
     {
-        return frontLeftDistSens;
+        return frontDistSens;
     }
 
     public void setFrontLeftDistSens(DistanceSensor frontLeftDistSens)
     {
-        this.frontLeftDistSens = frontLeftDistSens;
+        this.frontDistSens = frontLeftDistSens;
     }
 
     public DistanceSensor getFrontRightDistSens()
