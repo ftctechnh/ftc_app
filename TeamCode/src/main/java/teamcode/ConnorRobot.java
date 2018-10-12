@@ -14,10 +14,10 @@ public class ConnorRobot extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        waitForStart();
         instance = this; // assigns a static variable to the current instance
         telemetry.addData("Status", "Online");
         telemetry.update();
-        waitForStart();
         while (opModeIsActive()) {
             GamePadInput.update(); // performs update operations based on game pad input
             sleep(MILIS_PER_ITERATION);
