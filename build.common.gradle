@@ -98,6 +98,7 @@ android {
 }
 
 repositories {
+    google()
     flatDir {
         dirs rootProject.file('libs')
     }
