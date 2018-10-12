@@ -17,6 +17,8 @@ public class GamePadInput {
 
     public static final int ARM_MOTOR_TICKS = 1;
 
+    public static final double INTAKE_SPEED_MULTIPLIER = 100;
+
     /**
      * the main game pad used to control the robot
      */
@@ -97,14 +99,16 @@ public class GamePadInput {
         } else if (gamePad.b) {
             HardwareManager.setArmServoTopPosition(-ARM_SPEED);
         }
-        if (gamePad.right_trigger > 0) {
-            //HardwareManager;
-            // in
-        } else if (gamePad.left_trigger > 0) {
-            //HardwareManager;
-            // out
+        int intakeSpeed = 0;
+        float rt = gamePad.right_trigger;
+        if (rt > 0) {
+            intakeSpeed = (int) (rt * INTAKE_SPEED_MULTIPLIER);
         }
-
+        float lt = gamePad.left_trigger;
+        if (lt > 0) {
+            intakeSpeed = (int) (lt * INTAKE_SPEED_MULTIPLIER);
+        }
+        HardwareManager.setArmServoIntakeSpeed(intakeSpeed);
     }
 
 }
