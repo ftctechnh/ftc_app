@@ -43,8 +43,6 @@ public final class HardwareManager {
 
         armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotorBase.setDirection(DcMotor.Direction.FORWARD);
-        // armMotorBase.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        // armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         armServoBase.setDirection(Servo.Direction.REVERSE);
         armServoTop.setDirection(Servo.Direction.FORWARD);
