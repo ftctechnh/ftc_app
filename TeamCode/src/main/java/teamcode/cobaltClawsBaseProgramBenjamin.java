@@ -118,17 +118,17 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
             if (gamepad1.y) {
 
                 //Goes to top position and length
-                //quickArm();
+                quickArm("top");
 
             }else if (gamepad1.b) {
 
                 //Goes to hang position and length
-                //quickArm();
+                quickArm("hang");
 
             }else if (gamepad1.a) {
 
                 //Goes to movement position and hang
-                //quickArm();
+                quickArm("pickUp");
 
             }
 
