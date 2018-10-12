@@ -14,6 +14,10 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
     private DcMotor LeftDriveMotor; //motor 0
     private DcMotor RightDriveMotor; //motor 1
     private DcMotor ArmMotor; //motor 2
+    private DcMotor HangMotor; //motor 3
+
+    private Servo ArmServoBottom;
+    private Servo ArmServoTop;
     private Servo GrabberServo;
 
     //establishes and sets starting motor position
@@ -63,6 +67,10 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
         this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
+        this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
+
+        this.ArmServoTop = hardwareMap.get (Servo.class, "ArmServoTop");
+        this.ArmServoBottom = hardwareMap.get (Servo.class, "ArmServoBottom");
         this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
 
 
@@ -70,7 +78,10 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         ArmMotor.setDirection(DcMotor.Direction.FORWARD);
+        HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        ArmServoBottom.setDirection(Servo.Direction.FORWARD);
+        ArmServoTop.setDirection(Servo.Direction.FORWARD);
         GrabberServo.setDirection(Servo.Direction.FORWARD);
 
 
