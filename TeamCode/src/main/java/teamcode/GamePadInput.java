@@ -86,15 +86,25 @@ public class GamePadInput {
             HardwareManager.setArmMotorBasePosition(ARM_MOTOR_TICKS);
         } else if (gamePad.dpad_down) {
             HardwareManager.setArmMotorBasePosition(ARM_MOTOR_TICKS);
-        } else if (gamePad.x) {
+        }
+        if (gamePad.x) {
             HardwareManager.setArmServoBasePosition(ARM_SPEED);
         } else if (gamePad.a) {
             HardwareManager.setArmServoBasePosition(-ARM_SPEED);
-        } else if (gamePad.y) {
+        }
+        if (gamePad.y) {
             HardwareManager.setArmServoTopPosition(ARM_SPEED);
         } else if (gamePad.b) {
             HardwareManager.setArmServoTopPosition(-ARM_SPEED);
         }
+        if (gamePad.right_trigger > 0) {
+            //HardwareManager;
+            // in
+        } else if (gamePad.left_trigger > 0) {
+            //HardwareManager;
+            // out
+        }
+
     }
 
 }

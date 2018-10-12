@@ -15,6 +15,7 @@ public final class HardwareManager {
     private static DcMotor armMotorBase;
     private static Servo armServoBase;
     private static Servo armServoTop;
+    private static Servo armServoIntake;
 
     private static int armMotorBasePos;
     private static double armServoBasePos;
@@ -40,6 +41,7 @@ public final class HardwareManager {
         armMotorBase = hardwareMap.get(DcMotor.class, "armMotorBase");
         armServoBase = hardwareMap.get(Servo.class, "armServoBase");
         armServoTop = hardwareMap.get(Servo.class, "armServoTop");
+        armServoIntake = hardwareMap.get(Servo.class, "armServoIntake");
 
         armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotorBase.setDirection(DcMotor.Direction.FORWARD);
@@ -96,6 +98,10 @@ public final class HardwareManager {
         }
 
         armServoTop.setPosition(armServoTopPos);
+    }
+
+    public static void setArmServoIntakePos(double posDelta){
+
     }
 
 }
