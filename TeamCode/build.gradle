@@ -13,3 +13,25 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+
+android {
+    buildToolsVersion '27.0.3'
+
+
+    def versionPropsFile = file('apkcounter.properties')
+
+    if(versionPropsFile.canRead()){
+        def Properties versionProps = new Properties()
+
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        def code = versionProps['VERSION_CODE'].toInteger() + 1
+
+        versionProps['VERSION_CODE']=code.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+
+    }
+    else{
+        throw new FileNotFoundException("Could not read apk counter file!")
+    }
+}

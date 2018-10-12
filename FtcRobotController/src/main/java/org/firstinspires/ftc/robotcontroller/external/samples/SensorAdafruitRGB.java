@@ -47,7 +47,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
  * cable for the sensor is connected to an I2C port on the
  * Core Device Interface Module.
  *
- * It also assuems that the LED pin of the sensor is connected
+ * It also assumes that the LED pin of the sensor is connected
  * to the digital signal pin of a digital port on the
  * Core Device Interface Module.
  *
