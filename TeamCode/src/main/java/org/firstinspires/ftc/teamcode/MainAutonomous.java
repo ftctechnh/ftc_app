@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.lynx.LynxI2cColorRangeSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -15,20 +16,42 @@ public abstract class MainAutonomous extends LinearOpMode {
 
     protected DcMotor driveTrainMotorLeft;
     protected DcMotor driveTrainMotorRight;
-
-    protected DcMotor loweringMotor;
+    protected DcMotor jointMotor;
 
     // Servos
     protected Servo colorServo;
 
+    // Continuous rotation servos
+    protected CRServo intakeServo;
+
     // Color sensor
-    protected LynxI2cColorRangeSensor color0;
+    protected LynxI2cColorRangeSensor colorSensor;
 
     protected void initOpMode() {
+        jointMotor = hardwareMap.get(DcMotor.class, "jointMotor");
+
+        jointMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jointMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        colorServo = hardwareMap.get(Servo.class, "colorServo");
+        intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
+
+        colorSensor = hardwareMap.get(LynxI2cColorRangeSensor.class, "colorSensor");
+    }
+
+    protected void jointPosition(String position) {
+        if (position == "extended") {
+            jointMotor.setTargetPosition(0); // TODO: Add position
+        } else {
+            jointMotor.setTargetPosition(0); // TODO: Add position
+        }
+    }
+    protected void intake() {
+        intakeServo.setPower(1.0);
     }
 
     protected void lower() {
-        //write code for lowering and
+        // write code for lowering and
         // raising the robot here
     }
 
@@ -45,13 +68,19 @@ public abstract class MainAutonomous extends LinearOpMode {
         driveTrainMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveTrainMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         driveTrainMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        // Change 1440 appropriately if you are not using
-        // Modern Robotics encoders
+
+        // Multiply degrees input by a determined constant to tell motor how far to turn
         driveTrainMotorLeft.setTargetPosition((int) (degrees * 12.8));
         driveTrainMotorRight.setTargetPosition((int) (degrees * 12.8));
+
+        // Maximum speed
         driveTrainMotorLeft.setPower(0.35);
         driveTrainMotorRight.setPower(0.35);
-        while (driveTrainMotorLeft.isBusy() || driveTrainMotorRight.isBusy()) ;
+
+        // Loop until motors are no longer busy
+        while (driveTrainMotorLeft.isBusy() || driveTrainMotorRight.isBusy());
+
+        // Shut off motors
         driveTrainMotorLeft.setPower(0);
         driveTrainMotorRight.setPower(0);
 
@@ -67,19 +96,15 @@ public abstract class MainAutonomous extends LinearOpMode {
      */
     protected void moveInch(int inches) {
 
-        driveTrainMotorLeft.setDirection(DcMotor.Direction.FORWARD);
-        driveTrainMotorRight.setDirection(DcMotor.Direction.FORWARD);
         driveTrainMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveTrainMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         driveTrainMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         driveTrainMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //  If you are using AndyMark or REV motors, replace
-        // 1440 with
-        //     AndyMark NeveRest 40: 1120
-        //     REV Hex Motor: 2240
+
+        // Multiply the distance we require by a determined constant to tell the motors how far to turn
         driveTrainMotorLeft.setTargetPosition((int) (inches * -88));
         driveTrainMotorRight.setTargetPosition((int) (inches * 88));
-        // the maximum speed of the motors.
+        // The maximum speed of the motors.
         driveTrainMotorLeft.setPower(0.2);
         driveTrainMotorRight.setPower(0.2);
         // Loop until both motors are no longer busy.
