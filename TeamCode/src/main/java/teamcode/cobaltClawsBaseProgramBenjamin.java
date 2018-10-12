@@ -142,15 +142,16 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
             if (gamepad1.dpad_up) {
                 //Sets motor to work with encoder and speed
-                ArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+                //ArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm up until the d-pad is changed/released or the arm hits the upper
                 // limit
-                while(gamepad1.dpad_up && armPosition <= armMaximumPosition){
+                while(gamepad1.dpad_up && (this.ArmServoTop.getPosition()
+                        + this.ArmServoBottom.getPosition() < 1)){//&& armPosition <= armMaximumPosition){
 
-                    ArmMotor.setTargetPosition(armPosition + 1);
-                    this.ArmMotor.setPower(0.5);
-                    armPosition = this.ArmMotor.getCurrentPosition();
+                    //ArmMotor.setTargetPosition(armPosition + 1);
+                    //this.ArmMotor.setPower(0.5);
+                    //armPosition = this.ArmMotor.getCurrentPosition();
 
                     ArmServoTop.setPosition(this.ArmServoTop.getPosition() + 0.05);
                     ArmServoBottom.setPosition(this.ArmServoBottom.getPosition() + 0.05);
@@ -160,19 +161,40 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
             }else if (gamepad1.dpad_down) {
                 //Sets motor to work with encoder and speed
-                ArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+                //ArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
 
                 //Moves the arm down until the d-pad is changed/released or the arm hit the lower
                 // limit
-                while(gamepad1.dpad_down || armPosition >= armInitialPosition ){
+                while(gamepad1.dpad_down && (this.ArmServoTop.getPosition()
+                        + this.ArmServoBottom.getPosition() > -1)){ //|| armPosition >= armInitialPosition ){
 
-                    ArmMotor.setTargetPosition(armPosition - 1);
-                    this.ArmMotor.setPower(0.5);
-                    armPosition = this.ArmMotor.getCurrentPosition();
+                    //ArmMotor.setTargetPosition(armPosition - 1);
+                    //this.ArmMotor.setPower(0.5);
+                    //armPosition = this.ArmMotor.getCurrentPosition();
 
                     ArmServoTop.setPosition(this.ArmServoTop.getPosition() - 0.05);
                     ArmServoBottom.setPosition(this.ArmServoBottom.getPosition() - 0.05);
 
+
+                }
+
+            }
+
+            if(gamepad1.right_stick_y != 0){
+
+                //Sets motor to work with encoder and speed
+                ArmMotor.setMode((DcMotor.RunMode.RUN_TO_POSITION));
+
+                //Moves the arm up or down until the right stick is no longer being moved vertically
+                // or the arm hits the upper or lower limit
+                while(gamepad1.right_stick_y != 0 && armPosition >= armInitialPosition
+                        && armPosition <= armMaximumPosition ){
+
+                    int verticalRightStick = (int) gamepad1.right_stick_y;
+
+                    ArmMotor.setTargetPosition(armPosition + verticalRightStick);
+                    this.ArmMotor.setPower(0.5);
+                    armPosition = this.ArmMotor.getCurrentPosition();
 
                 }
 
