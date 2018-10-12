@@ -234,39 +234,43 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         telemetry.update();
     }
 
-    public void quickArm(int position, int length){
+    public void quickArm(String position){
 
         //Sets motor to work with position
         ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Goes to specified position and length
-        ArmMotor.setTargetPosition(length);
-        ArmMotor.setPower(1.0);
+        if(position == "deposit"){
 
-        /*
+            ArmServoTop.setPosition(1);
+            ArmServoBottom.setPosition(1);
 
-        if(length ==){
-
-            ArmServoTop.setPosition();
-            ArmServoBottom.setPosition();
+            ArmMotor.setTargetPosition(90);
+            ArmMotor.setPower(1.0);
 
         }
 
-        else if(length ==){
+        else if(position == "hang"){
 
-            ArmServoTop.setPosition();
-            ArmServoBottom.setPosition();
+            ArmServoTop.setPosition(0.75);
+            ArmServoBottom.setPosition(0.75);
 
-        }
-
-        else if(length ==){
-
-            ArmServoTop.setPosition();
-            ArmServoBottom.setPosition();
+            ArmMotor.setTargetPosition(75);
+            ArmMotor.setPower(1.0);
 
         }
 
-         */
+        else if(position == "pickUp"){
+
+            ArmServoTop.setPosition(0);
+            ArmServoBottom.setPosition(0);
+
+            ArmMotor.setTargetPosition(0);
+            ArmMotor.setPower(1.0);
+
+        }
+
+
 
         //Re-grabs encoder positions for future reference
         armPosition = ArmMotor.getCurrentPosition();
