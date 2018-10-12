@@ -1,5 +1,6 @@
 package teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -15,7 +16,8 @@ public final class HardwareManager {
     private static DcMotor armMotorBase;
     private static Servo armServoBase;
     private static Servo armServoTop;
-    private static Servo armServoIntake;
+
+    private static CRServo armServoIntake;
 
     private static int armMotorBasePos;
     private static double armServoBasePos;
@@ -41,7 +43,8 @@ public final class HardwareManager {
         armMotorBase = hardwareMap.get(DcMotor.class, "armMotorBase");
         armServoBase = hardwareMap.get(Servo.class, "armServoBase");
         armServoTop = hardwareMap.get(Servo.class, "armServoTop");
-        armServoIntake = hardwareMap.get(Servo.class, "armServoIntake");
+
+        armServoIntake = hardwareMap.get(CRServo.class, "armServoIntake");
 
         armMotorBase.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotorBase.setDirection(DcMotor.Direction.FORWARD);
@@ -100,8 +103,8 @@ public final class HardwareManager {
         armServoTop.setPosition(armServoTopPos);
     }
 
-    public static void setArmServoIntakePos(double posDelta){
-
+    public static void setArmServoIntakeSpeed(double speed) {
+        armServoIntake.setPower(speed);
     }
 
 }
