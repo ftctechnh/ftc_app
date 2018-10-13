@@ -80,6 +80,7 @@ abstract public class superAuto extends LinearOpMode {
 
     VuforiaTrackables targetsRoverRuckus;
     List<VuforiaTrackable> allTrackables;
+    OpenGLMatrix lastLocation;
 
 
     boolean iAmRed;
@@ -384,20 +385,20 @@ abstract public class superAuto extends LinearOpMode {
         targetsRoverRuckus.activate();
     }
 
-    void getLocation(){
+    double getLocation(int xOry) {
         while (opModeIsActive()) {
-            OpenGLMatrix lastLocation;
+
 
             // check all the trackable target to see which one (if any) is visible.
             Boolean targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
                     telemetry.addData("Visible Target", trackable.getName());
                     targetVisible = true;
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
                     // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
                         lastLocation = robotLocationTransform;
                     }
@@ -415,14 +416,89 @@ abstract public class superAuto extends LinearOpMode {
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                return translation.get(xOry);
             }
             else {
-                telemetry.addData("Visible Target", "none");
-            }
+               // telemetry.addData("Visible Target", "none");
+                 }
             telemetry.update();
+
         }
+        return 0;
     }
 
+    void goToPoint(double DestinationX, double DestinationY){
+        double Theta = Math.toRadians(getHeading());
+        double CurrentX, CurrentY;
+        double X,Y;
+
+
+
+        boolean go = true;
+        int i = 0;
+
+        // While not at desired location
+        while (go) {
+            CurrentX = getLocation(0); //Eventually I would like to directly take the readings. These #s are made up...
+            CurrentY = getLocation(1);
+            X = (DestinationX - CurrentX);
+            Y = (DestinationY - CurrentY);
+            double chgDistance = Math.sqrt((X*X) + (Y*Y));
+            X= X/Math.max(X, Y);
+            Y = Y/Math.max(X, Y);
+
+            if (Math.abs(chgDistance) >= 2) {
+                double posx = Vuforia_JoystickX(X,Y, Theta);
+                double posy = Vuforia_JoystickY(X,Y, Theta);
+                telemetry.addData("chgDistance ", chgDistance);
+                telemetry.addData("CurrentX ", CurrentX);
+                telemetry.addData("CurrentY ",CurrentY );
+                telemetry.addData("X ",X );
+                telemetry.addData("Y ",Y );
+                telemetry.addData("posx ",posx );
+                telemetry.addData("posy ",posy );
+                telemetry.addData("i", i);
+                telemetry.update();
+
+
+
+                // Power the motors
+                if ( ( posy != 0) || ( posx != 0 ) ) {
+
+                    double FRBLPower = ((-posy) - posx)*0.6;
+                    double FLBRPower = ((-posy) + posx)*0.6;
+                    motorFR.setPower( FRBLPower );
+                    motorFL.setPower( FLBRPower );
+                    motorBR.setPower( FLBRPower );
+                    motorBL.setPower( FRBLPower );
+
+                }
+
+            } else
+            {
+                go = false;
+            }
+            i++;
+
+        }
+        sR();
+    }
+
+
+    public double Vuforia_JoystickX(double X, double Y, double Theta)
+    {
+        double JoystickX = (X*Math.cos(Theta))- (Y*Math.sin(Theta));
+        telemetry.addData("JoystickX", "%f", JoystickX);
+        return JoystickX;
+    }
+
+    public double Vuforia_JoystickY(double X, double Y, double Theta)
+    {
+        double JoystickY = (X*Math.sin(Theta))+(Y*Math.cos(Theta));
+        telemetry.addData("JoystickY", "%f", JoystickY);
+        return JoystickY;
+
+    }
 
     void cryptoState(int targetHeading, float basePosx, float basePosy) {
         runtime.reset();
@@ -603,7 +679,6 @@ abstract public class superAuto extends LinearOpMode {
         return currentHeading;
     }
 
-
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
         //Pivot to clockwise is negative.
@@ -708,35 +783,6 @@ abstract public class superAuto extends LinearOpMode {
         }
         telemetry.addData("VuMark", "%s visible", vuMark);
         telemetry.addData("Time Recognize", "%d", timeRecongnize);
-        telemetry.update();
-    }
-
-    public double Vuforia_JoystickX(double X, double Y, double Theta)
-    {
-        double JoystickX = (X*Math.cos(Theta))- (Y*Math.sin(Theta));
-        telemetry.addData("JoystickX", "%d", JoystickX);
-        return JoystickX;
-    }
-
-    public double Vuforia_JoystickY(double X, double Y, double Theta)
-    {
-        double JoystickY = (X*Math.sin(Theta))+(Y*Math.cos(Theta));
-        telemetry.addData("JoystickY", "%d", JoystickY);
-        return JoystickY;
-
-    }
-    void goToPoint(double DestinationX, double DestinationY)
-    {
-        //Used to convert the readings into positive or negative x,y values which will be multiplied by said power scalar
-        //The above methods are used in this bigger method
-
-        double Theta = Math.toRadians(getHeading());
-        double CurrentX = -500; //Eventually I would like to directly take the readings. These #s are made up...
-        double CurrentY = -500;
-        double X = (DestinationX - CurrentX);
-        double Y = (DestinationY - CurrentY);
-        Vuforia_JoystickX(X,Y, Theta);
-        Vuforia_JoystickY(X,Y, Theta);
         telemetry.update();
     }
 

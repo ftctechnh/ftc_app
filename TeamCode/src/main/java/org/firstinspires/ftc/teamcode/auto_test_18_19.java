@@ -16,6 +16,7 @@ public class auto_test_18_19 extends superAuto {
 
         setUp();
         configVuforiaRoverRuckus();
+        goToPoint(-850,850);
 
     }
 }
