@@ -1,17 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 
 @Autonomous(name="Jewel Park: Blue Corner", group="Pushbot")
@@ -19,11 +12,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 public class BlueCornerJewelPark extends OpMode{
 
     private int stateMachineFlow;
-    RelicDrive robot       = new RelicDrive();
+    RoverDrive robot       = new RoverDrive();
     private ElapsedTime     runtime = new ElapsedTime();
 
     RelicRecoveryVuMark glyph;
-    GlyphArm gilgearmesh = new GlyphArm();
+    LiftSystem gilgearmesh = new LiftSystem();
 
     JewelSystem sensArm = new JewelSystem();
     JewelColor jewelColor = JewelColor.UNKNOWN;
@@ -87,75 +80,36 @@ public class BlueCornerJewelPark extends OpMode{
                 time = getRuntime();
                 stateMachineFlow++;
                 break;
-
             case 1:
-                sensArm.wristPos(WristServoPosition.CENTER);
-                sensArm.armPos(ArmServoPosition.BOTTOM);
-                sensArm.colorLED(true);
-                if (1 < getRuntime() - time ) {
-                    stateMachineFlow++;
-                }
-                telemetry.addData("Arm",gilgearmesh.getArmPosition());
-                telemetry.addData("Color",jewelColor);
-                telemetry.addData("Case",stateMachineFlow);
-                telemetry.update();
+
+                stateMachineFlow++;
                 break;
-
             case 2:
-                    if (sensArm.colorSens() == JewelColor.BLUE){
-                        jewelColor = JewelColor.BLUE;
-                        telemetry.addData("Arm",gilgearmesh.getArmPosition());
-                        telemetry.addData("Color",jewelColor);
-                        telemetry.addData("Case",stateMachineFlow);
-                        telemetry.update();}
-                    else if (sensArm.colorSens() == JewelColor.RED){
-                        jewelColor = JewelColor.RED;
-                        telemetry.addData("Arm",gilgearmesh.getArmPosition());
-                        telemetry.addData("Color",jewelColor);
-                        telemetry.addData("Case",stateMachineFlow);
-                        telemetry.update();}
 
-                    stateMachineFlow++;
-                    break;
+                stateMachineFlow++;
+                break;
             case 3:
-                //knock off correct jewel
-                if (jewelColor == JewelColor.BLUE){sensArm.wristPos(WristServoPosition.RIGHT);}
-                else if (jewelColor == JewelColor.RED){sensArm.wristPos(WristServoPosition.LEFT);}
-                else if (jewelColor == JewelColor.UNKNOWN){sensArm.armPos(ArmServoPosition.TOP);}
 
-                time = getRuntime();
-
-                telemetry.addData("Jewel Arm",sensArm.getArmPosition());
-                telemetry.addData("Jewel Wrist",sensArm.getWristPosition());
-                telemetry.addData("Case",stateMachineFlow);
-                telemetry.update();
                 stateMachineFlow++;
                 break;
             case 4:
-                if (2 < getRuntime() - time){
-                    sensArm.wristPos(WristServoPosition.CENTER);
-                    sensArm.armPos(ArmServoPosition.TOP);
-                    stateMachineFlow++;
-                }
+
+                stateMachineFlow++;
                 break;
             case 5:
-                gilgearmesh.armPos(50,.6);
-                robot.linearDrive(.25,-20);
+
                 stateMachineFlow++;
                 break;
             case 6:
-                gilgearmesh.armPos(10,.6);
-                robot.statTurn(.5,130);//chamged turn from 140 to 130
+
                 stateMachineFlow++;
                 break;
             case 7:
-                robot.linearDrive(.25,-2);
+
                 stateMachineFlow++;
                 break;
             case 8:
-                robot.linearDrive(.25, 8);
-                gilgearmesh.clawPos(0);
-                robot.linearDrive(.25, -1.5);
+
                 stateMachineFlow++;
                 //end?
                 break;
