@@ -228,6 +228,12 @@ public class AvesAblazeHardwarePushbot {
 		hwMap = ahwMap;
 
 	}
+	public  void stopMotors(){
+		motor0.setPower(0);
+		motor1.setPower(0);
+		motor2.setPower(0);
+		motor3.setPower(0);
+	}
 	public void rotate(double power){
 		motor0.setPower(power);
 		motor1.setPower(power);
@@ -245,6 +251,18 @@ public class AvesAblazeHardwarePushbot {
 		motor1.setPower(power);
 		motor2.setPower(-power);
 		motor3.setPower(power);
+	}
+	public void rotate(double power, int tics){
+		if(tics < 0) power = power*-1;
+		int initPos = motor0.getCurrentPosition();
+		int currPos = initPos;
+		while(currPos != initPos+tics){
+			motor0.setPower(power);
+			motor1.setPower(power);
+			motor2.setPower(power);
+			motor3.setPower(power);
+		}
+		stopMotors();
 	}
 	public void moveAll(double xVal, double yVal) {
 
@@ -295,6 +313,15 @@ public class AvesAblazeHardwarePushbot {
 		}
 		lift("stop");
 	}
-
+	public void liftAcc(int tics){
+		int initPos = lift1.getCurrentPosition();
+		int currPos = initPos;
+		while(currPos <= initPos+tics){
+			lift1.setPower(0.5);
+			lift2.setPower(0.5);
+		}
+		lift1.setPower(0);
+		lift2.setPower(0);
+	}
 
 }
