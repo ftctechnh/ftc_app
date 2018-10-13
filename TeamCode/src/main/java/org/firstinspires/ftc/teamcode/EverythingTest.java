@@ -15,9 +15,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="MecanumTest", group="Pushbot")
+@TeleOp(name="Something intelligent", group="Pushbot")
 
-public class NotAutisticMecanumTest extends LinearOpMode {
+public class EverythingTest extends LinearOpMode {
 
 	/* Declare OpMode members. */
 	AvesAblazeHardwarePushbot robot   = new AvesAblazeHardwarePushbot();   // Use a Pushbot's hardware
@@ -31,6 +31,7 @@ public class NotAutisticMecanumTest extends LinearOpMode {
 		waitForStart();
 		while(opModeIsActive()) {
             telemetry.update();
+            telemetry.addData("height", robot.lift1.getCurrentPosition());
             //Display coordinates and trackable
             if (robot.resetCoordinates()) {
                 telemetry.addData("Target", robot.currentTrackable.getName());
@@ -66,9 +67,17 @@ public class NotAutisticMecanumTest extends LinearOpMode {
 				robot.rotate(0);
 			}
 
+/*			if(moveY != 0 || moveX != 0){
+				double mag = Math.sqrt(moveX*moveX + moveY*moveY);
+				double angle = Math.atan(moveY/moveX);
+
+				robot.moveAll(moveX, moveY);
+
+			}*/
+
 			//Move team marker mechanism
 			if(gamepad1.left_bumper){
-				robot.door.setPosition(1);
+				robot.door.setPosition(0.7);
 			}
 			if(gamepad1.right_bumper){
 				robot.door.setPosition(0);
@@ -82,6 +91,26 @@ public class NotAutisticMecanumTest extends LinearOpMode {
 			}
 			else{
 				//robot.marker.setPower(0.6);
+			}
+
+			//lift robot
+			if(gamepad1.a){
+				robot.lift();
+			}
+			if(gamepad1.b){
+				robot.lower();
+			}
+			if(gamepad1.dpad_up){
+				robot.lift1.setPower(-1);
+				robot.lift2.setPower(-1);
+			}
+			else if (gamepad1.dpad_down){
+				robot.lift1.setPower(1);
+				robot.lift2.setPower(1);
+			}
+			else{
+				robot.lift1.setPower(0);
+				robot.lift2.setPower(0);
 			}
 
 		}

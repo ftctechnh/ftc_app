@@ -77,5 +77,8 @@ public class HardwarePushbotTest
 		motor2.setPower(-power);
 		motor3.setPower(power);
 	}
+	public void moveAll(double power, double theta){
+		motor0.setPower(power);
+	}
 }
 

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -36,6 +37,11 @@ public class AvesAblazeHardwarePushbot {
 	DcMotor motor2;
 	DcMotor motor3;
 
+	DcMotor lift1;
+	DcMotor lift2;
+
+	int startingHeight;
+
 	Servo door;
 	CRServo marker;
 
@@ -57,6 +63,7 @@ public class AvesAblazeHardwarePushbot {
 
 	/* Initialize standard Hardware interfaces */
 	public void init(HardwareMap ahwMap) {
+
 		hwMap=ahwMap;
 		door=hwMap.get(Servo.class, "door");
 		marker=hwMap.get(CRServo.class, "marker");
@@ -76,6 +83,17 @@ public class AvesAblazeHardwarePushbot {
 		motor3 = hwMap.get(DcMotor.class, "motor3");
 		motor3.setDirection(DcMotor.Direction.FORWARD);
 		motor3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		lift1 = hwMap.get(DcMotor.class, "lift1");
+		lift1.setDirection(DcMotor.Direction.FORWARD);
+		lift1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		lift2 = hwMap.get(DcMotor.class, "lift2");
+		lift2.setDirection(DcMotor.Direction.REVERSE);
+		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+		startingHeight=lift1.getCurrentPosition();
+
 		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
@@ -217,16 +235,19 @@ public class AvesAblazeHardwarePushbot {
 		motor3.setPower(power);
 	}
 	public void moveLeftRight(double power){
-		motor0.setPower(power);
-		motor1.setPower(power);
-		motor2.setPower(-power);
-		motor3.setPower(-power);
+		motor0.setPower(-power);
+		motor1.setPower(-power);
+		motor2.setPower(power);
+		motor3.setPower(power);
 	}
 	public void moveUpDown(double power){
 		motor0.setPower(-power);
 		motor1.setPower(power);
 		motor2.setPower(-power);
 		motor3.setPower(power);
+	}
+	public void moveAll(double xVal, double yVal) {
+
 	}
 	public boolean resetCoordinates(){
 		targetsRoverRuckus.activate();
@@ -248,5 +269,32 @@ public class AvesAblazeHardwarePushbot {
 			}
 		return targetVisible;
 	}
+	public void lift(String direction){
+		if(direction.equals("up")){
+			lift1.setPower(1);
+			lift2.setPower(1);
+		}
+		else if(direction.equals("down")){
+			lift1.setPower(-1);
+			lift2.setPower(-1);
+		}
+		else if(direction.equals("stop")){
+			lift1.setPower(0);
+			lift2.setPower(0);
+		}
+	}
+	public void lift(){
+		while(lift1.getCurrentPosition()<3350+startingHeight){
+			lift("up");
+		}
+		lift("stop");
+	}
+	public void lower(){
+		while(lift1.getCurrentPosition()>startingHeight+50){
+			lift("down");
+		}
+		lift("stop");
+	}
+
 
 }
