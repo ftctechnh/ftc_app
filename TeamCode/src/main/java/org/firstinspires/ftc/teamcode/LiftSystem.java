@@ -22,7 +22,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class GlyphArm
+public class LiftSystem
 {
     /* Public OpMode members. */
     public Servo    clawServo   = null;
@@ -39,7 +39,7 @@ public class GlyphArm
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public GlyphArm(){
+    public LiftSystem(){
 
     }
 
