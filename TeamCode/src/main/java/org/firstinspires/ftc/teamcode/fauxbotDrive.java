@@ -28,27 +28,10 @@ public class fauxbotDrive extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
 
-            if(gamepad1.dpad_up)
-            {
-                temp+=.01;
-            }
-            if(gamepad1.dpad_down)
-            {
-                temp-=.01;
-            }
-            if(temp < 0)
-            {
-                temp = 0;
-            }
-            if(temp > 1)
-            {
-                temp = 1;
-            }
 
             left.setPower(gamepad1.left_stick_y);
             right.setPower(gamepad1.right_stick_y);
 
-            telemetry.addData("temp: ", temp);
             telemetry.update();
             idle();
         }
