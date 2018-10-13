@@ -21,12 +21,8 @@ apply plugin: 'com.android.application'
 
 android {
 
-    //compileSdkVersion 23          //-- team Laptop
-    buildToolsVersion '23.0.3'    //-- team Laptop
-    compileSdkVersion 24            //-- mac Laptop
-//    buildToolsVersion '20.0.0'      //-- mac Laptop
-//    compileSdkVersion 23
-//    buildToolsVersion '25.0.3'
+    buildToolsVersion '28.0.2'    //-- team Laptop
+    compileSdkVersion 28            //-- mac Laptop
 
     signingConfigs {
         debug {
