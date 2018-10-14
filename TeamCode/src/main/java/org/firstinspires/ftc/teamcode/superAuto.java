@@ -55,12 +55,6 @@ abstract public class superAuto extends LinearOpMode {
     DcMotor motorConL;
     DcMotor motorConR;
     DcMotor motorFlip;
-    DcMotor motorSlide;
-    Servo servoTapper;
-    Servo servoClaw;
-    Servo servoWrist;
-    Servo servoIntake;
-    Servo servoFlicker;
 
     static final float ridgeDepth = 4;
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
@@ -132,8 +126,6 @@ abstract public class superAuto extends LinearOpMode {
         motorConL.setDirection(DcMotor.Direction.FORWARD);
         motorConR = hardwareMap.dcMotor.get("motorConR");
         motorConR.setDirection(DcMotor.Direction.FORWARD);
-        servoTapper = hardwareMap.servo.get("servoTapper");
-        servoFlicker = hardwareMap.servo.get("servoFlicker");
         colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
         if (colorSensor instanceof SwitchableLight) {
             ((SwitchableLight) colorSensor).enableLight(true);
@@ -845,11 +837,7 @@ abstract public class superAuto extends LinearOpMode {
 
         boolean iSeeBlue = false;
         boolean iSeeRed = false;
-        servoTapper.setPosition(0.2d);
-        servoFlicker.setPosition(.3d);
-        Wait(.2f);
-        servoTapper.setPosition(0.76d);
-        Wait(1f);
+
 
         telemetry.update();
         colors = colorSensor.getNormalizedColors();
@@ -877,19 +865,6 @@ abstract public class superAuto extends LinearOpMode {
 
         Wait(1f);
 
-        if ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)) {
-            telemetry.addData("1", "move right");
-            servoFlicker.setPosition(.1);
-        }
-        else {
-            telemetry.addData("1", "move left");
-            servoFlicker.setPosition(.5);
-        }
-        Wait(1d);
-        servoFlicker.setPosition(.3);
-        servoTapper.setPosition(.2d);
-        Wait(1d);
-        servoFlicker.setPosition(.6);
 
         telemetry.update();
 

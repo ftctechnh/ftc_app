@@ -27,11 +27,7 @@ public class TeleOp6217Flip extends OpMode
     DcMotor motorConL;
     DcMotor motorConR;
     DcMotor motorFlip;
-    Servo servoTapper;
-    DcMotor motorSlide;
-    //Servo servoThumb;
-   // Servo servoWrist;
-    CRServo servoBagArm;
+
 
    /* IntegratingGyroscope gyro;
     ModernRoboticsI2cGyro modernRoboticsI2cGyro;*/
@@ -74,18 +70,6 @@ public class TeleOp6217Flip extends OpMode
         motorFlip.setDirection(DcMotor.Direction.FORWARD);
 
 
-        // Tapper
-        servoTapper = hardwareMap.servo.get("servoTapper");
-
-        //Relic Arm
-        motorSlide = hardwareMap.dcMotor.get("motorSlide");
-        motorSlide.setDirection(DcMotor.Direction.FORWARD);
-        //servoWrist = hardwareMap.servo.get("servoWrist");
-        //servoThumb = hardwareMap.servo.get("servoThumb");
-
-        //Bag Arm
-        servoBagArm = hardwareMap.crservo.get("servoBagArm");
-        servoBagArm.setDirection(CRServo.Direction.FORWARD);
     }
 
     /*
@@ -100,10 +84,7 @@ public class TeleOp6217Flip extends OpMode
     /*
      * Code to run ONCE when the driver hits PLAY
      */
-    @Override
-    public void start() {
-        servoTapper.setPosition(.1d);
-    }
+
 
     @Override
     public void loop() {
@@ -194,16 +175,7 @@ public class TeleOp6217Flip extends OpMode
             motorBR.setPower(1);
         }
 
-        // Relic
-        if (y) {
-            motorSlide.setPower(-1);
-        }
-        else if (a){
-            motorSlide.setPower(.25);
-        }
-        else {
-            motorSlide.setPower(0);
-        }
+
 
         /*if (b && leftPad ){
             servoThumb.setPosition(0);
@@ -239,15 +211,7 @@ public class TeleOp6217Flip extends OpMode
         }
 
         // CR Servo Bag Arm
-       if(dpad_up && x){
-        servoBagArm.setPower(1);
-        }
-        else if(dpad_down && x) {
-            servoBagArm.setPower(-1);
-        }
-        else {
-            servoBagArm.setPower(0);
-        }
+
 
         /* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             Write telemetry back to driver station
