@@ -16,8 +16,7 @@ public class MainTeleOp extends LinearOpMode{
     protected DcMotor intakeSlideMotor;
     protected DcMotor liftSlideMotor;
     protected DcMotor jointMotor;
-    //protected DcMotor intakeMotor;
-    //protected DcMotor intake1Motor;
+
 
     // Servos
     protected Servo depositServo;
@@ -92,8 +91,7 @@ public class MainTeleOp extends LinearOpMode{
 
 //controller 2
     private void intake() {
-        //Skeleton is there, but I don't know how the args in the setPower() function work so that's up to someone else
-        if (gamepad2.left_stick_y != 0) {
+       if (gamepad2.left_stick_y != 0) {
             intakeSlideMotor.setPower(gamepad2.left_stick_y);
         }
 
@@ -106,7 +104,6 @@ public class MainTeleOp extends LinearOpMode{
 
         if (gamepad2.right_trigger != 0) {
             intakeServo.setPower(gamepad2.right_trigger);
-            //intake1Motor.setPower(gamepad1.right_trigger / slow * 2);
         }
     }
 
