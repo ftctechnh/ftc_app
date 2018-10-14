@@ -16,7 +16,6 @@ public class ParadeBotTele extends OpMode
     private boolean toggleSpeedMode = false;
     private boolean hasSpeedModeBeenActivated = false;
 
-
     public void init()
     {
         tank = new ParadeBot(hardwareMap);
@@ -51,8 +50,6 @@ public class ParadeBotTele extends OpMode
         telemetry.addData("RJoyStick= ", gamepad1.right_stick_y);
         telemetry.addData("REncoders= ", tank.getRightEncoderPos());
         telemetry.addData("LEncoders= ", tank.getLeftEncoderPos());
-        telemetry.addData("Distance from Front Left (in)= ", tank.getDistFromFrontLeft_In());
-        telemetry.addData("Distance from Front Right (in)= ", tank.getDistFromFrontRight_In());
         telemetry.update();
         tank.driveMotors(lValue, rValue);
 
