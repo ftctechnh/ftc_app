@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -66,7 +67,7 @@ public class HardwareBruinBot
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
+        HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
@@ -80,13 +81,14 @@ public class HardwareBruinBot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftFrontDrive  = hwMap.get(DcMotor.class, "left_front_drive");
-        leftRearDrive  = hwMap.get(DcMotor.class, "left_rear_drive");
-        rightFrontDrive = hwMap.get(DcMotor.class, "right_front_drive");
-        rightRearDrive = hwMap.get(DcMotor.class, "right_rear_drive");
+        leftFrontDrive  = hwMap.get(DcMotor.class, "leftFrontDrive");
+        leftRearDrive  = hwMap.get(DcMotor.class, "leftRearDrive");
+        rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontDrive");
+        rightRearDrive = hwMap.get(DcMotor.class, "rightRearDrive");
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
-        //leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        //rightDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+
 
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
