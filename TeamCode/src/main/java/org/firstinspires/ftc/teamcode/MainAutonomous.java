@@ -14,9 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous
 public abstract class MainAutonomous extends LinearOpMode {
 
+    // Motors
     protected DcMotor driveTrainMotorLeft;
     protected DcMotor driveTrainMotorRight;
     protected DcMotor jointMotor;
+    protected DcMotor liftMotor;
 
     // Servos
     protected Servo colorServo;
@@ -31,9 +33,14 @@ public abstract class MainAutonomous extends LinearOpMode {
     protected static final int FORWARD_MULTIPLIER = 88;
     protected static final double MAX_SPEED = 0.35;
     protected static final double TURN_MULTIPLIER = 12.8;
+    protected static final int JOINT_EXTENDED = 0; // TODO: Find position
+    protected static final int JOINT_FOLDED = 0; // TODO: Find position
 
     protected void initOpMode() {
+        driveTrainMotorLeft = hardwareMap.get(DcMotor.class, "driveTrainMotorLeft");
+        driveTrainMotorRight = hardwareMap.get(DcMotor.class, "driveTrainMotorRight");
         jointMotor = hardwareMap.get(DcMotor.class, "jointMotor");
+        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
 
         jointMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         jointMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -46,9 +53,9 @@ public abstract class MainAutonomous extends LinearOpMode {
 
     protected void jointPosition(String position) {
         if (position == "extended") {
-            jointMotor.setTargetPosition(0); // TODO: Add position
+            jointMotor.setTargetPosition(JOINT_EXTENDED); // TODO: Add position
         } else {
-            jointMotor.setTargetPosition(0); // TODO: Add position
+            jointMotor.setTargetPosition(JOINT_FOLDED); // TODO: Add position
         }
     }
     protected void intake() {
@@ -109,6 +116,7 @@ public abstract class MainAutonomous extends LinearOpMode {
         // Multiply the distance we require by a determined constant to tell the motors how far to turn
         driveTrainMotorLeft.setTargetPosition((int) (inches * -FORWARD_MULTIPLIER));
         driveTrainMotorRight.setTargetPosition((int) (inches * FORWARD_MULTIPLIER));
+
         // The maximum speed of the motors.
         driveTrainMotorLeft.setPower(MAX_SPEED);
         driveTrainMotorRight.setPower(MAX_SPEED);
