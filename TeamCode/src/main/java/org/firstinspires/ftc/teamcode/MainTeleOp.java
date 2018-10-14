@@ -46,8 +46,6 @@ public class MainTeleOp extends LinearOpMode{
         intakeSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         jointMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //intakeMotor = hardwareMap.get(DcMotor.class, "intake0Motor");
-        //intake1Motor = hardwareMap.get(DcMotor.class, "intake1Motor");
 
         //initialize the servos
         depositServo = hardwareMap.get(Servo.class, "depositServo");
