@@ -1,14 +1,11 @@
+package org.firstinspires.ftc.teamcode;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 
-/**
- * Made by Vedang
- */
-@TeleOp
-public class testOpMode extends LinearOpMode {
+public class MyFirstJavaOpMode extends LinearOpMode {
     private Gyroscope imu;
     private DcMotor motorTest;
     private DigitalChannel digitalTouch;
