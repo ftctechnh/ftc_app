@@ -26,6 +26,10 @@ public class MainTeleOp extends LinearOpMode{
     // Color sensors
     protected LynxI2cColorRangeSensor sampleSensor;
 
+    //constants
+    public static final int JOINT_FOLDED = 0; //TODO
+    public static final int JOINT_EXTENDED = 0; //TODO
+
     private void initOpMode() {
         //initialize all the motors
         rightDriveMotor = hardwareMap.get(DcMotor.class, "rightDriveMotor");
@@ -33,6 +37,10 @@ public class MainTeleOp extends LinearOpMode{
         intakeSlideMotor = hardwareMap.get(DcMotor.class, "intakeSlideMotor");
         liftSlideMotor = hardwareMap.get(DcMotor.class, "liftSlideMotor");
         jointMotor = hardwareMap.get(DcMotor.class, "jointMotor");
+
+        jointMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        jointMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         rightDriveMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftDriveMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         intakeSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -91,12 +99,15 @@ public class MainTeleOp extends LinearOpMode{
             intakeSlideMotor.setPower(gamepad2.left_stick_y);
         }
 
-        if (gamepad2.right_stick_y != 0) {
-            jointMotor.setPower(gamepad2.right_stick_y);
+        if (gamepad2.right_bumper) {
+            jointMotor.setTargetPosition(JOINT_FOLDED);
+        }
+        else if (gamepad2.left_bumper) {
+            jointMotor.setTargetPosition(JOINT_EXTENDED);
         }
 
         if (gamepad2.right_trigger != 0) {
-            intakeServo.setPower(gamepad1.right_trigger);
+            intakeServo.setPower(gamepad2.right_trigger);
             //intake1Motor.setPower(gamepad1.right_trigger / slow * 2);
         }
     }
