@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Gyroscope;
 
-public class MyFirstJavaOpMode extends LinearOpMode {
+@TeleOp(name = "TankDrive18", group = "Tank")
+public class TankDrive18 extends LinearOpMode {
     private Gyroscope imu;
     private DcMotor motorTest;
     private DigitalChannel digitalTouch;
