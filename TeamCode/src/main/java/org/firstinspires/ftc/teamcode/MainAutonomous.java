@@ -27,6 +27,11 @@ public abstract class MainAutonomous extends LinearOpMode {
     // Color sensor
     protected LynxI2cColorRangeSensor colorSensor;
 
+    // Constants
+    protected static final int FORWARD_MULTIPLIER = 88;
+    protected static final double MAX_SPEED = 0.35;
+    protected static final double TURN_MULTIPLIER = 12.8;
+
     protected void initOpMode() {
         jointMotor = hardwareMap.get(DcMotor.class, "jointMotor");
 
@@ -70,12 +75,12 @@ public abstract class MainAutonomous extends LinearOpMode {
         driveTrainMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Multiply degrees input by a determined constant to tell motor how far to turn
-        driveTrainMotorLeft.setTargetPosition((int) (degrees * 12.8));
-        driveTrainMotorRight.setTargetPosition((int) (degrees * 12.8));
+        driveTrainMotorLeft.setTargetPosition((int) (degrees * TURN_MULTIPLIER));
+        driveTrainMotorRight.setTargetPosition((int) (degrees * TURN_MULTIPLIER));
 
         // Maximum speed
-        driveTrainMotorLeft.setPower(0.35);
-        driveTrainMotorRight.setPower(0.35);
+        driveTrainMotorLeft.setPower(MAX_SPEED);
+        driveTrainMotorRight.setPower(MAX_SPEED);
 
         // Loop until motors are no longer busy
         while (driveTrainMotorLeft.isBusy() || driveTrainMotorRight.isBusy());
@@ -102,11 +107,11 @@ public abstract class MainAutonomous extends LinearOpMode {
         driveTrainMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // Multiply the distance we require by a determined constant to tell the motors how far to turn
-        driveTrainMotorLeft.setTargetPosition((int) (inches * -88));
-        driveTrainMotorRight.setTargetPosition((int) (inches * 88));
+        driveTrainMotorLeft.setTargetPosition((int) (inches * -FORWARD_MULTIPLIER));
+        driveTrainMotorRight.setTargetPosition((int) (inches * FORWARD_MULTIPLIER));
         // The maximum speed of the motors.
-        driveTrainMotorLeft.setPower(0.2);
-        driveTrainMotorRight.setPower(0.2);
+        driveTrainMotorLeft.setPower(MAX_SPEED);
+        driveTrainMotorRight.setPower(MAX_SPEED);
         // Loop until both motors are no longer busy.
         while (driveTrainMotorLeft.isBusy() || driveTrainMotorRight.isBusy()) ;
         driveTrainMotorLeft.setPower(0);
