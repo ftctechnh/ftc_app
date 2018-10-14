@@ -30,9 +30,9 @@ public class TurnPID extends LinearOpMode {
 
 
     public void turn(double target, double speed){
-        double kp = 0.012;
-        double ki = 0.012;
-        double kd = 0;
+        double kp = 0.14;
+        double ki = 0;
+        double kd = 0.005;
         double dt = 0;
         double sum = 0;
         double temp = 0;
@@ -46,6 +46,7 @@ public class TurnPID extends LinearOpMode {
         while(Math.abs(angles.firstAngle-initval)!=Math.abs(target) && opModeIsActive()){
             dt = time.time() - temp;
             roc = (error - err)/dt;
+            telemetry.addData("boom",roc);
             sum+= error*dt;
             power = kp*error + ki*sum + kd*roc;
             Motor1.setPower(speed*power);
@@ -57,8 +58,8 @@ public class TurnPID extends LinearOpMode {
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             telemetry.addData("error", error);
             telemetry.update();
-            error = target-angles.firstAngle;
             err = error;
+            error = target-angles.firstAngle;
         }
 
 
@@ -94,7 +95,7 @@ public class TurnPID extends LinearOpMode {
         imu.initialize(gyroParam);
 
         waitForStart();
-        turn(90,0.6);
+        turn(90,0.3);
 
     }
 }
