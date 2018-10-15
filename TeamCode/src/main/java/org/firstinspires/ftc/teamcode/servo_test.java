@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 @TeleOp
 public class servo_test extends LinearOpMode {
+    //boom-ting
     CRServo spinnerR;
     CRServo spinnerL;
     DcMotor motorFrontRight;
