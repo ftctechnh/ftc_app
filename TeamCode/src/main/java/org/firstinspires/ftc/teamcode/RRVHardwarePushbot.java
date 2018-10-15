@@ -56,11 +56,21 @@ public class RRVHardwarePushbot
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
+    public DcMotor  leftDriveR   = null;
+    public DcMotor  rightDriveR  = null;
     public DcMotor  rack_pinion     = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
+    public static final double wheel_diameter  = 4;
+    public static final int ticks_per_revolution = 1120;
+    public double dt = 0.05;
+    public static double max_velocity = 30; //in and sec
+    public static double max_acceleration = 30;
+    public static double wheelbase_width = 13.5;
+    public static final double kP_DriveForward = 0.1;
+    public static final double kV_Drive        = 1/max_velocity;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -79,26 +89,41 @@ public class RRVHardwarePushbot
         // Define and Initialize Motors
         leftDrive  = hwMap.get(DcMotor.class, "left_drive");
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
+        leftDriveR  = hwMap.get(DcMotor.class, "left_rear_drive");
+        rightDriveR = hwMap.get(DcMotor.class, "right_rear_drive");
+//        rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
+        leftDriveR.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-        rack_pinion.setPower(0);
+        setLeftRight(0,0);
+//        rack_pinion.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftDriveR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightDriveR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDriveR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDriveR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
     public void setLeftRight(double left, double right) {
         leftDrive.setPower(left);
+        leftDriveR.setPower(left);
         rightDrive.setPower(right);
+        rightDriveR.setPower(right);
     }
  }
 

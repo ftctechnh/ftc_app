@@ -12,7 +12,7 @@ public class TestOpModeBionicBots extends LinearOpMode {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor leftDrive = null;
-private DcMotor rightDrive = null;
+    private DcMotor rightDrive = null;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -30,8 +30,8 @@ private DcMotor rightDrive = null;
 
         waitForStart();
         while (opModeIsActive()){
-            powerLeft = this.gamepad1.left_stick_y;
-            powerRight = this.gamepad1.right_stick_y;
+            powerLeft = -this.gamepad1.left_stick_y;
+            powerRight = -this.gamepad1.right_stick_y;
 
             telemetry.addData("PowerLeft:",powerLeft);
             telemetry.addData("PowerRight:",powerRight);

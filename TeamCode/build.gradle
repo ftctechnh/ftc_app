@@ -17,5 +17,5 @@ apply from: '../build.common.gradle'
 dependencies {
     compile project(path: ':DogeCV')
     compile project(path: ':openCVLibrary3')
-
+    implementation files('src/main/java/org/firstinspires/ftc/teamcode/libs/MPGenerator.jar')
 }
