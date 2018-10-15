@@ -76,17 +76,17 @@ public class EverythingTest extends LinearOpMode {
 			}*/
 
 			//Move team marker mechanism
-			if(gamepad1.left_bumper){
+			if(gamepad1.left_trigger>0.1){
 				robot.door.setPosition(0.7);
 			}
-			if(gamepad1.right_bumper){
+			if(gamepad1.right_trigger>0.1){
 				robot.door.setPosition(0);
 			}
 
-			if(gamepad1.right_trigger>0.1){
+			if(gamepad1.right_bumper){
 				robot.marker.setPower(0.5-gamepad1.right_trigger/2);
 			}
-			else if(gamepad1.left_trigger>0.1){
+			else if(gamepad1.left_bumper){
 				robot.marker.setPower(0.5+(gamepad1.left_trigger/2));
 			}
 			else{

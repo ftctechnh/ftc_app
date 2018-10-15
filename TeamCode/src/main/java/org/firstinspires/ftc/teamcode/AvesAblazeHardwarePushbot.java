@@ -59,6 +59,7 @@ public class AvesAblazeHardwarePushbot {
 	public OpenGLMatrix lastLocation = null;
 	public boolean targetVisible = false;
 
+
 	HardwareMap hwMap;
 
 	/* Initialize standard Hardware interfaces */
@@ -228,6 +229,8 @@ public class AvesAblazeHardwarePushbot {
 		hwMap = ahwMap;
 
 	}
+
+
 	public  void stopMotors(){
 		motor0.setPower(0);
 		motor1.setPower(0);
@@ -235,10 +238,10 @@ public class AvesAblazeHardwarePushbot {
 		motor3.setPower(0);
 	}
 	public void rotate(double power){
-		motor0.setPower(power);
-		motor1.setPower(power);
-		motor2.setPower(power);
-		motor3.setPower(power);
+		motor0.setPower(-power);
+		motor1.setPower(-power);
+		motor2.setPower(-power);
+		motor3.setPower(-power);
 	}
 	public void moveLeftRight(double power){
 		motor0.setPower(-power);
@@ -247,20 +250,48 @@ public class AvesAblazeHardwarePushbot {
 		motor3.setPower(power);
 	}
 	public void moveUpDown(double power){
-		motor0.setPower(-power);
-		motor1.setPower(power);
-		motor2.setPower(-power);
-		motor3.setPower(power);
+		motor0.setPower(power);
+		motor1.setPower(-power);
+		motor2.setPower(power);
+		motor3.setPower(-power);
 	}
 	public void rotate(double power, int tics){
 		if(tics < 0) power = power*-1;
 		int initPos = motor0.getCurrentPosition();
 		int currPos = initPos;
 		while(currPos != initPos+tics){
-			motor0.setPower(power);
-			motor1.setPower(power);
+			motor0.setPower(-power);
+			motor1.setPower(-power);
+			motor2.setPower(-power);
+			motor3.setPower(-power);
+			currPos = motor0.getCurrentPosition();
+		}
+		stopMotors();
+	}
+	public void moveLeftRight(double power, int tics){
+		if(tics<0) power = power*-1;
+		int initPos = motor0.getCurrentPosition();
+		int currPos = initPos;
+		while(currPos != initPos+tics){
+			motor0.setPower(-power);
+			motor1.setPower(-power);
 			motor2.setPower(power);
 			motor3.setPower(power);
+			currPos = motor0.getCurrentPosition();
+		}
+		stopMotors();
+	}
+	public void moveUpDown(double power, int tics){
+		if(tics<0) power = power*-1;
+		int initPos = motor0.getCurrentPosition();
+		int currPos = initPos;
+		while(currPos != initPos+tics){
+			motor0.setPower(power);
+			motor1.setPower(-power);
+			motor2.setPower(power);
+			motor3.setPower(-power);
+			currPos = motor0.getCurrentPosition();
+
 		}
 		stopMotors();
 	}
