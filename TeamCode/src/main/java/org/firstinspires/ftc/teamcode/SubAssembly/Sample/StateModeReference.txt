@@ -1,0 +1,74 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
+
+@TeleOp(name = "State Mode Test", group = "Test")
+
+public class StateModeTest extends OpMode {
+
+    DriveControl Drive = null;
+
+    private enum State {
+        STATE_INITIAL,
+        STATE_MOVE_FORWARD,
+        STATE_TURN_RIGHT,
+        STATE_STOP,
+    }
+
+    private State mCurrentState;
+    int timesRun;
+    boolean goodToGo;
+    boolean finishedStraight;
+
+
+    @Override
+    public void init() {
+        Drive = new DriveControl(this);
+        timesRun = 0;
+        goodToGo = false;
+        finishedStraight = false;;
+    }
+
+    public void start() {
+        newState(State.STATE_INITIAL);
+    }
+
+    @Override
+    public void loop() {
+        switch (mCurrentState) {
+            case STATE_INITIAL:
+                goodToGo = true;
+                newState(State.STATE_MOVE_FORWARD);
+                break;
+
+            case STATE_MOVE_FORWARD:
+                goodToGo = false;
+                Drive.moveForward(1.0, 2.0);
+                finishedStraight = true;
+                timesRun += 1;
+                telemetry.addLine("Moving forward " + timesRun);
+                newState(State.STATE_STOP);
+                break;
+
+            case STATE_TURN_RIGHT:
+                if (finishedStraight) {
+                }
+                break;
+
+            case STATE_STOP:
+                Drive.stop(0, 0);
+                telemetry.addLine("Complete");
+        }
+    }
+
+    private void newState(State newState) {
+        mCurrentState = newState;
+    }
+}
