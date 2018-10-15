@@ -25,4 +25,19 @@ apply from: 'build.release.gradle'
 
 dependencies {
     implementation project(':openCV3.4.1')
+    buildscript {
+        repositories {
+            google() // here
+            jcenter()
+        }
+        dependencies {
+            classpath 'com.android.tools.build:gradle:3.2.0'
+        }
+    }
+    allprojects {
+        repositories {
+            google() // and here
+            jcenter()
+        }
+    }
 }

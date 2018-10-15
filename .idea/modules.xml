@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" filepath="$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" />
       <module fileurl="file://$PROJECT_DIR$/TeamCode/TeamCode.iml" filepath="$PROJECT_DIR$/TeamCode/TeamCode.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ftc_app.iml" filepath="$PROJECT_DIR$/.idea/ftc_app.iml" />
       <module fileurl="file://$PROJECT_DIR$/ftc_app.iml" filepath="$PROJECT_DIR$/ftc_app.iml" />
       <module fileurl="file://$PROJECT_DIR$/openCV3.4.1/openCV3.4.1.iml" filepath="$PROJECT_DIR$/openCV3.4.1/openCV3.4.1.iml" />
     </modules>

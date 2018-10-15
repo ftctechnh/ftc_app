@@ -14,4 +14,23 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    dependencies {
+        buildscript {
+            repositories {
+                google() // here
+                jcenter()
+            }
+            dependencies {
+                classpath 'com.android.tools.build:gradle:3.2.0'
+            }
+        }
+        allprojects {
+            repositories {
+                google() // and here
+                jcenter()
+            }
+        }
+
+
+    }
 }
