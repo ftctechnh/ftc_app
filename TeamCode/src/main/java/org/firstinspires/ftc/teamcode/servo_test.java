@@ -17,6 +17,7 @@ public class servo_test extends LinearOpMode {
     DcMotor motorBackRight;
     DcMotor motorBackLeft;
     DcMotor winch;
+    //hello boom yo ting goes skrrra
     public void runOpMode() throws InterruptedException {
         spinnerL = hardwareMap.crservo.get("spinnerL");
         spinnerR = hardwareMap.crservo.get("spinnerR");
