@@ -427,11 +427,17 @@ abstract public class superAuto extends LinearOpMode {
         while (go) {
             CurrentX = getLocation(0); //Eventually I would like to directly take the readings. These #s are made up...
             CurrentY = getLocation(1);
+            double SignX = 1;
+            double SignY = 1;
             X = (DestinationX - CurrentX);
+            if (X<0) { SignX = -1 };
             Y = (DestinationY - CurrentY);
+            if (Y<0) { SignY = -1 };
             double chgDistance = Math.sqrt((X*X) + (Y*Y));
             X= X/Math.max(X, Y);
+            if ( ((X<0) && (SignX>0)) | ((X>0) && (SignX<0)) ) { X = X*SignX};
             Y = Y/Math.max(X, Y);
+            if ( ((Y<0) && (SignY>0)) | ((Y>0) && (SignY<0)) ) { Y = Y*SignY};
 
             if (Math.abs(chgDistance) >= 2) {
                 //double posx = Vuforia_JoystickX(X,Y, Theta);
