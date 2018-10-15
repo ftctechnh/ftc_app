@@ -16,6 +16,8 @@ public class SprocketsTeleOp extends RobotsBase
         {
             leftDrive.setPower(-gamepad1.left_stick_y/2);
             rightDrive.setPower(-gamepad1.right_stick_y/2);
+
+            idle();
         }
     }
 }
