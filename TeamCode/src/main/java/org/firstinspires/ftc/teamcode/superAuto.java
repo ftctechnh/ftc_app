@@ -68,8 +68,6 @@ abstract public class superAuto extends LinearOpMode {
     Acceleration gravity;
 
     ModernRoboticsI2cRangeSensor rangeSensor;
-    NormalizedColorSensor colorSensor;
-    NormalizedRGBA colors;
     RelicRecoveryVuMark vuMark;
 
     VuforiaTrackables targetsRoverRuckus;
@@ -126,10 +124,6 @@ abstract public class superAuto extends LinearOpMode {
         motorConL.setDirection(DcMotor.Direction.FORWARD);
         motorConR = hardwareMap.dcMotor.get("motorConR");
         motorConR.setDirection(DcMotor.Direction.FORWARD);
-        colorSensor = hardwareMap.get(NormalizedColorSensor.class, "colorSensor");
-        if (colorSensor instanceof SwitchableLight) {
-            ((SwitchableLight) colorSensor).enableLight(true);
-        }
     }
 
     void composeTelemetry() {
@@ -367,7 +361,7 @@ abstract public class superAuto extends LinearOpMode {
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        CAMERA_CHOICE == FRONT ? 90 : -90, 90, 0));
+                        -90, -90, 0));
 
         /**  Let all the trackable listeners know where the phone is.  */
         for (VuforiaTrackable trackable : allTrackables)
@@ -402,8 +396,8 @@ abstract public class superAuto extends LinearOpMode {
             if (targetVisible) {
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+                telemetry.addData("Pos (mm)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                        translation.get(0) , translation.get(1) , translation.get(2));
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
@@ -451,14 +445,13 @@ abstract public class superAuto extends LinearOpMode {
                 telemetry.addData("posy ",posy );
                 telemetry.addData("i", i);
                 telemetry.update();
+                Wait(20);
 
-
-
-                // Power the motors
+                //Power the motors
                 if ( ( posy != 0) || ( posx != 0 ) ) {
 
-                    double FRBLPower = ((-posy) - posx)*0.6;
-                    double FLBRPower = ((-posy) + posx)*0.6;
+                    double FRBLPower = ((-posy) - posx)*0.3;
+                    double FLBRPower = ((-posy) + posx)*0.3;
                     motorFR.setPower( FRBLPower );
                     motorFL.setPower( FLBRPower );
                     motorBR.setPower( FLBRPower );
@@ -840,21 +833,8 @@ abstract public class superAuto extends LinearOpMode {
 
 
         telemetry.update();
-        colors = colorSensor.getNormalizedColors();
-        float redValue = colors.red * 10000;
-        float blueValue = colors.blue * 10000;
-
-        if (redValue > blueValue) {
-            iSeeRed = true;
-            iSeeBlue = false;
-        } else {
-            iSeeBlue = true;
-            iSeeRed = false;
-        }
 
         telemetry.addLine()
-                .addData("r", "%.3f", redValue)
-                .addData("b", "%.3f", blueValue)
                 .addData("iSeeRed", "%b", iSeeRed)
                 .addData("iSeeBlue", "%b", iSeeBlue)
                 .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))

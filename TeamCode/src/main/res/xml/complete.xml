@@ -8,7 +8,6 @@
             <NeveRest20Gearmotor name="motorBR" port="3" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <ModernRoboticsI2cRangeSensor name="rangeSensor" port="0" bus="3" />
-            <LynxColorSensor name="colorSensor" port="0" bus="1" />
         </LynxModule>
         <LynxModule name="Expansion Hub 3" port="3">
             <TetrixMotor name="motorConL" port="0" />
