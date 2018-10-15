@@ -36,10 +36,10 @@ public class DriveControl {
         /* Map hardware devices */
         Battery = hardwareMap.voltageSensor.get("Expansion Hub 2");
 
-        FrontRightM = hardwareMap.dcMotor.get("rightFront");
-        FrontLeftM = hardwareMap.dcMotor.get("leftFront");
-        BackRightM = hardwareMap.dcMotor.get("rightBack");
-        BackLeftM = hardwareMap.dcMotor.get("leftBack");
+        FrontRightM = hardwareMap.dcMotor.get("FrontRightM");
+        FrontLeftM = hardwareMap.dcMotor.get("FrontLeftM");
+        BackRightM = hardwareMap.dcMotor.get("BackRightM");
+        BackLeftM = hardwareMap.dcMotor.get(" BackLeftM");
         BackRightM.setDirection(DcMotor.Direction.REVERSE);
         BackLeftM.setDirection(DcMotor.Direction.REVERSE);
 
