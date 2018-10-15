@@ -434,8 +434,10 @@ abstract public class superAuto extends LinearOpMode {
             Y = Y/Math.max(X, Y);
 
             if (Math.abs(chgDistance) >= 2) {
-                double posx = Vuforia_JoystickX(X,Y, Theta);
-                double posy = Vuforia_JoystickY(X,Y, Theta);
+                //double posx = Vuforia_JoystickX(X,Y, Theta);
+                //double posy = Vuforia_JoystickY(X,Y, Theta);
+                double posx = X;
+                double posy = Y;
                 telemetry.addData("chgDistance ", chgDistance);
                 telemetry.addData("CurrentX ", CurrentX);
                 telemetry.addData("CurrentY ",CurrentY );
@@ -461,6 +463,10 @@ abstract public class superAuto extends LinearOpMode {
 
             } else
             {
+                motorFR.setPower(0);
+                motorFL.setPower(0);
+                motorBR.setPower(0);
+                motorBL.setPower(0);
                 go = false;
             }
             i++;
