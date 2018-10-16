@@ -13,11 +13,22 @@ public class Debugger implements IOpModeDebugger
         exceptionLogger = new FileLogger();
     }
 
-    public void debug(Exception e) {
-        StackTraceElement stackTrace = e.getStackTrace()[0];
-        int line = stackTrace.getLineNumber();
-        String file = stackTrace.getFileName();
-        exceptionLogger.log("Exception", "{0} line:{1} file:{2}", e.toString(), line, file);
-        exceptionLogger.write();
+    public void debug(Exception e)
+    {
+        for (int i = 0; i < e.getStackTrace().length; i++)
+        {
+            StackTraceElement stackTrace = e.getStackTrace()[i];
+            int line = stackTrace.getLineNumber();
+            String file = stackTrace.getFileName();
+            exceptionLogger.log(
+                "Stack Trace Element",
+                "{0} line:{1} file:{2}\ndepth: {3}",
+                e.toString(),
+                line,
+                file,
+                i
+            );
+            exceptionLogger.write();
+        }
     }
 }
