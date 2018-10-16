@@ -19,6 +19,7 @@ import java.util.List;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel {
 
+    private static final double TICKS_TO_INCHES = 100;
     private final IScale JOYSTICK_SCALE = new LinearScale(0.62, 0);
     private static double TURN_RAMP_POWER_CUTOFF = 0.1;
     private static double RAMP_POWER_CUTOFF = 0.1;
@@ -33,13 +34,20 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
 
+        telem("about to start imu");
         imuSystem = new IMUSystem(opMode);
         initialHeading = Math.toRadians(imuSystem.getHeading());
+        telem("started imu");
 
         this.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         powerItem = telemetry.addData("power", 0);
         distanceItem = telemetry.addData("distance", 0);
+    }
+
+    private void telem(String message) {
+        telemetry.addLine(message);
+        telemetry.update();
     }
 
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
