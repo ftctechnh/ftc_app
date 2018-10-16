@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.MagneticFlux;
@@ -29,7 +29,7 @@ public class MonsieurMallahChassis extends OpMode {
     //constants from encoder sample
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double WHEEL_DIAMETER_INCHES = 4.7;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 4.7);
     static final double DRIVE_SPEED = 0.6;
@@ -180,7 +180,7 @@ public class MonsieurMallahChassis extends OpMode {
             }
             servoHand.setPosition(angleHand);
 
-            // HACK: If press the secret  y key, go forward 12 inchses to test encider.
+            // HACK: If driver presses the secret 'y' key, go forward 12 inches, to test encoder.
             if (useEncoders) {
                 boolean encodertest = gamepad1.y;
                 if (encodertest) {
@@ -238,6 +238,7 @@ public class MonsieurMallahChassis extends OpMode {
                 + la.zAccel * la.zAccel);
         telemetry.addData("Gyro", "la: " + la + "(" + linear_force + ")");
         Acceleration ga = bosch.getGravity();
+
         double gravity_force = Math.sqrt(ga.xAccel * ga.xAccel
                 + ga.yAccel * ga.yAccel
                 + ga.zAccel * ga.zAccel);
