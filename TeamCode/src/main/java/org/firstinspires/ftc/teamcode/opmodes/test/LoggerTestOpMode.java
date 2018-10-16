@@ -26,8 +26,8 @@ public class LoggerTestOpMode extends LinearOpModeDebugger
         logger.log("2", "2");
         logger.write();
         sleepThread(1000);
-        Scanner dick = null;
-        dick.close();
+        Scanner s = null;
+        s.close();
     }
 
     private void sleepThread(int miliseconds) {
