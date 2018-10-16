@@ -40,7 +40,10 @@ public class DriveControl {
         FrontLeftM = hardwareMap.dcMotor.get("FrontLeftM");
         BackRightM = hardwareMap.dcMotor.get("BackRightM");
         BackLeftM = hardwareMap.dcMotor.get(" BackLeftM");
+
+       //reverses some motors
         BackLeftM.setDirection(DcMotor.Direction.REVERSE);
+        FrontLeftM.setDirection(DcMotor.Direction.REVERSE);
 
         FrontRightM.setPower(0);
         FrontLeftM.setPower(0);
