@@ -25,4 +25,15 @@ public abstract class System {
 
         }
     }
+
+    public void wait(int seconds) {
+        try
+        {
+            Thread.sleep(seconds * 1000);
+        }
+        catch (InterruptedException e)
+        {
+            throw new IllegalStateException("Failed to sleep thread", e);
+        }
+    }
 }

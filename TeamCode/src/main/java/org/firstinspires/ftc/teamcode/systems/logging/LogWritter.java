@@ -8,13 +8,12 @@ import java.io.FileWriter;
 
 public class LogWritter
 {
-    private static final String LoggingFilePath = "";
-
     private StringBuffer buffer;
     private File logFile;
 
-    public LogWritter() {
+    public LogWritter(File logFile) {
         this.buffer = new StringBuffer();
+        this.logFile = logFile;
     }
 
     public void appendLine(String line) {
