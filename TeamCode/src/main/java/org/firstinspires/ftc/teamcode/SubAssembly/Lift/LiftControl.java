@@ -22,10 +22,7 @@ public class LiftControl {
     private DcMotor  LifterLeftM;
     private Servo LockRightS;
     private Servo LockLeftS;
-
-
-    /* Declare public class object */
-    public VoltageSensor Battery = null;
+    
 
     /* Subassembly constructor */
     public LiftControl(LinearOpMode opMode) {
