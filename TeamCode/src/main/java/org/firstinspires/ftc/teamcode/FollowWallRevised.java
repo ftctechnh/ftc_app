@@ -6,33 +6,56 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Sahithi Thumuluri on 10/5/18.
  */
-@Autonomous(name = "FollowWall", group = "Auto")
+@Autonomous(name = "FollowWallRevised", group = "Auto")
 public class FollowWallRevised extends LinearOpMode
 {
-    ParadeBot paradeBot;
+    private ParadeBot paradeBot;
+
     public void runOpMode()
     {
         paradeBot = new ParadeBot(hardwareMap, this);
-        waitForStart();
         double distRight = paradeBot.getDistFromRight_In();
-        double preferedDist = 5;
         telemetry.addData("distance right = ", distRight);
         telemetry.update();
+        waitForStart();
+
+        final int CENTER = 0;
+        final int RIGHT = -1;
+        final int LEFT = 1;
+
+        int currentDirection = CENTER;
+
+
         while (paradeBot.getDistFromFront_In() > 18)
         {
-            paradeBot.driveMotorsAuto(.5f, .5f);
-         if (distRight > 6)
-         {
-             paradeBot.pivot_IMU(-15);
-             paradeBot. driveStraight_In(3);
+            telemetry.addData("front", paradeBot.getDistFromFront_In());
+            telemetry.addData("right", paradeBot.getDistFromRight_In());
+            telemetry.update();
 
-         }
-         if (distRight < 4)
-         {
-             paradeBot.pivot_IMU(15);
-         }
+            if (paradeBot.getDistFromRight_In() > 6 && currentDirection != RIGHT)
+            {
+                paradeBot.pivot_IMU(-10);
+                currentDirection = RIGHT;
+            }
+            else if (paradeBot.getDistFromRight_In() < 4 && currentDirection != LEFT)
+            {
+                paradeBot.pivot_IMU(10);
+                currentDirection = LEFT;
+            }
+
+            if ((paradeBot.getDistFromRight_In() > 4 && paradeBot.getDistFromRight_In() < 6) || currentDirection != CENTER)
+            {
+                paradeBot.driveStraight_In(10, .5);
+
+                if (currentDirection == LEFT)
+                    paradeBot.pivot_IMU(-10);
+                else if (currentDirection == RIGHT)
+                    paradeBot.pivot_IMU(10);
+
+                currentDirection = CENTER;
+            }
         }
-
+        paradeBot.driveMotorsAuto(0, 0);
     }
 
 }
