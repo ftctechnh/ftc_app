@@ -126,7 +126,7 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         }
 
-        LeftDriveMotor.setPower(0);
+        /*LeftDriveMotor.setPower(0);
         RightDriveMotor.setPower(0);
 
 
@@ -153,71 +153,44 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         //Stops motors, ready for next action
         LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);*/
+
+        upLeftMotor.setPower    (speed);
+        upRightMotor.setPower   (speed);
+
+        while(motorsWithinTarget() == false) {
+
+            //Loop body can be empty
+            telemetry.update();
+
+        }
+
+        upLeftMotor.setPower    (0);
+        upRightMotor.setPower   (0);
 
     }
 
     public void turn(String direction, int distance, double speed){
 
+
+        //Resets the encoders and does a left point turn for the inputted degrees
+        RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+        LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+
         if(direction == "L"){// left
 
-            //Resets the encoders and does a left point turn for the inputted degrees
-            RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-            RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            RightDriveMotor.setTargetPosition  (distance);
+            RightDriveMotor.setTargetPosition  (-distance);
             LeftDriveMotor.setTargetPosition   (distance);
-
-            LeftDriveMotor.setPower(speed);
-            RightDriveMotor.setPower(-speed);
-
-
-            //prevents other action until motors have reached positions
-            while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
-
-                telemetry.update();
-
-            }
-
-            //Stops motors, ready for next action
-            LeftDriveMotor.setPower(0);
-            RightDriveMotor.setPower(0);
-
 
         }
 
         if(direction == "R"){// right
 
-            //Resets the encoders and does a right point turn for the inputted degrees
-            RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            RightDriveMotor.setTargetPosition  (-distance);
+            RightDriveMotor.setTargetPosition  (distance);
             LeftDriveMotor.setTargetPosition   (-distance);
-
-            LeftDriveMotor.setPower(-speed);
-            RightDriveMotor.setPower(speed);
-
-
-            //prevents other action until motors have reached positions
-            while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
-
-                telemetry.update();
-
-            }
-
-            //Stops motors, ready for next action
-            LeftDriveMotor.setPower(0);
-            RightDriveMotor.setPower(0);
 
         }
 
