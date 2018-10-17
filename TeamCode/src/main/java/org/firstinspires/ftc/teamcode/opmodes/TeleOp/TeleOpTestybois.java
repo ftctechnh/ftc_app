@@ -1,14 +1,18 @@
 package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.controller.TriggerType;
 
+@TeleOp
 public class TeleOpTestybois extends BaseTeleOpMode {
 
     Telemetry.Item lastButtonTelemetryItem;
-
-    private static boolean slowDrive = false;
+    public ElapsedTime elapsedTime = new ElapsedTime();
     private boolean superDrive;
+    private boolean slowDrive = false;
 
     public TeleOpTestybois()
     {
