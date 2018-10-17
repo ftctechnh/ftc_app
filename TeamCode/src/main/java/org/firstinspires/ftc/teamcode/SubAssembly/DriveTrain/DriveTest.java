@@ -37,8 +37,6 @@ public class DriveTest extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-
-
             if (egamepad1.a.pressed) {
                 speed += 0.5*speed;
             }
