@@ -37,9 +37,6 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         initialHeading = Math.toRadians(imuSystem.getHeading());
 
         this.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        powerItem = telemetry.addData("power", 0);
-        distanceItem = telemetry.addData("distance", 0);
     }
 
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
@@ -153,10 +150,8 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             double scaledPower = ramp.scaleX(distance);
 
             setPower(direction * scaledPower);
-            telemetry.update();
         }
         setPower(0);
-        telemetry.update();
     }
 
     // I changed which distance the motors standardize to from the min to the max
@@ -195,12 +190,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         ExponentialRamp ramp = new ExponentialRamp(new Point(2.0, TURN_RAMP_POWER_CUTOFF), new Point(90, maxPower));
 
         while (Math.abs(computeDegreesDiff(targetHeading, heading)) > 1) {
-            telemetry.update();
             double power = getTurnPower(ramp, targetHeading, heading);
-            telemetry.addLine("heading: " + heading);
-            telemetry.addLine("target heading: " + targetHeading);
-            telemetry.addLine("power: " + power);
-
             tankDrive(power, -power);
             heading = imuSystem.getHeading();
         }

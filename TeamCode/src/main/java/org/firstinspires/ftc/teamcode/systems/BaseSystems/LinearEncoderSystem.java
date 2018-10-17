@@ -41,7 +41,6 @@ public abstract class LinearEncoderSystem extends LinearSystem {
         this.dcMotor = dcMotor;
 
         initializeMotor();
-        initializeTelemetry();
     }
 
     // May need to be overridden
@@ -52,19 +51,11 @@ public abstract class LinearEncoderSystem extends LinearSystem {
         calibrateSystem();
     }
 
-    private void initializeTelemetry() {
-        telemetry.addLine("Current Position:         " + currentPosition);
-        telemetry.addLine("Zero:                     " +  currentPosition);
-        telemetry.addLine("Target position:          " + dcMotor.getTargetPosition());
-        telemetry.addLine("dcMotor current position: " + dcMotor.getCurrentPosition());
-    }
-
     private int updateCurrentPosition(int startPosition) {
         return (dcMotor.getCurrentPosition() - zero) - startPosition;
     }
 
     public void goToPosition(double targetPosition, double power) {
-        telemetry.update();
         int startPosition = dcMotor.getCurrentPosition();
         int driveTicks = (int) ((targetPosition * maxEncoderTicks) - currentPosition);
         if (targetPosition == 0) {
@@ -98,15 +89,12 @@ public abstract class LinearEncoderSystem extends LinearSystem {
 
                 dcMotor.setPower(direction * scaledPower);
                 checkForBounds();
-                telemetry.update();
             }
             dcMotor.setPower(0);
-            telemetry.update();
         }
     }
 
     public void goToPosition(int targetPosition, double power) {
-        telemetry.update();
         if (targetPosition > positions.length) {
             throw new IllegalArgumentException("Target postition (" + targetPosition +
                     ") is beyond range of positions (" + positions.length + ")");
@@ -127,7 +115,6 @@ public abstract class LinearEncoderSystem extends LinearSystem {
             dcMotor.setPower(0);
             regressFromLimitSensor();
         }
-        telemetry.update();
     }
 
     private void regressFromLimitSensor() {
@@ -143,7 +130,6 @@ public abstract class LinearEncoderSystem extends LinearSystem {
                 dcMotor.setPower(-REGRESS_POWER);
             }
             updateCurrentPosition(startPosition);
-            telemetry.update();
         }
 
         dcMotor.setPower(0);
@@ -155,6 +141,5 @@ public abstract class LinearEncoderSystem extends LinearSystem {
             zero = dcMotor.getCurrentPosition();
             dcMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
-        telemetry.update();
     }
 }

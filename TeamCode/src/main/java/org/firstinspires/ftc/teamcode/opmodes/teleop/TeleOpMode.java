@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
  * Created by EvanCoulson on 10/11/17.
  */
 
-public abstract class BaseTeleOpMode extends OpMode
+public abstract class TeleOpMode extends OpMode
 {
     //protected final ConfigParser config;
     protected Controller controller1;
@@ -19,7 +19,7 @@ public abstract class BaseTeleOpMode extends OpMode
     //protected Logger logger;
 
 
-    public BaseTeleOpMode(String opModeName)
+    public TeleOpMode(String opModeName)
     {
         //this.logger = new Logger(this, opModeName);
         //logger.setLoggingServices(LoggingService.FILE);

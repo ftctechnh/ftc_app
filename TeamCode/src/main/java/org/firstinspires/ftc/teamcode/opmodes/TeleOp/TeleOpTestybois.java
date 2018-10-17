@@ -7,7 +7,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.controller.TriggerType;
 
 @TeleOp
-public class TeleOpTestybois extends BaseTeleOpMode {
+public class TeleOpTestybois extends TeleOpMode {
 
     Telemetry.Item lastButtonTelemetryItem;
     public ElapsedTime elapsedTime = new ElapsedTime();
