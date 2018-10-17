@@ -125,100 +125,72 @@ public class cobaltClawsAutonomousSilverBenjamin extends LinearOpMode {
 
         }
 
-        LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
+        LeftDriveMotor.setPower    (speed);
+        RightDriveMotor.setPower   (speed);
 
-
-        //prevents other action until motors have reached positions
-        double currentSpeed = (speed / 4);
-
-        while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
+        while(!motorsWithinTarget()) {
 
             //Loop body can be empty
             telemetry.update();
 
-            if(currentSpeed < speed){
-
-                currentSpeed = currentSpeed + 0.005;
-
-            }
-
-            LeftDriveMotor.setPower(currentSpeed);
-            RightDriveMotor.setPower(currentSpeed);
-
-
         }
 
-
-        //Stops motors, ready for next action
-        LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
+        LeftDriveMotor.setPower    (0);
+        RightDriveMotor.setPower   (0);
 
     }
 
     public void turn(String direction, int distance, double speed){
 
+
+        //Resets the encoders and does a left point turn for the inputted degrees
+        RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+        LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+
         if(direction == "L"){// left
 
-            //Resets the encoders and does a left point turn for the inputted degrees
-            RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-            RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            RightDriveMotor.setTargetPosition  (distance);
+            RightDriveMotor.setTargetPosition  (-distance);
             LeftDriveMotor.setTargetPosition   (distance);
-
-            LeftDriveMotor.setPower(speed);
-            RightDriveMotor.setPower(-speed);
-
-
-            //prevents other action until motors have reached positions
-            while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
-
-                telemetry.update();
-
-            }
-
-            //Stops motors, ready for next action
-            LeftDriveMotor.setPower(0);
-            RightDriveMotor.setPower(0);
-
 
         }
 
         if(direction == "R"){// right
 
-            //Resets the encoders and does a right point turn for the inputted degrees
-            RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
-            LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
-
-
-            RightDriveMotor.setTargetPosition  (-distance);
+            RightDriveMotor.setTargetPosition  (distance);
             LeftDriveMotor.setTargetPosition   (-distance);
 
-            LeftDriveMotor.setPower(-speed);
-            RightDriveMotor.setPower(speed);
+        }
 
+        LeftDriveMotor.setPower    (speed);
+        RightDriveMotor.setPower   (speed);
 
-            //prevents other action until motors have reached positions
-            while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
+        while(!motorsWithinTarget()) {
 
-                telemetry.update();
-
-            }
-
-            //Stops motors, ready for next action
-            LeftDriveMotor.setPower(0);
-            RightDriveMotor.setPower(0);
+            //Loop body can be empty
+            telemetry.update();
 
         }
+
+        LeftDriveMotor.setPower    (0);
+        RightDriveMotor.setPower   (0);
+
+    }
+
+    public boolean motorsBusy(){
+
+        return (RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive();
+
+    }
+
+    public boolean motorsWithinTarget(){
+
+        int lDif = (LeftDriveMotor.getTargetPosition() - LeftDriveMotor.getCurrentPosition());
+        int rDif = (RightDriveMotor.getTargetPosition() - RightDriveMotor.getCurrentPosition());
+
+        return ((Math.abs(lDif) <= 10) & (Math.abs(rDif) <= 10));
 
     }
 
