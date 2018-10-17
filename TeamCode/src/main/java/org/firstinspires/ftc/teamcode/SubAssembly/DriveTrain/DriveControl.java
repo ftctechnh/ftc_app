@@ -18,7 +18,7 @@ public class DriveControl {
 
     //initializing motors
     private DcMotor FrontRightM;
-    private DcMotor  FrontLeftM;
+    private DcMotor FrontLeftM;
     private DcMotor BackRightM;
     private DcMotor BackLeftM;
 
@@ -41,9 +41,9 @@ public class DriveControl {
         BackRightM = hardwareMap.dcMotor.get("BackRightM");
         BackLeftM = hardwareMap.dcMotor.get(" BackLeftM");
 
-       //reverses some motors
-        BackLeftM.setDirection(DcMotor.Direction.REVERSE);
-        FrontLeftM.setDirection(DcMotor.Direction.REVERSE);
+        //reverses some motors
+        BackRightM.setDirection(DcMotor.Direction.REVERSE);
+        FrontRightM.setDirection(DcMotor.Direction.REVERSE);
 
         FrontRightM.setPower(0);
         FrontLeftM.setPower(0);
@@ -54,44 +54,43 @@ public class DriveControl {
 
     //setting power to move forward
     public void moveForward(double speed) {
-        FrontRightM.setPower(1);
-        FrontLeftM.setPower(1);
-        BackRightM.setPower(1);
-        BackLeftM.setPower(1);
+        FrontRightM.setPower(speed);
+        FrontLeftM.setPower(speed);
+        BackRightM.setPower(speed);
+        BackLeftM.setPower(speed);
     }
 
     //setting power to move backward
     public void moveBackward(double speed) {
-        FrontRightM.setPower(-1);
-        FrontLeftM.setPower(-1);
-        BackRightM.setPower(-1);
-        BackLeftM.setPower(-1);
+        FrontRightM.setPower(-speed);
+        FrontLeftM.setPower(-speed);
+        BackRightM.setPower(-speed);
+        BackLeftM.setPower(-speed);
     }
 
     //setting power to turn left
     public void turnLeft(double speed) {
-        FrontRightM.setPower(-1);
-        FrontLeftM.setPower(1);
-        BackRightM.setPower(-1);
-        BackLeftM.setPower(1);
+        FrontRightM.setPower(-speed);
+        FrontLeftM.setPower(speed);
+        BackRightM.setPower(-speed);
+        BackLeftM.setPower(speed);
     }
 
     //setting power to turn right
     public void turnRight(double speed) {
-        FrontRightM.setPower(1);
-        FrontLeftM.setPower(-1);
-        BackRightM.setPower(1);
-        BackLeftM.setPower(-1);
+        FrontRightM.setPower(speed);
+        FrontLeftM.setPower(-speed);
+        BackRightM.setPower(speed);
+        BackLeftM.setPower(-speed);
     }
 
     //setting power to 0
-    public void stop (double speed) {
+    public void stop() {
         FrontRightM.setPower(0);
         FrontLeftM.setPower(0);
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
     }
-
 
 
 }
