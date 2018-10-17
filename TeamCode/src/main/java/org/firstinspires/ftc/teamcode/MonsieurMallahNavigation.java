@@ -151,7 +151,7 @@ public class MonsieurMallahNavigation extends OpMode {
     // Hack stuff.
     private boolean useServoHand = false;
     private boolean useMotors = true;
-    private boolean useEncoders = false;
+    private boolean useEncoders = true;
     private boolean useNavigation = true;
     private boolean useNavigationDisplay = true;
     private boolean useTestField = false;
@@ -256,16 +256,21 @@ public class MonsieurMallahNavigation extends OpMode {
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            //motorLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorLeft.setDirection(DcMotor.Direction.REVERSE);
             motorRight.setDirection(DcMotor.Direction.FORWARD);
 
             if (useEncoders) {
                 motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                // NOTE: only use RUN_IUSING_ENCODER when you want to run a certain amount of spins;
+                // running it like this made the right motor run slower than the left one when using
+                // a power that is less than max.
+                /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+
+                motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
 
@@ -416,14 +421,22 @@ public class MonsieurMallahNavigation extends OpMode {
         }
 
         if (useMotors) {
+            // Control the wheel motors.
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
+            if (Math.abs(drive) < 0.1)
+                drive = 0.0; // Prevent the output from saying "-0.0".
             double turn = gamepad1.right_stick_x;
             double leftPower = Range.clip(drive + turn, -1.0, 1.0);
             double rightPower = Range.clip(drive - turn, -1.0, 1.0);
             motorLeft.setPower(leftPower);
             motorRight.setPower(rightPower);
+            // Report motor telemetry: note that the left motor is mounted upside down compared to the first one,
+            // so it counts in reverse. We multiply it by -1 to change the sign, and so both motors count the same way.
+            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
+                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
+            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
 
             // Control the sweeper.
             boolean suckIn = gamepad1.right_bumper;
@@ -435,8 +448,9 @@ public class MonsieurMallahNavigation extends OpMode {
                 suckPower = 1.0;
             }
             sweeper.setPower(suckPower);
+            telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
 
-            //control the arm
+            // control the arm
             float pullUp = gamepad1.right_trigger;
             float pullDown = gamepad1.left_trigger;
             double pullPower = 0.0;
@@ -446,6 +460,7 @@ public class MonsieurMallahNavigation extends OpMode {
                 pullPower = 1.0;
             }
             arm.setPower(pullPower);
+            telemetry.addData("Arm", " power %.2f", pullPower);
 
             // control the hand
             if (useServoHand) {
@@ -460,6 +475,8 @@ public class MonsieurMallahNavigation extends OpMode {
                 }
             }
             servoHand.setPosition(angleHand);
+            telemetry.addData("Hand", " angle %5.2f", angleHand);
+
 
             // HACK: If press the secret  y key, go forward 12 inchses to test encider.
             if (useEncoders) {
@@ -475,11 +492,6 @@ public class MonsieurMallahNavigation extends OpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
-            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
-                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
-            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
-            telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
-            telemetry.addData("Hand", " angle %5.2f", angleHand);
         }
     }
 

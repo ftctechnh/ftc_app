@@ -89,8 +89,14 @@ public class MonsieurMallahChassis extends OpMode {
                 motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                // NOTE: only use RUN_IUSING_ENCODER when you want to run a certain amount of spins;
+                // running it like this made the right motor run slower than the left one when using
+                // a power that is less than max.
+                /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+
+                motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
 
@@ -140,11 +146,16 @@ public class MonsieurMallahChassis extends OpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
+            if (Math.abs(drive) < 0.1)
+                drive = 0.0; // Prevent the output from saying "-0.0".
             double turn = gamepad1.right_stick_x;
             double leftPower = Range.clip(drive + turn, -1.0, 1.0);
             double rightPower = Range.clip(drive - turn, -1.0, 1.0);
             motorLeft.setPower(leftPower);
             motorRight.setPower(rightPower);
+            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
+                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
+            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
 
             // Control the sweeper.
             boolean suckIn = gamepad1.right_bumper;
@@ -194,9 +205,7 @@ public class MonsieurMallahChassis extends OpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
-            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
-                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
-            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
+
             telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
             telemetry.addData("Hand", " angle %5.2f", angleHand);
         }
