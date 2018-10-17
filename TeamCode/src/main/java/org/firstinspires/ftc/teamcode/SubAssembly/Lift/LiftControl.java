@@ -49,7 +49,7 @@ public class LiftControl {
     }
 
     //setting power to move forward
-    public void goUp () {
+    public void Extend () {
 
 
 
@@ -57,7 +57,7 @@ public class LiftControl {
 
 
     //setting power to 0
-    public void goDown () {
+    public void Retract () {
 
 
 
