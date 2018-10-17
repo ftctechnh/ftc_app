@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.R;
+
 @Autonomous(name = "cobaltClawsAutonomousGoldBenjamin", group = "Linear OpMode")
 
 public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
@@ -126,47 +128,18 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
 
         }
 
-        /*LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
+        LeftDriveMotor.setPower    (speed);
+        RightDriveMotor.setPower   (speed);
 
-
-        //prevents other action until motors have reached positions
-        double currentSpeed = (speed / 4);
-
-        while((RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive()) {
+        /*while(motorsWithinTarget() == false) {
 
             //Loop body can be empty
             telemetry.update();
 
-            if(currentSpeed < speed){
+        }*/
 
-                currentSpeed = currentSpeed + 0.005;
-
-            }
-
-            LeftDriveMotor.setPower(currentSpeed);
-            RightDriveMotor.setPower(currentSpeed);
-
-
-        }
-
-
-        //Stops motors, ready for next action
-        LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);*/
-
-        upLeftMotor.setPower    (speed);
-        upRightMotor.setPower   (speed);
-
-        while(motorsWithinTarget() == false) {
-
-            //Loop body can be empty
-            telemetry.update();
-
-        }
-
-        upLeftMotor.setPower    (0);
-        upRightMotor.setPower   (0);
+        LeftDriveMotor.setPower    (0);
+        RightDriveMotor.setPower   (0);
 
     }
 
@@ -193,6 +166,19 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
             LeftDriveMotor.setTargetPosition   (-distance);
 
         }
+
+        LeftDriveMotor.setPower    (speed);
+        RightDriveMotor.setPower   (speed);
+
+        /*while(motorsWithinTarget() == false) {
+
+            //Loop body can be empty
+            telemetry.update();
+
+        }*/
+
+        LeftDriveMotor.setPower    (0);
+        RightDriveMotor.setPower   (0);
 
     }
 
