@@ -131,12 +131,12 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
         LeftDriveMotor.setPower    (speed);
         RightDriveMotor.setPower   (speed);
 
-        /*while(motorsWithinTarget() == false) {
+        while(!motorsWithinTarget()) {
 
             //Loop body can be empty
             telemetry.update();
 
-        }*/
+        }
 
         LeftDriveMotor.setPower    (0);
         RightDriveMotor.setPower   (0);
@@ -170,15 +170,30 @@ public class cobaltClawsAutonomousGoldBenjamin extends LinearOpMode {
         LeftDriveMotor.setPower    (speed);
         RightDriveMotor.setPower   (speed);
 
-        /*while(motorsWithinTarget() == false) {
+        while(!motorsWithinTarget()) {
 
             //Loop body can be empty
             telemetry.update();
 
-        }*/
+        }
 
         LeftDriveMotor.setPower    (0);
         RightDriveMotor.setPower   (0);
+
+    }
+
+    public boolean motorsBusy(){
+
+        return (RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive();
+
+    }
+
+    public boolean motorsWithinTarget(){
+
+        int lDif = (LeftDriveMotor.getTargetPosition() - LeftDriveMotor.getCurrentPosition());
+        int rDif = (RightDriveMotor.getTargetPosition() - RightDriveMotor.getCurrentPosition());
+
+        return ((Math.abs(lDif) <= 10) & (Math.abs(rDif) <= 10));
 
     }
 
