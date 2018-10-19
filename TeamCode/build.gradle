@@ -17,4 +17,21 @@ apply from: '../build.common.gradle'
 dependencies {
     implementation project(':openCVLibrary3')
     implementation project(':DogeCV')
+    implementation 'com.android.support:multidex:1.0.3'
+    testImplementation 'junit:junit:4.12'
+    implementation 'org.mockito:mockito-android:2.23.0'
+}
+
+android {
+    defaultConfig {
+        multiDexEnabled true
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url 'https://maven.google.com'
+        }
+    }
 }
