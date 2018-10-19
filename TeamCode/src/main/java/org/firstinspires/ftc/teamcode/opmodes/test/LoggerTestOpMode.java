@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.systems.logging.PhoneLogger;
 
 import java.util.Scanner;
 
-@Autonomous(name = "LoggingOpMode")
+@Autonomous(name = "LoggingTestOpMode")
 public class LoggerTestOpMode extends LinearOpModeDebugger
 {
     @Override
@@ -16,18 +16,16 @@ public class LoggerTestOpMode extends LinearOpModeDebugger
     {
         ILogger logger = new PhoneLogger(telemetry);
         logger.log("1", "1");
-        logger.write();
+        logger.close();
         sleepThread(1000);
         logger.log("1", "2");
         logger.log("2", "1");
-        logger.write();
+        logger.close();
         sleepThread(1000);
         logger.log("1", "3");
         logger.log("2", "2");
-        logger.write();
+        logger.close();
         sleepThread(1000);
-        Scanner s = null;
-        s.close();
     }
 
     private void sleepThread(int miliseconds) {
