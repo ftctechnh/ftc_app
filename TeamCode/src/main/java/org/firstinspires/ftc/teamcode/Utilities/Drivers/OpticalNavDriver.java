@@ -4,10 +4,11 @@ import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
 import com.qualcomm.robotcore.hardware.configuration.I2cSensor;
+import com.qualcomm.robotcore.util.TypeConversion;
 
 @I2cSensor(name = "PAT9125EL Optical Nav", description = "Optical Navigation Chip", xmlTag = "PAT9125EL")
 public class OpticalNavDriver extends I2cDeviceSynchDevice<I2cDeviceSynch> {
-    private static final int i2cAddress = 0x73 << 1; //I think???
+    private static final int i2cAddress = 0x79 << 1; //I think???
 
     public enum Register {
         FIRST(0x00),
@@ -71,7 +72,15 @@ public class OpticalNavDriver extends I2cDeviceSynchDevice<I2cDeviceSynch> {
 
     @Override
     public String getDeviceName() {
-        return null;
+        return "Gavin's Optical Nav";
+    }
+
+
+    protected short readShort(Register reg) {
+        return TypeConversion.byteArrayToShort(deviceClient.read(reg.byteValue, 2));
+    }
+    public short getManufacturerIDRaw() {
+        return readShort(Register.PRODUCT_ID1);
     }
 
     public byte[] read(Register r, int l) {
