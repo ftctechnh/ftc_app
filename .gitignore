@@ -27,4 +27,6 @@ build/
 *ASUS_PC_01*
 
 # Emacs
-*~
+*~ #save file autosaves
+[#]*[#] #unsaved file autosaves will be deleted unless file is unsaved and closed anyways
+.\#* #emacs symlink files.  # should not exist except for after crash of system or emacs
