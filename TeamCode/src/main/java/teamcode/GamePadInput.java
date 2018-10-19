@@ -13,11 +13,11 @@ public class GamePadInput {
      */
     private static final double DEFAULT_DRIVE_SPEED_MULTIPLIER = 0.5;
 
-    public static final double ARM_SPEED = 0.1;
+    public static final double ARM_SPEED = 0.0025;
 
-    public static final int ARM_MOTOR_TICKS = 1;
+    public static final int ARM_MOTOR_TICKS = 10;
 
-    public static final double INTAKE_SPEED_MULTIPLIER = 100;
+    public static final double INTAKE_SPEED_MULTIPLIER = 10;
 
     /**
      * the main game pad used to control the robot
@@ -49,7 +49,6 @@ public class GamePadInput {
      * A method to be called from a LinearOpMode repeatedly to handle game pad input
      */
     public static void update() {
-
         // determines if the left bumper was pressed down this "frame" and handles it accordingly
         if (gamePad.left_bumper) {
             if (!leftBumperDown) {
@@ -82,12 +81,18 @@ public class GamePadInput {
         }
         powerL *= driveSpeedModifier;
         powerR *= driveSpeedModifier;
-        HardwareManager.setDrivePower(powerL, powerR);
+        // HardwareManager.setDrivePower(powerL, powerR);
 
         if (gamePad.dpad_up) {
             HardwareManager.setArmMotorBasePosition(ARM_MOTOR_TICKS);
         } else if (gamePad.dpad_down) {
-            HardwareManager.setArmMotorBasePosition(ARM_MOTOR_TICKS);
+            HardwareManager.setArmMotorBasePosition(-ARM_MOTOR_TICKS);
+        }
+        if(gamePad.dpad_right){
+            HardwareManager.setArmServoMiddlePosition(ARM_SPEED);
+        }
+        else if(gamePad.dpad_left){
+            HardwareManager.setArmServoMiddlePosition(-ARM_SPEED);
         }
         if (gamePad.x) {
             HardwareManager.setArmServoBasePosition(ARM_SPEED);
@@ -108,7 +113,7 @@ public class GamePadInput {
         if (lt > 0) {
             intakeSpeed = (int) (lt * INTAKE_SPEED_MULTIPLIER);
         }
-        HardwareManager.setArmServoIntakeSpeed(intakeSpeed);
+       // HardwareManager.setArmServoIntakeSpeed(intakeSpeed);
     }
 
 }
