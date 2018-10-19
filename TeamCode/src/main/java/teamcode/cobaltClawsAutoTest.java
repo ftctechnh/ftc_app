@@ -3,12 +3,13 @@ package teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.R;
 
-@Autonomous(name = "cobaltClawsAutonomousGoldBenjamin", group = "Linear OpMode")
+@Autonomous(name = "cobaltClawsAutoTest", group = "Linear OpMode")
 
 public class cobaltClawsAutoTest extends LinearOpMode {
 
@@ -16,12 +17,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private DcMotor LeftDriveMotor; //motor 0
     private DcMotor RightDriveMotor; //motor 1
 
-
-    //static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    //static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    //static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    //static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION)
-    //                                                    / (WHEEL_DIAMETER_INCHES * 3.1415);
+    //1000 ticks is about 26 inches
 
     @Override
     public void runOpMode() {
@@ -35,8 +31,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            move("F", 5000, 0.8);
-            move("B", 5000, 0.8);
+            move("F", 1000, 0.6);
+
+            requestOpModeStop();
             
         }
 
@@ -51,7 +48,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
 
         //Sets correct directions for motors and servos
-        LeftDriveMotor.setDirection(DcMotor.Direction.REVERSE);
+        LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
 
         //Tells the driver station the arm motor positions and that the robot is ready.
