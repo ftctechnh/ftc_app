@@ -31,7 +31,14 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         while(opModeIsActive()) {
 
-            move("F", 1000, 0.6);
+            //move("F", 1000, 0.6);
+
+            move("F", 2200, 0.25);
+            move("B", 200,  0.25);
+            turn("R", 500,  0.25);
+            move("F", 800,  0.25);
+            turn("R", 270,  0.25);
+            move("F", 2000, 0.25);
 
             requestOpModeStop();
             
@@ -106,15 +113,15 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         if(direction == "L"){// left
 
-            RightDriveMotor.setTargetPosition  (-distance);
-            LeftDriveMotor.setTargetPosition   (distance);
+            RightDriveMotor.setTargetPosition  (distance);
+            LeftDriveMotor.setTargetPosition   (-distance);
 
         }
 
         if(direction == "R"){// right
 
-            RightDriveMotor.setTargetPosition  (distance);
-            LeftDriveMotor.setTargetPosition   (-distance);
+            RightDriveMotor.setTargetPosition  (-distance);
+            LeftDriveMotor.setTargetPosition   (distance);
 
         }
 
