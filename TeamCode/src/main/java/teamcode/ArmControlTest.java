@@ -19,7 +19,8 @@ public class ArmControlTest extends LinearOpMode {
     private double armServoTopPosition;
     private int ticks = 10;
     private double step = 0.1;
-    private long sleepTime = 200;
+    private long sleepTime = 100;
+    private double motorSpeed = 1;
 
     @Override
     //runop calls other methods to control arm- main method
@@ -33,12 +34,12 @@ public class ArmControlTest extends LinearOpMode {
 
             if (gamepad1.dpad_up) {
                 armMotorBasePosition += ticks;
-                setMotor(armMotorBasePosition, .2);
+                setMotor(armMotorBasePosition, motorSpeed);
                 sleep(sleepTime);
             }
             else if (gamepad1.dpad_down) {
                 armMotorBasePosition -= ticks;
-                setMotor(armMotorBasePosition, .2);
+                setMotor(armMotorBasePosition, motorSpeed);
                 sleep(sleepTime);
             }
             else if (gamepad1.x) {
