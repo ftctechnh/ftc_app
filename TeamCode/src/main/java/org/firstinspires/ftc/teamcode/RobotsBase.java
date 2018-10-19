@@ -12,18 +12,17 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Disabled
 public abstract class RobotsBase extends LinearOpMode
 {
-    public abstract void DefineOpMode();
-
     public DcMotor leftDrive;
     public DcMotor rightDrive;
 
-
-    public int thingsInBot = 0;
+    public abstract void DefineOpMode();
 
     public double inchConstantActual = 1;
     public int inchConstant = 1;
     public double degConstantActual = 1;
     public int degConstant = 1;
+
+    public int thingsInBot = 0;
 
     public boolean RobotIsGoingForwards = true;
 
@@ -44,6 +43,8 @@ public abstract class RobotsBase extends LinearOpMode
         DefineOpMode();
     }
 
+
+    //Here is a set of methods for everything the robot needs to do.  These can be used anywhere.
 
     //Utility Methods
 
@@ -75,6 +76,11 @@ public abstract class RobotsBase extends LinearOpMode
     public void ThingsInBotReset ()
     {
         thingsInBot = 0;
+    }
+
+    public void OffTheLander ()
+    {
+
     }
 
 
@@ -209,7 +215,6 @@ public abstract class RobotsBase extends LinearOpMode
     }
 
 
-
     //Arm Methods
 
     public void ArmsUp ()
@@ -257,12 +262,6 @@ public abstract class RobotsBase extends LinearOpMode
     }
 
     public void CloseClaw ()
-    {
-
-    }
-
-
-    public void OffTheLander ()
     {
 
     }
