@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Sahithi Thumuluri on 10/5/18.
+ * Created by Raghav and Jeremy
  */
 @Autonomous(name = "FollowWallRevised", group = "Auto")
 public class FollowWallRevised extends LinearOpMode
@@ -25,37 +25,57 @@ public class FollowWallRevised extends LinearOpMode
 
         int currentDirection = CENTER;
 
-
         while (paradeBot.getDistFromFront_In() > 18)
         {
+            sleep(300);
             telemetry.addData("front", paradeBot.getDistFromFront_In());
             telemetry.addData("right", paradeBot.getDistFromRight_In());
-            telemetry.update();
 
-            if (paradeBot.getDistFromRight_In() > 6 && currentDirection != RIGHT)
+            if (paradeBot.getDistFromRight_In() > 7)
             {
-                paradeBot.pivot_IMU(-10);
-                currentDirection = RIGHT;
-            }
-            else if (paradeBot.getDistFromRight_In() < 4 && currentDirection != LEFT)
-            {
-                paradeBot.pivot_IMU(10);
-                currentDirection = LEFT;
-            }
-
-            if ((paradeBot.getDistFromRight_In() > 4 && paradeBot.getDistFromRight_In() < 6) || currentDirection != CENTER)
-            {
-                paradeBot.driveStraight_In(10, .5);
-
-                if (currentDirection == LEFT)
+                if(currentDirection != RIGHT)
+                {
                     paradeBot.pivot_IMU(-10);
-                else if (currentDirection == RIGHT)
-                    paradeBot.pivot_IMU(10);
+                    currentDirection = RIGHT;
+                }
 
-                currentDirection = CENTER;
+                paradeBot.driveStraight_In(8, .75);
             }
+            else if (paradeBot.getDistFromRight_In() < 3 )
+            {
+                if (currentDirection != LEFT)
+                {
+                    paradeBot.pivot_IMU(10);
+                    currentDirection = LEFT;
+                }
+                paradeBot.driveStraight_In(8, .75);
+            }
+            else
+            {
+                paradeBot.driveStraight_In(8, .75);
+            }
+
+            if (currentDirection != CENTER)
+            {
+                if (currentDirection == LEFT && paradeBot.getDistFromRight_In() > 3/Math.cos(.26))
+                {
+                    paradeBot.pivot_IMU(-10);
+                    currentDirection = CENTER;
+                }
+                else if (currentDirection == RIGHT && paradeBot.getDistFromRight_In() < 7/Math.cos(.26))
+                {
+                    paradeBot.pivot_IMU(10);
+                    currentDirection = CENTER;
+                }
+                telemetry.addData("Current direction is center", null);
+            }
+            else
+            {
+                paradeBot.driveStraight_In(4, .75);
+            }
+
+            telemetry.update();
         }
-        paradeBot.driveMotorsAuto(0, 0);
     }
 
 }
