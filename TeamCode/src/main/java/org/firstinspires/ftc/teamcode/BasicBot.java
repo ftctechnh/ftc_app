@@ -49,4 +49,14 @@ public class BasicBot
         driveRightOne.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
     }
+
+    public DcMotorImplEx getDriveLeftOne()
+    {
+        return driveLeftOne;
+    }
+
+    public DcMotorImplEx getDriveRightOne()
+    {
+        return driveRightOne;
+    }
 }
