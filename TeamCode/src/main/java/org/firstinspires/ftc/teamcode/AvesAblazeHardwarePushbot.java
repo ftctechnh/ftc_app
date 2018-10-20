@@ -298,6 +298,15 @@ public class AvesAblazeHardwarePushbot {
 	public void moveAll(double xVal, double yVal) {
 
 	}
+	public int getMotorVal(int motorNum){
+		switch (motorNum){
+			case 0: return motor0.getCurrentPosition();
+			case 1: return motor1.getCurrentPosition();
+			case 2: return motor2.getCurrentPosition();
+			case 3: return motor3.getCurrentPosition();
+			default: return 0;
+		}
+	}
 	public boolean resetCoordinates(){
 		targetsRoverRuckus.activate();
 		targetVisible=false;
@@ -353,6 +362,13 @@ public class AvesAblazeHardwarePushbot {
 		}
 		lift1.setPower(0);
 		lift2.setPower(0);
+	}
+
+	public void resetEncodes(){
+		motor0.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+		motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 	}
 
 }

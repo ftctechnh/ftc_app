@@ -15,7 +15,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 /**
  * Created by Rohan Mathur on 9/26/18.
  */
-@TeleOp(name="Something intelligent", group="Pushbot")
+@TeleOp(name="Teleop", group="Pushbot")
 
 public class EverythingTest extends LinearOpMode {
 
@@ -68,10 +68,6 @@ public class EverythingTest extends LinearOpMode {
 			}
 
 /*			if(moveY != 0 || moveX != 0){
-				double mag = Math.sqrt(moveX*moveX + moveY*moveY);
-				double angle = Math.atan(moveY/moveX);
-
-				robot.moveAll(moveX, moveY);
 
 			}*/
 
@@ -118,4 +114,4 @@ public class EverythingTest extends LinearOpMode {
 
 	}
 
-	}
+}
