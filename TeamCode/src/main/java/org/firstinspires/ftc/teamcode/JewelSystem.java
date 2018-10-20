@@ -75,10 +75,10 @@ public class JewelSystem {
             blue  = colorSensor.blue();
             if (colorSensor.red() > colorSensor.blue()) {
                 colorSensor.enableLed(false);
-                return JewelColor.RED;
+                return JewelColor.UNKNOWN;
             }else if (colorSensor.blue() > colorSensor.red()) {
                 colorSensor.enableLed(false);
-                return JewelColor.BLUE;
+                return JewelColor.UNKNOWN;
             }else {
             colorSensor.enableLed(false);
             return JewelColor.UNKNOWN;
