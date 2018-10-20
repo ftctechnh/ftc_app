@@ -81,8 +81,9 @@ public class RobotLanding extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
+
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
 
         /*
          * Initialize the drive system variables.
@@ -116,10 +117,16 @@ public class RobotLanding extends LinearOpMode {
         encoderDown(4.625);  // S1: Forward 47 Inches with 5 Sec timeout
         runtime.reset();
         while (opModeIsActive()&&runtime.seconds()<0.8) {
-            robot.setLeftRight(-0.8, 0.8);
+            robot.setLeftRight(-0.8, 0.8,0,0);
         }
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
+        wait(500);
+        robot.setLeftRight(0,0,0,0);
+
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();

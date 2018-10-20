@@ -56,6 +56,8 @@ public class RRVHardwarePushbot
     /* Public OpMode members. */
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
+    public DcMotor leftRear = null;
+    public DcMotor rightRear = null;
     public DcMotor  rack_pinion     = null;
 
     public static final double MID_SERVO       =  0.5 ;
@@ -77,8 +79,10 @@ public class RRVHardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
+        leftDrive  = hwMap.get(DcMotor.class, "left_Front");
+        rightDrive = hwMap.get(DcMotor.class, "right_Front");
+        rightRear = hwMap.get(DcMotor.class, "right_Rear");
+        leftRear = hwMap.get(DcMotor.class, "left_Rear");
         rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
@@ -86,19 +90,25 @@ public class RRVHardwarePushbot
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
+        leftRear.setPower(0);
+        rightRear.setPower(0);
         rack_pinion.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
-    public void setLeftRight(double left, double right) {
+    public void setLeftRight(double left, double right, double leftrear, double rightrear) {
         leftDrive.setPower(left);
+        leftRear.setPower(leftrear);
         rightDrive.setPower(right);
+        rightRear.setPower(rightrear);
     }
  }
 
