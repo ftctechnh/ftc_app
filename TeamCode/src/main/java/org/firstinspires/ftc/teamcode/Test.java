@@ -4,4 +4,6 @@ public class Test {
     public void A() {
 
     }
+    public void B(){
+    }
 }
