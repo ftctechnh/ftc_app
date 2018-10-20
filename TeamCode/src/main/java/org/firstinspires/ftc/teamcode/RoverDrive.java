@@ -181,6 +181,13 @@ public class RoverDrive
         }
     }
     public void controlDrive(double left, double right){
+
+        //Put this in the init of any teleOP program and put run with at the end of it. This method will not function otherwise.
+        /*leftMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
+
         leftMid.setPower(left);
         leftBack.setPower(left);
         rightMid.setPower(right);
