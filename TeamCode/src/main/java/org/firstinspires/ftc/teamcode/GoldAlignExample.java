@@ -96,7 +96,7 @@ public class GoldAlignExample extends OpMode
     {
         return detector.getAligned();
     }
-    public int getX()
+    public double getX()
     {
         return detector.getXPosition();
     }
