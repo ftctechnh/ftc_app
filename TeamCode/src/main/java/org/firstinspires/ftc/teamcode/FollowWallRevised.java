@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 /**
  * Created by Sahithi Thumuluri on 10/5/18.
  */
-@Autonomous(name = "FollowWall", group = "Auto")
+@Autonomous(name = "FollowWallRevised", group = "Auto")
 public class FollowWallRevised extends LinearOpMode
 {
     ParadeBot paradeBot;
