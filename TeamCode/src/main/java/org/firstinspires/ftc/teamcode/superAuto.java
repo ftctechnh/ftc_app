@@ -417,27 +417,27 @@ abstract public class superAuto extends LinearOpMode {
         double Theta = Math.toRadians(getHeading());
         double CurrentX, CurrentY;
         double X,Y;
-
-
-
         boolean go = true;
         int i = 0;
+
 
         // While not at desired location
         while (go) {
             CurrentX = getLocation(0); //Eventually I would like to directly take the readings. These #s are made up...
             CurrentY = getLocation(1);
-            double SignX = 1;
-            double SignY = 1;
             X = (DestinationX - CurrentX);
-            if (X<0) { SignX = -1 };
             Y = (DestinationY - CurrentY);
-            if (Y<0) { SignY = -1 };
+            telemetry.addData("DestinationX ",DestinationX);
+            telemetry.addData("DestinationY ",DestinationY );
+            telemetry.addData("X ",X );
+            telemetry.addData("Y ",Y );
+            double divBy = Math.max(Math.abs(X), Math.abs(Y));
             double chgDistance = Math.sqrt((X*X) + (Y*Y));
-            X= X/Math.max(X, Y);
-            if ( ((X<0) && (SignX>0)) | ((X>0) && (SignX<0)) ) { X = X*SignX};
-            Y = Y/Math.max(X, Y);
-            if ( ((Y<0) && (SignY>0)) | ((Y>0) && (SignY<0)) ) { Y = Y*SignY};
+            X= X/divBy;
+            Y= Y/divBy;
+            telemetry.addData("Max Divisor: ", divBy );
+            telemetry.addData("X Normalized:  ",X );
+            telemetry.addData("Y Normalized: ",Y );
 
             if (Math.abs(chgDistance) >= 2) {
                 //double posx = Vuforia_JoystickX(X,Y, Theta);
@@ -447,17 +447,14 @@ abstract public class superAuto extends LinearOpMode {
                 telemetry.addData("chgDistance ", chgDistance);
                 telemetry.addData("CurrentX ", CurrentX);
                 telemetry.addData("CurrentY ",CurrentY );
-                telemetry.addData("X ",X );
-                telemetry.addData("Y ",Y );
                 telemetry.addData("posx ",posx );
                 telemetry.addData("posy ",posy );
                 telemetry.addData("i", i);
                 telemetry.update();
-                Wait(20);
+                Wait(10);
 
                 //Power the motors
                 if ( ( posy != 0) || ( posx != 0 ) ) {
-
                     double FRBLPower = ((-posy) - posx)*0.3;
                     double FLBRPower = ((-posy) + posx)*0.3;
                     motorFR.setPower( FRBLPower );
