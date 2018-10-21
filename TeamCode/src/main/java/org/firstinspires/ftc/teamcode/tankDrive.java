@@ -35,10 +35,10 @@ public class tankDrive extends OpMode {
     @Override
     public void loop() {
 
-        frontLeft.setPower(gamepad1.left_stick_y);
-        backLeft.setPower(gamepad1.left_stick_y);
-        frontRight.setPower(gamepad1.right_stick_y);
-        backRight.setPower(gamepad1.right_stick_y);
+        frontLeft.setPower(-gamepad1.left_stick_y);
+        backLeft.setPower(-gamepad1.left_stick_y);
+        frontRight.setPower(-gamepad1.right_stick_y);
+        backRight.setPower(-gamepad1.right_stick_y);
 
 //        if (gamepad2.a) {
 //            blockPull.setPosition(1.0);
