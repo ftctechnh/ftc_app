@@ -10,13 +10,10 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 
-@TeleOp(name = "tankDrive", group = "Tank")
-public class tankDrive extends OpMode {
+@TeleOp(name = "intakeTankDrive", group = "Tank")
+public class intakeTankDrive extends OpMode {
 
-    DcMotor frontLeft;
-    DcMotor frontRight;
-    DcMotor backLeft;
-    DcMotor backRight;
+
     DcMotor intakeFrontLeft;
     DcMotor intakeFrontRight;
     DcMotor intakeBackLeft;
@@ -24,16 +21,13 @@ public class tankDrive extends OpMode {
 
     @Override
     public void init() {
-        backRight = hardwareMap.dcMotor.get("back_right");
-        backLeft = hardwareMap.dcMotor.get("back_left");
-        frontRight = hardwareMap.dcMotor.get("front_right");
-        frontLeft = hardwareMap.dcMotor.get("front_left");
         intakeFrontLeft = hardwareMap.dcMotor.get("intake_front_left");
         intakeFrontRight = hardwareMap.dcMotor.get("intake_front_right");
         intakeBackLeft = hardwareMap.dcMotor.get("intake_back_left");
         intakeBackRight = hardwareMap.dcMotor.get("intake_back_right");
 
-        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        intakeBackLeft.setDirection(DcMotor.Direction.REVERSE);
+        intakeFrontLeft.setDirection(DcMotor.Direction.REVERSE);
 
     }
 
@@ -42,16 +36,12 @@ public class tankDrive extends OpMode {
         float leftTrigger = gamepad2.left_trigger;
         float rightTrigger = gamepad2.right_trigger;
 
-        frontLeft.setPower(-gamepad1.left_stick_y); //Moves robot forward.
-        backLeft.setPower(-gamepad1.left_stick_y);
-        frontRight.setPower(-gamepad1.right_stick_y);
-        backRight.setPower(-gamepad1.right_stick_y);
 
         if(rightTrigger>0){
             intakeFrontLeft.setPower(rightTrigger);
             intakeFrontRight.setPower(rightTrigger);
-            intakeBackLeft.setPower(rightTrigger);
-            intakeBackRight.setPower(rightTrigger);
+            intakeBackLeft.setPower(-rightTrigger);
+            intakeBackRight.setPower(-rightTrigger);
         }
 
         if(leftTrigger>0){
