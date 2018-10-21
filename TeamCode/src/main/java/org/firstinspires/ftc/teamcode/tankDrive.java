@@ -17,7 +17,10 @@ public class tankDrive extends OpMode {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
-//    Servo blockPull;
+    DcMotor intakeFrontLeft;
+    DcMotor intakeFrontRight;
+    DcMotor intakeBackLeft;
+    DcMotor intakeBackRight;
 
     @Override
     public void init() {
@@ -25,7 +28,10 @@ public class tankDrive extends OpMode {
         backLeft = hardwareMap.dcMotor.get("back_left");
         frontRight = hardwareMap.dcMotor.get("front_right");
         frontLeft = hardwareMap.dcMotor.get("front_left");
-//        blockPull = hardwareMap.servo.get("servo0");
+        intakeFrontLeft = hardwareMap.dcMotor.get("intake_front_left");
+        intakeFrontRight = hardwareMap.dcMotor.get("intake_front_right");
+        intakeBackLeft = hardwareMap.dcMotor.get("intake_back_left");
+        intakeBackRight = hardwareMap.dcMotor.get("intake_back_right");
 
         backLeft.setDirection(DcMotor.Direction.REVERSE);
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -34,18 +40,27 @@ public class tankDrive extends OpMode {
 
     @Override
     public void loop() {
+        float leftTrigger = gamepad2.left_trigger;
+        float rightTrigger = gamepad2.right_trigger;
 
-        frontLeft.setPower(-gamepad1.left_stick_y);
+        frontLeft.setPower(-gamepad1.left_stick_y); //Moves robot forward.
         backLeft.setPower(-gamepad1.left_stick_y);
         frontRight.setPower(-gamepad1.right_stick_y);
         backRight.setPower(-gamepad1.right_stick_y);
 
-//        if (gamepad2.a) {
-//            blockPull.setPosition(1.0);
-//        }
-//        if (gamepad2.x) {
-//            blockPull.setPosition(0.0);
-//        }
+        if(rightTrigger>0){
+            intakeFrontLeft.setPower(rightTrigger);
+            intakeFrontRight.setPower(rightTrigger);
+            intakeBackLeft.setPower(-rightTrigger);
+            intakeBackRight.setPower(-rightTrigger);
+        }
+
+        if(leftTrigger>0){
+            intakeFrontLeft.setPower(-rightTrigger);
+            intakeFrontRight.setPower(-rightTrigger);
+        }
+
+
 
     }
 }
