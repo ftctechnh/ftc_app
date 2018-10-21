@@ -88,7 +88,18 @@ public class GoldAlignExample extends OpMode
         telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
         telemetry.addLine("testing");
     }
-
+    public boolean found()
+    {
+        return detector.isFound();
+    }
+    public boolean isAligned()
+    {
+        return detector.getAligned();
+    }
+    public int getX()
+    {
+        return detector.getXPosition();
+    }
     /*
      * Code to run ONCE after the driver hits STOP
      */
