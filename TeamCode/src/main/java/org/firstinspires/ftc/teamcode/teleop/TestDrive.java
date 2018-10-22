@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.misc.RobotConstants;
 
 @TeleOp(name = "Drive")
 public class TestDrive extends LinearOpMode {
+    private double currentNomServoPos = 0;
     private ElapsedTime runtime = new ElapsedTime();
-    private double sensitivity = .5;
     private double rightx = 0;
     private double leftx = 0;
     private double lefty = 0;
@@ -23,14 +23,14 @@ public class TestDrive extends LinearOpMode {
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
             telemetry.addData("nom servo pos", robot.nomServoPos());
-            lefty = FtcUtils.motorScale(gamepad1.left_stick_y) * sensitivity;
-            rightx = FtcUtils.motorScale(gamepad1.right_stick_x) * sensitivity;
-            leftx = FtcUtils.motorScale(gamepad1.left_stick_x) * sensitivity;
-            if (Math.abs(gamepad1.left_stick_y) > RobotConstants.threshold) {
+            lefty = FtcUtils.motorScale(gamepad1.left_stick_y) * RobotConstants.sensitivity;
+            rightx = FtcUtils.motorScale(gamepad1.right_stick_x) * RobotConstants.sensitivity;
+            leftx = FtcUtils.motorScale(gamepad1.left_stick_x) * RobotConstants.sensitivity;
+            if (FtcUtils.abs(lefty) > RobotConstants.threshold) {
                 robot.drive(-lefty, -lefty, -lefty, -lefty);
-            } else if (Math.abs(gamepad1.left_stick_x) > RobotConstants.threshold) {
-                robot.drive(-leftx, leftx, leftx, -leftx);
-            }  else if (Math.abs(gamepad1.right_stick_x) > RobotConstants.threshold) {
+            } else if (FtcUtils.abs(leftx) > RobotConstants.threshold) {
+                robot.drive(leftx, -leftx, leftx, -leftx);
+            }  else if (FtcUtils.abs(rightx) > RobotConstants.threshold) {
                 robot.drive(-rightx, -rightx, rightx, rightx);
             } else {
                 robot.stop();
@@ -42,34 +42,34 @@ public class TestDrive extends LinearOpMode {
             } else {
                 robot.nom(0);
             }
-            if (Math.abs(FtcUtils.motorScale(gamepad2.right_stick_y)) > RobotConstants.threshold) {
+            if (FtcUtils.abs(FtcUtils.motorScale(gamepad2.right_stick_y)) > RobotConstants.threshold) {
                 robot.catapult(FtcUtils.motorScale(gamepad2.right_stick_y) * .65);
             } else {
                 robot.catapult(0);
             }
-            if (Math.abs(FtcUtils.motorScale(gamepad2.left_stick_y)) > RobotConstants.threshold) {
+            if (FtcUtils.abs(FtcUtils.motorScale(gamepad2.left_stick_y)) > RobotConstants.threshold) {
                 robot.extend(FtcUtils.motorScale(gamepad2.left_stick_y));
             } else {
                 robot.extend(0);
             }
             if (gamepad2.y) {
-                if (robot.nomServoPos() != RobotConstants.NOMSERVO_UP)
+                if (robot.nomServoPos() != RobotConstants.NOMSERVO_UP) {
                     robot.nomServo(RobotConstants.NOMSERVO_UP);
+                }
             }
             if (gamepad2.a) {
-                if (robot.nomServoPos() != RobotConstants.NOMSERVO_DOWN)
+                if (robot.nomServoPos() != RobotConstants.NOMSERVO_DOWN) {
                     robot.nomServo(RobotConstants.NOMSERVO_DOWN);
+                }
             }
-            if (gamepad2.b) {
-                if (robot.nomServoPos() != RobotConstants.NOMSERVO_NEUTRAL)
+            if (gamepad2.x) {
+                if (robot.nomServoPos() != RobotConstants.NOMSERVO_NEUTRAL) {
                     robot.nomServo(RobotConstants.NOMSERVO_NEUTRAL);
+                }
             }
             telemetry.update();
             idle();
         }
         robot.stop();
-    }
-    public double map(double x, double in_min, double in_max, double out_min, double out_max) {
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 }

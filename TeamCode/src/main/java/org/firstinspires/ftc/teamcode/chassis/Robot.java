@@ -44,17 +44,19 @@ public class Robot {
     private DcMotor nom = null;
     private DcMotor extend = null;
     private DcMotor BL = null;
-    private Servo nomServo = null;
+    private Servo nomServo1 = null;
+    private Servo nomServo2 = null;
     private DcMotor catapult = null;
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
-        FR = hwMap.get(DcMotor.class, "BL");
-        FL = hwMap.get(DcMotor.class, "BR");
+        FR = hwMap.get(DcMotor.class, "FR");
+        FL = hwMap.get(DcMotor.class, "FL");
         nom = hwMap.get(DcMotor.class, "nom");
         extend = hwMap.get(DcMotor.class, "extend");
-        BR = hwMap.get(DcMotor.class, "FL");
-        BL = hwMap.get(DcMotor.class, "FR");
-        nomServo = hwMap.get(Servo.class, "nomServo");
+        BR = hwMap.get(DcMotor.class, "BR");
+        BL = hwMap.get(DcMotor.class, "BL");
+        nomServo1 = hwMap.get(Servo.class, "nomServo1");
+        nomServo2 = hwMap.get(Servo.class, "nomServo2");
         catapult = hwMap.get(DcMotor.class, "catapult");
         catapult.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -62,12 +64,12 @@ public class Robot {
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        nom.setDirection(DcMotorSimple.Direction.FORWARD);
-        extend.setDirection(DcMotorSimple.Direction.REVERSE);
-        catapult.setDirection(DcMotorSimple.Direction.REVERSE);
+        nom.setDirection(DcMotorSimple.Direction.REVERSE);
+        extend.setDirection(DcMotorSimple.Direction.FORWARD);
+        catapult.setDirection(DcMotorSimple.Direction.FORWARD);
         FL.setDirection(DcMotorSimple.Direction.FORWARD);
         BL.setDirection(DcMotorSimple.Direction.FORWARD);
-        FR.setDirection(DcMotorSimple.Direction.REVERSE);
+        FR.setDirection(DcMotorSimple.Direction.FORWARD);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
 
        // sensor1 = (Rev2mDistanceSensor) hwMap.get(DistanceSensor.class, "sensor1");
@@ -119,10 +121,11 @@ public class Robot {
         extend.setPower(power);
     }
     public void nomServo(double pos) {
-        nomServo.setPosition(pos);
+        nomServo1.setPosition(pos);
+        nomServo2.setPosition(pos);
     }
     public double nomServoPos() {
-        return /*FtcUtils.roundTwoDecimalPlaces(*/nomServo.getPosition();
+        return /*FtcUtils.roundTwoDecimalPlaces(*/nomServo1.getPosition();
     }
     public double sensorOneDist() {
         return sensor1.getDistance(DistanceUnit.INCH);
