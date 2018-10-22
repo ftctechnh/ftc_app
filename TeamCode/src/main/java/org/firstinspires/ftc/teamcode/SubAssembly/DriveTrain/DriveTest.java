@@ -57,6 +57,8 @@ public class DriveTest extends LinearOpMode {
             } else {
                 Drive.stop();
             }
+            
+            telemetry.addLine("Speed: " +speed);
 
 
             //SubAssembly.test();
