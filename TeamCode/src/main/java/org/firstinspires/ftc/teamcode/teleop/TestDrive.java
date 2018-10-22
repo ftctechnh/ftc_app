@@ -15,10 +15,14 @@ public class TestDrive extends LinearOpMode {
     private double rightx = 0;
     private double leftx = 0;
     private double lefty = 0;
+    private double frontLeft;
+    private double frontRight;
+    private double backRight;
+    private double backLeft;
     private Robot robot = new Robot();
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap, false);
-        telemetry.addData("Status", "Binitialization bas been bompleted");
+        telemetry.addData("Status", "Initialization bas been completed");
         telemetry.update();
         waitForStart();
         while (!isStopRequested() && opModeIsActive()) {
@@ -26,7 +30,35 @@ public class TestDrive extends LinearOpMode {
             lefty = FtcUtils.motorScale(gamepad1.left_stick_y) * RobotConstants.sensitivity;
             rightx = FtcUtils.motorScale(gamepad1.right_stick_x) * RobotConstants.sensitivity;
             leftx = FtcUtils.motorScale(gamepad1.left_stick_x) * RobotConstants.sensitivity;
-            if (FtcUtils.abs(lefty) > RobotConstants.threshold) {
+            frontLeft = -lefty - leftx - rightx;
+            frontRight = lefty - leftx - rightx;
+            backRight = lefty + leftx - rightx;
+            backLeft = -lefty + leftx - rightx;
+
+            // If the joystick values are past the threshold, set the power variables to the clipped calculated power.
+            // Otherwise, set them to zero.
+            if (Math.abs(leftx) > RobotConstants.threshold || Math.abs(lefty) > RobotConstants.threshold  || Math.abs(rightx) > RobotConstants.threshold ) {
+                frontRight = FtcUtils.motorScale(frontRight);
+                frontLeft = FtcUtils.motorScale(frontLeft);
+                backLeft = FtcUtils.motorScale(backLeft);
+                backRight = FtcUtils.motorScale(backRight);
+            } else {
+                frontRight = 0;
+                frontLeft = 0;
+                backRight = 0;
+                backLeft = 0;
+            }
+
+            // Send the power variables to the driver.
+            telemetry.addData("FR", frontRight);
+            telemetry.addData("FL", frontLeft);
+            telemetry.addData("BR", backRight);
+            telemetry.addData("BL", backLeft);
+
+            // Set the powers of the motors to the power variables.
+            robot.drive(frontLeft, backLeft, frontRight, backRight);
+
+            /*if (FtcUtils.abs(lefty) > RobotConstants.threshold) {
                 robot.drive(-lefty, -lefty, -lefty, -lefty);
             } else if (FtcUtils.abs(leftx) > RobotConstants.threshold) {
                 robot.drive(leftx, -leftx, leftx, -leftx);
@@ -34,7 +66,7 @@ public class TestDrive extends LinearOpMode {
                 robot.drive(-rightx, -rightx, rightx, rightx);
             } else {
                 robot.stop();
-            }
+            }*/
             if (FtcUtils.scale(gamepad2.right_trigger, 0, 1) > RobotConstants.threshold) {
                 robot.nom(1);
             } else if (FtcUtils.scale(gamepad2.left_trigger, 0, 1) > RobotConstants.threshold) {
