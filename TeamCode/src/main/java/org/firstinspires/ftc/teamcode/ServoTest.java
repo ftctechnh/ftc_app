@@ -23,7 +23,7 @@ public class ServoTest extends LinearOpMode {
 //            spinnerL.setPower((gamepad1.left_trigger - gamepad2.right_trigger));
 //            spinnerR.setPower(-(gamepad1.left_trigger - gamepad2.right_trigger));
             spinnerL.setPower(1);
-            spinnerR.setPower(-1);`
+            spinnerR.setPower(-1);
             telemetry.update();
 
         }
