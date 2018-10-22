@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.controller.TriggerType;
 
+import java.util.logging.Handler;
+
+@TeleOp(name = "TeleOpTestybois", group = "TeleOp")
 public class TeleOpTestybois extends BaseTeleOpMode {
 
     Telemetry.Item lastButtonTelemetryItem;

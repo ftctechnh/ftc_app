@@ -40,8 +40,8 @@ public class EyeSystem extends System {
     Orientation rotation;
     VectorF translation;
 
-    public EyeSystem(OpMode opMode, String systemName) {
-        super(opMode, systemName);
+    public EyeSystem(OpMode opMode) {
+        super(opMode, "EyeSystem");
 
         int cameraMonitorViewId = map.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", map.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -70,11 +70,14 @@ public class EyeSystem extends System {
     public void find(int seconds) {
         long startTime = java.lang.System.currentTimeMillis();
         while (((java.lang.System.currentTimeMillis() - startTime) / 1000) <= seconds) {
+            telemetry.addLine("startTime: " + startTime);
+            telemetry.addLine("currentTime: " + ((java.lang.System.currentTimeMillis() - startTime) / 1000));
             if (rotation == null) {
                 look();
             } else {
                 return;
             }
+            telemetry.update();
         }
     }
 

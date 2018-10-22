@@ -65,9 +65,14 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         double frontLeftPower = leftY - rightX - leftX;
         double backLeftPower = leftY - rightX + leftX;
         this.motorFrontRight.run(Range.clip(frontRightPower, -1, 1));
+        telemetry.addLine("FRpower: " +  Range.clip(frontRightPower, -1, 1));
         this.motorBackRight.run(Range.clip(backRightPower, -1, 1));
+        telemetry.addLine("BRpower: " +  Range.clip(backRightPower, -1, 1));
         this.motorFrontLeft.run(Range.clip(frontLeftPower - leftX, -1, 1));
+        telemetry.addLine("FLpower: " +  Range.clip(frontLeftPower - leftX, -1, 1));
         this.motorBackLeft.run(Range.clip(backLeftPower + leftX, -1, 1));
+        telemetry.addLine("BLpower: " +  Range.clip(backLeftPower + leftX, -1, 1));
+        telemetry.update();
     }
 
     private float scaleJoystickValue(float joystickValue) {
@@ -208,6 +213,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             telemetry.addLine("heading: " + heading);
             telemetry.addLine("target heading: " + targetHeading);
             telemetry.addLine("power: " + power);
+            telemetry.addLine("distance left: " + Math.abs(computeDegreesDiff(targetHeading, heading)));
 
             tankDrive(power, -power);
             heading = imuSystem.getHeading();
