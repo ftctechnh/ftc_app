@@ -17,10 +17,10 @@ public class DriveControl {
     private String name = "Drive Train";
 
     //initializing motors
-    private DcMotor rightFront;
-    private DcMotor leftFront;
-    private DcMotor rightBack;
-    private DcMotor leftBack;
+    private DcMotor FrontRightM;
+    private DcMotor FrontLeftM;
+    private DcMotor BackRightM;
+    private DcMotor BackLeftM;
 
     /* Declare public class object */
     public VoltageSensor Battery = null;
@@ -36,63 +36,61 @@ public class DriveControl {
         /* Map hardware devices */
         Battery = hardwareMap.voltageSensor.get("Expansion Hub 2");
 
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        rightBack = hardwareMap.dcMotor.get("rightBack");
-        leftBack = hardwareMap.dcMotor.get("leftBack");
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        FrontRightM = hardwareMap.dcMotor.get("FrontRightM");
+        FrontLeftM = hardwareMap.dcMotor.get("FrontLeftM");
+        BackRightM = hardwareMap.dcMotor.get("BackRightM");
+        BackLeftM = hardwareMap.dcMotor.get(" BackLeftM");
 
-        rightFront.setPower(0);
-        leftFront.setPower(0);
-        rightBack.setPower(0);
-        leftBack.setPower(0);
+        //reverses some motors
+        BackLeftM.setDirection(DcMotor.Direction.REVERSE);
+        FrontLeftM.setDirection(DcMotor.Direction.REVERSE);
+
+        FrontRightM.setPower(0);
+        FrontLeftM.setPower(0);
+        BackRightM.setPower(0);
+        BackLeftM.setPower(0);
 
     }
 
     //setting power to move forward
     public void moveForward(double speed) {
-        rightFront.setPower(1);
-        leftFront.setPower(1);
-        rightBack.setPower(1);
-        leftBack.setPower(1);
+        FrontRightM.setPower(speed);
+        FrontLeftM.setPower(speed);
+        BackRightM.setPower(speed);
+        BackLeftM.setPower(speed);
     }
 
     //setting power to move backward
     public void moveBackward(double speed) {
-        rightFront.setPower(-1);
-        leftFront.setPower(-1);
-        rightBack.setPower(-1);
-        leftBack.setPower(-1);
+        FrontRightM.setPower(-speed);
+        FrontLeftM.setPower(-speed);
+        BackRightM.setPower(-speed);
+        BackLeftM.setPower(-speed);
     }
 
     //setting power to turn left
     public void turnLeft(double speed) {
-        rightFront.setPower(-1);
-        leftFront.setPower(1);
-        rightBack.setPower(-1);
-        leftBack.setPower(1);
+        FrontRightM.setPower(-speed);
+        FrontLeftM.setPower(speed);
+        BackRightM.setPower(-speed);
+        BackLeftM.setPower(speed);
     }
 
     //setting power to turn right
     public void turnRight(double speed) {
-        rightFront.setPower(1);
-        leftFront.setPower(-1);
-        rightBack.setPower(1);
-        leftBack.setPower(-1);
+        FrontRightM.setPower(speed);
+        FrontLeftM.setPower(-speed);
+        BackRightM.setPower(speed);
+        BackLeftM.setPower(-speed);
     }
 
     //setting power to 0
-    public void stop (double speed) {
-        rightFront.setPower(0);
-        leftFront.setPower(0);
-        rightBack.setPower(0);
-        leftBack.setPower(0);
+    public void stop() {
+        FrontRightM.setPower(0);
+        FrontLeftM.setPower(0);
+        BackRightM.setPower(0);
+        BackLeftM.setPower(0);
     }
 
-    /* Subassembly methods */
-    public void test() {
-        telemetry.addLine(name + " test");
-        telemetry.addData("Battery level = ", "%.2f V", Battery.getVoltage());
-    }
+
 }
