@@ -27,11 +27,34 @@ import java.util.List;
 //@Disabled
 public class VuforiaNav extends LinearOpMode  {
 
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor leftDrive = null;
-    private DcMotor rightDrive = null;
+    //Vuforia Key to use the program
+    private static final String VUFORIA_KEY = "AYF223v/////AAABmfNmdY7wQEWOtnHRqbf9/zkjwk4qXoKsKyftQI0oXarKVtaL18uhqXwgwqN4hqE11yd1YTTJtd3mUCoO+vUS6NqXLQE6oZ8GYw/EEAqbnjxrChXmAyNVa8Oz4slaFSarcPIlZH8NFXWkJbCgJm/7mtMfT6yYd0q2uwkjaFVQ+2V7mjXkbip19xPaXNfEDPpv36/g8wfMOU4RMKmhJEu2cVKPqgBQ/iHWu3FdS+ehsjRcsRftnMbnBOPT6FtZmNfh+JhJg15QAVzpobc/ER5ai1Fl/Wl1HDQgxxZUdzdckWZRJ49E1zdBz2ghhDcRU3J/qvsVaSmyGi5rvgJUyFMngBzo6GJJMYpgy3Es5PBt1VOJ"
 
-    @Override
-    public void
+    //measurements
+
+    private static final float mmPerInch        = 25.4f;
+    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;  //width
+    private static final float mmTargetHeight   = (6) * mmPerInch;  //height
+
+    //front or back camera
+    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+
+    private OpenGLMatrix lastLocation = null;
+    private boolean targetVisible = false;
+
+    /**
+     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * localization engine.
+     */
+    VuforiaLocalizer vuforia;
+
+    @override public void runOpMode() {
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY ;
+        
+
+    }
+
+
 
 }
