@@ -51,7 +51,7 @@ public class VuforiaNav extends LinearOpMode  {
     @override public void runOpMode() {
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY ;
-        
+
 
     }
 
