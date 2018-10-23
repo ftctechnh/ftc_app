@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 public class CrazyAngle {
-    public float convertNebula(float inputAngle){
+    public static float convertNebula(float inputAngle){
         if (inputAngle>75) {
             inputAngle -= 180;
         }
@@ -12,7 +12,7 @@ public class CrazyAngle {
         return inputAngle;
     }
 
-    public float convertFootprint(float inputAngle) {
+    public static float convertFootprint(float inputAngle) {
         if (inputAngle > -15) {
             inputAngle -= 180;
         }
@@ -23,7 +23,7 @@ public class CrazyAngle {
         return inputAngle;
     }
 
-    public float convertCrater(float inputAngle) {
+    public static float convertCrater(float inputAngle) {
         if (inputAngle < 75) {
             inputAngle += 180;
         }
@@ -31,7 +31,7 @@ public class CrazyAngle {
         return inputAngle;
     }
 
-    public float convertRover(float inputAngle) {
+    public static float convertRover(float inputAngle) {
         if (inputAngle < -15) {
             inputAngle += 180;
         }

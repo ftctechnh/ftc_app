@@ -5,6 +5,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -47,6 +48,9 @@ public class MonsieurMallahChassis extends OpMode {
     private DcMotor motorRight;
     private DcMotor sweeper;
     private DcMotor arm;
+    private DcMotor vacuum;
+    private DcMotor extender;
+
 
     // Hand servo.
     private Servo servoHand;
@@ -76,6 +80,8 @@ public class MonsieurMallahChassis extends OpMode {
             motorRight = hardwareMap.get(DcMotor.class, "motor1");
             sweeper = hardwareMap.get(DcMotor.class, "motor2");
             arm = hardwareMap.get(DcMotor.class, "motor3");
+            extender = hardwareMap.get(DcMotor.class, "motor5");
+            vacuum = hardwareMap.get(DcMotor.class, "motor6");
 
             servoHand = hardwareMap.get(Servo.class, "servo0");
             angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
@@ -89,8 +95,14 @@ public class MonsieurMallahChassis extends OpMode {
                 motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                // NOTE: only use RUN_IUSING_ENCODER when you want to run a certain amount of spins;
+                // running it like this made the right motor run slower than the left one when using
+                // a power that is less than max.
+                /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+
+                motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
 
@@ -140,13 +152,29 @@ public class MonsieurMallahChassis extends OpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
+            if (Math.abs(drive) < 0.1)
+                drive = 0.0; // Prevent the output from saying "-0.0".
             double turn = gamepad1.right_stick_x;
             double leftPower = Range.clip(drive + turn, -1.0, 1.0);
             double rightPower = Range.clip(drive - turn, -1.0, 1.0);
             motorLeft.setPower(leftPower);
             motorRight.setPower(rightPower);
+            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
+                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
+            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
 
-            // Control the sweeper.
+            // Control the extender.
+            boolean extendOut = gamepad1.dpad_up;
+            boolean extendIn = gamepad1.dpad_down;
+            double extendPower = 0.0;
+            if (extendOut) {
+                extendPower = -1.0;
+            } else if (extendIn) {
+                extendPower = 1.0;
+            }
+            extender.setPower(extendPower);
+
+            // Control the vacuum.
             boolean suckIn = gamepad1.right_bumper;
             boolean suckOut = gamepad1.left_bumper;
             double suckPower = 0.0;
@@ -155,7 +183,7 @@ public class MonsieurMallahChassis extends OpMode {
             } else if (suckOut) {
                 suckPower = 1.0;
             }
-            sweeper.setPower(suckPower);
+            vacuum.setPower(suckPower);
 
             //control the arm
             float pullUp = gamepad1.right_trigger;
@@ -182,22 +210,17 @@ public class MonsieurMallahChassis extends OpMode {
 
             // HACK: If driver presses the secret 'y' key, go forward 12 inches, to test encoder.
             if (useEncoders) {
-                boolean encodertest = gamepad1.y;
+                boolean encodertest = false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;//gamepad1.x;
                 if (encodertest) {
                     double speed = 1;
-                    encoderDrive(speed, 12, 12);
-                    encoderDrive(speed, 12, -12);
-                    encoderDrive(speed, 12, 12);
-                    encoderDrive(speed,5,5);
+                    encoderDrive(speed, 24, 24);
                 }
             }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
-            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
-                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
-            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
-            telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
+
+           // telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
             telemetry.addData("Hand", " angle %5.2f", angleHand);
         }
 
@@ -325,4 +348,3 @@ public class MonsieurMallahChassis extends OpMode {
         }
     }
 }
-

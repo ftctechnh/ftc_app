@@ -122,6 +122,9 @@ public class MonsieurMallahNavigation extends OpMode {
     private static final float FIELD_WIDTH = (12*6) * MM_PER_INCH;       // the width of the FTC field (from the center point to the outer panels)
     private static final float TARGET_HEIGHT = (6) * MM_PER_INCH;          // the height of the center of the target image above the floor
 
+    private static final float BASEMENT_FIELD_WIDTH = (12*6) * MM_PER_INCH;       // the width of the FTC field (from the center point to the outer panels)
+    private static final float BASEMENT_FIELD_LENGTH = (12*4) * MM_PER_INCH;       // the width of the FTC field (from the center point to the outer panels)
+
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -140,6 +143,10 @@ public class MonsieurMallahNavigation extends OpMode {
 
     // Navigation stuff.
     private OpenGLMatrix lastLocation;
+    private double lastLocationTime;
+    private LocationSource lastLocationSource;
+
+
     private VuforiaLocalizer vuforia;
     private VuforiaTrackables trackables;
     private List<VuforiaTrackable> allTrackables;
@@ -149,18 +156,19 @@ public class MonsieurMallahNavigation extends OpMode {
     private VuforiaTrackable backSpace;
 
     // Hack stuff.
+    private boolean useGyroscope = true;
     private boolean useServoHand = false;
     private boolean useMotors = true;
-    private boolean useEncoders = false;
+    private boolean useEncoders = true;
     private boolean useNavigation = true;
     private boolean useNavigationDisplay = true;
     private boolean useTestField = false;
 
 
     /**
-     * This will build up the geometry of the test field in the Connolly basment, with just the Rover picture mounted 600 mm in front of the origin point.
+     * This will build up the geometry of a very simple test field, with just the Rover picture mounted 600 mm in front of the origin point.
      */
-    private void buildPlayfieldConnollyBasement() {
+    private void buildPlayfieldSimpleWall() {
         // Target 1:
         OpenGLMatrix roverLocation = OpenGLMatrix
                 .translation(600, 0, TARGET_HEIGHT)
@@ -170,6 +178,62 @@ public class MonsieurMallahNavigation extends OpMode {
         blueRover.setLocation(roverLocation);
     }
 
+    /**
+     * This will build up the geometry of the test field in the Connolly basement.
+     *
+     *  The field is not the standard 12x12: its 12x8.
+     */
+    private void buildPlayfieldConnollyBasement() {
+        /**
+         * To place the BlueRover target in the middle of the blue perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Then, we translate it along the Y axis to the blue perimeter wall.
+         */
+        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
+                .translation(0, BASEMENT_FIELD_WIDTH, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
+        blueRover.setLocation(blueRoverLocationOnField);
+
+        /**
+         * To place the RedFootprint target in the middle of the red perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative Y axis to the red perimeter wall.
+         */
+        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
+                .translation(0, -BASEMENT_FIELD_WIDTH, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
+        redFootprint.setLocation(redFootprintLocationOnField);
+
+        /**
+         * To place the FrontCraters target in the middle of the front perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 90 around the field's Z axis so the image is flat against the front wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative X axis to the front perimeter wall.
+         */
+        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
+                .translation(-BASEMENT_FIELD_LENGTH, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+        frontCraters.setLocation(frontCratersLocationOnField);
+
+        /**
+         * To place the BackSpace target in the middle of the back perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it -90 around the field's Z axis so the image is flat against the back wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the X axis to the back perimeter wall.
+         */
+        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
+                .translation(BASEMENT_FIELD_LENGTH, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
+        backSpace.setLocation(backSpaceLocationOnField);
+    }
+
+    /**
+     * Standard 12x12 FTC layout
+     */
     private void buildPlayfieldREAL() {
         /**
          * In order for localization to work, we need to tell the system where each target is on the field, and
@@ -244,6 +308,13 @@ public class MonsieurMallahNavigation extends OpMode {
     @Override
     public void init() {
 
+        // Initialize the gyoroscope.
+        if (useGyroscope) {
+            boolean boschInit = initGyroscope();
+            telemetry.addData("Gyro", "bosch init=" + boschInit);
+            telemetry.addData("Gyro", bosch.getCalibrationStatus().toString());
+        }
+
         // Initialize the motors.
         if (useMotors) {
             motorLeft = hardwareMap.get(DcMotor.class, "motor0");
@@ -256,16 +327,21 @@ public class MonsieurMallahNavigation extends OpMode {
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            //motorLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorLeft.setDirection(DcMotor.Direction.REVERSE);
             motorRight.setDirection(DcMotor.Direction.FORWARD);
 
             if (useEncoders) {
                 motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                // NOTE: only use RUN_IUSING_ENCODER when you want to run a certain amount of spins;
+                // running it like this made the right motor run slower than the left one when using
+                // a power that is less than max.
+                /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+
+                motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
 
@@ -299,6 +375,11 @@ public class MonsieurMallahNavigation extends OpMode {
             allTrackables = new ArrayList<VuforiaTrackable>();
             allTrackables.addAll(trackables);
 
+            //initialize all lastLocation state
+            lastLocation = null;
+            lastLocationSource = lastLocationSource.Unknown;
+            lastLocationTime = 0;
+
             if (useTestField) {
                 buildPlayfieldConnollyBasement();
             }else {
@@ -320,11 +401,10 @@ public class MonsieurMallahNavigation extends OpMode {
              *  .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
              CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
              */
-            final int CAMERA_FORWARD_DISPLACEMENT  = 0; // 110;   // eg: Camera is 110 mm in front of robot center
-            final int CAMERA_VERTICAL_DISPLACEMENT = 0; // 200;   // eg: Camera is 200 mm above ground
-            final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
-
-
+            final float CAMERA_FORWARD_DISPLACEMENT  = 0.0f; // 110;   // eg: Camera is 110 mm in front of robot center
+            //final float CAMERA_VERTICAL_DISPLACEMENT = 14.0f * MM_PER_INCH; THIS CAUSES PROBLEMS!!!
+            final float CAMERA_VERTICAL_DISPLACEMENT = 0.0f * MM_PER_INCH;
+            final float CAMERA_LEFT_DISPLACEMENT     = 0.0f * MM_PER_INCH;
             OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                     .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                     .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
@@ -381,6 +461,11 @@ public class MonsieurMallahNavigation extends OpMode {
     @Override
     public void loop() {
         if (useNavigation) {
+            OpenGLMatrix nowLocation = null;
+
+            LocationSource nowSource = lastLocationSource.Unknown;
+
+            // Loop through all 4 images to see if any a re visible
             for (VuforiaTrackable trackable : allTrackables) {
                 /**
                  * getUpdatedRobotLocation() will return null if no new information is available since
@@ -391,39 +476,76 @@ public class MonsieurMallahNavigation extends OpMode {
 
                 OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
+                    nowLocation = robotLocationTransform;
+
+                    //record which image gave us the location, in nowSource
+                    if (trackable == blueRover) {
+                        nowSource = LocationSource.Rover;
+                    }
+                    else if (trackable == this.frontCraters) {
+                        nowSource = LocationSource.Crater;
+                    }
+                    else if (trackable == this.redFootprint) {
+                        nowSource = LocationSource.Footprint;
+                    }
+                    else if (trackable == this.backSpace) {
+                        nowSource = LocationSource.Nebula;
+                    }
                 }
+
             }
+
             /**
              * Provide feedback as to where the robot was last located (if we know).
              */
-            if (lastLocation != null) {
-                //  RobotLog.vv(TAG, "robot=%s", format(lastLocation));
-                telemetry.addData("Pos", format(lastLocation));
+            if (nowLocation != null) {
+                lastLocation = nowLocation;
+                lastLocationTime = runtime.milliseconds();
+                lastLocationSource = nowSource;
+            }
 
+
+            // Only print out the location if it is still fresh. Note that soetimes it flickers, and it is normal to get null.
+            if ((lastLocation != null) && (runtime.milliseconds() - lastLocationTime) < 3000.0) {
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                telemetry.addData("Pos", "{X, Y, Z} = %.0f, %.0f, %.0f",
                         translation.get(0) / MM_PER_INCH, translation.get(1) / MM_PER_INCH, translation.get(2) / MM_PER_INCH);
 
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                telemetry.addData("Heading", "{Standard, Crazy} = %.0f, %.0f", getHeading(), getCrazyHeading());
 
             } else {
                 telemetry.addData("Pos", "Unknown");
+                lastLocation = null;
+            }
+
+            boolean doTest = gamepad1.y;
+            if (doTest) {
+                awesomecool();
             }
         }
 
+        if (useGyroscope) {
+            reportGyroscope();
+        }
+
         if (useMotors) {
+            // Control the wheel motors.
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
+            if (Math.abs(drive) < 0.1)
+                drive = 0.0; // Prevent the output from saying "-0.0".
             double turn = gamepad1.right_stick_x;
             double leftPower = Range.clip(drive + turn, -1.0, 1.0);
             double rightPower = Range.clip(drive - turn, -1.0, 1.0);
             motorLeft.setPower(leftPower);
             motorRight.setPower(rightPower);
+            // Report motor telemetry: note that the left motor is mounted upside down compared to the first one,
+            // so it counts in reverse. We multiply it by -1 to change the sign, and so both motors count the same way.
+            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
+                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
+            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
 
             // Control the sweeper.
             boolean suckIn = gamepad1.right_bumper;
@@ -435,8 +557,9 @@ public class MonsieurMallahNavigation extends OpMode {
                 suckPower = 1.0;
             }
             sweeper.setPower(suckPower);
+            //telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
 
-            //control the arm
+            // control the arm
             float pullUp = gamepad1.right_trigger;
             float pullDown = gamepad1.left_trigger;
             double pullPower = 0.0;
@@ -446,6 +569,7 @@ public class MonsieurMallahNavigation extends OpMode {
                 pullPower = 1.0;
             }
             arm.setPower(pullPower);
+            //telemetry.addData("Arm", " power %.2f", pullPower);
 
             // control the hand
             if (useServoHand) {
@@ -460,11 +584,21 @@ public class MonsieurMallahNavigation extends OpMode {
                 }
             }
             servoHand.setPosition(angleHand);
+            //telemetry.addData("Hand", " angle %5.2f", angleHand);
+
+            boolean testLeft = gamepad1.b;
+            boolean testyRight = gamepad1.x;
+            if (testLeft) {
+                turnLeft();
+            }
+            if (testyRight) {
+                turnRight();
+            }
 
             // HACK: If press the secret  y key, go forward 12 inchses to test encider.
             if (useEncoders) {
-                boolean encodertest = gamepad1.y;
-                if (encodertest) {
+                //boolean encodertest = gamepad1.y;
+                if (false) {
                     double speed = 1;
                     encoderDrive(speed, 12, 12);
                     encoderDrive(speed, 12, -12);
@@ -475,13 +609,22 @@ public class MonsieurMallahNavigation extends OpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
-            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
-                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
-            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
-            telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
-            telemetry.addData("Hand", " angle %5.2f", angleHand);
         }
     }
+
+    //tested to turn aprox. ten to twelve degrees! (Flynn did this completely(No poppa))
+     void turnLeft() {
+         motorLeft.setPower(-1.0);
+         motorRight.setPower(1.0);
+         sleep(2000 / 45);
+     }
+
+    //tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
+     void turnRight() {
+         motorLeft.setPower(1.0);
+         motorRight.setPower(-1.0);
+         sleep(2000/45);
+     }
 
 
     enum StartingPosition {
@@ -496,12 +639,80 @@ public class MonsieurMallahNavigation extends OpMode {
         TeamRed
     };
 
+    enum LocationSource {
+        Unknown,
+        Rover,
+        Nebula,
+        Footprint,
+        Crater
+    }
+
+    class Location {
+        public float x;
+        public float y;
+        public float z;
+
+        Location(float x, float y, float z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+    }
+
+    private Location getLocation() {
+        if(lastLocation == null) {
+            return null;
+        }
+        VectorF translation = lastLocation.getTranslation();
+        return new Location( translation.get(0) / MM_PER_INCH, translation.get(1) / MM_PER_INCH, translation.get(2) / MM_PER_INCH);
+    }
+
+    private boolean locationLocked() {
+        return (lastLocation != null);
+    }
+
+    private float getHeading() {
+        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+
+        float angle = rotation.thirdAngle;
+        // TODO: convert angle using flynn's new functionsa in CrazyAnglre.
+        if (lastLocationSource == LocationSource.Rover){
+         angle = CrazyAngle.convertRover(angle);
+        }
+        else if (lastLocationSource == LocationSource.Crater){
+            angle = CrazyAngle.convertCrater(angle);
+        }
+        else if (lastLocationSource == LocationSource.Nebula){
+            angle = CrazyAngle.convertNebula(angle);
+        }
+        else if (lastLocationSource == LocationSource.Footprint){
+            angle = CrazyAngle.convertFootprint(angle);
+        }
+        return angle;
+    }
+
+    private float getCrazyHeading() {
+        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+
+        float angle = rotation.thirdAngle;
+        // TODO: convert angle using flynn's new functionsa in CrazyAnglre.
+
+        return angle;
+    }
+
+
+
     private void awesomecool () {
         // TODO: swivel camera until an image is found
 
-        // TODO: get position from viewmark
-        int x = 0;
-        int y = 0;
+        if (!locationLocked()) {
+            telemetry.addData("awesomecool", "not locked");
+            return;
+        }
+
+        Location loc = getLocation();
+        float x = loc.x;
+        float y = loc.y;
 
         // Which starting position am I in?
         StartingPosition position;
@@ -520,10 +731,12 @@ public class MonsieurMallahNavigation extends OpMode {
         if ((position == StartingPosition.Position_D) || (position == StartingPosition.Position_C))
         {
             team = Team.TeamRed;
-        } else
+        }
+        else
         {
             team = Team.TeamBlue;
         }
+        telemetry.addData("team", team.name());
 
         // Which crater should i look for?
         int targetX = 0;
@@ -535,6 +748,13 @@ public class MonsieurMallahNavigation extends OpMode {
             targetX = 72;
             targetY = 72;
         }
+
+        // what is the angle to the crater?
+        float oppositeSide = targetX - loc.x;
+        float adjacentSide = targetY - loc.y;
+        float angletoTarget = (float) Math.toDegrees((float) Math.tanh(oppositeSide/adjacentSide));
+        telemetry.addData("target", "x=%d, y=%d, opposite = %.0f, adjacent = %.0f", targetX, targetY, oppositeSide, adjacentSide);
+        telemetry.addData("target", "targetAngle = %.0f", angletoTarget);
     }
 
     /*
@@ -608,6 +828,63 @@ public class MonsieurMallahNavigation extends OpMode {
      */
     String format(OpenGLMatrix transformationMatrix) {
         return transformationMatrix.formatAsTransform();
+    }
+
+    /******** GYROSCOPE STUFF **********/
+
+    private boolean initGyroscope() {
+        bosch = hardwareMap.get(BNO055IMU.class, "imu");
+        telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.loggingEnabled = false;
+        parameters.loggingTag = "bosch";
+        //parameters.calibrationDataFile = "MonsieurMallahCalibration.json"; // see the calibration sample opmode
+        boolean boschInit = bosch.initialize(parameters);
+        return boschInit;
+    }
+
+    private void reportGyroscope() {
+         /*AngularVelocity velocity = imu.getAngularVelocity(AngleUnit.DEGREES);
+        String mesg = "x: " + velocity.xRotationRate + ", y:" + velocity.yRotationRate + ", z:" + velocity.zRotationRate;
+        telemetry.addData("Gyro", mesg); */
+
+        Orientation angles = bosch.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        telemetry.addData("Gyro", "angles: " + angles.firstAngle + "," + angles.secondAngle + "," + angles.thirdAngle);
+
+        Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        telemetry.addData("Gyro", "Xangles: " + exangles.firstAngle + "," + exangles.secondAngle + "," + exangles.thirdAngle);
+
+        // Acceleration oa = bosch.getOverallAcceleration();
+        //telemetry.addData("Gyro", "oa: " + oa);
+        /*Acceleration la = bosch.getLinearAcceleration();
+        double linear_force = Math.sqrt(la.xAccel * la.xAccel
+                + la.yAccel * la.yAccel
+                + la.zAccel * la.zAccel);
+        telemetry.addData("Gyro", "la: " + la + "(" + linear_force + ")");
+        Acceleration ga = bosch.getGravity();
+
+        double gravity_force = Math.sqrt(ga.xAccel * ga.xAccel
+                + ga.yAccel * ga.yAccel
+                + ga.zAccel * ga.zAccel);
+        telemetry.addData("Gyro", "ga: " + ga + "(" + gravity_force + ")");
+        Position pos = bosch.getPosition();
+        telemetry.addData("Gyro", "pos: " + pos);
+        Velocity v = bosch.getVelocity();
+        telemetry.addData("Gyro", "v: " + pos);
+        Acceleration accel = bosch.getAcceleration();
+        telemetry.addData("Gyro", "accel: " + accel);
+        Temperature temp = bosch.getTemperature();
+        telemetry.addData("Gyro", "temp: " + temp.temperature + " " + temp.unit.toString());
+        MagneticFlux flux = bosch.getMagneticFieldStrength();
+        telemetry.addData("Gyro", "flux: " + flux);
+        BNO055IMU.SystemStatus status = bosch.getSystemStatus();
+        telemetry.addData("Gyro", "status (" + bosch.isSystemCalibrated() + "): " + status);
+        BNO055IMU.CalibrationStatus cstatus = bosch.getCalibrationStatus();
+        telemetry.addData("Gyro", "cstatus: " + cstatus); */
     }
 }
 
