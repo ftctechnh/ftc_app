@@ -586,6 +586,14 @@ public class MonsieurMallahNavigation extends OpMode {
             servoHand.setPosition(angleHand);
             //telemetry.addData("Hand", " angle %5.2f", angleHand);
 
+            boolean testLeft = gamepad1.b;
+            boolean testyRight = gamepad1.x;
+            if (testLeft) {
+                turnLeft();
+            }
+            if (testyRight) {
+                turnRight();
+            }
 
             // HACK: If press the secret  y key, go forward 12 inchses to test encider.
             if (useEncoders) {
@@ -603,6 +611,20 @@ public class MonsieurMallahNavigation extends OpMode {
             telemetry.addData("Status", "time: " + runtime.toString());
         }
     }
+
+    //tested to turn aprox. ten to twelve degrees! (Flynn did this completely(No poppa))
+     void turnLeft() {
+         motorLeft.setPower(-1.0);
+         motorRight.setPower(1.0);
+         sleep(2000 / 45);
+     }
+
+    //tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
+     void turnRight() {
+         motorLeft.setPower(1.0);
+         motorRight.setPower(-1.0);
+         sleep(2000/45);
+     }
 
 
     enum StartingPosition {
