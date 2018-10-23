@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
-import com.disnodeteam.dogecv.filters.AsyncFilterRunner;
+//import com.disnodeteam.dogecv.filters.AsyncFilterRunner;
 import com.disnodeteam.dogecv.filters.DogeCVColorFilter;
 import com.disnodeteam.dogecv.filters.HSVRangeFilter;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;

@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 @Autonomous
 public class AutoPseudoCode extends OpMode {
 
+    ErnieHardware ernie = new ErnieHardware();
+
     private GoldAlignDetector detector;
 
     static final double TICKS_PER_MOTOR_REV = 1120; // Will change depending on encoder
@@ -54,12 +56,15 @@ public class AutoPseudoCode extends OpMode {
     @Override
     public void loop(){
         Unlatch();
-
-        if(detector.alignPosOffset < 0){
-            //pid turn to left
-        }
-        else if(detector.alignPosOffset > 0){
-            //pid turn to right
+        while(!detector.getAligned()) {
+            if (detector.alignPosOffset < 0) {
+                ernie.leftDrive.setPower(-1);
+                ernie.leftDrive.setPower(1);
+            } else if (detector.alignPosOffset > 0) {
+                ernie.leftDrive.setPower(1);
+                ernie.leftDrive.setPower(-1);
+            }
+            drive(12, 1);
         }
     }
 
@@ -75,7 +80,6 @@ public class AutoPseudoCode extends OpMode {
             double error;
             error = target - current;
 
-
             totalError += error;
 
             current = (error * Kp + totalError * Ki);
@@ -89,26 +93,26 @@ public class AutoPseudoCode extends OpMode {
         int TICKS;
         TICKS = (int)(-INCHES * TICKS_PER_INCH);
 
-        /*robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        /*ernie.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ernie.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.leftDrive.setTargetPosition(TICKS);
-        robot.rightDrive.setTargetPosition(TICKS);
+        ernie.leftDrive.setTargetPosition(TICKS);
+        ernie.rightDrive.setTargetPosition(TICKS);
 
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ernie.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        ernie.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.leftDrive.setPower(power);
-        robot.rightDrive.setPower(power);
+        ernie.leftDrive.setPower(power);
+        ernie.rightDrive.setPower(power);
 
-        while(robot.leftDrive.isBusy() && robot.rightDrive.isBusy()){
+        while(ernie.leftDrive.isBusy() && ernie.rightDrive.isBusy()){
 
         }
 
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
+        ernie.leftDrive.setPower(0);
+        ernie.rightDrive.setPower(0);
 
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+        ernie.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ernie.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
     }
 }
