@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 import org.firstinspires.ftc.teamcode.Hardware.controller.Controller;
@@ -32,6 +33,7 @@ public abstract class BaseTeleOpMode extends OpMode
         this.controller1 = new Controller(gamepad1);
         this.controller2 = new Controller(gamepad2);
         this.driveSystem = new MecanumDriveSystem(this);
+        driveSystem.setDirection(DcMotorSimple.Direction.REVERSE);
 
         initButtons();
     }

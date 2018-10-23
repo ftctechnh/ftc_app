@@ -26,16 +26,8 @@ public abstract class BaseAutonomousOpMode extends LinearOpMode
 
     protected void initSystems()
     {
-        telem("about to start drivesystem");
         this.driveSystem = new MecanumDriveSystem(this);
-        telem("started drivesystem about 2 start imyou");
         this.imuSystem = new IMUSystem(this);
         //this.eye = new EyeSystem(this);
-    }
-
-    private void telem(String message) {
-        telemetry.addLine(message);
-        telemetry.update();
-        sleep(2000);
     }
 }
