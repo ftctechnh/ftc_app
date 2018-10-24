@@ -40,11 +40,15 @@ public class auto extends LinearOpMode {
         STATE_MOVE_TO_CRATER,
         STATE_STOP,
     }
-
-
-
+    
     @Override
     public void runOpMode() throws InterruptedException {
+
+        //sets up subassemblies inside runOpMode
+        DriveControl Drive = new DriveControl(this);
+        LiftControl Lift = new LiftControl(this);
+
+        mCurrentState = State.STATE_INITIAL;
 
         telemetry.addLine("Autonomous");
 
@@ -55,12 +59,6 @@ public class auto extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-            //sets up subassemblies inside runOpMode
-            DriveControl Drive = new DriveControl(this);
-            LiftControl Lift = new LiftControl(this);
-
-            mCurrentState = State.STATE_INITIAL;
 
             //state switch
             switch (mCurrentState) {
@@ -84,6 +82,5 @@ public class auto extends LinearOpMode {
             }
             sleep (40);
         }
-
     }
 }
