@@ -6,12 +6,13 @@ import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import java.util.*;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 /**
  * Created by Simon on 10/21/18.
  */
 @Autonomous
-public class AutoPseudoCode extends OpMode {
+public class PseudoCrater extends OpMode {
 
     ErnieHardware ernie = new ErnieHardware();
 
@@ -73,37 +74,18 @@ public class AutoPseudoCode extends OpMode {
         // Detach with servo
     }
 
-    public void PidTurn(double Kp, double Ki, double Kd, double current, double target){
-        double totalError = 0;
-
-        while(current != target){
-            double error;
-            error = target - current;
-
-            totalError += error;
-
-            current = (error * Kp + totalError * Ki);
-
-            System.out.println("Current = " + current);
-
-        }
-    }
-
     public void drive(double INCHES, double POWER){
         int TICKS;
-        TICKS = (int)(-INCHES * TICKS_PER_INCH);
+        TICKS = (int)(INCHES * TICKS_PER_INCH); //Might need to set INCHES to negative since that's what it was with last year's drivetrain
 
-        /*ernie.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ernie.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        ernie.leftDrive.setTargetPosition(TICKS);
-        ernie.rightDrive.setTargetPosition(TICKS);
+        ernie.leftDrive.setTargetPosition(ernie.leftDrive.getCurrentPosition() + TICKS);
+        ernie.rightDrive.setTargetPosition(ernie.leftDrive.getCurrentPosition() + TICKS);
 
         ernie.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         ernie.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        ernie.leftDrive.setPower(power);
-        ernie.rightDrive.setPower(power);
+        ernie.leftDrive.setPower(POWER);
+        ernie.rightDrive.setPower(POWER);
 
         while(ernie.leftDrive.isBusy() && ernie.rightDrive.isBusy()){
 
@@ -113,6 +95,6 @@ public class AutoPseudoCode extends OpMode {
         ernie.rightDrive.setPower(0);
 
         ernie.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        ernie.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+        ernie.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
