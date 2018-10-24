@@ -130,6 +130,8 @@ public class MonsieurMallahNavigation extends OpMode {
 
     // Internal Gyroscope in the Rev Hub.
     private BNO055IMU bosch;
+    private float gyroAngleOffset;
+    private boolean gyroAngleCalibrated;
 
     // Motors connected to the hub.
     private DcMotor motorLeft;
@@ -302,11 +304,26 @@ public class MonsieurMallahNavigation extends OpMode {
         backSpace.setLocation(backSpaceLocationOnField);
     }
 
+   private void calibrateGyro(){
+        if (locationLocked()){
+        float vuforiaAngle = getVuforiaHeading();
+        float gyroAngle = getGyroHeading();
+        gyroAngleOffset = gyroAngle - vuforiaAngle;
+        gyroAngleCalibrated = true;
+        }
+
+   }
+
     /**
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
+
+        //initilize gyro stuff
+        bosch = null;
+        gyroAngleOffset = 0.0f;
+        gyroAngleCalibrated = false;
 
         // Initialize the gyoroscope.
         if (useGyroscope) {
@@ -460,6 +477,12 @@ public class MonsieurMallahNavigation extends OpMode {
      */
     @Override
     public void loop() {
+
+      if (gyroAngleCalibrated == false){
+          calibrateGyro();
+      }
+
+
         if (useNavigation) {
             OpenGLMatrix nowLocation = null;
 
@@ -528,6 +551,9 @@ public class MonsieurMallahNavigation extends OpMode {
         if (useGyroscope) {
             reportGyroscope();
         }
+
+        telemetry.addData("Compass", "Compass %.0f, Gyro %.0f, Vu %.0f", getHeading(), getGyroHeading(), getVuforiaHeading());
+
 
         if (useMotors) {
             // Control the wheel motors.
@@ -671,21 +697,38 @@ public class MonsieurMallahNavigation extends OpMode {
         return (lastLocation != null);
     }
 
-    private float getHeading() {
-        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+    private float getGyroHeading() {
+        Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+        float gyroAngle = exangles.thirdAngle;
+        return gyroAngle;
+    }
 
+    // will not work if have not seen an image yet, it will return 0.0 if it comes to that
+    private float getHeading() {
+        if (gyroAngleCalibrated == true) {
+            float gyroAngle = getGyroHeading();
+            return gyroAngle + gyroAngleOffset;
+        } else {
+          float angle = getVuforiaHeading();
+          return angle;
+        }
+    }
+
+    private float getVuforiaHeading(){
+        // This should never execute but here for saftey reasons
+        if (lastLocation == null){
+            return 0.0f;
+        }
+        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
         float angle = rotation.thirdAngle;
         // TODO: convert angle using flynn's new functionsa in CrazyAnglre.
-        if (lastLocationSource == LocationSource.Rover){
-         angle = CrazyAngle.convertRover(angle);
-        }
-        else if (lastLocationSource == LocationSource.Crater){
+        if (lastLocationSource == LocationSource.Rover) {
+            angle = CrazyAngle.convertRover(angle);
+        } else if (lastLocationSource == LocationSource.Crater) {
             angle = CrazyAngle.convertCrater(angle);
-        }
-        else if (lastLocationSource == LocationSource.Nebula){
+        } else if (lastLocationSource == LocationSource.Nebula) {
             angle = CrazyAngle.convertNebula(angle);
-        }
-        else if (lastLocationSource == LocationSource.Footprint){
+        } else if (lastLocationSource == LocationSource.Footprint) {
             angle = CrazyAngle.convertFootprint(angle);
         }
         return angle;
