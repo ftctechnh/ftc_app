@@ -4,6 +4,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import java.util.*;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Created by Simon on 10/21/18.
  */
 @Autonomous
-public class PseudoCrater extends OpMode {
+public class PseudoCrater extends LinearOpMode {
 
     ErnieHardware ernie = new ErnieHardware();
 
@@ -25,8 +26,9 @@ public class PseudoCrater extends OpMode {
 
 
     @Override
+    public void runOpMode() {
 
-    public void init(){
+        ernie.init(hardwareMap);
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
@@ -44,20 +46,11 @@ public class PseudoCrater extends OpMode {
         detector.ratioScorer.perfectRatio = 1.0;
 
         detector.enable();
-    }
 
-    @Override
-    public void init_loop(){
-    }
+        waitForStart();
 
-    @Override
-    public void start(){
-    }
-
-    @Override
-    public void loop(){
         Unlatch();
-        while(!detector.getAligned()) {
+        while (!detector.getAligned()) {
             if (detector.alignPosOffset < 0) {
                 ernie.leftDrive.setPower(-1);
                 ernie.leftDrive.setPower(1);
@@ -68,6 +61,7 @@ public class PseudoCrater extends OpMode {
             drive(12, 1);
         }
     }
+
 
     public void Unlatch(){
         // Extend latching arm to go down
@@ -97,4 +91,5 @@ public class PseudoCrater extends OpMode {
         ernie.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         ernie.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
 }
