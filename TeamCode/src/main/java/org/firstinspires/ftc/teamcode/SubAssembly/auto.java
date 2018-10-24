@@ -40,7 +40,7 @@ public class auto extends LinearOpMode {
         STATE_MOVE_TO_CRATER,
         STATE_STOP,
     }
-    
+
     @Override
     public void runOpMode() throws InterruptedException {
 
