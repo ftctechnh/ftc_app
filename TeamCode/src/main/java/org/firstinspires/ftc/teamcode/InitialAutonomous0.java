@@ -38,11 +38,26 @@ public class InitialAutonomous0 extends LinearOpMode {
 
 		waitForStart();
 
-		robot.moveUpDown(1, 50);
-		robot.rotate(1);
-		robot.moveLeftRight(1, 50);
-	}
+		//object.method(param0, param1, ... paramInfinity);
 
+		//This is a simple code to just move around in a box... No real use.. just bored
+		robot.moveUpDown(1, 50);
+		/*I have no idea how many ticks you need to make it turn 90degrees.. So I just assumed 1 tick is one degrees -Justin */
+		robot.rotate(1, -90);
+		robot.moveUpDown(1,50);
+		robot.moveLeftRight(1,-50);
+		robot.moveUpDown(1, -50);
+		/*I have no idea how many ticks you need to make it turn 90degrees.. So I just assumed 1 tick is one degrees -Justin */
+		robot.rotate(1,90);
+
+		//Another pointless program to move in a triangle
+		robot.rotate(1, -45);
+		robot.moveUpDown(1, 50);
+		robot.rotate(1, 90);
+		robot.moveUpDown(1, -50);
+		robot.rotate(1, -45);
+		robot.moveLeftRight(1, 50);
+}
 	public void printAll(){
 		telemetry.addData("motor0", robot.getMotorVal(0));
 		telemetry.addData("motor1", robot.getMotorVal(1));

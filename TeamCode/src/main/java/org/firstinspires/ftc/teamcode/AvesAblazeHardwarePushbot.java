@@ -69,6 +69,10 @@ public class AvesAblazeHardwarePushbot {
 		door=hwMap.get(Servo.class, "door");
 		marker=hwMap.get(CRServo.class, "marker");
 
+		/*
+			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
+		*/
+
 		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
 		motor0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
