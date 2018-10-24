@@ -2,18 +2,16 @@ package org.firstinspires.ftc.teamcode.SubAssembly;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
+import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 
 @Autonomous(name = "Auto")
-public class auto extends LinearOpMode {
-
-    // subassembly setup
-    DriveControl Drive = new DriveControl(this);
-    LiftControl Lift = new LiftControl(this);
+public class Auto extends LinearOpMode {
 
     //methods go here
+
+    private State mCurrentState;
 
     private void newState(State newState) {
         mCurrentState = newState;
@@ -43,42 +41,48 @@ public class auto extends LinearOpMode {
         STATE_STOP,
     }
 
-    private State mCurrentState;
+
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("Autonomous");
 
-        //sets up subassemblies inside runOpMode
-        Drive = new DriveControl(this);
-        Lift = new LiftControl(this);
+        startPosition();
 
-        //displays voltage
-        double voltage = Drive.Battery.getVoltage();
-        telemetry.addLine("Voltage: " + voltage);
+        AutoTransitioner.transitionOnStop(this, "TeleOp");
 
-        //state switch
-        switch (mCurrentState) {
-            case STATE_INITIAL:
-                startPosition();
-                if (orientation.equals("crater")) {
-                    newState(State.STATE_MOVE_TO_CRATER);
-                    telemetry.addLine("Moving to crater");
-                } else if (orientation.equals("depot")) {
-                    newState(State.STATE_MOVE_TO_DEPOT);
-                    telemetry.addLine("Moving to depot");
-                }
-                break;
-            case STATE_MOVE_TO_CRATER:
-                break;
-            case STATE_MOVE_TO_DEPOT:
-                break;
-            case STATE_STOP:
-                break;
-            default:
-                break;
+        waitForStart();
+
+        while (opModeIsActive()) {
+
+            //sets up subassemblies inside runOpMode
+            DriveControl Drive = new DriveControl(this);
+            LiftControl Lift = new LiftControl(this);
+
+            mCurrentState = State.STATE_INITIAL;
+
+            //state switch
+            switch (mCurrentState) {
+                case STATE_INITIAL:
+                    if (orientation.equals("crater")) {
+                        newState(State.STATE_MOVE_TO_CRATER);
+                        telemetry.addLine("Moving to crater");
+                    } else if (orientation.equals("depot")) {
+                        newState(State.STATE_MOVE_TO_DEPOT);
+                        telemetry.addLine("Moving to depot");
+                    }
+                    break;
+                case STATE_MOVE_TO_CRATER:
+                    break;
+                case STATE_MOVE_TO_DEPOT:
+                    break;
+                case STATE_STOP:
+                    break;
+                default:
+                    break;
+            }
         }
-
+        sleep (40);
     }
 }

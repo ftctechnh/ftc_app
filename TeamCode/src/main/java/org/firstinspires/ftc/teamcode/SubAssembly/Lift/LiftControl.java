@@ -13,8 +13,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class LiftControl {
     /* Declare private class object */
-    private Telemetry telemetry = null;         /* local copy of telemetry object from opmode class */
-    private HardwareMap hardwareMap = null;     /* local copy of HardwareMap object from opmode class */
+    private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
+    private HardwareMap hardwareMap;     /* local copy of HardwareMap object from opmode class */
     private String name = "Lift";
 
     //initializing motors
