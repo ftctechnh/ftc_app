@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 
 @Autonomous(name = "Auto")
-public class Auto extends LinearOpMode {
+public class auto extends LinearOpMode {
 
     //methods go here
 
@@ -82,7 +82,8 @@ public class Auto extends LinearOpMode {
                 default:
                     break;
             }
+            sleep (40);
         }
-        sleep (40);
+
     }
 }
