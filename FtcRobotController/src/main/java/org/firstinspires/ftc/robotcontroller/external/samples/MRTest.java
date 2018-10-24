@@ -68,5 +68,6 @@ public class MRTest extends OpMode {
 		else if(gamepad1.b){
 			servo1.setPower(0);
 		}
+		//not
 	}
 }
