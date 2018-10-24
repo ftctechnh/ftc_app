@@ -93,7 +93,6 @@ import java.util.Locale;
  */
 
 @TeleOp(name="Test: Vuforia Nav Webcam", group ="Concept")
-@Disabled
 public class TestVuforiaNavigationWebcam extends LinearOpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
@@ -123,7 +122,7 @@ public class TestVuforiaNavigationWebcam extends LinearOpMode {
         /*
          * Retrieve the camera we are to use.
          */
-        webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
+        webcamName = hardwareMap.get(WebcamName.class, "Webcam");
 
         /*
          * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
@@ -147,7 +146,7 @@ public class TestVuforiaNavigationWebcam extends LinearOpMode {
          * Once you've obtained a license key, copy the string from the Vuforia web site
          * and paste it in to your code on the next line, between the double quotes.
          */
-        parameters.vuforiaLicenseKey = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+        parameters.vuforiaLicenseKey = "ASZFNcz/////AAABmXbNftY1lUh2qVN06LaDcyk91NUp+t7H+AVib0mDkCZ1KThT2a8sIJCFaW7FUpNMTZ/FAKxTBEJ7AmeWc3eyzFYV2n6012K5BCd7fCsDrg2mHwQM8ckHRrR+FAQwnsp+28rXf+QJskCdGmNYnH2bvXyRBfHZzqrJQpedpogdhUZ4U16GqB2k+gDTYyAdZRb/Vj9StxN7HtF6I+8wZWG91Dh9+fL2geiWXzLYnHZjKcL7vYg2F1yit9/KT6480HiLnabp8DOCVsL2mI3TJE2pW9NoivUEyK71JzHIowBMsfUviZOWeIxoWfAqx8eYHpHjjbiFOV1xtfnVAmzWLxNUkM/7TBeohDgHNBbv48JtfbAo";
 
         /**
          * We also indicate which camera on the RC we wish to use.

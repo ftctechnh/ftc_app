@@ -29,11 +29,14 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+//import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 
 /**
  * This is NOT an opmode.
@@ -59,6 +62,8 @@ public class RRVHardwarePushbot
     public DcMotor leftRear = null;
     public DcMotor rightRear = null;
     public DcMotor  rack_pinion     = null;
+    public CRServo pickupServo = null;
+//    public WebcamName webcamName = null;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -84,6 +89,9 @@ public class RRVHardwarePushbot
         rightRear = hwMap.get(DcMotor.class, "right_Rear");
         leftRear = hwMap.get(DcMotor.class, "left_Rear");
         rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
+        pickupServo = hwMap.get(CRServo.class,"servo0");
+//        webcamName = hwMap.get(WebcamName.class, "Webcam");
+
         leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightDrive.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
@@ -101,7 +109,6 @@ public class RRVHardwarePushbot
         leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
 
     public void setLeftRight(double left, double right, double leftrear, double rightrear) {

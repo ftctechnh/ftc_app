@@ -36,19 +36,24 @@ import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.RRVHardwarePushbot;
+
 
 @TeleOp(name="GoldAlign Example", group="DogeCV")
 public class GoldDetectorOpMode extends OpMode
 {
     private GoldAlignDetector detector;
+    private RRVHardwarePushbot robot = new RRVHardwarePushbot();
 
 
     @Override
     public void init() {
+        robot.init(hardwareMap);
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+       // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),2,false);
         detector.useDefaults();
 
         // Optional Tuning
