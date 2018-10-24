@@ -415,11 +415,9 @@ abstract public class superAuto extends LinearOpMode {
 
     void goToPoint(double DestinationX, double DestinationY){
         double Theta = Math.toRadians(getHeading());
-        double CurrentX, CurrentY;
-        double X,Y;
+        double CurrentX, CurrentY,X,Y;//X and Y JOYstick coordinates
         boolean go = true;
         int i = 0;
-
 
         // While not at desired location
         while (go) {
