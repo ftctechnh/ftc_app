@@ -37,9 +37,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 @TeleOp(name = "Drive Test", group = "Test")
 public class DriveTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
-    private static final float mmPerInch        = 25.4f;
-    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-    private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float mmPerInch = 25.4f;
+    private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+    private static final float mmTargetHeight = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
     // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
     // Valid choices are:  BACK or FRONT
@@ -52,6 +52,7 @@ public class DriveTest extends LinearOpMode {
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
     boolean cvActive;
     SamplingOrderDetector detector;
+
     public void cvInit() {
         webcamName = hardwareMap.get(WebcamName.class, "Webcam 1");
 
@@ -93,7 +94,7 @@ public class DriveTest extends LinearOpMode {
 
         OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
                 .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 90));
         frontCraters.setLocation(frontCratersLocationOnField);
 
         OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
@@ -102,18 +103,17 @@ public class DriveTest extends LinearOpMode {
         backSpace.setLocation(backSpaceLocationOnField);
 
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
+        final int CAMERA_FORWARD_DISPLACEMENT = 110;   // eg: Camera is 110 mm in front of robot center
         final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
                         CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
 
-        for (VuforiaTrackable trackable : allTrackables)
-        {
-            ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
 
         targetsRoverRuckus.activate();
@@ -148,39 +148,10 @@ public class DriveTest extends LinearOpMode {
 
 
     }
+
     public void cvLoop() {
         targetVisible = false;
-        while (cvActive); {
-            for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
-                    targetVisible = true;
 
-                    // getUpdatedRobotLocation() will return null if no new information is available since
-                    // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
-                    if (robotLocationTransform != null) {
-                        lastLocation = robotLocationTransform;
-                    }
-                    break;
-                }
-            }
-
-            // Provide feedback as to where the robot is located (if we know).
-            if (targetVisible) {
-                // express position (translation) of robot in inches.
-                VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
-                // express the rotation of the robot in degrees.
-                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-            } else {
-                telemetry.addData("Visible Target", "none");
-            }
-
-        }
     }
 
     @Override
@@ -209,45 +180,77 @@ public class DriveTest extends LinearOpMode {
             egamepad2.updateEdge();
 
 
-            if (egamepad1.x.pressed) {
-            cvActive = true;
-            }
-            if(egamepad1.y.pressed) {
+                if (egamepad1.x.pressed) {
+                cvActive = true;
+                }
+                if (egamepad1.y.pressed) {
                 cvActive = false;
-   //speed control
-            if (egamepad1.right_bumper.pressed) {
-                speed += 0.25;
-                if (speed > 3) speed = 3;
+                //speed control
+                if (egamepad1.right_bumper.pressed) {
+                    speed += 0.25;
+                    if (speed > 3) speed = 3;
+                }
+                if (egamepad1.left_bumper.pressed) {
+                    speed -= 0.25;
+                    if (speed < 0) speed = 0;
+
+                }
+                    while (cvActive) ;
+                    {
+                        for (VuforiaTrackable trackable : allTrackables) {
+                            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                                telemetry.addData("Visible Target", trackable.getName());
+                                targetVisible = true;
+
+                                // getUpdatedRobotLocation() will return null if no new information is available since
+                                // the last time that call was made, or if the trackable is not currently visible.
+                                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                                if (robotLocationTransform != null) {
+                                    lastLocation = robotLocationTransform;
+                                }
+                                break;
+                            }
+                        }
+
+                        // Provide feedback as to where the robot is located (if we know).
+                        if (targetVisible) {
+                            // express position (translation) of robot in inches.
+                            VectorF translation = lastLocation.getTranslation();
+                            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
+
+                            // express the rotation of the robot in degrees.
+                            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                        } else {
+                            telemetry.addData("Visible Target", "none");
+                        }
+
+                    }
+
+                if (egamepad1.dpad_up.state) {
+                    Drive.moveForward(speed);
+                } else if (egamepad1.dpad_down.state) {
+                    Drive.moveBackward(speed);
+                } else if (egamepad1.dpad_left.state) {
+                    Drive.turnLeft(speed);
+                } else if (egamepad1.dpad_right.state) {
+                    Drive.turnRight(speed);
+                } else {
+
+                    Drive.stop();
+                }
+
+                telemetry.addLine("Speed: " + speed);
+
+
+                //SubAssembly.test();
+                telemetry.update();
+
+                //let the robot have a little rest, sleep is healthy
+                sleep(40);
             }
-            if (egamepad1.left_bumper.pressed) {
-                speed -= 0.25;
-                if (speed < 0) speed = 0;
 
-            }
-
-            if (egamepad1.dpad_up.state) {
-                Drive.moveForward(speed);
-            } else if (egamepad1.dpad_down.state) {
-                Drive.moveBackward(speed);
-            } else if (egamepad1.dpad_left.state) {
-                Drive.turnLeft(speed);
-            } else if (egamepad1.dpad_right.state) {
-                Drive.turnRight(speed);
-            } else {
-
-                Drive.stop();
-            }
-            
-            telemetry.addLine("Speed: " +speed);
-
-
-
-            //SubAssembly.test();
-            telemetry.update();
-
-            //let the robot have a little rest, sleep is healthy
-            sleep(40);
         }
-
     }
 }

@@ -153,8 +153,8 @@ public class Dogeforia extends VuforiaLocalizerImpl {
                 ((Activity)displayView.getContext()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        //displayView.onFrame(outputImage);
-                        //displayView.invalidate();
+                        displayView.onFrame(outputImage);
+                        displayView.invalidate();
                     }
                 });
 
