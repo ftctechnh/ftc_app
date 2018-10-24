@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -72,6 +75,7 @@ public class RobotLanding extends LinearOpMode {
     /* Declare OpMode members. */
     RRVHardwarePushbot robot = new RRVHardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
+    private GoldAlignDetector detector;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 8.0 ;     // This is < 1.0 if geared UP
@@ -83,7 +87,7 @@ public class RobotLanding extends LinearOpMode {
 
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
 
         /*
          * Initialize the drive system variables.
@@ -108,6 +112,7 @@ public class RobotLanding extends LinearOpMode {
         telemetry.addData("Path0",  "Starting at %7d",
                           robot.rack_pinion.getCurrentPosition());
         telemetry.update();
+        initDetector();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -122,8 +127,14 @@ public class RobotLanding extends LinearOpMode {
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
        //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
         robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
-        wait(500);
+        runtime.reset();
+        while(opModeIsActive()&&runtime.seconds()< 0.5){}
         robot.setLeftRight(0,0,0,0);
+        while(detector.getAligned()== false){
+            robot.setLeftRight(0.1,-0.1,0.1,-0.1);
+        }
+        robot.setLeftRight(0,0,0,0);
+        telemetry.addData("Detecting Gold",detector.getAligned());
 
 
 
@@ -149,5 +160,27 @@ public class RobotLanding extends LinearOpMode {
         }
 
         robot.rack_pinion.setPower(0);
+    }
+    private void initDetector(){
+        telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+
+        detector = new GoldAlignDetector();
+       // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),1,false);
+        detector.useDefaults();
+
+        // Optional Tuning
+        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005;
+
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0;
+
+        detector.enable();
     }
 }
