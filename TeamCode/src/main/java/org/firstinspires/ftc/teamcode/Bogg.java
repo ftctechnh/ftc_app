@@ -95,7 +95,7 @@ public class Bogg
             double heading_of_robot_on_field = camera.getHeading();
 
             //where a map would tell us a mountain is, relative to us
-            double heading_of_target_from_robot_location = Math.atan2(delta_x,delta_y);
+            double heading_of_target_from_robot_location = Math.atan2(delta_y,delta_x);
 
             //where compass would say the mountain is located considering our compass isn't pointed north
             double heading_of_target_from_robot_perspective = heading_of_target_from_robot_location - heading_of_robot_on_field;
