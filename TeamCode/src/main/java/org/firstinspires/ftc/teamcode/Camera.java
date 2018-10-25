@@ -119,6 +119,7 @@ public class Camera{
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
     private OpenGLMatrix lastLocation = null;
+    private Orientation lastOrientation = null;
     private boolean targetVisible = false;
 
     /**
@@ -304,6 +305,31 @@ public class Camera{
             // express position (translation) of robot in inches.
             VectorF translation = lastLocation.getTranslation();
             return new double[]{translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch};
+        }
+        return null;
+    }
+
+    public Double getHeading()
+    {
+        // check all the trackable target to see which one (if any) is visible.
+        targetVisible = false;
+        for (VuforiaTrackable trackable : allTrackables) {
+            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                targetVisible = true;
+
+                // getUpdatedRobotLocation() will return null if no new information is available since
+                // the last time that call was made, or if the trackable is not currently visible.
+                Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                if (rotation != null) {
+                    lastOrientation = rotation;
+                }
+                break;
+            }
+        }
+
+        if(lastOrientation != null) {
+            // get the heading (not roll or pitch)
+            return new Double(lastOrientation.thirdAngle);
         }
         return null;
     }
