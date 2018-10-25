@@ -17,7 +17,7 @@ public class Bogg
     double alphaInc = 0.000001;
     double xAve = 0;
     double yAve = 0;
-    double SpinAve = 0;
+    double spinAve = 0;
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad)
     {
@@ -45,20 +45,22 @@ public class Bogg
             yAve = alpha * y + (1-alpha) * yAve;
         return yAve;
     }
-    public double smoothSpin(double Spin)
+
+    public double smoothSpin(double spin)
     {
-        if(Spin == 0)
-            SpinAve = 0;
+        if(spin == 0)
+            spinAve = 0;
         else
-            SpinAve = alpha * Spin + (1-alpha ) * SpinAve;
-        return SpinAve;
+            spinAve = alpha * spin + (1-alpha ) * spinAve;
+        return spinAve;
     }
+
     public void lift()
     {
         if(gamepad.y)
-            lift.setPower(.1);
+            lift.setPower(.7);
         else if(gamepad.a)
-            lift.setPower(-.1);
+            lift.setPower(-.7);
         else
             lift.setPower(0);
     }
@@ -88,9 +90,15 @@ public class Bogg
         return alpha;
     }
 
+    public double getSmoothSpin() {
+        return smoothSpin(gamepad.right_stick_x);
+    }
 
     public void manualRotate()
     {
-        driveEngine.rotate(gamepad.right_stick_y);
+        if(gamepad.right_stick_button)
+            driveEngine.rotate(gamepad.right_stick_x);
+        else
+            driveEngine.rotate(smoothSpin(gamepad.right_stick_x));
     }
 }

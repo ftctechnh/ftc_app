@@ -29,10 +29,6 @@
 
 
 package org.firstinspires.ftc.teamcode;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -95,12 +91,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  */
 
 public class Camera{
-    HardwareMap hardwareMap;
-    Telemetry telemetry;
-    public Camera(HardwareMap hardwareMap, Telemetry telemetry){
-        this.hardwareMap = hardwareMap;
-        this.telemetry = telemetry;
-    }
+
+    private Telemetry telemetry;
 
     /*
      * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
@@ -114,7 +106,7 @@ public class Camera{
      * Once you've obtained a license key, copy the string from the Vuforia web site
      * and paste it in to your code on the next line, between the double quotes.
      */
-    private static final String VUFORIA_KEY = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+    private static final String VUFORIA_KEY = "Acm47W//////AAAAGenX5eoF4kiIjafAW3MpjnZ57moOjffX6IMOnB2KhmPJRAmPGqDUdQ6lgFbgurJWybQphBxaKkA+oOvvu+4Dmer+KI5FVLcswHpJZhOIKc0ytY675YBxZf4nw/5xgE1/u6hEBgQBbISBAejFdfPvU8g9lZthU2BKNkGvYXSUncestev+lPHKL/cyLb8UWsru2Uh7Pudx6FtKG0eAhxuh24S0NHVAmKbBDkjyWzJkFqfw/xr5ttsAnhmxdamnLzTbrunRa/EdcRik1gFswDSEyfG7QKf+kPagZeuFtoXM3A2h0Yp6l28RaEIGZSr5yGqa8pA6OQ/xXFiL/MkOhT7q1isFNJTCkSortBAQV1aGowSO";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
@@ -129,15 +121,23 @@ public class Camera{
     private OpenGLMatrix lastLocation = null;
     private boolean targetVisible = false;
 
-    private List<VuforiaTrackable> allTrackables;
-
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
      */
-    VuforiaLocalizer vuforia;
+    private VuforiaLocalizer vuforia;
+    private VuforiaTrackable blueRover;
+    private VuforiaTrackable redFootprint;
+    private VuforiaTrackable frontCraters;
+    private VuforiaTrackable backSpace;
+    private List<VuforiaTrackable> allTrackables;
 
-    public void startCamera() {
+    public Camera(HardwareMap hardwareMap, Telemetry telemetry){
+        this.telemetry = telemetry;
+        startCamera(hardwareMap);
+    }
+
+    public void startCamera(HardwareMap hardwareMap) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
@@ -145,7 +145,6 @@ public class Camera{
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY ;
@@ -157,13 +156,17 @@ public class Camera{
         // Load the data sets that for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.
         VuforiaTrackables targetsRoverRuckus = this.vuforia.loadTrackablesFromAsset("RoverRuckus");
-        VuforiaTrackable blueRover = targetsRoverRuckus.get(0);
+
+        blueRover = targetsRoverRuckus.get(0);
         blueRover.setName("Blue-Rover");
-        VuforiaTrackable redFootprint = targetsRoverRuckus.get(1);
+
+        redFootprint = targetsRoverRuckus.get(1);
         redFootprint.setName("Red-Footprint");
-        VuforiaTrackable frontCraters = targetsRoverRuckus.get(2);
+
+        frontCraters = targetsRoverRuckus.get(2);
         frontCraters.setName("Front-Craters");
-        VuforiaTrackable backSpace = targetsRoverRuckus.get(3);
+
+        backSpace = targetsRoverRuckus.get(3);
         backSpace.setName("Back-Space");
 
         // For convenience, gather together all the trackable objects in one easily-iterable collection */
@@ -281,13 +284,10 @@ public class Camera{
 
     public double[] getLocation()
     {
-
-
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                telemetry.addData("Visible Target", trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -300,24 +300,34 @@ public class Camera{
             }
         }
 
-        // express position (translation) of robot in inches.
-        VectorF translation = lastLocation.getTranslation();
-
-        // Provide feedback as to where the robot is located (if we know).
-        if (targetVisible) {
-
-            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                    translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
-
-            // express the rotation of the robot in degrees.
-            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+        if(lastLocation != null) {
+            // express position (translation) of robot in inches.
+            VectorF translation = lastLocation.getTranslation();
+            return new double[]{translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch};
         }
-        else {
-            telemetry.addData("Visible Target", "none");
-        }
-        telemetry.update();
+        return null;
+    }
 
-        return new double[]{translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch};
+    public boolean targetVisible(int whichTarget) {
+        VuforiaTrackable trackable = allTrackables.get(whichTarget);
+        return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
+    }
+
+    public Double alignToTarget(int whichTarget)
+    {
+        VuforiaTrackable trackable = allTrackables.get(whichTarget);
+        targetVisible = false;
+        if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+            targetVisible = true;
+
+            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+            if (robotLocationTransform != null) {
+                lastLocation = robotLocationTransform;
+            }
+
+            VectorF translation = lastLocation.getTranslation();
+            return new Double((double)(translation.get(1) / mmPerInch));
+        }
+        return null;
     }
 }

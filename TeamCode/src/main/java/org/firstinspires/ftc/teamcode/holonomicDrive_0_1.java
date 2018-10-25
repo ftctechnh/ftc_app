@@ -16,7 +16,7 @@ public class holonomicDrive_0_1 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if(gamepad1.right_stick_y != 0 )
+            if(gamepad1.right_stick_x != 0 )
             {
                 robot.manualRotate();
             }
@@ -25,11 +25,14 @@ public class holonomicDrive_0_1 extends LinearOpMode
                 robot.manualDrive();
             }
 
+            robot.lift();
+
             // Display the current value
             telemetry.addData("leftx: ", gamepad1.left_stick_x);
             telemetry.addData("lefty: ", gamepad1.left_stick_y);
             telemetry.addData("rightx: ", gamepad1.right_stick_x);
             telemetry.addData("righty: ", gamepad1.right_stick_y);
+            telemetry.addData("spinAve: ", robot.getSmoothSpin());
             telemetry.update();
             idle();
         }
