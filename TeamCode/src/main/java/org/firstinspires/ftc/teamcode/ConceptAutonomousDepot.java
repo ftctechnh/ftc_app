@@ -20,75 +20,79 @@ public class ConceptAutonomousDepot extends LinearOpMode
         walle.stopDriveMotors();
         sleep(500);
 
-        while (walle.getDistFromFront_In() > 24 && walle.getDistFromRight_In() > 24)
+        while (walle.getDistFromFront_In() > 16 && walle.getDistFromRight_In() > 16)
         {
             telemetry.addData("leftdist", walle.getDistFromFront_In());
             telemetry.addData("righdist", walle.getDistFromRight_In());
             telemetry.update();
 
-            walle.driveMotorsAuto(.2f, .4f);
+            walle.driveMotorsAuto(.4f, .4f);
         }
         walle.stopDriveMotors();
 
         //drop marker into depot
-        walle.pivot_IMU(-60f);
-        wallHug();
-    }
+        walle.pivot_IMU(120f);
 
-    public void wallHug()
-    {
-        final int CENTER = 0;
-        final int RIGHT = -1;
-        final int LEFT = 1;
+        double thetaDeg;
+        double initialD, finalD;
+        boolean isInCenter = false;
+        float distToTravel = 12;
 
-        int currentDirection = CENTER;
+        initialD = walle.getDistFromRight_In();
+        walle.driveStraight_In(distToTravel);
+        finalD = walle.getDistFromRight_In();
+        thetaDeg = (Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI;
 
         while (walle.getDistFromFront_In() > 18)
         {
+            sleep(200);
+            initialD = walle.getDistFromRight_In();
+            telemetry.addData("Theta = ", thetaDeg);
+            if( initialD > 8)
+            {
+                if (thetaDeg > 15)
+                {
+                    walle.pivot_IMU(-15);
+                }
+                else if (thetaDeg < 15 && thetaDeg > 0)
+                {
+                    walle.pivot_IMU(-7);
+                }
+                isInCenter = false;
+            }
+            else if ( initialD < 4)
+            {
+                if (thetaDeg < -15)
+                {
+                    walle.pivot_IMU(15);
+                }
+                else if (thetaDeg > -15 && thetaDeg < 0)
+                {
+                    walle.pivot_IMU(7);
+                }
+                isInCenter = false;
+            }
+            else
+            {
+                if(!isInCenter)
+                {
+                    walle.pivot_IMU((float)(-thetaDeg));
+                    isInCenter = true;
+                }
+            }
             sleep(300);
-            telemetry.addData("front", walle.getDistFromFront_In());
-            telemetry.addData("right", walle.getDistFromRight_In());
-
-            if (walle.getDistFromRight_In() > 7)
-            {
-                if (currentDirection != RIGHT)
-                {
-                    walle.pivot_IMU(-10);
-                    currentDirection = RIGHT;
-                }
-
-                walle.driveStraight_In(8, .75);
-            } else if (walle.getDistFromRight_In() < 3)
-            {
-                if (currentDirection != LEFT)
-                {
-                    walle.pivot_IMU(10);
-                    currentDirection = LEFT;
-                }
-                walle.driveStraight_In(8, .75);
-            } else
-            {
-                walle.driveStraight_In(8, .75);
-            }
-
-            if (currentDirection != CENTER)
-            {
-                if (currentDirection == LEFT && walle.getDistFromRight_In() > 3 / Math.cos(.26))
-                {
-                    walle.pivot_IMU(-10);
-                    currentDirection = CENTER;
-                } else if (currentDirection == RIGHT && walle.getDistFromRight_In() < 7 / Math.cos(.26))
-                {
-                    walle.pivot_IMU(10);
-                    currentDirection = CENTER;
-                }
-                telemetry.addData("Current direction is center", null);
-            } else
-            {
-                walle.driveStraight_In(4, .75);
-            }
-
+            walle.driveStraight_In(distToTravel);
+            finalD = walle.getDistFromRight_In();
+            thetaDeg =  (Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI;
+            telemetry.addData("Inital dist ", initialD);
+            telemetry.addData("Final dist ", finalD);
             telemetry.update();
+        }
+
+        telemetry.addData("Stopped", null);
+        telemetry.update();
+        while (!isStopRequested())
+        {
         }
     }
 }

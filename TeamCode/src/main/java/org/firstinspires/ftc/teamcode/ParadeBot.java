@@ -370,7 +370,6 @@ public class ParadeBot
         else
             degreesToStopAt = -Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);
 
-
         while (degreesToStopAt > 180)
         {
             degreesToStopAt -= 360;
@@ -381,13 +380,14 @@ public class ParadeBot
         }
 
         initIMU();
+
         if (degreesToStopAt < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
             while(getYaw() > degreesToStopAt && !linearOpMode.isStopRequested())
             {
-                linearOpMode.sleep(1);
+                linearOpMode.sleep(160);
             }
         }
         else
@@ -396,7 +396,7 @@ public class ParadeBot
             driveLeftOne.setPower(Math.abs(pow));
             while(getYaw() < degreesToStopAt && !linearOpMode.isStopRequested())
             {
-                linearOpMode.sleep(1);
+                linearOpMode.sleep(160);
             }
         }
 

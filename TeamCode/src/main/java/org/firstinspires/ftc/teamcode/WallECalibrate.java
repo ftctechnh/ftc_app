@@ -10,11 +10,10 @@ public class WallECalibrate extends LinearOpMode
 
     public void runOpMode() throws InterruptedException
     {
-        wallE = new ParadeBot(hardwareMap);
+        wallE = new ParadeBot(hardwareMap, this);
         waitForStart();
-        wallE.driveStraight_In(2000,.5);
-
-        while (!isStopRequested())
-            wallE.stopDriveMotors();
+        wallE.getDriveRightOne().setPower(1);
+        wallE.getDriveLeftOne().setPower(1);
+        sleep(2000);
     }
 }
