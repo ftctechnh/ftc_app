@@ -106,8 +106,8 @@ public class MonsieurMallahNavigation extends OpMode {
 
     //constants from encoder sample
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.9375;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 0.6;
@@ -167,152 +167,6 @@ public class MonsieurMallahNavigation extends OpMode {
     private boolean useTestField = false;
 
 
-    /**
-     * This will build up the geometry of a very simple test field, with just the Rover picture mounted 600 mm in front of the origin point.
-     */
-    private void buildPlayfieldSimpleWall() {
-        // Target 1:
-        OpenGLMatrix roverLocation = OpenGLMatrix
-                .translation(600, 0, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
-                        AngleUnit.DEGREES, 90, 0, -90));
-        blueRover.setLocation(roverLocation);
-    }
-
-    /**
-     * This will build up the geometry of the test field in the Connolly basement.
-     *
-     *  The field is not the standard 12x12: its 12x8.
-     */
-    private void buildPlayfieldConnollyBasement() {
-        /**
-         * To place the BlueRover target in the middle of the blue perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Then, we translate it along the Y axis to the blue perimeter wall.
-         */
-        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
-                .translation(0, BASEMENT_FIELD_WIDTH, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
-        blueRover.setLocation(blueRoverLocationOnField);
-
-        /**
-         * To place the RedFootprint target in the middle of the red perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the negative Y axis to the red perimeter wall.
-         */
-        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
-                .translation(0, -BASEMENT_FIELD_WIDTH, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
-        redFootprint.setLocation(redFootprintLocationOnField);
-
-        /**
-         * To place the FrontCraters target in the middle of the front perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it 90 around the field's Z axis so the image is flat against the front wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the negative X axis to the front perimeter wall.
-         */
-        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
-                .translation(-BASEMENT_FIELD_LENGTH, 0, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
-        frontCraters.setLocation(frontCratersLocationOnField);
-
-        /**
-         * To place the BackSpace target in the middle of the back perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it -90 around the field's Z axis so the image is flat against the back wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the X axis to the back perimeter wall.
-         */
-        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
-                .translation(BASEMENT_FIELD_LENGTH, 0, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
-        backSpace.setLocation(backSpaceLocationOnField);
-    }
-
-    /**
-     * Standard 12x12 FTC layout
-     */
-    private void buildPlayfieldREAL() {
-        /**
-         * In order for localization to work, we need to tell the system where each target is on the field, and
-         * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
-         * Transformation matrices are a central, important concept in the math here involved in localization.
-         * See <a href="https://en.wikipedia.org/wiki/Transformation_matrix">Transformation Matrix</a>
-         * for detailed information. Commonly, you'll encounter transformation matrices as instances
-         * of the {@link OpenGLMatrix} class.
-         *
-         * If you are standing in the Red Alliance Station looking towards the center of the field,
-         *     - The X axis runs from your left to the right. (positive from the center to the right)
-         *     - The Y axis runs from the Red Alliance Station towards the other side of the field
-         *       where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
-         *     - The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
-         *
-         * This Rover Ruckus sample places a specific target in the middle of each perimeter wall.
-         *
-         * Before being transformed, each target image is conceptually located at the origin of the field's
-         *  coordinate system (the center of the field), facing up.
-         */
-
-        /**
-         * To place the BlueRover target in the middle of the blue perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Then, we translate it along the Y axis to the blue perimeter wall.
-         */
-        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
-                .translation(0, FIELD_WIDTH, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
-        blueRover.setLocation(blueRoverLocationOnField);
-
-        /**
-         * To place the RedFootprint target in the middle of the red perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the negative Y axis to the red perimeter wall.
-         */
-        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
-                .translation(0, -FIELD_WIDTH, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
-        redFootprint.setLocation(redFootprintLocationOnField);
-
-        /**
-         * To place the FrontCraters target in the middle of the front perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it 90 around the field's Z axis so the image is flat against the front wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the negative X axis to the front perimeter wall.
-         */
-        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
-                .translation(-FIELD_WIDTH, 0, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
-        frontCraters.setLocation(frontCratersLocationOnField);
-
-        /**
-         * To place the BackSpace target in the middle of the back perimeter wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright.
-         * - Second, we rotate it -90 around the field's Z axis so the image is flat against the back wall
-         *   and facing inwards to the center of the field.
-         * - Then, we translate it along the X axis to the back perimeter wall.
-         */
-        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
-                .translation(FIELD_WIDTH, 0, TARGET_HEIGHT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
-        backSpace.setLocation(backSpaceLocationOnField);
-    }
-
-   private void calibrateGyro(){
-        if (locationLocked()){
-        float vuforiaAngle = getVuforiaHeading();
-        float gyroAngle = getGyroHeading();
-        gyroAngleOffset = gyroAngle - vuforiaAngle;
-        gyroAngleCalibrated = true;
-        }
-
-   }
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -535,7 +389,7 @@ public class MonsieurMallahNavigation extends OpMode {
                 telemetry.addData("Pos", "{X, Y, Z} = %.0f, %.0f, %.0f",
                         translation.get(0) / MM_PER_INCH, translation.get(1) / MM_PER_INCH, translation.get(2) / MM_PER_INCH);
 
-                telemetry.addData("Heading", "{Standard, Crazy} = %.0f, %.0f", getHeading(), getCrazyHeading());
+                telemetry.addData("Heading", "{Standard, Crazy} = %.0f, %.0f", getHeading(), getVuforiaHeadingRaw());
 
             } else {
                 telemetry.addData("Pos", "Unknown");
@@ -552,7 +406,7 @@ public class MonsieurMallahNavigation extends OpMode {
             reportGyroscope();
         }
 
-        telemetry.addData("Compass", "Compass %.0f, Gyro %.0f, Vu %.0f", getHeading(), getGyroHeading(), getVuforiaHeading());
+        telemetry.addData("Compass", "Compass %.0f, Gyro %.0f, Vu %.0f, VuRaw %.0f", getHeading(), getGyroHeading(), getVuforiaHeading(), getVuforiaHeadingRaw());
 
 
         if (useMotors) {
@@ -619,6 +473,15 @@ public class MonsieurMallahNavigation extends OpMode {
             }
             if (testyRight) {
                 turnRight();
+            }
+
+            // HACK: If driver presses the secret 'y' key, go forward 12 inches, to test encoder.
+            if (useEncoders) {
+                boolean encodertest = gamepad1.y;;;;;;;;;;;;;;;;;;;;
+                if (encodertest) {
+                    double speed = 1;
+                    encoderDrive(speed, 24, 24);
+                }
             }
 
             // HACK: If press the secret  y key, go forward 12 inchses to test encider.
@@ -719,8 +582,7 @@ public class MonsieurMallahNavigation extends OpMode {
         if (lastLocation == null){
             return 0.0f;
         }
-        Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-        float angle = rotation.thirdAngle;
+        float angle = getVuforiaHeadingRaw();
         // TODO: convert angle using flynn's new functionsa in CrazyAnglre.
         if (lastLocationSource == LocationSource.Rover) {
             angle = CrazyAngle.convertRover(angle);
@@ -734,15 +596,15 @@ public class MonsieurMallahNavigation extends OpMode {
         return angle;
     }
 
-    private float getCrazyHeading() {
+    private float getVuforiaHeadingRaw(){
+        // This should never execute but here for saftey reasons
+        if (lastLocation == null){
+            return 0.0f;
+        }
         Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-
         float angle = rotation.thirdAngle;
-        // TODO: convert angle using flynn's new functionsa in CrazyAnglre.
-
         return angle;
     }
-
 
 
     private void awesomecool () {
@@ -795,7 +657,7 @@ public class MonsieurMallahNavigation extends OpMode {
         // what is the angle to the crater?
         float oppositeSide = targetX - loc.x;
         float adjacentSide = targetY - loc.y;
-        float angletoTarget = (float) Math.toDegrees((float) Math.tanh(oppositeSide/adjacentSide));
+        float angletoTarget = (float) Math.toDegrees((float) Math.atan2(adjacentSide, oppositeSide));
         telemetry.addData("target", "x=%d, y=%d, opposite = %.0f, adjacent = %.0f", targetX, targetY, oppositeSide, adjacentSide);
         telemetry.addData("target", "targetAngle = %.0f", angletoTarget);
     }
@@ -818,6 +680,8 @@ public class MonsieurMallahNavigation extends OpMode {
         newRightTarget = motorLeft.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
         motorRight.setTargetPosition(newLeftTarget);
         motorLeft.setTargetPosition(newRightTarget);
+        /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
 
         // Turn On RUN_TO_POSITION
         motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -896,10 +760,10 @@ public class MonsieurMallahNavigation extends OpMode {
         telemetry.addData("Gyro", mesg); */
 
         Orientation angles = bosch.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-        telemetry.addData("Gyro", "angles: " + angles.firstAngle + "," + angles.secondAngle + "," + angles.thirdAngle);
+        //telemetry.addData("Gyro", "angles: " + angles.firstAngle + "," + angles.secondAngle + "," + angles.thirdAngle);
 
         Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-        telemetry.addData("Gyro", "Xangles: " + exangles.firstAngle + "," + exangles.secondAngle + "," + exangles.thirdAngle);
+        //telemetry.addData("Gyro", "Xangles: " + exangles.firstAngle + "," + exangles.secondAngle + "," + exangles.thirdAngle);
 
         // Acceleration oa = bosch.getOverallAcceleration();
         //telemetry.addData("Gyro", "oa: " + oa);
@@ -928,6 +792,153 @@ public class MonsieurMallahNavigation extends OpMode {
         telemetry.addData("Gyro", "status (" + bosch.isSystemCalibrated() + "): " + status);
         BNO055IMU.CalibrationStatus cstatus = bosch.getCalibrationStatus();
         telemetry.addData("Gyro", "cstatus: " + cstatus); */
+    }
+
+    /**
+     * This will build up the geometry of a very simple test field, with just the Rover picture mounted 600 mm in front of the origin point.
+     */
+    private void buildPlayfieldSimpleWall() {
+        // Target 1:
+        OpenGLMatrix roverLocation = OpenGLMatrix
+                .translation(600, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(
+                        AxesReference.EXTRINSIC, AxesOrder.XYZ,
+                        AngleUnit.DEGREES, 90, 0, -90));
+        blueRover.setLocation(roverLocation);
+    }
+
+    /**
+     * This will build up the geometry of the test field in the Connolly basement.
+     *
+     *  The field is not the standard 12x12: its 12x8.
+     */
+    private void buildPlayfieldConnollyBasement() {
+        /**
+         * To place the BlueRover target in the middle of the blue perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Then, we translate it along the Y axis to the blue perimeter wall.
+         */
+        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
+                .translation(0, BASEMENT_FIELD_WIDTH, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
+        blueRover.setLocation(blueRoverLocationOnField);
+
+        /**
+         * To place the RedFootprint target in the middle of the red perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative Y axis to the red perimeter wall.
+         */
+        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
+                .translation(0, -BASEMENT_FIELD_WIDTH, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
+        redFootprint.setLocation(redFootprintLocationOnField);
+
+        /**
+         * To place the FrontCraters target in the middle of the front perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 90 around the field's Z axis so the image is flat against the front wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative X axis to the front perimeter wall.
+         */
+        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
+                .translation(-BASEMENT_FIELD_LENGTH, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+        frontCraters.setLocation(frontCratersLocationOnField);
+
+        /**
+         * To place the BackSpace target in the middle of the back perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it -90 around the field's Z axis so the image is flat against the back wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the X axis to the back perimeter wall.
+         */
+        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
+                .translation(BASEMENT_FIELD_LENGTH, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
+        backSpace.setLocation(backSpaceLocationOnField);
+    }
+
+    /**
+     * Standard 12x12 FTC layout
+     */
+    private void buildPlayfieldREAL() {
+        /**
+         * In order for localization to work, we need to tell the system where each target is on the field, and
+         * where the phone resides on the robot.  These specifications are in the form of <em>transformation matrices.</em>
+         * Transformation matrices are a central, important concept in the math here involved in localization.
+         * See <a href="https://en.wikipedia.org/wiki/Transformation_matrix">Transformation Matrix</a>
+         * for detailed information. Commonly, you'll encounter transformation matrices as instances
+         * of the {@link OpenGLMatrix} class.
+         *
+         * If you are standing in the Red Alliance Station looking towards the center of the field,
+         *     - The X axis runs from your left to the right. (positive from the center to the right)
+         *     - The Y axis runs from the Red Alliance Station towards the other side of the field
+         *       where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
+         *     - The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
+         *
+         * This Rover Ruckus sample places a specific target in the middle of each perimeter wall.
+         *
+         * Before being transformed, each target image is conceptually located at the origin of the field's
+         *  coordinate system (the center of the field), facing up.
+         */
+
+        /**
+         * To place the BlueRover target in the middle of the blue perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Then, we translate it along the Y axis to the blue perimeter wall.
+         */
+        OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
+                .translation(0, FIELD_WIDTH, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 0));
+        blueRover.setLocation(blueRoverLocationOnField);
+
+        /**
+         * To place the RedFootprint target in the middle of the red perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 180 around the field's Z axis so the image is flat against the red perimeter wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative Y axis to the red perimeter wall.
+         */
+        OpenGLMatrix redFootprintLocationOnField = OpenGLMatrix
+                .translation(0, -FIELD_WIDTH, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 180));
+        redFootprint.setLocation(redFootprintLocationOnField);
+
+        /**
+         * To place the FrontCraters target in the middle of the front perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it 90 around the field's Z axis so the image is flat against the front wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the negative X axis to the front perimeter wall.
+         */
+        OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
+                .translation(-FIELD_WIDTH, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+        frontCraters.setLocation(frontCratersLocationOnField);
+
+        /**
+         * To place the BackSpace target in the middle of the back perimeter wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright.
+         * - Second, we rotate it -90 around the field's Z axis so the image is flat against the back wall
+         *   and facing inwards to the center of the field.
+         * - Then, we translate it along the X axis to the back perimeter wall.
+         */
+        OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
+                .translation(FIELD_WIDTH, 0, TARGET_HEIGHT)
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, -90));
+        backSpace.setLocation(backSpaceLocationOnField);
+    }
+
+    private void calibrateGyro(){
+        if (locationLocked()){
+            float vuforiaAngle = getVuforiaHeading();
+            float gyroAngle = getGyroHeading();
+            gyroAngleOffset = vuforiaAngle - gyroAngle;
+            gyroAngleCalibrated = true;
+        }
+
     }
 }
 
