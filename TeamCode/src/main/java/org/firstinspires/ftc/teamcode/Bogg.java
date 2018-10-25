@@ -73,6 +73,39 @@ public class Bogg
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }
 
+    public void driveToTarget(double target_x, double target_y, double speed, double precision_radius)
+    {
+        double[] location = camera.getLocation();
+        if(location != null)
+        {
+
+            double robot_x = location[0];
+            double robot_y = location[1];
+
+            double delta_x = target_x - robot_x;
+            double delta_y = target_y - robot_y;
+
+            if(delta_x < precision_radius && delta_y < precision_radius)
+            {
+                driveEngine.drive(0,0);
+                return;
+            }
+
+            //the direction a compass would tell us
+            double heading_of_robot_on_field = camera.getHeading();
+
+            //where a map would tell us a mountain is, relative to us
+            double heading_of_target_from_robot_location = Math.atan2(delta_x,delta_y);
+
+            //where compass would say the mountain is located considering our compass isn't pointed north
+            double heading_of_target_from_robot_perspective = heading_of_target_from_robot_location - heading_of_robot_on_field;
+
+            double target_heading = heading_of_target_from_robot_perspective;
+            driveEngine.drive(Math.cos(target_heading) * speed, Math.sin(target_heading) * speed);
+
+        }
+    }
+
     public void incAlpha()
     {
         if(alpha + alphaInc<1)
