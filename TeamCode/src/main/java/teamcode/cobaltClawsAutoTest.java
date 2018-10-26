@@ -18,7 +18,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private DcMotor LeftDriveMotor; //motor 0
     private DcMotor RightDriveMotor; //motor 1
 
-    private ColorSensor colorSensor;
+    //private ColorSensor colorSensor;
 
     //1000 ticks is about 26 inches
 
@@ -182,7 +182,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
 
-        this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
+        //this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
 
 
         //Sets correct directions for motors and servos
