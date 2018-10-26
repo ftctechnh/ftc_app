@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class Bogg
 {
@@ -11,7 +12,7 @@ public class Bogg
     DriveEngine driveEngine;
     DcMotor lift;
     Camera camera;
-//    Sensors sensors;
+    Sensors sensors;
 
     double alpha = 0.0039;
     double alphaInc = 0.000001;
@@ -57,9 +58,9 @@ public class Bogg
 
     public void lift()
     {
-        if(gamepad.y)
+        if(gamepad.y  )//  && !sensors.touchTop.isPressed())
             lift.setPower(.7);
-        else if(gamepad.a)
+        else if(gamepad.a  )//  && !sensors.touchBottom.isPressed())
             lift.setPower(-.7);
         else
             lift.setPower(0);
@@ -73,7 +74,7 @@ public class Bogg
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }
 
-    public void driveToTarget(double target_x, double target_y, double speed, double precision_radius)
+    public boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
     {
         double[] location = camera.getLocation();
         if(location != null)
@@ -85,10 +86,10 @@ public class Bogg
             double delta_x = target_x - robot_x;
             double delta_y = target_y - robot_y;
 
-            if(delta_x < precision_radius && delta_y < precision_radius)
+            if(delta_x < target_radius && delta_y < target_radius)
             {
                 driveEngine.drive(0,0);
-                return;
+                return true;
             }
 
             //the direction a compass would tell us
@@ -104,6 +105,7 @@ public class Bogg
             driveEngine.drive(Math.cos(target_heading) * speed, Math.sin(target_heading) * speed);
 
         }
+            return false;
     }
 
     public void incAlpha()

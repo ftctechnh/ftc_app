@@ -330,7 +330,7 @@ public class Camera{
 
         if(lastOrientation != null) {
             // get the heading (not roll or pitch)
-            return new Double(lastOrientation.thirdAngle);
+            return (double)lastOrientation.thirdAngle;
         }
         return null;
     }
@@ -353,7 +353,7 @@ public class Camera{
             }
 
             VectorF translation = lastLocation.getTranslation();
-            return new Double((double)(translation.get(1) / mmPerInch));
+            return (double)(translation.get(1) / mmPerInch);
         }
         return null;
     }
