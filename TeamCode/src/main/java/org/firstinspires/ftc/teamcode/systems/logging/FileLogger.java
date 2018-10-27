@@ -3,18 +3,14 @@ package org.firstinspires.ftc.teamcode.systems.logging;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
 public class FileLogger implements ILogger
 {
-    private final String ExceptionPath = "/FTC_Exceptions.txt";
-
     private LogWritter logWritter;
     private File logFile;
 
-    public FileLogger() {
-        logFile = new File(Environment.getExternalStorageDirectory() + ExceptionPath);
+    public FileLogger(String path) {
+        logFile = new File(Environment.getExternalStorageDirectory() + path);
         logWritter = new LogWritter(logFile);
     }
 
@@ -23,7 +19,7 @@ public class FileLogger implements ILogger
         logWritter.appendLine(line);
     }
 
-    public void write() {
-        logWritter.write();
+    public void close() {
+        logWritter.flush();
     }
 }
