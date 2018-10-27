@@ -126,13 +126,25 @@ public class Robot {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
-    public double getAngle() {
+    public double updateAngle() {
         currentAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle += FtcUtils.normalizeDegrees(currentAngles.firstAngle - lastAngles.firstAngle);
         lastAngles = currentAngles;
         return globalAngle;
     }
-
+    void rotate(double degs, double pow, int timeout) {
+        resetTicks();
+        resetAngle();
+        double newPow = map(FtcUtils.abs(degs) - FtcUtils.abs(globalAngle), 0, FtcUtils.abs(degs), RobotConstants.LOWEST_MOTOR_POWER, pow);
+        while (FtcUtils.abs(globalAngle) < degs && context.opModeIsActive()); {
+            drive(-FtcUtils.sign(degs) * FtcUtils.abs(newPow), -FtcUtils.sign(degs) * FtcUtils.abs(newPow), FtcUtils.sign(degs) * FtcUtils.abs(newPow), FtcUtils.sign(degs) * FtcUtils.abs(newPow));
+            newPow = map(FtcUtils.abs(degs) - FtcUtils.abs(globalAngle), 0, FtcUtils.abs(degs), RobotConstants.LOWEST_MOTOR_POWER, pow);
+            context.telemetry.addData("cur pow", newPow);
+            context.telemetry.addData("cur angle", globalAngle);
+            updateAngle();
+        }
+        stop();
+    }
     public void resetTicks() {
         encoderPos = BL.getCurrentPosition();
     }
