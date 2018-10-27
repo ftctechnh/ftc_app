@@ -405,7 +405,15 @@ abstract public class superAuto extends LinearOpMode {
                 return translation.get(xOry);
             }
             else {
-               // telemetry.addData("Visible Target", "none");
+                configureGyro();
+                angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                double currentHeading = angles.firstAngle;
+                int degrees = (int)currentHeading;
+
+                while (targetVisible == false) {
+                    degrees+=10;
+                    pivotTo(degrees);
+                }
                  }
             telemetry.update();
 
@@ -676,6 +684,7 @@ abstract public class superAuto extends LinearOpMode {
         //Pivot to clockwise is negative.
         float fudgeFactor = .25f;
 
+
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double currentHeading = angles.firstAngle;
         double wheelPower = .3;
@@ -757,6 +766,7 @@ abstract public class superAuto extends LinearOpMode {
                     "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
 
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+        parameters.useExtendedTracking = false;
         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
 
         VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
@@ -767,7 +777,7 @@ abstract public class superAuto extends LinearOpMode {
         int timeRecongnize=0;
 
         for(int t = 0; t<2e6; t++) {
-            timeRecongnize =t;
+            timeRecongnize = t;
             vuMark = RelicRecoveryVuMark.from(relicTemplate);
             if (vuMark != RelicRecoveryVuMark.UNKNOWN){
                 break;
