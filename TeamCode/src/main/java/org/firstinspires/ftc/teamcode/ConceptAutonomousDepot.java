@@ -16,7 +16,8 @@ public class ConceptAutonomousDepot extends LinearOpMode
         waitForStart();
 
         // have servos move robot down to the ground
-        walle.driveStraight_In(36, .4f);
+
+       /* walle.driveStraight_In(36, .4f);
         walle.stopDriveMotors();
         sleep(500);
 
@@ -31,9 +32,10 @@ public class ConceptAutonomousDepot extends LinearOpMode
         walle.stopDriveMotors();
 
         //drop marker into depot
-        walle.pivot_IMU(120f);
+        */
+        walle.pivot(120);
 
-        double thetaDeg;
+        float thetaDeg;
         double initialD, finalD;
         boolean isInCenter = false;
         float distToTravel = 12;
@@ -41,51 +43,48 @@ public class ConceptAutonomousDepot extends LinearOpMode
         initialD = walle.getDistFromRight_In();
         walle.driveStraight_In(distToTravel);
         finalD = walle.getDistFromRight_In();
-        thetaDeg = (Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI;
+        thetaDeg = (float) ((Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI);
 
+        walle.pivot(-thetaDeg);
         while (walle.getDistFromFront_In() > 18)
         {
-            sleep(200);
+            while (!gamepad1.a){}
+            sleep(336);
             initialD = walle.getDistFromRight_In();
-            telemetry.addData("Theta = ", thetaDeg);
-            if( initialD > 8)
+
+            telemetry.addData("Distance = ", initialD);
+            if (initialD < 4)
             {
-                if (thetaDeg > 15)
+                telemetry.addData("I'm in the <4 Case!", null);
+                walle.pivot(10);
+                walle.driveMotorsAuto(.16f,.16f);
+                while (walle.getDistFromRight_In() < 5)
                 {
-                    walle.pivot_IMU(-15);
+
                 }
-                else if (thetaDeg < 15 && thetaDeg > 0)
-                {
-                    walle.pivot_IMU(-7);
-                }
-                isInCenter = false;
+                walle.stopAllMotors();
+                walle.pivot(-10);
             }
-            else if ( initialD < 4)
+            else if (initialD > 7)
             {
-                if (thetaDeg < -15)
+                telemetry.addData("I'm in the >7 Case!", null);
+                walle.pivot(-10);
+                //walle.driveStraight_In(4);
+
+                walle.driveMotorsAuto(.16f,.16f);
+                while (walle.getDistFromRight_In() > 5)
                 {
-                    walle.pivot_IMU(15);
+
                 }
-                else if (thetaDeg > -15 && thetaDeg < 0)
-                {
-                    walle.pivot_IMU(7);
-                }
-                isInCenter = false;
+                walle.stopAllMotors();
+
+                walle.pivot(10);
             }
             else
             {
-                if(!isInCenter)
-                {
-                    walle.pivot_IMU((float)(-thetaDeg));
-                    isInCenter = true;
-                }
+                telemetry.addData("I'm in the default Case!", null);
+                walle.driveStraight_In(distToTravel);
             }
-            sleep(300);
-            walle.driveStraight_In(distToTravel);
-            finalD = walle.getDistFromRight_In();
-            thetaDeg =  (Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI;
-            telemetry.addData("Inital dist ", initialD);
-            telemetry.addData("Final dist ", finalD);
             telemetry.update();
         }
 
@@ -93,6 +92,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
         telemetry.update();
         while (!isStopRequested())
         {
+
         }
     }
 }
