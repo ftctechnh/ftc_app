@@ -27,7 +27,7 @@ public class EducayshunOpMode extends BaseAutonomousOpMode {
         telem("About to turn -90 deg at power 1");
         driveSystem.turn(-90, 1);*/
 
-        sleep(2000);
+        //sleep(2000);
         telem("About to drive to position inches 20000 ticks at power 1");
         driveSystem.driveToPositionInches(20000, 1);
 

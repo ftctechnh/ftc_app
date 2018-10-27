@@ -39,8 +39,6 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         initialHeading = Math.toRadians(imuSystem.getHeading());
         telem("started imu");
 
-        this.setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         powerItem = telemetry.addData("power", 0);
         distanceItem = telemetry.addData("distance", 0);
     }
@@ -64,13 +62,13 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         double backRightPower = leftY + rightX - leftX;
         double frontLeftPower = leftY - rightX - leftX;
         double backLeftPower = leftY - rightX + leftX;
-        this.motorFrontRight.run(Range.clip(frontRightPower, -1, 1));
+        this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
         telemetry.addLine("FRpower: " +  Range.clip(frontRightPower, -1, 1));
-        this.motorBackRight.run(Range.clip(backRightPower, -1, 1));
+        this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
         telemetry.addLine("BRpower: " +  Range.clip(backRightPower, -1, 1));
-        this.motorFrontLeft.run(Range.clip(frontLeftPower - leftX, -1, 1));
+        this.motorFrontLeft.setPower(Range.clip(frontLeftPower - leftX, -1, 1));
         telemetry.addLine("FLpower: " +  Range.clip(frontLeftPower - leftX, -1, 1));
-        this.motorBackLeft.run(Range.clip(backLeftPower + leftX, -1, 1));
+        this.motorBackLeft.setPower(Range.clip(backLeftPower + leftX, -1, 1));
         telemetry.addLine("BLpower: " +  Range.clip(backLeftPower + leftX, -1, 1));
         telemetry.update();
     }
@@ -107,10 +105,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         List<Double> powers = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
         clampPowers(powers);
 
-        motorFrontLeft.run(powers.get(0));
-        motorFrontRight.run(powers.get(1));
-        motorBackLeft.run(powers.get(2));
-        motorBackRight.run(powers.get(3));
+        motorFrontLeft.setPower(powers.get(0));
+        motorFrontRight.setPower(powers.get(1));
+        motorBackLeft.setPower(powers.get(2));
+        motorBackRight.setPower(powers.get(3));
     }
 
     private void clampPowers(List<Double> powers) {
@@ -128,10 +126,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     }
 
     public void mecanumDriveXY(double x, double y) {
-        this.motorFrontRight.run(Range.clip(y + x, -1, 1));
-        this.motorBackRight.run(Range.clip(y - x, -1, 1));
-        this.motorFrontLeft.run(Range.clip(y - x, -1, 1));
-        this.motorBackLeft.run(Range.clip(y + x, -1, 1));
+        this.motorFrontRight.setPower(Range.clip(y + x, -1, 1));
+        this.motorBackRight.setPower(Range.clip(y - x, -1, 1));
+        this.motorFrontLeft.setPower(Range.clip(y - x, -1, 1));
+        this.motorBackLeft.setPower(Range.clip(y + x, -1, 1));
     }
 
     public void mecanumDrivePolar(double radians, double power) {
@@ -141,15 +139,42 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     }
 
     public void driveToPositionInches(double ticks, double power) {
-        setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addLine("BR motor position pre stopAnd: " + motorBackRight.getCurrentPosition());
+        telemetry.update();
+        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        telemetry.addLine("BR motor position post stopAnd: " + motorBackRight.getCurrentPosition());
+        telemetry.update();
+        telemetry.addLine("runmode post stopAndReset: " + motorBackRight.getMode());
+        telemetry.update();
+        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        telemetry.addLine("runmode post toPosition: " + motorBackRight.getMode());
+        telemetry.update();
 
+
+        ////////////
         // Ramp the power from power to RAMP_POWER_CUTOFF from (ticks / 10) (changed from rampLength) to 0
-        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks / 10, power));
+        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks, power));
 
+        telemetry.addLine("BR position pre setPos: " + motorBackRight.getCurrentPosition());
+        telemetry.update();
+        telemetry.addLine("setting target positio: " + (int) ticks);
+        telemetry.update();
         setTargetPosition((int) ticks);
+        telemetry.addLine("post setPos BR target position set to: " + motorBackRight.getTargetPosition());
+        telemetry.update();
+        telemetry.addLine("BR pos post setPos: " + motorBackRight.getCurrentPosition());
+        telemetry.update();
+
 
         setPower(power);
         powerItem.setValue(power);
+        telemetry.addLine("set powery boy to: " + power);
+        telemetry.update();
+
+        boolean meep = false;
+        meep = anyMotorsBusy();
+        telemetry.addLine("anymotorsBusy(): " + meep);
+        telemetry.update();
 
         while (anyMotorsBusy()) {
             int distance = getDistanceFromTarget();
@@ -183,8 +208,37 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         telemetry.update();
     }
 
+    private void driveToPos(double ticks, double power) {
+        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+        setPower(0);
+
+        setTargetPosition((int) ticks);
+        setPower(power);
+
+        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks, power));
+
+        while (anyMotorsBusy()) {
+            int distance = getDistanceFromTarget();
+
+            double direction = 1.0;
+            if (distance < 0) {
+                distance = -distance;
+                direction = -1.0;
+            }
+
+            double scaledPower = ramp.scaleX(distance);
+
+            setPower(direction * scaledPower);
+            telemetry.update();
+        }
+
+        setPower(0);
+    }
+
     // I changed which distance the motors standardize to from the min to the max
     private int getDistanceFromTarget() {
+        synchDistances(); // getDistanceFromTarget should be redundant with this method
         int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
         d = max(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
         d = max(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
@@ -193,7 +247,24 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         return d;
     }
 
-
+    private void synchDistances() {
+        int d = this.motorFrontLeft.getCurrentPosition();
+        d = max(d, this.motorFrontRight.getCurrentPosition());
+        d = max(d, this.motorBackLeft.getCurrentPosition());
+        d = max(d, this.motorBackRight.getCurrentPosition());
+        if (this.motorBackLeft.getCurrentPosition() != d) {
+            this.motorBackLeft.setTargetPosition(d + (d - this.motorBackLeft.getCurrentPosition()));
+        }
+        if (this.motorBackRight.getCurrentPosition() != d) {
+            this.motorBackRight.setTargetPosition(d + (d - this.motorBackRight.getCurrentPosition()));
+        }
+        if (this.motorFrontLeft.getCurrentPosition() != d) {
+            this.motorFrontLeft.setTargetPosition(d + (d - this.motorFrontLeft.getCurrentPosition()));
+        }
+        if (this.motorFrontRight.getCurrentPosition() != d) {
+            this.motorFrontRight.setTargetPosition(d + (d - this.motorFrontRight.getCurrentPosition()));
+        }
+    }
 
     private int max(int d1, int d2) {
         if (d1 > d2) {
@@ -235,10 +306,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     }
 
     public void tankDrive(double leftPower, double rightPower) {
-        this.motorFrontLeft.run(leftPower);
-        this.motorBackLeft.run(leftPower);
-        this.motorFrontRight.run(rightPower);
-        this.motorBackRight.run(rightPower);
+        this.motorFrontLeft.setPower(leftPower);
+        this.motorBackLeft.setPower(leftPower);
+        this.motorFrontRight.setPower(rightPower);
+        this.motorBackRight.setPower(rightPower);
     }
 
     private double computeDegreesDiff(double targetHeading, double heading) {

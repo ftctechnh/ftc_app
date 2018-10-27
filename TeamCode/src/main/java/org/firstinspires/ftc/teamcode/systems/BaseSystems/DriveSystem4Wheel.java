@@ -8,33 +8,37 @@ import org.firstinspires.ftc.teamcode.components.Motors.DriveMotor;
 
 public class DriveSystem4Wheel extends System {
 
-    public DriveMotor motorFrontLeft;
-    public DriveMotor motorFrontRight;
-    public DriveMotor motorBackLeft;
-    public DriveMotor motorBackRight;
+    public DcMotor motorFrontLeft;
+    public DcMotor motorFrontRight;
+    public DcMotor motorBackLeft;
+    public DcMotor motorBackRight;
 
     public DriveSystem4Wheel(OpMode opMode, String systemName) {
         super(opMode, "MecanumDrive");
 
-        this.motorFrontLeft = new DriveMotor(map.dcMotor.get("motorFL"/*config.getString("motorFL")*/));
-        this.motorFrontRight = new DriveMotor(map.dcMotor.get("motorFR"/*config.getString("motorFR")*/));
-        this.motorBackRight = new DriveMotor(map.dcMotor.get("motorBR"/*config.getString("motorBR")*/));
-        this.motorBackLeft = new DriveMotor(map.dcMotor.get("motorBL"/*config.getString("motorBL")*/));
+        this.motorFrontLeft = map.dcMotor.get("motorFL"/*config.getString("motorFL")*/);
+        this.motorFrontRight = map.dcMotor.get("motorFR"/*config.getString("motorFR")*/);
+        this.motorBackRight = map.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
+        this.motorBackLeft = map.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
 
         this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
         this.motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
         this.motorBackRight.setDirection(DcMotor.Direction.FORWARD);
 
+        this.motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         // Set all drive motors to zero power
         setPower(0);
     }
 
     public void setPower(double power) {
-        this.motorFrontLeft.run(power);
-        this.motorFrontRight.run(power);
-        this.motorBackLeft.run(power);
-        this.motorBackRight.run(power);
+        this.motorFrontLeft.setPower(power);
+        this.motorFrontRight.setPower(power);
+        this.motorBackLeft.setPower(power);
+        this.motorBackRight.setPower(power);
     }
 
     public void setDirection(DcMotorSimple.Direction direction)
