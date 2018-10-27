@@ -20,13 +20,12 @@ import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
 
 public class ArmSystem extends System {
 
-    DigitalChannel limitTop;
-    DigitalChannel limitMiddle;
-    DigitalChannel limitBottom;
-    DcMotor motor1;
-    DcMotor motor2;
-    DcMotor winch;
-    AnalogInput potentiometer;
+    private DigitalChannel limitTop;
+    private DigitalChannel limitMiddle;
+    private DigitalChannel limitBottom;
+    private DcMotor motor1;
+    private DcMotor motor2;
+    private AnalogInput potentiometer;
 
     double potenMax = 3.3;
     double potenMin = 2.43;
@@ -43,7 +42,7 @@ public class ArmSystem extends System {
         ElapsedTime time = new ElapsedTime();
         motor1 = hardwareMap.dcMotor.get( "parallelM1");
         motor2 = hardwareMap.dcMotor.get( "parallelM2");
-        winch = hardwareMap.dcMotor.get( "winch");
+
         limitTop = hardwareMap.get(DigitalChannel.class, "limitTop");
         limitMiddle = hardwareMap.get(DigitalChannel.class, "limitMiddle");
         //limitBottom = hardwareMap.get(DigitalChannel.class, "limitBot");
@@ -58,23 +57,22 @@ public class ArmSystem extends System {
 
 
     public void slideUp() {
-
-
         motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         while(!limitTop.getState() && !limitMiddle.getState()) {
             boolean hitTop = limitTop.getState();
-            String strTop = String.valueOf(hitTop);
             boolean hitMiddle = limitMiddle.getState();
+
+            String strTop = String.valueOf(hitTop);
             String strMiddle = String.valueOf(hitMiddle);
 
             telemetry.log("Top", strTop);
             telemetry.log("Middle", strMiddle);
             telemetry.write();
 
-            motor1.setPower(0.8);
-            motor2.setPower(-0.8);
+            motor1.setPower(0.1);
+            motor2.setPower(-0.1);
         }
         motor1.setPower(0.0);
         motor2.setPower(0.0);
@@ -84,8 +82,9 @@ public class ArmSystem extends System {
     public void slideDown() {
 
         boolean hitTop = limitTop.getState();
-        String strTop = String.valueOf(hitTop);
         boolean hitMiddle = limitMiddle.getState();
+
+        String strTop = String.valueOf(hitTop);
         String strMiddle = String.valueOf(hitMiddle);
 
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -120,13 +119,10 @@ public class ArmSystem extends System {
     }
 
     public void robotDown(){
-
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-            motor1.setPower(0.1);
-            motor2.setPower(-0.1);
-
+        motor1.setPower(0.1);
+        motor2.setPower(-0.1);
     }
 
 
