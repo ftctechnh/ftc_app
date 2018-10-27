@@ -25,8 +25,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RoverDrive
 {
     /* Public OpMode members. */
-    public DcMotor  leftMid     = null;
-    public DcMotor  rightMid    = null;
     public DcMotor  leftBack    = null;
     public DcMotor  rightBack   = null;
 
@@ -60,38 +58,28 @@ public class RoverDrive
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftMid  = hwMap.get(DcMotor.class, "left_mid");
-        rightMid = hwMap.get(DcMotor.class, "right_mid");
         leftBack    = hwMap.get(DcMotor.class, "left_back");
         rightBack = hwMap.get(DcMotor.class, "right_back");
         //We have AndyMark motors, but our direction of drive is opposite of what is suggested in the below comments
-        leftMid.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightMid.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
         leftBack.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightBack.setDirection(DcMotor.Direction.FORWARD);// Set to FORWARD if using AndyMark motors
 
         // Set all motors to zero power
-        leftMid.setPower(0);
-        rightMid.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftMid.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMid.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
     //encoder drive method
     void encoderDrive(double speed,
-                             double lMDis, double rMDis, double lBDis, double rBDis) {
+                             double lBDis, double rBDis) {
         int newLMTarget;
         int newRMTarget;
         int newLBTarget;
@@ -103,13 +91,9 @@ public class RoverDrive
         telemetry.update();*/
 
         // Determine new target position, and pass to motor controller
-        newLMTarget = leftMid.getCurrentPosition() + (int)(lMDis * COUNTS_PER_INCH);
-        newRMTarget = rightMid.getCurrentPosition() + (int)(rMDis * COUNTS_PER_INCH);
         newLBTarget = leftBack.getCurrentPosition() + (int)(lBDis * COUNTS_PER_INCH);
         newRBTarget = rightBack.getCurrentPosition() + (int)(rBDis * COUNTS_PER_INCH);
-        leftMid.setTargetPosition(newLMTarget);
         leftBack.setTargetPosition(newLBTarget);
-        rightMid.setTargetPosition(newRMTarget);
         rightBack.setTargetPosition(newRBTarget);
 
         /*telemetry.addData("after new target set",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
@@ -117,18 +101,14 @@ public class RoverDrive
         sleep(500);*/
 
         // Turn On RUN_TO_POSITION
-        leftMid.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMid.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         // reset the timeout time and start motion.
-        leftMid.setPower(Math.abs(speed));
-        rightMid.setPower(Math.abs(speed));
         leftBack.setPower(Math.abs(speed));
         rightBack.setPower(Math.abs(speed));
 
-        while (leftMid.isBusy() && rightMid.isBusy() && leftBack.isBusy() && rightBack.isBusy());
+        while (leftBack.isBusy() && rightBack.isBusy());
 
         // keep looping while we are still active, and there is time left, and both motors are running.
         /* while (opModeIsActive() &&
@@ -144,8 +124,6 @@ public class RoverDrive
         }*/
 
         //Stop all motion;
-        leftMid.setPower(0);
-        rightMid.setPower(0);
         leftBack.setPower(0);
         rightBack.setPower(0);
 
@@ -154,30 +132,25 @@ public class RoverDrive
         sleep(500);*/
 
         // Turn off RUN_TO_POSITION
-        leftMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //  sleep(250);   // all comments were from when this method was in an OpMode. These commands don't work in non OpModes.
     } //end of encoder drive method
     public void linearDrive (double speed, double distance){
-        encoderDrive(speed, distance, distance, distance,distance);
+        encoderDrive(speed, distance,distance);
     }
     public void statTurn(double speed, double degrees){
         double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
-        double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
-        encoderDrive(speed, midArc, -midArc, outArc, -outArc);
+        encoderDrive(speed, midArc, -midArc);
     }
     public void pivotTurn(double speed, double degrees, RobotDirection direction){
         if (direction == RobotDirection.RIGHT){
             double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
-            double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
-            encoderDrive(speed, midArc, 0, outArc, 0);
+            encoderDrive(speed, midArc, 0);
         }else if (direction == RobotDirection.LEFT){
             double midArc = 2 * 3.14 * MID_RAD * (degrees/360);
-            double outArc = 2 * 3.14 * OUT_RAD * (degrees/360);
-            encoderDrive(speed, 0, midArc, 0, outArc);
+            encoderDrive(speed, 0, midArc);
         }
     }
     public void controlDrive(double left, double right){
@@ -188,16 +161,8 @@ public class RoverDrive
         rightMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
 
-        leftMid.setPower(left);
         leftBack.setPower(left);
-        rightMid.setPower(right);
         rightBack.setPower(right);
-    }
-    public int getLMencoder(){
-        return leftMid.getCurrentPosition();
-    }
-    public int getRMencoder(){
-        return rightMid.getCurrentPosition();
     }
     public int getLBencoder(){
         return leftBack.getCurrentPosition();
