@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.systems;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -33,7 +32,7 @@ public class IMUSystem extends System {
         this.parameters.loggingEnabled = true;
         this.parameters.loggingTag = "BNO055";
         this.parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
-        this.imu = this.map.get(BNO055IMU.class, "imu");
+        this.imu = this.hardwareMap.get(BNO055IMU.class, "imu");
         this.imu.initialize(parameters);
 
         // Enable reporting of position using the naive integrator

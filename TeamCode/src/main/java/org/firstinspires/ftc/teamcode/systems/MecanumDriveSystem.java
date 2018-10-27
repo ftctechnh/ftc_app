@@ -53,10 +53,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         double backRightPower = leftY + rightX - leftX;
         double frontLeftPower = leftY - rightX - leftX;
         double backLeftPower = leftY - rightX + leftX;
-        this.motorFrontRight.run(Range.clip(frontRightPower, -1, 1));
-        this.motorBackRight.run(Range.clip(backRightPower, -1, 1));
-        this.motorFrontLeft.run(Range.clip(frontLeftPower - leftX, -1, 1));
-        this.motorBackLeft.run(Range.clip(backLeftPower + leftX, -1, 1));
+        this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
+        this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
+        this.motorFrontLeft.setPower(Range.clip(frontLeftPower - leftX, -1, 1));
+        this.motorBackLeft.setPower(Range.clip(backLeftPower + leftX, -1, 1));
     }
 
     private float scaleJoystickValue(float joystickValue) {
@@ -91,10 +91,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         List<Double> powers = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
         clampPowers(powers);
 
-        motorFrontLeft.run(powers.get(0));
-        motorFrontRight.run(powers.get(1));
-        motorBackLeft.run(powers.get(2));
-        motorBackRight.run(powers.get(3));
+        motorFrontLeft.setPower(powers.get(0));
+        motorFrontRight.setPower(powers.get(1));
+        motorBackLeft.setPower(powers.get(2));
+        motorBackRight.setPower(powers.get(3));
     }
 
     private void clampPowers(List<Double> powers) {
@@ -112,10 +112,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     }
 
     public void mecanumDriveXY(double x, double y) {
-        this.motorFrontRight.run(Range.clip(y + x, -1, 1));
-        this.motorBackRight.run(Range.clip(y - x, -1, 1));
-        this.motorFrontLeft.run(Range.clip(y - x, -1, 1));
-        this.motorBackLeft.run(Range.clip(y + x, -1, 1));
+        this.motorFrontRight.setPower(Range.clip(y + x, -1, 1));
+        this.motorBackRight.setPower(Range.clip(y - x, -1, 1));
+        this.motorFrontLeft.setPower(Range.clip(y - x, -1, 1));
+        this.motorBackLeft.setPower(Range.clip(y + x, -1, 1));
     }
 
     public void mecanumDrivePolar(double radians, double power) {
@@ -198,10 +198,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     }
 
     public void tankDrive(double leftPower, double rightPower) {
-        this.motorFrontLeft.run(leftPower);
-        this.motorBackLeft.run(leftPower);
-        this.motorFrontRight.run(rightPower);
-        this.motorBackRight.run(rightPower);
+        this.motorFrontLeft.setPower(leftPower);
+        this.motorBackLeft.setPower(leftPower);
+        this.motorFrontRight.setPower(rightPower);
+        this.motorBackRight.setPower(rightPower);
     }
 
     private double computeDegreesDiff(double targetHeading, double heading) {

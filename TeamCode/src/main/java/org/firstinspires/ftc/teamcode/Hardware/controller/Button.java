@@ -41,7 +41,7 @@ public class Button
         Boolean pressed = this.isPressed.value();
 
         this.justPressed = (pressed && !this.wasPressed);
-        this.justReleased = (!pressed && this.wasPressed);
+        this.justReleased   = (!pressed && this.wasPressed);
         this.wasPressed = pressed;
 
         if (this.justPressed && this.pressedHandler != null)

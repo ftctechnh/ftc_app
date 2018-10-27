@@ -10,18 +10,18 @@ public abstract class System {
 
     String systemName;
 
-    protected HardwareMap map;
-    public ConfigParser config;
+    protected HardwareMap hardwareMap;
+    //public ConfigParser config;
     public PhoneLogger telemetry;
 
     public System(OpMode opMode, String systemName) {
         this.systemName = systemName;
-        this.map = opMode.hardwareMap;
+        this.hardwareMap = opMode.hardwareMap;
         //this.config = new ConfigParser(systemName + ".omc");
         this.telemetry = new PhoneLogger(opMode.telemetry);
         try
         {
-            this.config = new ConfigParser(systemName + ".omc");
+            //this.config = new ConfigParser(systemName + ".omc");
         } catch (Exception e) {
 
         }
