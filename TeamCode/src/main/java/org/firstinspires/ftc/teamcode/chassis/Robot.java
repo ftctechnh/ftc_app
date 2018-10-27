@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -31,7 +32,7 @@ import org.firstinspires.ftc.teamcode.misc.RobotConstants;
 public class Robot {
     HardwareMap hwMap;
     ElapsedTime clock = new ElapsedTime();
-    private BNO055IMU imu;
+    public BNO055IMU imu;
     private Rev2mDistanceSensor sensor1;
     BNO055IMU.Parameters parameters;
     private Orientation lastAngles;
@@ -46,9 +47,11 @@ public class Robot {
     private DcMotor extend = null;
     private DcMotor BL = null;
     private Servo nomServo1 = null;
+    private LinearOpMode context;
     private Servo nomServo2 = null;
     private DcMotor catapult = null;
-    public void init(HardwareMap ahwMap, boolean initSensors) {
+    public void init(HardwareMap ahwMap, LinearOpMode context, boolean initSensors) {
+        this.context = context;
         hwMap = ahwMap;
         FR = hwMap.get(DcMotor.class, "FR");
         FL = hwMap.get(DcMotor.class, "FL");
@@ -84,8 +87,23 @@ public class Robot {
             resetAngle();
         }
     }
-    public void init(HardwareMap ahwMap) {
-        init(ahwMap, true);
+    public void init(HardwareMap ahwMap, LinearOpMode context) {
+        init(ahwMap, context, true);
+    }
+
+    public void moveTicks(int ticks, double pow, int timeout) {
+        resetTicks();
+        long startTime = System.currentTimeMillis();
+        long currentTime = startTime;
+        // While we still have ticks to drive AND we haven't exceeded the time limit, move in the specified direction.
+        while (Math.abs(getTicks()) < ticks && currentTime - startTime < timeout && context.opModeIsActive()) {
+            drive(-pow, -pow, -pow, -pow);
+            currentTime = System.currentTimeMillis();
+            context.telemetry.addData("Target", ticks);
+            context.telemetry.addData("Current", getTicks());
+            context.telemetry.update();
+        }
+        stop();
     }
 
     public void drive(double fl, double bl, double fr, double br) {
@@ -94,6 +112,16 @@ public class Robot {
         FR.setPower(fr);
         BR.setPower(br);
     }
+
+    public void drive(double fl, double bl, double fr, double br, int time) {
+        FL.setPower(fl);
+        BL.setPower(bl);
+        FR.setPower(fr);
+        BR.setPower(br);
+        context.sleep(time);
+        stop();
+    }
+
     public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;

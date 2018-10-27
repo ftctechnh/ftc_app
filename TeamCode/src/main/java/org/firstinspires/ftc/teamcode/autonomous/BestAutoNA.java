@@ -55,13 +55,18 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 
 @TeleOp(name="Auto 1", group ="Autonomous")
-@Disabled
-public class BestAutoNA extends AutoBase {
+public class BestAutoNA extends LinearOpMode {
+    private Robot robot = new Robot();
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap, true);
+        telemetry.addData("Status", "waiting for imu to init");
+        telemetry.update();
+        robot.init(hardwareMap, this, true);
+        while (!robot.imu.isGyroCalibrated()) {
+            idle();
+        }
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
-        moveTicks(500, .5, 5000);
+        robot.moveTicks(500, .5, 5000);
     }
 }

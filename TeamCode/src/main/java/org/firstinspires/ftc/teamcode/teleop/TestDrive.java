@@ -21,7 +21,7 @@ public class TestDrive extends LinearOpMode {
     private double backLeft;
     private Robot robot = new Robot();
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap, false);
+        robot.init(hardwareMap, this, false);
         robot.nomServo(RobotConstants.NOMSERVO_NEUTRAL);
         telemetry.addData("Status", "Initialization bas been completed");
         telemetry.update();
