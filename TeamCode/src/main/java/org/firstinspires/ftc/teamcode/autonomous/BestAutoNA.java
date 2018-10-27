@@ -54,7 +54,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 
-@TeleOp(name="Auto 1", group ="Autonomous")
+@TeleOp(name="Auto Test", group ="Autonomous")
 public class BestAutoNA extends LinearOpMode {
     private Robot robot = new Robot();
     public void runOpMode() throws InterruptedException {
@@ -68,5 +68,6 @@ public class BestAutoNA extends LinearOpMode {
         telemetry.update();
         waitForStart();
         robot.moveTicks(500, .5, 5000);
+        robot.rotate(40, .5, 2500);
     }
 }
