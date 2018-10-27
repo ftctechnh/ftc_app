@@ -97,7 +97,7 @@ public class Robot {
         long currentTime = startTime;
         // While we still have ticks to drive AND we haven't exceeded the time limit, move in the specified direction.
         while (Math.abs(getTicks()) < ticks && currentTime - startTime < timeout && context.opModeIsActive()) {
-            drive(-pow, -pow, -pow, -pow);
+            drive(-FtcUtils.sign(ticks) * FtcUtils.abs(pow), -FtcUtils.sign(ticks) * FtcUtils.abs(pow), -FtcUtils.sign(ticks) * FtcUtils.abs(pow), -FtcUtils.sign(ticks) * FtcUtils.abs(pow));
             currentTime = System.currentTimeMillis();
             context.telemetry.addData("Target", ticks);
             context.telemetry.addData("Current", getTicks());
