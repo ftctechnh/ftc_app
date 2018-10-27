@@ -42,4 +42,10 @@ public class FtcUtils {
     public static double abs(double a) {
         return (a <= 0.0) ? -a : a;
     }
+
+    public static double normalizeDegrees(double degrees) {
+        while (degrees >= 180.0) degrees -= 360.0;
+        while (degrees < -180.0) degrees += 360.0;
+        return degrees;
+    }
 }

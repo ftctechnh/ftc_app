@@ -42,6 +42,7 @@ public class Robot {
     private DcMotor FL = null;
     private DcMotor BR = null;
     private DcMotor nom = null;
+    private DcMotor hang = null;
     private DcMotor extend = null;
     private DcMotor BL = null;
     private Servo nomServo1 = null;
@@ -53,10 +54,11 @@ public class Robot {
         FL = hwMap.get(DcMotor.class, "FL");
         nom = hwMap.get(DcMotor.class, "nom");
         extend = hwMap.get(DcMotor.class, "extend");
+        hang = hwMap.get(DcMotor.class, "hang");
         BR = hwMap.get(DcMotor.class, "BR");
         BL = hwMap.get(DcMotor.class, "BL");
         nomServo1 = hwMap.get(Servo.class, "nomServo1");
-        nomServo2 = hwMap.get(Servo.class, "nomServo2");
+    //    nomServo2 = hwMap.get(Servo.class, "nomServo2");
         catapult = hwMap.get(DcMotor.class, "catapult");
         catapult.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -65,16 +67,14 @@ public class Robot {
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         nom.setDirection(DcMotorSimple.Direction.REVERSE);
+        hang.setDirection(DcMotorSimple.Direction.REVERSE);
         extend.setDirection(DcMotorSimple.Direction.FORWARD);
         catapult.setDirection(DcMotorSimple.Direction.FORWARD);
         FL.setDirection(DcMotorSimple.Direction.FORWARD);
         BL.setDirection(DcMotorSimple.Direction.FORWARD);
         FR.setDirection(DcMotorSimple.Direction.FORWARD);
         BR.setDirection(DcMotorSimple.Direction.REVERSE);
-
-       // sensor1 = (Rev2mDistanceSensor) hwMap.get(DistanceSensor.class, "sensor1");
         resetTicks();
-        nomServo(RobotConstants.NOMSERVO_UP);
         if (initSensors) {
             imu = hwMap.get(BNO055IMU.class, "imu 1");
             parameters = new BNO055IMU.Parameters();
@@ -100,7 +100,7 @@ public class Robot {
     }
     public double getAngle() {
         currentAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        globalAngle += AngleUnit.normalizeDegrees(currentAngles.firstAngle - lastAngles.firstAngle);
+        globalAngle += FtcUtils.normalizeDegrees(currentAngles.firstAngle - lastAngles.firstAngle);
         lastAngles = currentAngles;
         return globalAngle;
     }
@@ -117,12 +117,15 @@ public class Robot {
     public void catapult(double power) {
         catapult.setPower(power);
     }
+    public void hang(double power) {
+        hang.setPower(power);
+    }
     public void extend(double power) {
         extend.setPower(power);
     }
     public void nomServo(double pos) {
         nomServo1.setPosition(pos);
-        nomServo2.setPosition(pos);
+   //     nomServo2.setPosition(pos);
     }
     public double nomServoPos() {
         return /*FtcUtils.roundTwoDecimalPlaces(*/nomServo1.getPosition();
