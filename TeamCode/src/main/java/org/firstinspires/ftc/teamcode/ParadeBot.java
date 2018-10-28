@@ -328,15 +328,16 @@ public class ParadeBot
 
         stopAllMotors();
     }
+    public void pivot(float degrees)
+    {
+        pivot(degrees, .8);
+    }
 
     public void pivot(float degrees, double pow)//Utilizes two motors at a time; spins in place
     {
         resetEncoders();
-
-        float encTarget = degrees;
-        //To explain, the first set of parenthesis gets the radius of robot and multiplies it by the degrees in radians
-        //second set gets encoder counts per centimeter
-        //we divide it by two at the end to compensate for using two motors
+        double encTarget;
+        encTarget = Math.abs( 17.254 * Math.abs(degrees) + 367.295);
 
         //It pivots in the direction of how to unit circle spins
         if (degrees < 0) //Pivot Clockwise
@@ -351,9 +352,10 @@ public class ParadeBot
             driveLeftOne.setPower(Math.abs(pow));
         }
 
-        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget)) {}
+        while (Math.abs(driveLeftOne.getCurrentPosition()) < encTarget && Math.abs(driveRightOne.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested()) {}
 
         stopAllMotors();
+        stopDriveMotors();
     }
 
     public void pivot_IMU(float degrees_IN)
@@ -370,7 +372,6 @@ public class ParadeBot
         else
             degreesToStopAt = -Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);
 
-
         while (degreesToStopAt > 180)
         {
             degreesToStopAt -= 360;
@@ -381,13 +382,14 @@ public class ParadeBot
         }
 
         initIMU();
+
         if (degreesToStopAt < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
             while(getYaw() > degreesToStopAt && !linearOpMode.isStopRequested())
             {
-                linearOpMode.sleep(1);
+                linearOpMode.sleep(160);
             }
         }
         else
@@ -396,7 +398,7 @@ public class ParadeBot
             driveLeftOne.setPower(Math.abs(pow));
             while(getYaw() < degreesToStopAt && !linearOpMode.isStopRequested())
             {
-                linearOpMode.sleep(1);
+                linearOpMode.sleep(160);
             }
         }
 
