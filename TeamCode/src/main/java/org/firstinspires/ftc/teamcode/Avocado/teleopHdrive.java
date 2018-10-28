@@ -65,13 +65,13 @@ public class teleopHdrive extends OpMode{
         robot.topLeftMotor.setPower(left);
 
         robot.topRightMotor.setPower(right);
-        if (gamepad1.dpad_left) {
+        if (gamepad1.dpad_left && !gamepad1.dpad_right) {
             robot.middleMotor.setPower(1);
 
-        } else if (!gamepad1.dpad_left) {
+        } else if (!gamepad1.dpad_left && !gamepad1.dpad_right) {
 
             robot.middleMotor.setPower(0);
-        } else if (gamepad1.dpad_right) {
+        } else if (gamepad1.dpad_right && !gamepad1.dpad_left) {
             robot.middleMotor.setPower(-1);
 
         }
