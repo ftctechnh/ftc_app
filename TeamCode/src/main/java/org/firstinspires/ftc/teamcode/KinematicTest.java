@@ -149,7 +149,7 @@ public class KinematicTest extends OpMode {
      */
     @Override
     public void stop() {
-        time.cancel();
+        time.cancel(); 
     }
 
     //Measurement can be inches or whichever unit you measure the wheel diameter with
