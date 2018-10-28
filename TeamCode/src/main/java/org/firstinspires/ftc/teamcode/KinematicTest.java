@@ -20,7 +20,8 @@ import java.util.TimerTask;
  */
 
 @TeleOp(name = "Kinematic Tester", group = "MPbot")
-@Disabled
+//@Disabled
+
 public class KinematicTest extends OpMode {
 
     final double timeInterval = 0.02; // Time in seconds
@@ -122,7 +123,7 @@ public class KinematicTest extends OpMode {
         }
 
         // Output the safe vales to the motor drives.
-        robot.setLeftRight(left,right);
+        robot.setLeftRight(left, right);
 
         // Send telemetry message to signify robot running
         telemetry.addData("left", "%.2f", left);
@@ -149,7 +150,7 @@ public class KinematicTest extends OpMode {
      */
     @Override
     public void stop() {
-        time.cancel();  
+        time.cancel();
     }
 
     //Measurement can be inches or whichever unit you measure the wheel diameter with

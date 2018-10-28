@@ -96,7 +96,7 @@ public class RRVHardwarePushbot
         leftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
-        setLeftRight(0,0);
+        this.setLeftRight(0,0);
 //        rack_pinion.setPower(0);
 
         // Set all motors to run without encoders.
@@ -119,6 +119,11 @@ public class RRVHardwarePushbot
 
     }
 
+    /**
+     *
+     * @param left
+     * @param right
+     */
     public void setLeftRight(double left, double right) {
         leftRear.setPower(left);
         leftFront.setPower(left);
