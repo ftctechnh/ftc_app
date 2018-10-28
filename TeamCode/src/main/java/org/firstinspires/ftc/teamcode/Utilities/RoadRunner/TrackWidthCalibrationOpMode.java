@@ -1,33 +1,39 @@
 package org.firstinspires.ftc.teamcode.Utilities.RoadRunner;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.RoadRunnerMecanumInterface;
 import com.acmerobotics.roadrunner.drive.Drive;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@TeleOp(name="Quad - Track Width Calibration", group="Diagnostics")
-public class TrackWidthCalibration extends LinearOpMode {
-    private final int totalRevolutions = 8;
-    private final double power = 0.7;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+/**
+ * Op mode for measuring the empirical track width of a robot drive.
+ */
+@Config
+public abstract class TrackWidthCalibrationOpMode extends LinearOpMode {
+    private int totalRevolutions;
+    private double power;
+    public static int ANGLE;
+
+    /**
+     * @param totalRevolutions number of revolutions
+     * @param power angular power
+     */
+    public TrackWidthCalibrationOpMode(int totalRevolutions, double power) {
+        this.totalRevolutions = totalRevolutions;
+        this.power = power;
+    }
+
+    public TrackWidthCalibrationOpMode() {
+        this(4, 0.3);
+    }
 
     @Override
-    public void runOpMode() {
-
-        Drive drive = new RoadRunnerMecanumInterface(hardwareMap);
-        telemetry.log().add("Initialized motor");
-        telemetry.update();
-        sleep(2000);
-
-        BNO055IMU imu = hardwareMap.get(BNO055IMU.class, "primaryIMU");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
-        imu.initialize(parameters);
+    public void runOpMode() throws InterruptedException {
+        Drive drive = initDrive();
+        BNO055IMU imu = initIMU();
 
         telemetry.log().add("Press play to begin the track width calibration routine");
         telemetry.log().add("Make sure your robot has enough clearance to turn smoothly");
@@ -47,7 +53,9 @@ public class TrackWidthCalibration extends LinearOpMode {
         drive.setPoseEstimate(new Pose2d());
         drive.setVelocity(new Pose2d(0.0, 0.0,  power));
         while (opModeIsActive() && (!startedMoving || revolutions <= totalRevolutions)) {
-            double heading = imu.getAngularOrientation().firstAngle;
+            Orientation o = imu.getAngularOrientation();
+            double[] headings = new double[] {o.firstAngle, o.secondAngle, o.thirdAngle};
+            double heading = headings[ANGLE];
             if (imu.getParameters().angleUnit == BNO055IMU.AngleUnit.DEGREES) {
                 heading = Math.toRadians(heading);
             }
@@ -71,6 +79,8 @@ public class TrackWidthCalibration extends LinearOpMode {
         while (opModeIsActive()) {
             idle();
         }
-
     }
+
+    protected abstract Drive initDrive();
+    protected abstract BNO055IMU initIMU();
 }

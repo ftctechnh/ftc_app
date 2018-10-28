@@ -27,7 +27,7 @@ public class RampingDcMotor {
 
     public void ramp(double elapsedMS) {
         double maxChange = elapsedMS * POWER_CHANGE_PER_MS;
-        double currentPower = m.getPower();
+        double currentPower = m.getPower(); // Uber slow, oh well
         double eventualDesiredChange = desiredPower - currentPower;
 
         if (Math.abs(eventualDesiredChange) <= maxChange) {

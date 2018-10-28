@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.Vision;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
-@TeleOp(name="Filter Testing", group="Vision")
+@TeleOp(name="Just Filter Testing", group="Vision")
 
 public class FilterTesting extends LinearOpMode {
     private GoldDetector detector;

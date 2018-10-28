@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ScrollView;
 
 
 /**
@@ -51,7 +52,7 @@ public class CameraViewDisplay implements ViewDisplay {
         return instance;
     }
 
-    public void setCurrentView(Context context, View newView) {
+    public void setCurrentView(final Context context, View newView) {
         // finding the resID dynamically allows this class to exist outside of the TeamCode module
         final int resID = context.getResources().getIdentifier("RelativeLayout", "id", context.getPackageName());
         final Activity activity = (Activity) context;
@@ -63,7 +64,7 @@ public class CameraViewDisplay implements ViewDisplay {
                 if (view != null) {
                     l.removeView(view);
                 }
-
+                l.addView(new ScrollView(context));
                 l.addView(queuedView);
                 view = queuedView;
             }

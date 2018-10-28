@@ -1,28 +1,52 @@
-package org.firstinspires.ftc.teamcode.Vision;
+package com.disnodeteam.dogecv;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.opengl.GLES20;
+import android.os.Debug;
 import android.util.Log;
+import android.view.Surface;
 
-import com.disnodeteam.dogecv.DrawViewSource;
 import com.disnodeteam.dogecv.detectors.DogeCVDetector;
+import com.qualcomm.robotcore.util.ThreadPool;
+import com.vuforia.CameraDevice;
 import com.vuforia.Frame;
+import com.vuforia.Matrix34F;
+import com.vuforia.Matrix44F;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.Tool;
+import com.vuforia.Trackable;
+import com.vuforia.TrackableResult;
 
+import org.firstinspires.ftc.robotcore.external.function.Consumer;
+import org.firstinspires.ftc.robotcore.external.function.Continuation;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCameraCaptureRequest;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCameraFrame;
+import org.firstinspires.ftc.robotcore.internal.camera.libuvc.api.UvcApiCaptureSession;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaLocalizerImpl;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackableImpl;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaTrackablesImpl;
+import org.firstinspires.ftc.robotcore.internal.vuforia.externalprovider.VuforiaWebcam;
+import org.opencv.android.JavaCameraView;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.logging.Logger;
+
+import static com.vuforia.Vuforia.setFrameFormat;
 
 /**
- * Created by Victo on 9/12/2018.
+ * An implementation of Vuforia intended to be cross-compatible with OpenCV (and DogeCV by extension)
  */
 
 public class Dogeforia extends VuforiaLocalizerImpl {
@@ -39,9 +63,6 @@ public class Dogeforia extends VuforiaLocalizerImpl {
     BlockingQueue<CloseableFrame> frames;
     public Dogeforia(Parameters parameters) {
         super(parameters);
-
-
-
     }
 
     public void setDogeCVDetector(DogeCVDetector detector){
@@ -99,15 +120,21 @@ public class Dogeforia extends VuforiaLocalizerImpl {
             outMat = detector.processFrame(inputMat, null);
 
             if(showDebug){
-                VuforiaTrackablesImpl trackables = loadedTrackableSets.get(0);
-                int count = 0;
-                for(VuforiaTrackable trackable : trackables){
-                    if(((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()){
-                        Imgproc.putText(outMat,"Vuforia: " + trackable.getName(), new Point(10,50 * count + 50),0,2,new Scalar(0,255,0),3);
-                        count++;
-                    }
+                if(loadedTrackableSets !=null && loadedTrackableSets.size() > 0) {
+                    VuforiaTrackablesImpl trackables = loadedTrackableSets.get(0);
+                    int count = 0;
+                    for(VuforiaTrackable trackable : trackables){
+                        if(trackable == null || ((VuforiaTrackableDefaultListener)trackable.getListener()) == null){
+                            continue;
+                        }
+                        if(((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()){
+                            Imgproc.putText(outMat,"Vuforia: " + trackable.getName(), new Point(10,50 * count + 50),0,2,new Scalar(0,255,0),3);
+                            count++;
+                        }
 
+                    }   
                 }
+                
             }
 
 
@@ -151,14 +178,14 @@ public class Dogeforia extends VuforiaLocalizerImpl {
 
         if(detector != null && dogeCVEnabled){
 
-            if(!frameQueue.isEmpty()){
+            if(!getFrameQueue().isEmpty()){
                 try {
-                    processFrame(frameQueue.take());
+                    processFrame(getFrameQueue().take());
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }else{
-                Log.w("DogeCV", "Frame is empty wtf: " + getFrameQueueCapacity());
+                //Log.w("DogeCV", "Frame is empty: " + getFrameQueueCapacity());
             }
 
             /*
@@ -175,13 +202,12 @@ public class Dogeforia extends VuforiaLocalizerImpl {
     }
 
     public void stop(){
-
+        close();
         ((Activity)displayView.getContext()).runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 workerThread.interrupt();
-                stopCamera();
-                stopTracker();
+
                 detector.disable();
             }
         });

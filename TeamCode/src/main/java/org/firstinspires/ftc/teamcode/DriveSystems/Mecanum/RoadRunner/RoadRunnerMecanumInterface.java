@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.qualcomm.hardware.motors.NeveRest20Gearmotor;
+import com.qualcomm.hardware.motors.NeveRest40Gearmotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,12 +17,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+@Config
 public class RoadRunnerMecanumInterface extends MecanumDrive {
-    // TODO: change your drive motor
     public static final MotorConfigurationType MOTOR_CONFIG = MotorConfigurationType.getMotorType(NeveRest20Gearmotor.class);
 
-    private static final double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
-
+    private static double TICKS_PER_REV = MOTOR_CONFIG.getTicksPerRev();
+    public static double TRACK_WIDTH = 15.5;
     /**
      * These were good velocity PID values for a ~40lb robot with 1:1 belt-driven wheels off AM
      * orbital 20s. Adjust accordingly (or tune them yourself, see
@@ -28,11 +30,12 @@ public class RoadRunnerMecanumInterface extends MecanumDrive {
      */
     public static final PIDCoefficients NORMAL_VELOCITY_PID = new PIDCoefficients(20, 8, 12);
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+    public DcMotorEx leftFront, leftRear, rightRear, rightFront;
     private List<DcMotorEx> motors;
 
     public RoadRunnerMecanumInterface(HardwareMap hardwareMap) {
-        super(7.42);
+        // TODO: this needs to be tuned using FeedforwardTuningOpMode
+        super(TRACK_WIDTH);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
         leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");
@@ -40,9 +43,11 @@ public class RoadRunnerMecanumInterface extends MecanumDrive {
         rightFront = hardwareMap.get(DcMotorEx.class, "frontRight");
 
         for (DcMotorEx motor : Arrays.asList(leftFront, leftRear, rightRear, rightFront)) {
-            // We'll use ACME Robotic's coefficients
+            // TODO: decide whether or not to use the built-in velocity PID
+            // if you keep it, then don't tune kStatic or kA
+            // otherwise, at least tune kStatic and kA potentially
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            motor.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, NORMAL_VELOCITY_PID);
+            //motor.setPIDCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, NORMAL_VELOCITY_PID);
         }
 
         rightRear.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -52,7 +57,9 @@ public class RoadRunnerMecanumInterface extends MecanumDrive {
     }
 
     private static double encoderTicksToInches(int ticks) {
-        return 3.94 * 2.0 * Math.PI * ticks / TICKS_PER_REV;
+        // TODO: modify this appropriately
+        // wheel radius * radians/rev * wheel revs/motor revs * motor revs
+        return 2 * 2 * Math.PI * 1.0 * ticks / TICKS_PER_REV;
     }
 
     @NotNull

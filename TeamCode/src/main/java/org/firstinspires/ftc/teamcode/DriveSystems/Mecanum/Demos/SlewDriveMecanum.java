@@ -15,7 +15,7 @@ public class SlewDriveMecanum extends TeleOpMecanum {
 
     @Override
     public void runOpMode() {
-        robot.init();
+        robot.init(false);
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         waitForStart();

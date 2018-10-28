@@ -15,9 +15,9 @@ public class QuadWheelHardware extends BaseHardware {
     }
 
     @Override
-    public void init() {
+    public void init(boolean calibrate) {
 
-        super.init();
+        super.init(calibrate);
 
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");

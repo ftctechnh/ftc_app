@@ -37,6 +37,8 @@ import android.view.View;
  */
 
 public class ActivityViewDisplay implements ViewDisplay {
+
+    //There should only be one instance of this class, so make a static reference to it
     private static ActivityViewDisplay instance;
     private static View main = null;
 
@@ -48,6 +50,11 @@ public class ActivityViewDisplay implements ViewDisplay {
         return instance;
     }
 
+    /**
+     * Sets this display to be the current one in use, and starts it on the UI thread (as opposed to the robot controller thread)
+     * @param context The context of the OpMode, can be obtained via hardwaremap.appContext;
+     * @param view The view upon which this activity is to be displayed
+     */
     public void setCurrentView(final Context context, final View view) {
         final Activity activity = (Activity) context;
         activity.runOnUiThread(new Runnable() {

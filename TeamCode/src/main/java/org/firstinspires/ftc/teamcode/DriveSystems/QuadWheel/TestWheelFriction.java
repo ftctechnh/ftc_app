@@ -24,7 +24,7 @@ public class TestWheelFriction extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot = new QuadWheelHardware(this);
-        robot.init();
+        robot.init(false);
         telemetry.log().add("Finished initialization");
 
         for (DcMotor m : robot.motorArr) {
@@ -80,7 +80,6 @@ public class TestWheelFriction extends LinearOpMode {
         int[] encoderDist = new int[robot.motorArr.length];
         for (int i = 0; i < robot.motorArr.length; i++) {
             robot.motorArr[i].setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.motorArr[i].setPowerFloat();
             robot.motorArr[i].setPower(0);
             encoderDist[i] = robot.motorArr[i].getCurrentPosition() - initialPos[i];
         }

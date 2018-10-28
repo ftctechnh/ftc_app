@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.Demos;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -10,12 +11,13 @@ import org.firstinspires.ftc.teamcode.Hardware.MecanumHardware;
  * Created by guberti on 12/8/2017.
  */
 @TeleOp(name="MecanumDemo - Drive While Spinning", group="MecanumDemo")
+@Disabled
 public class DriveWhileSpinningMecanum extends TeleOpMecanum {
     MecanumHardware robot   = new MecanumHardware(this);
 
     @Override
     public void runOpMode() {
-        robot.init();
+        robot.init(true);
 
         // Enables hardware-controlled PID wheel speeds
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);

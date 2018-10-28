@@ -26,7 +26,7 @@ import java.io.IOException;
 public class BaseHardware {
 
     // Sensors
-    public LynxModule wheelHub;
+    public LynxModule leftHub;
     public BNO055IMU imu;
     public Orientation angles; // Used to read IMU
     public LynxGetBulkInputDataResponse bulkDataResponse;
@@ -60,10 +60,11 @@ public class BaseHardware {
         }
     }
 
-    public void init() {
-        wheelHub = hwMap.get(LynxModule.class, "motorController");
+    public void init(boolean calibrate) {
+        leftHub = hwMap.get(LynxModule.class, "leftHub");
         imu = opMode.hardwareMap.get(BNO055IMU.class, "primaryIMU");
-        calibrateGyro();
+        if (calibrate) {calibrateGyro();}
+
         initialized = true;
     }
 
@@ -92,7 +93,7 @@ public class BaseHardware {
     }
 
     public void updateREVHubReadings() {
-        LynxGetBulkInputDataCommand bulkDataInput = new LynxGetBulkInputDataCommand(wheelHub);
+        LynxGetBulkInputDataCommand bulkDataInput = new LynxGetBulkInputDataCommand(leftHub);
         try {
             bulkDataResponse = bulkDataInput.sendReceive();
         } catch (InterruptedException e) {

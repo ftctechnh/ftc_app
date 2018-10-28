@@ -11,5 +11,5 @@ import java.util.List;
  */
 
 public abstract class DogeCVScorer {
-    public abstract double calculateDifference(MatOfPoint contours);
+    public abstract double calculateScore(Mat input);
 }

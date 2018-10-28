@@ -19,6 +19,38 @@ public class MathFTC {
     }
 
     /**
+     * Returns the arithmetic mean (average) of a list
+     * @param list A list of doubles
+     * @return The mean
+     */
+    public static double mean(double[] list) {
+        if(list.length == 0) {
+            return 0;
+        }
+        double sum = 0;
+        for (int i = 0; i < list.length; i++) {
+            sum += list[i];
+        }
+        return sum / list.length;
+    }
+
+    /**
+     * Returns the arithmetic mean (average) of a list
+     * @param list A list of doubles
+     * @return The mean
+     */
+    public static double mean(Double[] list) {
+        if(list.length == 0) {
+            return 0;
+        }
+        double sum = 0;
+        for (int i = 0; i < list.length; i++) {
+            sum += list[i];
+        }
+        return sum / list.length;
+    }
+
+    /**
      * A recursive function which return a list of lists, where each list is a combination of length k.
      * @param list The input list to be chosen from
      * @param k The sample size
@@ -43,6 +75,11 @@ public class MathFTC {
         return combos;
     }
 
+    /**
+     * Returns the standard deviation of a sample set
+     * @param samples A list of Doubles
+     * @return Sigma (i.e. the standard deviation)
+     */
     public static double getStdDev(List<Double> samples) {
         if(samples.size() == 0) return 0;
         double mean = 0;
@@ -57,6 +94,11 @@ public class MathFTC {
         return Math.sqrt(sigma/(samples.size() - 1));
     }
 
+    /**
+     * Normalizes an angle to always return between 0 and 180 degrees
+     * @param angle Input angle, in degrees
+     * @return Noramlized angle, in degrees
+     */
     public static double normalizeAngle(double angle) {
         angle = angle % 180;
         if (angle > 0) return angle;

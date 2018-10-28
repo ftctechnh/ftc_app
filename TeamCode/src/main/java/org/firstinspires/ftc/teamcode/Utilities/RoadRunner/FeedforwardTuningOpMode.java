@@ -2,12 +2,9 @@ package org.firstinspires.ftc.teamcode.Utilities.RoadRunner;
 
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.drive.Drive;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.apache.commons.math3.stat.regression.SimpleRegression;
-import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.RoadRunnerMecanumInterface;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,15 +12,31 @@ import java.util.List;
 /**
  * Op mode for computing kV, kStatic, and kA from various drive routines.
  */
-@TeleOp(name="Quad - Tune Feedforward", group="Diagnostics")
-public class FeedforwardTuning extends LinearOpMode {
-    private static final double MAX_POWER = 1.0;
+public abstract class FeedforwardTuningOpMode extends LinearOpMode {
+    private static final double MAX_POWER = 0.7;
     private static final double EPSILON = 1e-2;
 
-    private double distance = 100.0;
-    private double wheelMotorRpm = 340; // For orbital 20
-    private double wheelDiameter = 3.94;
-    private double wheelGearRatio = 1.0;
+    private double distance;
+    private double wheelMotorRpm;
+    private double wheelDiameter;
+    private double wheelGearRatio;
+
+    /**
+     * @param distance allowable forward travel distance
+     * @param wheelMotorRpm wheel motor rpm
+     * @param wheelDiameter wheel diameter
+     * @param wheelGearRatio wheel gear ratio (output / input)
+     */
+    public FeedforwardTuningOpMode(double distance, double wheelMotorRpm, double wheelDiameter, double wheelGearRatio) {
+        this.distance = distance;
+        this.wheelMotorRpm = wheelMotorRpm;
+        this.wheelDiameter = wheelDiameter;
+        this.wheelGearRatio = wheelGearRatio;
+    }
+
+    public FeedforwardTuningOpMode(double distance, double wheelMotorRpm, double wheelDiameter) {
+        this(distance, wheelMotorRpm, wheelDiameter, 1.0);
+    }
 
     private static List<Double> numericalDerivative(List<Double> x, List<Double> y) {
         List<Double> deriv = new ArrayList<>();
@@ -36,8 +49,8 @@ public class FeedforwardTuning extends LinearOpMode {
     }
 
     @Override
-    public void runOpMode() {
-        Drive drive = new RoadRunnerMecanumInterface(hardwareMap);
+    public void runOpMode() throws InterruptedException {
+        Drive drive = initDrive();
 
         telemetry.log().add("Press play to begin the feedforward tuning routine");
         telemetry.update();
@@ -210,4 +223,6 @@ public class FeedforwardTuning extends LinearOpMode {
             idle();
         }
     }
+
+    protected abstract Drive initDrive();
 }
