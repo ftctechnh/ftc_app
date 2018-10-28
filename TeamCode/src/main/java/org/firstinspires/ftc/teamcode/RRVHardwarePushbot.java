@@ -54,10 +54,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class RRVHardwarePushbot
 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  leftDriveR   = null;
-    public DcMotor  rightDriveR  = null;
+    public DcMotor  leftRear   = null;
+    public DcMotor  rightRear  = null;
+    public DcMotor  leftFront   = null;
+    public DcMotor  rightFront  = null;
     public DcMotor  rack_pinion     = null;
 
     public static final double MID_SERVO       =  0.5 ;
@@ -87,13 +87,13 @@ public class RRVHardwarePushbot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "left_drive");
-        rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        leftDriveR  = hwMap.get(DcMotor.class, "left_rear_drive");
-        rightDriveR = hwMap.get(DcMotor.class, "right_rear_drive");
-//        rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
-        leftDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        leftDriveR.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        leftRear  = hwMap.get(DcMotor.class, "left_Rear");
+        rightRear = hwMap.get(DcMotor.class, "right_Rear");
+        leftFront  = hwMap.get(DcMotor.class, "left_Front");
+        rightFront = hwMap.get(DcMotor.class, "right_Front");
+        rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
+        leftRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        leftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
         setLeftRight(0,0);
@@ -101,29 +101,29 @@ public class RRVHardwarePushbot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftDriveR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightDriveR.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftDriveR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightDriveR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        rack_pinion.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
 
     public void setLeftRight(double left, double right) {
-        leftDrive.setPower(left);
-        leftDriveR.setPower(left);
-        rightDrive.setPower(right);
-        rightDriveR.setPower(right);
+        leftRear.setPower(left);
+        leftFront.setPower(left);
+        rightRear.setPower(right);
+        rightFront.setPower(right);
     }
  }
 

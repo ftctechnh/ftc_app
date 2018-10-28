@@ -113,7 +113,7 @@ public class RobotLanding extends LinearOpMode {
 
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDown(4.625);  // S1: Forward 47 Inches with 5 Sec timeout
+        encoderDown(5.5);  // S1: Forward 47 Inches with 5 Sec timeout
         runtime.reset();
         while (opModeIsActive()&&runtime.seconds()<0.8) {
             robot.setLeftRight(-0.8, 0.8);

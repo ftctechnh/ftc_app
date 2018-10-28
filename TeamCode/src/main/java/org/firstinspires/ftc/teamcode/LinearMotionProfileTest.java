@@ -59,10 +59,10 @@ public class LinearMotionProfileTest extends LinearOpMode {
 
 
         //Sets both motors to brake mode
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.leftDriveR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDriveR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.leftRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightRear.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         config = new Config(robot.dt, robot.max_velocity, robot.max_acceleration);
 
@@ -74,19 +74,19 @@ public class LinearMotionProfileTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         if (opModeIsActive()) {
-            follower.configureEncoder(robot.rightDrive.getCurrentPosition(), robot.leftDrive.getCurrentPosition(), robot.ticks_per_revolution, robot.wheel_diameter);
+            follower.configureEncoder(robot.rightRear.getCurrentPosition(), robot.leftRear.getCurrentPosition(), robot.ticks_per_revolution, robot.wheel_diameter);
             follower.configurePV(robot.kP_DriveForward, robot.kV_Drive);
-            robot.rightDrive.setTargetPosition(robot.rightDrive.getCurrentPosition() + follower.unitToCounts(targetDistance));
-            robot.leftDrive.setTargetPosition(robot.leftDrive.getCurrentPosition() + follower.unitToCounts(targetDistance));
-            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightRear.setTargetPosition(robot.rightRear.getCurrentPosition() + follower.unitToCounts(targetDistance));
+            robot.leftRear.setTargetPosition(robot.leftRear.getCurrentPosition() + follower.unitToCounts(targetDistance));
+            robot.rightRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.leftRear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             time.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
                     if (opModeIsActive()) {
                         isRunning = true;
-                        int currLeftPos = robot.leftDrive.getCurrentPosition();
-                        int currRightPos = robot.rightDrive.getCurrentPosition();
+                        int currLeftPos = robot.leftRear.getCurrentPosition();
+                        int currRightPos = robot.rightRear.getCurrentPosition();
 
                         double left = follower.calculateLeftPower(index, currLeftPos);
                         double right = follower.calculateRightPower(index, currRightPos);
@@ -102,19 +102,19 @@ public class LinearMotionProfileTest extends LinearOpMode {
                     } else {
                         isRunning = false;
                         robot.setLeftRight(0, 0);
-                        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.leftDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.rightDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                         time.cancel();
                     }
                     if (index >= trajectory.getLeftTrajectory().length()) {
                         isRunning = false;
                         robot.setLeftRight(0,0);
-                        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.leftDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                        robot.rightDriveR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.leftRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.rightRear.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                         time.cancel();
                     }
 
@@ -124,8 +124,8 @@ public class LinearMotionProfileTest extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
-            telemetry.addData("Left Power", robot.leftDrive.getPower());
-            telemetry.addData("Right Power", robot.rightDrive.getPower());
+            telemetry.addData("Left Power", robot.leftRear.getPower());
+            telemetry.addData("Right Power", robot.rightRear.getPower());
             telemetry.addData("Current Segment", index);
             telemetry.update();
         }
@@ -140,5 +140,6 @@ public class LinearMotionProfileTest extends LinearOpMode {
         targetDistance = distance;
         trajectory = StraightProfileGenerator.generateTrajectory(config, robot.wheelbase_width, distance);
         follower = new PathFollower(trajectory);
+
     }
 }
