@@ -18,7 +18,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private DcMotor LeftDriveMotor; //motor 0
     private DcMotor RightDriveMotor; //motor 1
 
-    //private ColorSensor colorSensor;
+    private ColorSensor colorSensor;
 
     //1000 ticks is about 26 inches
 
@@ -40,18 +40,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             //Looks at the center mineral. If the center mineral is gold, goes straight to the
             // depot, then turns and drives into the crater.
-            /*if(isGold()) {*/
+            if(isGold()) {
 
-                move(Direction.Forward,  2200, 0.25);
-                move(Direction.Backward, 200,  0.25);
-                turn(Direction.Left,     500,  0.25);
-                move(Direction.Forward,  800,  0.25);
-                turn(Direction.Left,     270,  0.25);
-                move(Direction.Forward,  2000, 0.25);
+                goldRoute();
 
                 break;
 
-            /*} else{
+            } else{
 
                 //Turns to face the left mineral. If the left mineral is gold, goes to the mineral,
                 // then turns and goes to the depot, then turns and drives into the crater.
@@ -59,15 +54,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                 if(isGold()) {
 
-                    move(Direction.Forward, 1000, 0.25);
-                    turn(Direction.Right,   200,  0.25);
-                    move(Direction.Forward, 1200, 0.25);
-                    turn(Direction.Left,    1000, 0.25);
-                    move(Direction.Forward, 800,  0.25);
-                    turn(Direction.Left,    270,  0.25);
-                    move(Direction.Forward, 2000, 0.25);
+                    turn(Direction.Right,   250,  0.25);
+                    goldRoute();
 
-                    requestOpModeStop();
+                    break;
 
 
                 } else{
@@ -79,39 +69,27 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                     if(isGold()){
 
-                        move(Direction.Forward, 1000, 0.25);
-                        turn(Direction.Left,    200,  0.25);
-                        move(Direction.Forward, 1200, 0.25);
                         turn(Direction.Left,    250,  0.25);
-                        move(Direction.Forward, 800,  0.25);
-                        turn(Direction.Left,    270,  0.25);
-                        move(Direction.Forward, 2000, 0.25);
+                        goldRoute();
 
-                        requestOpModeStop();
+                        break;
 
                     }
 
                 }
 
-            }*/
+            }
 
 
             //SILVER TEST
 
             //Looks at the center mineral. If the center mineral is gold, goes to the mineral,
             // then drives to the depot, then turns and drives into the crater.
-            /*if(isGold()) {
+            if(isGold()) {
 
-            move(Direction.Forward,  1200, 0.25);
-            move(Direction.Backward, 200,  0.25);
-            turn(Direction.Left,     300,  0.25);
-            move(Direction.Forward,  1500, 0.25);
-            turn(Direction.Left,     200,  0.25);
-            move(Direction.Forward,  1750, 0.25);
-            turn(Direction.Right,    750,  0.25);
-            move(Direction.Forward,  3000, 0.25);
+                silverRoute();
 
-            requestOpModeStop();
+                break;
 
             } else{
 
@@ -121,16 +99,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                 if(isGold()) {
 
-                    move(Direction.Forward,  1200, 0.25);
-                    move(Direction.Backward, 200,  0.25);
-                    turn(Direction.Left,     500,  0.25);
-                    move(Direction.Forward,  1200, 0.25);
-                    turn(Direction.Left,     50,   0.25);
-                    move(Direction.Forward,  1750, 0.25);
-                    turn(Direction.Right,    750,  0.25);
-                    move(Direction.Forward,  3000, 0.25);
+                    turn(Direction.Right, 250, 0.25);
+                    silverRoute();
 
-                    requestOpModeStop();
+                    break;
 
 
                 } else{
@@ -142,24 +114,16 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                     if(isGold()){
 
-                        move(Direction.Forward,  1200, 0.25);
-                        move(Direction.Backward, 200,  0.25);
-                        turn(Direction.Left,     1000, 0.25);
-                        move(Direction.Forward,  400,  0.25);
-                        turn(Direction.Left,     30,   0.25);
-                        move(Direction.Forward,  1300, 0.25);
-                        turn(Direction.Left,     300,  0.25);
-                        move(Direction.Forward,  1750, 0.25);
-                        turn(Direction.Right,    750,  0.25);
-                        move(Direction.Forward,  3000, 0.25);
+                        turn(Direction.Left, 250, 0.25);
+                        silverRoute();
 
-                        requestOpModeStop();
+                        break;
 
                     }
 
                 }
 
-            }*/
+            }
 
         }
 
@@ -172,7 +136,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
 
-        //this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
+        this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
 
 
         //Sets correct directions for motors and servos
@@ -276,19 +240,39 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    /*public  boolean isGold() {
+    public  boolean isGold() {
 
-        if((colorSensor.red() >= 240 && colorSensor.red() <= 255) &&
-                (colorSensor.green() >= 200 && colorSensor.green() <= 230) &&
-                (colorSensor.blue() >= 0 && colorSensor.blue() <= 15)) {
-
+        if((colorSensor.red() >= (2 * colorSensor.blue()))
+                && colorSensor.green() >= (2* colorSensor.blue())) {
             return true;
 
         }
 
         return false;
 
-    }*/
+    }
+
+    public void goldRoute(){
+
+        move(Direction.Forward,  300,  0.25);
+        turn(Direction.Left,     500,  0.25);
+        move(Direction.Forward,  800,  0.25);
+        turn(Direction.Left,     270,  0.25);
+        move(Direction.Forward,  2000, 0.25);
+
+    }
+
+    public void silverRoute(){
+
+        move(Direction.Forward,  300,  0.25);
+        turn(Direction.Left,     300,  0.25);
+        move(Direction.Forward,  1500, 0.25);
+        turn(Direction.Left,     200,  0.25);
+        move(Direction.Forward,  1750, 0.25);
+        turn(Direction.Right,    750,  0.25);
+        move(Direction.Forward,  3000, 0.25);
+
+    }
 
 }
 
