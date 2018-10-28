@@ -58,7 +58,7 @@ public class HardwareBruinBot
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  rightRearDrive = null;
-    public DcMotor  armExt = null;  //for the arm extension
+    //public DcMotor  armExt = null;  //for the arm extension
     //public DcMotor  leftArm     = null;
     //public Servo    leftClaw    = null;
     //public Servo    rightClaw   = null;
@@ -87,10 +87,12 @@ public class HardwareBruinBot
         leftRearDrive  = hwMap.get(DcMotor.class, "leftRearDrive");
         rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontDrive");
         rightRearDrive = hwMap.get(DcMotor.class, "rightRearDrive");
-        armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
+       // armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        rightRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightRearDrive.setDirection(DcMotor.Direction.FORWARD);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
 
         // Set all motors to zero power
@@ -98,7 +100,7 @@ public class HardwareBruinBot
         leftRearDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightRearDrive.setPower(0);
-        armExt.setPower(0); //arm extension
+       // armExt.setPower(0); //arm extension
         //leftArm.setPower(0);
 
         // Set all motors to run without encoders.
@@ -107,7 +109,7 @@ public class HardwareBruinBot
         leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armExt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //arm extension
+       // armExt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //arm extension
         //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.

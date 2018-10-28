@@ -57,7 +57,7 @@ know what type of motor/servo the extension is going to be!
             //hwMap.leftRearDrive.setPower(drive - strafe + rotate); //= drive - strafe + rotate;
             //hwMap.rightFrontDrive.setPower(drive - strafe - rotate); //= drive - strafe - rotate;
             //hwMap.rightRearDrive.setPower(drive + strafe - rotate); //= drive + strafe - rotate;
-            hwMap.armExt.setPower (armPower);
+         //   hwMap.armExt.setPower (armPower);
             /*
             // Run wheels in POV mode (note: The joystick goes negative when pushed forwards, so negate it)
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
