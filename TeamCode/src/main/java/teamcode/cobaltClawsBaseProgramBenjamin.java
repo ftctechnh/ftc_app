@@ -104,7 +104,7 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
             } else if (gamepad1.right_bumper) {
 
-                //Turns the servo so that the right grabber opens, waits until the right bumber is
+                //Turns the servo so that the right grabber opens, waits until the right bumper is
                 // released, and then moves back to original position
                 GrabberServo.setPosition(-0.5);
 
