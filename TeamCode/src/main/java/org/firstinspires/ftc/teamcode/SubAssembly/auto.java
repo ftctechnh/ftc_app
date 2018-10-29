@@ -21,6 +21,7 @@ public class auto extends LinearOpMode {
     //State changing array
     private void newState(State newState) {
         mCurrentState = newState;
+        Drive.stop();
         resetClock();
     }
 
@@ -98,21 +99,15 @@ public class auto extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (now < 3) {
-                        Drive.moveForward(0.75);
-                    }
-                    else {
-                        Drive.stop();
+                    Drive.moveForward(0.75);
+                    if (now > 3) {
                         newState(State.STATE_STOP);
                     }
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
-                    if (now < 5) {
-                        Drive.moveForward(0.75);
-                    }
-                    else {
-                        Drive.stop();
+                    Drive.moveForward(0.75);
+                    if (now > 5) {
                         newState(State.STATE_STOP);
                     }
                     break;
