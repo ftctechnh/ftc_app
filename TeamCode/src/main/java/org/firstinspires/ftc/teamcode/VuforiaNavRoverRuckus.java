@@ -23,10 +23,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import java.util.ArrayList;
 import java.util.List;
 
+
 @TeleOP(name="Vuforia Nav", group="Linear OpMode")
 //@Disabled
 public class VuforiaNav extends LinearOpMode  {
-
+    NewHardware robot = new NewHardware();
     //Vuforia Key to use the program
     private static final String VUFORIA_KEY = "AYF223v/////AAABmfNmdY7wQEWOtnHRqbf9/zkjwk4qXoKsKyftQI0oXarKVtaL18uhqXwgwqN4hqE11yd1YTTJtd3mUCoO+vUS6NqXLQE6oZ8GYw/EEAqbnjxrChXmAyNVa8Oz4slaFSarcPIlZH8NFXWkJbCgJm/7mtMfT6yYd0q2uwkjaFVQ+2V7mjXkbip19xPaXNfEDPpv36/g8wfMOU4RMKmhJEu2cVKPqgBQ/iHWu3FdS+ehsjRcsRftnMbnBOPT6FtZmNfh+JhJg15QAVzpobc/ER5ai1Fl/Wl1HDQgxxZUdzdckWZRJ49E1zdBz2ghhDcRU3J/qvsVaSmyGi5rvgJUyFMngBzo6GJJMYpgy3Es5PBt1VOJ"
 
