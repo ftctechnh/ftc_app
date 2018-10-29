@@ -50,8 +50,7 @@ public class RatBot extends OpMode {
 
         telemetry.addData("Status", "Initialized");
 
-        // hardware maps
-        frontLeftMotor = (DcMotorEx) hardwareMap.dcMotor.get("front_left");
+        // hardware maps        frontLeftMotor = (DcMotorEx) hardwareMap.dcMotor.get("front_left");
         frontRightMotor = (DcMotorEx) hardwareMap.dcMotor.get("front_right");
         backLeftMotor = (DcMotorEx) hardwareMap.dcMotor.get("back_left");
         backRightMotor = (DcMotorEx) hardwareMap.dcMotor.get("back_right");
