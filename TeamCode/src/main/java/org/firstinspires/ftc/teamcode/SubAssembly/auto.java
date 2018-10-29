@@ -11,26 +11,31 @@ import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 @Autonomous(name = "Auto", group = "Drive")
 public class auto extends LinearOpMode {
 
-    //methods go here
-
+    /* Methods */
+    DriveControl Drive = new DriveControl(this);
+    LiftControl Lift = new LiftControl(this);
     private ElapsedTime runtime = new ElapsedTime();
 
-    private State mCurrentState;
+    /* Arrays */
 
+    //State changing array
     private void newState(State newState) {
         mCurrentState = newState;
+        resetClock();
     }
 
-    public String startPosition() {
+    //Start array
+    public void startPosition() {
         telemetry.addLine("Is the starting position facing the crater?");
-        do {
-            if (gamepad1.a) {
-                orientation = "crater";
-            } else if (gamepad1.b) {
-                orientation = "depot";
-            }
-        } while (!gamepad1.a && !gamepad1.b);
-        return orientation;
+        while (!gamepad1.a && !gamepad1.b){
+        }
+
+        if (gamepad1.a)
+            telemetry.addLine("Crater");
+            orientation = Start.Crater;
+
+        telemetry.addLine("Depot");
+        orientation = Start.Depot;
     }
 
     public void resetClock() {
@@ -38,16 +43,24 @@ public class auto extends LinearOpMode {
         lastReset = runtime.seconds();
     }
 
-    //variables go here
-    String orientation;
+    //Makes the enum stuff work
+    private State mCurrentState;
+    private Start orientation;
 
-    //stuff for state selection
+    /* Variables go here */
 
+    //State selection term variables
     private enum State {
         STATE_INITIAL,
         STATE_MOVE_TO_DEPOT,
         STATE_MOVE_TO_CRATER,
         STATE_STOP,
+    }
+
+    //Start position term variables
+    private enum Start {
+        Crater,
+        Depot,
     }
 
     //time based variables
@@ -58,62 +71,55 @@ public class auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("starting runOpMode in auto.java");
-        telemetry.update();
-
-        //sets up subassemblies inside runOpMode
-        DriveControl Drive = new DriveControl(this);
-        LiftControl Lift = new LiftControl(this);
-
-        mCurrentState = State.STATE_INITIAL;
-
         telemetry.addLine("Autonomous");
-        telemetry.update();
 
         startPosition();
 
         //no u
-        //AutoTransitioner.transitionOnStop(this, "TeleOp");
+        AutoTransitioner.transitionOnStop(this, "TeleOp");
 
         waitForStart();
 
-        resetClock();
+        newState(State.STATE_INITIAL);
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
 
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
-                    if (orientation.equals("crater")) {
+                    if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
-                        telemetry.update();
-                        resetClock();
                         newState(State.STATE_MOVE_TO_CRATER);
-                    } else if (orientation.equals("depot")) {
-                        newState(State.STATE_MOVE_TO_DEPOT);
+                    }
+                    else if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to depot");
-                        telemetry.update();
+                        newState(State.STATE_MOVE_TO_DEPOT);
                     }
                     break;
+
                 case STATE_MOVE_TO_CRATER:
                     if (now < 3) {
                         Drive.moveForward(0.75);
-                    } else {
+                    }
+                    else {
                         Drive.stop();
                         newState(State.STATE_STOP);
-                        resetClock();
                     }
                     break;
+
                 case STATE_MOVE_TO_DEPOT:
                     if (now < 5) {
                         Drive.moveForward(0.75);
-                    } else {
+                    }
+                    else {
                         Drive.stop();
                         newState(State.STATE_STOP);
-                        resetClock();
                     }
                     break;
+
                 case STATE_STOP:
                     break;
+
                 default:
                     break;
             }
