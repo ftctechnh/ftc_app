@@ -12,7 +12,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
 
     //Declares servo and motors
-    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     private DcMotor ArmMotor; //motor 0
 
     private Servo ArmServoElbow;
@@ -27,9 +27,13 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
     int armPosition;
 
-
     boolean leftGrabberOpen;
     boolean rightGrabberOpen;
+
+    double wristTimer;
+    double grabberTimer;
+
+    double delayMS = 100;
 
     @Override
     public void runOpMode() {
@@ -44,34 +48,39 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
 
             //Arm System
+            double endTime = runtime.time();
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_bumper && (endTime - grabberTimer > delayMS)) {
 
                 //Turns the servo so that the left grabber opens, waits until the left bumper is
                 // pressed again, and then moves back to original position
                 if(!leftGrabberOpen) {
 
                     GrabberServo.setPosition(0);
+                    grabberTimer = runtime.time();
 
                 } else if(leftGrabberOpen){
 
                     GrabberServo.setPosition(0.5);
+                    grabberTimer = runtime.time();
 
                 }
 
                 leftGrabberOpen = !leftGrabberOpen;
 
-            } else if (gamepad1.right_bumper) {
+            } else if (gamepad1.right_bumper && (endTime - grabberTimer > delayMS)) {
 
                 //Turns the servo so that the right grabber opens, waits until the right bumper is
                 // pressed again, and then moves back to original position
                 if(!rightGrabberOpen) {
 
                     GrabberServo.setPosition(1);
+                    grabberTimer = runtime.time();
 
                 } else if(rightGrabberOpen){
 
                     GrabberServo.setPosition(0.5);
+                    grabberTimer = runtime.time();
 
                 }
 
@@ -105,11 +114,13 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
                 ArmServoWrist.setPosition(this.ArmServoWrist.getPosition() + 0.05);
 
+
             }else if (gamepad1.dpad_down) {
 
                 //Moves the arm down until the d-pad is changed/released or the arm hit the lower
                 // limit
                 ArmServoWrist.setPosition(this.ArmServoWrist.getPosition() - 0.05);
+
 
             }
 
@@ -121,7 +132,10 @@ public class cobaltClawsArmTest extends LinearOpMode{
                 //Moves the arm up or down until the right stick is no longer being moved vertically
                 // or the arm hits the upper or lower limit
                 if(armPosition >= armInitialPosition
-                        && armPosition <= armMaximumPosition ){
+                        && armPosition <= armMaximumPosition){
+
+                    telemetry.addData("Within range: ", (armPosition >= armInitialPosition
+                            && armPosition <= armMaximumPosition));
 
                     int verticalRightStick = (int) gamepad1.right_stick_y;
 
@@ -139,7 +153,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
             //Gives stats and updates
             telemetry.addData("Status", "Running");
-            telemetry.addData("Arm Position", armPosition);
+            telemetry.addData("Arm Position: ", armPosition);
             telemetry.update();
         }
     }
@@ -191,7 +205,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
         if(position == "deposit"){
             //arm is vertical
             ArmServoWrist.setPosition(0);
-            ArmServoElbow.setPosition(0);
+            ArmServoElbow.setPosition(0.5);
             ArmMotor.setTargetPosition(armMaximumPosition);
             ArmMotor.setPower(0.5);
 
@@ -210,7 +224,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
         else if(position == "pickUp"){
             // arm is extended and pointed towards the ground
             ArmServoWrist.setPosition(0);
-            ArmServoElbow.setPosition(0);
+            ArmServoElbow.setPosition(0.5);
 
             ArmMotor.setTargetPosition(0);
             ArmMotor.setPower(0.5);
