@@ -8,11 +8,11 @@ import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 
-@Autonomous(name = "Auto", group = "Drive")
+@Autonomous(name = "Auto1", group = "Drive")
 public class auto extends LinearOpMode {
 
     /* Methods */
-    DriveControl Drive = new DriveControl(this);
+    DriveControl Drive = new DriveControl();
     //LiftControl Lift = new LiftControl(this);
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -28,15 +28,18 @@ public class auto extends LinearOpMode {
     //Start array
     public void startPosition() {
         telemetry.addLine("Is the starting position facing the crater?");
+        telemetry.update();
         while (!gamepad1.a && !gamepad1.b){
         }
 
-        if (gamepad1.a)
+        if (gamepad1.a) {
             telemetry.addLine("Crater");
             orientation = Start.Crater;
-
-        telemetry.addLine("Depot");
-        orientation = Start.Depot;
+        }
+        else{
+            telemetry.addLine("Depot");
+            orientation = Start.Depot;
+        }
     }
 
     public void resetClock() {
@@ -71,42 +74,47 @@ public class auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addLine("starting runOpMode in auto.java");
+        Drive.init(hardwareMap);
+
         telemetry.addLine("Autonomous");
 
         startPosition();
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
+        telemetry.update();
         waitForStart();
 
         newState(State.STATE_INITIAL);
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
 
+            now = runtime.seconds() - lastReset;
+
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
+                        telemetry.update();
                         newState(State.STATE_MOVE_TO_CRATER);
-                    }
-                    else if (orientation == Start.Crater) {
+                    } else if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to depot");
+                        telemetry.update();
                         newState(State.STATE_MOVE_TO_DEPOT);
                     }
                     break;
 
                 case STATE_MOVE_TO_CRATER:
                     Drive.moveForward(0.75);
-                    if (now > 3) {
+                    if (now > 1) {
                         newState(State.STATE_STOP);
                     }
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
                     Drive.moveForward(0.75);
-                    if (now > 5) {
+                    if (now > 1.5) {
                         newState(State.STATE_STOP);
                     }
                     break;

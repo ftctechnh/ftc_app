@@ -20,7 +20,7 @@ public class DriveTest extends LinearOpMode {
 
         /* initialize sub-assemblies
          */
-        DriveControl Drive = new DriveControl(this);
+        DriveControl Drive = new DriveControl();
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
@@ -32,6 +32,8 @@ public class DriveTest extends LinearOpMode {
 
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
+
+            Drive.init(hardwareMap);
 
             egamepad1.updateEdge();
             egamepad2.updateEdge();
