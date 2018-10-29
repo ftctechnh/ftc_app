@@ -12,8 +12,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class DriveControl {
     /* Declare private class object */
-    private Telemetry telemetry = null;         /* local copy of telemetry object from opmode class */
-    private HardwareMap hardwareMap = null;     /* local copy of HardwareMap object from opmode class */
+    private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
+    private HardwareMap hardwareMap;     /* local copy of HardwareMap object from opmode class */
     private String name = "Drive Train";
 
     //initializing motors
@@ -23,7 +23,6 @@ public class DriveControl {
     private DcMotor BackLeftM;
 
     /* Declare public class object */
-    public VoltageSensor Battery = null;
 
     /* Subassembly constructor */
     public DriveControl(LinearOpMode opMode) {
@@ -34,12 +33,11 @@ public class DriveControl {
         telemetry.addLine(name + " initialize");
 
         /* Map hardware devices */
-        Battery = hardwareMap.voltageSensor.get("Expansion Hub 2");
 
         FrontRightM = hardwareMap.dcMotor.get("FrontRightM");
         FrontLeftM = hardwareMap.dcMotor.get("FrontLeftM");
         BackRightM = hardwareMap.dcMotor.get("BackRightM");
-        BackLeftM = hardwareMap.dcMotor.get(" BackLeftM");
+        BackLeftM = hardwareMap.dcMotor.get("BackLeftM");
 
         //reverses some motors
         BackLeftM.setDirection(DcMotor.Direction.REVERSE);
@@ -70,18 +68,18 @@ public class DriveControl {
 
     //setting power to turn left
     public void turnLeft(double speed) {
-        FrontRightM.setPower(-speed);
-        FrontLeftM.setPower(speed);
-        BackRightM.setPower(-speed);
-        BackLeftM.setPower(speed);
-    }
-
-    //setting power to turn right
-    public void turnRight(double speed) {
         FrontRightM.setPower(speed);
         FrontLeftM.setPower(-speed);
         BackRightM.setPower(speed);
         BackLeftM.setPower(-speed);
+    }
+
+    //setting power to turn right
+    public void turnRight(double speed) {
+        FrontRightM.setPower(-speed);
+        FrontLeftM.setPower(speed);
+        BackRightM.setPower(-speed);
+        BackLeftM.setPower(speed);
     }
 
     //setting power to 0
@@ -91,6 +89,4 @@ public class DriveControl {
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
     }
-
-
 }
