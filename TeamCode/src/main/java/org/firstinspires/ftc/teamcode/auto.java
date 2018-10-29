@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SubAssembly;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -13,7 +13,7 @@ public class auto extends LinearOpMode {
 
     /* Methods */
     DriveControl Drive = new DriveControl(this);
-    LiftControl Lift = new LiftControl(this);
+    //LiftControl Lift = new LiftControl(this);
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
@@ -76,7 +76,6 @@ public class auto extends LinearOpMode {
 
         startPosition();
 
-        //no u
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
         waitForStart();
