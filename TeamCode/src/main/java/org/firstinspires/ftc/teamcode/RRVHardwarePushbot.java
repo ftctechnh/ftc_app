@@ -66,8 +66,8 @@ public class RRVHardwarePushbot
     public static final double wheel_diameter  = 4;
     public static final int ticks_per_revolution = 1120;
     public double dt = 0.05;
-    public static double max_velocity = 30; //in and sec
-    public static double max_acceleration = 30;
+    public static double max_velocity = 10.928571428571; //in and sec
+    public static double max_acceleration = 93.57142857142857;
     public static double wheelbase_width = 13.5;
     public static final double kP_DriveForward = 0.1;
     public static final double kV_Drive        = 1/max_velocity;
@@ -92,8 +92,8 @@ public class RRVHardwarePushbot
         leftFront  = hwMap.get(DcMotor.class, "left_Front");
         rightFront = hwMap.get(DcMotor.class, "right_Front");
         rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
-        leftRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
-        leftFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
+        rightFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
         this.setLeftRight(0,0);

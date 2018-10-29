@@ -19,12 +19,12 @@ import java.util.TimerTask;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name = "Kinematic Tester", group = "MPbot")
+@TeleOp(name = "Kinematic Tester", group = "MP Bot")
 //@Disabled
 
 public class KinematicTest extends OpMode {
 
-    final double timeInterval = 0.02; // Time in seconds
+    final double timeInterval = 0.05; // Time in seconds
     /* Declare OpMode members. */
     RRVHardwarePushbot robot = new RRVHardwarePushbot(); // use the class created to define a bot's hardware
     java.util.Timer time = new Timer();
@@ -123,7 +123,7 @@ public class KinematicTest extends OpMode {
         }
 
         // Output the safe vales to the motor drives.
-        robot.setLeftRight(left, right);
+        robot.setLeftRight(1.0, 1.0);
 
         // Send telemetry message to signify robot running
         telemetry.addData("left", "%.2f", left);
