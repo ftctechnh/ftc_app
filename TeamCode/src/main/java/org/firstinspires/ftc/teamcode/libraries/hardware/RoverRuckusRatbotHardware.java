@@ -24,19 +24,19 @@ public class RoverRuckusRatbotHardware {
         br = hwMap.get(DcMotor.class, "br");
 
         fl.setDirection(DcMotor.Direction.REVERSE);
-        bl.setDirection(DcMotor.Direction.REVERSE);;
+        bl.setDirection(DcMotor.Direction.REVERSE);
 
-        fr.setDirection(DcMotor.Direction.FORWARD);;
-        br.setDirection(DcMotor.Direction.FORWARD);;
+        fr.setDirection(DcMotor.Direction.FORWARD);
+        br.setDirection(DcMotor.Direction.FORWARD);
 
         fl.setPower(0);
         bl.setPower(0);
         fr.setPower(0);
         br.setPower(0);
 
-        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }

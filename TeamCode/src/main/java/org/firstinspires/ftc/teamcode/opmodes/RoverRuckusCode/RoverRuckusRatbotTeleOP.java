@@ -13,14 +13,24 @@ import org.firstinspires.ftc.teamcode.libraries.hardware.RoverRuckusRatbotHardwa
 public class RoverRuckusRatbotTeleOP extends OpMode{
     RoverRuckusRatbotHardware robot =  new RoverRuckusRatbotHardware();
     double left, right;
+    double speedFactor = 0.5;
 
+    @Override
     public void init() {
         robot.init(hardwareMap);
     }
 
+    @Override
     public void loop() {
-        left = (-1)* Math.pow(gamepad1.left_stick_y, 3);
-        right = (-1)* Math.pow(gamepad1.right_stick_y, 3);
+        if(gamepad1.left_bumper && !gamepad1.right_bumper){
+            speedFactor = 1; }
+        else if(gamepad1.right_bumper && !gamepad1.left_bumper){
+            speedFactor = 0.25; }
+        else if(!gamepad1.right_bumper && !gamepad1.left_bumper){
+            speedFactor = 0.5; }
+
+        left = (-1)* Math.pow(gamepad1.left_stick_y, 3) * speedFactor;
+        right = (-1)* Math.pow(gamepad1.right_stick_y, 3) * speedFactor;
 
         robot.fl.setPower(left);
         robot.bl.setPower(left);
@@ -28,6 +38,8 @@ public class RoverRuckusRatbotTeleOP extends OpMode{
         robot.br.setPower(right);
 
         telemetry.addData("gamepad_1", gamepad1);
-        telemetry.addData("gamepad_2", gamepad2);
+        telemetry.addData("Speed Factor", speedFactor);
+        telemetry.addData("Left", left);
+        telemetry.addData("Right", right);
     }
 }
