@@ -282,7 +282,7 @@ public class AutoLib {
         int mEncoderCount;      // target encoder count
         int mState;             // internal state machine state
         boolean mStop;          // stop motor when count is reached
-        double lastEncoder;
+        int lastEncoder;
         OpMode mMode;
 
         public EncoderMotorStep(DcMotor motor, double power, int count, boolean stop) {
@@ -315,14 +315,17 @@ public class AutoLib {
 
             // we need a little state machine to make the encoders happy
             if (firstLoopCall()) {
+                mMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                mMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 mMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                 lastEncoder = mMotor.getCurrentPosition();
                 mMotor.setPower(mPower);
+                mMotor.setTargetPosition(lastEncoder + mEncoderCount);
                 mState++;
             }
 
-            // the rest of the time, just update power and check to see if we're done
-            done = Math.abs(mMotor.getCurrentPosition()-lastEncoder) >= mEncoderCount;
+            done = !mMotor.isBusy();
+
             if (done && mStop)
                 mMotor.setPower(0);     // optionally stop motor when target reached
             else
@@ -875,6 +878,14 @@ public class AutoLib {
                     this.add(new EncoderMotorStep(em, power, count, stop));
         }
 
+        public MoveByEncoderStep(DcMotor fr, DcMotor fl, double power, int count, boolean stop)
+        {
+            if (fr != null)
+                this.add(new EncoderMotorStep(fr, power, count, stop));
+            if (fl != null)
+                this.add(new EncoderMotorStep(fl, power, count, stop));
+        }
+
     }
 
 
@@ -891,6 +902,14 @@ public class AutoLib {
                 this.add(new EncoderMotorStep(fl, leftPower, leftCount, stop));
             if (bl != null)
                 this.add(new EncoderMotorStep(bl, leftPower, leftCount, stop));
+        }
+
+        public TurnByEncoderStep(DcMotor fr, DcMotor fl, double rightPower, double leftPower, int rightCount, int leftCount, boolean stop)
+        {
+            if (fr != null)
+                this.add(new EncoderMotorStep(fr, rightPower, rightCount, stop));
+            if (fl != null)
+                this.add(new EncoderMotorStep(fl, leftPower, leftCount, stop));
         }
 
     }

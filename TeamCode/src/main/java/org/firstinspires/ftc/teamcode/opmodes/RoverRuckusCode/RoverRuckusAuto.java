@@ -14,7 +14,8 @@ public class RoverRuckusAuto extends OpMode{
 
     public void init() {
         robot.init(hardwareMap);
-        mSeq.add(new AutoLib.MoveByEncoderStep(robot.fl, robot.bl, robot.fr, robot.br, 1.0f, 2000, true));
+        mSeq.add(new AutoLib.MoveByEncoderStep(robot.fl, robot.fr, 1.0f, 6000, true));
+        //mSeq.add(new AutoLib.TurnByEncoderStep(robot.fr, robot.fl, 1.0f, -1.0f, 2000, -2000, true));
     }
 
     @Override
