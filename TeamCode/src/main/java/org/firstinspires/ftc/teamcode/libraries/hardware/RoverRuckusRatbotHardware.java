@@ -8,35 +8,35 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 
 public class RoverRuckusRatbotHardware {
-    public DcMotor flDrive   = null;
-    public DcMotor rlDrive   = null;
-    public DcMotor frDrive  = null;
-    public DcMotor rrDrive   = null;
+    public DcMotor fl = null;
+    public DcMotor bl = null;
+    public DcMotor fr  = null;
+    public DcMotor br   = null;
 
     HardwareMap hwMap = null;
 
     public void init (HardwareMap ahwMap) {
         hwMap = ahwMap;
 
-        flDrive = hwMap.get(DcMotor.class, "flDrive");
-        rlDrive = hwMap.get(DcMotor.class, "rlDrive");
-        frDrive = hwMap.get(DcMotor.class, "frDrive");
-        rrDrive = hwMap.get(DcMotor.class, "rrDrive");
+        fl = hwMap.get(DcMotor.class, "fl");
+        bl = hwMap.get(DcMotor.class, "bl");
+        fr = hwMap.get(DcMotor.class, "fr");
+        br = hwMap.get(DcMotor.class, "br");
 
-        flDrive.setDirection(DcMotor.Direction.REVERSE);
-        rlDrive.setDirection(DcMotor.Direction.REVERSE);;
+        fl.setDirection(DcMotor.Direction.REVERSE);
+        bl.setDirection(DcMotor.Direction.REVERSE);;
 
-        frDrive.setDirection(DcMotor.Direction.FORWARD);;
-        rrDrive.setDirection(DcMotor.Direction.FORWARD);;
+        fr.setDirection(DcMotor.Direction.FORWARD);;
+        br.setDirection(DcMotor.Direction.FORWARD);;
 
-        flDrive.setPower(0);
-        rlDrive.setPower(0);
-        frDrive.setPower(0);
-        rrDrive.setPower(0);
+        fl.setPower(0);
+        bl.setPower(0);
+        fr.setPower(0);
+        br.setPower(0);
 
-        flDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rlDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        frDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rrDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 }
