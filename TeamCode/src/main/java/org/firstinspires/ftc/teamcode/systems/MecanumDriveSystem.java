@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.systems;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 import org.firstinspires.ftc.teamcode.components.scale.ExponentialRamp;
 import org.firstinspires.ftc.teamcode.components.scale.IScale;
 import org.firstinspires.ftc.teamcode.components.scale.LinearScale;
@@ -19,10 +21,12 @@ import java.util.List;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel {
 
-    private static final double TICKS_TO_INCHES = 100;
+    private ConfigParser config;
+
+    private double TICKS_TO_INCHES;
     private final IScale JOYSTICK_SCALE = new LinearScale(0.62, 0);
     private static double TURN_RAMP_POWER_CUTOFF = 0.1;
-    private static double RAMP_POWER_CUTOFF = 0.1;
+    private static double RAMP_POWER_CUTOFF;
 
     public IMUSystem imuSystem;
 
@@ -33,6 +37,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
 
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
+
+        this.config = new ConfigParser("Testy.omc");
+        TICKS_TO_INCHES = config.getInt("ticksInInch");
+        RAMP_POWER_CUTOFF = config.getDouble("rampPowerCutoff");
 
         telem("about to start imu");
         imuSystem = new IMUSystem(opMode);
@@ -138,47 +146,48 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         mecanumDriveXY(x, y);
     }
 
-    public void driveToPositionInches(double ticks, double power) {
-        telemetry.addLine("BR motor position pre stopAnd: " + motorBackRight.getCurrentPosition());
-        telemetry.update();
-        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        telemetry.addLine("BR motor position post stopAnd: " + motorBackRight.getCurrentPosition());
-        telemetry.update();
-        telemetry.addLine("runmode post stopAndReset: " + motorBackRight.getMode());
-        telemetry.update();
-        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        telemetry.addLine("runmode post toPosition: " + motorBackRight.getMode());
-        telemetry.update();
+    public void driveToPositionInches(int inches, double power) {
+        int ticks = (int) inchesToTicks(inches);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
+
+        motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
+        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() + ticks);
+        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition() + ticks);
+
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF),
+                new Point((ticks / config.getInt("rampStartDivisor")), power));
+
+        double adjustedPower = Range.clip(power, -1.0, 1.0);
+
+        motorBackRight.setPower(adjustedPower);
+        motorBackLeft.setPower(adjustedPower);
+        motorFrontLeft.setPower(adjustedPower);
+        motorFrontRight.setPower(adjustedPower);
+
+        while (motorFrontLeft.isBusy() ||
+                motorFrontRight.isBusy() ||
+                motorBackRight.isBusy() ||
+                motorBackLeft.isBusy()) {
+            int distance = getMinDistanceFromTarget();
 
 
-        ////////////
-        // Ramp the power from power to RAMP_POWER_CUTOFF from (ticks / 10) (changed from rampLength) to 0
-        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks, power));
-
-        telemetry.addLine("BR position pre setPos: " + motorBackRight.getCurrentPosition());
-        telemetry.update();
-        telemetry.addLine("setting target positio: " + (int) ticks);
-        telemetry.update();
-        setTargetPosition((int) ticks);
-        telemetry.addLine("post setPos BR target position set to: " + motorBackRight.getTargetPosition());
-        telemetry.update();
-        telemetry.addLine("BR pos post setPos: " + motorBackRight.getCurrentPosition());
-        telemetry.update();
-
-
-        setPower(power);
-        powerItem.setValue(power);
-        telemetry.addLine("set powery boy to: " + power);
-        telemetry.update();
-
-        boolean meep = false;
-        meep = anyMotorsBusy();
-        telemetry.addLine("anymotorsBusy(): " + meep);
-        telemetry.update();
-
-        while (anyMotorsBusy()) {
-            int distance = getDistanceFromTarget();
-            telemetry.addLine("targetPostition: " + getDistanceFromTarget());
+            if (distance < config.getInt("tolerance")) {
+                break;
+            }
 
             telemetry.addLine("targetPos motorFL: " + this.motorFrontLeft.getTargetPosition());
             telemetry.addLine("targetPos motorFR: " + this.motorFrontRight.getTargetPosition());
@@ -189,10 +198,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             telemetry.addLine("currentPos motorFR: " + this.motorFrontRight.getCurrentPosition());
             telemetry.addLine("currentPos motorBL: " + this.motorBackLeft.getCurrentPosition());
             telemetry.addLine("currentPos motorBR: " + this.motorBackRight.getCurrentPosition());
-            telemetry.update();
-            // ramp assumes the distance away from the target is positive,
-            // so we make it positive here and account for the direction when
-            // the motor power is set.
+
             double direction = 1.0;
             if (distance < 0) {
                 distance = -distance;
@@ -200,45 +206,45 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             }
 
             double scaledPower = ramp.scaleX(distance);
-
+            telemetry.addLine("power: " + scaledPower);
             setPower(direction * scaledPower);
             telemetry.update();
         }
-        setPower(0);
-        telemetry.update();
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
     }
 
-    private void driveToPos(double ticks, double power) {
-        setRunMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        setPower(0);
+    private int  getMinDistanceFromTarget() {
+        int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
+        d = min(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
+        d = min(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
+        d = min(d, this.motorBackRight.getTargetPosition() - this.motorBackRight.getCurrentPosition());
+        distanceItem.setValue(d);
+        return d;
+    }
 
-        setTargetPosition((int) ticks);
-        setPower(power);
+    private double ticksToInches(int ticks) {
+        return ticks / TICKS_TO_INCHES;
+    }
 
-        Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF), new Point(ticks, power));
+    private double inchesToTicks(int ticks) {
+        return ticks * TICKS_TO_INCHES;
+    }
 
-        while (anyMotorsBusy()) {
-            int distance = getDistanceFromTarget();
 
-            double direction = 1.0;
-            if (distance < 0) {
-                distance = -distance;
-                direction = -1.0;
-            }
-
-            double scaledPower = ramp.scaleX(distance);
-
-            setPower(direction * scaledPower);
-            telemetry.update();
+    private int min(int d1, int d2) {
+        if (d1 < d2) {
+            return d1;
+        } else {
+            return d2;
         }
-
-        setPower(0);
     }
 
     // I changed which distance the motors standardize to from the min to the max
     private int getDistanceFromTarget() {
-        synchDistances(); // getDistanceFromTarget should be redundant with this method
+        //synchDistances(); // getDistanceFromTarget should be redundant with this method
         int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
         d = max(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
         d = max(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
@@ -253,16 +259,16 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         d = max(d, this.motorBackLeft.getCurrentPosition());
         d = max(d, this.motorBackRight.getCurrentPosition());
         if (this.motorBackLeft.getCurrentPosition() != d) {
-            this.motorBackLeft.setTargetPosition(d + (d - this.motorBackLeft.getCurrentPosition()));
+            this.motorBackLeft.setTargetPosition(motorBackLeft.getTargetPosition() + (d - this.motorBackLeft.getCurrentPosition()));
         }
         if (this.motorBackRight.getCurrentPosition() != d) {
-            this.motorBackRight.setTargetPosition(d + (d - this.motorBackRight.getCurrentPosition()));
+            this.motorBackRight.setTargetPosition(motorBackRight.getTargetPosition() + (d - this.motorBackRight.getCurrentPosition()));
         }
         if (this.motorFrontLeft.getCurrentPosition() != d) {
-            this.motorFrontLeft.setTargetPosition(d + (d - this.motorFrontLeft.getCurrentPosition()));
+            this.motorFrontLeft.setTargetPosition(motorFrontLeft.getTargetPosition() + (d - this.motorFrontLeft.getCurrentPosition()));
         }
         if (this.motorFrontRight.getCurrentPosition() != d) {
-            this.motorFrontRight.setTargetPosition(d + (d - this.motorFrontRight.getCurrentPosition()));
+            this.motorFrontRight.setTargetPosition(motorFrontRight.getTargetPosition() + (d - this.motorFrontRight.getCurrentPosition()));
         }
     }
 

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 public abstract class BaseAutonomousOpMode extends LinearOpMode
 {
-    //public ConfigParser config;
+    // ConfigParser config;
     public MecanumDriveSystem driveSystem;
     public IMUSystem imuSystem;
     //public EyeSystem eye;
