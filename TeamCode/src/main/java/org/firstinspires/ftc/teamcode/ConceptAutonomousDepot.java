@@ -31,7 +31,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
         walle.stopDriveMotors();
 
         //drop marker into depot
-        walle.pivot_IMU(-60f);
+        walle.pivot_IMU(120f);
         wallHug();
     }
 
