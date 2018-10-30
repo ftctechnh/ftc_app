@@ -160,7 +160,8 @@ public class MonsieurMallahNavigation extends OpMode {
     //Game State
     private Team team;
     private StartingPosition position;
-    private boolean graveError;
+    private Status robotStatus;
+
 
     // Hack stuff.
     private boolean useGyroscope = true;
@@ -194,7 +195,7 @@ public class MonsieurMallahNavigation extends OpMode {
         //init. Game State
          team = Team.Unknown;
         position = StartingPosition.Unknown;
-        graveError = false;
+        robotStatus = Status.OK;
 
         // Initialize the motors.
         if (useMotors) {
@@ -345,10 +346,9 @@ public class MonsieurMallahNavigation extends OpMode {
         //
       if (team == Team.Unknown){
           figureoutTeam();
-         // if (team == Team.Unknown){
-              //graveError = true;
-              //return;
-         // }
+          if (team == Team.Unknown){
+              robotStatus = Status.Error;
+          }
       }
 
 
@@ -549,6 +549,10 @@ public class MonsieurMallahNavigation extends OpMode {
          return  180 - Math.abs(Math.abs(currentAngle - angletoTarget) - 180);
      }
 
+     enum Status {
+        OK,
+        Error
+     }
 
     enum StartingPosition {
         Unknown,
