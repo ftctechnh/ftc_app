@@ -16,79 +16,83 @@ public class ConceptAutonomousDepot extends LinearOpMode
         waitForStart();
 
         // have servos move robot down to the ground
-        walle.driveStraight_In(36, .4f);
+
+       /* walle.driveStraight_In(36, .4f);
         walle.stopDriveMotors();
         sleep(500);
 
-        while (walle.getDistFromFront_In() > 24 && walle.getDistFromRight_In() > 24)
+        while (walle.getDistFromFront_In() > 16 && walle.getDistFromRight_In() > 16)
         {
             telemetry.addData("leftdist", walle.getDistFromFront_In());
             telemetry.addData("righdist", walle.getDistFromRight_In());
             telemetry.update();
 
-            walle.driveMotorsAuto(.2f, .4f);
+            walle.driveMotorsAuto(.4f, .4f);
         }
         walle.stopDriveMotors();
 
-        //drop marker into depot.
-        walle.pivot_IMU(120f);
-        wallHug();
-    }
+        //drop marker into depot
+        */
+        walle.pivot(120);
 
-    public void wallHug()
-    {
-        final int CENTER = 0;
-        final int RIGHT = -1;
-        final int LEFT = 1;
+        float thetaDeg;
+        double initialD, finalD;
+        boolean isInCenter = false;
+        float distToTravel = 12;
 
-        int currentDirection = CENTER;
+        initialD = walle.getDistFromRight_In();
+        walle.driveStraight_In(distToTravel);
+        finalD = walle.getDistFromRight_In();
+        thetaDeg = (float) ((Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI);
 
+        walle.pivot(-thetaDeg);
         while (walle.getDistFromFront_In() > 18)
         {
-            sleep(300);
-            telemetry.addData("front", walle.getDistFromFront_In());
-            telemetry.addData("right", walle.getDistFromRight_In());
+            while (!gamepad1.a){}
+            sleep(336);
+            initialD = walle.getDistFromRight_In();
 
-            if (walle.getDistFromRight_In() > 7)
+            telemetry.addData("Distance = ", initialD);
+            if (initialD < 4)
             {
-                if (currentDirection != RIGHT)
+                telemetry.addData("I'm in the <4 Case!", null);
+                walle.pivot(10);
+                walle.driveMotorsAuto(.16f,.16f);
+                while (walle.getDistFromRight_In() < 5)
                 {
-                    walle.pivot_IMU(-10);
-                    currentDirection = RIGHT;
-                }
 
-                walle.driveStraight_In(8, .75);
-            } else if (walle.getDistFromRight_In() < 3)
-            {
-                if (currentDirection != LEFT)
-                {
-                    walle.pivot_IMU(10);
-                    currentDirection = LEFT;
                 }
-                walle.driveStraight_In(8, .75);
-            } else
-            {
-                walle.driveStraight_In(8, .75);
+                walle.stopAllMotors();
+                walle.pivot(-10);
             }
-
-            if (currentDirection != CENTER)
+            else if (initialD > 7)
             {
-                if (currentDirection == LEFT && walle.getDistFromRight_In() > 3 / Math.cos(.26))
+                telemetry.addData("I'm in the >7 Case!", null);
+                walle.pivot(-10);
+                //walle.driveStraight_In(4);
+
+                walle.driveMotorsAuto(.16f,.16f);
+                while (walle.getDistFromRight_In() > 5)
                 {
-                    walle.pivot_IMU(-10);
-                    currentDirection = CENTER;
-                } else if (currentDirection == RIGHT && walle.getDistFromRight_In() < 7 / Math.cos(.26))
-                {
-                    walle.pivot_IMU(10);
-                    currentDirection = CENTER;
+
                 }
-                telemetry.addData("Current direction is center", null);
-            } else
-            {
-                walle.driveStraight_In(4, .75);
-            }
+                walle.stopAllMotors();
 
+                walle.pivot(10);
+            }
+            else
+            {
+                telemetry.addData("I'm in the default Case!", null);
+                walle.driveStraight_In(distToTravel);
+            }
             telemetry.update();
+        }
+
+        telemetry.addData("Stopped", null);
+        telemetry.update();
+        while (!isStopRequested())
+        {
+
         }
     }
 }
