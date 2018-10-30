@@ -3,7 +3,6 @@ package teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -19,15 +18,27 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
     private DcMotor ArmMotor; //motor 2
     private DcMotor HangMotor; //motor 3
 
-    private Servo ArmServoBottom;
-    private Servo ArmServoTop;
+    private Servo ArmServoElbow;
+    private Servo ArmServoWrist;
     private Servo GrabberServo;
 
     //establishes and sets starting motor positions
     int armInitialPosition = 0; //guessed limit
-    double armMaximumPosition = 600; //guessed limit
+    int armMaximumPosition = 600; //guessed limit
+
+    final double TICKS_PER_DEGREE = 4.67;
 
     int armPosition;
+
+    boolean leftGrabberOpen;
+    boolean rightGrabberOpen;
+
+    double wristTimer;
+    double grabberTimer;
+
+    double delayMS = 100;
+
+    public enum quickArmSet { deposit, hang, pickUp, }
 
 
     @Override
@@ -119,17 +130,17 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
             if (gamepad1.y) {
 
                 //Goes to top position and length
-                quickArm("top");
+                quickArm(quickArmSet.deposit);
 
             }else if (gamepad1.b) {
 
                 //Goes to hang position and length
-                quickArm("hang");
+                quickArm(quickArmSet.hang);
 
             }else if (gamepad1.a) {
 
                 //Goes to movement position and hang
-                quickArm("pickUp");
+                quickArm(quickArmSet.pickUp);
 
             }
 
@@ -139,12 +150,12 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
                 //Moves the arm up until the d-pad is changed/released or the arm hits the upper
                 // limit
-                while(gamepad1.dpad_up && (this.ArmServoTop.getPosition()
-                        + this.ArmServoBottom.getPosition() < 1)){
+                while(gamepad1.dpad_up && (this.ArmServoWrist.getPosition()
+                        + this.ArmServoElbow.getPosition() < 1)){
 
 
-                    ArmServoTop.setPosition(this.ArmServoTop.getPosition() + 0.05);
-                    ArmServoBottom.setPosition(this.ArmServoBottom.getPosition() + 0.05);
+                    ArmServoWrist.setPosition(this.ArmServoWrist.getPosition() + 0.05);
+                    ArmServoElbow.setPosition(this.ArmServoElbow.getPosition() + 0.05);
 
 
                 }
@@ -153,12 +164,12 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
                 //Moves the arm down until the d-pad is changed/released or the arm hit the lower
                 // limit
-                while(gamepad1.dpad_down && (this.ArmServoTop.getPosition()
-                        + this.ArmServoBottom.getPosition() > -1)){
+                while(gamepad1.dpad_down && (this.ArmServoWrist.getPosition()
+                        + this.ArmServoElbow.getPosition() > -1)){
 
 
-                    ArmServoTop.setPosition(this.ArmServoTop.getPosition() - 0.05);
-                    ArmServoBottom.setPosition(this.ArmServoBottom.getPosition() - 0.05);
+                    ArmServoWrist.setPosition(this.ArmServoWrist.getPosition() - 0.05);
+                    ArmServoElbow.setPosition(this.ArmServoElbow.getPosition() - 0.05);
 
 
                 }
@@ -203,8 +214,8 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
         this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
         this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
-        this.ArmServoTop = hardwareMap.get (Servo.class, "ArmServoTop");
-        this.ArmServoBottom = hardwareMap.get (Servo.class, "ArmServoBottom");
+        this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
+        this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
         this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
 
 
@@ -214,8 +225,8 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         ArmMotor.setDirection(DcMotor.Direction.FORWARD);
         HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        ArmServoBottom.setDirection(Servo.Direction.FORWARD);
-        ArmServoTop.setDirection(Servo.Direction.FORWARD);
+        ArmServoElbow.setDirection(Servo.Direction.FORWARD);
+        ArmServoWrist.setDirection(Servo.Direction.FORWARD);
 
         GrabberServo.setDirection(Servo.Direction.FORWARD);
 
@@ -224,8 +235,13 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         //Sets arm motors to work with position
         ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //Sets grabber servos to open
-        this.GrabberServo.setPosition(0);
+        //Sets drive motors to work without position
+        RightDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+        //Sets grabber servos to closed
+        this.GrabberServo.setPosition(0.5);
 
         //Gets the current arm motor positions so driver can make sure motors are properly
         // calibrated.
@@ -237,39 +253,38 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         telemetry.update();
     }
 
-    public void quickArm(String position){
+    public void quickArm(quickArmSet position){
 
         //Sets motor to work with position
         ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Goes to specified position and length
-        if(position == "deposit"){
-
-            ArmServoTop.setPosition(1);
-            ArmServoBottom.setPosition(1);
-
-            ArmMotor.setTargetPosition(90);
-            ArmMotor.setPower(1.0);
-
-        }
-
-        else if(position == "hang"){
-
-            ArmServoTop.setPosition(0.75);
-            ArmServoBottom.setPosition(0.75);
-
-            ArmMotor.setTargetPosition(75);
-            ArmMotor.setPower(1.0);
+        if(position == quickArmSet.deposit){
+            //arm is vertical
+            ArmServoWrist.setPosition(0);
+            ArmServoElbow.setPosition(0.5);
+            ArmMotor.setTargetPosition(armMaximumPosition);
+            ArmMotor.setPower(0.5);
 
         }
 
-        else if(position == "pickUp"){
-
-            ArmServoTop.setPosition(0);
-            ArmServoBottom.setPosition(0);
+        else if(position == quickArmSet.hang){
+            // arm is retracted onto itself
+            ArmServoWrist.setPosition(0.9);
+            ArmServoElbow.setPosition(0.9);
 
             ArmMotor.setTargetPosition(0);
-            ArmMotor.setPower(1.0);
+            ArmMotor.setPower(0.5);
+
+        }
+
+        else if(position == quickArmSet.pickUp){
+            // arm is extended and pointed towards the ground
+            ArmServoWrist.setPosition(0);
+            ArmServoElbow.setPosition(0.5);
+
+            ArmMotor.setTargetPosition(0);
+            ArmMotor.setPower(0.5);
 
         }
 
