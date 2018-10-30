@@ -95,8 +95,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@Autonomous(name="Bully Flaka bakanakakakaka!!!!!!!!!!!!(ChaChaCha)", group="MonsieurMallah")
-public class BullRun2 extends OpMode {
+@Autonomous(name="Bull...Bull...Bull...RUNNNN!!!! (4 wheel drive)", group="MonsieurMallah")
+public class BullRun4 extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -114,14 +114,15 @@ public class BullRun2 extends OpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     // Motors connected to the hub.
-    private DcMotor motorLeft;
-    private DcMotor motorRight;
+    private DcMotor motorBackLeft;
+    private DcMotor motorBackRight;
+    private DcMotor motorFrontLeft;
+    private DcMotor motorFrontRight;
 
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useNavigation = true;
-
     private boolean madeTheRun = false;
     /**
      * Code to run ONCE when the driver hits INIT
@@ -131,17 +132,24 @@ public class BullRun2 extends OpMode {
 
         // Initialize the motors.
         if (useMotors) {
-            motorLeft = hardwareMap.get(DcMotor.class, "motor0");
-            motorRight = hardwareMap.get(DcMotor.class, "motor1");
+            motorBackLeft = hardwareMap.get(DcMotor.class, "motor0");
+            motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
+            motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
+            motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorRight.setDirection(DcMotor.Direction.FORWARD);
+            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+            motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+            motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+
 
             if (useEncoders) {
-                motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
                 // NOTE: only use RUN_IUSING_ENCODER when you want to run a certain amount of spins;
                 // running it like this made the right motor run slower than the left one when using
@@ -149,9 +157,10 @@ public class BullRun2 extends OpMode {
                 /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
 
-                motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
+                motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }   motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 
@@ -216,26 +225,34 @@ public class BullRun2 extends OpMode {
 
     public void encoderDrive(double speed,
                              double leftInches, double rightInches) {
-        int newLeftTarget;
-        int newRightTarget;
+        int newLeftBackTarget;
+        int newRightBackTarget;
 
         // Determine new target position, and pass to motor controller
-        newLeftTarget = motorRight.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = motorLeft.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        motorRight.setTargetPosition(newLeftTarget);
-        motorLeft.setTargetPosition(newRightTarget);
+        newLeftBackTarget = motorBackRight.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+        newRightBackTarget = motorBackLeft.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+        motorBackRight.setTargetPosition(newLeftBackTarget);
+        motorBackLeft.setTargetPosition(newRightBackTarget);
+        motorFrontRight.setTargetPosition(newLeftBackTarget);
+        motorFrontLeft.setTargetPosition(newRightBackTarget);
+
+
         /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
 
         // Turn On RUN_TO_POSITION
-        motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         // reset the timeout time and start motion.
         runtime.reset();
-        motorRight.setPower(Math.abs(speed));
-        motorLeft.setPower(Math.abs(speed));
-
+        motorBackRight.setPower(Math.abs(speed));
+        motorBackLeft.setPower(Math.abs(speed));
+        motorFrontRight.setPower(Math.abs(speed));
+        motorFrontLeft.setPower(Math.abs(speed));
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
         // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -244,25 +261,30 @@ public class BullRun2 extends OpMode {
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
         ElapsedTime motorOnTime = new ElapsedTime();
         while ((motorOnTime.seconds() < 30) &&
-                (motorRight.isBusy() && motorLeft.isBusy())) {
+                (motorBackRight.isBusy() && motorBackLeft.isBusy())) {
 
             // Display it for the driver.
             telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
             telemetry.addData("Path2", "Running at %7d :%7d",
-                    motorRight.getCurrentPosition(),
-                    motorLeft.getCurrentPosition());
+                    motorBackRight.getCurrentPosition(),
+                    motorBackLeft.getCurrentPosition());
             telemetry.update();
             sleep(100);
         }
 
         // Stop all motion;
-        motorRight.setPower(0);
-        motorLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorBackLeft.setPower(0);
+        motorFrontRight.setPower(0);
+        motorFrontLeft.setPower(0);
+
 
         // Turn off RUN_TO_POSITION
-        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
+        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+}
 
 
     public final void sleep(long milliseconds) {
@@ -276,15 +298,19 @@ public class BullRun2 extends OpMode {
 
     //tested to turn aprox. ten to twelve degrees! (Flynn did this completely(No poppa))
     void turnLeft() {
-        motorLeft.setPower(-1.0);
-        motorRight.setPower(1.0);
+        motorBackLeft.setPower(-1.0);
+        motorBackRight.setPower(1.0);
+        motorFrontRight.setPower(1.0);
+        motorFrontLeft.setPower(-1.0);
         sleep(2000 / 45);
     }
 
     //tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
     void turnRight() {
-        motorLeft.setPower(1.0);
-        motorRight.setPower(-1.0);
+        motorBackLeft.setPower(1.0);
+        motorBackRight.setPower(-1.0);
+        motorFrontRight.setPower(-1.0);
+        motorFrontLeft.setPower(1.0);
         sleep(2000/45);
     }
 }
