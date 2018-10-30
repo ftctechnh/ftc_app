@@ -31,7 +31,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.chassis.*;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -54,8 +54,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 
-@TeleOp(name="Auto Test", group ="Autonomous")
-public class BestAutoNA extends LinearOpMode {
+@Autonomous(name="Encoder Auto Test", group = "Autonomous")
+public class EncoderAutoTest extends LinearOpMode {
     private Robot robot = new Robot();
     public void runOpMode() throws InterruptedException {
         telemetry.addData("Status", "waiting for imu to init");
@@ -67,7 +67,7 @@ public class BestAutoNA extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
         waitForStart();
-        robot.moveTicks(500, .5, 5000);
+        robot.moveTicks(500, .3, 5000);
         robot.rotate(40, .5, 2500);
     }
 }
