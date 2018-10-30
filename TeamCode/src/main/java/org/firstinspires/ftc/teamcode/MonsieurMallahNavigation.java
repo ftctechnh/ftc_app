@@ -350,6 +350,8 @@ public class MonsieurMallahNavigation extends OpMode {
               //return;
          // }
       }
+        telemetry.addData("Team", team.name());
+        telemetry.addData("StartPos", position.name());
 
 
         if (gyroAngleCalibrated == false){
@@ -552,10 +554,10 @@ public class MonsieurMallahNavigation extends OpMode {
 
     enum StartingPosition {
         Unknown,
-        Position_A,
-        Position_B,
-        Position_C,
-        Position_D
+        RedCrater,
+        BlueCrater,
+        RedSquare,
+        BlueSquare
     };
 
     enum Team {
@@ -653,18 +655,18 @@ public class MonsieurMallahNavigation extends OpMode {
         // Which starting position am I in?
         StartingPosition position;
         if((x>0) && (y>0)){
-            position = StartingPosition.Position_A;
+            position = StartingPosition.RedCrater;
         }else if((x>0) && (y<0)) {
-            position = StartingPosition.Position_D;
+            position = StartingPosition.BlueSquare;
         }else if((x<0) && (y>0)) {
-            position = StartingPosition.Position_B;
+            position = StartingPosition.RedSquare;
         }else {
-            position = StartingPosition.Position_C;
+            position = StartingPosition.BlueCrater;
 
         }
 
         // Which team am i on?
-        if ((position == StartingPosition.Position_D) || (position == StartingPosition.Position_C))
+        if ((position == StartingPosition.RedCrater) || (position == StartingPosition.RedSquare))
         {
             team = Team.TeamRed;
         }
@@ -672,8 +674,6 @@ public class MonsieurMallahNavigation extends OpMode {
         {
             team = Team.TeamBlue;
         }
-        telemetry.addData("team", team.name());
-
     }
 
 
