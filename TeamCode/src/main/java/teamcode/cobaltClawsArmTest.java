@@ -35,6 +35,8 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
     double delayMS = 100;
 
+    public enum quickArmSet { deposit, hang, pickUp, }
+
     @Override
     public void runOpMode() {
 
@@ -91,17 +93,17 @@ public class cobaltClawsArmTest extends LinearOpMode{
             if (gamepad1.y) {
 
                 //Goes to top position and length
-                quickArm("deposit");
+                quickArm(quickArmSet.deposit);
 
             }else if (gamepad1.b) {
 
                 //Goes to hang position and length
-                quickArm("hang");
+                quickArm(quickArmSet.hang);
 
             }else if (gamepad1.a) {
 
                 //Goes to movement position and hang
-                quickArm("pickUp");
+                quickArm(quickArmSet.pickUp);
 
             }
 
@@ -196,13 +198,13 @@ public class cobaltClawsArmTest extends LinearOpMode{
         telemetry.update();
     }
 
-    public void quickArm(String position){
+    public void quickArm(quickArmSet position){
 
         //Sets motor to work with position
         ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Goes to specified position and length
-        if(position == "deposit"){
+        if(position == quickArmSet.deposit){
             //arm is vertical
             ArmServoWrist.setPosition(0);
             ArmServoElbow.setPosition(0.5);
@@ -211,7 +213,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
         }
 
-        else if(position == "hang"){
+        else if(position == quickArmSet.hang){
             // arm is retracted onto itself
             ArmServoWrist.setPosition(0.9);
             ArmServoElbow.setPosition(0.9);
@@ -221,7 +223,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
         }
 
-        else if(position == "pickUp"){
+        else if(position == quickArmSet.pickUp){
             // arm is extended and pointed towards the ground
             ArmServoWrist.setPosition(0);
             ArmServoElbow.setPosition(0.5);

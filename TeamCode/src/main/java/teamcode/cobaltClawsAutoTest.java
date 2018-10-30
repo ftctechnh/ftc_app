@@ -42,7 +42,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             // depot, then turns and drives into the crater.
             if(isGold()) {
 
-                goldRoute();
+                move(Direction.Forward,  2200, 0.25);
+                move(Direction.Backward, 200,  0.25);
+                turn(Direction.Left,     500,  0.25);
+                move(Direction.Forward,  800,  0.25);
+                turn(Direction.Left,     270,  0.25);
+                move(Direction.Forward,  2000, 0.25);
 
                 break;
 
@@ -54,8 +59,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                 if(isGold()) {
 
-                    turn(Direction.Right,   250,  0.25);
-                    goldRoute();
+                    move(Direction.Forward, 1000, 0.25);
+                    turn(Direction.Right,   200,  0.25);
+                    move(Direction.Forward, 1200, 0.25);
+                    turn(Direction.Left,    1000, 0.25);
+                    move(Direction.Forward, 800,  0.25);
+                    turn(Direction.Left,    270,  0.25);
+                    move(Direction.Forward, 2000, 0.25);
 
                     break;
 
@@ -69,8 +79,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                     if(isGold()){
 
+                        move(Direction.Forward, 1000, 0.25);
+                        turn(Direction.Left,    200,  0.25);
+                        move(Direction.Forward, 1200, 0.25);
                         turn(Direction.Left,    250,  0.25);
-                        goldRoute();
+                        move(Direction.Forward, 800,  0.25);
+                        turn(Direction.Left,    270,  0.25);
+                        move(Direction.Forward, 2000, 0.25);
 
                         break;
 
@@ -87,7 +102,14 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             // then drives to the depot, then turns and drives into the crater.
             if(isGold()) {
 
-                silverRoute();
+                move(Direction.Forward,  1200, 0.25);
+                move(Direction.Backward, 200,  0.25);
+                turn(Direction.Left,     300,  0.25);
+                move(Direction.Forward,  1500, 0.25);
+                turn(Direction.Left,     200,  0.25);
+                move(Direction.Forward,  1750, 0.25);
+                turn(Direction.Right,    750,  0.25);
+                move(Direction.Forward,  3000, 0.25);
 
                 break;
 
@@ -99,8 +121,14 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                 if(isGold()) {
 
-                    turn(Direction.Right, 250, 0.25);
-                    silverRoute();
+                    move(Direction.Forward,  1200, 0.25);
+                    move(Direction.Backward, 200,  0.25);
+                    turn(Direction.Left,     500,  0.25);
+                    move(Direction.Forward,  1200, 0.25);
+                    turn(Direction.Left,     50,   0.25);
+                    move(Direction.Forward,  1750, 0.25);
+                    turn(Direction.Right,    750,  0.25);
+                    move(Direction.Forward,  3000, 0.25);
 
                     break;
 
@@ -114,8 +142,16 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                     if(isGold()){
 
-                        turn(Direction.Left, 250, 0.25);
-                        silverRoute();
+                        move(Direction.Forward,  1200, 0.25);
+                        move(Direction.Backward, 200,  0.25);
+                        turn(Direction.Left,     1000, 0.25);
+                        move(Direction.Forward,  400,  0.25);
+                        turn(Direction.Left,     30,   0.25);
+                        move(Direction.Forward,  1300, 0.25);
+                        turn(Direction.Left,     300,  0.25);
+                        move(Direction.Forward,  1750, 0.25);
+                        turn(Direction.Right,    750,  0.25);
+                        move(Direction.Forward,  3000, 0.25);
 
                         break;
 
@@ -249,28 +285,6 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         }
 
         return false;
-
-    }
-
-    public void goldRoute(){
-
-        move(Direction.Forward,  300,  0.25);
-        turn(Direction.Left,     500,  0.25);
-        move(Direction.Forward,  800,  0.25);
-        turn(Direction.Left,     270,  0.25);
-        move(Direction.Forward,  2000, 0.25);
-
-    }
-
-    public void silverRoute(){
-
-        move(Direction.Forward,  300,  0.25);
-        turn(Direction.Left,     300,  0.25);
-        move(Direction.Forward,  1500, 0.25);
-        turn(Direction.Left,     200,  0.25);
-        move(Direction.Forward,  1750, 0.25);
-        turn(Direction.Right,    750,  0.25);
-        move(Direction.Forward,  3000, 0.25);
 
     }
 
