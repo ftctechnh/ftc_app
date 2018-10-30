@@ -13,13 +13,14 @@ import java.text.DecimalFormat;
 
 @TeleOp(name="Rover Ruckus TeleOp")
 
+
+
 public class RoverRuckusRatbotTeleOP extends OpMode{
     RoverRuckusRatbotHardware robot =  new RoverRuckusRatbotHardware();
     double left, right;
     double speedFactor = 0.5;
     DecimalFormat printFormat = new DecimalFormat ("#.###");
     boolean brake = false;
-
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -34,10 +35,7 @@ public class RoverRuckusRatbotTeleOP extends OpMode{
         else if(!gamepad1.right_bumper && !gamepad1.left_bumper){
             speedFactor = 0.5; }
 
-        if(gamepad1.b)
-            brake = true;
-
-        if(brake == true){
+        while(gamepad1.b) {
             robot.fl.setPower(0);
             robot.bl.setPower(0);
             robot.fr.setPower(0);
