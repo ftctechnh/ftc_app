@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Hardware.controller.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.controller.Handler;
 import org.firstinspires.ftc.teamcode.opmodes.debuggers.LinearOpModeDebugger;
 import org.firstinspires.ftc.teamcode.opmodes.debuggers.TeleOpModeDebugger;
+import org.firstinspires.ftc.teamcode.systems.ArmState;
 import org.firstinspires.ftc.teamcode.systems.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.IMUSystem;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
@@ -41,6 +42,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
     public void run(){
         telemetry.addLine("dogs");
         controller1.handle();
+        armSystem.run();
 
         float rx = controller1.gamepad.right_stick_x;
         float ry = controller1.gamepad.right_stick_y;
@@ -78,7 +80,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
             {
                 telemetry.addData("Controller 1: ", controller1.a.isPressed.value());
                 telemetry.update();
-                armSystem.slideUp();
+                armSystem.addState(ArmState.WINCH_TOP);
             }
         };
 
@@ -89,20 +91,10 @@ public class TeleOpMode extends TeleOpModeDebugger {
             {
                 telemetry.addData("Controller 1: ", controller1.b.isPressed.value());
                 telemetry.update();
-                armSystem.slideDown();
+                armSystem.addState(ArmState.WINCH_BOTTOM);
             }
         };
 
-        controller1.dPadUp.pressedHandler = new Handler()
-        {
-            @Override
-            public void invoke() throws Exception
-            {
-                telemetry.addData("Controller 1: ", controller1.dPadUp.isPressed.value());
-                telemetry.update();
-                armSystem.robotUp();
-            }
-        };
         controller1.dPadDown.pressedHandler = new Handler()
         {
             @Override
@@ -110,7 +102,17 @@ public class TeleOpMode extends TeleOpModeDebugger {
             {
                 telemetry.addData("Controller 1: ", controller1.dPadDown.isPressed.value());
                 telemetry.update();
-                armSystem.robotDown();
+                armSystem.addState(ArmState.ROTATE_DOWN);
+            }
+        };
+        controller1.dPadUp.pressedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                telemetry.addData("Controller 1: ", controller1.dPadUp.isPressed.value());
+                telemetry.update();
+                armSystem.addState(ArmState.ROTATE_UP);
             }
         };
         telemetry.addData("buttons", "finished initialize");

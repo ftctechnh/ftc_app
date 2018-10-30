@@ -10,13 +10,11 @@ import org.firstinspires.ftc.teamcode.systems.logging.PhoneLogger;
 public abstract class System {
 
     protected String systemName;
-    protected LinearOpMode opMode;
     protected HardwareMap hardwareMap;
     //public ConfigParser config;
     public PhoneLogger telemetry;
 
     public System(OpMode opMode, String systemName) {
-        this.opMode = (LinearOpMode)opMode;
         this.systemName = systemName;
         this.hardwareMap = opMode.hardwareMap;
         //this.config = new ConfigParser(systemName + ".omc");
