@@ -17,7 +17,6 @@ public class Controller
 
     private float rightTriggerValue;
     private float leftTriggerValue;
-    private ConfigParser parser;
 
     public Button a;
     public Button b;

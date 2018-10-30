@@ -10,7 +10,12 @@ public abstract class TeleOpModeDebugger extends OpMode
         debugger = new Debugger();
     }
 
-    public abstract void init();
+    @Override
+    public void init() {
+
+    }
+
+    public abstract void initialize();
 
     @Override
     public void loop()

@@ -4,18 +4,13 @@ package org.firstinspires.ftc.teamcode.systems;/* Copyright (c) 2017 FIRST. All 
 
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.opmodes.debuggers.LinearOpModeDebugger;
-
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.components.Motors.DriveMotor;
 import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
 
 public class ArmSystem extends System {
@@ -25,16 +20,20 @@ public class ArmSystem extends System {
     private DigitalChannel limitBottom;
     private DcMotor motor1;
     private DcMotor motor2;
+    private DcMotor winch;
     private AnalogInput potentiometer;
 
-    double potenMax = 3.3;
-    double potenMin = 2.43;
+    private final double PotentiometerMaximum = 0.937;
+    private final double PotentiometerMinimum = 0.35;
 
-    boolean isAtTop = false;
+    private final int EncoderMaximum = 100;
+    private final int EncoderMinimum = 200;
 
-    boolean debouncing = false;
-    boolean middleIsPressed = false;
-    boolean topIsPressed = false;
+    private boolean isAtTop = false;
+
+    private boolean debouncing = false;
+    private boolean middleIsPressed = false;
+    private boolean topIsPressed = false;
 
 
     public ArmSystem(OpMode opMode) {
@@ -42,97 +41,80 @@ public class ArmSystem extends System {
         ElapsedTime time = new ElapsedTime();
         motor1 = hardwareMap.dcMotor.get( "parallelM1");
         motor2 = hardwareMap.dcMotor.get( "parallelM2");
+        winch = hardwareMap.dcMotor.get("winch");
 
         limitTop = hardwareMap.get(DigitalChannel.class, "limitTop");
         limitMiddle = hardwareMap.get(DigitalChannel.class, "limitMiddle");
-        //limitBottom = hardwareMap.get(DigitalChannel.class, "limitBot");
 
         potentiometer = hardwareMap.get(AnalogInput.class, "potentiometer");
 
         limitTop.setMode(DigitalChannel.Mode.INPUT);
         limitMiddle.setMode(DigitalChannel.Mode.INPUT);
-        //limitBottom.setMode(DigitalChannel.Mode.INPUT);
     }
 
 
 
     public void slideUp() {
-        motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        winch.setPower(0);
+        while (limitTop.getState() || limitMiddle.getState()) {
 
-        while(!limitTop.getState() && !limitMiddle.getState()) {
-            boolean hitTop = limitTop.getState();
-            boolean hitMiddle = limitMiddle.getState();
-
-            String strTop = String.valueOf(hitTop);
-            String strMiddle = String.valueOf(hitMiddle);
-
-            telemetry.log("Top", strTop);
-            telemetry.log("Middle", strMiddle);
+            telemetry.log("Top", limitTop.getState());
+            telemetry.log("Middle", limitMiddle.getState());
+            telemetry.log("Winch", winch.getCurrentPosition());
             telemetry.write();
-
-            motor1.setPower(0.1);
-            motor2.setPower(-0.1);
+            Thread.yield();
         }
-        motor1.setPower(0.0);
-        motor2.setPower(0.0);
-
+        winch.setPower(0.0);
     }
 
     public void slideDown() {
-
         boolean hitTop = limitTop.getState();
         boolean hitMiddle = limitMiddle.getState();
-
-        String strTop = String.valueOf(hitTop);
-        String strMiddle = String.valueOf(hitMiddle);
-
-        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        while(limitTop.getState() && limitMiddle.getState()) {
-
-            telemetry.log("Top", strTop);
-            telemetry.log("Middle", strMiddle);
+        motor1.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while (!limitTop.getState() || !limitMiddle.getState()) {
+            telemetry.log("Top", hitTop);
+            telemetry.log("Middle", hitMiddle);
             telemetry.write();
 
-            motor1.setPower(0.1);
-            motor2.setPower(-0.1);
+            winch.setPower(-0.5);
+            telemetry.log("Winch", winch.getCurrentPosition());
         }
-        motor1.setPower(0.0);
-        motor2.setPower(0.0);
+        winch.setPower(0);
     }
   
     public void robotUp() {
-
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int encoderMax = motor1.getCurrentPosition();
-        while(potentiometer.getVoltage() > potenMin || motor1.getCurrentPosition() < encoderMax + 1000) {
-            telemetry.log("Motor 1,2 power","yes");
-            motor1.setPower(-0.05);
-            motor2.setPower(0.05);
+        while (potentiometer.getVoltage() > PotentiometerMinimum) {
+            telemetry.log("Potentiometer", potentiometer.getVoltage());
+            telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
+            telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
+            telemetry.write();
+
+            motor1.setPower(0.3);
+            motor2.setPower(-0.3);
         }
         motor1.setPower(0.0);
         motor2.setPower(0.0);
-
     }
 
     public void robotDown(){
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor1.setPower(0.1);
-        motor2.setPower(-0.1);
-    }
+        int encoderMax = motor1.getCurrentPosition() - EncoderMinimum;
+        while (potentiometer.getVoltage() < PotentiometerMaximum) {
+            telemetry.log("Potentiometer", potentiometer.getVoltage());
+            telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
+            telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
+            telemetry.write();
 
-
-
-    public void robotDown(int encoderTicks){
-        if (!limitMiddle.getState()) {
-            motor1.setTargetPosition(encoderTicks);
-            motor2.setTargetPosition(encoderTicks);
-            motor1.setPower(-0.05);
-            motor2.setPower(0.05);
+            motor1.setPower(-0.3);
+            motor2.setPower(0.3);
         }
+        motor1.setPower(0.0);
+        motor2.setPower(0.0);
     }
 }

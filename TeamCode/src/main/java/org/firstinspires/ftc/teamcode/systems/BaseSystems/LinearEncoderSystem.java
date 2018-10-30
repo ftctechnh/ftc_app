@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.teamcode.components.scale.ExponentialRamp;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
-import org.firstinspires.ftc.teamcode.systems.LimitSensor;
+import org.firstinspires.ftc.teamcode.systems.LimitSwitch;
 
 /**
  * Created by Michael on 3/15/2018.
@@ -28,13 +28,13 @@ public abstract class LinearEncoderSystem extends LinearSystem {
     private int zero;
 
     private int currentPosition;
-    private LimitSensor maxLimitSensor;
-    private LimitSensor minLimitSensor;
+    private LimitSwitch maxLimitSensor;
+    private LimitSwitch minLimitSensor;
     private DcMotor dcMotor;
 
 
     public LinearEncoderSystem(OpMode opMode, String systemName, int maxTicks, DcMotor dcMotor,
-                               LimitSensor maxLimitSensor, LimitSensor minLimitSensor) {
+                               LimitSwitch maxLimitSensor, LimitSwitch minLimitSensor) {
         super(opMode, systemName);
 
         this.maxEncoderTicks = maxTicks;
@@ -108,10 +108,10 @@ public abstract class LinearEncoderSystem extends LinearSystem {
     }
 
     private void checkForBounds() {
-        if (maxLimitSensor.isTriggered() || currentPosition >= maxEncoderTicks) {
+        if (maxLimitSensor.isPressed() || currentPosition >= maxEncoderTicks) {
             dcMotor.setPower(0);
             regressFromLimitSensor();
-        } else if (minLimitSensor.isTriggered() || currentPosition <= 0) {
+        } else if (minLimitSensor.isPressed() || currentPosition <= 0) {
             dcMotor.setPower(0);
             regressFromLimitSensor();
         }
@@ -121,11 +121,11 @@ public abstract class LinearEncoderSystem extends LinearSystem {
         boolean topTriggered = false;
         dcMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         int startPosition = dcMotor.getCurrentPosition();
-        while (minLimitSensor.isTriggered() || maxLimitSensor.isTriggered()) {
-            if (maxLimitSensor.isTriggered()) {
+        while (minLimitSensor.isPressed() || maxLimitSensor.isPressed()) {
+            if (maxLimitSensor.isPressed()) {
                 topTriggered = true;
                 dcMotor.setPower(REGRESS_POWER);
-            } else if (minLimitSensor.isTriggered()) {
+            } else if (minLimitSensor.isPressed()) {
                 topTriggered = false;
                 dcMotor.setPower(-REGRESS_POWER);
             }
