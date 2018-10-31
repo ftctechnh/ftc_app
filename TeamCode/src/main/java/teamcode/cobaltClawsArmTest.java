@@ -21,7 +21,7 @@ public class cobaltClawsArmTest extends LinearOpMode{
 
     //establishes and sets starting motor positions
     int armInitialPosition = 0; //guessed limit
-    int armMaximumPosition = 420; //guessed limit
+    int armMaximumPosition = 840; //guessed limit
 
     final double TICKS_PER_DEGREE = 4.67;
 
@@ -139,9 +139,9 @@ public class cobaltClawsArmTest extends LinearOpMode{
                     telemetry.addData("Within range: ", (armPosition >= armInitialPosition
                             && armPosition <= armMaximumPosition));
 
-                    int verticalRightStick = (int) gamepad1.right_stick_y;
+                    int verticalRightStick = (int) -gamepad1.right_stick_y;
 
-                    ArmMotor.setTargetPosition(armPosition + verticalRightStick);
+                    ArmMotor.setTargetPosition(armPosition + verticalRightStick * 10);
                     this.ArmMotor.setPower(0.5);
                     while (ArmMotor.isBusy());
                     armPosition = this.ArmMotor.getCurrentPosition();
@@ -156,6 +156,8 @@ public class cobaltClawsArmTest extends LinearOpMode{
             //Gives stats and updates
             telemetry.addData("Status", "Running");
             telemetry.addData("Arm Position: ", armPosition);
+            telemetry.addData("Right Y Position: ", gamepad1.right_stick_y);
+
             telemetry.update();
         }
     }
@@ -208,8 +210,8 @@ public class cobaltClawsArmTest extends LinearOpMode{
             //arm is vertical
             ArmServoWrist.setPosition(0);
             ArmServoElbow.setPosition(0.5);
-            ArmMotor.setTargetPosition(armMaximumPosition);
-            ArmMotor.setPower(0.5);
+            ArmMotor.setTargetPosition(armMaximumPosition / 2);
+            ArmMotor.setPower(1.0);
 
         }
 
@@ -218,18 +220,22 @@ public class cobaltClawsArmTest extends LinearOpMode{
             ArmServoWrist.setPosition(0.9);
             ArmServoElbow.setPosition(0.9);
 
-            ArmMotor.setTargetPosition(0);
-            ArmMotor.setPower(0.5);
+            while(!(ArmServoWrist.getPosition() == 0.9)){
+
+            }
+
+            ArmMotor.setTargetPosition(420);
+            ArmMotor.setPower(1.0);
 
         }
 
         else if(position == quickArmSet.pickUp){
             // arm is extended and pointed towards the ground
-            ArmServoWrist.setPosition(0);
+            ArmServoWrist.setPosition(0.5);
             ArmServoElbow.setPosition(0.5);
 
-            ArmMotor.setTargetPosition(0);
-            ArmMotor.setPower(0.5);
+            ArmMotor.setTargetPosition(armMaximumPosition);
+            ArmMotor.setPower(1.0);
 
         }
 

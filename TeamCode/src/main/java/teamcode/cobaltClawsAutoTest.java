@@ -16,11 +16,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private DcMotor RightDriveMotor; //motor 1
 
     private DcMotor ArmMotor; //motor 2
-    private DcMotor HangMotor; //motor 3
 
-    private Servo ArmServoElbow;
-    private Servo ArmServoWrist;
-    private Servo GrabberServo;
+    private Servo ArmServoElbow; //servo 3
+    private Servo ArmServoWrist; //servo 2
+    private Servo GrabberServo; //servo 1
 
     //establishes and sets starting motor positions
     int armInitialPosition = 0; //guessed limit
@@ -201,7 +200,6 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
         this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
-        this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
         this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
         this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
         this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
@@ -213,7 +211,6 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         ArmMotor.setDirection(DcMotor.Direction.FORWARD);
-        HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
         ArmServoElbow.setDirection(Servo.Direction.FORWARD);
         ArmServoWrist.setDirection(Servo.Direction.FORWARD);
@@ -227,16 +224,18 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         //Sets grabber servos to closed
-        this.GrabberServo.setPosition(0.5);
+        //this.GrabberServo.setPosition(0);
 
         //Sets arm servos to hang position
         this.ArmServoWrist.setPosition(0.9);
         this.ArmServoElbow.setPosition(0.9);
 
         //Gives power to the arm motor
-        this.ArmMotor.setPower(0.5);
+        this.ArmMotor.setPower(1.0);
 
         //Gets the current arm motor positions so driver can make sure motors are properly
         // calibrated.

@@ -18,9 +18,9 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
     private DcMotor ArmMotor; //motor 2
     private DcMotor HangMotor; //motor 3
 
-    private Servo ArmServoElbow;
-    private Servo ArmServoWrist;
-    private Servo GrabberServo;
+    private Servo ArmServoElbow; //servo 2
+    private Servo ArmServoWrist; //servo 1
+    private Servo GrabberServo; //servo 0
 
     //establishes and sets starting motor positions
     int armInitialPosition = 0; //guessed limit
