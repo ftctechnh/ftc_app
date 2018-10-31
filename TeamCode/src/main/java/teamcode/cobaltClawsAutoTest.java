@@ -15,19 +15,19 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private DcMotor LeftDriveMotor; //motor 0
     private DcMotor RightDriveMotor; //motor 1
 
-    private DcMotor ArmMotor; //motor 2
+    //private DcMotor ArmMotor; //motor 2
     private DcMotor HangMotor; // motor 3
 
-    private Servo ArmServoElbow; //servo 3
-    private Servo ArmServoWrist; //servo 2
-    private Servo GrabberServo; //servo 1
+    //private Servo ArmServoElbow; //servo 3
+    //private Servo ArmServoWrist; //servo 2
+    //private Servo GrabberServo; //servo 1
     private Servo SensorServo;
 
     //establishes and sets starting motor positions
-    int armInitialPosition = 0; //guessed limit
-    double armMaximumPosition = 600; //guessed limit
+    //int armInitialPosition = 0; //guessed limit
+    //double armMaximumPosition = 600; //guessed limit
 
-    int armPosition;
+    //int armPosition;
 
     boolean hangArmUp;
 
@@ -213,11 +213,11 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         //giving internal hardware an external name for the app config
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
-        this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
+        //this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
         this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
-        this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
-        this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
-        this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
+        //this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
+        //this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
+        //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
         this.SensorServo = hardwareMap.get (Servo.class, "SensorServo");
 
         this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
@@ -226,24 +226,24 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         //Sets correct directions for motors and servos
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        ArmMotor.setDirection(DcMotor.Direction.FORWARD);
+        //ArmMotor.setDirection(DcMotor.Direction.FORWARD);
         HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
 
-        ArmServoElbow.setDirection(Servo.Direction.FORWARD);
-        ArmServoWrist.setDirection(Servo.Direction.FORWARD);
+        //ArmServoElbow.setDirection(Servo.Direction.FORWARD);
+        //ArmServoWrist.setDirection(Servo.Direction.FORWARD);
 
-        GrabberServo.setDirection(Servo.Direction.FORWARD);
+        //GrabberServo.setDirection(Servo.Direction.FORWARD);
 
         //Sets motors to work with position
-        ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         HangMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
@@ -253,15 +253,15 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         //this.GrabberServo.setPosition(0);
 
         //Sets arm servos to hang position
-        this.ArmServoWrist.setPosition(0.9);
-        this.ArmServoElbow.setPosition(0.9);
+        //this.ArmServoWrist.setPosition(0.9);
+        //this.ArmServoElbow.setPosition(0.9);
 
         //Gives power to the arm motor
-        this.ArmMotor.setPower(1.0);
+        //this.ArmMotor.setPower(1.0);
 
         //Gets the current arm motor positions so driver can make sure motors are properly
         // calibrated.
-        armPosition = this.ArmMotor.getCurrentPosition();
+        //armPosition = this.ArmMotor.getCurrentPosition();
 
         //Tells the driver station the arm motor positions and that the robot is ready.
         telemetry.addData("Status", "Online");

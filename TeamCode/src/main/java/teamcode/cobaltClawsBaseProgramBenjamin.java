@@ -15,32 +15,32 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor LeftDriveMotor; //motor 0
     private DcMotor RightDriveMotor; //motor 1
-    private DcMotor ArmMotor; //motor 2
+    //private DcMotor ArmMotor; //motor 2
     private DcMotor HangMotor; //motor 3
 
-    private Servo ArmServoElbow; //servo 2
-    private Servo ArmServoWrist; //servo 1
-    private Servo GrabberServo; //servo 0
+    //private Servo ArmServoElbow; //servo 2
+    //private Servo ArmServoWrist; //servo 1
+    //private Servo GrabberServo; //servo 0
 
     //establishes and sets starting motor positions
-    int armInitialPosition = 0; //guessed limit
-    int armMaximumPosition = 600; //guessed limit
+    //int armInitialPosition = 0; //guessed limit
+    //int armMaximumPosition = 600; //guessed limit
 
     final double TICKS_PER_DEGREE = 4.67;
 
-    int armPosition;
+    //int armPosition;
 
-    boolean leftGrabberOpen;
-    boolean rightGrabberOpen;
+    //boolean leftGrabberOpen;
+    //boolean rightGrabberOpen;
 
     boolean hangArmUp;
 
-    double wristTimer;
-    double grabberTimer;
+    //double wristTimer;
+    //double grabberTimer;
 
-    double delayMS = 100;
+    //double delayMS = 100;
 
-    public enum quickArmSet { deposit, hang, pickUp, }
+    //public enum quickArmSet { deposit, hang, pickUp, }
 
 
     @Override
@@ -103,7 +103,7 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
             //Arm System
 
-            if (gamepad1.left_bumper) {
+            /*if (gamepad1.left_bumper) {
 
                 //Turns the servo so that the left grabber opens, waits until the left bumper is
                 // released, and then moves back to original position
@@ -144,7 +144,7 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
                 //Goes to movement position and hang
                 quickArm(quickArmSet.pickUp);
 
-            }
+            }*/
 
             if(gamepad1.x){
 
@@ -160,7 +160,7 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
 
 
-            if (gamepad1.dpad_up) {
+            /*if (gamepad1.dpad_up) {
 
                 //Moves the arm up until the d-pad is changed/released or the arm hits the upper
                 // limit
@@ -208,14 +208,14 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
                 }
 
-            }
+            }*/
 
 
 
 
             //Gives stats and updates
             telemetry.addData("Status", "Running");
-            telemetry.addData("Arm Position", armPosition);
+            //telemetry.addData("Arm Position", armPosition);
             telemetry.update();
         }
     }
@@ -226,28 +226,28 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         //giving internal hardware an external name for the app config
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
-        this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
+        //this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
         this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
-        this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
-        this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
-        this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
+        //this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
+        //this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
+        //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
 
 
         //Sets correct directions for motors and servos
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        ArmMotor.setDirection(DcMotor.Direction.FORWARD);
+        //ArmMotor.setDirection(DcMotor.Direction.FORWARD);
         HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        ArmServoElbow.setDirection(Servo.Direction.FORWARD);
-        ArmServoWrist.setDirection(Servo.Direction.FORWARD);
+        //ArmServoElbow.setDirection(Servo.Direction.FORWARD);
+        //ArmServoWrist.setDirection(Servo.Direction.FORWARD);
 
-        GrabberServo.setDirection(Servo.Direction.FORWARD);
+        //GrabberServo.setDirection(Servo.Direction.FORWARD);
 
 
 
         //Sets arm motors to work with position
-        ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Sets drive motors to work without position
         RightDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -256,19 +256,19 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         hangArmUp = false;
 
         //Sets grabber servos to closed
-        this.GrabberServo.setPosition(0.5);
+        //this.GrabberServo.setPosition(0.5);
 
         //Gets the current arm motor positions so driver can make sure motors are properly
         // calibrated.
-        armPosition = this.ArmMotor.getCurrentPosition();
+        //armPosition = this.ArmMotor.getCurrentPosition();
 
         //Tells the driver station the arm motor positions and that the robot is ready.
         telemetry.addData("Status", "Online");
-        telemetry.addData("Arm Position: ", armPosition);
+        //telemetry.addData("Arm Position: ", armPosition);
         telemetry.update();
     }
 
-    public void quickArm(quickArmSet position){
+    /*public void quickArm(quickArmSet position){
 
         //Sets motor to work with position
         ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -308,5 +308,5 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         //Re-grabs encoder positions for future reference
         armPosition = ArmMotor.getCurrentPosition();
 
-    }
+    }*/
 }
