@@ -1,72 +1,89 @@
 package teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
  * A static-only class that handles Input from the game pad
  */
 public class GamePadInput {
+
     /**
-     * the standard drive speed multiplier when turbo mod is not active
+     * The amount that the motor at the base of the arm moves during an update.
      */
-    private static final double DEFAULT_DRIVE_SPEED_MULTIPLIER = 0.5;
-
-    public static final double ARM_SPEED = 0.0025;
-
     public static final int ARM_MOTOR_TICKS = 10;
+    /**
+     * The speed at which the arm extends.
+     */
+    public static final double ARM_EXTEND_SPEED = 1.0;
+    /**
+     * Speed of the intake servo.
+     */
+    public static final double INTAKE_SPEED = 10;
 
-    public static final double INTAKE_SPEED_MULTIPLIER = 10;
+    /**
+     * Current instance of this class in use. Singleton design.
+     */
+    private static GamePadInput instance;
 
     /**
      * the main game pad used to control the robot
      */
-    private static Gamepad gamePad;
+    private Gamepad gamePad;
     /**
-     * the current multiplier which limits the speed of the drive motors so as to prevent the robot from accelerating too fast
+     * Value representing how far the arm has extended from 0.0 (fully retracted) to 1.0 (fully extended).
      */
-    private static double driveSpeedModifier;
-    /**
-     * if the left bumper is pressed down
-     */
-    private static boolean leftBumperDown;
-    /**
-     * if turbo mode has been activated to remove speed handicaps on the motors
-     */
-    private static boolean turboActive;
+    private double armExtention;
 
-    static {
-        gamePad = ConnorRobot.instance.gamepad1;
-        driveSpeedModifier = DEFAULT_DRIVE_SPEED_MULTIPLIER;
+    public static void init() {
+        instance = new GamePadInput();
     }
 
     private GamePadInput() {
-        // not to be instantiated
+        gamePad = ConnorRobot.instance.gamepad1;
+        armExtention = 0.0;
     }
 
     /**
-     * A method to be called from a LinearOpMode repeatedly to handle game pad input
+     * A method to be called from a LinearOpMode repeatedly to handle input from the game pad
      */
     public static void update() {
-        // determines if the left bumper was pressed down this "frame" and handles it accordingly
-        if (gamePad.left_bumper) {
-            if (!leftBumperDown) {
-                // activates turbo mode if left bumper was just pressed down
-                turboActive = true;
-                driveSpeedModifier = (turboActive ? DEFAULT_DRIVE_SPEED_MULTIPLIER : 1);
-                turboActive = !turboActive;
+        if (HardwareManager.DRIVE_ENABLED) {
+            driveUpdate();
+        }
+        if (HardwareManager.ARM_ENABLED) {
+            armUpdate();
+        }
+    }
+
+    private static void armUpdate() {
+        if (instance.gamePad.a) { // extend
+            instance.armExtention += ARM_EXTEND_SPEED * ConnorRobot.MILIS_PER_TICK;
+            if (instance.armExtention > 1.0) {
+                instance.armExtention = 1.0;
             }
-        } else {
-            if (leftBumperDown) {
-                // disables turbo mode if left bumper was just released
-                leftBumperDown = false;
+        } else if (instance.gamePad.b) { // retract
+            instance.armExtention -= ARM_EXTEND_SPEED * ConnorRobot.MILIS_PER_TICK;
+            if (instance.armExtention < -1.0) {
+                instance.armExtention = -1.0;
             }
         }
-        double drive = gamePad.left_stick_y;
-        double steer = gamePad.left_stick_x;
-        double powerL = drive - steer;
+        double motorBaseRot = 0.5 * instance.armExtention;
+        double servoBasePos = 0;
+        double servoMiddlePos = 0;
+        double servoTopPos = 0;
+        HardwareManager.setArmMotorBasePosition(motorBaseRot);
+        HardwareManager.setArmServoBasePosition(servoBasePos);
+        HardwareManager.setArmServoMiddlePosition(servoMiddlePos);
+        HardwareManager.setArmServoTopPosition(servoTopPos);
+    }
 
+    /**
+     * Makes the robot drive based on input.
+     */
+    private static void driveUpdate() {
+        double drive = instance.gamePad.left_stick_y;
+        double steer = instance.gamePad.left_stick_x;
+        double powerL = drive - steer;
         // clamps the power values from -1 to 1
         if (powerL > 1.0) {
             powerL = 1.0;
@@ -74,46 +91,13 @@ public class GamePadInput {
             powerL = -1.0;
         }
         double powerR = drive + steer;
+        // clamps the power values from -1 to 1
         if (powerR > 1.0) {
             powerR = 1.0;
         } else if (powerR < -1.0) {
             powerR = -1.0;
         }
-        powerL *= driveSpeedModifier;
-        powerR *= driveSpeedModifier;
-        // HardwareManager.setDrivePower(powerL, powerR);
-
-        if (gamePad.dpad_up) {
-            HardwareManager.setArmMotorBasePosition(ARM_MOTOR_TICKS);
-        } else if (gamePad.dpad_down) {
-            HardwareManager.setArmMotorBasePosition(-ARM_MOTOR_TICKS);
-        }
-        if(gamePad.dpad_right){
-            HardwareManager.setArmServoMiddlePosition(ARM_SPEED);
-        }
-        else if(gamePad.dpad_left){
-            HardwareManager.setArmServoMiddlePosition(-ARM_SPEED);
-        }
-        if (gamePad.x) {
-            HardwareManager.setArmServoBasePosition(ARM_SPEED);
-        } else if (gamePad.a) {
-            HardwareManager.setArmServoBasePosition(-ARM_SPEED);
-        }
-        if (gamePad.y) {
-            HardwareManager.setArmServoTopPosition(ARM_SPEED);
-        } else if (gamePad.b) {
-            HardwareManager.setArmServoTopPosition(-ARM_SPEED);
-        }
-        int intakeSpeed = 0;
-        float rt = gamePad.right_trigger;
-        if (rt > 0) {
-            intakeSpeed = (int) (rt * INTAKE_SPEED_MULTIPLIER);
-        }
-        float lt = gamePad.left_trigger;
-        if (lt > 0) {
-            intakeSpeed = (int) (lt * INTAKE_SPEED_MULTIPLIER);
-        }
-       // HardwareManager.setArmServoIntakeSpeed(intakeSpeed);
+        HardwareManager.setDrivePower(powerL, powerR);
     }
 
 }

@@ -1,9 +1,10 @@
 package teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.Hardware;
 
-public class AutonomousTest extends LinearOpMode {
+@Autonomous(name = "ConnorRobotAutonomous")
+public class ConnorRobotAutonomous extends LinearOpMode {
 
     private static final long TIME_1 = 4000L;
     private static final long TIME_2 = 500L;
