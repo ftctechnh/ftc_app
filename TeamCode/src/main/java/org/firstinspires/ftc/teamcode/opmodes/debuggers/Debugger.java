@@ -27,6 +27,6 @@ public class Debugger implements IOpModeDebugger
                 i + 1
             );
         }
-        exceptionLogger.close();
+        exceptionLogger.write();
     }
 }

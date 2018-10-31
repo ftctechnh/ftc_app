@@ -14,12 +14,12 @@ public class FileLogger implements ILogger
         logWritter = new LogWritter(logFile);
     }
 
-    public void log(String name, String data, Object... args) {
-        String line = StringFormatter.format("[{0}]: {1}", name, StringFormatter.format(data, args));
+    public void log(String name, Object data, Object... args) {
+        String line = StringFormatter.format("[{0}]: {1}", name, StringFormatter.format(data.toString(), args));
         logWritter.appendLine(line);
     }
 
-    public void close() {
+    public void write() {
         logWritter.flush();
     }
 }

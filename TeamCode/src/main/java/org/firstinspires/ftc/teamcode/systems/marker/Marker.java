@@ -10,7 +10,7 @@ public class Marker extends System {
 
     public Marker(OpMode opMode) {
         super(opMode, "marker");
-        this.servo = map.servo.get("marker");
+        this.servo = hardwareMap.servo.get("marker");
     }
 
     public void place() {

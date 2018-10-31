@@ -10,7 +10,7 @@ public class Flail extends System {
 
     public Flail(OpMode opMode) {
         super (opMode,"flail");
-        flailMotor = map.dcMotor.get("flail");
+        flailMotor = hardwareMap.dcMotor.get("flail");
     }
 
     public void start() {

@@ -30,9 +30,8 @@
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -47,16 +46,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * @see <a href="http://modernroboticsinc.com/range-sensor">MR Range Sensor</a>
  */
-@TeleOp(name = "Sensor: MR range sensor", group = "Sensor")
-@Disabled   // comment out or remove this line to enable this opmode
+
+@Autonomous(name = "Sensor: MR range sensor", group = "Sensor")
 public class SensorMRRangeSensor extends LinearOpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;
+    boolean triggered = false;
 
-    @Override public void runOpMode() {
+    public void runOpMode() {
 
         // get a reference to our compass
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");
+         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "range");
 
         // wait for the start button to be pressed
         waitForStart();
@@ -67,6 +67,15 @@ public class SensorMRRangeSensor extends LinearOpMode {
             telemetry.addData("cm optical", "%.2f cm", rangeSensor.cmOptical());
             telemetry.addData("cm", "%.2f cm", rangeSensor.getDistance(DistanceUnit.CM));
             telemetry.update();
+
+            if(rangeSensor.cmOptical() < 2) {
+                triggered = true;
+                telemetry.addData("This is within 2cm", triggered);
+            } else{
+                triggered = false;
+                telemetry.addData("This is within 2cm", triggered);
+            }
+
         }
     }
 }
