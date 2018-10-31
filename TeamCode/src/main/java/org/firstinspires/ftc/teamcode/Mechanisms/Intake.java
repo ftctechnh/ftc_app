@@ -10,12 +10,14 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 @Config
 public class Intake {
     public static double FLIPPER_START = 0;
-    public static double DEPOSIT_DIST = 0;
-    public static double COLLECT_DIST = 1.0;
+    public static double DEPOSIT_DIST = 0.35;
+    public static double COLLECT_DIST = 0;
 
     public static double MAX_INTAKE_SPEED = 0.8;
     public static double MAX_PWN = 2800;
     public static double MIN_PWM = 500;
+
+    private boolean enabled;
 
     public ServoImplEx leftIntakeFlipper;
     public ServoImplEx rightIntakeFlipper;
@@ -26,11 +28,12 @@ public class Intake {
                   CRServoImplEx leftIntakeRoller, CRServoImplEx rightIntakeRoller) {
         this.leftIntakeFlipper = leftIntakeFlipper;
         this.rightIntakeFlipper = rightIntakeFlipper;
-        /*PwmControl.PwmRange newRange = new PwmControl.PwmRange(MIN_PWM, MAX_PWN);
-        this.rightIntakeFlipper.setPwmRange(newRange);
-        this.leftIntakeFlipper.setPwmRange(newRange);*/
+
         this.leftIntakeRoller = leftIntakeRoller;
         this.rightIntakeRoller = rightIntakeRoller;
+        leftIntakeFlipper.setPwmDisable();
+        rightIntakeFlipper.setPwmDisable();
+
         rightIntakeRoller.setDirection(CRServoImplEx.Direction.REVERSE);
         leftIntakeFlipper.setDirection(ServoImplEx.Direction.FORWARD);
         rightIntakeFlipper.setDirection(ServoImplEx.Direction.REVERSE);
@@ -51,8 +54,19 @@ public class Intake {
         rightIntakeFlipper.setPosition(COLLECT_DIST);
     }
 
-    public void retract() {
-        leftIntakeFlipper.setPosition(FLIPPER_START);
-        rightIntakeFlipper.setPosition(FLIPPER_START);
+    public void enableFlippers() {
+        if (!enabled) {
+            leftIntakeFlipper.setPwmEnable();
+            rightIntakeFlipper.setPwmEnable();
+            enabled = true;
+        }
+    }
+
+    public void disableFlippers() {
+        if (enabled) {
+            leftIntakeFlipper.setPwmDisable();
+            rightIntakeFlipper.setPwmDisable();
+            enabled = false;
+        }
     }
 }
