@@ -12,7 +12,12 @@ public abstract class TeleOpModeDebugger extends OpMode
 
     @Override
     public void init() {
-
+        try {
+            initialize();
+        } catch (Exception e) {
+            debugger.debug(e);
+            throw e;
+        }
     }
 
     public abstract void initialize();
