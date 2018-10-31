@@ -44,6 +44,27 @@ public class auto extends LinearOpMode {
         }
     }
 
+    //Start array
+    public void samplePosition() {
+        telemetry.addLine("Sample position?");
+        telemetry.update();
+        while (!gamepad1.dpad_down && !gamepad1.dpad_right && !gamepad1.dpad_left){
+        }
+
+        if (gamepad1.dpad_down) {
+            telemetry.addLine("Center");
+            sample = Sample.Center;
+        }
+        else if (gamepad1.dpad_right){
+            telemetry.addLine("Right");
+            sample = Sample.Right;
+        }
+        else {
+            telemetry.addLine("Left");
+            sample = Sample.Left;
+        }
+    }
+
     public void resetClock() {
         //resets the clock
         lastReset = runtime.seconds();
@@ -88,6 +109,7 @@ public class auto extends LinearOpMode {
         telemetry.addLine("Autonomous");
 
         startPosition();
+        samplePosition();
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
@@ -95,7 +117,6 @@ public class auto extends LinearOpMode {
         waitForStart();
 
         newState(State.STATE_INITIAL);
-        sample = Sample.Center;
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
 
@@ -118,10 +139,13 @@ public class auto extends LinearOpMode {
                 case STATE_MOVE_TO_CRATER:
                     if (sample == Sample.Left){
                        if (now < 0.15){
-                            Drive.turnLeft(0.5);
+                            Drive.turnLeft(0.4);
+                       }//SS increase time
+                       else if (now < 0.25){
+                           Drive.stop();
                        }
                        else if (now < 1.35) {
-                           Drive.moveForward(0.75);
+                           Drive.moveForward(0.5);
                        }
                        else {
                            newState(State.STATE_STOP);
@@ -129,10 +153,13 @@ public class auto extends LinearOpMode {
                     }
                     else if (sample == Sample.Right){
                         if (now < 0.15){
-                            Drive.turnRight(0.5);
+                            Drive.turnRight(0.4);
+                        }
+                        else if (now < 0.25){
+                            Drive.stop();
                         }
                         else if (now < 1.35) {
-                            Drive.moveForward(0.75);
+                            Drive.moveForward(0.5);
                         }
                         else {
                             newState(State.STATE_STOP);
@@ -140,7 +167,7 @@ public class auto extends LinearOpMode {
                     }
                     else {
                         if (now < 1){
-                            Drive.moveForward(0.75);
+                            Drive.moveForward(0.5);
                         }
                         else {
                             newState(State.STATE_STOP);
