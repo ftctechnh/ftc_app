@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -28,7 +26,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * Created by Rohan Mathur on 9/17/18.
  */
-public class AvesAblazeHardwarePushbot {
+public class vuforiaHardware {
 	private static final String VUFORIA_KEY = "ASre9vb/////AAABmS9qcsdgiEiVmAClC8R25wUqiedmCZI33tlr4q8OswrB3Kg7FKhhuQsUv3Ams+kaXnsjj4VxJlgsopgZOhophhcKyw6VmXIFChkIzZmaqF/PcsDLExsXycCjm/Z/LWQEdcmuNKbSEgc1sTAwKyLvWn6TK+ne1fzboxjtTmkVqu/lBopmR3qI+dtd3mjYIBiLks9WW6tW9zS4aau7fJCNYaU1NPgXfvq1CRjhWxbX+KWSTUtYuFSFUBw2zI5PzIPHaxKrIwDKewo1bOZBUwbqzmm5h0d4skXo3OC0r+1AYrMG0HJrGRpkN9U6umTlYd5oWCqvgBSVxKkOGM1PhNY5cX+sqHpbILgP+QVOFblKSV9i";
 	VuforiaLocalizer vuforia;// Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
 
@@ -66,12 +64,12 @@ public class AvesAblazeHardwarePushbot {
 	public void init(HardwareMap ahwMap) {
 
 		hwMap=ahwMap;
-		door=hwMap.get(Servo.class, "door");
+		/*door=hwMap.get(Servo.class, "door");
 		marker=hwMap.get(CRServo.class, "marker");
 
-		/*
+
 			MOTORS AT FULL POWER ALL MOVING FORWARD MOVE AT 2.618 ft/sec
-		*/
+
 
 		motor0 = hwMap.get(DcMotor.class, "motor0");
 		motor0.setDirection(DcMotor.Direction.FORWARD);
@@ -97,7 +95,7 @@ public class AvesAblazeHardwarePushbot {
 		lift2.setDirection(DcMotor.Direction.REVERSE);
 		lift2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-		startingHeight=lift1.getCurrentPosition();
+		startingHeight=lift1.getCurrentPosition();*/
 
 		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
 		VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -203,7 +201,7 @@ public class AvesAblazeHardwarePushbot {
 		 * camera is pointing to the left side of the  robot.  The rotation angles don't work if you flip the phone.
 		 *
 		 * If using the rear (High Res) camera:
-		 * We need to rotate the camera arouBACKnd it's long axis to bring the rear camera forward.
+		 * We need to rotate the camera around it's long axis to bring the rear camera forward.
 		 * This requires a negative 90 degree rotation on the Y axis
 		 *
 		 * If using the Front (Low Res) camera
@@ -234,7 +232,7 @@ public class AvesAblazeHardwarePushbot {
 
 	}
 
-
+/*
 	public  void stopMotors(){
 		motor0.setPower(0);
 		motor1.setPower(0);
@@ -310,7 +308,7 @@ public class AvesAblazeHardwarePushbot {
 			case 3: return motor3.getCurrentPosition();
 			default: return 0;
 		}
-	}
+	}*/
 	public boolean resetCoordinates(){
 		targetsRoverRuckus.activate();
 		targetVisible=false;
@@ -331,6 +329,7 @@ public class AvesAblazeHardwarePushbot {
 			}
 		return targetVisible;
 	}
+	/*
 	public void lift(String direction){
 		if(direction.equals("up")){
 			lift1.setPower(1);
@@ -373,6 +372,6 @@ public class AvesAblazeHardwarePushbot {
 		motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 		motor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-	}
+	}*/
 
 }

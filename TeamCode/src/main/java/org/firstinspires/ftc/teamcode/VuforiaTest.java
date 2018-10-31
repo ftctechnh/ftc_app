@@ -16,7 +16,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
  */
 @TeleOp(name="TestVuforia", group="Pushbot")
 public class VuforiaTest extends LinearOpMode {
-	AvesAblazeHardwarePushbot robot= new AvesAblazeHardwarePushbot();
+	vuforiaHardware robot= new vuforiaHardware();
 	public void runOpMode(){
 		robot.init(hardwareMap);
 		telemetry.addData("does this work?", "yes");
