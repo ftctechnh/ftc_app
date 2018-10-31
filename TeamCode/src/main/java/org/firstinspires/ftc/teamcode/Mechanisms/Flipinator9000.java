@@ -10,6 +10,8 @@ import com.qualcomm.hardware.lynx.commands.core.LynxGetBulkInputDataResponse;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+/* I'm sure it's only a glitch. A temporary setback. */
+
 @Config
 public class Flipinator9000 {
     public static double FLIP_kV = 0;

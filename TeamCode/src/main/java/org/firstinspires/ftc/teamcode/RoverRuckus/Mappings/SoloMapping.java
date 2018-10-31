@@ -49,7 +49,7 @@ public class SoloMapping extends ControlMapping {
     }
 
     @Override
-    public int getSpinDir() {
+    public double getSpinSpeed() {
         if (gamepad1.x && !x_down) {
 
             // X was just pressed
@@ -66,7 +66,11 @@ public class SoloMapping extends ControlMapping {
         } else if (!gamepad1.b && b_down) {
             b_down = false;
         }
-        return spinDir;
+        if (gamepad1.right_trigger > 0.15) {
+            return gamepad1.right_trigger * -0.2;
+        } else {
+            return spinDir;
+        }
     }
 
     @Override

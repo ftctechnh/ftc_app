@@ -30,7 +30,7 @@ public abstract class ControlMapping {
     public abstract double getExtendSpeed();
     public abstract int getHangDir();
 
-    public abstract int getSpinDir();
+    public abstract double getSpinSpeed();
 
     // Metric must be 0-1
     static double scaleControl(double metric, double min, double max) {

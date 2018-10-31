@@ -53,9 +53,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
             else {robot.motorArr[i].setDirection(DcMotor.Direction.REVERSE);}
         }
 
-        // Initialize servo position
-        intake.retract();
-
+        // Intake flipper servos are disabled by default
         waitForStart();
         loopTime.reset();
 
@@ -66,7 +64,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
             robot.leftFlipper.setPower(controller.armSpeed());
             robot.rightFlipper.setPower(controller.armSpeed());
 
-            intake.setIntakeSpeed(controller.getSpinDir());
+            intake.setIntakeSpeed(controller.getSpinSpeed());
 
             winch.setPower(controller.getHangDir());
             robot.linearSlide.setPower(controller.getExtendSpeed() * MAX_EXTEND_POWER);
