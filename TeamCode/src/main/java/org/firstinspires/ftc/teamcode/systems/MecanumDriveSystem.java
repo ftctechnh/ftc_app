@@ -57,10 +57,6 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
         this.motorFrontLeft.setPower(Range.clip(frontLeftPower - leftX, -1, 1));
         this.motorBackLeft.setPower(Range.clip(backLeftPower + leftX, -1, 1));
-        telemetry.log("FR", motorFrontRight.getCurrentPosition());
-        telemetry.log("BR", motorBackRight.getCurrentPosition());
-        telemetry.log("FL", motorFrontLeft.getCurrentPosition());
-        telemetry.log("BL", motorBackLeft.getCurrentPosition());
     }
 
     private float scaleJoystickValue(float joystickValue) {

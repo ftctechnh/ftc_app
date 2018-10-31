@@ -16,6 +16,13 @@ import java.util.HashSet;
 
 public class ArmSystem extends System {
 
+    /*
+       TODO:
+       - encoder values on slide to determine set positions
+       - set those positions
+       - ramp the encoder values
+     */
+
     private DigitalChannel limitTop;
     private DigitalChannel limitMiddle;
     private DigitalChannel limitBottom;
@@ -24,8 +31,9 @@ public class ArmSystem extends System {
     private DcMotor winch;
     private AnalogInput potentiometer;
 
-    private final double PotentiometerMaximum = 0.937;
-    private final double PotentiometerMinimum = 0.35;
+    private final double PotentiometerMaximum = 0.8;
+    private final double PotentiometerLatch = 0.7;
+    private final double PotentiometerMinimum = 0.1;
 
     private final int EncoderMaximum = 100;
     private final int EncoderMinimum = 200;
@@ -68,6 +76,9 @@ public class ArmSystem extends System {
         if (states.contains(ArmState.ROTATE_DOWN)) {
             robotDown();
         }
+        if (states.contains(ArmState.ROTATE_LATCH)) {
+            robotLatch();
+        }
         if (states.contains(ArmState.ROTATE_UP)) {
             robotUp();
         }
@@ -86,8 +97,8 @@ public class ArmSystem extends System {
         if (!limitTop.getState() && !limitMiddle.getState())
         {
             states.remove(ArmState.WINCH_TOP);
+            winch.setPower(0.0);
         }
-        winch.setPower(0.0);
     }
 
     public void slideDown() {
@@ -106,8 +117,8 @@ public class ArmSystem extends System {
         if (limitTop.getState() && limitMiddle.getState())
         {
             states.remove(ArmState.WINCH_BOTTOM);
+            winch.setPower(0);
         }
-        winch.setPower(0);
     }
   
     public void robotDown() {
@@ -119,16 +130,35 @@ public class ArmSystem extends System {
             telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
             telemetry.write();
 
-            motor1.setPower(0.15);
-            motor2.setPower(-0.15);
+            motor1.setPower(0.03);
+            motor2.setPower(-0.03);
         } else {
-            states.remove(ArmState.ROTATE_UP);
+            states.remove(ArmState.ROTATE_DOWN);
+            motor1.setPower(0.0);
+            motor2.setPower(0.0);
         }
-        motor1.setPower(0.0);
-        motor2.setPower(0.0);
     }
 
-    public void robotUp(){
+    public void robotLatch(){
+        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        int encoderMax = motor1.getCurrentPosition() - EncoderMinimum;
+        if (potentiometer.getVoltage() < PotentiometerLatch) {
+            telemetry.log("Potentiometer", potentiometer.getVoltage());
+            telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
+            telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
+            telemetry.write();
+
+            motor1.setPower(-0.03);
+            motor2.setPower(0.03);
+        } else {
+            states.remove(ArmState.ROTATE_LATCH);
+            motor1.setPower(0.0);
+            motor2.setPower(0.0);
+        }
+    }
+
+    public void robotUp() {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         int encoderMax = motor1.getCurrentPosition() - EncoderMinimum;
@@ -138,12 +168,12 @@ public class ArmSystem extends System {
             telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
             telemetry.write();
 
-            motor1.setPower(-0.15);
-            motor2.setPower(0.15);
+            motor1.setPower(-0.03);
+            motor2.setPower(0.03);
         } else {
-            states.remove(ArmState.ROTATE_DOWN);
+            states.remove(ArmState.ROTATE_UP);
+            motor1.setPower(0.0);
+            motor2.setPower(0.0);
         }
-        motor1.setPower(0.0);
-        motor2.setPower(0.0);
     }
 }

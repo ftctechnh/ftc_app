@@ -50,7 +50,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
         float ly = controller1.gamepad.left_stick_y;
 
         driveSystem.mecanumDrive(rx, ry, lx, ly, false);
-        telemetry.update();
     }
 
     @Override
@@ -113,6 +112,16 @@ public class TeleOpMode extends TeleOpModeDebugger {
                 telemetry.addData("Controller 1: ", controller1.dPadUp.isPressed.value());
                 telemetry.update();
                 armSystem.addState(ArmState.ROTATE_UP);
+            }
+        };
+        controller1.dPadUpShifted.pressedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                telemetry.addData("Controller 1: ", controller1.dPadUpShifted.isPressed.value());
+                telemetry.update();
+                armSystem.addState(ArmState.ROTATE_LATCH);
             }
         };
         telemetry.addData("buttons", "finished initialize");
