@@ -16,16 +16,21 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private DcMotor RightDriveMotor; //motor 1
 
     private DcMotor ArmMotor; //motor 2
+    private DcMotor HangMotor; // motor 3
 
     private Servo ArmServoElbow; //servo 3
     private Servo ArmServoWrist; //servo 2
     private Servo GrabberServo; //servo 1
+    private Servo SensorServo;
 
     //establishes and sets starting motor positions
     int armInitialPosition = 0; //guessed limit
     double armMaximumPosition = 600; //guessed limit
 
     int armPosition;
+
+    boolean hangArmUp;
+
 
     private ColorSensor colorSensor;
 
@@ -50,65 +55,67 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             //Moves the grabber wrist out of the way, then rotates the arm motor until the robot is
             //on the ground. Then moves right wheel forward to get out of hook, and positions for
             //route.
-            ArmServoWrist.setPosition(0.1);
-            ArmMotor.setTargetPosition(600);
-            ArmMotor.setPower(0.25);
+            //ArmServoWrist.setPosition(0.1);
+            //ArmMotor.setTargetPosition(600);
+            //ArmMotor.setPower(0.25);
 
-            RightDriveMotor.setTargetPosition(300);
-            LeftDriveMotor.setTargetPosition(-300);
-            RightDriveMotor.setPower(0.25);
-            LeftDriveMotor.setPower(0.25);
+            HangMotor.setTargetPosition(0);
 
-            move(Direction.Forward, 300, 0.25);
-            turn(Direction.Right,   300, 0.25);
-            turn(Direction.Left,    150, 0.25);
+            turn(Direction.Left, 400, 0.25);
+
+            move(Direction.Forward, 700, 0.25);
+
+            turn(Direction.Right, 300, 0.25);
+
+            SensorServo.setPosition(0.5);
 
 
             //GOLD TEST
 
-            //Looks at the center mineral. If the center mineral is gold, goes straight to the
-            // depot, then turns and drives into the crater.
-            //if(isGold()) {
+            move(Direction.Forward, 200, 0.25);
+            //Looks at the left mineral. If the left mineral is gold, turns and knocks over the
+            // mineral, then turns and goes to the depot, then turns and drives into the crater.
 
-                move(Direction.Forward,  2000, 0.25);
-                move(Direction.Backward, 200,  0.25);
-                turn(Direction.Left,     500,  0.25);
-                move(Direction.Forward,  800,  0.25);
-                turn(Direction.Left,     270,  0.25);
-                move(Direction.Forward,  2000, 0.25);
+            if(isGold()) {
 
-                //break;
-
-            /*} else{
-
-                //Turns to face the left mineral. If the left mineral is gold, goes to the mineral,
-                // then turns and goes to the depot, then turns and drives into the crater.
                 turn(Direction.Left, 250, 0.25);
+                move(Direction.Forward, 1200, 0.25);
+                turn(Direction.Left,    1000, 0.25);
+                move(Direction.Forward, 800,  0.25);
+                turn(Direction.Left,    270,  0.25);
+                move(Direction.Forward, 2000, 0.25);
+
+                break;
+
+
+            } else{
+
+                //Looks at the center mineral. If the center mineral is gold, goes straight to the
+                // depot, then turns and drives into the crater.
+
+                move(Direction.Forward, 100, 0.25);
 
                 if(isGold()) {
 
-                    move(Direction.Forward, 800,  0.25);
-                    turn(Direction.Right,   200,  0.25);
-                    move(Direction.Forward, 1200, 0.25);
-                    turn(Direction.Left,    1000, 0.25);
-                    move(Direction.Forward, 800,  0.25);
-                    turn(Direction.Left,    270,  0.25);
+                    turn(Direction.Left, 150, 0.25);
+                    move(Direction.Forward, 1400, 0.25);
+                    turn(Direction.Left, 500, 0.25);
+                    move(Direction.Forward, 800, 0.25);
+                    turn(Direction.Left, 270, 0.25);
                     move(Direction.Forward, 2000, 0.25);
 
                     break;
-
 
                 } else{
 
                     //Turns to face the right mineral. If the right mineral is gold, goes to the
                     // mineral, then turns and goes to the depot, then turns and drives into the
                     // crater.
-                    turn(Direction.Right, 500, 0.25);
+                    move(Direction.Forward, 100, 0.25);
 
                     if(isGold()){
 
-                        move(Direction.Forward, 800,  0.25);
-                        turn(Direction.Left,    200,  0.25);
+                        turn(Direction.Left,    350,  0.25);
                         move(Direction.Forward, 1200, 0.25);
                         turn(Direction.Left,    250,  0.25);
                         move(Direction.Forward, 800,  0.25);
@@ -126,47 +133,54 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             //SILVER TEST
 
-            //Looks at the center mineral. If the center mineral is gold, goes to the mineral,
-            // then drives to the depot, then turns and drives into the crater.
-            if(isGold()) {
+
+
+            /*if(isGold()) {
+
+                //Looks at the left mineral. If the left mineral is gold, goes to the mineral,
+                // then drives to the depot, then turns and drives into the crater.
 
                 move(Direction.Forward,  1000, 0.25);
                 move(Direction.Backward, 200,  0.25);
-                turn(Direction.Left,     300,  0.25);
-                move(Direction.Forward,  1500, 0.25);
-                turn(Direction.Left,     200,  0.25);
+                turn(Direction.Left,     500,  0.25);
+                move(Direction.Forward,  1200, 0.25);
+                turn(Direction.Left,     50,   0.25);
                 move(Direction.Forward,  1750, 0.25);
                 turn(Direction.Right,    750,  0.25);
                 move(Direction.Forward,  3000, 0.25);
 
                 break;
 
-            } else{
 
-                //Turns to face the left mineral. If the left mineral is gold, goes to the mineral,
+            } else {
+
+                //Looks at the center mineral. If the center mineral is gold, goes to the mineral,
                 // then drives to the depot, then turns and drives into the crater.
-                turn(Direction.Left, 250, 0.25);
+                move(Direction.Backward, 100, 0.25);
+                turn(Direction.Right, 250, 0.25);
+                move(Direction.Forward, 100, 0.25);
 
                 if(isGold()) {
 
-                    move(Direction.Forward,  1000, 0.25);
-                    move(Direction.Backward, 200,  0.25);
-                    turn(Direction.Left,     500,  0.25);
-                    move(Direction.Forward,  1200, 0.25);
-                    turn(Direction.Left,     50,   0.25);
-                    move(Direction.Forward,  1750, 0.25);
-                    turn(Direction.Right,    750,  0.25);
-                    move(Direction.Forward,  3000, 0.25);
+                    move(Direction.Forward, 1000, 0.25);
+                    move(Direction.Backward, 200, 0.25);
+                    turn(Direction.Left, 300, 0.25);
+                    move(Direction.Forward, 1500, 0.25);
+                    turn(Direction.Left, 200, 0.25);
+                    move(Direction.Forward, 1750, 0.25);
+                    turn(Direction.Right, 750, 0.25);
+                    move(Direction.Forward, 3000, 0.25);
 
                     break;
-
 
                 } else{
 
                     //Turns to face the right mineral. If the right mineral is gold, goes to the
                     // mineral, then drives to the depot, then turns and drives into the
                     // crater.
-                    turn(Direction.Right, 500, 0.25);
+                    move(Direction.Backward, 100, 0.25);
+                    turn(Direction.Right, 250, 0.25);
+                    move(Direction.Forward, 100, 0.25);
 
                     if(isGold()){
 
@@ -200,9 +214,11 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
         this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
         this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
+        this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
         this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
         this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
         this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
+        this.SensorServo = hardwareMap.get (Servo.class, "SensorServo");
 
         this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
 
@@ -211,6 +227,8 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
         ArmMotor.setDirection(DcMotor.Direction.FORWARD);
+        HangMotor.setDirection(DcMotor.Direction.FORWARD);
+
 
         ArmServoElbow.setDirection(Servo.Direction.FORWARD);
         ArmServoWrist.setDirection(Servo.Direction.FORWARD);
@@ -219,13 +237,17 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         //Sets motors to work with position
         ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        HangMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+
+        hangArmUp = true;
 
         //Sets grabber servos to closed
         //this.GrabberServo.setPosition(0);

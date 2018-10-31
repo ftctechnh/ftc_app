@@ -33,6 +33,8 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
     boolean leftGrabberOpen;
     boolean rightGrabberOpen;
 
+    boolean hangArmUp;
+
     double wristTimer;
     double grabberTimer;
 
@@ -144,6 +146,18 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
             }
 
+            if(gamepad1.x){
+
+                if(hangArmUp){
+
+                    HangMotor.setTargetPosition(this.HangMotor.getCurrentPosition() - 600);
+
+                } else HangMotor.setTargetPosition(this.HangMotor.getCurrentPosition() + 600);
+
+                hangArmUp = !hangArmUp;
+
+            }
+
 
 
             if (gamepad1.dpad_up) {
@@ -239,6 +253,7 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         RightDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         LeftDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        hangArmUp = false;
 
         //Sets grabber servos to closed
         this.GrabberServo.setPosition(0.5);
