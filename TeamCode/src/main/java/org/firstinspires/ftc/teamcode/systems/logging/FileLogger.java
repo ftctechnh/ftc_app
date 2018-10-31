@@ -19,7 +19,7 @@ public class FileLogger implements ILogger
         logWritter.appendLine(line);
     }
 
-    public void close() {
+    public void write() {
         logWritter.flush();
     }
 }

@@ -16,15 +16,15 @@ public class LoggerTestOpMode extends LinearOpModeDebugger
     {
         ILogger logger = new PhoneLogger(telemetry);
         logger.log("1", "1");
-        logger.close();
+        logger.write();
         sleepThread(1000);
         logger.log("1", "2");
         logger.log("2", "1");
-        logger.close();
+        logger.write();
         sleepThread(1000);
         logger.log("1", "3");
         logger.log("2", "2");
-        logger.close();
+        logger.write();
         sleepThread(1000);
     }
 

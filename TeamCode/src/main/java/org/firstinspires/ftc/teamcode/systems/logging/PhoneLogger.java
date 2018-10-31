@@ -17,7 +17,7 @@ public class PhoneLogger implements ILogger
         telemetry.addData(name, StringFormatter.format(data.toString(), args));
     }
 
-    public void close() {
+    public void write() {
         telemetry.update();
     }
 }
