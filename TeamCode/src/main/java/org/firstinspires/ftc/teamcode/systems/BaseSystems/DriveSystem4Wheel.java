@@ -21,10 +21,10 @@ public class DriveSystem4Wheel extends System {
         this.motorBackRight = map.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
         this.motorBackLeft = map.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
 
-        this.motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-        this.motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-        this.motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-        this.motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

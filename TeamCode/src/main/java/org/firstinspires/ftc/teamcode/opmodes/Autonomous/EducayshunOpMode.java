@@ -13,8 +13,9 @@ public class EducayshunOpMode extends BaseAutonomousOpMode {
     public void runOpMode()
     {
 
-        telem("About to init systems");
+        telem("About to initialize systems.");
         this.initSystems();
+        telem("Initialized all systems. Ready.");
 
         ////
         waitForStart();
@@ -33,6 +34,8 @@ public class EducayshunOpMode extends BaseAutonomousOpMode {
 
         driveSystem.driveToPositionInches(15, 1);
 
+        // FR BL BR FL
+
         //telem("just drove 2000, about to find with eye for 10 sec");
         //eye.find(10);
         //telem("done finding for 10 seconds");
@@ -43,6 +46,6 @@ public class EducayshunOpMode extends BaseAutonomousOpMode {
     private void telem(String message) {
         telemetry.addLine(message);
         telemetry.update();
-        sleep(1000);
+        sleep(250);
     }
 }
