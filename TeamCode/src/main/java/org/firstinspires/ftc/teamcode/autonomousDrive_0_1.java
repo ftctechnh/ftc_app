@@ -19,6 +19,14 @@ public class autonomousDrive_0_1 extends LinearOpMode
         MoveToCrater
     }
 
+    private enum StartPosition
+    {
+        FrontBlue,
+        BackBlue,
+        FrontRed,
+        BackRed
+    }
+
     private final double ftPerInch = 1.0/12.0;
     private final double tilesPerInch = 1.0/24.0;
 
@@ -41,7 +49,9 @@ public class autonomousDrive_0_1 extends LinearOpMode
                 case Drop:
                     //do something
                     if(false) //if condition
+                    {
                         action = Mode.MoveToWall;
+                    }
                     break;
 
                 case MoveToWall:
