@@ -310,7 +310,7 @@ public class AvesAblazeHardwarePushbot {
 			case 3: return motor3.getCurrentPosition();
 			default: return 0;
 		}
-	}
+	}*/
 	public boolean resetCoordinates(){
 		targetsRoverRuckus.activate();
 		targetVisible=false;
