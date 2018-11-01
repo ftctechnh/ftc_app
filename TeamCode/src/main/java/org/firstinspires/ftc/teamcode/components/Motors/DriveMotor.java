@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-public class DriveMotor {
+public class DriveMotor implements Drivable{
 
     private DcMotor motor;
 

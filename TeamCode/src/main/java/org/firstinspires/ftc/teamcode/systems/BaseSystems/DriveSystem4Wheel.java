@@ -16,16 +16,25 @@ public class DriveSystem4Wheel extends System {
     public DriveSystem4Wheel(OpMode opMode, String systemName) {
         super(opMode, "MecanumDrive");
 
-        this.motorFrontLeft = hardwareMap.dcMotor.get("motorFL"/*config.getString("motorFL")*/);
-        this.motorFrontRight =  hardwareMap.dcMotor.get("motorFR"/*config.getString("motorFR")*/);
-        this.motorBackRight =  hardwareMap.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
-        this.motorBackLeft =  hardwareMap.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
+        this.motorFrontLeft = map.dcMotor.get("motorFL"/*config.getString("motorFL")*/);
+        this.motorFrontRight = map.dcMotor.get("motorFR"/*config.getString("motorFR")*/);
+        this.motorBackRight = map.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
+        this.motorBackLeft = map.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
 
-        this.motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-        this.motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-        this.motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-        this.motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        this.motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Set all drive motors to zero power
         setPower(0);
     }
@@ -56,10 +65,10 @@ public class DriveSystem4Wheel extends System {
 
     public void setTargetPosition(int ticks)
     {
-        motorBackLeft.setTargetPosition(ticks);
-        motorBackRight.setTargetPosition(ticks);
-        motorFrontLeft.setTargetPosition(ticks);
-        motorFrontRight.setTargetPosition(ticks);
+        motorBackLeft.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() + ticks);
+        motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
     }
 
     public void setRunMode(DcMotor.RunMode runMode)
