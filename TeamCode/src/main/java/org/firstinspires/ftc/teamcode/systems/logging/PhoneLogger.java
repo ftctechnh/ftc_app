@@ -13,8 +13,8 @@ public class PhoneLogger implements ILogger
         this.telemetry = telemetry;
     }
 
-    public void log(String name, String data, Object... args) {
-        telemetry.addData(name, StringFormatter.format(data, args));
+    public void log(String name, Object data, Object... args) {
+        telemetry.addData(name, StringFormatter.format(data.toString(), args));
     }
 
     public void write() {

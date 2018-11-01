@@ -21,11 +21,11 @@ public class LogWritter
         buffer.append(line + "\n");
     }
 
-    public void write() {
+    public void flush() {
         try {
             writeToFile();
         } catch (Exception e) {
-            throw new IllegalStateException("Could not write to file", e);
+            throw new IllegalStateException("Could not close to file", e);
         }
     }
 

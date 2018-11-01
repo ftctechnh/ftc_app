@@ -4,11 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.components.pixy.PixyCam;
+import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
 
 import java.util.ArrayList;
 
 //@Autonomous(name = "PixySystem", group = "Bot")
-public class PixySystem  {
+public class PixySystem extends System {
     public static final int YELLOW_SIGNATURE = 3;
     public static final int WHITE_SIGNATURE = 4;
 
@@ -19,39 +20,41 @@ public class PixySystem  {
     private PixyCam.Block whiteBlock2;
     private MecanumDriveSystem driveSystem;
 
+    public PixySystem (OpMode opMode) {
+        super(opMode, "PixySystem");
+    }
+
     public void runPixySystem(LinearOpMode oMode) {
         opMode= oMode;
         pixyCam = opMode.hardwareMap.get(PixyCam.class, "PixyCam");
         driveSystem = new MecanumDriveSystem(opMode);
-        opMode.telemetry.addLine("called RunPixySystem");
+        telemetry.addLine("called RunPixySystem");
 
         driveSystem.turn(90, 0.3);
-        opMode.telemetry.addLine("turning 90 degs to start");
-        opMode.telemetry.update();
+        telemetry.addLine("turning 90 degs to start");
+        telemetry.update();
         spin();
 
     }
-
-
 
     // get values from PixyCam
     public void getValues() {
         ArrayList<PixyCam.Block> blocks = pixyCam.getBlocks();
         if (!blocks.isEmpty()) {
-            opMode.telemetry.addLine("getting values from blocks: " + blocks.toString());
+            telemetry.addLine("getting values from blocks: " + blocks.toString());
             for (PixyCam.Block block : blocks) {
                 if (block.signature == YELLOW_SIGNATURE) {
                     yellowBlock = block;
-                    opMode.telemetry.addData("yellow: ", yellowBlock);
-                    opMode.telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.addData("yellow: ", yellowBlock);
+                    telemetry.addLine("yellow is null   turning counterclockwise");
                 } else if (whiteBlock1 == null && block.signature == WHITE_SIGNATURE) {
                     whiteBlock1 = block;
-                    opMode.telemetry.addData("white1: ", whiteBlock1);
-                    opMode.telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.addData("white1: ", whiteBlock1);
+                    telemetry.addLine("yellow is null   turning counterclockwise");
                 } else if (whiteBlock2 == null && block.signature == WHITE_SIGNATURE) {
                     whiteBlock2 = block;
-                    opMode.telemetry.addData("white2: ", whiteBlock2);
-                    opMode.telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.addData("white2: ", whiteBlock2);
+                    telemetry.addLine("yellow is null   turning counterclockwise");
                 }
             }
 
@@ -67,48 +70,52 @@ public class PixySystem  {
     }
 
     public void spin() {
-        opMode.telemetry.addLine("spinning");
+        telemetry.addLine("spinning");
         int angle = 0;
 
-        // if yellow isn't there or it's too far left, turn
-        while ((yellowBlock == null || yellowBlock.xCenter < 255 - 10) && angle <= 360) {
+        // if yellow isn't there or it's too far left, turn clockwise
+        while ((yellowBlock == null || yellowBlock.xCenter < 255 / 2 - 10) && angle <= 360) {
             driveSystem.turn(-10, 0.2);
 
             angle += 10;
             getValues();
-            opMode.telemetry.addLine("angle: " + angle);
-            opMode.telemetry.update();
+            telemetry.addLine("angle: " + angle);
+            telemetry.update();
         }
-        while (yellowBlock.xCenter > 255 + 10) {
+
+        // if yellow is too far right, turn counterclockwise
+        while (yellowBlock.xCenter > 255 / 2 + 10) {
             driveSystem.turn(10, 0.2);
             angle += 10;
             getValues();
-            opMode.telemetry.addLine("angle: " + angle);
-            opMode.telemetry.update();
+            telemetry.addLine("angle: " + angle);
+            telemetry.update();
         }
 
-        if (yellowBlock != null && yellowBlock.xCenter > 255 - 10 && yellowBlock.xCenter < 255 + 10) {
+        // if yellow's centered, drive forward
+        if (yellowBlock != null && yellowBlock.xCenter > 255 / 2- 10 && yellowBlock.xCenter < 255 / 2 + 10) {
             driveSystem.driveToPositionInches(2, 0.1);
-            opMode.telemetry.addLine("driving forward");
-            opMode.telemetry.update();
+            telemetry.addLine("driving forward");
+            telemetry.update();
         }
 
+        // make the white balls equidistant from either side
         if (angle > 360) {
             if (yellowBlock == null) {
-                while (whiteBlock1.xCenter > 255 - whiteBlock2.xCenter) {
+                while (whiteBlock1.xCenter > 255 / 2 - whiteBlock2.xCenter) {
                     driveSystem.turn(5, 0.1);
-                    opMode.telemetry.addLine("yellow is null   turning counterclockwise");
-                    opMode.telemetry.update();
+                    telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.update();
                 }
-                while (whiteBlock1.xCenter < 255 - whiteBlock2.xCenter) {
+                while (whiteBlock1.xCenter < 255 / 2 - whiteBlock2.xCenter) {
                     driveSystem.turn(-5, 0.1);
-                    opMode.telemetry.addLine("yellow is null   turning clockwise");
-                    opMode.telemetry.update();
+                    telemetry.addLine("yellow is null   turning clockwise");
+                    telemetry.update();
                 }
             }
 
         }
-        opMode.telemetry.update();
+        telemetry.update();
     }
 /*
     public void center() {
@@ -117,7 +124,7 @@ public class PixySystem  {
             while (yellowBlock.xCenter < 255 - 10 && yellowBlock.xCenter > 255 + 10) {
                 if(yellowBlock.xCenter < 255 - 10) {
                     driveSystem.mecanumDriveXY(0.1, 0);
-                    opMode.sleep(10);
+                    sleep(10);
                     driveSystem.mecanumDriveXY(0, 0);
                 }
             }
@@ -163,7 +170,7 @@ public class PixySystem  {
     public PixySystem(LinearOpMode oMode) {
     //public void initPixy() {
         opMode = oMode;
-        pixyCam = opMode.hardwareMap.get(PixyCam.class, "PixyCam");
+        pixyCam = hardwareMap.get(PixyCam.class, "PixyCam");
         //driveSystem = dSystem;
         //driveSystem = new MecanumDriveSystem(opMode);
     }
@@ -176,10 +183,10 @@ public class PixySystem  {
 
     public void getValues() {
         yellowBlock = pixyCam.GetBiggestBlock(3);
-        opMode.telemetry.addData("yellow: ", yellowBlock.toString());
+        telemetry.addData("yellow: ", yellowBlock.toString());
         whiteBlock = pixyCam.GetBiggestBlock(4);
-        opMode.telemetry.addData("white: ", whiteBlock.toString());
-        opMode.telemetry.update();
+        telemetry.addData("white: ", whiteBlock.toString());
+        telemetry.update();
     }
 
 
@@ -191,15 +198,15 @@ public class PixySystem  {
                (yellowBlock.width < 5 || yellowBlock.height < 5)) {
             if (whiteBlock.x < 255 / 2) {
                 // strafe right
-                opMode.telemetry.addLine("driving right to see yellow");
+                telemetry.addLine("driving right to see yellow");
                 // driveSystem.mecanumDriveXY(1, 0);
-                opMode.sleep(10);
+                sleep(10);
                 // driveSystem.mecanumDrive(0, 0)
             } else {
                 // strafe left
-                opMode.telemetry.addLine("driving left to see yellow");
+                telemetry.addLine("driving left to see yellow");
                 // driveSystem.mecanumDriveXY(-1, 0);
-                opMode.sleep(10);
+                sleep(10);
                 // driveSystem.mecanumDrive(0, 0)
             }
         }
@@ -208,23 +215,23 @@ public class PixySystem  {
         while (!(yellowBlock.x < 255 + 5 || yellowBlock.x > 255 - 5)) {
             if (yellowBlock.x < 255 / 2) {
                 // strafe right
-                opMode.telemetry.addLine("driving right");
+                telemetry.addLine("driving right");
                 // driveSystem.mecanumDriveXY(1, 0);
-                opMode.sleep(10);
+                sleep(10);
                 // driveSystem.mecanumDrive(0, 0)
             } else if (yellowBlock.x > 255 / 2) {
                 // strafe left
-                opMode.telemetry.addLine("driving left");
+                telemetry.addLine("driving left");
                 // driveSystem.mecanumDriveXY(-1, 0);
-                opMode.sleep(10);
+                sleep(10);
                 // driveSystem.mecanumDrive(0, 0)
             }
         }
 
         // drive forward to hit the block
-        opMode.telemetry.addLine("driving forward");
+        telemetry.addLine("driving forward");
         // driveSystem.mecanumDriveXY(0, 1);
-        opMode.sleep(10);
+        sleep(10);
         // driveSystem.mecanumDrive(0, 0)
     }
   */
