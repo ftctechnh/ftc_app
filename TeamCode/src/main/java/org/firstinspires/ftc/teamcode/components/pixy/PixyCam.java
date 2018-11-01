@@ -64,7 +64,7 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
         bytes = this.getDeviceClient().read(0, bytes.length);
 
         // search for sync
-        for (int i = 0; i < bytes.length; i++){
+        for (int i = 0; i < bytes.length - 2; i++){
             boolean sync1 = checkSync(bytes,i);
             boolean sync2 = checkSync(bytes,i+2);
             boolean startOfFrame = sync1 && sync2;
