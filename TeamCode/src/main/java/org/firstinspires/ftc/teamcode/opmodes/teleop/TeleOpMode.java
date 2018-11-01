@@ -1,19 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Config.ConfigParser;
-import org.firstinspires.ftc.teamcode.Hardware.controller.Button;
 import org.firstinspires.ftc.teamcode.Hardware.controller.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.controller.Handler;
-import org.firstinspires.ftc.teamcode.opmodes.debuggers.LinearOpModeDebugger;
 import org.firstinspires.ftc.teamcode.opmodes.debuggers.TeleOpModeDebugger;
-import org.firstinspires.ftc.teamcode.systems.ArmState;
-import org.firstinspires.ftc.teamcode.systems.ArmSystem;
-import org.firstinspires.ftc.teamcode.systems.IMUSystem;
+import org.firstinspires.ftc.teamcode.systems.arm.ArmState;
+import org.firstinspires.ftc.teamcode.systems.arm.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 /**
@@ -27,20 +20,12 @@ public class TeleOpMode extends TeleOpModeDebugger {
     private MecanumDriveSystem driveSystem;
     private ArmSystem armSystem;
 
-    //protected Logger logger;
-
     public TeleOpMode() {
-        msStuckDetectLoop = 100000000;
-    }
-
-    @Override
-    public void start(){
-        telemetry.addLine("start worked");
+        msStuckDetectLoop = 1000000000;
     }
 
     @Override
     public void run(){
-        telemetry.addLine("dogs");
         controller1.handle();
         armSystem.run();
 
@@ -59,7 +44,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
         armSystem = new ArmSystem(this);
         this.driveSystem = new MecanumDriveSystem(this);
         initButton();
-        telemetry.update();
     }
 
     @Override
@@ -77,8 +61,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                telemetry.addData("Controller 1: ", controller1.a.isPressed.value());
-                telemetry.update();
                 armSystem.addState(ArmState.WINCH_TOP);
             }
         };
@@ -88,8 +70,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                telemetry.addData("Controller 1: ", controller1.b.isPressed.value());
-                telemetry.update();
                 armSystem.addState(ArmState.WINCH_BOTTOM);
             }
         };
@@ -99,8 +79,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                telemetry.addData("Controller 1: ", controller1.dPadDown.isPressed.value());
-                telemetry.update();
                 armSystem.addState(ArmState.ROTATE_DOWN);
             }
         };
@@ -109,8 +87,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                telemetry.addData("Controller 1: ", controller1.dPadUp.isPressed.value());
-                telemetry.update();
                 armSystem.addState(ArmState.ROTATE_UP);
             }
         };
@@ -119,12 +95,16 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                telemetry.addData("Controller 1: ", controller1.dPadUpShifted.isPressed.value());
-                telemetry.update();
                 armSystem.addState(ArmState.ROTATE_LATCH);
             }
         };
-        telemetry.addData("buttons", "finished initialize");
-        telemetry.update();
+        controller1.x.pressedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                armSystem.slideTesting();
+            }
+        };
     }
 }

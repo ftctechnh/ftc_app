@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Hardware.controller.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.controller.TriggerType;
-import org.firstinspires.ftc.teamcode.systems.ArmSystem;
+import org.firstinspires.ftc.teamcode.systems.arm.ArmSystem;
 
 @TeleOp(name= "cats")
 public class TeleOpTestybois extends TeleOpMode {
