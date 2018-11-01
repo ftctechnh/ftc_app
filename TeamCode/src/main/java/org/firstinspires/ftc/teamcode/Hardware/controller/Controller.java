@@ -6,7 +6,7 @@ import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 
 /**
- * Created by EvanCoulson on 11/3/17.
+ * Created by idiot on 11/3/17.
  */
 
 public class Controller
@@ -17,7 +17,6 @@ public class Controller
 
     private float rightTriggerValue;
     private float leftTriggerValue;
-    //private ConfigParser parser;
 
     public Button a;
     public Button b;
@@ -54,9 +53,9 @@ public class Controller
     public Controller(final Gamepad gamepad)
     {
         //this.parser = new ConfigParser("Controller");
-        DEFAULT_TRIGGER_VALUE = 7; //parser.getFloat("default_trigger");
-        this.rightTriggerValue = DEFAULT_TRIGGER_VALUE;
-        this.leftTriggerValue = DEFAULT_TRIGGER_VALUE;
+        //DEFAULT_TRIGGER_VALUE = parser.getFloat("default_trigger");
+        //this.rightTriggerValue = DEFAULT_TRIGGER_VALUE;
+        //this.leftTriggerValue = DEFAULT_TRIGGER_VALUE;
         this.gamepad = gamepad;
 
         a = new Button();

@@ -56,6 +56,7 @@ public class DriveSystem4Wheel extends System {
 
     public boolean anyMotorsBusy()
     {
+        // lick left kneecap daddy pimple
         return motorFrontLeft.isBusy() ||
                 motorFrontRight.isBusy() ||
                 motorBackLeft.isBusy() ||
