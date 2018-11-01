@@ -1,23 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Recharged Orange on 9/27/2018.
  */
-@TeleOp(name = "mecenum test")
+@TeleOp(name = "mecenum drive code")
 
-public class MecanumTest extends LinearOpMode {
-
-    private DcMotor leftBack;
-    private DcMotor leftFront;
-    private DcMotor rightFront;
-    private DcMotor rightBack;
-
-    Servo Nate;
+public class MecanumTest extends superClass {
 
     double drive ;
     double strafe;
@@ -32,12 +22,14 @@ public class MecanumTest extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-
-        initialization();
+        initialization(false);
         waitForStart();
         while (opModeIsActive()) {
             mecanumDrive();
-            servoControls();
+            sweeper();
+            servo();
+            //REVServo();
+            touchSen();
         }
     }
 
@@ -76,29 +68,47 @@ public class MecanumTest extends LinearOpMode {
 
     }
 
+public void sweeper(){
 
-    public void initialization() {
-
-
-        leftBack = hardwareMap.dcMotor.get("leftBack");
-        leftFront = hardwareMap.dcMotor.get("leftFront");
-        rightFront = hardwareMap.dcMotor.get("rightFront");
-        rightBack = hardwareMap.dcMotor.get("rightBack");
-
-        leftBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        Nate = hardwareMap.servo.get("Nate");
-    }
-
-    public void servoControls() {
-if (gamepad1.left_bumper){
-    Nate.setPosition(1);
-}
-else Nate.setPosition(0);
-    }
-
+        if (gamepad1.right_bumper){
+            sweeper.setPower(1);
+        }
+        else if (gamepad1.left_bumper){
+            sweeper.setPower(-1);
+        }
+        else sweeper.setPower(0);
 
 }
+
+public void servo(){
+
+    if (gamepad1.x){
+        servo.setPosition(1);
+    }
+    else servo.setPosition(0);
+}
+
+/*public void REVServo(){
+
+    if (gamepad1.a){
+        REVServo.setPower(1);
+    }
+
+    else if (gamepad1.b){
+        REVServo.setPower(-1);
+    }
+
+
+
+}*/
+
+public void touchSen(){
+
+    if (touchSensor.isPressed()){
+        REVServo.setPower(0);
+    }
+    else REVServo.setPower(1);
+}
+
+
+    }
