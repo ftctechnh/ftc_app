@@ -1,70 +1,113 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.pixy.PixyCam;
 import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
 
 import java.util.ArrayList;
 
-//@Autonomous(name = "PixySystem", group = "Bot")
 public class PixySystem extends System {
     public static final int YELLOW_SIGNATURE = 3;
     public static final int WHITE_SIGNATURE = 4;
 
     private LinearOpMode opMode;
     private PixyCam pixyCam;
-    private PixyCam.Block yellowBlock;
-    private PixyCam.Block whiteBlock1;
-    private PixyCam.Block whiteBlock2;
     private MecanumDriveSystem driveSystem;
+
+    private int yellowPos = 0;
+    private int white1Pos = 0;
+    private int white2Pos = 0;
 
     public PixySystem (OpMode opMode) {
         super(opMode, "PixySystem");
     }
 
     public void runPixySystem(LinearOpMode oMode) {
-        opMode= oMode;
-        pixyCam = opMode.hardwareMap.get(PixyCam.class, "PixyCam");
+        opMode = oMode;
+        pixyCam = map.get(PixyCam.class, "PixyCam");
+        pixyCam.setBlockCount(3);
+
+        ArrayList<PixyCam.Block> blocks = pixyCam.getBlocks();
+        for(PixyCam.Block block : blocks){
+            telemetry.addData("sig: ", block.signature);
+            telemetry.addData("block: ", block.xCenter);
+        }
+        telemetry.update();
+
+        /*
         driveSystem = new MecanumDriveSystem(opMode);
         telemetry.addLine("called RunPixySystem");
 
         driveSystem.turn(90, 0.3);
         telemetry.addLine("turning 90 degs to start");
         telemetry.update();
-        spin();
-
+        spin(); */
     }
 
     // get values from PixyCam
     public void getValues() {
-        ArrayList<PixyCam.Block> blocks = pixyCam.getBlocks();
-        if (!blocks.isEmpty()) {
-            telemetry.addLine("getting values from blocks: " + blocks.toString());
-            for (PixyCam.Block block : blocks) {
-                if (block.signature == YELLOW_SIGNATURE) {
-                    yellowBlock = block;
-                    telemetry.addData("yellow: ", yellowBlock);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
-                } else if (whiteBlock1 == null && block.signature == WHITE_SIGNATURE) {
-                    whiteBlock1 = block;
-                    telemetry.addData("white1: ", whiteBlock1);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
-                } else if (whiteBlock2 == null && block.signature == WHITE_SIGNATURE) {
-                    whiteBlock2 = block;
-                    telemetry.addData("white2: ", whiteBlock2);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
+        ArrayList<ArrayList<PixyCam.Block>> valuesArray = new ArrayList<>();
+
+        int yellowSum = 0;
+        int yellowCount = -1;
+        int white1Sum = 0;
+        int white1Count = -1;
+        int white2Sum = 0;
+        int white2Count = -1;
+
+        for (int i = 0; i < 3; i++) {
+            PixyCam.Block yellowBlock = null;
+            PixyCam.Block whiteBlock1 = null;
+            PixyCam.Block whiteBlock2 = null;
+
+            ArrayList<PixyCam.Block> blocks = pixyCam.getBlocks();
+            valuesArray.add(blocks);
+            if (!blocks.isEmpty()) {
+                telemetry.addLine("getting values from blocks: " + blocks.toString());
+                for (PixyCam.Block block : blocks) {
+                    if (block.signature == YELLOW_SIGNATURE) {
+                        yellowBlock = block;
+
+                        yellowSum += yellowBlock.xCenter;
+                        if (yellowBlock.xCenter != 0) {
+                            yellowCount++;
+                        }
+                        telemetry.addLine("yellow: " + yellowBlock.xCenter);
+                        telemetry.update();
+                    } else if (whiteBlock1 == null && block.signature == WHITE_SIGNATURE) {
+                        whiteBlock1 = block;
+                        white1Sum += whiteBlock1.xCenter;
+                        if (whiteBlock1.xCenter != 0) {
+                            white1Count++;
+                        }
+                        telemetry.addLine("white1: " + whiteBlock1.toString());
+                        telemetry.update();
+                    } else if (whiteBlock2 == null && block.signature == WHITE_SIGNATURE) {
+                        whiteBlock2 = block;
+                        white2Sum += whiteBlock2.xCenter;
+                        if (whiteBlock2.xCenter != 0) {
+                            white2Count++;
+                        }
+                        telemetry.addData("white2: ", whiteBlock2);
+                        telemetry.update();
+                    }
                 }
             }
+        }
 
-            // change names so whiteBlock1 is on the left and whiteBlock2 is on the right
-            if (whiteBlock1 != null && whiteBlock2 != null) {
-                if (whiteBlock1.xCenter > whiteBlock2.xCenter) {
-                    PixyCam.Block temp = whiteBlock1;
-                    whiteBlock1 = whiteBlock2;
-                    whiteBlock2 = temp;
-                }
+        yellowPos = yellowSum / yellowCount;
+        white1Pos = white1Sum / white1Count;
+        white2Pos = white2Sum / white2Count;
+
+        // change names so whiteBlock1 is on the left and whiteBlock2 is on the right
+        if (white1Pos != 0 && white2Pos != 0) {
+            if (white1Pos > white2Pos) {
+                int tempPos = white1Pos;
+                white1Pos = white2Pos;
+                white2Pos = tempPos;
             }
         }
     }
@@ -74,7 +117,7 @@ public class PixySystem extends System {
         int angle = 0;
 
         // if yellow isn't there or it's too far left, turn clockwise
-        while ((yellowBlock == null || yellowBlock.xCenter < 255 / 2 - 10) && angle <= 360) {
+        while ((yellowPos == 0 || yellowPos < 255 / 2 - 10) && angle <= 360) {
             driveSystem.turn(-10, 0.2);
 
             angle += 10;
@@ -84,7 +127,7 @@ public class PixySystem extends System {
         }
 
         // if yellow is too far right, turn counterclockwise
-        while (yellowBlock.xCenter > 255 / 2 + 10) {
+        while (yellowPos > 255 / 2 + 10) {
             driveSystem.turn(10, 0.2);
             angle += 10;
             getValues();
@@ -93,7 +136,7 @@ public class PixySystem extends System {
         }
 
         // if yellow's centered, drive forward
-        if (yellowBlock != null && yellowBlock.xCenter > 255 / 2- 10 && yellowBlock.xCenter < 255 / 2 + 10) {
+        if (yellowPos != 0 && yellowPos > 255 / 2- 10 && yellowPos < 255 / 2 + 10) {
             driveSystem.driveToPositionInches(2, 0.1);
             telemetry.addLine("driving forward");
             telemetry.update();
@@ -101,13 +144,13 @@ public class PixySystem extends System {
 
         // make the white balls equidistant from either side
         if (angle > 360) {
-            if (yellowBlock == null) {
-                while (whiteBlock1.xCenter > 255 / 2 - whiteBlock2.xCenter) {
+            if (yellowPos == 0) {
+                while (white1Pos > 255 / 2 - white2Pos) {
                     driveSystem.turn(5, 0.1);
                     telemetry.addLine("yellow is null   turning counterclockwise");
                     telemetry.update();
                 }
-                while (whiteBlock1.xCenter < 255 / 2 - whiteBlock2.xCenter) {
+                while (white1Pos < 255 / 2 - white2Pos) {
                     driveSystem.turn(-5, 0.1);
                     telemetry.addLine("yellow is null   turning clockwise");
                     telemetry.update();
