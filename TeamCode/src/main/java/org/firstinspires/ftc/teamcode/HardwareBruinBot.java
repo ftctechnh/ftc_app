@@ -58,6 +58,11 @@ public class HardwareBruinBot
     public DcMotor  leftRearDrive = null;
     public DcMotor  rightFrontDrive  = null;
     public DcMotor  rightRearDrive = null;
+    public DcMotor  landerLatchLift = null;
+    public DcMotor  armExtend = null;
+    public DcMotor  armRotate = null;
+    public Servo    leftMineral = null;
+    public Servo    rightMineral = null;
     //public DcMotor  armExt = null;  //for the arm extension
     //public DcMotor  leftArm     = null;
     //public Servo    leftClaw    = null;
@@ -87,6 +92,11 @@ public class HardwareBruinBot
         leftRearDrive  = hwMap.get(DcMotor.class, "leftRearDrive");
         rightFrontDrive = hwMap.get(DcMotor.class, "rightFrontDrive");
         rightRearDrive = hwMap.get(DcMotor.class, "rightRearDrive");
+        landerLatchLift = hwMap.get(DcMotor.class, "landerLatchLift");
+        armExtend = hwMap.get(DcMotor.class, "armExtend");
+        armRotate = hwMap.get(DcMotor.class, "armRotate");
+        leftMineral = hwMap.get(Servo.class, "leftMineral");
+        rightMineral = hwMap.get(Servo.class, "rightMineral");
        // armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -95,11 +105,15 @@ public class HardwareBruinBot
         leftRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
 
 
+
         // Set all motors to zero power
         leftFrontDrive.setPower(0);
         leftRearDrive.setPower(0);
         rightFrontDrive.setPower(0);
         rightRearDrive.setPower(0);
+        armExtend.setPower(0);
+        armRotate.setPower(0);
+        landerLatchLift.setPower(0);
        // armExt.setPower(0); //arm extension
         //leftArm.setPower(0);
 
@@ -109,9 +123,11 @@ public class HardwareBruinBot
         leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        landerLatchLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
        // armExt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //arm extension
         //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         // Define and initialize ALL installed servos.
         //leftClaw  = hwMap.get(Servo.class, "left_hand");
         //rightClaw = hwMap.get(Servo.class, "right_hand");
