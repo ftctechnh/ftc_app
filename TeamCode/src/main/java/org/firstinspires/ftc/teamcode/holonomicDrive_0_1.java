@@ -11,8 +11,9 @@ public class holonomicDrive_0_1 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1);
+        robot = new Bogg(hardwareMap, gamepad1, telemetry);
         waitForStart();
+        double x = .6;
 
         while (opModeIsActive())
         {
@@ -24,6 +25,18 @@ public class holonomicDrive_0_1 extends LinearOpMode
             {
                 robot.manualDrive();
             }
+            if(gamepad1.dpad_up)
+            {
+                x+=.001;
+            }
+
+            if(gamepad1.dpad_down)
+            {
+                x-=.001;
+            }
+            robot.setBrake(x);
+
+
 
             robot.lift();
 
