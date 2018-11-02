@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.systems.BaseSystems;
+package org.firstinspires.ftc.teamcode.systems.base;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 import org.firstinspires.ftc.teamcode.systems.logging.PhoneLogger;
 
 public abstract class System {

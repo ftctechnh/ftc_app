@@ -1,10 +1,9 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.components.pixy.PixyCam;
-import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
+import org.firstinspires.ftc.teamcode.systems.base.System;
 
 import java.util.ArrayList;
 

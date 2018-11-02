@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.components.scale.IScale;
 import org.firstinspires.ftc.teamcode.components.scale.LinearScale;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
-import org.firstinspires.ftc.teamcode.systems.BaseSystems.DriveSystem4Wheel;
+import org.firstinspires.ftc.teamcode.systems.base.DriveSystem4Wheel;
 import org.firstinspires.ftc.teamcode.systems.imu.IMUSystem;
 
 import java.util.Arrays;
