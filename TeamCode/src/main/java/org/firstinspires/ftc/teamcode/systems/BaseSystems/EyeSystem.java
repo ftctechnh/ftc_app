@@ -43,7 +43,7 @@ public class EyeSystem extends System {
     public EyeSystem(OpMode opMode) {
         super(opMode, "EyeSystem");
 
-        int cameraMonitorViewId = map.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", map.appContext.getPackageName());
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
         parameters.vuforiaLicenseKey = LICENSE_KEY;
@@ -70,14 +70,14 @@ public class EyeSystem extends System {
     public void find(int seconds) {
         long startTime = java.lang.System.currentTimeMillis();
         while (((java.lang.System.currentTimeMillis() - startTime) / 1000) <= seconds) {
-            telemetry.addLine("startTime: " + startTime);
-            telemetry.addLine("currentTime: " + ((java.lang.System.currentTimeMillis() - startTime) / 1000));
+            telemetry.log("Eye","startTime: " + startTime);
+            telemetry.log("Eye","currentTime: " + ((java.lang.System.currentTimeMillis() - startTime) / 1000));
             if (rotation == null) {
                 look();
             } else {
                 return;
             }
-            telemetry.update();
+            telemetry.write();
         }
     }
 
@@ -86,7 +86,7 @@ public class EyeSystem extends System {
         targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                telemetry.addData("Visible Target", trackable.getName());
+                telemetry.log("Eye","Visible Target", trackable.getName());
                 targetVisible = true;
 
                 // getUpdatedRobotLocation() will return null if no new information is available since
@@ -103,17 +103,17 @@ public class EyeSystem extends System {
         if (targetVisible) {
             // express position (translation) of robot in inches.
             translation = lastLocation.getTranslation();
-            telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+            telemetry.log("Eye","Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                     translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
             // express the rotation of the robot in degrees.
             rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-            telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+            telemetry.log("Eye","Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
         }
         else {
-            telemetry.addData("Visible Target", "none");
+            telemetry.log("Eye","Visible Target", "none");
         }
-        telemetry.update();
+        telemetry.write();
     }
 
     public double getRoll() {

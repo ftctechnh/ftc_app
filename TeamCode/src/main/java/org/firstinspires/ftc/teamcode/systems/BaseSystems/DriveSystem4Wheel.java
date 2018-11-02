@@ -16,10 +16,10 @@ public class DriveSystem4Wheel extends System {
     public DriveSystem4Wheel(OpMode opMode, String systemName) {
         super(opMode, "MecanumDrive");
 
-        this.motorFrontLeft = map.dcMotor.get("motorFL"/*config.getString("motorFL")*/);
-        this.motorFrontRight = map.dcMotor.get("motorFR"/*config.getString("motorFR")*/);
-        this.motorBackRight = map.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
-        this.motorBackLeft = map.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
+        this.motorFrontLeft = hardwareMap.dcMotor.get("motorFL"/*config.getString("motorFL")*/);
+        this.motorFrontRight = hardwareMap.dcMotor.get("motorFR"/*config.getString("motorFR")*/);
+        this.motorBackRight = hardwareMap.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
+        this.motorBackLeft = hardwareMap.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
 
         motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);

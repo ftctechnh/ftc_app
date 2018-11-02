@@ -45,13 +45,13 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         imuSystem = new IMUSystem(opMode);
         initialHeading = Math.toRadians(imuSystem.getHeading());
 
-        powerItem = telemetry.addData("power", 0);
-        distanceItem = telemetry.addData("distance", 0);
+        telemetry.log("MecanumDriveSystem","power: {0}", 0);
+        telemetry.log("MecanumDriveSystem","distance: {0}", 0);
     }
 
     private void telem(String message) {
-        telemetry.addLine(message);
-        telemetry.update();
+        telemetry.log("MecanumDriveSystem", message);
+        telemetry.write();
     }
 
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
@@ -69,14 +69,14 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         double frontLeftPower = leftY - rightX - leftX;
         double backLeftPower = leftY - rightX + leftX;
         this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
-        telemetry.addLine("FRpower: " +  Range.clip(frontRightPower, -1, 1));
+        telemetry.log("Mecanum Drive System","FRpower: {0}", Range.clip(frontRightPower, -1, 1));
         this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
-        telemetry.addLine("BRpower: " +  Range.clip(backRightPower, -1, 1));
+        telemetry.log("Mecanum Drive System","BRPower: {0}", Range.clip(backRightPower, -1, 1));
         this.motorFrontLeft.setPower(Range.clip(frontLeftPower - leftX, -1, 1));
-        telemetry.addLine("FLpower: " +  Range.clip(frontLeftPower - leftX, -1, 1));
+        telemetry.log("Mecanum Drive System", "FLPower: {0}", Range.clip(frontLeftPower - leftX, -1, 1));
         this.motorBackLeft.setPower(Range.clip(backLeftPower + leftX, -1, 1));
-        telemetry.addLine("BLpower: " +  Range.clip(backLeftPower + leftX, -1, 1));
-        telemetry.update();
+        telemetry.log("Mecanum Drive System", "BLPower: {0}", Range.clip(backLeftPower + leftX, -1, 1));
+        telemetry.write();
     }
 
     private float scaleJoystickValue(float joystickValue) {
@@ -171,15 +171,15 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
                 break;
             }
 
-            telemetry.addLine("targetPos motorFL: " + this.motorFrontLeft.getTargetPosition());
-            telemetry.addLine("targetPos motorFR: " + this.motorFrontRight.getTargetPosition());
-            telemetry.addLine("targetPos motorBL: " + this.motorBackLeft.getTargetPosition());
-            telemetry.addLine("targetPos motorBR: " + this.motorBackRight.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorFL: " + this.motorFrontLeft.getTargetPosition());
+            telemetry.log("MecanumDriveSystem", "targetPos motorFR: " + this.motorFrontRight.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorBL: " + this.motorBackLeft.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorBR: " + this.motorBackRight.getTargetPosition());
 
-            telemetry.addLine("currentPos motorFL: " + this.motorFrontLeft.getCurrentPosition());
-            telemetry.addLine("currentPos motorFR: " + this.motorFrontRight.getCurrentPosition());
-            telemetry.addLine("currentPos motorBL: " + this.motorBackLeft.getCurrentPosition());
-            telemetry.addLine("currentPos motorBR: " + this.motorBackRight.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorFL: " + this.motorFrontLeft.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorFR: " + this.motorFrontRight.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorBL: " + this.motorBackLeft.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorBR: " + this.motorBackRight.getCurrentPosition());
 
             double direction = 1.0;
             if (distance < 0) {
@@ -188,9 +188,9 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             }
 
             double scaledPower = ramp.scaleX(distance);
-            telemetry.addLine("power: " + scaledPower);
+            telemetry.log("MecanumDriveSystem","power: " + scaledPower);
             setPower(direction * scaledPower);
-            telemetry.update();
+            telemetry.write();
         }
         setPower(0);
     }
@@ -238,15 +238,15 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
                 break;
             }
 
-            telemetry.addLine("targetPos motorFL: " + this.motorFrontLeft.getTargetPosition());
-            telemetry.addLine("targetPos motorFR: " + this.motorFrontRight.getTargetPosition());
-            telemetry.addLine("targetPos motorBL: " + this.motorBackLeft.getTargetPosition());
-            telemetry.addLine("targetPos motorBR: " + this.motorBackRight.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorFL: " + this.motorFrontLeft.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorFR: " + this.motorFrontRight.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorBL: " + this.motorBackLeft.getTargetPosition());
+            telemetry.log("MecanumDriveSystem","targetPos motorBR: " + this.motorBackRight.getTargetPosition());
 
-            telemetry.addLine("currentPos motorFL: " + this.motorFrontLeft.getCurrentPosition());
-            telemetry.addLine("currentPos motorFR: " + this.motorFrontRight.getCurrentPosition());
-            telemetry.addLine("currentPos motorBL: " + this.motorBackLeft.getCurrentPosition());
-            telemetry.addLine("currentPos motorBR: " + this.motorBackRight.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorFL: " + this.motorFrontLeft.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorFR: " + this.motorFrontRight.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorBL: " + this.motorBackLeft.getCurrentPosition());
+            telemetry.log("MecanumDriveSystem","currentPos motorBR: " + this.motorBackRight.getCurrentPosition());
 
             double direction = 1.0;
             if (distance < 0) {
@@ -255,9 +255,9 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             }
 
             double scaledPower = ramp.scaleX(distance);
-            telemetry.addLine("power: " + scaledPower);
+            telemetry.log("MecanumDriveSystem","power: " + scaledPower);
             setPower(direction * scaledPower);
-            telemetry.update();
+            telemetry.write();
         }
         motorBackLeft.setPower(0);
         motorBackRight.setPower(0);
@@ -348,11 +348,11 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
 
         while (Math.abs(computeDegreesDiff(targetHeading, heading)) > 1) {
             double power = getTurnPower(ramp, targetHeading, heading);
-            telemetry.addLine("heading: " + heading);
-            telemetry.addLine("target heading: " + targetHeading);
-            telemetry.addLine("power: " + power);
-            telemetry.addLine("distance left: " + Math.abs(computeDegreesDiff(targetHeading, heading)));
-            telemetry.update();
+            telemetry.log("MecanumDriveSystem","heading: " + heading);
+            telemetry.log("MecanumDriveSystem","target heading: " + targetHeading);
+            telemetry.log("MecanumDriveSystem","power: " + power);
+            telemetry.log("MecanumDriveSystem","distance left: " + Math.abs(computeDegreesDiff(targetHeading, heading)));
+            telemetry.write();
 
             tankDrive(power, -power);
             heading = -imuSystem.getHeading();
