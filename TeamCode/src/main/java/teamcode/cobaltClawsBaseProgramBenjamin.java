@@ -2,6 +2,7 @@ package teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -32,6 +33,10 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
     //boolean leftGrabberOpen;
     //boolean rightGrabberOpen;
+
+    private Servo SensorServo;
+
+    private ColorSensor colorSensor;
 
     boolean hangArmUp;
 
@@ -231,6 +236,9 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         //this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
         //this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
         //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
+        this.SensorServo = hardwareMap.get (Servo.class, "SensorServo");
+
+        this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
 
 
         //Sets correct directions for motors and servos
@@ -254,6 +262,8 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
         LeftDriveMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         hangArmUp = false;
+
+        SensorServo.setPosition(0);
 
         //Sets grabber servos to closed
         //this.GrabberServo.setPosition(0.5);

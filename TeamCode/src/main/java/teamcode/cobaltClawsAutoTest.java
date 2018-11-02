@@ -61,24 +61,25 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             HangMotor.setTargetPosition(0);
 
-            turn(Direction.Left, 400, 0.25);
+            turn(Direction.Right,   400, 0.25);
 
             move(Direction.Forward, 700, 0.25);
 
-            turn(Direction.Right, 300, 0.25);
+            turn(Direction.Right,   300, 0.25);
 
             SensorServo.setPosition(0.5);
 
 
             //GOLD TEST
 
-            move(Direction.Forward, 200, 0.25);
+            move(Direction.Backward, 200, 0.25);
             //Looks at the left mineral. If the left mineral is gold, turns and knocks over the
             // mineral, then turns and goes to the depot, then turns and drives into the crater.
 
             if(isGold()) {
 
-                turn(Direction.Left, 250, 0.25);
+                turn(Direction.Left,    250,  0.25);
+                SensorServo.setPosition(0);
                 move(Direction.Forward, 1200, 0.25);
                 turn(Direction.Left,    1000, 0.25);
                 move(Direction.Forward, 800,  0.25);
@@ -93,15 +94,16 @@ public class cobaltClawsAutoTest extends LinearOpMode {
                 //Looks at the center mineral. If the center mineral is gold, goes straight to the
                 // depot, then turns and drives into the crater.
 
-                move(Direction.Forward, 100, 0.25);
+                move(Direction.Backward, 100, 0.25);
 
                 if(isGold()) {
 
-                    turn(Direction.Left, 150, 0.25);
+                    turn(Direction.Left,    150,  0.25);
+                    SensorServo.setPosition(0);
                     move(Direction.Forward, 1400, 0.25);
-                    turn(Direction.Left, 500, 0.25);
-                    move(Direction.Forward, 800, 0.25);
-                    turn(Direction.Left, 270, 0.25);
+                    turn(Direction.Left,    500,  0.25);
+                    move(Direction.Forward, 800,  0.25);
+                    turn(Direction.Left,    270,  0.25);
                     move(Direction.Forward, 2000, 0.25);
 
                     break;
@@ -111,11 +113,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
                     //Turns to face the right mineral. If the right mineral is gold, goes to the
                     // mineral, then turns and goes to the depot, then turns and drives into the
                     // crater.
-                    move(Direction.Forward, 100, 0.25);
+                    move(Direction.Backward, 100, 0.25);
 
                     if(isGold()){
 
                         turn(Direction.Left,    350,  0.25);
+                        SensorServo.setPosition(0);
                         move(Direction.Forward, 1200, 0.25);
                         turn(Direction.Left,    250,  0.25);
                         move(Direction.Forward, 800,  0.25);
