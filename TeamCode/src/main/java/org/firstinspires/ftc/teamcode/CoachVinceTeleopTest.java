@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode;
-package org.firstinspires.ftc.teamcode;
+
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -55,13 +55,15 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             hwMap.rightFrontDrive.setPower(drive - strafe - rotate); //= drive - strafe - rotate;
             hwMap.rightRearDrive.setPower(drive + strafe - rotate); //= drive + strafe - rotate;
 
+            // Read the second gamepad and move the arm
             armExtension = gamepad2.right_stick_y;
             armRotation = gamepad2.left_stick_y;
-            mineralServosIn = gamepad2.right_trigger;
-            mineralServosOut = gamepad2.left_trigger;
-
             hwMap.armRotate.setPower(armRotation);
             hwMap.armExtend.setPower(armExtension);
+
+
+            mineralServosIn = gamepad2.right_trigger;
+            mineralServosOut = gamepad2.left_trigger;
             if (mineralServosIn > mineralServosOut) {
                 hwMap.leftMineral.setPosition(mineralServosIn); // These don't look right, how do I get them to rotate continuously
                 hwMap.rightMineral.setPosition(mineralServosIn);
