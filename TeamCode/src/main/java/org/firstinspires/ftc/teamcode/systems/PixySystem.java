@@ -28,11 +28,11 @@ public class PixySystem extends System {
         opMode= oMode;
         pixyCam = opMode.hardwareMap.get(PixyCam.class, "PixyCam");
         driveSystem = new MecanumDriveSystem(opMode);
-        telemetry.addLine("called RunPixySystem");
+        telemetry.log("Pixy System","called RunPixySystem");
 
         driveSystem.turn(90, 0.3);
-        telemetry.addLine("turning 90 degs to start");
-        telemetry.update();
+        telemetry.log("Pixy System","turning 90 degs to start");
+        telemetry.write();
         spin();
 
     }
@@ -41,20 +41,20 @@ public class PixySystem extends System {
     public void getValues() {
         ArrayList<PixyCam.Block> blocks = pixyCam.getBlocks();
         if (!blocks.isEmpty()) {
-            telemetry.addLine("getting values from blocks: " + blocks.toString());
+            telemetry.log("Pixy Cam","getting values from blocks: {0}", blocks.toString());
             for (PixyCam.Block block : blocks) {
                 if (block.signature == YELLOW_SIGNATURE) {
                     yellowBlock = block;
-                    telemetry.addData("yellow: ", yellowBlock);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.log("Pixy System","yellow: {0}", yellowBlock);
+                    telemetry.log("Pixy Systen","yellow is null, turning counterclockwise");
                 } else if (whiteBlock1 == null && block.signature == WHITE_SIGNATURE) {
                     whiteBlock1 = block;
-                    telemetry.addData("white1: ", whiteBlock1);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.log("Pixy System","white1: {0}", whiteBlock1);
+                    telemetry.log("Pixy System","yellow is null, turning counterclockwise");
                 } else if (whiteBlock2 == null && block.signature == WHITE_SIGNATURE) {
                     whiteBlock2 = block;
-                    telemetry.addData("white2: ", whiteBlock2);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
+                    telemetry.log("Pixy System","white2: {0}", whiteBlock2);
+                    telemetry.log("Pixy System", "yellow is null, turning counterclockwise");
                 }
             }
 
@@ -70,7 +70,7 @@ public class PixySystem extends System {
     }
 
     public void spin() {
-        telemetry.addLine("spinning");
+        telemetry.log("Pixy System","spinning");
         int angle = 0;
 
         // if yellow isn't there or it's too far left, turn clockwise
@@ -79,8 +79,8 @@ public class PixySystem extends System {
 
             angle += 10;
             getValues();
-            telemetry.addLine("angle: " + angle);
-            telemetry.update();
+            telemetry.log("Pixy System","angle: " + angle);
+            telemetry.write();
         }
 
         // if yellow is too far right, turn counterclockwise
@@ -88,15 +88,15 @@ public class PixySystem extends System {
             driveSystem.turn(10, 0.2);
             angle += 10;
             getValues();
-            telemetry.addLine("angle: " + angle);
-            telemetry.update();
+            telemetry.log("Pixy System","angle: " + angle);
+            telemetry.write();
         }
 
         // if yellow's centered, drive forward
         if (yellowBlock != null && yellowBlock.xCenter > 255 / 2- 10 && yellowBlock.xCenter < 255 / 2 + 10) {
             driveSystem.driveToPositionInches(2, 0.1);
-            telemetry.addLine("driving forward");
-            telemetry.update();
+            telemetry.log("Pixy System","driving forward");
+            telemetry.write();
         }
 
         // make the white balls equidistant from either side
@@ -104,18 +104,18 @@ public class PixySystem extends System {
             if (yellowBlock == null) {
                 while (whiteBlock1.xCenter > 255 / 2 - whiteBlock2.xCenter) {
                     driveSystem.turn(5, 0.1);
-                    telemetry.addLine("yellow is null   turning counterclockwise");
-                    telemetry.update();
+                    telemetry.log("Pixy System","yellow is null, turning counterclockwise");
+                    telemetry.write();
                 }
                 while (whiteBlock1.xCenter < 255 / 2 - whiteBlock2.xCenter) {
                     driveSystem.turn(-5, 0.1);
-                    telemetry.addLine("yellow is null   turning clockwise");
-                    telemetry.update();
+                    telemetry.log("Pixy System","yellow is null   turning clockwise");
+                    telemetry.write();
                 }
             }
 
         }
-        telemetry.update();
+        telemetry.write();
     }
 /*
     public void center() {
