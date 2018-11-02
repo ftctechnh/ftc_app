@@ -340,6 +340,15 @@ public class Camera{
         return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
     }
 
+    public VuforiaTrackable targetVisible() {
+        for (VuforiaTrackable trackable: allTrackables)
+        {
+            if(((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible())
+                return trackable;
+        }
+        return null;
+    }
+
     public Double alignToTarget(int whichTarget)
     {
         VuforiaTrackable trackable = allTrackables.get(whichTarget);

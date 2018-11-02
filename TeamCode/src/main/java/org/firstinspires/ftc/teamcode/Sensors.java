@@ -31,11 +31,11 @@ public class Sensors {
         //touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
     }
 
-    private void rotateMobile(double angle) //in degrees for clarity
+    public void rotateMobile(double angle) //in degrees for clarity
     {
         //angle    should go from 0   to 180
         //position should go from min to max
-        double position = 0; //TODO: Math from angle to position
+        double position = angle / 180 + .5; //TODO: Math from angle to position
 
         dServo.setPosition(position);
     }
