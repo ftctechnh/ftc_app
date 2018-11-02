@@ -9,27 +9,41 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.teamcode.RoboticsUtils.PID;
+
+import static android.content.Context.*;
 import static java.lang.Math.abs;
-import static java.lang.Math.cos;
 import static java.lang.Math.pow;
 import static java.lang.Math.sin;
 import static java.lang.Math.sqrt;
 import static java.lang.Math.toRadians;
+
 
 /**
  * Created by jxfio on 1/21/2018.
  */
 @TeleOp(name="tribot", group="Linear Opmode")
 public class ClimberBot2018 extends LinearOpMode{
+
     // Declare OpMode members.
+    //packageContext(org.firstinspires.ftc.teamcode, 0);
     ElapsedTime timer = new ElapsedTime();
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor ADrive;
-    private DcMotor BDrive;
-    private DcMotor CDrive;
+    private DcMotor left;
+    private DcMotor back;
+    private DcMotor right;
+    private DcMotor wheelLift;
+    private DcMotor swivel;
+    private DcMotor arm;
+    private DcMotor leftClimb;
+    private DcMotor rightClimb;
+    private Servo lift;
+    private Servo leftFinger;
+    private Servo rightFinger;
+    private Servo backSwivel;
     private IntegratingGyroscope gyro;
     private ModernRoboticsI2cGyro MRI2CGyro;
-    private Servo F;
+    PID θPID = new PID(1,.0001,.1);
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -39,15 +53,23 @@ public class ClimberBot2018 extends LinearOpMode{
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        ADrive = hardwareMap.get(DcMotor.class, "A");
-        BDrive = hardwareMap.get(DcMotor.class, "B");
-        CDrive = hardwareMap.get(DcMotor.class, "C");
+        left = hardwareMap.get(DcMotor.class, "B1");
+        back = hardwareMap.get(DcMotor.class, "B3");
+        right = hardwareMap.get(DcMotor.class, "B2");
+        wheelLift = hardwareMap.get(DcMotor.class, "B0");
+        swivel = hardwareMap.get(DcMotor.class,"R0");
+        arm = hardwareMap.get(DcMotor.class, "R1");
+        leftClimb = hardwareMap.get(DcMotor.class, "R2");
+        rightClimb = hardwareMap.get(DcMotor.class, "R3");
+        lift = hardwareMap.get(Servo.class,"S2");
+        leftFinger = hardwareMap.get(Servo.class, "S3");
+        rightFinger = hardwareMap.get(Servo.class, "S4");
+        backSwivel = hardwareMap.get(Servo.class, "S5");
         MRI2CGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
         gyro = (IntegratingGyroscope)MRI2CGyro;
         telemetry.log().add("Gyro Calibrating. Do Not Move!");
         MRI2CGyro.calibrate();
         // Wait until the gyro calibration is complete
-        F = hardwareMap.get(Servo.class, "F");
         timer.reset();
         while (!isStopRequested() && MRI2CGyro.isCalibrating())  {
             telemetry.addData("calibrating", "%s", Math.round(timer.seconds())%2==0 ? "|.." : "..|");
@@ -63,61 +85,161 @@ public class ClimberBot2018 extends LinearOpMode{
         telemetry.log().add("Press A & B to reset heading");
         // run until the end of the match (driver presses STOP)
         double temp;
-        double APwr;
-        double BPwr;
-        double CPwr;
+        double leftPwr;
+        double backPwr;
+        double rightPwr;
         double dt;
         double Desiredθ = 0;
-        double Fingeroffset = 0;
         double TurnPWR;
         double PrevTime = time; //previous time value
         boolean curResetState = false;
         boolean lastResetState = false;
-        boolean b = false;
-        boolean x = false;
+        boolean upRailMode = false;
+        boolean onRail = false;
+        boolean y = false;
+        double pos;
+        double prevpos=0;
+        double prevderiv=0;
+        double wheelLiftZero=0;
+        final double wheelLiftZerotoGround=47;
+        PID wheelLiftPID = new PID(1,.0001,.1);
+        PID armPID = new PID(1,.00001,.1);
+        PID armSwivelPID = new PID(1,.00001,.1);
+        boolean x=false;
+        boolean b=false;
+        boolean armSwivelZeroingState;
+        boolean lastArmSwivelZeroingState=false;
+        double armSwivelZeroState=0;
+        boolean armZeroingState;
+        boolean lastArmZeroingState=false;
+        double armZeroState=0;
+        boolean leftOpen=true;
+        boolean rightOpen = true;
         while (opModeIsActive()) {
+                //Gyro reset
             curResetState = (gamepad1.a && gamepad1.b);
             if (curResetState && !lastResetState) {
                 MRI2CGyro.resetZAxisIntegrator();
             }
             lastResetState = curResetState;
+            armZeroingState = (gamepad2.a && gamepad2.b);
+            if (armZeroingState&&!lastArmZeroingState){
+                armZeroState=arm.getCurrentPosition();
+            }
+            lastArmZeroingState =armZeroingState;
+            armSwivelZeroingState = (gamepad2.a && gamepad2.b);
+            if (armSwivelZeroingState&&!lastArmSwivelZeroingState){
+                armSwivelZeroState=arm.getCurrentPosition();
+            }
+            lastArmSwivelZeroingState =armSwivelZeroingState;
+            if(gamepad1.y&&! y){
+                upRailMode=true;
+            }
+            y = gamepad1.y;
+            if(gamepad2.y){
+                lift.setPosition(1);
+            }else if(gamepad2.a){
+                lift.setPosition(-1);
+            }
+            if(gamepad2.x&&!x){
+                leftOpen=!leftOpen;
+            }
+            x=gamepad2.x;
+            if(gamepad2.b&&!b){
+                rightOpen=!rightOpen;
+            }
+            b=gamepad2.b;
+            if(leftOpen){
+                leftFinger.setPosition(1);
+            }else{
+                leftFinger.setPosition(.25);
+            }
+            if(rightOpen){
+                rightFinger.setPosition(0);
+            }else{
+                rightFinger.setPosition(.75);
+            }
+            while (upRailMode){
+                double dp;
+                dt = time - PrevTime;
+                PrevTime = time;
+                time = getRuntime();
+                if(gamepad1.y&&! y){
+                    upRailMode=false;
+                }
+                armPID.iteratePID(arm.getCurrentPosition()-armZeroState+70,dt);
+                armSwivelPID.iteratePID(swivel.getCurrentPosition()-armSwivelZeroState,dt);
+                arm.setPower(Range.clip(armPID.getPID(),-1,1));
+                swivel.setPower(Range.clip(armSwivelPID.getPID(),-1,1));
+                y = gamepad1.y;
+                backSwivel.setPosition(1);
+                leftClimb.setPower(-1);
+                rightClimb.setPower(1);
+                pos = rightClimb.getCurrentPosition();
+                dp = pos-prevpos;
+                prevpos = pos;
+                if(Math.abs(dp/dt-prevderiv)>10){
+                    onRail = true;
+                }
+
+                while (onRail){
+                    dt = time - PrevTime;
+                    PrevTime = time;
+                    time = getRuntime();
+                    wheelLiftPID.iteratePID(wheelLift.getCurrentPosition()- wheelLiftZero,dt);
+                    wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+                    leftClimb.setPower(Range.clip(-gamepad1.left_stick_y,-1,1));
+                    rightClimb.setPower(Range.clip(gamepad1.left_stick_y,-1,1));
+                    if(Math.abs((pos-prevpos)/dt-prevderiv)>10){
+                        onRail = false;
+                    }
+                    wheelLiftPID.iteratePID(wheelLift.getCurrentPosition()-wheelLiftZero,dt);
+                    armPID.iteratePID(arm.getCurrentPosition()-armZeroState+70,dt);
+                    armSwivelPID.iteratePID(swivel.getCurrentPosition()-armSwivelZeroState,dt);
+                    arm.setPower(Range.clip(armPID.getPID(),-1,1));
+                    swivel.setPower(Range.clip(armSwivelPID.getPID(),-1,1));
+                    wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+                }
+                wheelLiftPID.iteratePID(wheelLift.getCurrentPosition()-wheelLiftZero+wheelLiftZerotoGround,dt);
+                wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+                prevderiv=(pos-prevpos)/dt;
+                back.setPower(Range.clip(gamepad1.left_stick_y,-1,1));
+            }
             double θ = MRI2CGyro.getIntegratedZValue();
             double drivey = -gamepad1.left_stick_y; //should be neg here
             double drivex = -gamepad1.left_stick_x;
-            //double turn =  gamepad1.right_stick_x;
-            //negative sign because y goes in wrong direction
+                //double turn =  gamepad1.right_stick_x;
+                //negative sign because y goes in wrong direction
             double time = getRuntime();
             double driveθ = Math.atan2(drivex,drivey); //direction //took out neg
-            double driveV = (sqrt(pow(drivey,2)+pow(drivex,2)));  //magnitude -pythagorean theorem
+            double driveV = sqrt(pow(drivey,2)+pow(drivex,2));  //magnitude -pythagorean theorem
             driveV = Range.clip(driveV,-1,1);
-            //integrating for angle
+                //integrating for angle
             dt = time - PrevTime;
             Desiredθ += (-gamepad1.right_stick_x * dt * 90); // 45 degrees per second
             PrevTime = time;
-            //PIDθ
-            TurnPWR = (θ - Desiredθ)/-100;
+                //PID
+            wheelLiftPID.iteratePID(wheelLift.getCurrentPosition()-wheelLiftZero+wheelLiftZerotoGround,dt);
+            wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+            θPID.iteratePID(θ-Desiredθ,dt);
+            TurnPWR = θPID.getPID();
+                //TurnPWR = (θ - Desiredθ)/-100;
             TurnPWR = Range.clip(TurnPWR, -.75, .75);
-            if(gamepad2.b && !b && Fingeroffset <= .4){
-                Fingeroffset += .1;
-            }
-            if(gamepad2.x && !x && Fingeroffset >= .1 ){
-                Fingeroffset -= .1;
-            }
-            b = gamepad2.b;
-            x = gamepad2.x;
-            //drivebase powers
+                //drivebase powers
             temp= 1 - TurnPWR;
-            APwr= TurnPWR + temp * driveV*sin(driveθ); //power to send motor- proportional to the sign of the angle to drive at
-            BPwr= TurnPWR + temp * driveV*sin(driveθ+toRadians(120));
-            CPwr= TurnPWR + temp * driveV*sin(driveθ-toRadians(120));
-            F.setPosition(Range.clip(0.5 - Fingeroffset, -1,1));
-            // Send calculated power to wheels
-            ADrive.setPower(Range.clip(APwr, -1, 1));  //range.clip concerns for ratios?- put in in case
-            BDrive.setPower(Range.clip(BPwr, -1, 1));
-            CDrive.setPower(Range.clip(CPwr, -1, 1));
-            //Telemetry Data
+            leftPwr= TurnPWR + temp * driveV*sin(driveθ+toRadians(60)); //power to send motor- proportional to the sign of the angle to drive at
+            backPwr= TurnPWR + temp * driveV*sin(driveθ+toRadians(180));
+            rightPwr= TurnPWR + temp * driveV*sin(driveθ-toRadians(60));
+                // Send calculated power to motors
+            swivel.setPower(Range.clip(gamepad2.left_stick_x,-1,1));
+            arm.setPower(Range.clip(gamepad2.left_stick_y,-1,1));
+            backSwivel.setPosition(1/2);
+            left.setPower(Range.clip(leftPwr, -1, 1));  //range.clip concerns for ratios?- put in in case
+            back.setPower(Range.clip(backPwr, -1, 1));
+            right.setPower(Range.clip(rightPwr, -1, 1));
+                //Telemetry Data
             telemetry.addData("path0","driveθ:");
-            telemetry.addData("path1","A Power:" + String.valueOf(APwr) + " B Power:" + String.valueOf(BPwr) + " C Power:" +String.valueOf(CPwr));
+            telemetry.addData("path1","A Power:" + String.valueOf(leftPwr) + " B Power:" + String.valueOf(backPwr) + " C Power:" +String.valueOf(rightPwr));
             telemetry.addData("path2","Integrated Z:" + String.valueOf(MRI2CGyro.getIntegratedZValue()) + " Desiredθ: " + String.valueOf(Desiredθ));
             telemetry.addData("path3","Time: "+ toString().valueOf(time));
             telemetry.update();// prints above stuff to phone
