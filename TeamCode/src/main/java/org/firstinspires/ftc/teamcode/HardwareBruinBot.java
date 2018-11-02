@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -61,8 +62,8 @@ public class HardwareBruinBot
     public DcMotor  landerLatchLift = null;
     public DcMotor  armExtend = null;
     public DcMotor  armRotate = null;
-    public Servo    leftMineral = null;
-    public Servo    rightMineral = null;
+    public CRServo    leftMineral = null;
+    public CRServo    rightMineral = null;
     //public DcMotor  armExt = null;  //for the arm extension
     //public DcMotor  leftArm     = null;
     //public Servo    leftClaw    = null;
@@ -95,8 +96,8 @@ public class HardwareBruinBot
         landerLatchLift = hwMap.get(DcMotor.class, "landerLatchLift");
         armExtend = hwMap.get(DcMotor.class, "armExtend");
         armRotate = hwMap.get(DcMotor.class, "armRotate");
-        leftMineral = hwMap.get(Servo.class, "leftMineral");
-        rightMineral = hwMap.get(Servo.class, "rightMineral");
+        leftMineral = hwMap.get(CRServo.class, "leftMineral");
+        rightMineral = hwMap.get(CRServo.class, "rightMineral");
        // armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
@@ -123,9 +124,15 @@ public class HardwareBruinBot
         leftRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightRearDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         armExtend.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armExtend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armRotate.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         landerLatchLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        landerLatchLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
        // armExt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //arm extension
         //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Define and initialize ALL installed servos.
