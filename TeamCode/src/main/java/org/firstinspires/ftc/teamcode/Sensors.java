@@ -24,18 +24,17 @@ public class Sensors {
     {
         this.hardwareMap = hardwareMap;
         dServo = hardwareMap.get(Servo.class, "dServo");
-        //dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
-        //dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
+        dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
+        dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
         //colorSensorBottom = hardwareMap.get(ColorSensor.class, "colorSensorBottom");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
-        //touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
     }
 
     public void rotateMobile(double angle) //in degrees for clarity
     {
         //angle    should go from 0   to 180
         //position should go from min to max
-        double position = angle / 180 + .5; //TODO: Math from angle to position
+        double position = angle / 180 + .5;
 
         dServo.setPosition(position);
     }
@@ -43,7 +42,7 @@ public class Sensors {
     public double getMobileAngle()
     {
         double position = dServo.getPosition();
-        return 0; //TODO: Math from position to angle in radians
+        return (position - .5) * Math.PI;
     }
 
 }
