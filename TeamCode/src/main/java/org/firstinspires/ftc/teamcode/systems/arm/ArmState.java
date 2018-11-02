@@ -4,7 +4,8 @@ public enum ArmState
 {
     WINCH_TOP,
     WINCH_BOTTOM,
-    ROTATE_UP,
-    ROTATE_DOWN,
+    WINCH_LOAD,
+    ROTATE_DROP,
+    ROTATE_PICKUP,
     ROTATE_LATCH
 }

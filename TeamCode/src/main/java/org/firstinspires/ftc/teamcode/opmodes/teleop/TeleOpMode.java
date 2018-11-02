@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.controller.Controller;
 import org.firstinspires.ftc.teamcode.Hardware.controller.Handler;
+import org.firstinspires.ftc.teamcode.Hardware.controller.StepButton;
 import org.firstinspires.ftc.teamcode.opmodes.debuggers.TeleOpModeDebugger;
 import org.firstinspires.ftc.teamcode.systems.arm.ArmState;
 import org.firstinspires.ftc.teamcode.systems.arm.ArmSystem;
@@ -25,19 +26,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
     }
 
     @Override
-    public void run(){
-        controller1.handle();
-        armSystem.run();
-
-        float rx = controller1.gamepad.right_stick_x;
-        float ry = controller1.gamepad.right_stick_y;
-        float lx = controller1.gamepad.left_stick_x;
-        float ly = controller1.gamepad.left_stick_y;
-
-        driveSystem.mecanumDrive(rx, ry, lx, ly, false);
-    }
-
-    @Override
     public void init()
     {
         this.controller1 = new Controller(gamepad1);
@@ -46,40 +34,22 @@ public class TeleOpMode extends TeleOpModeDebugger {
         initButton();
     }
 
+
     @Override
     public void initialize()
     {
 
     }
 
-
     public void initButton() {
         telemetry.addData("buttons", "initialize");
         telemetry.update();
-        controller1.a.pressedHandler = new Handler()
-        {
-            @Override
-            public void invoke() throws Exception
-            {
-                armSystem.addState(ArmState.WINCH_TOP);
-            }
-        };
-
-        controller1.b.pressedHandler = new Handler()
-        {
-            @Override
-            public void invoke() throws Exception
-            {
-                armSystem.addState(ArmState.WINCH_BOTTOM);
-            }
-        };
-
         controller1.dPadDown.pressedHandler = new Handler()
         {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.addState(ArmState.ROTATE_DOWN);
+                armSystem.addState(ArmState.ROTATE_PICKUP);
             }
         };
         controller1.dPadUp.pressedHandler = new Handler()
@@ -87,7 +57,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.addState(ArmState.ROTATE_UP);
+                armSystem.addState(ArmState.ROTATE_DROP);
             }
         };
         controller1.dPadUpShifted.pressedHandler = new Handler()
@@ -98,13 +68,75 @@ public class TeleOpMode extends TeleOpModeDebugger {
                 armSystem.addState(ArmState.ROTATE_LATCH);
             }
         };
-        controller1.x.pressedHandler = new Handler()
+        addWinchButton();
+    }
+
+    private void addWinchButton() {
+        final StepButton<ArmState> winchButton = new StepButton<ArmState>(
+                controller1.y,
+                controller1.a,
+                ArmState.WINCH_BOTTOM,
+                ArmState.WINCH_LOAD,
+                ArmState.WINCH_TOP
+        );
+        winchButton.setOffset(1);
+        winchButton.incrementAction = new Handler()
         {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.slideTesting();
+                armSystem.addState(winchButton.getCurrentState());
+            }
+        } ;
+        winchButton.decrementAction = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                armSystem.addState(winchButton.getCurrentState());
             }
         };
+        controller1.addButton(winchButton);
+    }
+
+    private void addRotateButton() {
+        final StepButton<ArmState> rotateButton = new StepButton<ArmState>(
+                controller1.y,
+                controller1.a,
+                ArmState.ROTATE_PICKUP,
+                ArmState.ROTATE_LATCH,
+                ArmState.ROTATE_DROP
+        );
+        rotateButton.setOffset(1);
+        rotateButton.incrementAction = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                armSystem.addState(rotateButton.getCurrentState());
+            }
+        } ;
+        rotateButton.decrementAction = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                armSystem.addState(rotateButton.getCurrentState());
+            }
+        };
+        controller1.addButton(rotateButton);
+    }
+
+    @Override
+    public void run(){
+        controller1.handle();
+        armSystem.run();
+
+        float rx = controller1.gamepad.right_stick_x;
+        float ry = controller1.gamepad.right_stick_y;
+        float lx = controller1.gamepad.left_stick_x;
+        float ly = controller1.gamepad.left_stick_y;
+
+        driveSystem.mecanumDrive(rx, ry, lx, ly, false);
     }
 }

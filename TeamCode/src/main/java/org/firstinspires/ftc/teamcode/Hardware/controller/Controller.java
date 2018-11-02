@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by idiot on 11/3/17.
  */
@@ -17,6 +20,8 @@ public class Controller
 
     private float rightTriggerValue;
     private float leftTriggerValue;
+
+    private List<Button> uniqueButtons;
 
     public Button a;
     public Button b;
@@ -57,6 +62,7 @@ public class Controller
         //this.rightTriggerValue = DEFAULT_TRIGGER_VALUE;
         //this.leftTriggerValue = DEFAULT_TRIGGER_VALUE;
         this.gamepad = gamepad;
+        uniqueButtons = new ArrayList<Button>();
 
         a = new Button();
         b = new Button();
@@ -376,6 +382,10 @@ public class Controller
         }
     }
 
+    public void addButton(Button button) {
+        this.uniqueButtons.add(button);
+    }
+
     public void handle()
     {
         a.testAndHandle();
@@ -397,19 +407,19 @@ public class Controller
         bShifted.testAndHandle();
         xShifted.testAndHandle();
         yShifted.testAndHandle();
-        ;
         backShifted.testAndHandle();
         startShifted.testAndHandle();
         dPadDownShifted.testAndHandle();
-        ;
         dPadUpShifted.testAndHandle();
         dPadLeftShifted.testAndHandle();
         dPadRightShifted.testAndHandle();
         leftStickButtonShifted.testAndHandle();
-        ;
         leftTriggerShifted.testAndHandle();
         rightBumperShifted.testAndHandle();
         rightStickButtonShifted.testAndHandle();
         rightTriggerShifted.testAndHandle();
+        for (Button button : uniqueButtons) {
+            button.testAndHandle();
+        }
     }
 }
