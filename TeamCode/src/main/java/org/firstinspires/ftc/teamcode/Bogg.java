@@ -13,6 +13,7 @@ public class Bogg
     DcMotor lift;
     Camera camera;
     Sensors sensors;
+    Servo brake;
 
     double alpha = 0.0039;
     double alphaInc = 0.000001;
@@ -26,7 +27,8 @@ public class Bogg
         this.hardwareMap = hardwareMap;
         driveEngine = new DriveEngine(hardwareMap);
         lift  = hardwareMap.dcMotor.get("lift");
-//        sensors = new Sensors(hardwareMap);
+        sensors = new Sensors(hardwareMap);
+        brake = hardwareMap.servo.get("brake");
     }
 
     public double smoothX(double x)
@@ -64,6 +66,24 @@ public class Bogg
             lift.setPower(-.7);
         else
             lift.setPower(0);
+    }
+
+    public void lift(double power)
+    {
+        lift.setPower(power);
+    }
+
+    public void setBrake(boolean position)
+    {
+        if(position == true)
+            brake.setPosition(.5);
+        else
+            brake.setPosition(.6);
+    }
+
+    public void setBrake(double position)
+    {
+        brake.setPosition(position);
     }
 
     public void manualDrive()
