@@ -45,11 +45,13 @@ public class AutoMineral extends LinearOpMode {
 
         //Initialize hardware;
         hwMap.init(hardwareMap);
+        // Wait for the Start button to be pushed
         while (!isStarted()) {
-
+            // Put things to do prior to start in here
         }
-        double fwdSpeed=0.0;  // Normally 0.1
+        double fwdSpeed=0.0;  // Forward Speed, Normally 0.1
         double rotate = 0.1; // Rotation Speed
+        double strafe = 0.1;  // Strafe Speed
         //This loop runs until the gold mineral is found;
         //Need to change this to "while not detected" like in the GoldAlignExample program;
         while (detector.isFound()) {
