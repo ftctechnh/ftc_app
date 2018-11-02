@@ -31,9 +31,9 @@ public class AutoMineralCoachVince extends LinearOpMode {
 
         // Initiaize Gyro
         ModernRoboticsI2cGyro gyro    = null;
-        static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-        static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-        static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+        final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
+        final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+        final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
 
 
 
@@ -206,7 +206,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
      */
-    public void gyroTurn (  double speed, double angle) {
+    /*public void gyroTurn (  double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
@@ -225,6 +225,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
      *                   If a relative angle is required, add/subtract from current heading.
      * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
+    /*
     public void gyroHold( double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
@@ -240,7 +241,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
         // Stop all motion;
         stopBot();
     }
-
+*/
     /**
      * Perform one cycle of closed loop heading control.
      *
@@ -251,7 +252,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
      * @param PCoeff    Proportional Gain coefficient
      * @return
      */
-    boolean onHeading(double speed, double angle, double PCoeff) {
+    /*boolean onHeading(double speed, double angle, double PCoeff) {
         double   error ;
         double   steer ;
         boolean  onTarget = false ;
@@ -284,14 +285,14 @@ public class AutoMineralCoachVince extends LinearOpMode {
 
         return onTarget;
     }
-
+*/
     /**
      * getError determines the error between the target angle and the robot's current heading
      * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
      * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
      *          +ve error means the robot should turn LEFT (CCW) to reduce error.
      */
-    public double getError(double targetAngle) {
+    /*public double getError(double targetAngle) {
 
         double robotError;
 
@@ -301,7 +302,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
         while (robotError <= -180) robotError += 360;
         return robotError;
     }
-
+*/
 
 
 }

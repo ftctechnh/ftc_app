@@ -22,6 +22,8 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         float armRotation;
         float mineralServosIn;
         float mineralServosOut;
+        float liftingArmUp;
+        float liftingArmDown;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -55,13 +57,26 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             hwMap.rightFrontDrive.setPower(drive - strafe - rotate); //= drive - strafe - rotate;
             hwMap.rightRearDrive.setPower(drive + strafe - rotate); //= drive + strafe - rotate;
 
+            // Read the driving gamepad triggers for the lifting arm
+            liftingArmUp = gamepad1.right_trigger;
+            liftingArmDown = gamepad1.left_trigger;
+
+            if (liftingArmUp > liftingArmDown) {
+                hwMap.landerLatchLift.setPower(liftingArmUp);
+
+            }
+            else
+            {
+                hwMap.landerLatchLift.setPower(liftingArmDown);
+            }
+
             // Read the second gamepad and move the arm
             armExtension = gamepad2.right_stick_y;
             armRotation = gamepad2.left_stick_y;
             hwMap.armRotate.setPower(armRotation);
             hwMap.armExtend.setPower(armExtension);
 
-
+            // Read the triggers and roll the Mineral Servos
             mineralServosIn = gamepad2.right_trigger;
             mineralServosOut = gamepad2.left_trigger;
             if (mineralServosIn > mineralServosOut) {
@@ -73,6 +88,8 @@ public class CoachVinceTeleopTest extends LinearOpMode {
                 hwMap.leftMineral.setPosition(mineralServosOut);
                 hwMap.rightMineral.setPosition(mineralServosOut);
             }
+
+
             /*
 
             // Use gamepad left & right Bumpers to open and close the claw
