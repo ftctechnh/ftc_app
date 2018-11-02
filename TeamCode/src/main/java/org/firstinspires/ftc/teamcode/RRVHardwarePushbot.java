@@ -130,5 +130,12 @@ public class RRVHardwarePushbot
         rightRear.setPower(right);
         rightFront.setPower(right);
     }
+
+    public void setLeftRight(double left, double right,double LeftRear, double RightRear) {
+        leftRear.setPower(LeftRear);
+        leftFront.setPower(left);
+        rightRear.setPower(RightRear);
+        rightFront.setPower(right);
+    }
  }
 

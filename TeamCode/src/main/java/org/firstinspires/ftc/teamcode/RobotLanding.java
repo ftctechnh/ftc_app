@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -72,14 +75,16 @@ public class RobotLanding extends LinearOpMode {
     /* Declare OpMode members. */
     RRVHardwarePushbot robot = new RRVHardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime     runtime = new ElapsedTime();
+    private GoldAlignDetector detector;
 
     static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 8.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 0.8188976 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * Math.PI);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
+
 
     @Override
     public void runOpMode() {
@@ -94,33 +99,75 @@ public class RobotLanding extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-//        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        robot.rack_pinion.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//
-//        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        robot.rack_pinion.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0",  "Starting at %7d",
-                          robot.rack_pinion.getCurrentPosition());
+                robot.rack_pinion.getCurrentPosition());
         telemetry.update();
+
+        initDetector();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        // Step through each leg of the path,
-        // Note: Reverse movement is obtained by setting a negative distance (not speed)
-        encoderDown(5.5);  // S1: Forward 47 Inches with 5 Sec timeout
-        runtime.reset();
-        while (opModeIsActive()&&runtime.seconds()<0.8) {
-            robot.setLeftRight(-0.8, 0.8);
-        }
-        //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
-       //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
+        //encoderDown(6.5);
 
+        runtime.reset();
+
+        while (opModeIsActive() && runtime.seconds()<0.5) {
+            robot.setLeftRight(0.8, -0.3,0.8,-0.3);
+        }
+        robot.setLeftRight(0,0,0,0);
+        Wait(1);
+        telemetry.addData("My name is ","Jeff");
+        telemetry.update();
+        robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
+        Wait(0.75);
+        robot.setLeftRight(0,0,0,0);
+        Wait(2);
+        telemetry.addData("My name is ","Bob");
+        telemetry.update();
+        Wait(1);
+        telemetry.addData("My name is ","Chinmay");
+        telemetry.update();
+        while(opModeIsActive() && detector.getAligned() == false){
+            robot.setLeftRight(-0.05,0.05,-0.05,0.05);
+        }
+        robot.setLeftRight(0,0,0,0);
+        telemetry.addData("My name is ","Prajwal");
+        Wait(2);
+        telemetry.addData("X position of the cube", detector.getXPosition());
+        telemetry.update();
+        Wait(2);
+        robot.setLeftRight(0.2,-0.2,0.2,-0.2);
+        Wait(0.5);
+        robot.setLeftRight(0,0,0,0);
+        Wait(2);
+        telemetry.addData("X position of the cube", detector.getXPosition());
+        telemetry.update();
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds()< 3.5) {
+            robot.setLeftRight(-0.2,-0.2,-0.2,-0.2);
+            telemetry.addData("X position of the cube", detector.getXPosition());
+            telemetry.update();
+        }
+
+
+        robot.setLeftRight(0,0,0,0);
+        telemetry.addData("Is the cube pushed?",detector.isFound());
+        telemetry.update();
+
+        runtime.reset();
+
+//        while (opModeIsActive() && runtime.seconds()<0.75) {
+//            robot.setLeftRight(0, 0.8,0,0.8);
+//        }
+//        while (opModeIsActive()&& runtime.seconds() < 1){
+//            robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
+//        }
+//
+//
+//        robot.setLeftRight(0,0,0,0);
+        telemetry.addData("Detecting Gold",detector.getAligned());
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
@@ -142,5 +189,32 @@ public class RobotLanding extends LinearOpMode {
         }
 
         robot.rack_pinion.setPower(0);
+    }
+    public void Wait(double seconds){
+        runtime.reset();
+        while(opModeIsActive() && runtime.seconds()< seconds){}
+    }
+
+    private void initDetector(){
+        telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+
+        detector = new GoldAlignDetector();
+        // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0,false);
+        detector.useDefaults();
+
+        // Optional Tuning
+        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005;
+
+        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.perfectRatio = 1.0;
+
+        detector.enable();
     }
 }
