@@ -46,13 +46,15 @@ public class autonomousDrive_0_1 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1);
+        robot = new Bogg(hardwareMap, gamepad1, telemetry);
         action = Mode.Stop;
         robot.sensors.rotateMobile(0);
         waitForStart();
         action = Mode.Drop;
+        startPosition = StartPosition.BackBlue;
         boolean midtargetAchieved = false;
         timer = new ElapsedTime();
+        timer.startTime();
 
         while (opModeIsActive())
         {
@@ -60,22 +62,23 @@ public class autonomousDrive_0_1 extends LinearOpMode
             switch(action) //TODO: complete actions and conditions
             {
                 case Drop:
-                    if(t < .3)
+                    if(t < 1)
                     {
-                        robot.setBrake(false);
                         if(!robot.sensors.touchBottom.isPressed())
-                            robot.lift(-0.7);
+                            robot.lift(-0.7); //pull
+                        robot.setBrake(false);
                     }
-                    else if(t < 2.3)
+                    else if(t < 6)
                     {
-                        robot.lift(.2);
+                        robot.lift(.2); //push
                     }
-                    else if(t < 2.8)
+                    else if(t < 9)
                     {
                         robot.lift(0);
-                        robot.driveEngine.drive(-.8,0);
+                        robot.driveEngine.drive(.8,0);
                     }
-                    else if(t > 5) //if condition
+
+                    else if(t > 9) //if condition
                     {
                         robot.driveEngine.rotate(-.2);
                     }
@@ -174,25 +177,17 @@ public class autonomousDrive_0_1 extends LinearOpMode
                         action = Mode.Stop;
                     break;
 
+
                 default:
                     //do something (actually nothing but we need to tell the robot that.)
 
             }
-            if(gamepad1.dpad_up)
-            {
-                x+=.001;
-            }
-
-            if(gamepad1.dpad_down)
-            {
-                x-=.001;
-            }
-            robot.setBrake(x);
 
             // Display the current values
             telemetry.addData("leftx: ", gamepad1.left_stick_x);
+            telemetry.addData("time: ", t);
             telemetry.addData("servo x: ", x);
-            telemetry.addData("servo diff: ", x-robot.brake.getPosition());
+            telemetry.addData("servo power", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
             telemetry.addData("mode", action);
             telemetry.update();

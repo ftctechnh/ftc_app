@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class Bogg
 {
     Gamepad gamepad;
@@ -21,10 +23,11 @@ public class Bogg
     double yAve = 0;
     double spinAve = 0;
 
-    public Bogg(HardwareMap hardwareMap, Gamepad gamepad)
+    public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
     {
         this.gamepad = gamepad;
         this.hardwareMap = hardwareMap;
+        camera = new Camera(hardwareMap, telemetry);
         driveEngine = new DriveEngine(hardwareMap);
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
@@ -61,9 +64,9 @@ public class Bogg
     public void lift()
     {
         if(gamepad.y  )//  && !sensors.touchTop.isPressed())
-            lift.setPower(.7);
+            lift.setPower(1);
         else if(gamepad.a  )//  && !sensors.touchBottom.isPressed())
-            lift.setPower(-.7);
+            lift.setPower(-1);
         else
             lift.setPower(0);
     }

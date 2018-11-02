@@ -11,7 +11,8 @@ public class holonomicDrive_test_alpha extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1);
+        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        double x = .5;
         waitForStart();
 
         while (opModeIsActive())
@@ -38,9 +39,21 @@ public class holonomicDrive_test_alpha extends LinearOpMode
                 robot.decAlpha();
             }
 
+            if(gamepad1.dpad_up)
+            {
+                x+=.001;
+            }
+
+            if(gamepad1.dpad_down)
+            {
+                x-=.001;
+            }
+            robot.setBrake(x);
+
             // Display the current value
             telemetry.addData("leftx: ", robot.smoothX(gamepad1.left_stick_x));
             telemetry.addData("lefty: ", robot.smoothY(gamepad1.left_stick_y));
+            telemetry.addData("servo x: ", x);
             telemetry.addData("leftx: ", gamepad1.left_stick_x);
             telemetry.addData("lefty: ", gamepad1.left_stick_y);
             telemetry.addData("alpha: ", robot.getAlpha());
