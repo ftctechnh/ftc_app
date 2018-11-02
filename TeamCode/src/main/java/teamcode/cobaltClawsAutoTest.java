@@ -59,7 +59,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             //ArmMotor.setTargetPosition(600);
             //ArmMotor.setPower(0.25);
 
-            HangMotor.setTargetPosition(0);
+            HangMotor.setTargetPosition(600);
+            HangMotor.setPower(0.8);
+
+            while(HangMotor.isBusy()){
+
+            }
+
 
             turn(Direction.Right,   400, 0.25);
 
@@ -223,7 +229,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
         this.SensorServo = hardwareMap.get (Servo.class, "SensorServo");
 
-        this.colorSensor = hardwareMap.get(ColorSensor.class, "ColorSensor");
+        this.colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
 
         //Sets correct directions for motors and servos
