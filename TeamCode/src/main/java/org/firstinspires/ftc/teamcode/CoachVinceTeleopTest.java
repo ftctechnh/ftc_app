@@ -80,13 +80,13 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             mineralServosIn = gamepad2.right_trigger;
             mineralServosOut = gamepad2.left_trigger;
             if (mineralServosIn > mineralServosOut) {
-                hwMap.leftMineral.setPosition(mineralServosIn); // These don't look right, how do I get them to rotate continuously
-                hwMap.rightMineral.setPosition(mineralServosIn);
+                hwMap.leftMineral.setPower(mineralServosIn); // These don't look right, how do I get them to rotate continuously
+                hwMap.rightMineral.setPower(mineralServosIn);
             }
             else
             {
-                hwMap.leftMineral.setPosition(mineralServosOut);
-                hwMap.rightMineral.setPosition(mineralServosOut);
+                hwMap.leftMineral.setPower(mineralServosOut);
+                hwMap.rightMineral.setPower(mineralServosOut);
             }
 
 
