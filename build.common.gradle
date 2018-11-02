@@ -77,7 +77,6 @@ android {
             }
         }
         debug {
-            buildConfigField 'String', "VuforiaKey", NullRobotics_VuforiaKey
             debuggable true
             jniDebuggable true
             renderscriptDebuggable true
