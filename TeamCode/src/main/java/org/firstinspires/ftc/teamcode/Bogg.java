@@ -86,7 +86,7 @@ public class Bogg
             double delta_x = target_x - robot_x;
             double delta_y = target_y - robot_y;
 
-            if(delta_x < target_radius && delta_y < target_radius)
+            if(Math.abs(delta_x) < target_radius && Math.abs(delta_y) < target_radius)
             {
                 driveEngine.drive(0,0);
                 return true;
@@ -105,7 +105,29 @@ public class Bogg
             driveEngine.drive(Math.cos(target_heading) * speed, Math.sin(target_heading) * speed);
 
         }
+            return true;
+    }
+
+    public boolean rotateToTarget(double targetHeading, double accuracy_angle)
+    {
+        double[] location = camera.getLocation();
+        if(location != null)
+        {
+
+            //the direction a compass would tell us
+            double currentHeading = camera.getHeading() * 180 / Math.PI;
+
+            double headingDifference = currentHeading - targetHeading;
+
+            if(Math.abs(headingDifference) < accuracy_angle)
+                return true;
+            if(headingDifference > 1)
+                driveEngine.rotate(.2);
+            else
+                driveEngine.rotate(-.2);
             return false;
+        }
+        return true;
     }
 
     public void incAlpha()
