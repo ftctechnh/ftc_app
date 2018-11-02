@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.Hardware.controller;
+package org.firstinspires.ftc.teamcode.hardware.controller;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -388,6 +387,9 @@ public class Controller
 
     public void handle()
     {
+        if (gamepad == null) {
+            return;
+        }
         a.testAndHandle();
         b.testAndHandle();
         x.testAndHandle();

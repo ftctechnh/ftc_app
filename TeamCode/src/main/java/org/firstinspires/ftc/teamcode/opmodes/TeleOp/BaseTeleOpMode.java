@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Config.ConfigParser;
-import org.firstinspires.ftc.teamcode.Hardware.controller.Controller;
+import org.firstinspires.ftc.teamcode.hardware.controller.Controller;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
 
 /**
