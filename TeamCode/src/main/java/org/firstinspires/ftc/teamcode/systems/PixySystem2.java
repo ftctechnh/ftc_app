@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.systems;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.components.pixy.PixyCam;
 import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
 
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class PixySystem2 extends System {
     private final int YELLOW_SIGNATURE = 3;
     private final int WHITE_SIGNATURE = 4;
-
+    private Telemetry telemetry;
     private PixyCam pixy;
     private int yellowPos;
     private int white1Pos;
@@ -20,7 +20,7 @@ public class PixySystem2 extends System {
 
     public PixySystem2 (OpMode opMode) {
         super(opMode, "PixySystem2");
-        pixy = map.get(PixyCam.class, "PixyCam");
+        pixy = hardwareMap.get(PixyCam.class, "PixyCam");
         pixy.setBlockCount(3);
         driveSystem = new MecanumDriveSystem(opMode);
     }
