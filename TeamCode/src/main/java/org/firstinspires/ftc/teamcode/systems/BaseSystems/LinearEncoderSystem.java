@@ -4,9 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.components.Motors.DriveMotor;
 import org.firstinspires.ftc.teamcode.components.scale.ExponentialRamp;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
@@ -30,7 +28,7 @@ public abstract class LinearEncoderSystem extends LinearSystem {
     private int currentPosition;
     private LimitSwitch maxLimitSensor;
     private LimitSwitch minLimitSensor;
-    private DcMotor dcMotor;
+    private DriveMotor dcMotor;
 
 
     public LinearEncoderSystem(OpMode opMode, String systemName, int maxTicks, DcMotor dcMotor,
@@ -38,9 +36,10 @@ public abstract class LinearEncoderSystem extends LinearSystem {
         super(opMode, systemName);
 
         this.maxEncoderTicks = maxTicks;
-        this.dcMotor = dcMotor;
+        this.dcMotor = new DriveMotor(dcMotor);
 
         initializeMotor();
+        initializeTelemetry();
     }
 
     // May need to be overridden
@@ -51,20 +50,28 @@ public abstract class LinearEncoderSystem extends LinearSystem {
         calibrateSystem();
     }
 
+    private void initializeTelemetry() {
+        telemetry.log("Current Position:         ", currentPosition);
+        telemetry.log("Zero:                     ", currentPosition);
+        telemetry.log("Target position:          ", dcMotor.getTargetPosition());
+        telemetry.log("dcMotor current position: ", dcMotor.getCurrentPosition());
+    }
+
     private int updateCurrentPosition(int startPosition) {
         return (dcMotor.getCurrentPosition() - zero) - startPosition;
     }
 
     public void goToPosition(double targetPosition, double power) {
+        telemetry.write();
         int startPosition = dcMotor.getCurrentPosition();
         int driveTicks = (int) ((targetPosition * maxEncoderTicks) - currentPosition);
         if (targetPosition == 0) {
             dcMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            dcMotor.setPower(-power);
+            dcMotor.run(-power);
             checkForBounds();
         } else if (targetPosition == 1) {
             dcMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            dcMotor.setPower(power);
+            dcMotor.run(power);
             checkForBounds();
         } else {
             dcMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -87,14 +94,17 @@ public abstract class LinearEncoderSystem extends LinearSystem {
 
                 double scaledPower = ramp.scaleX(driveTicks);
 
-                dcMotor.setPower(direction * scaledPower);
+                dcMotor.run(direction * scaledPower);
                 checkForBounds();
+                telemetry.write();
             }
-            dcMotor.setPower(0);
+            dcMotor.run(0);
+            telemetry.write();
         }
     }
 
     public void goToPosition(int targetPosition, double power) {
+        telemetry.write();
         if (targetPosition > positions.length) {
             throw new IllegalArgumentException("Target postition (" + targetPosition +
                     ") is beyond range of positions (" + positions.length + ")");
@@ -109,12 +119,13 @@ public abstract class LinearEncoderSystem extends LinearSystem {
 
     private void checkForBounds() {
         if (maxLimitSensor.isPressed() || currentPosition >= maxEncoderTicks) {
-            dcMotor.setPower(0);
+            dcMotor.run(0);
             regressFromLimitSensor();
         } else if (minLimitSensor.isPressed() || currentPosition <= 0) {
-            dcMotor.setPower(0);
+            dcMotor.run(0);
             regressFromLimitSensor();
         }
+        telemetry.write();
     }
 
     private void regressFromLimitSensor() {
@@ -124,15 +135,16 @@ public abstract class LinearEncoderSystem extends LinearSystem {
         while (minLimitSensor.isPressed() || maxLimitSensor.isPressed()) {
             if (maxLimitSensor.isPressed()) {
                 topTriggered = true;
-                dcMotor.setPower(REGRESS_POWER);
+                dcMotor.run(REGRESS_POWER);
             } else if (minLimitSensor.isPressed()) {
                 topTriggered = false;
-                dcMotor.setPower(-REGRESS_POWER);
+                dcMotor.run(-REGRESS_POWER);
             }
             updateCurrentPosition(startPosition);
+            telemetry.write();
         }
 
-        dcMotor.setPower(0);
+        dcMotor.run(0);
         if (topTriggered) {
             zero = dcMotor.getCurrentPosition() - maxEncoderTicks;
             currentPosition = maxEncoderTicks;
@@ -141,5 +153,6 @@ public abstract class LinearEncoderSystem extends LinearSystem {
             zero = dcMotor.getCurrentPosition();
             dcMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
+        telemetry.write();
     }
 }
