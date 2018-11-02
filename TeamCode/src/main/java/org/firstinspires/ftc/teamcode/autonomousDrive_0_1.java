@@ -59,12 +59,12 @@ public class autonomousDrive_0_1 extends LinearOpMode
         while (opModeIsActive())
         {
             double t = timer.seconds();
-            switch(action) //TODO: complete actions and conditions
+            switch(action)
             {
                 case Drop:
                     if(t < 1)
                     {
-                        if(!robot.sensors.touchBottom.isPressed())
+                        //if(!robot.sensors.touchBottom.isPressed())
                             robot.lift(-0.7); //pull
                         robot.setBrake(false);
                     }
@@ -80,7 +80,7 @@ public class autonomousDrive_0_1 extends LinearOpMode
 
                     else if(t > 9) //if condition
                     {
-                        robot.driveEngine.rotate(-.2);
+                        robot.driveEngine.rotate(-.1);
                     }
                     if(robot.camera.targetVisible() != null)
                     {
@@ -161,25 +161,31 @@ public class autonomousDrive_0_1 extends LinearOpMode
 
                     if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) < 6) {
                         action = Mode.DropMarker;
+                        robot.sensors.rotateMobile(-90);
                         timer.reset();
                     }
                     break;
 
                 case DropMarker:
                     robot.driveEngine.drive(0,0);
-                    if(t > 4) //if condition
+                    if(t > 4)
                         action = Mode.MoveToCrater;
                     break;
 
                 case MoveToCrater:
-                    //do something
-                    if(false) //condition
+                    x = -.7;
+                    y = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
+                    robot.driveEngine.drive(x,y/6.0);
+
+                    if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) < 24) {
                         action = Mode.Stop;
+                    }
                     break;
 
 
                 default:
-                    //do something (actually nothing but we need to tell the robot that.)
+                    robot.driveEngine.drive(0,0);
+                    robot.lift(0);
 
             }
 
