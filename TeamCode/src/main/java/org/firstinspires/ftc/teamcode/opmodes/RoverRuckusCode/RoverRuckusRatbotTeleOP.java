@@ -51,7 +51,7 @@ public class RoverRuckusRatbotTeleOP extends OpMode{
         robot.fr.setPower(right);
         robot.br.setPower(right);
 
-        telemetry.addData("Gamepad 1: ", gamepad1);
+        //telemetry.addData("Gamepad 1: ", gamepad1);
         telemetry.addData("Speed Factor: ", printFormat.format(speedFactor));
         telemetry.addData("Left: ", printFormat.format(left));
         telemetry.addData("Right: ", printFormat.format(right));
