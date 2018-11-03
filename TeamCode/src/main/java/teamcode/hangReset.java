@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "cobaltClawsAutoTest", group = "Linear OpMode")
+@Autonomous(name = "hangReset", group = "Linear OpMode")
 
-public class cobaltClawsAutoTest extends LinearOpMode {
+public class hangReset extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor LeftDriveMotor;  //motor 0
@@ -31,7 +31,6 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     boolean hangArmUp;
 
-    double driveSpeed = 0.25;
 
     private ColorSensor colorSensorOuter;
     private ColorSensor colorSensorInner;
@@ -52,188 +51,17 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            //HANG RELEASE
-
-            //Moves the grabber wrist out of the way, then rotates the arm motor until the robot is
-            //on the ground. Then moves right wheel forward to get out of hook, and positions for
-            //route.
-
             HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            HangMotor.setTargetPosition(-2000);
+            HangMotor.setTargetPosition(1600);
             HangMotor.setPower(0.8);
 
             while (HangMotor.isBusy()) {
 
             }
 
-
-            turn(Direction.Right, 295, driveSpeed);
-
-            move(Direction.Forward, 1175, driveSpeed);
-
-            turn(Direction.Right, 320, driveSpeed);
-
-            SensorServo.setPosition(0.5);
-            sleep(1000);
-
-
-            //GOLD TEST
-
-            move(Direction.Backward, 400, driveSpeed);
-            //Looks at the right mineral. If the right mineral is gold, turns and knocks over the
-            // mineral, then turns and goes to the depot, then turns and drives into the crater.
-
-            if (isGold()) {
-
-                telemetry.addData("Gold: ", "Detected");
-                telemetry.update();
-
-                turn(Direction.Left, 350, driveSpeed);
-                SensorServo.setPosition(0);
-                move(Direction.Forward, 1200, driveSpeed);
-                setArm(0.3, 0.8, -0.5);
-                sleep(200);
-                setArm(0, 0, 0);
-                turn(Direction.Left, 250, driveSpeed);
-                move(Direction.Forward, 800, driveSpeed);
-                turn(Direction.Left, 270, driveSpeed);
-                move(Direction.Forward, 2000, driveSpeed);
-
-                break;
-
-            } else {
-
-                //Looks at the center mineral. If the center mineral is gold, goes straight to the
-                // depot, then turns and drives into the crater.
-
-                move(Direction.Backward, 400, driveSpeed);
-
-                if (isGold()) {
-
-                    telemetry.addData("Gold: ", "Detected");
-                    telemetry.update();
-
-                    turn(Direction.Left, 150, driveSpeed);
-                    SensorServo.setPosition(0);
-                    move(Direction.Forward, 1400, driveSpeed);
-                    setArm(0.3, 0.8, -0.5);
-                    sleep(200);
-                    setArm(0, 0, 0);
-                    turn(Direction.Left, 500, driveSpeed);
-                    move(Direction.Forward, 800, driveSpeed);
-                    turn(Direction.Left, 270, driveSpeed);
-                    move(Direction.Forward, 2000, driveSpeed);
-
-                    break;
-
-                } else {
-
-                    //Turns to face the left mineral. If the left mineral is gold, goes to the
-                    // mineral, then turns and goes to the depot, then turns and drives into the
-                    // crater.
-                    move(Direction.Backward, 400, driveSpeed);
-
-
-                    if (isGold()) {
-
-                        telemetry.addData("Gold: ", "Detected");
-                        telemetry.update();
-
-                        turn(Direction.Left, 250, driveSpeed);
-                        SensorServo.setPosition(0);
-                        move(Direction.Forward, 1200, driveSpeed);
-                        setArm(0.3, 0.8, -0.5);
-                        sleep(200);
-                        setArm(0, 0, 0);
-                        turn(Direction.Left, 1000, driveSpeed);
-                        move(Direction.Forward, 800, driveSpeed);
-                        turn(Direction.Left, 270, driveSpeed);
-                        move(Direction.Forward, 2000, driveSpeed);
-
-                        break;
-
-
-                    }
-
-                }
-
-            }
             requestOpModeStop();
-
-
-            //SILVER TEST
-
-
-
-            /*if(isGold()) {
-
-                //Looks at the left mineral. If the left mineral is gold, goes to the mineral,
-                // then drives to the depot, then turns and drives into the crater.
-
-                move(Direction.Forward,  1000, 0.25);
-                move(Direction.Backward, 200,  0.25);
-                turn(Direction.Left,     500,  0.25);
-                move(Direction.Forward,  1200, 0.25);
-                turn(Direction.Left,     50,   0.25);
-                move(Direction.Forward,  1750, 0.25);
-                turn(Direction.Right,    750,  0.25);
-                move(Direction.Forward,  3000, 0.25);
-
-                break;
-
-
-            } else {
-
-                //Looks at the center mineral. If the center mineral is gold, goes to the mineral,
-                // then drives to the depot, then turns and drives into the crater.
-                move(Direction.Backward, 100, 0.25);
-                turn(Direction.Right, 250, 0.25);
-                move(Direction.Forward, 100, 0.25);
-
-                if(isGold()) {
-
-                    move(Direction.Forward, 1000, 0.25);
-                    move(Direction.Backward, 200, 0.25);
-                    turn(Direction.Left, 300, 0.25);
-                    move(Direction.Forward, 1500, 0.25);
-                    turn(Direction.Left, 200, 0.25);
-                    move(Direction.Forward, 1750, 0.25);
-                    turn(Direction.Right, 750, 0.25);
-                    move(Direction.Forward, 3000, 0.25);
-
-                    break;
-
-                } else{
-
-                    //Turns to face the right mineral. If the right mineral is gold, goes to the
-                    // mineral, then drives to the depot, then turns and drives into the
-                    // crater.
-                    move(Direction.Backward, 100, 0.25);
-                    turn(Direction.Right, 250, 0.25);
-                    move(Direction.Forward, 100, 0.25);
-
-                    if(isGold()){
-
-                        move(Direction.Forward,  1000, 0.25);
-                        move(Direction.Backward, 200,  0.25);
-                        turn(Direction.Left,     1000, 0.25);
-                        move(Direction.Forward,  400,  0.25);
-                        turn(Direction.Left,     30,   0.25);
-                        move(Direction.Forward,  1300, 0.25);
-                        turn(Direction.Left,     300,  0.25);
-                        move(Direction.Forward,  1750, 0.25);
-                        turn(Direction.Right,    750,  0.25);
-                        move(Direction.Forward,  3000, 0.25);
-
-                        break;
-
-                    }
-
-                }
-
-            }*/
 
         }
 
@@ -268,8 +96,6 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         GrabberServo.setDirection(Servo.Direction.FORWARD);
 
-        SensorServo.setDirection(Servo.Direction.FORWARD);
-
         //Sets motors to work with position
         //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -298,9 +124,8 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         // calibrated.
         //armPosition = this.ArmMotor.getCurrentPosition();
 
-        //Tells the driver station that the robot is ready.
+        //Tells the driver station the arm motor positions and that the robot is ready.
         telemetry.addData("Status", "Online");
-        telemetry.addData("Servo Position: ", SensorServo.getPosition());
         telemetry.update();
     }
 
@@ -398,10 +223,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     public boolean isGold() {
 
-        if ((((colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
-                && (colorSensorOuter.green() >= (2 * colorSensorOuter.blue()))) ||
-                ((colorSensorInner.red() >= (2 * colorSensorInner.blue()))
-                && (colorSensorInner.green() >= (2 * colorSensorInner.blue()))))) {
+        if (((colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
+                && colorSensorOuter.green() >= (2 * colorSensorOuter.blue()) ||
+                (colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
+                && colorSensorOuter.green() >= (2 * colorSensorOuter.blue()))) {
             return true;
 
         }
