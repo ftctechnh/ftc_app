@@ -21,7 +21,7 @@ import java.util.List;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel {
 
-    private ConfigParser config;
+    //private ConfigParser config;
 
     private double TICKS_TO_INCHES;
     private final IScale JOYSTICK_SCALE = new LinearScale(0.62, 0);
@@ -38,9 +38,9 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
 
-        this.config = new ConfigParser("Testy.omc");
-        TICKS_TO_INCHES = config.getInt("ticksInInch");
-        RAMP_POWER_CUTOFF = config.getDouble("rampPowerCutoff");
+        //this.config = new ConfigParser("Testy.omc");
+        TICKS_TO_INCHES = 67;
+        RAMP_POWER_CUTOFF = 0.3;
 
         imuSystem = new IMUSystem(opMode);
         initialHeading = Math.toRadians(imuSystem.getHeading());
@@ -158,7 +158,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF),
-                new Point((ticks / config.getInt("rampStartDivisor")), power));
+                new Point((ticks / 4), power));
 
         double adjustedPower = Range.clip(power, -1.0, 1.0);
 
@@ -167,7 +167,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         while (anyMotorsBusy()) {
             int distance = getMinDistanceFromTarget();
 
-            if (distance < config.getInt("tolerance")) {
+            if (distance < 50) {
                 break;
             }
 
@@ -218,7 +218,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF),
-                new Point((ticks / config.getInt("rampStartDivisor")), power));
+                new Point((ticks / 4), power));
 
         double adjustedPower = Range.clip(power, -1.0, 1.0);
 
@@ -234,7 +234,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
             int distance = getMinDistanceFromTarget();
 
 
-            if (distance < config.getInt("tolerance")) {
+            if (distance < 50) {
                 break;
             }
 

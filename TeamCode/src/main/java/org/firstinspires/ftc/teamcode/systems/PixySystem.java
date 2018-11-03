@@ -37,9 +37,34 @@ public class PixySystem extends System {
 
         telemetry.log("Pixy System","running PixySystem");
         telemetry.write();
+        yellow();
+        /*
         printValues();
         centerYellow();
         driveForward();
+        */
+    }
+
+    private void yellow() {
+        int yellowX = -1;
+        ArrayList<PixyCam.Block> blocks = pixy.getBlocks();
+        for(PixyCam.Block block : blocks) {
+            telemetry.log("Pixy Cam", "block: "+ block.xCenter);
+            if (block.signature == YELLOW_SIGNATURE) {
+                yellowX = block.xCenter;
+            }
+            telemetry.write();
+        }
+
+        if (yellowX < 255 / 2 - 10) {
+            telemetry.log("Pixy System", "turn counterclockwise");
+            yellow();
+        } else if (yellowX > 255 / 2 + 10) {
+            telemetry.log("Pixy System", "turn clockwise");
+            yellow();
+        }
+        telemetry.write();
+
     }
 
     public void printValues() {
@@ -53,9 +78,11 @@ public class PixySystem extends System {
         telemetry.write();
     }
 
+/*
     private void getValues() {
 
-
+        telemetry.log("Pixy System", "in getValues");
+        telemetry.write();
         for (int i = 0; i < 3; i++) {
             int whiteVal1 = 0;
             int whiteVal2 = 0;
@@ -156,4 +183,6 @@ public class PixySystem extends System {
         telemetry.write();
         //driveSystem.driveToPositionInches(4, 0.1);
     }
+
+    */
 }
