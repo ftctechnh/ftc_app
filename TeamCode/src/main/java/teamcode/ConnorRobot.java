@@ -16,7 +16,7 @@ public class ConnorRobot extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
-        instance = this; // assigns this instance to a static variable
+        instance = this; // assigns a static variable to this instance
         HardwareManager.init();
         GamePadInput.init();
         telemetry.addData("Status", "Online");
