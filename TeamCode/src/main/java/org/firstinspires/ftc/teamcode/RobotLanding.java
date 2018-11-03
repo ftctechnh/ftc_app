@@ -102,7 +102,7 @@ public class RobotLanding extends LinearOpMode {
         telemetry.update();
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d",
+        telemetry.addData("Step0",  "Starting at %7d",
                 robot.rack_pinion.getCurrentPosition());
         telemetry.update();
 
@@ -111,37 +111,39 @@ public class RobotLanding extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
-        //encoderDown(6.5);
+        encoderDown(6.5);
 
         runtime.reset();
 
+        //Unlatch
         while (opModeIsActive() && runtime.seconds()<0.5) {
+            telemetry.addData("Step1","Unlatching....");
+            telemetry.update();
             robot.setLeftRight(0.8, -0.3,0.8,-0.3);
         }
         robot.setLeftRight(0,0,0,0);
         Wait(1);
-        telemetry.addData("My name is ","Jeff");
-        telemetry.update();
+
         robot.setLeftRight(-0.5,-0.5,-0.5,-0.5);
         Wait(0.75);
         robot.setLeftRight(0,0,0,0);
-        Wait(2);
-        telemetry.addData("My name is ","Bob");
-        telemetry.update();
-        Wait(1);
-        telemetry.addData("My name is ","Chinmay");
-        telemetry.update();
+//        Wait(2);
+//        telemetry.addData("My name is ","Bob");
+//        telemetry.update();
+//        Wait(1);
+//        telemetry.addData("My name is ","Chinmay");
+//        telemetry.update();
         while(opModeIsActive() && detector.getAligned() == false){
+            telemetry.addData("Step2","Scanning the block");
+            telemetry.update();
             robot.setLeftRight(-0.05,0.05,-0.05,0.05);
         }
         robot.setLeftRight(0,0,0,0);
-
-        telemetry.addData("My name is ","Prajwal");
-//        Wait(2);
+        //        Wait(2);
         telemetry.addData("X position of the cube", detector.getXPosition());
         telemetry.update();
         double initialPosition = detector.getXPosition();
-        Wait(2);
+//        Wait(2);
         //Commenting the 4 lines below for testing
 //        robot.setLeftRight(0.2,-0.2,0.2,-0.2);
 //        Wait(0.5);
@@ -196,7 +198,7 @@ public class RobotLanding extends LinearOpMode {
         int finalPos = (int) (lastPos-COUNTS_PER_INCH*inches);
 
         while (opModeIsActive()&&robot.rack_pinion.getCurrentPosition()>finalPos) {
-            robot.rack_pinion.setPower(-0.8);
+            robot.rack_pinion.setPower(-1.0);
         }
 
         robot.rack_pinion.setPower(0);
