@@ -232,7 +232,7 @@ public class cobaltSensorAutoTest extends LinearOpMode {
                 (Math.abs(colorSensorInner.blue() - 100) <= tolerance)) ||
                 ((Math.abs(colorSensorOuter.red() - 310) <= tolerance) &&
                 (Math.abs(colorSensorOuter.green() - 210) <= tolerance) &&
-                (Math.abs(colorSensorOuter.red() - 95) <= tolerance))) {
+                (Math.abs(colorSensorOuter.blue() - 95) <= tolerance))) {
             return true;
 
         }
