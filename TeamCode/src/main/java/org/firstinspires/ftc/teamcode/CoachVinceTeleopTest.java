@@ -51,11 +51,12 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             drive = drive/maxDrive;
             strafe = strafe/maxDrive;
             rotate = rotate/maxDrive;
+            double moveScaling = 0.5; // 1 for full speed
             //maxDrive = Math.max(Math.max((drive+strafe+rotate),(drive - strafe + rotate)));
-            hwMap.leftFrontDrive.setPower(drive + strafe + rotate); //= drive + strafe + rotate;
-            hwMap.leftRearDrive.setPower(drive - strafe + rotate); //= drive - strafe + rotate;
-            hwMap.rightFrontDrive.setPower(drive - strafe - rotate); //= drive - strafe - rotate;
-            hwMap.rightRearDrive.setPower(drive + strafe - rotate); //= drive + strafe - rotate;
+            hwMap.leftFrontDrive.setPower(moveScaling*(drive + strafe + rotate)); //= drive + strafe + rotate;
+            hwMap.leftRearDrive.setPower(moveScaling * (drive - strafe + rotate)); //= drive - strafe + rotate;
+            hwMap.rightFrontDrive.setPower(moveScaling * (drive - strafe - rotate)); //= drive - strafe - rotate;
+            hwMap.rightRearDrive.setPower(moveScaling * (drive + strafe - rotate)); //= drive + strafe - rotate;
 
             // Read the driving gamepad triggers for the lifting arm
             liftingArmUp = gamepad1.right_trigger;
@@ -67,26 +68,27 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             }
             else
             {
-                hwMap.landerLatchLift.setPower(liftingArmDown);
+                hwMap.landerLatchLift.setPower(-liftingArmDown);
             }
 
             // Read the second gamepad and move the arm
             armExtension = gamepad2.right_stick_y;
             armRotation = gamepad2.left_stick_y;
-            hwMap.armRotate.setPower(armRotation);
-            hwMap.armExtend.setPower(armExtension);
+            double armRotationScaling = 0.7; // 1.0 for full power, used to scale the arm power
+            hwMap.armRotate.setPower(armRotationScaling * armRotation);
+            hwMap.armExtend.setPower(armRotationScaling * armExtension);
 
             // Read the triggers and roll the Mineral Servos
             mineralServosIn = gamepad2.right_trigger;
             mineralServosOut = gamepad2.left_trigger;
             if (mineralServosIn > mineralServosOut) {
-                hwMap.leftMineral.setPower(mineralServosIn); // These don't look right, how do I get them to rotate continuously
+                hwMap.leftMineral.setPower(-mineralServosIn); // These don't look right, how do I get them to rotate continuously
                 hwMap.rightMineral.setPower(mineralServosIn);
             }
             else
             {
                 hwMap.leftMineral.setPower(mineralServosOut);
-                hwMap.rightMineral.setPower(mineralServosOut);
+                hwMap.rightMineral.setPower(-mineralServosOut);
             }
 
 

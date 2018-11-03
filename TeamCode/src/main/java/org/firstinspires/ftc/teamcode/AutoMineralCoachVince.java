@@ -81,6 +81,10 @@ public class AutoMineralCoachVince extends LinearOpMode {
         double rotate = 0.1; // Rotation Speed
         double strafe = 0.1;  // Strafe Speed
 
+        hwMap.landerLatchLift.setPower(0.3);
+        sleep(2000);
+        hwMap.landerLatchLift.setPower(0);
+
         //This loop runs until the gold mineral is found;
         //Need to change this to "while not detected" like in the GoldAlignExample program;
         while (detector.isFound()) {
