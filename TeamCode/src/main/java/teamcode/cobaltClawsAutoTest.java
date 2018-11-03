@@ -59,6 +59,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             //ArmMotor.setTargetPosition(600);
             //ArmMotor.setPower(0.25);
 
+            HangMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            HangMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+
             HangMotor.setTargetPosition(600);
             HangMotor.setPower(0.8);
 
