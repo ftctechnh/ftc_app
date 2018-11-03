@@ -225,7 +225,7 @@ public class cobaltSensorAutoTest extends LinearOpMode {
 
     public boolean isGold() {
 
-        int tolerance = 100;
+        int tolerance = 200;
 
         if (((Math.abs(colorSensorInner.red() - 275) <= tolerance) &&
                 (Math.abs(colorSensorInner.green() - 185) <= tolerance) &&
