@@ -32,7 +32,7 @@ public class GoldDetector extends DogeCVDetector {
     private Mat displayMat = new Mat(); // Display debug info to the screen (this is what is returned)
     private Mat workingMat = new Mat(); // Used for preprocessing and working with (blurring as an example)
     private Mat maskYellow = new Mat(); // Yellow Mask returned by color filter
-    private Mat hierarchy  = new Mat(); // hierarchy used by coutnours
+    private Mat hierarchy  = new Mat(); // hierarchy used by coutours
 
     // Results of the detector
     private boolean found    = false; // Is the gold mineral found

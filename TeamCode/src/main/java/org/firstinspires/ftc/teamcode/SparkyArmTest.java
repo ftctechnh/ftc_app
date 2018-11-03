@@ -21,13 +21,13 @@ public class SparkyArmTest extends LinearOpMode {
         robot = new SparkyTheRobot(this);
         robot.init(false);
 
-        // TODO maybe tune these?
-        robot.leftFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         waitForStart();
 
         while (opModeIsActive()) {
+            for (double i = 0; i <= 1; i += 0.05) {
+                robot.markerDeployer.setPosition(i);
+                sleep(500);
+            }
 
         }
     }

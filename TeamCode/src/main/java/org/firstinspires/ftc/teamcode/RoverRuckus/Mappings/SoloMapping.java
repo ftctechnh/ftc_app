@@ -69,7 +69,7 @@ public class SoloMapping extends ControlMapping {
         if (gamepad1.right_trigger > 0.15) {
             return gamepad1.right_trigger * -0.2;
         } else {
-            return spinDir;
+            return spinDir * 0.6;
         }
     }
 

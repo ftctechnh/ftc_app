@@ -47,4 +47,13 @@ public class TandemMapping extends SoloMapping {
         return scaleControl(gamepad1.left_trigger, 0.3, 1);
     }
 
+
+    @Override
+    public int getHangDir() {
+        if (gamepad2.left_bumper || gamepad2.right_bumper) {
+            return boolsToDir(gamepad2.right_bumper, gamepad2.left_bumper);
+        } else {
+            return boolsToDir(gamepad1.right_bumper, gamepad1.left_bumper);
+        }
+    }
 }

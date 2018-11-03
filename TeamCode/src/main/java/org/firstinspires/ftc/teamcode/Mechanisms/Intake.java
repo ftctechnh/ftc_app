@@ -54,6 +54,11 @@ public class Intake {
         rightIntakeFlipper.setPosition(COLLECT_DIST);
     }
 
+    public void goToMin() {
+        leftIntakeFlipper.setPosition(0);
+        rightIntakeFlipper.setPosition(0);
+    }
+
     public void enableFlippers() {
         if (!enabled) {
             leftIntakeFlipper.setPwmEnable();

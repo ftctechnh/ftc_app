@@ -32,10 +32,14 @@ android {
         }
     }
 
+    aaptOptions {
+        noCompress "tflite"
+    }
+
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 23
-        targetSdkVersion 23
+        targetSdkVersion 26
 
         /**
          * We keep the versionCode and versionName of robot controller applications in sync with

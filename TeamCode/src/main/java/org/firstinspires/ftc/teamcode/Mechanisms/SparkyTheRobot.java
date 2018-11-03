@@ -22,6 +22,9 @@ public class SparkyTheRobot extends MecanumHardware {
     public ServoImplEx rightIntakeFlipper;
     public CRServoImplEx leftIntakeRoller;
     public CRServoImplEx rightIntakeRoller;
+    public Intake intake;
+
+    public ServoImplEx markerDeployer;
 
     public SparkyTheRobot(LinearOpMode oM) {super(oM);}
 
@@ -39,6 +42,8 @@ public class SparkyTheRobot extends MecanumHardware {
         rightIntakeFlipper = hwMap.get(ServoImplEx.class, "rightIntakeFlipper");
         leftIntakeRoller = hwMap.get(CRServoImplEx.class, "leftIntakeRoller");
         rightIntakeRoller = hwMap.get(CRServoImplEx.class, "rightIntakeRoller");
+        intake = new Intake(leftIntakeFlipper, rightIntakeFlipper, leftIntakeRoller, rightIntakeRoller);
+        markerDeployer = hwMap.get(ServoImplEx.class, "markerDeployer");
 
         leftFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
