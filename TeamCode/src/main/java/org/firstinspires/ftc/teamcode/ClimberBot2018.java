@@ -22,7 +22,7 @@ import static java.lang.Math.toRadians;
 /**
  * Created by jxfio on 1/21/2018.
  */
-@TeleOp(name="tribot", group="Linear Opmode")
+@TeleOp(name="Climber", group="Linear Opmode")
 public class ClimberBot2018 extends LinearOpMode{
 
     // Declare OpMode members.
@@ -43,7 +43,7 @@ public class ClimberBot2018 extends LinearOpMode{
     private Servo backSwivel;
     private IntegratingGyroscope gyro;
     private ModernRoboticsI2cGyro MRI2CGyro;
-    PID θPID = new PID(1,.0001,.1);
+    PID θPID = new PID(.5,.0001,.1);
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -101,8 +101,8 @@ public class ClimberBot2018 extends LinearOpMode{
         double prevpos=0;
         double prevderiv=0;
         double wheelLiftZero=0;
-        final double wheelLiftZerotoGround=47;
-        PID wheelLiftPID = new PID(1,.0001,.1);
+        final double wheelLiftZerotoGround=-20;
+        PID wheelLiftPID = new PID(1,0,0);
         PID armPID = new PID(1,.00001,.1);
         PID armSwivelPID = new PID(1,.00001,.1);
         boolean x=false;
@@ -115,6 +115,11 @@ public class ClimberBot2018 extends LinearOpMode{
         double armZeroState=0;
         boolean leftOpen=true;
         boolean rightOpen = true;
+        wheelLift.setPower(.25);
+        sleep(1000);
+        wheelLiftZero = wheelLift.getCurrentPosition();
+        wheelLift.setPower(0);
+
         while (opModeIsActive()) {
                 //Gyro reset
             curResetState = (gamepad1.a && gamepad1.b);
@@ -127,7 +132,7 @@ public class ClimberBot2018 extends LinearOpMode{
                 armZeroState=arm.getCurrentPosition();
             }
             lastArmZeroingState =armZeroingState;
-            armSwivelZeroingState = (gamepad2.a && gamepad2.b);
+            armSwivelZeroingState = (gamepad2.y && gamepad2.a);
             if (armSwivelZeroingState&&!lastArmSwivelZeroingState){
                 armSwivelZeroState=arm.getCurrentPosition();
             }
@@ -137,9 +142,11 @@ public class ClimberBot2018 extends LinearOpMode{
             }
             y = gamepad1.y;
             if(gamepad2.y){
-                lift.setPosition(1);
+                lift.setPosition(0);
             }else if(gamepad2.a){
-                lift.setPosition(-1);
+                lift.setPosition(1);
+            }else{
+                lift.setPosition(.5);
             }
             if(gamepad2.x&&!x){
                 leftOpen=!leftOpen;
@@ -198,10 +205,10 @@ public class ClimberBot2018 extends LinearOpMode{
                     armSwivelPID.iteratePID(swivel.getCurrentPosition()-armSwivelZeroState,dt);
                     arm.setPower(Range.clip(armPID.getPID(),-1,1));
                     swivel.setPower(Range.clip(armSwivelPID.getPID(),-1,1));
-                    wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+                    wheelLift.setPower(-Range.clip(wheelLiftPID.getPID(),-1,1));
                 }
                 wheelLiftPID.iteratePID(wheelLift.getCurrentPosition()-wheelLiftZero+wheelLiftZerotoGround,dt);
-                wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+                wheelLift.setPower(-Range.clip(wheelLiftPID.getPID(),-1,1));
                 prevderiv=(pos-prevpos)/dt;
                 back.setPower(Range.clip(gamepad1.left_stick_y,-1,1));
             }
@@ -220,7 +227,7 @@ public class ClimberBot2018 extends LinearOpMode{
             PrevTime = time;
                 //PID
             wheelLiftPID.iteratePID(wheelLift.getCurrentPosition()-wheelLiftZero+wheelLiftZerotoGround,dt);
-            wheelLift.setPower(Range.clip(wheelLiftPID.getPID(),-1,1));
+            wheelLift.setPower(Range.clip(-wheelLiftPID.getPID(),-1,1));
             θPID.iteratePID(θ-Desiredθ,dt);
             TurnPWR = θPID.getPID();
                 //TurnPWR = (θ - Desiredθ)/-100;
@@ -238,11 +245,11 @@ public class ClimberBot2018 extends LinearOpMode{
             back.setPower(Range.clip(backPwr, -1, 1));
             right.setPower(Range.clip(rightPwr, -1, 1));
                 //Telemetry Data
-            telemetry.addData("path0","driveθ:");
+            /*telemetry.addData("path0","driveθ:");
             telemetry.addData("path1","A Power:" + String.valueOf(leftPwr) + " B Power:" + String.valueOf(backPwr) + " C Power:" +String.valueOf(rightPwr));
             telemetry.addData("path2","Integrated Z:" + String.valueOf(MRI2CGyro.getIntegratedZValue()) + " Desiredθ: " + String.valueOf(Desiredθ));
             telemetry.addData("path3","Time: "+ toString().valueOf(time));
-            telemetry.update();// prints above stuff to phone
+            telemetry.update();// prints above stuff to phone*/
         }
     }
 }
