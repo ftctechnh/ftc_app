@@ -19,8 +19,8 @@ public class RoverRuckusRatbotTeleOP extends OpMode{
     RoverRuckusRatbotHardware robot =  new RoverRuckusRatbotHardware();
     double left, right;
     double speedFactor = 0.5;
+    double liftSpeed = 0.5;
     DecimalFormat printFormat = new DecimalFormat ("#.###");
-    boolean brake = false;
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -35,12 +35,13 @@ public class RoverRuckusRatbotTeleOP extends OpMode{
         else if(!gamepad1.right_bumper && !gamepad1.left_bumper){
             speedFactor = 0.5; }
 
-        while(gamepad1.b) {
-            robot.fl.setPower(0);
-            robot.bl.setPower(0);
-            robot.fr.setPower(0);
-            robot.br.setPower(0);
-        }
+        if(gamepad2.left_bumper && !gamepad2.right_bumper){
+            robot.lift.setPower(liftSpeed); }
+        else if(gamepad2.right_bumper && !gamepad2.left_bumper){
+            robot.lift.setPower(-1 * liftSpeed); }
+        else if(!gamepad2.right_bumper && !gamepad2.left_bumper){
+            robot.lift.setPower(0); }
+
 
         left = (-1)* Math.pow(gamepad1.left_stick_y, 3) * speedFactor;
         right = (-1)* Math.pow(gamepad1.right_stick_y, 3) * speedFactor;
@@ -54,6 +55,7 @@ public class RoverRuckusRatbotTeleOP extends OpMode{
         telemetry.addData("Speed Factor: ", printFormat.format(speedFactor));
         telemetry.addData("Left: ", printFormat.format(left));
         telemetry.addData("Right: ", printFormat.format(right));
+        telemetry.addData("Lift Motor: ", printFormat.format(robot.lift.getPower()));
 
     }
 }
