@@ -54,6 +54,14 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         telemetry.write();
     }
 
+    public void beep() {
+        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+    }
+
+
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
         rightX = Range.clip(rightX, -1, 1);
         leftX = Range.clip(leftX, -1, 1);
@@ -64,10 +72,16 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         leftY = scaleJoystickValue(leftY);
 
         // write the values to the motors
-        double frontRightPower = leftY + rightX + leftX;
+        /*double frontRightPower = leftY + rightX + leftX;
         double backRightPower = leftY + rightX - leftX;
         double frontLeftPower = leftY - rightX - leftX;
-        double backLeftPower = leftY - rightX + leftX;
+        double backLeftPower = leftY - rightX + leftX;*/
+
+        double frontRightPower = leftY + leftX ;
+        double backRightPower = leftY - leftX ;
+        double frontLeftPower = leftY - leftX ;
+        double backLeftPower = leftY + leftX ;
+
         this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
         telemetry.log("Mecanum Drive System","FRpower: {0}", Range.clip(frontRightPower, -1, 1));
         this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
@@ -196,6 +210,8 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
     }
 
     public void driveToPositionInches(int inches, double power) {
+        telemetry.log("In drive to position inches", 0);
+        telemetry.write();
         int ticks = (int) inchesToTicks(inches);
         motorBackRight.setPower(0);
         motorBackLeft.setPower(0);
@@ -220,23 +236,40 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         Ramp ramp = new ExponentialRamp(new Point(0, RAMP_POWER_CUTOFF),
                 new Point((ticks / config.getInt("rampStartDivisor")), power));
 
+        telemetry.log("after rampnor, before power adjusto", 0);
+        telemetry.write();
+
         double adjustedPower = Range.clip(power, -1.0, 1.0);
+
+        telemetry.log("after clippy, before power sett", 0);
+        telemetry.write();
 
         motorBackRight.setPower(adjustedPower);
         motorBackLeft.setPower(adjustedPower);
         motorFrontLeft.setPower(adjustedPower);
         motorFrontRight.setPower(adjustedPower);
 
+        telemetry.log("after power setty, pre looop", 0);
+        telemetry.write();
+
         while (motorFrontLeft.isBusy() ||
                 motorFrontRight.isBusy() ||
                 motorBackRight.isBusy() ||
                 motorBackLeft.isBusy()) {
+
+            telemetry.log("dog", 0);
+            telemetry.write();
             int distance = getMinDistanceFromTarget();
 
+            telemetry.log("after get min distance", 0);
+            telemetry.write();
 
             if (distance < config.getInt("tolerance")) {
                 break;
             }
+
+            telemetry.log("after config tolerance ", 0);
+            telemetry.write();
 
             telemetry.log("MecanumDriveSystem","targetPos motorFL: " + this.motorFrontLeft.getTargetPosition());
             telemetry.log("MecanumDriveSystem","targetPos motorFR: " + this.motorFrontRight.getTargetPosition());
@@ -267,10 +300,15 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
 
     private int  getMinDistanceFromTarget() {
         int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
+        telemetry.log("meepp: ", 2);
+        telemetry.write();
         d = min(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
         d = min(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
         d = min(d, this.motorBackRight.getTargetPosition() - this.motorBackRight.getCurrentPosition());
-        distanceItem.setValue(d);
+        telemetry.log("distance item: ", d);
+        telemetry.write();
+        telemetry.log("after distance item", 0);
+        telemetry.write();
         return d;
     }
 
@@ -284,6 +322,8 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
 
 
     private int min(int d1, int d2) {
+        telemetry.log("reep: ", 2);
+        telemetry.write();
         if (d1 < d2) {
             return d1;
         } else {
