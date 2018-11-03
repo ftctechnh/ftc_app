@@ -195,7 +195,7 @@ public class MonsieurMallahNavigation extends OpMode {
         //init. Game State
          team = Team.Unknown;
         position = StartingPosition.Unknown;
-        robotStatus = Status.OK;
+        robotStatus = Status.Lost;
 
         // Initialize the motors.
         if (useMotors) {
@@ -344,14 +344,24 @@ public class MonsieurMallahNavigation extends OpMode {
     public void loop() {
 
         //
-      if (team == Team.Unknown){
+
+        if (team == Team.Unknown){
           figureoutTeam();
-          if (team == Team.Unknown){
-              robotStatus = Status.Error;
+          if (team == Team.Unknown) {
+              robotStatus = Status.Lost;
           }
-      }
+          else {
+              robotStatus = Status.OK;
+          }
+        }
+
+        if (robotStatus == Status.Lost){
+            //
+        }
+
         telemetry.addData("Team", team.name());
         telemetry.addData("StartPos", position.name());
+        telemetry.addData("Status", robotStatus.name());
 
 
         if (gyroAngleCalibrated == false){
@@ -553,7 +563,7 @@ public class MonsieurMallahNavigation extends OpMode {
 
      enum Status {
         OK,
-        Error
+        Lost
      }
 
     enum StartingPosition {
@@ -667,6 +677,12 @@ public class MonsieurMallahNavigation extends OpMode {
         }else {
             position = StartingPosition.BlueCrater;
 
+        }
+
+        if (position == StartingPosition.Unknown){
+            robotStatus = Status.Lost;
+        }else {
+            robotStatus = Status.OK;
         }
 
         // Which team am i on?
@@ -995,3 +1011,5 @@ public class MonsieurMallahNavigation extends OpMode {
     }
 }
 
+//if lost
+// swivel around and try to approach nearest image to try and find its own location
