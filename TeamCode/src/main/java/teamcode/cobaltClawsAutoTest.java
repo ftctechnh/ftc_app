@@ -12,16 +12,16 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class cobaltClawsAutoTest extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor LeftDriveMotor; //motor 0
+    private DcMotor LeftDriveMotor;  //motor 0
     private DcMotor RightDriveMotor; //motor 1
 
     //private DcMotor ArmMotor; //motor 2
-    private DcMotor HangMotor; // motor 3
+    private DcMotor HangMotor; //motor 3
 
-    //private Servo ArmServoElbow; //servo 3
-    //private Servo ArmServoWrist; //servo 2
-    //private Servo GrabberServo; //servo 1
-    private Servo SensorServo;
+    private Servo ArmServoBase;  //servo
+    private Servo ArmServoWrist; //servo
+    private Servo GrabberServo;  //servo
+    private Servo SensorServo;   // servo
 
     //establishes and sets starting motor positions
     //int armInitialPosition = 0; //guessed limit
@@ -56,9 +56,6 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             //Moves the grabber wrist out of the way, then rotates the arm motor until the robot is
             //on the ground. Then moves right wheel forward to get out of hook, and positions for
             //route.
-            //ArmServoWrist.setPosition(0.1);
-            //ArmMotor.setTargetPosition(600);
-            //ArmMotor.setPower(0.25);
 
             HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -91,6 +88,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
                 turn(Direction.Left, 350, 0.25);
                 SensorServo.setPosition(0);
                 move(Direction.Forward, 1200, 0.25);
+                setArm(0.3, 0, -0.5);
+                sleep(200);
+                setArm(0, 0.3, 0);
                 turn(Direction.Left, 250, 0.25);
                 move(Direction.Forward, 800, 0.25);
                 turn(Direction.Left, 270, 0.25);
@@ -110,6 +110,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
                     turn(Direction.Left, 150, 0.25);
                     SensorServo.setPosition(0);
                     move(Direction.Forward, 1400, 0.25);
+                    setArm(0.3, 0, -0.5);
+                    sleep(200);
+                    setArm(0, 0.3, 0);
                     turn(Direction.Left, 500, 0.25);
                     move(Direction.Forward, 800, 0.25);
                     turn(Direction.Left, 270, 0.25);
@@ -130,6 +133,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
                         turn(Direction.Left, 250, 0.25);
                         SensorServo.setPosition(0);
                         move(Direction.Forward, 1200, 0.25);
+                        setArm(0.3, 0, -0.5);
+                        sleep(200);
+                        setArm(0, 0.3, 0);
                         turn(Direction.Left, 1000, 0.25);
                         move(Direction.Forward, 800, 0.25);
                         turn(Direction.Left, 270, 0.25);
@@ -230,9 +236,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         this.RightDriveMotor = hardwareMap.get(DcMotor.class, "RightDriveMotor");
         //this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
         this.HangMotor = hardwareMap.get(DcMotor.class, "HangMotor");
-        //this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
-        //this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
-        //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
+        this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
+        this.ArmServoBase = hardwareMap.get (Servo.class, "ArmServoBase");
+        this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
         this.SensorServo = hardwareMap.get(Servo.class, "SensorServo");
 
         this.colorSensorOuter = hardwareMap.get(ColorSensor.class, "colorSensorOuter");
@@ -246,10 +252,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
 
-        //ArmServoElbow.setDirection(Servo.Direction.FORWARD);
-        //ArmServoWrist.setDirection(Servo.Direction.FORWARD);
+        ArmServoBase.setDirection(Servo.Direction.FORWARD);
+        ArmServoWrist.setDirection(Servo.Direction.FORWARD);
 
-        //GrabberServo.setDirection(Servo.Direction.FORWARD);
+        GrabberServo.setDirection(Servo.Direction.FORWARD);
 
         //Sets motors to work with position
         //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -265,12 +271,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         hangArmUp = true;
 
-        //Sets grabber servos to closed
-        //this.GrabberServo.setPosition(0);
+        //Sets grabber servo to closed
+        this.GrabberServo.setPosition(0);
 
         //Sets arm servos to hang position
-        //this.ArmServoWrist.setPosition(0.9);
-        //this.ArmServoElbow.setPosition(0.9);
+        this.ArmServoWrist.setPosition(0.9);
+        this.ArmServoBase.setPosition(0.9);
 
         //Gives power to the arm motor
         //this.ArmMotor.setPower(1.0);
@@ -387,6 +393,16 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         }
 
         return false;
+
+    }
+
+    //Moves arm servos to indicated positions
+    //For GrabberPosition, 0.5 is Left Open, -0.5 is Right Open, 0 is Closed
+    public void setArm(double BasePosition, double WristPosition, double GrabberPosition){
+
+        ArmServoBase.setPosition(BasePosition);
+        ArmServoWrist.setPosition(WristPosition);
+        GrabberServo.setPosition(GrabberPosition);
 
     }
 

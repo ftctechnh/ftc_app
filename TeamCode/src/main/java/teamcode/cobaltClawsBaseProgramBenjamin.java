@@ -156,9 +156,9 @@ public class cobaltClawsBaseProgramBenjamin extends LinearOpMode{
 
                 if(hangArmUp){
 
-                    HangMotor.setTargetPosition(this.HangMotor.getCurrentPosition() - 600);
+                    HangMotor.setTargetPosition(this.HangMotor.getCurrentPosition() + 600);
 
-                } else HangMotor.setTargetPosition(this.HangMotor.getCurrentPosition() + 600);
+                } else HangMotor.setTargetPosition(this.HangMotor.getCurrentPosition() - 600);
 
                 hangArmUp = !hangArmUp;
 
