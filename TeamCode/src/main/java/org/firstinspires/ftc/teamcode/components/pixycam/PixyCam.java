@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.components.pixy;
+package org.firstinspires.ftc.teamcode.components.pixycam;
 
 import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.*;
 
@@ -15,7 +13,7 @@ import java.util.*;
 public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
 {
     private static final int BLOCK_SIZE = 14;
-    public int blockCount;
+    private int blockCount;
 
     public PixyCam(I2cDeviceSynch deviceClient){
         super(deviceClient, true);
@@ -24,18 +22,16 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
         this.deviceClient.engage();
     }
 
-    protected void setReadWindow()
+    private void setReadWindow()
     {
         // Sensor registers are read repeatedly and stored in a register. This method specifies the
         // registers and repeat read mode
-
         I2cDeviceSynch.ReadWindow readWindow = new I2cDeviceSynch.ReadWindow(
                 0,
                 1,
                 I2cDeviceSynch.ReadMode.REPEAT);
         this.deviceClient.setReadWindow(readWindow);
     }
-
 
     @Override
     protected boolean doInitialize() {
@@ -57,56 +53,70 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
     }
 
     public ArrayList<Block> getBlocks() {
-        ArrayList<Block> blocks = new ArrayList<>(blockCount);
-        byte[] bytes = new byte[(blockCount+1)*BLOCK_SIZE+2];
 
+        ArrayList<Block> blocks = new ArrayList<>(blockCount);
+
+        // We don't know where in the register the frame will start, so we'll need to
+        // gather enough bytes to make sure we can read <blockCount> concurrent blocks.
+        // In order to do this, we'll read <(blockCount + 1)*BLOCK_SIZE> bytes, plus two
+        // to account for the sync words.
+        byte[] bytes = new byte[(blockCount+1)*BLOCK_SIZE+2];
+        int length = bytes.length;
         // read data from pixy
-        bytes = this.getDeviceClient().read(0, bytes.length);
+        bytes = this.getDeviceClient().read(0, length);
 
         // search for sync
-        for (int i = 0; i < bytes.length; i++){
+        for (int i = 0; i < length; i++){
+
+            // We're too late in the register. Return what we have (if anything),
+            // or we'll get an ArrayIndexOutOfBoundsException.
+            if (i + 14 >= length) {
+                return blocks;
+            }
+
             boolean sync1 = checkSync(bytes,i);
             boolean sync2 = checkSync(bytes,i+2);
             boolean startOfFrame = sync1 && sync2;
 
             if (startOfFrame){
+
+                // Advance two to skip the extra sync word
                 i += 2;
                 for (int j = 0; j < blockCount; j++) {
                     byte[] tempBytes = new byte[BLOCK_SIZE];
-                    for (int tempByteOffset = 0; tempByteOffset < BLOCK_SIZE; tempByteOffset++) {
-                        if (i < 58) {
-                            tempBytes[tempByteOffset] = bytes[i];
-                            i++;
-                        }
-                    }
+                    System.arraycopy(bytes, i, tempBytes, 0, BLOCK_SIZE);
+                    i += BLOCK_SIZE;
                     Block block = getBlock(tempBytes);
                     if (block != null) {
                         blocks.add(block);
                     }
-                    if (blocks.size() == blockCount) {
-                        return blocks;
-                    }
                 }
                 return blocks;
+
             }
         }
+
+        // We didn't find anything; just return an empty ArrayList;
         return blocks;
+
     }
 
     private boolean checkSync(byte[] bytes, int byteOffset){
+
         int b1 = bytes[byteOffset];
-        if (b1 < 0){
-            b1+=256;
+        if (b1 < 0) {
+            b1 += 256;
         }
-        int b2 = bytes[byteOffset+1];
-        if (b2 < 0){
-            b2+=256;
+        int b2 = bytes[byteOffset + 1];
+        if (b2 < 0) {
+            b2 += 256;
         }
 
         return b1 == 0x55 && b2 == 0xaa;
+
     }
 
-    public Block getBlock(byte[] bytes){
+    private Block getBlock(byte[] bytes){
 
         Block block = new Block();
 
@@ -127,21 +137,15 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
         return block;
     }
 
-
     public class Block{
         public int signature;
         public int xCenter;
         public int yCenter;
         public int width;
         public int height;
-
-        public String toString() {
-            return "sig: " + signature + "__ x: " + xCenter + "__ y: " + yCenter +
-                    "__ w: " + width + "__ h: " + height;
-        }
     }
 
-    public int convertBytesToInt(int msb, int lsb){
+    private int convertBytesToInt(int msb, int lsb){
         if (msb < 0) {
             msb += 256;
         }
@@ -154,6 +158,4 @@ public class PixyCam extends I2cDeviceSynchDevice<I2cDeviceSynch>
         value += lsb;
         return value;
     }
-
-
 }

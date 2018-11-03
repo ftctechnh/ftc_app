@@ -1,241 +1,188 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.components.pixy.PixyCam;
+
+import org.firstinspires.ftc.teamcode.components.pixycam.PixyCam;
 import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
 
 import java.util.ArrayList;
 
-//@Autonomous(name = "PixySystem", group = "Bot")
+
 public class PixySystem extends System {
-    public static final int YELLOW_SIGNATURE = 3;
-    public static final int WHITE_SIGNATURE = 4;
+    private final int YELLOW_SIGNATURE = 3;
+    private final int WHITE_SIGNATURE = 4;
+    private PixyCam pixy;
+    private double yellowPos;
+    private double white1Pos;
+    private double white2Pos;
 
-    private LinearOpMode opMode;
-    private PixyCam pixyCam;
-    private PixyCam.Block yellowBlock;
-    private PixyCam.Block whiteBlock1;
-    private PixyCam.Block whiteBlock2;
-    private MecanumDriveSystem driveSystem;
+    double yellowCount = -1;
+    double yellowSum = 0;
+    double white1Count = -1;
+    double white1Sum = 0;
+    double white2Count = -1;
+    double white2Sum = 0;
+    // private MecanumDriveSystem driveSystem;
 
-    public PixySystem (OpMode opMode) {
+    public PixySystem(OpMode opMode) {
         super(opMode, "PixySystem");
-    }
+        pixy = hardwareMap.get(PixyCam.class, "PixyCam");
+        pixy.setBlockCount(3);
 
-    public void runPixySystem(LinearOpMode oMode) {
-        opMode= oMode;
-        pixyCam = opMode.hardwareMap.get(PixyCam.class, "PixyCam");
-        driveSystem = new MecanumDriveSystem(opMode);
-        telemetry.log("Pixy System","called RunPixySystem");
 
-        driveSystem.turn(90, 0.3);
-        telemetry.log("Pixy System","turning 90 degs to start");
-        telemetry.write();
-        spin();
-
-    }
-
-    // get values from PixyCam
-    public void getValues() {
-        ArrayList<PixyCam.Block> blocks = pixyCam.getBlocks();
-        if (!blocks.isEmpty()) {
-            telemetry.log("Pixy Cam","getting values from blocks: {0}", blocks.toString());
-            for (PixyCam.Block block : blocks) {
-                if (block.signature == YELLOW_SIGNATURE) {
-                    yellowBlock = block;
-                    telemetry.log("Pixy System","yellow: {0}", yellowBlock);
-                    telemetry.log("Pixy Systen","yellow is null, turning counterclockwise");
-                } else if (whiteBlock1 == null && block.signature == WHITE_SIGNATURE) {
-                    whiteBlock1 = block;
-                    telemetry.log("Pixy System","white1: {0}", whiteBlock1);
-                    telemetry.log("Pixy System","yellow is null, turning counterclockwise");
-                } else if (whiteBlock2 == null && block.signature == WHITE_SIGNATURE) {
-                    whiteBlock2 = block;
-                    telemetry.log("Pixy System","white2: {0}", whiteBlock2);
-                    telemetry.log("Pixy System", "yellow is null, turning counterclockwise");
-                }
-            }
-
-            // change names so whiteBlock1 is on the left and whiteBlock2 is on the right
-            if (whiteBlock1 != null && whiteBlock2 != null) {
-                if (whiteBlock1.xCenter > whiteBlock2.xCenter) {
-                    PixyCam.Block temp = whiteBlock1;
-                    whiteBlock1 = whiteBlock2;
-                    whiteBlock2 = temp;
-                }
-            }
-        }
-    }
-
-    public void spin() {
-        telemetry.log("Pixy System","spinning");
-        int angle = 0;
-
-        // if yellow isn't there or it's too far left, turn clockwise
-        while ((yellowBlock == null || yellowBlock.xCenter < 255 / 2 - 10) && angle <= 360) {
-            driveSystem.turn(-10, 0.2);
-
-            angle += 10;
-            getValues();
-            telemetry.log("Pixy System","angle: " + angle);
-            telemetry.write();
-        }
-
-        // if yellow is too far right, turn counterclockwise
-        while (yellowBlock.xCenter > 255 / 2 + 10) {
-            driveSystem.turn(10, 0.2);
-            angle += 10;
-            getValues();
-            telemetry.log("Pixy System","angle: " + angle);
-            telemetry.write();
-        }
-
-        // if yellow's centered, drive forward
-        if (yellowBlock != null && yellowBlock.xCenter > 255 / 2- 10 && yellowBlock.xCenter < 255 / 2 + 10) {
-            driveSystem.driveToPositionInches(2, 0.1);
-            telemetry.log("Pixy System","driving forward");
-            telemetry.write();
-        }
-
-        // make the white balls equidistant from either side
-        if (angle > 360) {
-            if (yellowBlock == null) {
-                while (whiteBlock1.xCenter > 255 / 2 - whiteBlock2.xCenter) {
-                    driveSystem.turn(5, 0.1);
-                    telemetry.log("Pixy System","yellow is null, turning counterclockwise");
-                    telemetry.write();
-                }
-                while (whiteBlock1.xCenter < 255 / 2 - whiteBlock2.xCenter) {
-                    driveSystem.turn(-5, 0.1);
-                    telemetry.log("Pixy System","yellow is null   turning clockwise");
-                    telemetry.write();
-                }
-            }
-
-        }
-        telemetry.write();
-    }
-/*
-    public void center() {
-        // center yellow in the frame
-        if(yellowBlock != null) {
-            while (yellowBlock.xCenter < 255 - 10 && yellowBlock.xCenter > 255 + 10) {
-                if(yellowBlock.xCenter < 255 - 10) {
-                    driveSystem.mecanumDriveXY(0.1, 0);
-                    sleep(10);
-                    driveSystem.mecanumDriveXY(0, 0);
-                }
-            }
-        } else {
-            if (whiteBlock2.xCenter < 2 * 255 / 3) {
-                getYellow("right");
-            } else if(whiteBlock1.xCenter > 255 / 3) {
-                getYellow("left");
-            }
-        }
-    }
-
-    public void getBlocks() {
-        while ((yellowBlock == null && whiteBlock1 == null) ||
-               (whiteBlock1 == null && whiteBlock2 == null) ||
-               (yellowBlock == null && whiteBlock1 == null)) {
-            driveSystem.turn(10, 0.1);
-            getValues();
-        }
-    }
-
-    public void getYellow(String direction) {
-        int angle = 0;
-        while (yellowBlock == null && angle <= 360) {
-            if (direction.equalsIgnoreCase("right")) {
-                driveSystem.turn(-10, 0.1);
-            } else if (direction.equalsIgnoreCase("left")) {
-                driveSystem.turn(10, 0.1);
-            }
-        }
-    }
-*/
-
-    /*
-    if the yellow block isn't visible, figure out if the yellow block is on the far left or right
-        if it's on the far right, move right until the yellow block is visible
-        if it's on the far left, move left until the yellow block is visible
-    center the yellow block
-    drive forward
-     */
-
-/*
-    public PixySystem(LinearOpMode oMode) {
-    //public void initPixy() {
-        opMode = oMode;
-        pixyCam = hardwareMap.get(PixyCam.class, "PixyCam");
-        //driveSystem = dSystem;
         //driveSystem = new MecanumDriveSystem(opMode);
     }
 
     public void runPixySystem() {
-        // initPixy();
-        getValues();
-        center();
+
+        telemetry.log("Pixy System","running PixySystem");
+        telemetry.write();
+        yellow();
+        /*
+        printValues();
+        centerYellow();
+        driveForward();
+        */
     }
 
-    public void getValues() {
-        yellowBlock = pixyCam.GetBiggestBlock(3);
-        telemetry.addData("yellow: ", yellowBlock.toString());
-        whiteBlock = pixyCam.GetBiggestBlock(4);
-        telemetry.addData("white: ", whiteBlock.toString());
-        telemetry.update();
+    private void yellow() {
+        int yellowX = -1;
+        ArrayList<PixyCam.Block> blocks = pixy.getBlocks();
+        for(PixyCam.Block block : blocks) {
+            telemetry.log("Pixy Cam", "block: "+ block.xCenter);
+            if (block.signature == YELLOW_SIGNATURE) {
+                yellowX = block.xCenter;
+            }
+            telemetry.write();
+        }
+
+        if (yellowX < 255 / 2 - 10) {
+            telemetry.log("Pixy System", "turn counterclockwise");
+            yellow();
+        } else if (yellowX > 255 / 2 + 10) {
+            telemetry.log("Pixy System", "turn clockwise");
+            yellow();
+        }
+        telemetry.write();
+
     }
 
+    public void printValues() {
+        telemetry.log("Pixy System","yellow: " + yellowPos);
 
-    // if the yellow block isn't in the center of the pixy camera, move the robot so the yellow
-    //      block is centered, then drive forward
-    public void center() {
-        // get the yellow block in the field of vision
-        while ((yellowBlock.x == 0 && yellowBlock.y == 0) ||
-               (yellowBlock.width < 5 || yellowBlock.height < 5)) {
-            if (whiteBlock.x < 255 / 2) {
-                // strafe right
-                telemetry.addLine("driving right to see yellow");
-                // driveSystem.mecanumDriveXY(1, 0);
-                sleep(10);
-                // driveSystem.mecanumDrive(0, 0)
-            } else {
-                // strafe left
-                telemetry.addLine("driving left to see yellow");
-                // driveSystem.mecanumDriveXY(-1, 0);
-                sleep(10);
-                // driveSystem.mecanumDrive(0, 0)
+        telemetry.log("Pixy System", "yellowSum: " + yellowSum);
+        telemetry.log("Pixy System", "yellowCount: " + yellowCount);
+
+        telemetry.log("Pixy System","white1: " + white1Pos);
+        telemetry.log("Pixy System","white2: " + white2Pos);
+        telemetry.write();
+    }
+
+/*
+    private void getValues() {
+
+        telemetry.log("Pixy System", "in getValues");
+        telemetry.write();
+        for (int i = 0; i < 3; i++) {
+            int whiteVal1 = 0;
+            int whiteVal2 = 0;
+            ArrayList<PixyCam.Block> blocks = pixy.getBlocks();
+            telemetry.log("Pixy System", blocks.size());
+            telemetry.write();
+            for (PixyCam.Block block : blocks) {
+                telemetry.log("Pixy System","sig: " + block.signature + "   " + "xCenter: " + block.xCenter);
+                telemetry.write();
+                if (block.signature == YELLOW_SIGNATURE) {
+                    yellowCount++;
+                    yellowSum += block.xCenter;
+                } else if (block.signature == WHITE_SIGNATURE) {
+                    if (whiteVal1 == 0) {
+                        whiteVal1 = block.xCenter;
+                    } else {
+                        whiteVal2 = block.xCenter;
+                    }
+                }
+
+                if (whiteVal1 > whiteVal2 && whiteVal2 != 0) {
+                    white1Sum += whiteVal2;
+                    white1Count++;
+                    white2Sum = whiteVal1;
+                    white2Count++;
+                }
             }
         }
 
-        // center the yellow block
-        while (!(yellowBlock.x < 255 + 5 || yellowBlock.x > 255 - 5)) {
-            if (yellowBlock.x < 255 / 2) {
-                // strafe right
-                telemetry.addLine("driving right");
-                // driveSystem.mecanumDriveXY(1, 0);
-                sleep(10);
-                // driveSystem.mecanumDrive(0, 0)
-            } else if (yellowBlock.x > 255 / 2) {
-                // strafe left
-                telemetry.addLine("driving left");
-                // driveSystem.mecanumDriveXY(-1, 0);
-                sleep(10);
-                // driveSystem.mecanumDrive(0, 0)
+        yellowPos = yellowSum / yellowCount;
+
+        telemetry.write();
+        white1Pos = white1Sum / white1Count;
+        white2Pos = white2Sum / white2Count;
+
+        printValues();
+    }
+
+    public void centerYellow() {
+        // if yellow is visible but not centered, center it
+        if(yellowPos > 0) {
+            telemetry.log("Pixy System","centering yellow -- yellow is visible");
+            while (yellowPos < 255 / 2 - 5) {
+                // driveSystem.turn(-5, 0.1);
+                telemetry.log("Pixy System", "turning clockwise");
+                telemetry.write();
+                getValues();
+            }
+            while (yellowPos > 255 / 2 + 5) {
+                // driveSystem.turn(5, 0.1);
+                telemetry.log("Pixy System", "turning counterclockwise");
+                telemetry.write();
+                getValues();
+            }
+
+        }
+        // if yellow isnt visible but both white are and they're next to each other
+        else if(white2Pos != 0 && white1Pos != 0 && white2Pos - white1Pos < 100) {
+            telemetry.log("Pixy System","centering yellow -- white next to each other");
+            telemetry.write();
+            if(white2Pos < 2 * 255 / 3) {
+                while(white2Pos > 255 / 3) {
+                    // driveSystem.turn(5, 0.1);
+                    telemetry.log("Pixy System", "turning counterclockwise");
+                    telemetry.write();
+                    getValues();
+                }
+            } else if(white1Pos > 255 / 3) {
+                while(white1Pos < 2 * 255 / 3) {
+                    // driveSystem.turn(-5, 0.1);
+                    telemetry.log("Pixy System", "turning clockwise");
+                    telemetry.write();
+                    getValues();
+                }
             }
         }
-
-        // drive forward to hit the block
-        telemetry.addLine("driving forward");
-        // driveSystem.mecanumDriveXY(0, 1);
-        sleep(10);
-        // driveSystem.mecanumDrive(0, 0)
+        // if yellow isnt visible but both white are and they're not next to each other
+        else if (white2Pos - white1Pos >= 100) {
+            telemetry.log("Pixy System","centering yellow -- yellow in middle");
+            telemetry.write();
+            while (white1Pos > 255 - white2Pos) {
+                // driveSystem.turn(5, 0.1);
+                telemetry.log("Pixy System", "turning counterclockwise");
+                telemetry.write();
+                getValues();
+            }
+            while (white1Pos < 255 - white2Pos) {
+                // driveSystem.turn(-5, 0.1);
+                telemetry.log("Pixy System", "turning clockwise");
+                telemetry.write();
+                getValues();
+            }
+        }
     }
-  */
 
+    public void driveForward() {
+        telemetry.log("Pixy System","driving forward");
+        telemetry.write();
+        //driveSystem.driveToPositionInches(4, 0.1);
+    }
 
-
+    */
 }
