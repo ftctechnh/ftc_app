@@ -64,7 +64,7 @@ public class autonomousDrive_0_1 extends LinearOpMode
                 case Drop:
                     if(t < 1)
                     {
-                        //if(!robot.sensors.touchBottom.isPressed())
+                        if(!robot.sensors.touchBottom.isPressed())
                             robot.lift(-0.7); //pull
                         robot.setBrake(false);
                     }
@@ -72,13 +72,13 @@ public class autonomousDrive_0_1 extends LinearOpMode
                     {
                         robot.lift(.2); //push
                     }
-                    else if(t < 9)
+                    else if(t < 7.5)
                     {
                         robot.lift(0);
-                        robot.driveEngine.drive(.8,0);
+                        robot.driveEngine.drive(.2,0);
                     }
 
-                    else if(t > 9) //if condition
+                    else if(t > 8.0) //if condition
                     {
                         robot.driveEngine.rotate(-.1);
                     }
@@ -190,6 +190,9 @@ public class autonomousDrive_0_1 extends LinearOpMode
                     robot.lift(0);
 
             }
+
+//            if(gamepad1.right_bumper){timer.addTime(.0001);}
+//            if(gamepad1.left_bumper){timer.addTime(-.0001);}
 
             // Display the current values
             telemetry.addData("time: ", t);

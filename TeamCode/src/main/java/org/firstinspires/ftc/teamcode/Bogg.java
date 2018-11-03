@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Bogg
 {
@@ -65,7 +66,7 @@ public class Bogg
     {
         if(gamepad.y  )//  && !sensors.touchTop.isPressed())
             lift.setPower(1);
-        else if(gamepad.a  )//  && !sensors.touchBottom.isPressed())
+        else if(gamepad.a  && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8)//  && !sensors.touchBottom.isPressed())
             lift.setPower(-1);
         else
             lift.setPower(0);
