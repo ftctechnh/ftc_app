@@ -32,6 +32,8 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -133,30 +135,31 @@ public class RobotLanding extends LinearOpMode {
             robot.setLeftRight(-0.05,0.05,-0.05,0.05);
         }
         robot.setLeftRight(0,0,0,0);
+
         telemetry.addData("My name is ","Prajwal");
-        Wait(2);
+//        Wait(2);
         telemetry.addData("X position of the cube", detector.getXPosition());
         telemetry.update();
+        double initialPosition = detector.getXPosition();
         Wait(2);
-        robot.setLeftRight(0.2,-0.2,0.2,-0.2);
-        Wait(0.5);
-        robot.setLeftRight(0,0,0,0);
-        Wait(2);
-        telemetry.addData("X position of the cube", detector.getXPosition());
-        telemetry.update();
+        //Commenting the 4 lines below for testing
+//        robot.setLeftRight(0.2,-0.2,0.2,-0.2);
+//        Wait(0.5);
+//        robot.setLeftRight(0,0,0,0);
+//        Wait(2);
+//        telemetry.addData("X position of the cube", detector.getXPosition());
+//        telemetry.update();
         runtime.reset();
-        while(opModeIsActive() && runtime.seconds()< 3.5) {
+        while(opModeIsActive() && runtime.seconds() < 5) {
             robot.setLeftRight(-0.2,-0.2,-0.2,-0.2);
             telemetry.addData("X position of the cube", detector.getXPosition());
+            telemetry.addData("What is the value of isFound", detector.isFound());
             telemetry.update();
+            if(!detector.isFound())break;
         }
 
 
-        robot.setLeftRight(0,0,0,0);
-        telemetry.addData("Is the cube pushed?",detector.isFound());
-        telemetry.update();
-
-        runtime.reset();
+//        runtime.reset();
 
 //        while (opModeIsActive() && runtime.seconds()<0.75) {
 //            robot.setLeftRight(0, 0.8,0,0.8);
@@ -167,9 +170,17 @@ public class RobotLanding extends LinearOpMode {
 //
 //
 //        robot.setLeftRight(0,0,0,0);
+        telemetry.addData("Is the cube pushed?",detector.isFound());
         telemetry.addData("Detecting Gold",detector.getAligned());
+        telemetry.addData("Initial position of Gold",initialPosition);
         telemetry.addData("Path", "Complete");
         telemetry.update();
+
+        robot.setLeftRight(0,0,0,0);
+
+        Wait(10);
+
+
     }
 
     /*
@@ -199,10 +210,10 @@ public class RobotLanding extends LinearOpMode {
         telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
 
         detector = new GoldAlignDetector();
+
         // detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance(),0,false);
         detector.useDefaults();
-
         // Optional Tuning
         detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
         detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
