@@ -32,11 +32,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     boolean hangArmUp;
 
 
-    private ColorSensor colorSensor;
+    private ColorSensor colorSensorOuter;
+    private ColorSensor colorSensorInner;
 
     //1000 ticks is about 26 inches
 
-    public enum Direction { Forward, Backward, Left, Right }
+    public enum Direction {Forward, Backward, Left, Right}
 
     @Override
     public void runOpMode() {
@@ -48,7 +49,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
 
             //HANG RELEASE
 
@@ -59,88 +60,90 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             //ArmMotor.setTargetPosition(600);
             //ArmMotor.setPower(0.25);
 
-            HangMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            HangMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
+            HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            HangMotor.setTargetPosition(600);
+            HangMotor.setTargetPosition(-2400);
             HangMotor.setPower(0.8);
 
-            while(HangMotor.isBusy()){
+            while (HangMotor.isBusy()) {
 
             }
 
 
-            turn(Direction.Right,   400, 0.25);
+            turn(Direction.Right, 270, 0.25);
 
-            move(Direction.Forward, 700, 0.25);
+            move(Direction.Forward, 1300, 0.25);
 
-            turn(Direction.Right,   300, 0.25);
+            turn(Direction.Right, 300, 0.25);
 
-            SensorServo.setPosition(0.5);
+            SensorServo.setPosition(0.05);
 
 
             //GOLD TEST
 
             move(Direction.Backward, 200, 0.25);
-            //Looks at the left mineral. If the left mineral is gold, turns and knocks over the
+            //Looks at the right mineral. If the right mineral is gold, turns and knocks over the
             // mineral, then turns and goes to the depot, then turns and drives into the crater.
 
-            if(isGold()) {
+            if (isGold()) {
 
-                turn(Direction.Left,    250,  0.25);
+                turn(Direction.Left, 350, 0.25);
                 SensorServo.setPosition(0);
                 move(Direction.Forward, 1200, 0.25);
-                turn(Direction.Left,    1000, 0.25);
-                move(Direction.Forward, 800,  0.25);
-                turn(Direction.Left,    270,  0.25);
+                turn(Direction.Left, 250, 0.25);
+                move(Direction.Forward, 800, 0.25);
+                turn(Direction.Left, 270, 0.25);
                 move(Direction.Forward, 2000, 0.25);
 
                 break;
 
-
-            } else{
+            } else {
 
                 //Looks at the center mineral. If the center mineral is gold, goes straight to the
                 // depot, then turns and drives into the crater.
 
                 move(Direction.Backward, 100, 0.25);
 
-                if(isGold()) {
+                if (isGold()) {
 
-                    turn(Direction.Left,    150,  0.25);
+                    turn(Direction.Left, 150, 0.25);
                     SensorServo.setPosition(0);
                     move(Direction.Forward, 1400, 0.25);
-                    turn(Direction.Left,    500,  0.25);
-                    move(Direction.Forward, 800,  0.25);
-                    turn(Direction.Left,    270,  0.25);
+                    turn(Direction.Left, 500, 0.25);
+                    move(Direction.Forward, 800, 0.25);
+                    turn(Direction.Left, 270, 0.25);
                     move(Direction.Forward, 2000, 0.25);
 
                     break;
 
-                } else{
+                } else {
 
-                    //Turns to face the right mineral. If the right mineral is gold, goes to the
+                    //Turns to face the left mineral. If the left mineral is gold, goes to the
                     // mineral, then turns and goes to the depot, then turns and drives into the
                     // crater.
                     move(Direction.Backward, 100, 0.25);
 
-                    if(isGold()){
 
-                        turn(Direction.Left,    350,  0.25);
+                    if (isGold()) {
+
+                        turn(Direction.Left, 250, 0.25);
                         SensorServo.setPosition(0);
                         move(Direction.Forward, 1200, 0.25);
-                        turn(Direction.Left,    250,  0.25);
-                        move(Direction.Forward, 800,  0.25);
-                        turn(Direction.Left,    270,  0.25);
+                        turn(Direction.Left, 1000, 0.25);
+                        move(Direction.Forward, 800, 0.25);
+                        turn(Direction.Left, 270, 0.25);
                         move(Direction.Forward, 2000, 0.25);
 
                         break;
+
 
                     }
 
                 }
 
             }
+            requestOpModeStop();
 
 
             //SILVER TEST
@@ -220,24 +223,25 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    private void initialize(){
+    private void initialize() {
 
         //giving internal hardware an external name for the app config
-        this.LeftDriveMotor = hardwareMap.get (DcMotor.class,"LeftDriveMotor");
-        this.RightDriveMotor = hardwareMap.get (DcMotor.class, "RightDriveMotor");
+        this.LeftDriveMotor = hardwareMap.get(DcMotor.class, "LeftDriveMotor");
+        this.RightDriveMotor = hardwareMap.get(DcMotor.class, "RightDriveMotor");
         //this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
-        this.HangMotor = hardwareMap.get (DcMotor.class, "HangMotor");
+        this.HangMotor = hardwareMap.get(DcMotor.class, "HangMotor");
         //this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
         //this.ArmServoElbow = hardwareMap.get (Servo.class, "ArmServoElbow");
         //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
-        this.SensorServo = hardwareMap.get (Servo.class, "SensorServo");
+        this.SensorServo = hardwareMap.get(Servo.class, "SensorServo");
 
-        this.colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+        this.colorSensorOuter = hardwareMap.get(ColorSensor.class, "colorSensorOuter");
+        this.colorSensorInner = hardwareMap.get(ColorSensor.class, "colorSensorInner");
 
 
         //Sets correct directions for motors and servos
         LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        RightDriveMotor.setDirection(DcMotor.Direction.FORWARD);
+        RightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
         //ArmMotor.setDirection(DcMotor.Direction.FORWARD);
         HangMotor.setDirection(DcMotor.Direction.FORWARD);
 
@@ -253,10 +257,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HangMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
 
         hangArmUp = true;
@@ -280,90 +284,90 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         telemetry.update();
     }
 
-    public void move(Direction direction, int distance, double speed){
+    public void move(Direction direction, int distance, double speed) {
 
 
         //Resets encoder and moves the inputted ticks
-        RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
-        LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+        RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        if(direction == Direction.Forward) {
+        if (direction == Direction.Forward) {
 
             LeftDriveMotor.setTargetPosition(distance);
             RightDriveMotor.setTargetPosition(distance);
 
-        } else if(direction == Direction.Backward) {
+        } else if (direction == Direction.Backward) {
 
             LeftDriveMotor.setTargetPosition(-distance);
             RightDriveMotor.setTargetPosition(-distance);
 
         }
 
-        LeftDriveMotor.setPower    (speed);
-        RightDriveMotor.setPower   (speed);
+        LeftDriveMotor.setPower(speed);
+        RightDriveMotor.setPower(speed);
 
-        while(!motorsWithinTarget()) {
+        while (!motorsWithinTarget()) {
 
             //Loop body can be empty
             telemetry.update();
 
         }
 
-        LeftDriveMotor.setPower    (0);
-        RightDriveMotor.setPower   (0);
+        LeftDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);
 
     }
 
-    public void turn(Direction direction, int distance, double speed){
+    public void turn(Direction direction, int distance, double speed) {
 
 
         //Resets the encoders and does a left point turn for the inputted degrees
-        RightDriveMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode     (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        RightDriveMotor.setMode    (DcMotor.RunMode.RUN_TO_POSITION);
-        LeftDriveMotor.setMode     (DcMotor.RunMode.RUN_TO_POSITION);
+        RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        if(direction == Direction.Left){
+        if (direction == Direction.Left) {
 
-            RightDriveMotor.setTargetPosition  (distance);
-            LeftDriveMotor.setTargetPosition   (-distance);
-
-        }
-
-        if(direction == Direction.Right){
-
-            RightDriveMotor.setTargetPosition  (-distance);
-            LeftDriveMotor.setTargetPosition   (distance);
+            RightDriveMotor.setTargetPosition(distance);
+            LeftDriveMotor.setTargetPosition(-distance);
 
         }
 
-        LeftDriveMotor.setPower    (speed);
-        RightDriveMotor.setPower   (speed);
+        if (direction == Direction.Right) {
 
-        while(!motorsWithinTarget()) {
+            RightDriveMotor.setTargetPosition(-distance);
+            LeftDriveMotor.setTargetPosition(distance);
+
+        }
+
+        LeftDriveMotor.setPower(speed);
+        RightDriveMotor.setPower(speed);
+
+        while (!motorsWithinTarget()) {
 
             //Loop body can be empty
             telemetry.update();
 
         }
 
-        LeftDriveMotor.setPower    (0);
-        RightDriveMotor.setPower   (0);
+        LeftDriveMotor.setPower(0);
+        RightDriveMotor.setPower(0);
 
     }
 
-    public boolean motorsBusy(){
+    public boolean motorsBusy() {
 
         return (RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive();
 
     }
 
-    public boolean motorsWithinTarget(){
+    public boolean motorsWithinTarget() {
 
         int lDif = (LeftDriveMotor.getTargetPosition() - LeftDriveMotor.getCurrentPosition());
         int rDif = (RightDriveMotor.getTargetPosition() - RightDriveMotor.getCurrentPosition());
@@ -372,10 +376,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    public  boolean isGold() {
+    public boolean isGold() {
 
-        if((colorSensor.red() >= (2 * colorSensor.blue()))
-                && colorSensor.green() >= (2* colorSensor.blue())) {
+        if (((colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
+                && colorSensorOuter.green() >= (2 * colorSensorOuter.blue()) ||
+                (colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
+                && colorSensorOuter.green() >= (2 * colorSensorOuter.blue()))) {
             return true;
 
         }
