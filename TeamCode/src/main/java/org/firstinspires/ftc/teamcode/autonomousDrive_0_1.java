@@ -86,14 +86,16 @@ public class autonomousDrive_0_1 extends LinearOpMode
                     {
                         double[] location = robot.camera.getLocation();
 
-                        if(location[0] > 0 && location[1] > 0)
-                            startPosition = StartPosition.FrontRed;
-                        else if(location[0] < 0 && location[1] > 0)
-                            startPosition = StartPosition.FrontBlue;
-                        else if(location[0] > 0 && location[1] < 0)
-                            startPosition = StartPosition.BackRed;
-                        else // location[0] < 0 && location[1] < 0
+                        double angle = Math.atan2(location[0], location[1]);
+
+                        if(angle < -Math.PI/2)
                             startPosition = StartPosition.BackBlue;
+                        else if(angle < 0)
+                            startPosition = StartPosition.BackRed;
+                        else if(angle < Math.PI/2)
+                            startPosition = StartPosition.FrontRed;
+                        else // angle between pi/2 and pi
+                            startPosition = StartPosition.FrontBlue;
                         action = Mode.MoveToWall;
                     }
                     break;
@@ -190,10 +192,10 @@ public class autonomousDrive_0_1 extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("leftx: ", gamepad1.left_stick_x);
             telemetry.addData("time: ", t);
-            telemetry.addData("servo x: ", x);
-            telemetry.addData("servo power", robot.brake.getPosition());
+            telemetry.addData("brake x: ", x);
+            telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
+            telemetry.addData("brake position", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
             telemetry.addData("mode", action);
             telemetry.update();

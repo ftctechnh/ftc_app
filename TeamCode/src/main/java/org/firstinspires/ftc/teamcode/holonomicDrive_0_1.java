@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @TeleOp(name="holonomicDrive_0_1", group="Testing")
 public class holonomicDrive_0_1 extends LinearOpMode
 {
@@ -41,11 +43,12 @@ public class holonomicDrive_0_1 extends LinearOpMode
             robot.lift();
 
             // Display the current value
-            telemetry.addData("leftx: ", gamepad1.left_stick_x);
-            telemetry.addData("lefty: ", gamepad1.left_stick_y);
-            telemetry.addData("rightx: ", gamepad1.right_stick_x);
-            telemetry.addData("righty: ", gamepad1.right_stick_y);
-            telemetry.addData("spinAve: ", robot.getSmoothSpin());
+            telemetry.addData("Servo x", x);
+            telemetry.addData("touch", robot.sensors.touchBottom.isPressed());
+            telemetry.addData("fixed distance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
+            telemetry.addData("mobile distance", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
+            telemetry.addData("camera x, y", robot.camera.getLocation());
+            telemetry.addData("camera orientation", robot.camera.getHeading());
             telemetry.update();
             idle();
         }
