@@ -20,8 +20,4 @@ allprojects {
         google()
         jcenter()
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> ftctechnh/master
