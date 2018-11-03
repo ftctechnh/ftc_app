@@ -14,9 +14,7 @@ public class TeleOpTest extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         //the lines below allow the control drive method to work
-        robot.leftMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.rightMid.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         telemetry.addData("Hello","this is a test");
     }
@@ -26,9 +24,7 @@ public class TeleOpTest extends OpMode {
     }
     @Override
     public void stop(){
-        robot.leftMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightMid.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
