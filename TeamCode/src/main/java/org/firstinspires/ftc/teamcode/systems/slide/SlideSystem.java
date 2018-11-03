@@ -17,21 +17,20 @@ public class SlideSystem extends System
        TODO:
        - ramp the encoder values
      */
+    private final double WinchPower = 0.7;
+    private final int EncoderLoadRange = 100;
 
     private DigitalChannel limitTop;
     private DigitalChannel limitMiddle;
     private DcMotor winch;
 
-    private final int EncoderBottom = 10810;
+    private final int EncoderBottom = 11000;
     private final int EncoderLoad = 3340;
-    private final double MinPower = 0.000001;
-    private final double MaxPower = 0.3;
 
     private boolean hasSetOrigin;
     private double winchOrigin;
 
     private SlideState currentState;
-    private Ramp motionRamp;
 
     public SlideSystem(OpMode opMode)
     {
@@ -71,36 +70,35 @@ public class SlideSystem extends System
     public void slideUp()
     {
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motionRamp.getPoint1().setX(EncoderBottom);
         if (!isAtTop())
         {
-            winch.setPower(winchOrigin - winch.getCurrentPosition() + EncoderBottom);
+            winch.setPower(WinchPower);
         }
         else
         {
+            winch.setPower(0.0);
             setState(SlideState.IDLE);
             setOrigin();
         }
     }
 
     private boolean isAtTop() {
-        return limitTop.getState() || limitMiddle.getState();
+        return !limitTop.getState() && !limitMiddle.getState();
     }
 
     private void setOrigin() {
-        winch.setPower(0.0);
-        hasSetOrigin = true;
-        winchOrigin = winch.getCurrentPosition();
-        motionRamp = new LogarithmicRamp(new Point(winchOrigin, MinPower), new Point(winchOrigin, MaxPower));
+        if (!hasSetOrigin) {
+            hasSetOrigin = true;
+            winchOrigin = winch.getCurrentPosition();
+        }
     }
 
     public void slideDown()
     {
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motionRamp.getPoint1().setX(winchOrigin - EncoderBottom + Double.MIN_VALUE);
         if (hasSetOrigin && !isAtBottom())
         {
-            winch.setPower(-winch.getCurrentPosition());
+            winch.setPower(-WinchPower);
         }
         else
         {
@@ -110,13 +108,12 @@ public class SlideSystem extends System
     }
 
     private boolean isAtBottom() {
-        return winch.getCurrentPosition() > winchOrigin - EncoderBottom;
+        return winch.getCurrentPosition() <= winchOrigin - EncoderBottom;
     }
 
     public void slideLoad()
     {
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motionRamp.getPoint1().setX(winchOrigin - EncoderLoad);
         if (hasSetOrigin && !isInLoadRange())
         {
             winch.setPower(getLoadPower());
@@ -129,14 +126,14 @@ public class SlideSystem extends System
     }
 
     private boolean isInLoadRange() {
-        return winch.getCurrentPosition() <= winchOrigin - EncoderLoad + 100 &&
-                winch.getCurrentPosition() >= winchOrigin - EncoderLoad - 100;
+        return winch.getCurrentPosition() <= winchOrigin - EncoderLoad + EncoderLoadRange &&
+                winch.getCurrentPosition() >= winchOrigin - EncoderLoad - EncoderLoadRange;
     }
 
     private double getLoadPower()
     {
         return winch.getCurrentPosition() > winchOrigin - EncoderLoad ?
-                -motionRamp.scaleX(winch.getCurrentPosition()) :
-                motionRamp.scaleX(2 * EncoderLoad - winch.getCurrentPosition());
+                -WinchPower :
+                WinchPower;
     }
 }

@@ -82,11 +82,11 @@ public class TeleOpMode extends TeleOpModeDebugger {
 
     private void addRotateButton() {
         final StepButton<ArmState> rotateButton = new StepButton<ArmState>(
-                controller1.y,
-                controller1.a,
-                ArmState.ROTATING_DROP,
+                controller1.dPadUp,
+                controller1.dPadDown,
+                ArmState.ROTATING_PICKUP,
                 ArmState.ROTATING_LATCH,
-                ArmState.ROTATING_PICKUP
+                ArmState.ROTATING_DROP
         );
         rotateButton.setOffset(1);
         rotateButton.incrementAction = new Handler()

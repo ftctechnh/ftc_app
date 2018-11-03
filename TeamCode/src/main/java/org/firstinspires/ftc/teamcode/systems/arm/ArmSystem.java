@@ -15,9 +15,9 @@ public class ArmSystem extends System {
     private DcMotor motor2;
     private AnalogInput potentiometer;
 
-    private final double PotentiometerMaximum = 0.4;
-    private final double PotentiometerLatch = 0.4;
-    private final double PotentiometerMinimum = 0.03;
+    private final double PotentiometerMaximum = 0.5;
+    private final double PotentiometerLatch = 0.2;
+    private final double PotentiometerMinimum = 0.0;
 
     private ArmState currentState;
 
@@ -34,6 +34,7 @@ public class ArmSystem extends System {
     }
 
     public void run() {
+        telemetry.log("voltage", potentiometer.getVoltage());
         switch (currentState) {
             case ROTATING_DROP:
                 rotateDrop();
@@ -56,8 +57,8 @@ public class ArmSystem extends System {
             telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
             telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
 
-            motor1.setPower(0.05);
-            motor2.setPower(-0.05);
+            motor1.setPower(-0.05);
+            motor2.setPower(0.05);
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);
@@ -77,8 +78,8 @@ public class ArmSystem extends System {
             telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
             telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
 
-            motor1.setPower(-0.01);
-            motor2.setPower(0.01);
+            motor1.setPower(-getPower());
+            motor2.setPower(getPower());
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);
@@ -91,16 +92,21 @@ public class ArmSystem extends System {
                 potentiometer.getVoltage() <= PotentiometerLatch + 0.05;
     }
 
+    private double getPower() {
+        return potentiometer.getVoltage() > PotentiometerLatch + 0.05 ?
+                -0.05 :
+                0.05;
+    }
+
     public void rotateDrop() {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.log("Potentiometer", potentiometer.getVoltage());
+        telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
+        telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
         if (!isAtDropPosition()) {
-            telemetry.log("Potentiometer", potentiometer.getVoltage());
-            telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
-            telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
-
-            motor1.setPower(-0.01);
-            motor2.setPower(0.01);
+            motor1.setPower(0.05);
+            motor2.setPower(-0.05);
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);

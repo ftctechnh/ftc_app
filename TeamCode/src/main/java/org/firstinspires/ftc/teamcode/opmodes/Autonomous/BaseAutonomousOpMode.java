@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.opmodes.Autonomous;
+package org.firstinspires.ftc.teamcode.opmodes.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.systems.IMUSystem;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
+import org.firstinspires.ftc.teamcode.systems.imu.IMUSystem;
 
 /**
  * Created by EvanCoulson on 10/11/17.
