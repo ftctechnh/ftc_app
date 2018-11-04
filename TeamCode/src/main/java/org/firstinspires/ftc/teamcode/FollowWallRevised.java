@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
- * Created by Raghav and Jeremy
+ * Created by Sahithi and Jeremy
  */
 @Autonomous(name = "FollowWallRevised", group = "Auto")
 public class FollowWallRevised extends LinearOpMode
