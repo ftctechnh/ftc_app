@@ -345,19 +345,18 @@ public class MonsieurMallahNavigation extends OpMode {
 
         //
 
-        if (team == Team.Unknown){
-          figureoutTeam();
-          if (team == Team.Unknown) {
-              robotStatus = Status.Lost;
-          }
-          else {
-              robotStatus = Status.OK;
-          }
+        if (team == Team.Unknown && position == StartingPosition.Unknown) {
+            robotStatus = Status.Lost;
+        } else {
+            robotStatus = Status.OK;
         }
 
+
+
         if (robotStatus == Status.Lost){
-            //
+
         }
+
 
         telemetry.addData("Team", team.name());
         telemetry.addData("StartPos", position.name());
@@ -679,11 +678,6 @@ public class MonsieurMallahNavigation extends OpMode {
 
         }
 
-        if (position == StartingPosition.Unknown){
-            robotStatus = Status.Lost;
-        }else {
-            robotStatus = Status.OK;
-        }
 
         // Which team am i on?
         if ((position == StartingPosition.RedCrater) || (position == StartingPosition.RedSquare))

@@ -1,41 +1,19 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.MagneticFlux;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 
 /**
@@ -95,8 +73,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@Autonomous(name="Bull...Bull...Bull...RUNNNN!!!! (4 wheel drive)", group="MonsieurMallah")
-public class BullRun4 extends OpMode {
+@TeleOp(name="2 Contollers", group="MonsieurMallah")
+public class FourWheelsTwoControllers extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -118,12 +96,32 @@ public class BullRun4 extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
+    private DcMotor extender;
+    private DcMotor tacVac;
+    private DcMotor shoulder;
 
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useNavigation = true;
-    private boolean madeTheRun = false;
+
+    //tested to turn aprox. ten to twelve degrees! (Flynn did this completely(No poppa))
+        /*void turnLeft() {
+           motorBackLeft.setPower(-1.0);
+           motorBackRight.setPower(1.0);
+           motorFrontRight.setPower(1.0);
+           motorFrontLeft.setPower(-1.0);
+        }
+
+       // tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
+        void turnRight() {
+            motorBackLeft.setPower(1.0);
+            motorBackRight.setPower(-1.0);
+            motorFrontRight.setPower(-1.0);
+            motorFrontLeft.setPower(1.0);
+        }*/
+
+
     /**
      * Code to run ONCE when the driver hits INIT
      */
@@ -136,6 +134,9 @@ public class BullRun4 extends OpMode {
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
             motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
             motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
+            extender = hardwareMap.get(DcMotor.class, "motor6");
+            tacVac = hardwareMap.get(DcMotor.class, "motor4");
+            shoulder = hardwareMap.get(DcMotor.class, "motor7");
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -143,7 +144,6 @@ public class BullRun4 extends OpMode {
             motorBackRight.setDirection(DcMotor.Direction.FORWARD);
             motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
             motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-
 
             if (useEncoders) {
                 motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -160,25 +160,37 @@ public class BullRun4 extends OpMode {
                 motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }   motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
+
+//package com.qualcomm.robotcore.hardware;
+
+    /**
+     * Instances of DcMotorSimple interface provide a most basic motor-like functionality
+     */
+    /*public interface DcMotorSimple extends HardwareDevice {
+
+
+        void setPower(double power);
+
+        double getPower();
+    } */
 
 
     /**
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop () {
+    public void init_loop() {
     }
 
     /**
      * Code to run ONCE when the driver hits PLAY
      */
     @Override
-    public void start () {
-        // Reset the game timer.
-        runtime.reset();
+    public void start() {
 
     }
 
@@ -186,7 +198,7 @@ public class BullRun4 extends OpMode {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop () {
+    public void stop() {
 
         if (useNavigation) {
             /** Stop tracking the data sets we care about. */
@@ -197,34 +209,84 @@ public class BullRun4 extends OpMode {
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
-    public void loop () {
+    public void loop() {
+        if (useMotors) {
+            // Control the wheel motors.
+            // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
+            double drive = gamepad1.left_stick_y;
+            if (Math.abs(drive) < 0.1)
+                drive = 0.0; // Prevent the output from saying "-0.0".
 
-        if (madeTheRun == false) {
-            double speed = 1;
+            double turn = -gamepad1.right_stick_x;
+            double leftPower = Range.clip(drive + turn, -0.8, 0.8);
+            double rightPower = Range.clip(drive - turn, -0.8, 0.8);
+            double halfLeftPower = Range.clip(drive + turn, -0.45, 0.45);
+            double halfRightPower = Range.clip(drive - turn, -0.45, 0.45);
 
-            // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 43, 43);
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            encoderDrive(speed, 45, 45);
-            madeTheRun = true;
+            boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
+
+         /*   void turnRight() {
+                motorBackLeft.setPower(1.0);
+                motorBackRight.setPower(-1.0);
+                motorFrontRight.setPower(-1.0);
+                motorFrontLeft.setPower(1.0);
+            }
+            void turnLeft() {
+                motorBackLeft.setPower(-1.0);
+                motorBackRight.setPower(1.0);
+                motorFrontRight.setPower(1.0);
+                motorFrontLeft.setPower(-1.0);
+            }*/
+            if (halfSpeed) {
+                motorBackLeft.setPower(halfLeftPower);
+                motorBackRight.setPower(halfRightPower);
+                motorFrontLeft.setPower(halfLeftPower);
+                motorFrontRight.setPower(halfRightPower);
+            } else {
+                motorBackLeft.setPower(leftPower);
+                motorBackRight.setPower(rightPower);
+                motorFrontLeft.setPower(leftPower);
+                motorFrontRight.setPower(rightPower);
+            }
+
+
+            // Report motor telemetry: note that the left motor is mounted upside down compared to the first one,
+            // so it counts in reverse. We multiply it by -1 to change the sign, and so both motors count the same way.
+
+            boolean pullIn = gamepad2.dpad_down;
+            boolean pushOut = gamepad2.dpad_up;
+            double pullPower = 0.0;
+            if (pullIn) {
+                pullPower = -1.0;
+            } else if (pushOut) {
+                pullPower = 1.0;
+            }
+            extender.setPower(pullPower);
+
+            // Control the shoulder arm.
+
+            double shoulderPower = -gamepad2.left_stick_y;
+            if (gamepad2.left_bumper && gamepad2.right_bumper){
+                shoulderPower = Range.clip( shoulderPower, -0.4, 0.4);
+            }else {
+                shoulderPower = Range.clip( shoulderPower, -0.8, 0.8);
+            }
+            shoulder.setPower(shoulderPower);
+
+            // control the vacuum
+            double suckPower = gamepad2.right_stick_y;
+            if (gamepad2.left_bumper && gamepad2.right_bumper){
+                suckPower = Range.clip( suckPower, -0.5, 0.5);
+                tacVac.setPower(suckPower)
+            }else {
+                tacVac.setPower(suckPower);
+
+            }
         }
 
-        // Show the elapsed game time and wheel power.
-        telemetry.addData("Status", "time: " + runtime.toString());
-        telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
-    }
 
-
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches) {
+        /*public void encoderDrive(double speed, double leftInches, double rightInches) {
         int newLeftBackTarget;
         int newRightBackTarget;
 
@@ -241,14 +303,14 @@ public class BullRun4 extends OpMode {
                 motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
 
         // Turn On RUN_TO_POSITION
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+       /* motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION); */
 
 
         // reset the timeout time and start motion.
-        runtime.reset();
+        /*runtime.reset();
         motorBackRight.setPower(Math.abs(speed));
         motorBackLeft.setPower(Math.abs(speed));
         motorFrontRight.setPower(Math.abs(speed));
@@ -263,55 +325,21 @@ public class BullRun4 extends OpMode {
         while ((motorOnTime.seconds() < 30) &&
                 (motorBackRight.isBusy() && motorBackLeft.isBusy())) {
 
-            // Display it for the driver.
-           //telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-           // telemetry.addData("Path2", "Running at %7d :%7d",
-                  //  motorBackRight.getCurrentPosition(),
-                 //  motorBackLeft.getCurrentPosition();
-         //   telemetry.update();
-          //  sleep(100);
+
+            // Stop all motion;
+            motorBackRight.setPower(0);
+            motorBackLeft.setPower(0);
+            motorFrontRight.setPower(0);
+            motorFrontLeft.setPower(0);
+
+
+            // Turn off RUN_TO_POSITION
+            motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);*/
         }
 
-        // Stop all motion;
-        motorBackRight.setPower(0);
-        motorBackLeft.setPower(0);
-        motorFrontRight.setPower(0);
-        motorFrontLeft.setPower(0);
 
-
-        // Turn off RUN_TO_POSITION
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-}
-
-
-    public final void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-
-        }
     }
-
-    //tested to turn aprox. ten to twelve degrees! (Flynn did this completely(No poppa))
-    void turnLeft() {
-        motorBackLeft.setPower(-1.0);
-        motorBackRight.setPower(1.0);
-        motorFrontRight.setPower(1.0);
-        motorFrontLeft.setPower(-1.0);
-        sleep(2000 / 45);
-    }
-
-    //tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
-    void turnRight() {
-        motorBackLeft.setPower(1.0);
-        motorBackRight.setPower(-1.0);
-        motorFrontRight.setPower(-1.0);
-        motorFrontLeft.setPower(1.0);
-        sleep(2000/45);
-    }
-}
 
