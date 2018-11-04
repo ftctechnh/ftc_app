@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.systems;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -59,6 +60,9 @@ public class RRVHardwarePushbot
     public DcMotor  leftFront   = null;
     public DcMotor  rightFront  = null;
     public DcMotor  rack_pinion     = null;
+    public DcMotor lift_Base = null;
+    public DcMotor lift_Extn = null;
+    public CRServo servo0;
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -92,6 +96,11 @@ public class RRVHardwarePushbot
         leftFront  = hwMap.get(DcMotor.class, "left_Front");
         rightFront = hwMap.get(DcMotor.class, "right_Front");
         rack_pinion = hwMap.get(DcMotor.class, "rack_pinion");
+
+        lift_Base = hwMap.get(DcMotor.class, "lift_Base");
+        lift_Extn = hwMap.get(DcMotor.class, "lift_Extn");
+        servo0 = hwMap.get(CRServo.class, "servo0");
+
         rightRear.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
         rightFront.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
 
@@ -101,10 +110,10 @@ public class RRVHardwarePushbot
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        leftRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightRear.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         leftRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightRear.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
