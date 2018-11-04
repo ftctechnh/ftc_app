@@ -104,29 +104,27 @@ public class AutoMineralCoachVince extends LinearOpMode {
 
             //For a 0.5 second period, move the robot forward away from the lander;
             // I don't think we need this - "sleep" takes care of this while (runtime.seconds() < 0.5)
-            if(detector.getXPosition() < 270)
+            if(detector.getXPosition() < 240)
             {
                 //double rotate = 0.2;
-                hwMap.leftFrontDrive.setPower(fwdSpeed + rotate); //= drive + strafe + rotate;
-                hwMap.leftRearDrive.setPower(fwdSpeed + rotate); //= drive - strafe + rotate;
-                hwMap.rightFrontDrive.setPower(fwdSpeed - rotate); //= drive - strafe - rotate;
-                hwMap.rightRearDrive.setPower(fwdSpeed - rotate); //= drive + strafe - rotate;
+                hwMap.leftFrontDrive.setPower(rotate); //= drive + strafe + rotate;
+                hwMap.leftRearDrive.setPower(rotate); //= drive - strafe + rotate;
+                hwMap.rightFrontDrive.setPower(-rotate); //= drive - strafe - rotate;
+                hwMap.rightRearDrive.setPower(-rotate); //= drive + strafe - rotate;
 
             }
-            else if(detector.getXPosition() > 330)
+            else if(detector.getXPosition() > 370)
             {
                 //double rotate = -0.2;
-                hwMap.leftFrontDrive.setPower(fwdSpeed - rotate); //= drive + strafe + rotate;
-                hwMap.leftRearDrive.setPower(fwdSpeed - rotate); //= drive - strafe + rotate;
-                hwMap.rightFrontDrive.setPower(fwdSpeed + rotate); //= drive - strafe - rotate;
-                hwMap.rightRearDrive.setPower(fwdSpeed + rotate); //= drive + strafe - rotate;
+                hwMap.leftFrontDrive.setPower(-rotate); //= drive + strafe + rotate;
+                hwMap.leftRearDrive.setPower(-rotate); //= drive - strafe + rotate;
+                hwMap.rightFrontDrive.setPower(rotate); //= drive - strafe - rotate;
+                hwMap.rightRearDrive.setPower(rotate); //= drive + strafe - rotate;
             }
             else
             {
-                hwMap.leftFrontDrive.setPower(fwdSpeed); //= drive + strafe + rotate;
-                hwMap.leftRearDrive.setPower(fwdSpeed); //= drive - strafe + rotate;
-                hwMap.rightFrontDrive.setPower(fwdSpeed); //= drive - strafe - rotate;
-                hwMap.rightRearDrive.setPower(fwdSpeed); //= drive + strafe - rotate;
+                move(0,0, 0.25);
+                sleep(200);
             }
 
             sleep(50);
@@ -155,15 +153,20 @@ public class AutoMineralCoachVince extends LinearOpMode {
         }
 
         //Now we move the robot forward slightly to push the mineral.
-           /* hwMap.leftFrontDrive.setPower(0.1); //= drive + strafe + rotate;
-            hwMap.leftRearDrive.setPower(0.1); //= drive - strafe + rotate;
-            hwMap.rightFrontDrive.setPower(0.1); //= drive - strafe - rotate;
-            hwMap.rightRearDrive.setPower(0.1); //= drive + strafe - rotate;
-        sleep(1000);*/
-        hwMap.leftFrontDrive.setPower(0);
-        hwMap.leftRearDrive.setPower(0);
-        hwMap.rightFrontDrive.setPower(0);
-        hwMap.rightRearDrive.setPower(0);
+        move(0,0,0.25);
+        sleep(500);
+        stopBot();
+        move(0,0,-0.25);
+        sleep(500);
+        move(0.1,0,0);
+        sleep(1000);
+        move(0,0.1,0);
+        sleep(250);
+        move(0.1,0,0);
+        sleep(500);
+        move(-0.1,0,0);
+        sleep(2500);
+
 
     }
     public void move(double drive, double rotate, double strafe)
