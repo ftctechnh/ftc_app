@@ -1,28 +1,16 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.followers.MecanumPIDVAFollower;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
-import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints;
-import com.qualcomm.hardware.lynx.LynxNackException;
-import com.qualcomm.hardware.lynx.commands.core.LynxGetADCCommand;
-import com.qualcomm.hardware.lynx.commands.core.LynxGetADCResponse;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
-import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 
 @Config
-@Autonomous(name="Depot - Same - Simple single sample")
-public class SimpleSingleSampling extends AutoUtils {
+@Autonomous(name="Depot - Other - Simple single sample")
+public class SimpleSingleSamplingOther extends AutoUtils {
 
     public static int overrideTrajectoryIndex = -1;
     public static int unhookFromLander = 1;
@@ -73,13 +61,13 @@ public class SimpleSingleSampling extends AutoUtils {
         turnToPos(0);
 
         // Strafe to wall
-        followPath(drive, Paths.UNDO_UNHOOK);
+        followPath(drive, Paths.UNHOOK);
 
         // Deploy the team marker
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
         robot.sleep(750);
 
-        followPath(drive, Paths.DEPOT_TO_SAME_CRATER);
+        followPath(drive, Paths.DEPOT_TO_OTHER_CRATER);
     }
 
     public void turnToPos(double pos) {
