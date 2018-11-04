@@ -53,6 +53,7 @@ public class autonomousDrive_0_1 extends LinearOpMode
         action = Mode.Drop;
         startPosition = StartPosition.BackBlue;
         boolean midtargetAchieved = false;
+        boolean touchGround = false;
         timer = new ElapsedTime();
         timer.startTime();
 
@@ -66,37 +67,47 @@ public class autonomousDrive_0_1 extends LinearOpMode
                     {
                         if(!robot.sensors.touchBottom.isPressed())
                             robot.lift(-0.7); //pull
-                        robot.setBrake(false);
+                        robot.setBrake(.6);
                     }
-                    else if(t < 6)
+                    else if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8)
                     {
                         robot.lift(.2); //push
                     }
-                    else if(t < 7.5)
+                    else if(touchGround == false)
+                    {
+                        touchGround = true;
+                        timer.reset();
+                    }
+                    else if(t < .1)
+                    {
+                        robot.lift(.2); //push
+                    }
+                    else if(t < .6)
                     {
                         robot.lift(0);
                         robot.driveEngine.drive(.2,0);
                     }
 
-                    else if(t > 8.0) //if condition
+                    else if(t >= .6)
                     {
-                        robot.driveEngine.rotate(-.1);
-                    }
-                    if(robot.camera.targetVisible() != null)
-                    {
-                        double[] location = robot.camera.getLocation();
+                        robot.driveEngine.rotate(.05);
 
-                        double angle = Math.atan2(location[0], location[1]);
+                        if(robot.camera.targetVisible() != null)
+                        {
+                            double[] location = robot.camera.getLocation();
 
-                        if(angle < -Math.PI/2)
-                            startPosition = StartPosition.BackBlue;
-                        else if(angle < 0)
-                            startPosition = StartPosition.BackRed;
-                        else if(angle < Math.PI/2)
-                            startPosition = StartPosition.FrontRed;
-                        else // angle between pi/2 and pi
-                            startPosition = StartPosition.FrontBlue;
-                        action = Mode.MoveToWall;
+                            double angle = Math.atan2(location[0], location[1]);
+
+                            if(angle < -Math.PI/2)
+                                startPosition = StartPosition.BackBlue;
+                            else if(angle < 0)
+                                startPosition = StartPosition.BackRed;
+                            else if(angle < Math.PI/2)
+                                startPosition = StartPosition.FrontRed;
+                            else // angle between pi/2 and pi
+                                startPosition = StartPosition.FrontBlue;
+                            action = Mode.MoveToWall;
+                        }
                     }
                     break;
 

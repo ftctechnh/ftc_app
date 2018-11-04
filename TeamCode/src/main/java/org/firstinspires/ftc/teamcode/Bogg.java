@@ -18,11 +18,13 @@ public class Bogg
     Sensors sensors;
     Servo brake;
 
-    double alpha = 0.0039;
+    double alpha = 0.039;
     double alphaInc = 0.000001;
     double xAve = 0;
     double yAve = 0;
     double spinAve = 0;
+    double liftAve = 0;
+    boolean goingUp;
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
     {
@@ -37,7 +39,7 @@ public class Bogg
 
     public double smoothX(double x)
     {
-        if(x == 0)
+        if(x * xAve < 0 || x == 0)
             xAve = 0;
         else
             xAve = alpha * x + (1-alpha) * xAve;
@@ -46,16 +48,29 @@ public class Bogg
 
     public double smoothY(double y)
     {
-        if(y == 0)
+        if(y * yAve < 0 || y == 0)
             yAve = 0;
         else
             yAve = alpha * y + (1-alpha) * yAve;
         return yAve;
     }
 
+    public double smoothLift(double l)
+    {
+        if(l* liftAve < 0 || l == 0)
+            liftAve = 0;
+        else if(l == -.02)
+        {
+            liftAve = alpha*3 * l + (1-alpha*3) * liftAve;
+        }
+        else
+            liftAve = alpha * l + (1-alpha) * liftAve;
+        return liftAve;
+    }
+
     public double smoothSpin(double spin)
     {
-        if(spin == 0)
+        if(spin * spinAve < 0 || spin == 0)
             spinAve = 0;
         else
             spinAve = alpha * spin + (1-alpha ) * spinAve;
@@ -64,17 +79,42 @@ public class Bogg
 
     public void lift()
     {
-        if(gamepad.y  )//  && !sensors.touchTop.isPressed())
-            lift.setPower(1);
-        else if(gamepad.a  && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8)//  && !sensors.touchBottom.isPressed())
-            lift.setPower(-1);
+        if(gamepad.y)
+        {
+            goingUp = true;
+        }
+
+        if(gamepad.a)
+        {
+            goingUp = false;
+        }
+
+        if(gamepad.y ) //!sensors.touchTop.isPressed() && goingUp)
+        {
+            lift.setPower(smoothLift(1));
+        }
+        else if(gamepad.a  && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8)
+        {
+            goingUp = false;
+            if (sensors.touchBottom.isPressed())
+            {
+                lift.setPower(smoothLift(-.02));
+            } else {
+                lift.setPower(smoothLift(-1));
+            }
+        }
         else
-            lift.setPower(0);
+            lift.setPower(smoothLift(0));
     }
 
     public void lift(double power)
     {
-        lift.setPower(power);
+        if(power > 0  && !sensors.touchTop.isPressed())
+            lift.setPower(smoothLift(power));
+        else if(power < 0 && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8 && !sensors.touchBottom.isPressed())
+            lift.setPower(smoothLift(power));
+        else
+            lift.setPower(smoothLift(0));
     }
 
     public void setBrake(boolean position)
