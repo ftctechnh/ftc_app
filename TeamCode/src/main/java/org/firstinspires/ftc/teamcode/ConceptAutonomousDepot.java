@@ -32,8 +32,8 @@ public class ConceptAutonomousDepot extends LinearOpMode
         walle.stopDriveMotors();
 
         //drop marker into depot
-        */
-        walle.pivot(120);
+
+        walle.pivot(120); */
 
         float thetaDeg;
         double initialD, finalD;
@@ -58,7 +58,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
                 telemetry.addData("I'm in the <4 Case!", null);
                 walle.pivot(10);
                 walle.driveMotorsAuto(.16f,.16f);
-                while (walle.getDistFromRight_In() < 5)
+                while (walle.getDistFromRight_In() > 5) //flipped the signs since the anything less than 4 is also less than 5
                 {
 
                 }
@@ -72,7 +72,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
                 //walle.driveStraight_In(4);
 
                 walle.driveMotorsAuto(.16f,.16f);
-                while (walle.getDistFromRight_In() > 5)
+                while (walle.getDistFromRight_In() < 7) //flipped signs since anything greater than 7 is going to be greater than 5
                 {
 
                 }
