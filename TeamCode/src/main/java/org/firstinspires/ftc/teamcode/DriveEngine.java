@@ -29,8 +29,8 @@ public class DriveEngine {
 
     public void drive(double x, double y) {
         //back.setPower(Math.cos(0) * x + Math.cos(0) * y);
-        //right.setPower(Math.cos(Math.pi * 2 / 3) * x + Math.cos(Math.pi * 2 / 3) * y);
-        //left.setPower(Math.cos(Math.pi * 4 / 3) * x + Math.cos(Math.pi * 4 / 3) * y);
+        //right.setPower(Math.cos(Math.PI * 2 / 3) * x + Math.cos(Math.PI * 2 / 3) * y);
+        //left.setPower(Math.cos(Math.PI * 4 / 3) * x + Math.cos(Math.PI * 4 / 3) * y);
 
         back.setPower(x);
         right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );

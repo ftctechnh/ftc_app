@@ -12,9 +12,8 @@ public class Sensors {
 
     Servo dServo;
 
-    TouchSensor touchTop;
+    public TouchSensor touchTop;
     public TouchSensor touchBottom;
-    public TouchSensor touchLander;
 
     DistanceSensor dFixed;
     DistanceSensor dMobile;
@@ -27,7 +26,7 @@ public class Sensors {
         dServo = hardwareMap.get(Servo.class, "dServo");
         dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
         dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
-        touchLander = hardwareMap.get(TouchSensor.class, "touchLander");
+        touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         //colorSensorBottom = hardwareMap.get(ColorSensor.class, "colorSensorBottom");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
     }

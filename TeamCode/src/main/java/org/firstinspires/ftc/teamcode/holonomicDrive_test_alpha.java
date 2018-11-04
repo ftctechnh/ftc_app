@@ -39,17 +39,6 @@ public class holonomicDrive_test_alpha extends LinearOpMode
                 robot.decAlpha();
             }
 
-            if(gamepad1.dpad_up)
-            {
-                x+=.001;
-            }
-
-            if(gamepad1.dpad_down)
-            {
-                x-=.001;
-            }
-            robot.setBrake(x);
-
             // Display the current value
             telemetry.addData("leftx: ", robot.smoothX(gamepad1.left_stick_x));
             telemetry.addData("lefty: ", robot.smoothY(gamepad1.left_stick_y));
