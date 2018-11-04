@@ -53,10 +53,10 @@ public abstract class BaseTeleOp extends LinearOpMode {
             else {robot.motorArr[i].setDirection(DcMotor.Direction.REVERSE);}
         }
 
-        robot.markerDeployer.setPosition(0.9);
 
         // Intake flipper servos are disabled by default
         waitForStart();
+        robot.markerDeployer.setPosition(0.9);
         loopTime.reset();
 
         while (opModeIsActive()) {

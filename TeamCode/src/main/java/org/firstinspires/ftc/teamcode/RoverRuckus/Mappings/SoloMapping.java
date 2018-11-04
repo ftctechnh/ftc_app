@@ -1,8 +1,13 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Mappings;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+@Config
 public class SoloMapping extends ControlMapping {
+    public static double INTAKE_SPEED = 0.5;
+    public static double INTAKE_SLOW_SPEED = 0.2;
+
     public int spinDir;
     private boolean x_down, b_down;
 
@@ -67,9 +72,9 @@ public class SoloMapping extends ControlMapping {
             b_down = false;
         }
         if (gamepad1.right_trigger > 0.15) {
-            return gamepad1.right_trigger * -0.2;
+            return gamepad1.right_trigger * -INTAKE_SLOW_SPEED;
         } else {
-            return spinDir * 0.6;
+            return spinDir * INTAKE_SPEED;
         }
     }
 

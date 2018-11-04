@@ -47,9 +47,13 @@ public class SparkyTheRobot extends MecanumHardware {
 
         leftFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFlipper.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        winch.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         leftFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         super.init(calibrate);
     }

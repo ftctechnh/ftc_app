@@ -55,8 +55,8 @@ public class Intake {
     }
 
     public void goToMin() {
-        leftIntakeFlipper.setPosition(0);
-        rightIntakeFlipper.setPosition(0);
+        leftIntakeFlipper.setPosition(1);
+        rightIntakeFlipper.setPosition(1);
     }
 
     public void enableFlippers() {

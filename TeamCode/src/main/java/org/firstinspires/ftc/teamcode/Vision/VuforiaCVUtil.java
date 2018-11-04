@@ -3,21 +3,11 @@ package org.firstinspires.ftc.teamcode.Vision;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
-import com.disnodeteam.dogecv.detectors.DogeCVDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
-import com.disnodeteam.dogecv.filters.LeviColorFilter;
-import com.disnodeteam.dogecv.scoring.MaxAreaScorer;
-import com.disnodeteam.dogecv.scoring.RatioScorer;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -26,6 +16,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.firstinspires.ftc.teamcode.Vision.GoldDetector;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;

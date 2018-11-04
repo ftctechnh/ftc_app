@@ -23,9 +23,7 @@ import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 @Config
 public abstract class SingleSampling extends AutoUtils {
 
-    public ParkingLocation parkingLocation;
-    public StartingPosition startingPosition;
-    public SparkyTheRobot robot;
+    public static int trajectoryIndex = 0;
 
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch        = 25.4f;
@@ -38,27 +36,40 @@ public abstract class SingleSampling extends AutoUtils {
         robot = new SparkyTheRobot(this);
         robot.init(false);
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
-        initVuforia();
+        //initVuforia();
 
-        // Will run through hang dialog until op mode starts
-        setupRobotHang();
+        waitForStart();
 
-        // Will unhook robot and return it to starting pos
-        unhookFromLander(drive);
+        // Will unhook robot and bring it to starting pos
+        //unhookFromLander(drive, robot);
 
-        int trajectoryIndex = -1;
-        do {
-            if (detector.getFoundRect().x > 350) {
-                trajectoryIndex = 2;
-            } else if (detector.getFoundRect().x > 150) {
-                trajectoryIndex = 1;
-            } else if (detector.getFoundRect().x > 1) {
-                trajectoryIndex = 0;
+        /*int[] probabilities = new int[3];
+        ElapsedTime scanTime = new ElapsedTime();
+
+        while(opModeIsActive() && scanTime.milliseconds() < 1000) {
+            telemetry.addData("Yellow position", getMiddlePosition(detector.getFoundRect()));
+            telemetry.addData("Found?", detector.isFound());
+
+            if (!detector.isFound()) {
+                probabilities[2] += 1;
+            } else {
+                if (getMiddlePosition(detector.getFoundRect()) > 400) {
+                    probabilities[0] += 1;
+                } else {
+                    probabilities[1] += 1;
+                }
             }
-        } while (trajectoryIndex == -1);
+            telemetry.update();
+        }
 
-        // Force a certain trajectory
-        //trajectoryIndex = 0;
+        int trajectoryIndex;
+        if (probabilities[2] > probabilities[1] && probabilities[2] > probabilities[0]) {
+            trajectoryIndex = 2;
+        } else if (probabilities[0] > probabilities[1] && probabilities[0] > probabilities[2]) {
+            trajectoryIndex = 0;
+        } else {
+            trajectoryIndex = 1;
+        }*/
 
         Trajectory sampleTrajectory;
         if (startingPosition == StartingPosition.CRATER) {
@@ -100,43 +111,5 @@ public abstract class SingleSampling extends AutoUtils {
                 drive.update();
             }
         }
-
-        // Now, we need to unfold our mechanism
-        robot.linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.linearSlide.setPower(0.4);
-        robot.leftFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftFlipper.setPower(0.2);
-        robot.rightFlipper.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFlipper.setPower(0.2);
-        robot.linearSlide.setTargetPosition(500);
-        robot.leftFlipper.setTargetPosition(500);
-        robot.rightFlipper.setTargetPosition(500);
-        robot.intake.collect();
-
-        robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.winch.setPower(0.2);
-
-        // Now, move hook down and stop on current spike
-        while (opModeIsActive()) {
-            try {
-                LynxGetADCResponse resp = new LynxGetADCCommand(robot.rightHub, LynxGetADCCommand.Channel.MOTOR1_CURRENT, LynxGetADCCommand.Mode.ENGINEERING).sendReceive();
-                int currentMA = resp.getValue();
-                telemetry.addData("Current (mA)", currentMA);
-                telemetry.update();
-                if (currentMA > 1000) {
-                    break;
-                }
-            } catch (LynxNackException e) {
-                e.printStackTrace();
-                break;
-            }
-        }
-        robot.sleep(5000);
-        robot.linearSlide.setTargetPosition(0);
-        robot.leftFlipper.setTargetPosition(0);
-        robot.rightFlipper.setTargetPosition(0);
-        robot.sleep(1000);
-        robot.intake.goToMin();
-
     }
 }

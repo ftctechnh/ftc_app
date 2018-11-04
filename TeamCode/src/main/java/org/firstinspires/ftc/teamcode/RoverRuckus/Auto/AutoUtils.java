@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveBase;
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
 import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
@@ -18,35 +19,52 @@ public abstract class AutoUtils extends VuforiaCVUtil {
     public static double MARKER_DEPLOYER_DEPLOY = 0;
     public static double MARKER_DEPLOYER_RETRACTED = 0.85;
 
-    public void setupRobotHang() {
-        hangMotor = new HoldingPIDMotor(robot.winch, 1);
-        telemetry.log().add("Ensure hook is at a 90 degree angle before proceeding");
-        telemetry.log().add("Use GP1 right and left triggers to hang the robot");
-
-        while (!isStarted()) {
-            telemetry.addData("Middle x position", getMiddlePosition(detector.getFoundRect()));
-            telemetry.update();
-            if (gamepad1.right_trigger > 0.1 || gamepad1.left_trigger > 0.1) {
-                hangMotor.setPower(gamepad1.left_trigger - gamepad1.right_trigger);
-            } else {
-                hangMotor.setPower(0);
-            }
-        }
-    }
-
-    public void unhookFromLander(SampleMecanumDriveREV drive) {
+    public void unhookFromLander(SampleMecanumDriveREV drive, SparkyTheRobot robot) {
+        robot.init(false);
+        robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setPower(0.5);
         robot.winch.setTargetPosition(0);
-        sleep(2000);
-        followPath(drive, Paths.UNHOOK);
+
+        waitForStart();
+
         robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.winch.setPower(1);
-        sleep(750);
+        robot.winch.setPower(-0.5);
+        while (opModeIsActive()) {
+            robot.updateReadings();
+            if (robot.imu.getGravity().zAccel >= 9.7) {
+                break;
+            }
+        }
+        robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.winch.setPower(0);
+        followPath(drive, Paths.UNHOOK);
+
+        // Now, lower the hang arm
+        robot.linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.linearSlide.setPower(0.4);
+        robot.linearSlide.setTargetPosition(500);
+        robot.intake.deposit();
+
+        robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.winch.setPower(1);
+        robot.winch.setTargetPosition(1500);
+
+        int encoder = robot.winch.getCurrentPosition();
+        while (opModeIsActive() && Math.abs(encoder - 1500) > 20) {
+            encoder = robot.winch.getCurrentPosition();
+            telemetry.addData("Current position", encoder);
+            telemetry.update();
+        }
+
+        robot.winch.setMotorDisable();
+        robot.linearSlide.setTargetPosition(0);
+        robot.intake.goToMin();
+        sleep(500);
+
         followPath(drive, Paths.UNDO_UNHOOK);
     }
 
-    public int getMiddlePosition(Rect boundingBox) {
+    public static int getMiddlePosition(Rect boundingBox) {
         return boundingBox.x + (boundingBox.width / 2);
     }
 
