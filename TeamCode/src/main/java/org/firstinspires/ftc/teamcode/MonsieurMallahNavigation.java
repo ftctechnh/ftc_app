@@ -160,7 +160,8 @@ public class MonsieurMallahNavigation extends OpMode {
     //Game State
     private Team team;
     private StartingPosition position;
-    private boolean graveError;
+    private Status robotStatus;
+
 
     // Hack stuff.
     private boolean useGyroscope = true;
@@ -194,7 +195,7 @@ public class MonsieurMallahNavigation extends OpMode {
         //init. Game State
          team = Team.Unknown;
         position = StartingPosition.Unknown;
-        graveError = false;
+        robotStatus = Status.Lost;
 
         // Initialize the motors.
         if (useMotors) {
@@ -343,15 +344,23 @@ public class MonsieurMallahNavigation extends OpMode {
     public void loop() {
 
         //
-      if (team == Team.Unknown){
-          figureoutTeam();
-         // if (team == Team.Unknown){
-              //graveError = true;
-              //return;
-         // }
-      }
+
+        if (team == Team.Unknown && position == StartingPosition.Unknown) {
+            robotStatus = Status.Lost;
+        } else {
+            robotStatus = Status.OK;
+        }
+
+
+
+        if (robotStatus == Status.Lost){
+
+        }
+
+
         telemetry.addData("Team", team.name());
         telemetry.addData("StartPos", position.name());
+        telemetry.addData("Status", robotStatus.name());
 
 
         if (gyroAngleCalibrated == false){
@@ -551,6 +560,10 @@ public class MonsieurMallahNavigation extends OpMode {
          return  180 - Math.abs(Math.abs(currentAngle - angletoTarget) - 180);
      }
 
+     enum Status {
+        OK,
+        Lost
+     }
 
     enum StartingPosition {
         Unknown,
@@ -664,6 +677,7 @@ public class MonsieurMallahNavigation extends OpMode {
             position = StartingPosition.BlueCrater;
 
         }
+
 
         // Which team am i on?
         if ((position == StartingPosition.RedCrater) || (position == StartingPosition.RedSquare))
@@ -991,3 +1005,5 @@ public class MonsieurMallahNavigation extends OpMode {
     }
 }
 
+//if lost
+// swivel around and try to approach nearest image to try and find its own location
