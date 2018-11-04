@@ -9,7 +9,7 @@ public class PID {
     public double di=0;
     public double preverror = 0;
     public PID(double kp, double ki, double kd){
-        this.kp = kp;
+        this.kp = kp; //making 3 number variables to set later on
         this.ki = ki;
         this.kd = kd;
     }

@@ -43,7 +43,7 @@ public class ClimberBot2018 extends LinearOpMode{
     private Servo backSwivel;
     private IntegratingGyroscope gyro;
     private ModernRoboticsI2cGyro MRI2CGyro;
-    PID θPID = new PID(.5,.0001,.1);
+    PID θPID = new PID(.5,0,0);//changed from .5, .0001, 0.1
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -102,9 +102,9 @@ public class ClimberBot2018 extends LinearOpMode{
         double prevderiv=0;
         double wheelLiftZero=0;
         final double wheelLiftZerotoGround=-20;
-        PID wheelLiftPID = new PID(1,0,0);
-        PID armPID = new PID(1,.00001,.1);
-        PID armSwivelPID = new PID(1,.00001,.1);
+        PID wheelLiftPID = new PID(.01,0,0);//set all the ps to .01 instead of 1
+        PID armPID = new PID(.01,0,0);//originally 1, ,00001,.1 (armswivel same)
+        PID armSwivelPID = new PID(.01,0,0);
         boolean x=false;
         boolean b=false;
         boolean armSwivelZeroingState;
@@ -115,10 +115,11 @@ public class ClimberBot2018 extends LinearOpMode{
         double armZeroState=0;
         boolean leftOpen=true;
         boolean rightOpen = true;
-        wheelLift.setPower(.25);
-        sleep(1000);
-        wheelLiftZero = wheelLift.getCurrentPosition();
-        wheelLift.setPower(0);
+       // wheelLift.setPower(.01);//changed from 0.25 because it was slamming
+       // sleep(1000); //changed from 1000 because it was pushing into robot for too long
+       // wheelLiftZero = wheelLift.getCurrentPosition();
+       // wheelLift.setPower(-.01);
+        // commented all of this out because no matter what we do it would just slam on the robot and we want to drive first and foremost.
 
         while (opModeIsActive()) {
                 //Gyro reset
