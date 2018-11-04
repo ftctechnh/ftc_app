@@ -17,10 +17,10 @@ import java.text.DecimalFormat;
 
 public class RoverRuckusRatbotTeleOP extends OpMode{
     RoverRuckusRatbotHardware robot =  new RoverRuckusRatbotHardware();
-    
+
     double left, right;
     double speedFactor = 0.5;
-    double liftSpeed = 0.5;
+    double liftSpeed = 1;
     DecimalFormat printFormat = new DecimalFormat ("#.###");
 
     @Override

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.libraries.AutoLib;
 import org.firstinspires.ftc.teamcode.libraries.hardware.RoverRuckusRatbotHardware;
 
-@Autonomous(name = "AutoTest")
+@Autonomous(name = "RR2 Main Auto (Straight)")
 public class RoverRuckusAuto extends OpMode{
     RoverRuckusRatbotHardware robot =  new RoverRuckusRatbotHardware();
     private AutoLib.Sequence mSeq = new AutoLib.LinearSequence();
