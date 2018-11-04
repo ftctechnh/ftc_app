@@ -11,9 +11,18 @@ public class WallECalibrate extends LinearOpMode
     public void runOpMode() throws InterruptedException
     {
         wallE = new ParadeBot(hardwareMap, this);
+        boolean buttonPressed = false;
         waitForStart();
-        wallE.getDriveRightOne().setPower(1);
-        wallE.getDriveLeftOne().setPower(1);
-        sleep(2000);
+        while (opModeIsActive())
+        {
+            if (gamepad1.a)
+            {
+                wallE.pivot(-120);
+            }
+            else if (gamepad1.b)
+            {
+                wallE.pivot(120);
+            }
+        }
     }
 }

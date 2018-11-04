@@ -32,7 +32,6 @@ public class ConceptAutonomousDepot extends LinearOpMode
         walle.stopDriveMotors();
 
         //drop marker into depot
-
         walle.pivot(120); */
 
         float thetaDeg;
@@ -45,7 +44,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
         finalD = walle.getDistFromRight_In();
         thetaDeg = (float) ((Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI);
 
-        walle.pivot(-thetaDeg);
+        walle.pivot_IMU(-thetaDeg);
         while (walle.getDistFromFront_In() > 18)
         {
             while (!gamepad1.a){}
@@ -56,19 +55,19 @@ public class ConceptAutonomousDepot extends LinearOpMode
             if (initialD < 4)
             {
                 telemetry.addData("I'm in the <4 Case!", null);
-                walle.pivot(10);
+                walle.pivot_IMU(14);
                 walle.driveMotorsAuto(.16f,.16f);
                 while (walle.getDistFromRight_In() > 5) //flipped the signs since the anything less than 4 is also less than 5
                 {
 
                 }
                 walle.stopAllMotors();
-                walle.pivot(-10);
+                walle.pivot_IMU(-14);
             }
             else if (initialD > 7)
             {
                 telemetry.addData("I'm in the >7 Case!", null);
-                walle.pivot(-10);
+                walle.pivot_IMU(-14);
                 //walle.driveStraight_In(4);
 
                 walle.driveMotorsAuto(.16f,.16f);
@@ -78,7 +77,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
                 }
                 walle.stopAllMotors();
 
-                walle.pivot(10);
+                walle.pivot_IMU(14);
             }
             else
             {

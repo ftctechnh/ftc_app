@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -35,9 +34,9 @@ public class ParadeBot
     double velocitiesL = 0;
 
     private int encCountsPerRev = 1120; //Based on Nevverest 40 motors
-    private float roboDiameterCm = (float)(45.7*Math.PI); // can be adjusted
-    private float wheelCircIn = 4 * (float)Math.PI ; //Circumference of wheels used
-    private float wheelCircCm = (float)(9.8* Math.PI);
+    private float roboDiameterCm = (float) (45.7 * Math.PI); // can be adjusted
+    private float wheelCircIn = 4 * (float) Math.PI; //Circumference of wheels used
+    private float wheelCircCm = (float) (9.8 * Math.PI);
 
     private DistanceSensor frontDistSens, frontRightDistSens;
 
@@ -73,12 +72,11 @@ public class ParadeBot
         frontDistSens = hMap.get(DistanceSensor.class, "frontLeftDistSens");
         frontRightDistSens = hMap.get(DistanceSensor.class, "frontRightDistSens");
         stopAllMotors();
-        updateIMUValues();
     }
 
     public void driveStraight_In(float inches)
     {
-        driveStraight_In(inches,.75);
+        driveStraight_In(inches, .75);
     }
 
     public void driveStraight_In(float inches, double pow)
@@ -90,18 +88,19 @@ public class ParadeBot
 
         resetEncoders();
 
-        if(inches < 0)
+        if (inches < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-        }
-        else
+        } else
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
         }
 
-        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget) && !linearOpMode.isStopRequested()) {}
+        while (Math.abs(driveLeftOne.getCurrentPosition()) < Math.abs(encTarget) && Math.abs(driveRightOne.getCurrentPosition()) < Math.abs(encTarget) && !linearOpMode.isStopRequested())
+        {
+        }
 
         stopAllMotors();
     }
@@ -132,18 +131,18 @@ public class ParadeBot
             while (driveLeftOne.getCurrentPosition() < -encTarget && driveRightOne.getCurrentPosition() > encTarget)
             {
                 // if (Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES) <  *.75 )
-                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double rVel = getDriveRightOne().getVelocity(AngleUnit.DEGREES);
                 double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
                 loops++;
                 velocitiesR += rVel;
                 velocitiesL += lVel;
-                telemetry.addData("RightVel ",rVel);
-                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("RightVel ", rVel);
+                telemetry.addData("LeftVel ", lVel);
                 telemetry.addData("Average", null);
-                telemetry.addData("LAvg ",velocitiesL/loops);
-                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.addData("LAvg ", velocitiesL / loops);
+                telemetry.addData("RAvg ", velocitiesR / loops);
                 telemetry.update();
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                if (loops > 3 && (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
                     break;
             }
         } else
@@ -152,19 +151,19 @@ public class ParadeBot
 
             while (driveLeftOne.getCurrentPosition() > -encTarget && driveRightOne.getCurrentPosition() < encTarget)
             {
-                double rVel =  getDriveRightOne().getVelocity(AngleUnit.DEGREES);
+                double rVel = getDriveRightOne().getVelocity(AngleUnit.DEGREES);
                 double lVel = getDriveLeftOne().getVelocity(AngleUnit.DEGREES);
                 loops++;
                 velocitiesR += rVel;
                 velocitiesL += lVel;
-                telemetry.addData("RightVel ",rVel);
-                telemetry.addData("LeftVel ",lVel);
+                telemetry.addData("RightVel ", rVel);
+                telemetry.addData("LeftVel ", lVel);
                 telemetry.addData("Average", null);
-                telemetry.addData("LAvg ",velocitiesL/loops);
-                telemetry.addData("RAvg ",velocitiesR/loops);
+                telemetry.addData("LAvg ", velocitiesL / loops);
+                telemetry.addData("RAvg ", velocitiesR / loops);
                 telemetry.update();
-                if (loops > 3 &&(Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
-                 break;
+                if (loops > 3 && (Math.abs(driveRightOne.getVelocity(AngleUnit.DEGREES)) < 5 || Math.abs(driveLeftOne.getVelocity(AngleUnit.DEGREES)) < 5))
+                    break;
             }
 
             stopDriveMotors();
@@ -223,13 +222,16 @@ public class ParadeBot
         {
             driveRightOne.setPower(-Math.abs(pow));
 
-            while(driveRightOne.getCurrentPosition() > encTarget){}
-        }
-        else //spins cc
+            while (driveRightOne.getCurrentPosition() > encTarget)
+            {
+            }
+        } else //spins cc
         {
             driveRightOne.setPower(Math.abs(pow));
 
-            while(driveRightOne.getCurrentPosition() < encTarget){}
+            while (driveRightOne.getCurrentPosition() < encTarget)
+            {
+            }
         }
 
         stopAllMotors();
@@ -241,7 +243,7 @@ public class ParadeBot
         {
             degrees -= 360;
         }
-        while (degrees <-180)
+        while (degrees < -180)
         {
             degrees += 360;
         }
@@ -250,12 +252,15 @@ public class ParadeBot
         if (degrees < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
-            while(getYaw() > degrees) {}
-        }
-        else
+            while (getYaw() > degrees)
+            {
+            }
+        } else
         {
             driveRightOne.setPower(Math.abs(pow));
-            while(getYaw() < degrees) {}
+            while (getYaw() < degrees)
+            {
+            }
         }
 
         stopAllMotors();
@@ -280,14 +285,17 @@ public class ParadeBot
         {
             driveLeftOne.setPower(Math.abs(pow));
 
-            while(driveLeftOne.getCurrentPosition() < encTarget){}
+            while (driveLeftOne.getCurrentPosition() < encTarget)
+            {
+            }
 
-        }
-        else //spins clockwise
+        } else //spins clockwise
         {
             driveLeftOne.setPower(-Math.abs(pow));
 
-            while(driveLeftOne.getCurrentPosition() > encTarget){}
+            while (driveLeftOne.getCurrentPosition() > encTarget)
+            {
+            }
         }
 
         stopAllMotors();
@@ -299,8 +307,7 @@ public class ParadeBot
         if (deg > 0)
         {
             degrees -= 5.2f;
-        }
-        else
+        } else
         {
             degrees += 5.2f;
         }
@@ -309,7 +316,7 @@ public class ParadeBot
         {
             degrees -= 360;
         }
-        while (degrees <-180)
+        while (degrees < -180)
         {
             degrees += 360;
         }
@@ -318,16 +325,20 @@ public class ParadeBot
         if (degrees < 0)
         {
             driveLeftOne.setPower(-Math.abs(pow));
-            while(getYaw() > degrees) {}
-        }
-        else
+            while (getYaw() > degrees)
+            {
+            }
+        } else
         {
             driveLeftOne.setPower(Math.abs(pow));
-            while(getYaw() < degrees) {}
+            while (getYaw() < degrees)
+            {
+            }
         }
 
         stopAllMotors();
     }
+
     public void pivot(float degrees)
     {
         pivot(degrees, .8);
@@ -337,7 +348,7 @@ public class ParadeBot
     {
         resetEncoders();
         double encTarget;
-        encTarget = Math.abs( 17.254 * Math.abs(degrees) + 367.295);
+        encTarget = Math.abs(17.254 * Math.abs(degrees) + 367.295);
 
         //It pivots in the direction of how to unit circle spins
         if (degrees < 0) //Pivot Clockwise
@@ -345,15 +356,15 @@ public class ParadeBot
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
 
-        }
-        else //CounterClockwise
+        } else //CounterClockwise
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
         }
 
-        while (Math.abs(driveLeftOne.getCurrentPosition()) < encTarget && Math.abs(driveRightOne.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested()) {}
-
+        while (Math.abs(driveLeftOne.getCurrentPosition()) < encTarget && Math.abs(driveRightOne.getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
+        {
+        }
         stopAllMotors();
         stopDriveMotors();
     }
@@ -367,27 +378,19 @@ public class ParadeBot
     {
         float degreesToStopAt;
 
-        if(degrees_In > 0)
+        if (degrees_In > 0)
             degreesToStopAt = Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);// at .8 pow
         else
             degreesToStopAt = -Math.abs(1.0661f * Math.abs(degrees_In) - 21.0936f);
 
-        while (degreesToStopAt > 180)
-        {
-            degreesToStopAt -= 360;
-        }
-        while (degreesToStopAt <-180)
-        {
-            degreesToStopAt += 360;
-        }
-
         initIMU();
 
+        linearOpMode.sleep(100);
         if (degreesToStopAt < 0)
         {
             driveRightOne.setPower(-Math.abs(pow));
             driveLeftOne.setPower(-Math.abs(pow));
-            while(getYaw() > degreesToStopAt && !linearOpMode.isStopRequested())
+            while (getYaw() > degreesToStopAt && !linearOpMode.isStopRequested())
             {
                 linearOpMode.sleep(160);
             }
@@ -396,7 +399,7 @@ public class ParadeBot
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
-            while(getYaw() < degreesToStopAt && !linearOpMode.isStopRequested())
+            while (getYaw() < degreesToStopAt && !linearOpMode.isStopRequested())
             {
                 linearOpMode.sleep(160);
             }
@@ -438,49 +441,44 @@ public class ParadeBot
     public void initIMU()
     {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
         imu.initialize(parameters);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //gravity  = imu.getGravity();
     }
 
 
     public double anglePerpToGrav()
     {
-        updateIMUValues();
-        return Math.atan(gravity.yAccel/gravity.zAccel);
+        return Math.atan(gravity.yAccel / gravity.zAccel);
     }
 
     public String getGravToString()
     {
-        updateIMUValues();
         return gravity.toString();
     }
 
     public float getYaw()
     {
-        updateIMUValues();
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-    }
-
-    public void updateIMUValues()
-    {
-        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        gravity  = imu.getGravity();
     }
 
     public double getDistFromFront_In()
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
+
     public double getDistFromRight_In()
     {
         return frontRightDistSens.getDistance(DistanceUnit.INCH);
     }
+
     private void resetDriveEncoders()//sets encoders to 0 for motors
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -494,7 +492,10 @@ public class ParadeBot
         return driveLeftOne;
     }
 
-    public DcMotorImplEx getDriveRightOne() {return driveRightOne;}
+    public DcMotorImplEx getDriveRightOne()
+    {
+        return driveRightOne;
+    }
 
     public DistanceSensor getFrontLeftDistSens()
     {
