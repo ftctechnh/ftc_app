@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.teamcode.VucamOrder;
+import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
@@ -91,5 +91,15 @@ public class DriveControl {
         FrontLeftM.setPower(0);
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
+    }
+
+    public void tankRight(double tankSpeed) {
+        FrontRightM.setPower(tankSpeed);
+        BackRightM.setPower(tankSpeed);
+    }
+
+    public void tankLeft(double tankSpeed) {
+        FrontLeftM.setPower(tankSpeed);
+        BackLeftM.setPower(tankSpeed);
     }
 }
