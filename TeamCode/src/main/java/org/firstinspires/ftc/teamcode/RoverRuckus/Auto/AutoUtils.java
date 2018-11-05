@@ -28,7 +28,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         waitForStart();
 
         robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.winch.setPower(-0.5);
+        robot.winch.setPower(-1);
         while (opModeIsActive()) {
             robot.updateReadings();
             if (robot.imu.getGravity().zAccel >= 9.7) {
@@ -37,6 +37,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         }
         robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.winch.setPower(0);
+        followPath(drive, Paths.FORWARD_A_LITTLE);
         followPath(drive, Paths.UNHOOK);
 
         // Now, lower the hang arm

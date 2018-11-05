@@ -22,6 +22,10 @@ public class Paths {
             .lineTo(new Vector2d(0, 0), new ConstantInterpolator(0))
             .build();
 
+    static Trajectory FORWARD_A_LITTLE = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(3, 0), new ConstantInterpolator(0))
+            .build();
+
     static Trajectory TURN_UNHOOK = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
             .turn(Math.PI/3)
             .build();
@@ -31,7 +35,7 @@ public class Paths {
             .build();
 
     static Trajectory BACKUP = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-10, 0), new ConstantInterpolator(0))
+            .lineTo(new Vector2d(-15, 0), new ConstantInterpolator(0))
             .build();
 
     static Trajectory FORWARD = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
