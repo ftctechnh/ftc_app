@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 
 @TeleOp(name = "TeleOp", group = "Drive")
-    public class teleop extends LinearOpMode {
+    public class Teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
