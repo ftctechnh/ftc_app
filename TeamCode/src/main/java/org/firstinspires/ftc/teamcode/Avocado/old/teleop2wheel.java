@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.Avocado;
+package org.firstinspires.ftc.teamcode.Avocado.old;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Avocado.hardwareprofile;
+import org.firstinspires.ftc.teamcode.Avocado.old.hardwareprofile2wheel;
 
 /**
  * Team Inspiration 11128
@@ -10,13 +10,13 @@ import org.firstinspires.ftc.teamcode.Avocado.hardwareprofile;
  */
 
 
-@TeleOp(name="Basic Tank Drive", group="Test")
+@TeleOp(name="Basic Tank Drive (2 Wheel)", group="Test")
 
 
-public class teleop extends OpMode{
+public class teleop2wheel extends OpMode{
 
     /* Define hardware */
-    hardwareprofile robot       = new hardwareprofile(); // use the class created to define a Pushbot's hardware
+    hardwareprofile2wheel robot       = new hardwareprofile2wheel(); // use the class created to define a Pushbot's hardware
 
     // double          clawOffset  = 0.0 ;                  // Servo mid position
     // final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
@@ -40,7 +40,9 @@ public class teleop extends OpMode{
      */
     @Override
     public void init_loop() {
+
     }
+
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -48,6 +50,7 @@ public class teleop extends OpMode{
     @Override
     public void start() {
         loop();
+
     }
 
     /*
@@ -59,27 +62,14 @@ public class teleop extends OpMode{
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        left = -gamepad1.left_stick_y;
+        right = gamepad1.right_stick_y;
 
         robot.topLeftMotor.setPower(left);
-        robot.bottomLeftMotor.setPower(left);
+
         robot.topRightMotor.setPower(right);
-        robot.bottomRightMotor.setPower(right);
-
-        if (gamepad1.a) {
-            robot.linearLift.setPower(0.8);
-        } else if (gamepad1.y) {
-            robot.linearLift.setPower(-1);
-        }
-
-        if (gamepad1.x) {
-            robot.claw.setPower(0.5);
-        } else if (gamepad1.b) {
-
-            robot.claw.setPower(1);
-
-        }
+        telemetry.addData("Joystick value", left);
+        telemetry.update();
 
     }
 
