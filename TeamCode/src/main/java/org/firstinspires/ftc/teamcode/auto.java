@@ -140,12 +140,13 @@ public class auto extends LinearOpMode {
                     if (sample == Sample.Left){
                        if (now < 0.15){
                             Drive.turnLeft(0.4);
-                       }//SS increase time
-                       else if (now < 0.25){
+                       }
+                       else if (now < 0.3){
                            Drive.stop();
                        }
-                       else if (now < 1.35) {
-                           Drive.moveForward(0.5);
+                       //Sample left to move forward
+                       else if (now < 1.45) {
+                           Drive.moveForward(0.55);
                        }
                        else {
                            newState(State.STATE_STOP);
@@ -158,7 +159,8 @@ public class auto extends LinearOpMode {
                         else if (now < 0.25){
                             Drive.stop();
                         }
-                        else if (now < 1.35) {
+                        //Sample right to move forward
+                        else if (now < 1.45) {
                             Drive.moveForward(0.5);
                         }
                         else {
@@ -166,7 +168,7 @@ public class auto extends LinearOpMode {
                         }
                     }
                     else {
-                        if (now < 1){
+                        if (now < 1.25){
                             Drive.moveForward(0.5);
                         }
                         else {
@@ -181,6 +183,61 @@ public class auto extends LinearOpMode {
 
                 case STATE_MOVE_TO_DEPOT:
                     if (sample == Sample.Left){
+                        if (now < 0.15){
+                            Drive.turnLeft(0.4);
+                        }
+                        else if (now < 0.3){
+                            Drive.stop();
+                        }
+                        //Sample left to move forward
+                        else if (now < 1.35) {
+
+                            Drive.moveForward(0.55);
+                        }
+                        else if (now < 1.45){
+                            Drive.stop();
+                        }
+                        else if(now < 1.7){
+                            Drive.turnRight(0.4);
+                        }
+                        else {
+                            newState(State.STATE_STOP);
+                        }
+                    }
+                    else if (sample == Sample.Right){
+                        if (now < 0.15){
+                            Drive.turnRight(0.4);
+                        }
+                        else if (now < 0.25){
+                            Drive.stop();
+                        }
+                        //Sample right to move forward
+                        else if (now < 1.45) {
+                            Drive.moveForward(0.5);
+                        }
+                        else {
+                            newState(State.STATE_STOP);
+                        }
+                    }
+                    //Center
+                    else {
+                        if (now < 1.9){
+                            Drive.moveForward(0.5);
+                        }
+                        else if (now < 2.0 ){
+                            Drive.stop();
+                        }
+                        else if (now < 2.3){
+                            Drive.turnLeft(0.4);
+                        }
+                        else if(now < 7.3){
+                            Drive.moveBackward(0.5);
+                        }
+                        else {
+                            newState(State.STATE_STOP);
+                        }
+                    }
+                    /*if (sample == Sample.Left){
                         if (now < 0.15){
                             Drive.turnLeft(0.5);
                         }
