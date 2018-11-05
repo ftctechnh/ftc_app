@@ -6,21 +6,18 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp
-public class FirstRobot extends LinearOpMode {
+public class ServoTest extends LinearOpMode {
 
     private CRServo left_servo;
     private CRServo right_servo;
-    private DcMotor liftMotor;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         //AnimatornicsRobot robot = new AnimatornicsRobot(hardwareMap, telemetry);
 
-        //left_servo = hardwareMap.crservo.get("left_servo");
-        //right_servo = hardwareMap.crservo.get("right_servo");
-
-        liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
+        left_servo = hardwareMap.crservo.get("left_servo");
+        right_servo = hardwareMap.crservo.get("right_servo");
 
         waitForStart();
         double tgtLeftPower = 0;
@@ -30,12 +27,10 @@ public class FirstRobot extends LinearOpMode {
             tgtLeftPower = this.gamepad1.left_stick_y;
             tgtRightPower = -this.gamepad1.right_stick_y;
 
-            //left_servo.setPower(tgtLeftPower);
-            //right_servo.setPower(tgtRightPower);
+            left_servo.setPower(tgtLeftPower);
+            right_servo.setPower(tgtRightPower);
 
             //robot.setWheelPower(tgtLeftPower, tgtLeftPower, tgtRightPower, tgtRightPower);
-
-            liftMotor.setPower(tgtLeftPower);
 
             telemetry.addData("Status", "Running");
             telemetry.addData("X and Y are",
