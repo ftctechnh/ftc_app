@@ -189,15 +189,15 @@ public class auto extends LinearOpMode {
                         else if (now < 0.3){
                             Drive.stop();
                         }
-                        //Sample left to move forward
-                        else if (now < 1.35) {
+                        //Sample left to move forward (test before adjusting)
+                        else if (now < 1.5) {
 
                             Drive.moveForward(0.55);
                         }
-                        else if (now < 1.45){
+                        else if (now < 1.65){
                             Drive.stop();
                         }
-                        else if(now < 1.7){
+                        else if(now < 2.1){
                             Drive.turnRight(0.4);
                         }
                         else {
