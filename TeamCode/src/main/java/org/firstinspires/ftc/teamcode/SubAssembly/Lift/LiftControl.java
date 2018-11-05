@@ -48,6 +48,9 @@ public class LiftControl {
 
     }
 
+    public LiftControl() {
+    }
+
     //setting power to move forward
     public void Extend () {
 
