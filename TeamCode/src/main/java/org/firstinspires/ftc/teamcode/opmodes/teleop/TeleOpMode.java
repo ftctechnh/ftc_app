@@ -96,7 +96,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
             {
                 armSystem.setState(rotateButton.getCurrentState());
             }
-        } ;
+        };
         rotateButton.decrementAction = new Handler()
         {
             @Override
