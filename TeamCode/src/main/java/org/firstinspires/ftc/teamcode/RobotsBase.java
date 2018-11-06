@@ -14,6 +14,9 @@ public abstract class RobotsBase extends LinearOpMode
 {
     public DcMotor leftDrive;
     public DcMotor rightDrive;
+    public DcMotor leftArm;
+    public DcMotor rightArm;
+    public DcMotor armRaiser;
 
     public abstract void DefineOpMode();
 
@@ -31,9 +34,14 @@ public abstract class RobotsBase extends LinearOpMode
     {
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
+        leftArm = hardwareMap.dcMotor.get("leftArm");
+        rightArm = hardwareMap.dcMotor.get("rightArm");
+
         //hardwaremap
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        //change collector direction if needbe later
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -219,22 +227,34 @@ public abstract class RobotsBase extends LinearOpMode
 
     public void ArmsUp ()
     {
-
+        leftArm.setPower(0.8);
+        rightArm.setPower(0.8);
+        Thread.sleep(2000); //fix this later
+        leftArm.setPower(0);
+        rightArm.setPower(0);
     }
 
     public void ArmsDown ()
     {
-
+        leftArm.setPower(-0.25);
+        rightArm.setPower(-0.25);
+        Thread.sleep(2000); //fix this later
+        leftArm.setPower(0);
+        rightArm.setPower(0);
     }
 
     public void CollectorUpAndOut ()
     {
-
+        armRaiser.setPower(0.5);
+        Thread.sleep(1000);
+        armRaiser.setPower(0);
     }
 
     public void CollectorBackAndIn ()
     {
-
+        armRaiser.setPower(-0.5);
+        Thread.sleep(1000);
+        armRaiser.setPower(0);
     }
 
     public void CollectAThing ()
