@@ -394,8 +394,7 @@ public class ParadeBot
             {
                 linearOpMode.sleep(160);
             }
-        }
-        else
+        } else
         {
             driveRightOne.setPower(Math.abs(pow));
             driveLeftOne.setPower(Math.abs(pow));
@@ -466,7 +465,7 @@ public class ParadeBot
 
     public float getYaw()
     {
-        return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        return angles.firstAngle;
     }
 
     public double getDistFromFront_In()
@@ -516,4 +515,39 @@ public class ParadeBot
     {
         this.frontRightDistSens = frontRightDistSens;
     }
+
+    /*
+    public void turnAbsolute(int target)
+    {
+        double direction = angles.firstAngle;
+        double minspeed = .1;
+        double maxspeed = .3;
+        double errorDegs = Math.abs(direction - target);
+        double turnSpeed = maxspeed * (errorDegs / 180) + minspeed;
+        while (Math.abs(direction - target) > 2 && opModeIsActive())
+        {
+            if (direction > target)
+            {
+                back_left.setPower(turnSpeed);
+                front_left.setPower(turnSpeed);
+                back_right.setPower(-turnSpeed);
+                front_right.setPower(-turnSpeed);
+            }
+            if (direction < target)
+            {
+                back_left.setPower(-turnSpeed);
+                front_left.setPower(-turnSpeed);
+                back_right.setPower(turnSpeed);
+                front_right.setPower(turnSpeed);
+            }
+            direction = angles.firstAngle;
+            telemetry.addData("accu", String.format("%03d", zAccumulated));
+            telemetry.update();
+        }
+        back_left.setPower(0);
+        front_left.setPower(0);
+        back_right.setPower(0);
+        front_right.setPower(0);
+    }
+    */
 }
