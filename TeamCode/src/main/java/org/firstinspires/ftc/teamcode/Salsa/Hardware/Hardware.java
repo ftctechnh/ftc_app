@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.Salsa.Asteroid;
+package org.firstinspires.ftc.teamcode.Salsa.Hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.internal.vuforia.externalprovider.VuforiaWebcam;
 
 /**
  * Created by adityamavalankar on 11/4/18.

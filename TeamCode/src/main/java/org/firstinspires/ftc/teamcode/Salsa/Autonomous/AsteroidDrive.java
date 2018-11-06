@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode.Salsa.Asteroid.TeleOp;
+package org.firstinspires.ftc.teamcode.Salsa.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.Salsa.Asteroid.*;
+
+import org.firstinspires.ftc.teamcode.Salsa.Robot.Asteroid;
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
+import org.firstinspires.ftc.teamcode.Salsa.Vision.Vuforia;
 
 /**
  * Created by adityamavalankar on 11/4/18.
@@ -12,7 +15,8 @@ import org.firstinspires.ftc.teamcode.Salsa.Asteroid.*;
 public class AsteroidDrive extends OpMode {
 
     Robot robot = new Robot();
-    TeleOpFunctions teleOpFunctions = new TeleOpFunctions();
+    Asteroid asteroid = new Asteroid();
+    Vuforia vuforia = new Vuforia();
 
     @Override
     public void init() {
@@ -21,6 +25,6 @@ public class AsteroidDrive extends OpMode {
 
     @Override
     public void loop() {
-        teleOpFunctions.straightDrive();
+        asteroid.drive(gamepad1.left_stick_y, gamepad1.right_stick_y);
     }
 }

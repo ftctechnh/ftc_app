@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Salsa.Asteroid;
+package org.firstinspires.ftc.teamcode.Salsa;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 

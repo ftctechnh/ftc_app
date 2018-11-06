@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.teamcode.Salsa.Asteroid;
+package org.firstinspires.ftc.teamcode.Salsa.Vision;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Const;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.teamcode.Salsa.Constants;
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.Hardware;
 
 /**
  * Created by adityamavalankar on 11/4/18.
@@ -29,10 +31,34 @@ public class Vuforia {
 
 
 
-    public void enableVuforia() {
+    public void enableVuforia(CameraOrientation camDirection, CameraUsed cam) {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
         parameters.vuforiaLicenseKey = constants.VUFORIA_KEY;
-        relicTemplate.setName("relicVuMarkTemplate");
+
+
+        if (cam == CameraUsed.WEBCAM) {
+            parameters.cameraName = hardware.webcamFront;
+        }
+
+        else if (cam == CameraUsed.PHONE) {
+            if (camDirection == CameraOrientation.FRONT) {
+
+                parameters.cameraDirection = CameraDirection.FRONT;
+
+            } else if (camDirection == CameraOrientation.BACK) {
+
+                parameters.cameraDirection = CameraDirection.BACK;
+
+            } else {
+
+                parameters.cameraDirection = CameraDirection.BACK;
+            }
+        }
+
+        //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
     }
 
     public void disableVuforia() {
@@ -43,23 +69,6 @@ public class Vuforia {
         relicTrackables.activate();
     }
 
-    public void setCameraDirection(Direction cameraDirecrtion){
-        if (cameraDirecrtion == Direction.FRONT) {
-            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-        }
-        else if (cameraDirecrtion == Direction.BACK) {
-            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        }
-    }
-
-    public void setCamera(Camera camera){
-        if (camera == Camera.WEBCAM) {
-            parameters.cameraName = hardware.webcamFront;
-        }
-        else {
-            parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        }
-    }
 
     public RelicRecoveryVuMark VuMark() {
 
@@ -68,14 +77,4 @@ public class Vuforia {
         return vumark;
     }
 
-}
-
-enum Direction {
-    FRONT,
-    BACK;
-}
-
-enum Camera {
-    WEBCAM,
-    PHONE;
 }
