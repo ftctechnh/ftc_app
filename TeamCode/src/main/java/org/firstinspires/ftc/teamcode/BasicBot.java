@@ -17,11 +17,12 @@ public class BasicBot
         driveLeftOne.setDirection(DcMotorImplEx.Direction.REVERSE);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         resetEncoders();
         driveMotors(0,0);
     }
 
-    public void driveMotors(float lPow, float rPow)
+    public void driveMotors(double lPow, double rPow)
     {
          driveRightOne.setPower(rPow);
          driveLeftOne.setPower(lPow);
@@ -42,7 +43,7 @@ public class BasicBot
         driveMotors(0,0);
     }
 
-    private void resetEncoders()
+    public void resetEncoders()
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
