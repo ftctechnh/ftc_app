@@ -1,9 +1,9 @@
-package org.firstinspires.ftc.teamcode.Salsa.Autonomous;
+package org.firstinspires.ftc.teamcode.Salsa.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Salsa.Robot.Asteroid;
+import org.firstinspires.ftc.teamcode.Salsa.Robots.Asteroid;
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Salsa.Vision.Vuforia;
 
