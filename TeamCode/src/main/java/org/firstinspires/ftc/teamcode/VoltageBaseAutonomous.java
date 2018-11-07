@@ -6,8 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Disabled
-public abstract class VoltageBaseAutonomous extends LinearOpMode
-{
+public abstract class VoltageBaseAutonomous extends LinearOpMode {
     public DcMotor leftDrive;
     public DcMotor rightDrive;
 
@@ -38,11 +37,6 @@ public abstract class VoltageBaseAutonomous extends LinearOpMode
 
         DefineOpMode();
     }
-
-
-    //Here is a set of methods for everything the robot needs to do.  These can be used anywhere.
-
-    //Utility Methods
 
     public void DriveMotors (int speed)
     {
@@ -208,7 +202,33 @@ public abstract class VoltageBaseAutonomous extends LinearOpMode
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    };
+    }
+
+
+    //Arm Methods
+
+
+    public void DumpAndReset ()
+    {
+        //dump
+        thingsInBot = 0;
+    }
+
+    public void OpenClaw ()
+    {
+
+    }
+
+    public void CloseClaw ()
+    {
+
+    }
+
+}
+
+    //Movement Methods
+
+
 
 
     //Arm Methods
