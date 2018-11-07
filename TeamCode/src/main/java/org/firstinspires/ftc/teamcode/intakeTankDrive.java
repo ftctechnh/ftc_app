@@ -38,15 +38,15 @@ public class intakeTankDrive extends OpMode {
 
 
         if(rightTrigger>0){
-            intakeFrontLeft.setPower(rightTrigger);
-            intakeFrontRight.setPower(rightTrigger);
-            intakeBackLeft.setPower(-rightTrigger);
-            intakeBackRight.setPower(-rightTrigger);
+            intakeFrontLeft.setPower(1.0);
+            intakeFrontRight.setPower(1.0);
+            intakeBackLeft.setPower(1.0);
+            intakeBackRight.setPower(1.0);
         }
 
         if(leftTrigger>0){
-            intakeFrontLeft.setPower(-rightTrigger);
-            intakeFrontRight.setPower(-rightTrigger);
+            intakeFrontLeft.setPower(1.0);
+            intakeFrontRight.setPower(1.0);
         }
 
 
