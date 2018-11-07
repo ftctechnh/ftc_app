@@ -26,7 +26,7 @@ public class DriveControl {
     /* Declare public class object */
 
     /* Subassembly constructor */
-    public DriveControl(){
+    public DriveControl() {
     }
 
     public void init(HardwareMap ahwMap) {
@@ -93,13 +93,23 @@ public class DriveControl {
         BackLeftM.setPower(0);
     }
 
-    public void tankRight(double tankSpeed) {
-        FrontRightM.setPower(tankSpeed);
-        BackRightM.setPower(tankSpeed);
+    public void tankRightForward(double speed) {
+        FrontRightM.setPower(speed);
+        BackRightM.setPower(speed);
     }
 
-    public void tankLeft(double tankSpeed) {
-        FrontLeftM.setPower(tankSpeed);
-        BackLeftM.setPower(tankSpeed);
+    public void tankRightBackward(double speed) {
+        FrontRightM.setPower(-speed);
+        BackRightM.setPower(-speed);
+    }
+
+    public void tankLeftForward(double speed) {
+        FrontLeftM.setPower(speed);
+        BackLeftM.setPower(speed);
+    }
+
+    public void tankLeftBackward(double speed) {
+        FrontLeftM.setPower(-speed);
+        BackLeftM.setPower(-speed);
     }
 }
