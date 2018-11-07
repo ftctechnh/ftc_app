@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
  * This TeleOp OpMode is used to test the functionality of the specific sub assembly
  */
 // Assign OpMode type (TeleOp or Autonomous), name, and grouping
-@TeleOp(name = "Drive Test", group = "Test")
+@TeleOp(name = "Lift Test", group = "Test")
 public class LiftTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        telemetry.addLine("Drive Test: ");
+        telemetry.addLine("Lift Test: ");
         double speed = 1.0;
 
         /* initialize sub-assemblies
