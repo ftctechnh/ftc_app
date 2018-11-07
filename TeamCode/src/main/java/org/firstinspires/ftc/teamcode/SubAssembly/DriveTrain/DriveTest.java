@@ -56,11 +56,18 @@ public class DriveTest extends LinearOpMode {
                 Drive.turnLeft(speed);
             } else if (egamepad1.dpad_right.state) {
                 Drive.turnRight(speed);
-            } else {
+            }
 
-                Drive.tankLeft(-gamepad1.right_stick_y + speed);
-                Drive.tankRight(-gamepad1.right_stick_y + speed);
+            if (-gamepad1.left_stick_y>=0.4) {
+                Drive.tankLeftForward(speed);
+            } else if (-gamepad1.left_stick_y<=-0.4) {
+                Drive.tankLeftBackward(speed);
+            }
 
+            if (-gamepad1.right_stick_y>=0.4) {
+                Drive.tankRightForward(speed);
+            } else if (-gamepad1.right_stick_y<=-0.4) {
+                Drive.tankRightBackward(speed);
             }
 
             telemetry.addLine("Speed: " + speed);
