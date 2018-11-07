@@ -16,10 +16,10 @@ public class ClaimerControl {
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
 
     //initializing motors
-    private Servo ClaimerS = null;
+    private Servo ClaimerS;
 
-      /* Subassembly constructor */
-    public ClaimerControl(){
+    /* Subassembly constructor */
+    public ClaimerControl() {
     }
 
     public void init(HardwareMap ahwMap) {
@@ -31,23 +31,17 @@ public class ClaimerControl {
 
         ClaimerS = hwMap.servo.get("ClaimerS");
 
-        ClaimerS.setPosition(1);
-
-
+        ClaimerS.setPosition(0.075);
     }
 
 
     public void drop() {
-        ClaimerS.setPosition(1.0);
-
-
+        ClaimerS.setPosition(0.5);
     }
 
 
     public void reset() {
-        ClaimerS.setPosition(0.55);
-
+        ClaimerS.setPosition(0.075);
     }
 
-
-    }
+}

@@ -16,7 +16,6 @@ public class ClaimerTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("Claimer Test: ");
-        double speed = 1.0;
 
         /* initialize sub-assemblies
          */
@@ -30,29 +29,28 @@ public class ClaimerTest extends LinearOpMode {
         //waits for that giant PLAY button to be pressed on RC
         waitForStart();
 
+        Claimer.init(hardwareMap);
+
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
-
-
 
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
 
-
-            if (egamepad1.a.state) {
+            if (egamepad1.a.released) {
                 Claimer.drop();
+            } else if (egamepad1.b.released) {
+                Claimer.reset();
             }
 
 
+            //SubAssembly.test();
+            telemetry.update();
 
-
-                //SubAssembly.test();
-                telemetry.update();
-
-                //let the robot have a little rest, sleep is healthy
-                sleep(40);
-            }
-
+            //let the robot have a little rest, sleep is healthy
+            sleep(40);
         }
+
     }
+}
