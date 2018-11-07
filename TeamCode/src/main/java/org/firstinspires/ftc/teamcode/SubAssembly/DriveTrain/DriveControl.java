@@ -93,22 +93,22 @@ public class DriveControl {
         BackLeftM.setPower(0);
     }
 
-    public void tankRightF(double speed) {
+    public void tankRightForward(double speed) {
         FrontRightM.setPower(speed);
         BackRightM.setPower(speed);
     }
 
-    public void tankRightB(double speed) {
+    public void tankRightBackward(double speed) {
         FrontRightM.setPower(-speed);
         BackRightM.setPower(-speed);
     }
 
-    public void tankLeftF(double speed) {
+    public void tankLeftForward(double speed) {
         FrontLeftM.setPower(speed);
         BackLeftM.setPower(speed);
     }
 
-    public void tankLeftB(double speed) {
+    public void tankLeftBackward(double speed) {
         FrontLeftM.setPower(-speed);
         BackLeftM.setPower(-speed);
     }

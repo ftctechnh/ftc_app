@@ -59,9 +59,18 @@ import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
                 Drive.turnLeft(speed);
             } else if (egamepad1.dpad_right.state) {
                 Drive.turnRight(speed);
-            } else {
-                Drive.tankLeft(-gamepad1.right_stick_y);
-                Drive.tankRight(-gamepad1.right_stick_y);
+            }
+
+            if (-gamepad1.left_stick_y>=0.4) {
+                Drive.tankLeftForward(speed);
+            } else if (-gamepad1.left_stick_y<=-0.4) {
+                Drive.tankLeftBackward(speed);
+            }
+
+            if (-gamepad1.right_stick_y>=0.4) {
+                Drive.tankRightForward(speed);
+            } else if (-gamepad1.right_stick_y<=-0.4) {
+                Drive.tankRightBackward(speed);
             }
 
             telemetry.update();
