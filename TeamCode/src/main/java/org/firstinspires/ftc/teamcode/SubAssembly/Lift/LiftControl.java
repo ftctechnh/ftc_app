@@ -72,13 +72,14 @@ public class LiftControl {
 
     //locking the servos into place to hold position
     public void Lock() {
-        LockRightS.setPosition(0);
-        LockLeftS.setPosition(0);
+        LockRightS.setPosition(0.44);
+        LockLeftS.setPosition(0.4);
     }
 
     //unlocking the servos
     public void Unlock() {
-        LockLeftS.setPosition(180);
-        LockRightS.setPosition(180);
+        LockRightS.setPosition(0.77);
+        LockLeftS.setPosition(0.1);
+
     }
 }
