@@ -114,13 +114,15 @@ public class auto extends LinearOpMode {
         telemetry.addLine("Autonomous");
 
         startPosition();
+
         sample = PracticeSample.Center;
+
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
         telemetry.update();
         waitForStart();
-
+//put sample position code here
         newState(State.STATE_INITIAL);
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
@@ -230,20 +232,20 @@ public class auto extends LinearOpMode {
                     }
                     //Center
                     else {
-                        if (now < 1.9){
+                        if (now < 2.3){
                             Drive.moveForward(0.5);
                         }
-                        else if (now < 2.0 ){
+                        else if (now < 2.4 ){
                             Drive.stop();
                         }
-                        else if (now < 2.3){
+                        else if (now < 2.8){
                             Drive.turnLeft(0.4);
                         }
-                        else if (now < 3.3){
+                        else if (now < 3.8){
                             Drive.stop();
                             Claimer.drop();
                         }
-                        else if(now < 8.3){
+                        else if(now < 7.0){
                             Claimer.reset();
                             Drive.moveBackward(0.5);
                         }
