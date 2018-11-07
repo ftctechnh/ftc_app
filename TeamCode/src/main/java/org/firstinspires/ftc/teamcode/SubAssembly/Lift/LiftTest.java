@@ -16,7 +16,6 @@ public class LiftTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("Lift Test: ");
-        double speed = 1.0;
 
         /* initialize sub-assemblies
          */
@@ -33,12 +32,8 @@ public class LiftTest extends LinearOpMode {
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
 
-
-
             egamepad1.updateEdge();
             egamepad2.updateEdge();
-
-
 
             if (egamepad1.dpad_up.state) {
                 Lift.Extend();
@@ -51,14 +46,10 @@ public class LiftTest extends LinearOpMode {
             }
 
 
-
-
-            //SubAssembly.test();
             telemetry.update();
 
             //let the robot have a little rest, sleep is healthy
             sleep(40);
         }
-
     }
 }
