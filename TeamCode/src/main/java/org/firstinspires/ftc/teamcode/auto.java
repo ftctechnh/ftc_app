@@ -109,13 +109,14 @@ public class auto extends LinearOpMode {
         telemetry.addLine("Autonomous");
 
         startPosition();
-        samplePosition();
+//        samplePosition();
+        sample = Sample.Center;
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
         telemetry.update();
         waitForStart();
-
+//put sample position code here
         newState(State.STATE_INITIAL);
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
