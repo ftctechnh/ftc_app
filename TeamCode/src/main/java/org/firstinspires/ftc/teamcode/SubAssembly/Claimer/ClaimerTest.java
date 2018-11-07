@@ -16,7 +16,6 @@ public class ClaimerTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("Claimer Test: ");
-        double speed = 1.0;
 
         /* initialize sub-assemblies
          */

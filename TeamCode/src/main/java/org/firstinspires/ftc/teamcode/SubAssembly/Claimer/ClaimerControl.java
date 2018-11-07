@@ -13,10 +13,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class ClaimerControl {
     /* Declare private class object */
     //private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
-    HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
+    HardwareMap hwMap;     /* local copy of HardwareMap object from opmode class */
 
     //initializing motors
-    private Servo ClaimerS = null;
+    private Servo ClaimerS;
 
       /* Subassembly constructor */
     public ClaimerControl(){
@@ -51,3 +51,4 @@ public class ClaimerControl {
 
 
     }
+
