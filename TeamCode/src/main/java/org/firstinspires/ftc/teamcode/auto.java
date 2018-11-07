@@ -108,8 +108,8 @@ public class auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Drive.init(hardwareMap);
-        Sample.init();
        // Claimer.init(hardwareMap);
+        Sample.init();
 
         telemetry.addLine("Autonomous");
 
@@ -127,11 +127,13 @@ public class auto extends LinearOpMode {
 
             now = runtime.seconds() - lastReset;
 
-            Sample.loop();
-
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
+                    Sample.init();
+                    Sample.start();
+                    Sample.loop();
+
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
                         telemetry.update();
