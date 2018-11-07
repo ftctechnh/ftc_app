@@ -38,14 +38,14 @@ public class ClaimerControl {
 
 
     public void drop() {
-        ClaimerS.setPosition(1);
+        ClaimerS.setPosition(1.0);
 
 
     }
 
 
     public void reset() {
-        ClaimerS.setPosition(180);
+        ClaimerS.setPosition(0.55);
 
     }
 
