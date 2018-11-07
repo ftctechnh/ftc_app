@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Servo {
 
-    public Servo s;
+    public com.qualcomm.robotcore.hardware.Servo s;
     HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 
         hwmap = inputMap;
 
-        s = hwmap.get(Servo.class, hardwareName);
+        s = hwmap.get(com.qualcomm.robotcore.hardware.Servo.class, hardwareName);
     }
 
 

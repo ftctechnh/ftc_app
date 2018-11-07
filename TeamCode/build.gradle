@@ -1,4 +1,3 @@
-
 //
 // build.gradle in TeamCode
 //
@@ -8,24 +7,9 @@
 // the build definitions, you can place those customizations in this file, but
 // please think carefully as to whether such customizations are really necessary
 // before doing so.
+
+
 // Custom definitions may go here
+
 // Include common definitions from above.
 apply from: '../build.common.gradle'
-dependencies {
-    implementation project(':openCV3.4.1')
-    buildscript {
-        repositories {
-            google() // here
-            jcenter()
-        }
-        dependencies {
-            classpath 'com.android.tools.build:gradle:3.2.0'
-        }
-    }
-    allprojects {
-        repositories {
-            google() // and here
-            jcenter()
-        }
-    }
-}

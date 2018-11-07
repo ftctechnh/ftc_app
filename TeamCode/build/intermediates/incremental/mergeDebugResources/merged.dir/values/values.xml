@@ -192,14 +192,6 @@
     <color name="very_very_dark_purple">#14012d</color>
     <color name="very_very_dark_red">#2d0104</color>
     <color name="very_very_dark_teal">#01212d</color>
-    <declare-styleable name="CameraBridgeViewBase">
-       <attr format="boolean" name="show_fps"/>
-       <attr format="integer" name="camera_id">
-          <enum name="any" value="-1"/>
-          <enum name="back" value="99"/>
-          <enum name="front" value="98"/>
-       </attr>
-    </declare-styleable>
     <declare-styleable name="ColorListPreference"><attr format="reference" name="colors"/></declare-styleable>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">5dp</dimen>
@@ -661,6 +653,8 @@
     <string name="rev_distributor">REV Robotics</string>
     <string name="rev_laser_sensor_description">a REV 2M (Time of Flight) Distance Sensor</string>
     <string name="rev_laser_sensor_name">REV 2M Distance Sensor</string>
+    <string name="rev_spark_mini_description">a REV SPARK Mini Motor Controller</string>
+    <string name="rev_spark_mini_name">REV SPARK Mini Controller</string>
     <string name="rev_touch_sensor_description">a REV touch sensor</string>
     <string name="robotControllerAppUpdateReadme">When running on a REV Control Hub (and only on a Control Hub, not merely a robot controller phone), any Android applications (APK files) found in this folder will be automatically installed when the system boots. Once successfully installed, each APK is deleted so as to not be reinstalled on subsequent boots.</string>
     <string name="robotStateEmergencyStop">EMERGENCY STOP</string>
