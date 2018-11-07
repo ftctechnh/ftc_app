@@ -16,8 +16,8 @@ public class auto extends LinearOpMode {
 
     /* Methods */
     DriveControl Drive = new DriveControl();
-    SamplingOrderExample Sample = new SamplingOrderExample();
-   // ClaimerControl Claimer = new ClaimerControl();
+    //SamplingOrderExample Sample = new SamplingOrderExample();
+    ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -108,13 +108,13 @@ public class auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Drive.init(hardwareMap);
-       // Claimer.init(hardwareMap);
-        Sample.init();
+        Claimer.init(hardwareMap);
+        //Sample.init();
 
         telemetry.addLine("Autonomous");
 
         startPosition();
-        samplePosition();
+        sample = PracticeSample.Center;
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
@@ -130,9 +130,9 @@ public class auto extends LinearOpMode {
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
-                    Sample.init();
+                    /*Sample.init();
                     Sample.start();
-                    Sample.loop();
+                    Sample.loop();*/
 
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
@@ -241,10 +241,10 @@ public class auto extends LinearOpMode {
                         }
                         else if (now < 3.3){
                             Drive.stop();
-                            //Claimer.drop();
+                            Claimer.drop();
                         }
                         else if(now < 8.3){
-                            //Claimer.reset();
+                            Claimer.reset();
                             Drive.moveBackward(0.5);
                         }
                         else {
@@ -278,6 +278,6 @@ public class auto extends LinearOpMode {
             }
             sleep(40);
         }
-        Sample.stop();
+        //Sample.stop();
     }
 }
