@@ -36,6 +36,7 @@ public abstract class RobotsBase extends LinearOpMode
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         leftArm = hardwareMap.dcMotor.get("leftArm");
         rightArm = hardwareMap.dcMotor.get("rightArm");
+        armRaiser = hardwareMap.dcMotor.get("armRaiser");
 
         //hardwaremap
 
