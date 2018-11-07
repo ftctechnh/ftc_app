@@ -6,8 +6,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
+import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
-
+import org.firstinspires.ftc.teamcode.SamplingOrderExample;
 //import static org.firstinspires.ftc.teamcode.auto.State.STATE_STOP;
 
 @Autonomous(name = "Auto1", group = "Drive")
@@ -15,6 +16,8 @@ public class auto extends LinearOpMode {
 
     /* Methods */
     DriveControl Drive = new DriveControl();
+    //SamplingOrderExample Sample = new SamplingOrderExample();
+    ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -53,15 +56,15 @@ public class auto extends LinearOpMode {
 
         if (gamepad1.dpad_down) {
             telemetry.addLine("Center");
-            sample = Sample.Center;
+            sample = PracticeSample.Center;
         }
         else if (gamepad1.dpad_right){
             telemetry.addLine("Right");
-            sample = Sample.Right;
+            sample = PracticeSample.Right;
         }
         else {
             telemetry.addLine("Left");
-            sample = Sample.Left;
+            sample = PracticeSample.Left;
         }
     }
 
@@ -73,7 +76,7 @@ public class auto extends LinearOpMode {
     //Makes the enum stuff work
     private State mCurrentState;
     private Start orientation;
-    private Sample sample;
+    private PracticeSample sample;
 
     /* Variables go here */
 
@@ -91,7 +94,7 @@ public class auto extends LinearOpMode {
         Depot
     }
 
-    private enum Sample {
+    private enum PracticeSample {
         Left,
         Right,
         Center
@@ -105,11 +108,13 @@ public class auto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Drive.init(hardwareMap);
+        Claimer.init(hardwareMap);
+        //Sample.init();
 
         telemetry.addLine("Autonomous");
 
         startPosition();
-        samplePosition();
+        sample = PracticeSample.Center;
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
@@ -125,6 +130,10 @@ public class auto extends LinearOpMode {
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
+                    /*Sample.init();
+                    Sample.start();
+                    Sample.loop();*/
+
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
                         telemetry.update();
@@ -137,7 +146,7 @@ public class auto extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (sample == Sample.Left){
+                    if (sample == PracticeSample.Left){
                        if (now < 0.15){
                             Drive.turnLeft(0.4);
                        }
@@ -152,7 +161,7 @@ public class auto extends LinearOpMode {
                            newState(State.STATE_STOP);
                        }
                     }
-                    else if (sample == Sample.Right){
+                    else if (sample == PracticeSample.Right){
                         if (now < 0.15){
                             Drive.turnRight(0.4);
                         }
@@ -182,29 +191,29 @@ public class auto extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
-                    if (sample == Sample.Left){
+                    if (sample == PracticeSample.Left){
                         if (now < 0.15){
                             Drive.turnLeft(0.4);
                         }
                         else if (now < 0.3){
                             Drive.stop();
                         }
-                        //Sample left to move forward
-                        else if (now < 1.35) {
+                        //Sample left to move forward (test before adjusting)
+                        else if (now < 1.5) {
 
                             Drive.moveForward(0.55);
                         }
-                        else if (now < 1.45){
+                        else if (now < 1.65){
                             Drive.stop();
                         }
-                        else if(now < 1.7){
+                        else if(now < 2.1){
                             Drive.turnRight(0.4);
                         }
                         else {
                             newState(State.STATE_STOP);
                         }
                     }
-                    else if (sample == Sample.Right){
+                    else if (sample == PracticeSample.Right){
                         if (now < 0.15){
                             Drive.turnRight(0.4);
                         }
@@ -230,7 +239,12 @@ public class auto extends LinearOpMode {
                         else if (now < 2.3){
                             Drive.turnLeft(0.4);
                         }
-                        else if(now < 7.3){
+                        else if (now < 3.3){
+                            Drive.stop();
+                            Claimer.drop();
+                        }
+                        else if(now < 8.3){
+                            Claimer.reset();
                             Drive.moveBackward(0.5);
                         }
                         else {
@@ -264,5 +278,6 @@ public class auto extends LinearOpMode {
             }
             sleep(40);
         }
+        //Sample.stop();
     }
 }

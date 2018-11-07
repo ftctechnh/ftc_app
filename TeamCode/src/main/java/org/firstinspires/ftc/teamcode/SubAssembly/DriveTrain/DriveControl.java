@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -16,6 +18,7 @@ public class DriveControl {
     //private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     //private String name = "Drive Train";
+    private ElapsedTime runtime = new ElapsedTime();
 
     //initializing motors
     private DcMotor FrontRightM = null;
@@ -61,12 +64,24 @@ public class DriveControl {
         BackLeftM.setPower(speed);
     }
 
+    public void moveForward(double speed,double time){
+        moveForward(speed);
+        TimeDelay(time);
+        stop();
+    }
+
     //setting power to move backward
     public void moveBackward(double speed) {
         FrontRightM.setPower(-speed);
         FrontLeftM.setPower(-speed);
         BackRightM.setPower(-speed);
         BackLeftM.setPower(-speed);
+    }
+
+    public void moveBackward(double speed,double time){
+        moveBackward(speed);
+        TimeDelay(time);
+        stop();
     }
 
     //setting power to turn left
@@ -77,6 +92,12 @@ public class DriveControl {
         BackLeftM.setPower(-speed);
     }
 
+    public void turnLeft(double speed,double time){
+        turnLeft(speed);
+        TimeDelay(time);
+        stop();
+    }
+
     //setting power to turn right
     public void turnRight(double speed) {
         FrontRightM.setPower(-speed);
@@ -85,12 +106,25 @@ public class DriveControl {
         BackLeftM.setPower(speed);
     }
 
+    public void turnRight(double speed,double time){
+        turnRight(speed);
+        TimeDelay(time);
+        stop();
+    }
+
     //setting power to 0
     public void stop() {
         FrontRightM.setPower(0);
         FrontLeftM.setPower(0);
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
+    }
+
+    public void tankDrive (double leftSpeed, double rightSpeed, double time){
+        tankLeftForward(leftSpeed);
+        tankRightForward(rightSpeed);
+        TimeDelay(time);
+        stop();
     }
 
     public void tankRightForward(double speed) {
@@ -111,5 +145,14 @@ public class DriveControl {
     public void tankLeftBackward(double speed) {
         FrontLeftM.setPower(-speed);
         BackLeftM.setPower(-speed);
+    }
+
+    public void TimeDelay(double time){
+        double start = 0;
+        double now = 0;
+        start = runtime.seconds();
+        do {
+            now = runtime.seconds() - start;
+        }while (now<time);
     }
 }
