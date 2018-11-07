@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
-import org.firstinspires.ftc.teamcode.Salsa.Hardware.Hardware;
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 
 /**
  * Created by adityamavalankar on 11/4/18.
@@ -19,8 +19,8 @@ import org.firstinspires.ftc.teamcode.Salsa.Hardware.Hardware;
 public class Vuforia {
 
     public HardwareMap hwmap = null;
-    Hardware hardware = new Hardware();
     Constants constants = new Constants();
+    Robot robot = new Robot();
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia = null;
     int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
@@ -38,7 +38,7 @@ public class Vuforia {
 
 
         if (cam == CameraUsed.WEBCAM) {
-            parameters.cameraName = hardware.webcamFront;
+            parameters.cameraName = robot.webcamFront;
         }
 
         else if (cam == CameraUsed.PHONE) {

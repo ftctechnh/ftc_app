@@ -9,14 +9,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Motor {
 
-    public DcMotor m;
+    public DcMotor dcm;
     HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 
         hwmap = inputMap;
 
-        m = hwmap.get(DcMotor.class, hardwareName);
+        dcm = hwmap.get(DcMotor.class, hardwareName);
     }
 
 }

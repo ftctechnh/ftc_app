@@ -42,3 +42,8 @@ FtcRobotController/build/generated/source/r/debug/com/qualcomm/ftcrobotcontrolle
 FtcRobotController/build/generated/source/r/debug/com/qualcomm/ftccommon/R.java
 FtcRobotController/build/generated/source/r/debug/com/google/blocks/R.java
 .idea/workspace.xml
+/.idea/workspace.xml
+/FtcRobotController/build/intermediates/incremental/packageDebugResources/compile-file-map.properties
+/FtcRobotController/build/
+/.gradle/
+/.idea/
