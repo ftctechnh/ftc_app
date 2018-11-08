@@ -95,13 +95,14 @@ public class Auto extends LinearOpMode {
         robot.oof.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.oof.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Send telemetry message to indicate successful Encoder reset
-      telemetry.addData("Path0",  "Starting at %7d :%7d",
+        telemetry.addData("Path0", "Starting at %7d :%7d",
                 robot.oof.getCurrentPosition(),
-      telemetry.update());
+                telemetry.update());
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        encoderDrive(DRIVE_SPEED,  20,  20, 5.0);
+        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+    }
 
 
         //robot.oof.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

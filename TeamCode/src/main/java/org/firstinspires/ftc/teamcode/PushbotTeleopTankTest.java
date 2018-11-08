@@ -102,7 +102,7 @@ public class PushbotTeleopTankTest extends OpMode{
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
+        left = gamepad1.left_stick_y;
         //left = 0.0;
         right =-gamepad1.right_stick_y;
 
