@@ -43,15 +43,10 @@ public class Vuforia {
 
         else if (cam == CameraUsed.PHONE) {
             if (camDirection == CameraOrientation.FRONT) {
-
                 parameters.cameraDirection = CameraDirection.FRONT;
-
             } else if (camDirection == CameraOrientation.BACK) {
-
                 parameters.cameraDirection = CameraDirection.BACK;
-
             } else {
-
                 parameters.cameraDirection = CameraDirection.BACK;
             }
         }

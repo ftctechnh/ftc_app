@@ -20,9 +20,22 @@ public class Constants {
     //names for the sensors
     public final String GYRO_NAME = "imu";
     public final String WEBCAM_FRONT_NAME = "webcam_front";
-
+    public final String LEFT_COLOR_NAME = "left_line";
+    public final String RIGHT_COLOR_NAME = "right_line";
 
     //Vuforia license key, DO NOT TOUCH!
     public final String VUFORIA_KEY = "AffveYv/////AAAAGQ5VbB9zQUgjlHWrneVac2MnNgfMDlq6EwI3tyURgRK6CHargOTFidfzKod6GLQwGD4m9MPLkR+0NfUrnY8+o8FqAKcQbrAsjk8ONdkWYTPZDfoBRgDLNWRuB7LU1MOp9KqAWpXBJjvH5JCKF/Hxz+beHfVqdWQ0BVZdgGMXG4yEzLN5AI+4NIkQeLvI7Cwz5pIlksoH+rb/e6+YExoWZbQWhDTiRiemlWjvDM1z2a0kteGDz0wTyHz48IkV4M0YsSQIFKwu3YB2a1vkB9FiRfMrBI+CyInjgNoO8V0EEOtRc6Vqsf3XbF3fGXricZUhl7RIl5M/IkFOgeAZ4ML+JcrjTqfZb2Yh3JNx1me524cK";
+
+
+    //constant numbers meant for autonomous with encoders
+    public final double TICKS_PER_ROTATION = 1120;
+
+    public final double WHEEL_DIAMETER_CM = 10.16;
+    public final double WHEEL_DIAMETER_IN = 4;
+    public final double WHEEL_CIRCUMFERENCE_CM = (Math.PI * WHEEL_DIAMETER_CM);
+    public final double WHEEL_CIRCUMFERENCE_IN = (Math.PI * WHEEL_DIAMETER_IN);
+
+    public final double TICKS_PER_CM = (TICKS_PER_ROTATION)/(WHEEL_CIRCUMFERENCE_CM);
+    public final double TICKS_PER_IN = (TICKS_PER_ROTATION)/(WHEEL_CIRCUMFERENCE_IN);
 
 }

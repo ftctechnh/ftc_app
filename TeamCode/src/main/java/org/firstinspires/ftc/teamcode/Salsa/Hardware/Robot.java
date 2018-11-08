@@ -6,7 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
  * Created by adityamavalankar on 11/4/18.
@@ -25,6 +29,7 @@ public class Robot {
     public ColorSensor leftLine = null;
     public ColorSensor rightLine = null;
     public WebcamName webcamFront = null;
+    public Orientation angles;
 
     public void initDrivetrain(HardwareMap inputMap) {
 
@@ -43,7 +48,10 @@ public class Robot {
 
         //Sensors
         imu = hwmap.get(BNO055IMU.class, constants.GYRO_NAME);
+        leftLine = hwmap.get(ColorSensor.class, constants.LEFT_COLOR_NAME);
+        rightLine = hwmap.get(ColorSensor.class, constants.RIGHT_COLOR_NAME);
 
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
     public void initWebcam(HardwareMap inputMap) {
