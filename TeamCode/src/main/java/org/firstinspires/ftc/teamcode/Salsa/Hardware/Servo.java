@@ -19,6 +19,4 @@ public class Servo {
         s = hwmap.get(com.qualcomm.robotcore.hardware.Servo.class, hardwareName);
     }
 
-
-
 }

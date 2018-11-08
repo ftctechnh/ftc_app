@@ -13,12 +13,11 @@ public class TeleOpMecanum extends OpMode {
     DcMotor bottomLeftMotor;
     DcMotor topRightMotor;
     DcMotor bottomRightMotor;
-
+    byte posleft = -1;
     @Override
     public void loop() {
-        FourWheelDrive_fast();
-        straffe();
-        FourWheelDrive_slow();
+        dpad();
+        TankDrive();
     }
 
     public void init(){
@@ -28,56 +27,46 @@ public class TeleOpMecanum extends OpMode {
         bottomRightMotor = hardwareMap.dcMotor.get("bottomRightMotor");
     }
 
-    public void FourWheelDrive_fast(){
+    public void TankDrive() {
+
         float leftY_gp1 = (-gamepad1.left_stick_y);
-        float rightY_gp1 = (-gamepad1.right_stick_y);
+        float rightY_gp1 = (gamepad1.right_stick_y);
 
-        if (gamepad1.left_trigger > 0) {
-            topLeftMotor.setPower(1);
-            bottomLeftMotor.setPower(1);
-            topRightMotor.setPower(0);
-            bottomRightMotor.setPower(0);
-        }
-        if (gamepad1.right_trigger > 0) {
-            topLeftMotor.setPower(0);
-            bottomLeftMotor.setPower(0);
-            topRightMotor.setPower(1);
-            bottomRightMotor.setPower(1);
-        } else {
-            topLeftMotor.setPower(0);
-            bottomLeftMotor.setPower(0);
-            topRightMotor.setPower(0);
-            bottomRightMotor.setPower(0);
-        }
+        topLeftMotor.setPower(leftY_gp1);
+        bottomLeftMotor.setPower(leftY_gp1);
+        topRightMotor.setPower(rightY_gp1);
+        bottomRightMotor.setPower(rightY_gp1);
+
     }
 
-    public void FourWheelDrive_slow(){
-        if (gamepad1.dpad_up){
-            topLeftMotor.setPower(0.5);
-            bottomLeftMotor.setPower(0.5);
-            topRightMotor.setPower(0);
-            bottomRightMotor.setPower(0);
-        }
-        if (gamepad1.dpad_down){
-            topLeftMotor.setPower(0);
-            bottomLeftMotor.setPower(0);
-            topRightMotor.setPower(0.5);
-            bottomRightMotor.setPower(0.5);
-        }
-    }
-
-    public void straffe(){
+    public void dpad(){
         if (gamepad1.dpad_left){
-            topLeftMotor.setPower(-1);
-            bottomLeftMotor.setPower(1);
+            topLeftMotor.setPower(1 * posleft);
+            bottomLeftMotor.setPower(-1 * posleft);
+            topRightMotor.setPower(-1);
+            bottomRightMotor.setPower(1);
+        }
+        else if (gamepad1.dpad_right){
+            topLeftMotor.setPower(-1 * posleft);
+            bottomLeftMotor.setPower(1 * posleft);
             topRightMotor.setPower(1);
             bottomRightMotor.setPower(-1);
         }
-        else if (gamepad1.dpad_right){
-            topLeftMotor.setPower(1);
-            bottomLeftMotor.setPower(-1);
-            topRightMotor.setPower(-1);
-            bottomRightMotor.setPower(1);
+        else if (gamepad1.dpad_up) {
+            topLeftMotor.setPower(0.5 * posleft);
+            bottomLeftMotor.setPower(0.5 * posleft);
+            topRightMotor.setPower(0.5);
+            bottomRightMotor.setPower(0.5);
+
+
+        }
+        else if (gamepad1.dpad_down) {
+
+            topLeftMotor.setPower(-0.5 * posleft);
+            bottomLeftMotor.setPower(-0.5 * posleft);
+            topRightMotor.setPower(-0.5);
+            bottomRightMotor.setPower(-0.5);
+
         }
     }
 
