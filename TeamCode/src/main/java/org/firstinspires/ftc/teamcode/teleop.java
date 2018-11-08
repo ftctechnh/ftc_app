@@ -2,42 +2,42 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
-import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
+
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 
-@TeleOp(name = "TeleOp", group = "Drive")
-    public class teleop extends LinearOpMode {
+/* Sub Assembly Test OpMode
+ * This TeleOp OpMode is used to test the functionality of the specific sub assembly
+ */
+// Assign OpMode type (TeleOp or Autonomous), name, and grouping
+@TeleOp(name = "teleop", group = "Drive")
+public class teleop extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        //variables
+
+        telemetry.addLine("Drive Test: ");
         double speed = 1.0;
 
-        //initializing subassemblies
+        /* initialize sub-assemblies
+         */
         DriveControl Drive = new DriveControl();
-        ClaimerControl Claimer = new ClaimerControl();
-        LiftControl Lift = new LiftControl();
 
-        //setting up gamepads
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
-        //waits for start
+        telemetry.update();
+
+        //waits for that giant PLAY button to be pressed on RC
         waitForStart();
 
-        //good ole "while opmode is active" loop so stuff doesn't kill itself
+        //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
 
-            //update gamepads
+            Drive.init(hardwareMap);
+
             egamepad1.updateEdge();
             egamepad2.updateEdge();
-
-            //displays speed for drivers
-            telemetry.addLine("Speed: " +speed);
-            telemetry.update();
 
             //speed control
             if (egamepad1.right_bumper.pressed) {
@@ -49,35 +49,33 @@ import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
                 if (speed < 0) speed = 0;
             }
 
-            /*drive controls! this tells the robot which inputs control
-             which outputs when moving the robot from here to there*/
-            if (egamepad1.dpad_up.state) {
-                Drive.moveForward(speed);
-            } else if (egamepad1.dpad_down.state) {
-                Drive.moveBackward(speed);
-            } else if (egamepad1.dpad_left.state) {
-                Drive.turnLeft(speed);
-            } else if (egamepad1.dpad_right.state) {
-                Drive.turnRight(speed);
-            }
-
-            if (-gamepad1.left_stick_y>=0.4) {
-                Drive.tankLeftForward(speed);
-            } else if (-gamepad1.left_stick_y<=-0.4) {
-                Drive.tankLeftBackward(speed);
-            }
-
-            if (-gamepad1.right_stick_y>=0.4) {
+            if (egamepad1.dpad_left.state) {
                 Drive.tankRightForward(speed);
-            } else if (-gamepad1.right_stick_y<=-0.4) {
-                Drive.tankRightBackward(speed);
+            } else if (egamepad1.dpad_right.state) {
+                Drive.tankLeftForward(speed);
             }
 
+            if (-gamepad1.left_stick_y < -0.4) {
+                Drive.moveBackward(speed);
+            } else if (-gamepad1.left_stick_y > 0.4) {
+                Drive.moveForward(speed);
+            }
+
+            if (gamepad1.left_stick_x > 0.4) {
+                Drive.turnRight(speed);
+            } else if (gamepad1.left_stick_x < -0.25) {
+                Drive.turnLeft(speed);
+            }
+
+            telemetry.addLine("Speed: " + speed);
+
+
+            //SubAssembly.test();
             telemetry.update();
 
-            //"Sleeeeeeeep" -Green Goblin, played by Willem Dafoe, Spider-Man, 2002, directed by Sam Raimi
+            //let the robot have a little rest, sleep is healthy
             sleep(40);
         }
+
     }
 }
-

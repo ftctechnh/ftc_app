@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.auto2;
 
 
 
@@ -19,6 +20,7 @@ public class DriveControl {
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     //private String name = "Drive Train";
     private ElapsedTime runtime = new ElapsedTime();
+    auto2 auto = new auto2();
 
     //initializing motors
     private DcMotor FrontRightM = null;
@@ -65,6 +67,8 @@ public class DriveControl {
     }
 
     public void moveForward(double speed,double time){
+        if ( !auto.opModeIsActive() ) return;
+
         moveForward(speed);
         TimeDelay(time);
         stop();
@@ -79,6 +83,8 @@ public class DriveControl {
     }
 
     public void moveBackward(double speed,double time){
+        if ( !auto.opModeIsActive() ) return;
+
         moveBackward(speed);
         TimeDelay(time);
         stop();
@@ -93,6 +99,8 @@ public class DriveControl {
     }
 
     public void turnLeft(double speed,double time){
+        if ( !auto.opModeIsActive() ) return;
+
         turnLeft(speed);
         TimeDelay(time);
         stop();
@@ -107,6 +115,8 @@ public class DriveControl {
     }
 
     public void turnRight(double speed,double time){
+        if ( !auto.opModeIsActive() ) return;
+
         turnRight(speed);
         TimeDelay(time);
         stop();
@@ -121,6 +131,8 @@ public class DriveControl {
     }
 
     public void tankDrive (double leftSpeed, double rightSpeed, double time){
+        if ( !auto.opModeIsActive() ) return;
+
         tankLeftForward(leftSpeed);
         tankRightForward(rightSpeed);
         TimeDelay(time);
@@ -148,6 +160,8 @@ public class DriveControl {
     }
 
     public void TimeDelay(double time){
+        if ( !auto.opModeIsActive() ) return;
+
         double start = 0;
         double now = 0;
         start = runtime.seconds();
