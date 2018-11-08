@@ -34,7 +34,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+//import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
+import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -58,7 +59,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 public class PushbotTeleopTankTest extends OpMode{
 
     /* Declare OpMode members. */
-    HardwarePushbot robot       = new HardwarePushbot(); // use the class created to define a Pushbot's hardware
+    DriveBaseHardwareMap robot       = new DriveBaseHardwareMap(); // use the class created to define a Pushbot's hardware
                                                          // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
@@ -74,14 +75,15 @@ public class PushbotTeleopTankTest extends OpMode{
         robot.init(hardwareMap);
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
+        //telemetry.addData("Say", "Did you ever hear the tragedy of Darth Plagueis the Wise?\n" +
+          //      "I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life... He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. It's ironic he could save others from death, but not himself.");    //
     }
 
     /*
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
      */
     @Override
-    public void init_loop() {
+    public void init_loop(){
     }
 
     /*
@@ -101,34 +103,37 @@ public class PushbotTeleopTankTest extends OpMode{
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
         left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        //left = 0.0;
+        right =-gamepad1.right_stick_y;
 
-        robot.leftDrive.setPower(left);
-        robot.rightDrive.setPower(right);
+        robot.top_left.setPower(right);
+        robot.bot_left.setPower(right);
+        robot.top_right.setPower(left);
+        robot.bot_right.setPower(left);
 
         // Use gamepad left & right Bumpers to open and close the claw
-        if (gamepad1.right_bumper)
-            clawOffset += CLAW_SPEED;
-        else if (gamepad1.left_bumper)
-            clawOffset -= CLAW_SPEED;
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
-        clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-        robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-        robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
+       
         // Use gamepad buttons to move the arm up (Y) and down (A)
+        /*
         if (gamepad1.y)
             robot.leftArm.setPower(robot.ARM_UP_POWER);
         else if (gamepad1.a)
             robot.leftArm.setPower(robot.ARM_DOWN_POWER);
         else
             robot.leftArm.setPower(0.0);
-
+        if (gamepad1.x)
+            robot.sweeper.setPower(1);
+        else if (gamepad1.b)
+            robot.sweeper.setPower(-1);
+        else
+            robot.sweeper.setPower(0.0);
+            */
         // Send telemetry message to signify robot running;
-        telemetry.addData("claw",  "Offset = %.2f", clawOffset);
+        /*telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+        telemetry.addData("right", "%.2f", right);*/
     }
 
     /*
