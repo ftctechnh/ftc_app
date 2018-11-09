@@ -6,59 +6,106 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Created by Benla on 10/14/2018.
+ * Created by Benla on 11/9/2018.
+ */
+
+/*
+I'm filling out the structure of both team's opmodes.
+
+Here's some more programming stuff
+
+Relevant object types:
+    - int holds a whole number
+    - double and float hold decimal values, but robot hardware doesn't like these as much
+    - Strings hold strings of letters/numbers/whatever.  note that these must be in caps (String not string)
+        - unlike the others, the data they hold must be in quotes
+    - Voids are used for instructions that don't need to output anything.  robotics methods are generally voids.
+
+
+Useful Java Logic Stuff:
+
+    -If/else statements: used to do something once when a condition is met (Ex. pushing a button in teleop)
+
+        if (condition)
+        {
+            effect
+        }
+
+            -These can be chained to fit as many possible outcomes as needed:
+
+            if (condition 1)
+            {
+                effect 1;
+            } else if (condition 2)
+            {
+                effect 2;
+            } else
+            {
+                effect if none of the other conditions are met;
+            }
+
+            -You can also specify multiple conditions
+
+            if (condition1 && condition2)
+            {
+                ...
+            }
+
+
+    -While loop: used for doing something as long as a condition is met (Ex. having teleop controls as long as the game is running)
+
+        while (condition)
+        {
+            effect;
+        }
+
+
+    -In java, = changes a value to what you specify...
+            int myNumber = 2.
+
+        == checks equality.
+            if (myNumber == 2)
+            {
+                ...
+            }
+
+
+Also general tip, whenever you open a new set of brackets, indent everything inside it on level further than the outside.
+    This makes it harder to lose track.
  */
 
 @Disabled
-public abstract class RobotsBase extends LinearOpMode
+public abstract class VoltageBase extends LinearOpMode
 {
-    public DcMotor leftDrive;
-    public DcMotor rightDrive;
-    public DcMotor leftArm;
-    public DcMotor rightArm;
-    public DcMotor armRaiser;
-
-    public String stringTestAgain = "yep this works";
-
     public abstract void DefineOpMode();
 
-    public double inchConstantActual = 1;
-    public int inchConstant = 1;
-    public double degConstantActual = 1;
-    public int degConstant = 1;
+    public DcMotor leftDrive;
+    public DcMotor rightDrive;
 
-    public int thingsInBot = 0;
+    public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
+    public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
+
+    public int thingsInBot = 0; //currently not used for anything.
 
     public boolean RobotIsGoingForwards = true;
+
+    //put any other data you will use later here.
 
     @Override
     public void runOpMode()
     {
+        //put all initializing stuff here.  hardwaremaps, starting settings for motors and servos, etc.
+
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
-        leftArm = hardwareMap.dcMotor.get("leftArm");
-        rightArm = hardwareMap.dcMotor.get("rightArm");
-        armRaiser = hardwareMap.dcMotor.get("armRaiser");
-
-
-        //hardwaremap
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        //change collector direction if needbe later
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        waitForStart();
-
-        DefineOpMode();
+        DefineOpMode(); //I moved waitforstart inside defineopmode to make autonomous easier.
     }
-
-
-    //Here is a set of methods for everything the robot needs to do.  These can be used anywhere.
-
-    //Utility Methods
 
     public void DriveMotors (int speed)
     {
@@ -191,6 +238,7 @@ public abstract class RobotsBase extends LinearOpMode
 
         DriveForwardsOrBackwards(speed);
 
+
         while (leftDrive.isBusy() && rightDrive.isBusy())
         {
 
@@ -229,50 +277,16 @@ public abstract class RobotsBase extends LinearOpMode
 
     //Arm Methods
 
-    public void ArmsUp ()
+    public void RaiseArm ()
     {
-        leftArm.setPower(0.8);
-        rightArm.setPower(0.8);
-        Thread.sleep(2000); //fix this later
-        leftArm.setPower(0);
-        rightArm.setPower(0);
+
     }
 
-    public void ArmsDown ()
+    public void LowerArm ()
     {
-        leftArm.setPower(-0.25);
-        rightArm.setPower(-0.25);
-        Thread.sleep(2000); //fix this later
-        leftArm.setPower(0);
-        rightArm.setPower(0);
+
     }
 
-    public void CollectorUpAndOut ()
-    {
-        armRaiser.setPower(0.5);
-        Thread.sleep(1000);
-        armRaiser.setPower(0);
-    }
-
-    public void CollectorBackAndIn ()
-    {
-        armRaiser.setPower(-0.5);
-        Thread.sleep(1000);
-        armRaiser.setPower(0);
-    }
-
-    public void CollectAThing ()
-    {
-        if (thingsInBot < 2)
-        {
-            //collect
-            thingsInBot = thingsInBot+1;
-        } else
-        {
-
-        }
-
-    }
 
     public void DumpAndReset ()
     {

@@ -12,6 +12,8 @@ public class SprocketsTeleOp extends RobotsBase
     @Override
     public void DefineOpMode ()
     {
+        waitForStart();
+
         while (opModeIsActive())
         {
             leftDrive.setPower(-gamepad1.left_stick_y/2);

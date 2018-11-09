@@ -14,8 +14,9 @@ public abstract class BaseAutonomous extends RobotsBase
     @Override
     public void DefineOpMode ()
     {
+        waitForStart();
+
         DriveTheRobot();
     }
-    public String test = "test";
 
 }
