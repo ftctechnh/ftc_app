@@ -122,7 +122,7 @@ public class auto2 extends LinearOpMode {
         sample = PracticeSample.Center;
 
 
-        AutoTransitioner.transitionOnStop(this, "TeleOp");
+        AutoTransitioner.transitionOnStop(this, "teleOp");
 
         telemetry.update();
         waitForStart();
@@ -189,11 +189,11 @@ public class auto2 extends LinearOpMode {
                     }
                     //Center
                     else {
-                        Drive.moveForward(0.5, 2.1);
+                        Drive.moveForward(0.5, 2.2);
                         Drive.TimeDelay(0.1);
-                        Drive.turnLeft(0.4, 0.3);
+                        Drive.tankDrive(-0.4, 0, 0.48);
                         Claimer.drop();
-                        Drive.TimeDelay(1.0);
+                        Drive.TimeDelay(2.0);
                         Claimer.reset();
                         Drive.moveBackward(0.5, 3.7);
                         newState(State.STATE_STOP);
