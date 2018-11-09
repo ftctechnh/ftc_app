@@ -9,10 +9,10 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SamplingOrderExample;
-//import static org.firstinspires.ftc.teamcode.auto.State.STATE_STOP;
+//import static org.firstinspires.ftc.teamcode.auto2.State.STATE_STOP;
 
-@Autonomous(name = "Auto1", group = "Drive")
-public class auto extends LinearOpMode {
+@Autonomous(name = "Auto2", group = "Drive")
+public class auto2 extends LinearOpMode {
 
     /* Methods */
     DriveControl Drive = new DriveControl();
@@ -22,6 +22,10 @@ public class auto extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
+
+    public void auto2() {
+
+    }
 
     //State changing array
     private void newState(State newState) {
@@ -118,7 +122,7 @@ public class auto extends LinearOpMode {
         sample = PracticeSample.Center;
 
 
-        AutoTransitioner.transitionOnStop(this, "TeleOp");
+        AutoTransitioner.transitionOnStop(this, "teleOp");
 
         telemetry.update();
         waitForStart();
@@ -149,127 +153,51 @@ public class auto extends LinearOpMode {
 
                 case STATE_MOVE_TO_CRATER:
                     if (sample == PracticeSample.Left){
-                       if (now < 0.15){
-                            Drive.turnLeft(0.4);
-                       }
-                       else if (now < 0.3){
-                           Drive.stop();
-                       }
-                       //Sample left to move forward
-                       else if (now < 1.45) {
-                           Drive.moveForward(0.55);
-                       }
-                       else {
-                           newState(State.STATE_STOP);
-                       }
-                    }
+                       Drive.turnLeft(0.4, 0.15);
+                       Drive.TimeDelay(0.15);
+                       Drive.moveForward(0.55,1.15);
+                       newState(State.STATE_STOP);
+                         }
                     else if (sample == PracticeSample.Right){
-                        if (now < 0.15){
-                            Drive.turnRight(0.4);
-                        }
-                        else if (now < 0.25){
-                            Drive.stop();
-                        }
-                        //Sample right to move forward
-                        else if (now < 1.45) {
-                            Drive.moveForward(0.5);
-                        }
-                        else {
-                            newState(State.STATE_STOP);
-                        }
+
+                       Drive.turnRight(0.4, 0.15);
+                       Drive.TimeDelay(0.1);
+                       Drive.moveForward(0.5, 1.20);
+                       newState(State.STATE_STOP);
+
                     }
                     else {
-                        if (now < 1.25){
-                            Drive.moveForward(0.5);
-                        }
-                        else {
-                            newState(State.STATE_STOP);
-                        }
-                    }
-                    /*Drive.moveForward(0.75);
-                    if (now > 1) {
+                        Drive.moveForward(0.5, 1.25);
                         newState(State.STATE_STOP);
-                    }*/
+                    }
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
                     if (sample == PracticeSample.Left){
-                        if (now < 0.15){
-                            Drive.turnLeft(0.4);
-                        }
-                        else if (now < 0.3){
-                            Drive.stop();
-                        }
-                        //Sample left to move forward (test before adjusting)
-                        else if (now < 1.5) {
-
-                            Drive.moveForward(0.55);
-                        }
-                        else if (now < 1.65){
-                            Drive.stop();
-                        }
-                        else if(now < 2.1){
-                            Drive.turnRight(0.4);
-                        }
-                        else {
-                            newState(State.STATE_STOP);
-                        }
+                         Drive.turnLeft(0.4, 0.15);
+                         Drive.TimeDelay(0.15);
+                         Drive.moveForward(0.55, 1.2);
+                         Drive.TimeDelay(0.15);
+                         Drive.turnRight(0.4, 0.36);
+                         newState(State.STATE_STOP);
                     }
+
                     else if (sample == PracticeSample.Right){
-                        if (now < 0.15){
-                            Drive.turnRight(0.4);
-                        }
-                        else if (now < 0.25){
-                            Drive.stop();
-                        }
-                        //Sample right to move forward
-                        else if (now < 1.45) {
-                            Drive.moveForward(0.5);
-                        }
-                        else {
+                            Drive.turnRight(0.4, 0.15);
+                            Drive.moveForward(0.5, 1.2);
                             newState(State.STATE_STOP);
-                        }
                     }
                     //Center
                     else {
-                        if (now < 2.3){
-                            Drive.moveForward(0.5);
-                        }
-                        else if (now < 2.4 ){
-                            Drive.stop();
-                        }
-                        else if (now < 2.8){
-                            Drive.turnLeft(0.4);
-                        }
-                        else if (now < 3.8){
-                            Drive.stop();
-                            Claimer.drop();
-                        }
-                        else if(now < 7.5){
-                            Claimer.reset();
-                            Drive.moveBackward(0.5);
-                        }
-                        else {
-                            newState(State.STATE_STOP);
-                        }
-                    }
-                    /*if (sample == Sample.Left){
-                        if (now < 0.15){
-                            Drive.turnLeft(0.5);
-                        }
-                    }
-                    else if (sample == Sample.Right) {
-                        if (now < 0.15) {
-                            Drive.turnRight(0.5);
-                        } else {
-                            Drive.moveForward(1.25);
-                        }
+                        Drive.moveForward(0.5, 2.2);
+                        Drive.TimeDelay(0.1);
+                        Drive.tankDrive(-0.4, 0, 0.48);
+                        Claimer.drop();
+                        Drive.TimeDelay(2.0);
+                        Claimer.reset();
+                        Drive.moveBackward(0.5, 3.7);
                         newState(State.STATE_STOP);
                     }
-                    /*Drive.moveForward(0.75);
-                    if (now > 1.25) {
-                        newState(State.STATE_STOP);
-                    }*/
                     break;
 
                 case STATE_STOP:
