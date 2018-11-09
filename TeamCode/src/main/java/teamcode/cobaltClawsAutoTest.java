@@ -37,6 +37,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private ColorSensor colorSensorInner;
 
     //1000 ticks is about 26 inches
+    private final double inchConversionRatio = 34.46;
+
+    //100 ticks is about  degrees
+    private final double degreeConversionRatio = 1;
 
     public enum Direction {Forward, Backward, Left, Right}
 
@@ -304,8 +308,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         telemetry.update();
     }
 
-    public void move(Direction direction, int distance, double speed) {
+    public void move(Direction direction, int inches, double speed) {
 
+        //Changes inches to work with ticks
+        inches *= inchConversionRatio;
 
         //Resets encoder and moves the inputted ticks
         RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -317,13 +323,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         if (direction == Direction.Forward) {
 
-            LeftDriveMotor.setTargetPosition(distance);
-            RightDriveMotor.setTargetPosition(distance);
+            LeftDriveMotor.setTargetPosition(inches);
+            RightDriveMotor.setTargetPosition(inches);
 
         } else if (direction == Direction.Backward) {
 
-            LeftDriveMotor.setTargetPosition(-distance);
-            RightDriveMotor.setTargetPosition(-distance);
+            LeftDriveMotor.setTargetPosition(-inches);
+            RightDriveMotor.setTargetPosition(-inches);
 
         }
 
@@ -342,8 +348,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    public void turn(Direction direction, int distance, double speed) {
+    public void turn(Direction direction, int degrees, double speed) {
 
+        //Changes degrees to work with ticks
+        degrees *= degreeConversionRatio;
 
         //Resets the encoders and does a left point turn for the inputted degrees
         RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -354,15 +362,15 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         if (direction == Direction.Left) {
 
-            RightDriveMotor.setTargetPosition(distance);
-            LeftDriveMotor.setTargetPosition(-distance);
+            RightDriveMotor.setTargetPosition(degrees);
+            LeftDriveMotor.setTargetPosition(-degrees);
 
         }
 
         if (direction == Direction.Right) {
 
-            RightDriveMotor.setTargetPosition(-distance);
-            LeftDriveMotor.setTargetPosition(distance);
+            RightDriveMotor.setTargetPosition(-degrees);
+            LeftDriveMotor.setTargetPosition(degrees);
 
         }
 
@@ -396,7 +404,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    public boolean isGold() {
+    /*public boolean isGold() {
 
         if ((((colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
                 && (colorSensorOuter.green() >= (2 * colorSensorOuter.blue()))) ||
@@ -408,6 +416,23 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         return false;
 
+    }*/
+
+    public boolean isGold() {
+        int minRed = 40;
+        double minDifference = 1.5;
+
+        if (colorSensorInner.red() > minRed &&
+                (colorSensorInner.red() / colorSensorInner.blue()) >= minDifference) {
+            return true;
+        }
+
+        if (colorSensorOuter.red() > minRed &&
+                (colorSensorOuter.red() / colorSensorOuter.blue()) >= minDifference) {
+            return true;
+        }
+
+        return false;
     }
 
     //Moves arm servos to indicated positions
