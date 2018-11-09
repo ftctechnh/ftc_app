@@ -19,6 +19,15 @@ public class VoltageTeleOp extends VoltageBase
 
         while (opModeIsActive())
         {
+            leftDrive.setPower(-gamepad1.left_stick_y/2);
+            rightDrive.setPower(-gamepad1.right_stick_y/2);
+
+            /*if (gamepad2.a)
+            {
+                RaiseArm();
+            }
+            */
+
             /*
             Put controls here
 

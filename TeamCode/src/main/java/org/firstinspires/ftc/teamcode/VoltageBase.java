@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Benla on 11/9/2018.
@@ -79,8 +80,14 @@ public abstract class VoltageBase extends LinearOpMode
 {
     public abstract void DefineOpMode();
 
+    //Declare Motors
     public DcMotor leftDrive;
     public DcMotor rightDrive;
+    public DcMotor liftMotor;
+
+    //Declare Servos
+    public Servo mineralArm;
+
 
     public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
     public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
@@ -279,6 +286,9 @@ public abstract class VoltageBase extends LinearOpMode
 
     public void RaiseArm ()
     {
+        if (gamepad2.a)
+        {
+        }
 
     }
 
