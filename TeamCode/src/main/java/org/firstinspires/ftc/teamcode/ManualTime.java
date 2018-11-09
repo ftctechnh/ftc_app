@@ -16,4 +16,6 @@ public class ManualTime {
         time += t;
     }
 
+    public void reset() {time = 0;}
+
 }

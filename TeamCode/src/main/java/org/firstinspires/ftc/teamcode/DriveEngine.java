@@ -28,9 +28,21 @@ public class DriveEngine {
     }
 
     public void drive(double x, double y) {
-        //back.setPower(Math.cos(0) * x + Math.cos(0) * y);
-        //right.setPower(Math.cos(Math.PI * 2 / 3) * x + Math.cos(Math.PI * 2 / 3) * y);
-        //left.setPower(Math.cos(Math.PI * 4 / 3) * x + Math.cos(Math.PI * 4 / 3) * y);
+        //back.setPower(Math.cos(0) * x + Math.sin(0) * y);
+        //right.setPower(Math.cos(Math.PI * 2 / 3) * x + Math.sin(Math.PI * 2 / 3) * y);
+        //left.setPower(Math.cos(Math.PI * 4 / 3) * x + Math.sin(Math.PI * 4 / 3) * y);
+
+        back.setPower(x);
+        right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );
+        left.setPower ( (-x/2) + ( (-y*Math.sqrt(3)) / 2 ) );
+    }
+
+    public void drive(double x, double y, double theta) {
+        double xprime = x * Math.cos(theta) - y * Math.sin(theta);
+        double yprime = x * Math.sin(theta) + y * Math.cos(theta);
+
+        x = xprime;
+        y = yprime;
 
         back.setPower(x);
         right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );

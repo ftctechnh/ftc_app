@@ -137,6 +137,13 @@ public class Bogg
         else
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }
+    public void manualDrive(double theta)
+    {
+        if(gamepad.left_stick_button)
+            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y, theta);
+        else
+            driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
+    }
 
     public boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
     {
