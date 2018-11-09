@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class CRServo {
 
     public com.qualcomm.robotcore.hardware.CRServo crs;
-    HardwareMap hwmap;
+    public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 
@@ -21,3 +21,5 @@ public class CRServo {
 
 
 }
+
+//Eesh isn't part of the cool club!

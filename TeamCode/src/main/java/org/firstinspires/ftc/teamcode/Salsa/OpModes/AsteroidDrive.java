@@ -15,12 +15,11 @@ import org.firstinspires.ftc.teamcode.Salsa.Vision.Vuforia;
 @TeleOp(name = "Four Wheel Drive Salsa", group = "Salsa")
 public class AsteroidDrive extends OpMode {
 
-    Robot robot = new Robot();
-    Asteroid asteroid = new Asteroid();
+    public Asteroid asteroid = new Asteroid();
 
     @Override
     public void init() {
-        robot.initDrivetrain(hardwareMap);
+        asteroid.robot.initDrivetrain(hardwareMap);
     }
 
     @Override

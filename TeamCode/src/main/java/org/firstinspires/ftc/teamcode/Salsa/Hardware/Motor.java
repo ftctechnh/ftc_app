@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Motor {
 
     public DcMotor dcm;
-    HardwareMap hwmap;
+    public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 

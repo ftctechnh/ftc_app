@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class ColorSensor {
 
     public ColorSensor cs;
-    HardwareMap hwmap;
+    public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 

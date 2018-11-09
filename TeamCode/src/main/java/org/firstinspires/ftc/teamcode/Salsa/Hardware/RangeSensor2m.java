@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistanc
 public class RangeSensor2m {
 
     public SensorREV2mDistance rs2m;
-    HardwareMap hwmap;
+    public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 

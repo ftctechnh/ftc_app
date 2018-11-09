@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 public class Robot {
 
     public HardwareMap hwmap = null;
-    public Constants constants = new Constants();
+    private Constants constants = new Constants();
 
     public DcMotor leftFront = null;
     public DcMotor leftBack = null;
@@ -61,5 +61,12 @@ public class Robot {
         //Webcam
         webcamFront = hwmap.get(WebcamName.class, constants.WEBCAM_FRONT_NAME);
 
+    }
+
+    public void sleep(int ms) {
+        int startTime = (int)System.currentTimeMillis();
+        while (startTime + ms > (int)System.currentTimeMillis()) {
+            //do nothing, as we are in break :)
+        }
     }
 }

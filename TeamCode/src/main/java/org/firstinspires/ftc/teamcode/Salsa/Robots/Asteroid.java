@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Salsa.Robots;
 
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 
 /**
  * Created by adityamavalankar on 11/5/18.
@@ -9,8 +11,7 @@ import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 
 public class Asteroid {
 
-    Robot robot = new Robot();
-    Constants constants = new Constants();
+    public Robot robot = new Robot();
 
     public void drive(double leftJoystick, double rightJoystick) {
 

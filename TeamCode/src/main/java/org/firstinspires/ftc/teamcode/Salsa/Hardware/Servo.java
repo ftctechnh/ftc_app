@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Servo {
 
     public com.qualcomm.robotcore.hardware.Servo s;
-    HardwareMap hwmap;
+    public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 
