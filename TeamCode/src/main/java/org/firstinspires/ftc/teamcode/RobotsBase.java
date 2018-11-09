@@ -17,7 +17,7 @@ public abstract class RobotsBase extends LinearOpMode
     public DcMotor leftArm;
     public DcMotor rightArm;
     public DcMotor armRaiser;
-
+public String stringTestAgain = "yep this works";
 
     public abstract void DefineOpMode();
 
