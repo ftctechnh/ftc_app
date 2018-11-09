@@ -18,6 +18,7 @@ public abstract class RobotsBase extends LinearOpMode
     public DcMotor rightArm;
     public DcMotor armRaiser;
 
+
     public abstract void DefineOpMode();
 
     public double inchConstantActual = 1;
@@ -37,6 +38,7 @@ public abstract class RobotsBase extends LinearOpMode
         leftArm = hardwareMap.dcMotor.get("leftArm");
         rightArm = hardwareMap.dcMotor.get("rightArm");
         armRaiser = hardwareMap.dcMotor.get("armRaiser");
+
 
         //hardwaremap
 

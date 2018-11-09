@@ -226,12 +226,3 @@ public abstract class VoltageBaseAutonomous extends LinearOpMode {
     }
 
 }
-
-    //Movement Methods
-
-
-
-
-    //Arm Methods
-
-
