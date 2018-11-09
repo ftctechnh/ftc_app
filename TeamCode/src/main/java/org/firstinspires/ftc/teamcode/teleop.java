@@ -63,7 +63,7 @@ public class teleop extends LinearOpMode {
 
             if (gamepad1.left_stick_x > 0.4) {
                 Drive.turnLeft(speed/2);
-            } else if (gamepad1.left_stick_x < -0.25) {
+            } else if (gamepad1.left_stick_x < -0.4) {
                 Drive.turnRight(speed/2);
             }
 
