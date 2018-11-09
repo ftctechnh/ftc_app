@@ -1,0 +1,28 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion '27.0.3'
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 19
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../libs'
+    }
+}
+
+dependencies {
+    compile (name:'Inspection-release', ext: 'aar')
+    compile(name: 'RobotCore-release', ext: 'aar')
+    compile (name:'Hardware-release', ext: 'aar')
+    compile (name:'FtcCommon-release', ext: 'aar')
+}
