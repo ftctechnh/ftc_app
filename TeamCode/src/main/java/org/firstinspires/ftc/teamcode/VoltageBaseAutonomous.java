@@ -20,7 +20,6 @@ public abstract class VoltageBaseAutonomous extends LinearOpMode {
     public int thingsInBot = 0;
 
     public boolean RobotIsGoingForwards = true;
-
     @Override
     public void runOpMode()
     {
@@ -168,6 +167,8 @@ public abstract class VoltageBaseAutonomous extends LinearOpMode {
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         DriveForwardsOrBackwards(speed);
+
+    }
 
         while (leftDrive.isBusy() && rightDrive.isBusy())
         {
