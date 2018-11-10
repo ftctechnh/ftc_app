@@ -24,16 +24,11 @@ import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 @Autonomous(name="Depot - Same - Simple single sample")
 public class SimpleSingleSampling extends AutoUtils {
 
+    public DepotEndGoal goal;
+
     public static int overrideTrajectoryIndex = -1;
     public static int unhookFromLander = 1;
 
-    double TURN_MAX_SPEED = 0.6;
-    double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45;
-
-    private ElapsedTime runtime = new ElapsedTime();
-    private static final float mmPerInch        = 25.4f;
-    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;
-    private static final float mmTargetHeight   = (6) * mmPerInch;
     @Override
     public void runOpMode() throws InterruptedException {
         // Set up road runner
@@ -73,48 +68,24 @@ public class SimpleSingleSampling extends AutoUtils {
         turnToPos(0);
 
         // Strafe to wall
-        followPath(drive, Paths.UNDO_UNHOOK);
+        if (goal == DepotEndGoal.BLUE_DOUBLE_SAMPLE) {
+            followPath(drive, Paths.FORWARD_RIGHT);
+        } else if (goal == DepotEndGoal.BLUE_CRATER) {
+            followPath(drive, Paths.UNDO_UNHOOK);
+        } else { // goal == RED_CRATER
+            followPath(drive, Paths.UNHOOK);
+        }
 
         // Deploy the team marker
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
-        robot.sleep(750);
 
-        followPath(drive, Paths.DEPOT_TO_SAME_CRATER);
-    }
-
-    public void turnToPos(double pos) {
-        double difference = Double.MAX_VALUE;
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        while(Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && opModeIsActive()) {
-            robot.updateReadings();
-
-            difference = robot.getSignedAngleDifference(robot.normAngle(pos), robot.getGyroHeading());
-            double turnSpeed = Math.max(-TURN_MAX_SPEED, Math.min(TURN_MAX_SPEED, difference));
-
-            turnSpeed = Math.copySign(Math.max(0.05, Math.abs(turnSpeed)), turnSpeed);
-
-            telemetry.addData("Turn rate: ", turnSpeed);
-            telemetry.update();
-
-            double[] unscaledMotorPowers = new double[4];
-
-            for (int i = 0; i < unscaledMotorPowers.length; i++) {
-                if (i % 2 == 0) {
-                    unscaledMotorPowers[i] = -turnSpeed;
-                } else {
-                    unscaledMotorPowers[i] = turnSpeed;
-                }
-            }
-            telemetry.update();
-
-            robot.setMotorSpeeds(unscaledMotorPowers);
-        }
-        stopMoving();
-    }
-    public void stopMoving() {
-        for (DcMotor m : robot.motorArr) {
-            m.setPower(0);
+        if (goal == DepotEndGoal.BLUE_CRATER) {
+            followPath(drive, Paths.DEPOT_TO_SAME_CRATER);
+        } else if (goal == DepotEndGoal.RED_CRATER) {
+            followPath(drive, Paths.DEPOT_TO_OTHER_CRATER);
+        } else {
+            // The double sample!
+            followPath(drive, Paths.DEPO_TO_CRATER_SELECTOR[trajectoryIndex]);
         }
     }
 }

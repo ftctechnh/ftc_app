@@ -56,6 +56,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         // Intake flipper servos are disabled by default
         waitForStart();
+        robot.soundEffects.playEffect("begin");
         robot.markerDeployer.setPosition(0.9);
         loopTime.reset();
 

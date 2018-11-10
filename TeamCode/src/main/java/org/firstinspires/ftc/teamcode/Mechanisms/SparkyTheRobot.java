@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.teamcode.Hardware.MecanumHardware;
+import org.firstinspires.ftc.teamcode.Utilities.Audio.SoundEffectManager;
 
 public class SparkyTheRobot extends MecanumHardware {
     public LynxModule rightHub;
@@ -25,6 +26,8 @@ public class SparkyTheRobot extends MecanumHardware {
     public Intake intake;
 
     public ServoImplEx markerDeployer;
+
+    public SoundEffectManager soundEffects;
 
     public SparkyTheRobot(LinearOpMode oM) {super(oM);}
 
@@ -54,6 +57,8 @@ public class SparkyTheRobot extends MecanumHardware {
         rightFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        soundEffects = new SoundEffectManager(hwMap.appContext, SoundEffectManager.PACMAN_AUDIO);
 
         super.init(calibrate);
     }
