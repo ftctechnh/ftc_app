@@ -1,11 +1,18 @@
 package org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Sensors.IMU;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -19,6 +26,7 @@ public class DriveControl {
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     //private String name = "Drive Train";
     private ElapsedTime runtime = new ElapsedTime();
+    IMU imu = new IMU();
 
     //initializing motors
     private DcMotor FrontRightM = null;
@@ -53,7 +61,6 @@ public class DriveControl {
         FrontLeftM.setPower(0);
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
-
     }
 
     //setting power to move forward
@@ -112,6 +119,52 @@ public class DriveControl {
         stop();
     }
 
+    public void turn2angle (int angle){
+        imu.angle2turn = (angle - imu.trueAngle);
+
+        if (imu.angle2turn > 180){
+            imu.angle2turn -= 360;
+        }
+        if (imu.angle2turn < -180){
+            imu.angle2turn += 360;
+        }
+
+        if (imu.angle2turn > 15) {
+            turnRight(imu.turnSpeed);
+        }
+        else if (imu.angle2turn < -15) {
+            turnLeft(imu.turnSpeed);
+        }
+        else {
+            stop();
+        }
+    }
+
+    public void turnAngle (int angle) {
+        imu.angle2turn = (angle + imu.trueAngle);
+
+        if (imu.startTrueAngle == 180) {
+            imu.startTrueAngle = imu.trueAngle;
+        }
+
+        if (imu.angle2turn > 180){
+            imu.angle2turn -= 360;
+        }
+        if (imu.angle2turn < -180){
+            imu.angle2turn += 360;
+        }
+
+        if (imu.angle2turn > 15) {
+            turnRight(imu.turnSpeed);
+        }
+        else if (imu.angle2turn < -15) {
+            turnLeft(imu.turnSpeed);
+        }
+        else {
+            stop();
+            imu.startTrueAngle = 180;
+        }
+    }
     //setting power to 0
     public void stop() {
         FrontRightM.setPower(0);
