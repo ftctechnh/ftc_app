@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SamplingOrderExample;
+import org.firstinspires.ftc.teamcode.Sensors.IMU;
 //import static org.firstinspires.ftc.teamcode.auto2.State.STATE_STOP;
 
 @Autonomous(name = "Auto2", group = "Drive")
@@ -19,6 +20,7 @@ public class auto2 extends LinearOpMode {
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
+    IMU imu = new IMU();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
@@ -112,6 +114,7 @@ public class auto2 extends LinearOpMode {
 
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
+        imu.init(hardwareMap);
         //Sample.init();
 
         telemetry.addLine("Autonomous");
@@ -198,7 +201,7 @@ public class auto2 extends LinearOpMode {
                     Claimer.drop();
                     Drive.TimeDelay(2.0);
                     Claimer.reset();
-                    newState(State.STATE_DEPOT_TO_CRATER)
+                    newState(State.STATE_DEPOT_TO_CRATER);
                     break;
 
                 case STATE_DEPOT_TO_CRATER:
