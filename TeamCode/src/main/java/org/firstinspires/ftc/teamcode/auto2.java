@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SamplingOrderExample;
+import org.firstinspires.ftc.teamcode.Sensors.IMU;
 //import static org.firstinspires.ftc.teamcode.auto2.State.STATE_STOP;
 
 @Autonomous(name = "Auto2", group = "Drive")
@@ -19,18 +20,16 @@ public class auto2 extends LinearOpMode {
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
+    IMU imu = new IMU();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
-
-    public void auto2() {
-
-    }
 
     //State changing array
     private void newState(State newState) {
         mCurrentState = newState;
         Drive.stop();
+        Drive.TimeDelay(0.1);
         resetClock();
     }
 
@@ -51,7 +50,7 @@ public class auto2 extends LinearOpMode {
         }
     }
 
-    //Start array
+    //Sample position testing array
     public void samplePosition() {
         telemetry.addLine("Sample position?");
         telemetry.update();
@@ -77,22 +76,19 @@ public class auto2 extends LinearOpMode {
         lastReset = runtime.seconds();
     }
 
-    //Makes the enum stuff work
-    private State mCurrentState;
-    private Start orientation;
-    private PracticeSample sample;
-
     /* Variables go here */
 
-    //State selection term variables
+    //State selection variable options
     private enum State {
         STATE_INITIAL,
         STATE_MOVE_TO_DEPOT,
         STATE_MOVE_TO_CRATER,
+        STATE_CLAIM,
+        STATE_DEPOT_TO_CRATER,
         STATE_STOP
     }
 
-    //Start position term variables
+    //Start position variable options
     private enum Start {
         Crater,
         Depot
@@ -104,6 +100,11 @@ public class auto2 extends LinearOpMode {
         Center
     }
 
+    //Enum variables (creates variables of the enum variable types previously created)
+    private State mCurrentState;
+    private Start orientation;
+    private PracticeSample sample;
+
     //time based variables
     double lastReset = 0;
     double now = 0;
@@ -113,6 +114,7 @@ public class auto2 extends LinearOpMode {
 
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
+        imu.init(hardwareMap);
         //Sample.init();
 
         telemetry.addLine("Autonomous");
@@ -190,14 +192,21 @@ public class auto2 extends LinearOpMode {
                     //Center
                     else {
                         Drive.moveForward(0.5, 2.2);
-                        Drive.TimeDelay(0.1);
-                        Drive.tankDrive(-0.4, 0, 0.48);
-                        Claimer.drop();
-                        Drive.TimeDelay(2.0);
-                        Claimer.reset();
-                        Drive.moveBackward(0.5, 3.7);
-                        newState(State.STATE_STOP);
+                        newState(State.STATE_CLAIM);
                     }
+                    break;
+
+                case STATE_CLAIM:
+                    Drive.tankDrive(-0.4, 0, 0.48);
+                    Claimer.drop();
+                    Drive.TimeDelay(2.0);
+                    Claimer.reset();
+                    newState(State.STATE_DEPOT_TO_CRATER);
+                    break;
+
+                case STATE_DEPOT_TO_CRATER:
+                    Drive.moveBackward(0.5, 3.7);
+                    newState(State.STATE_STOP);
                     break;
 
                 case STATE_STOP:

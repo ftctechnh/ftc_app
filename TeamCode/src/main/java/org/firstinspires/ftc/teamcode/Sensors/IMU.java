@@ -58,9 +58,11 @@ public class IMU {
         trueAngle = startAngle-currentAngle;
 
         //keeps the angle in a 360 degree range so there is only one number or each orientation
-        if (trueAngle > 180)
+        if (trueAngle > 180){
             trueAngle -= 360;
-        if (trueAngle < -180)
+        }
+        if (trueAngle < -180){
             trueAngle += 360;
+        }
     }
 }
