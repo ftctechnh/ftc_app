@@ -58,7 +58,7 @@ public class RoverDrive
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftBack    = hwMap.get(DcMotor.class, "left_back");
+        leftBack  = hwMap.get(DcMotor.class, "left_back");
         rightBack = hwMap.get(DcMotor.class, "right_back");
         //We have AndyMark motors, but our direction of drive is opposite of what is suggested in the below comments
         leftBack.setDirection(DcMotor.Direction.REVERSE); // Set to REVERSE if using AndyMark motors
