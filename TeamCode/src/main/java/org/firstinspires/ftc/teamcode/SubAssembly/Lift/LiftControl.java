@@ -14,32 +14,31 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class LiftControl {
     /* Declare private class object */
-    private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
-    private HardwareMap hardwareMap;     /* local copy of HardwareMap object from opmode class */
+    //private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
+    HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     private String name = "Lift";
 
     //initializing motors, servos, and sensors
-    private DcMotor LifterRightM;
-    private DcMotor LifterLeftM;
+    private DcMotor LifterRightM = null;
+    private DcMotor LifterLeftM = null;
     private Servo LockRightS;
     private Servo LockLeftS;
-    private TouchSensor LifterButtonT;
-    private TouchSensor LifterButtonB;
+    private TouchSensor LifterButtonT = null;
+    private TouchSensor LifterButtonB = null;
 
+
+    public LiftControl() {
+    }
 
     /* Subassembly constructor */
-    public LiftControl(LinearOpMode opMode) {
+    public void init(HardwareMap ahwMap) {
         /* Set local copies from opmode class */
-        telemetry = opMode.telemetry;
-        hardwareMap = opMode.hardwareMap;
-
-        telemetry.addLine(name + " initialize");
-
+        hwMap = ahwMap;
         // Map hardware devices
-        LifterRightM = hardwareMap.dcMotor.get("LifterRightM");
-        LifterLeftM = hardwareMap.dcMotor.get("LifterLeftM");
-        LockRightS = hardwareMap.servo.get("LockRightS");
-        LockLeftS = hardwareMap.servo.get("LockLeftS");
+        LifterRightM = hwMap.dcMotor.get("LifterRightM");
+        LifterLeftM = hwMap.dcMotor.get("LifterLeftM");
+        LockRightS = hwMap.servo.get("LockRightS");
+        LockLeftS = hwMap.servo.get("LockLeftS");
 
         //reverses some motors
         LifterLeftM.setDirection(DcMotor.Direction.REVERSE);
@@ -48,9 +47,6 @@ public class LiftControl {
         LifterLeftM.setPower(0);
 
 
-    }
-
-    public LiftControl() {
     }
 
     //setting power to lower the robot or reach the lift up

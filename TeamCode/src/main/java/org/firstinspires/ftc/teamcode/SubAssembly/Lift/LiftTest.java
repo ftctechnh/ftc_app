@@ -16,7 +16,6 @@ public class LiftTest extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("Lift Test: ");
-
         /* initialize sub-assemblies
          */
         LiftControl Lift = new LiftControl();
