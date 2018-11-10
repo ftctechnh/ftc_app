@@ -409,15 +409,32 @@ abstract public class superAuto extends LinearOpMode {
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 double currentHeading = angles.firstAngle;
                 int degrees = (int)currentHeading;
-
                 while (targetVisible == false) {
-                    degrees+=10;
+                    degrees+=13;
+                    if (degrees >360)//This is incorrect since there is no 360. Range is from 0->180, -180->0
+                        break;
                     pivotTo(degrees);
+                    Wait(2);
+                    for (VuforiaTrackable trackable : allTrackables) {
+                        if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                            telemetry.addData("Visible Target", trackable.getName());
+                            targetVisible = true;
+                            break;
+                        }
+                    }
+                    if (targetVisible)
+                        break;
+                }
+                if (!targetVisible){
+                    telemetry.addData("We have pivoted 360 degrees and haven't seen anything.  We Have Depression Now!  Target Visible = ", targetVisible);
+                    sR();
+                    //Move Code: eventually use range sensor to move NOT INTO A CORNER
+                    //This stop robot is because we have pivoted 360 degrees but still havent seen a picture
+                    //We will have to work on this but for now, whatever :)
+                }
                 }
                  }
             telemetry.update();
-
-        }
         return 0;
     }
 
@@ -457,7 +474,7 @@ abstract public class superAuto extends LinearOpMode {
                 telemetry.addData("posy ",posy );
                 telemetry.addData("i", i);
                 telemetry.update();
-                Wait(10);
+                Wait(5);
 
                 //Power the motors
                 if ( ( posy != 0) || ( posx != 0 ) ) {
@@ -682,17 +699,20 @@ abstract public class superAuto extends LinearOpMode {
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
         //Pivot to clockwise is negative.
-        float fudgeFactor = .25f;
+        float fudgeFactor = .5f;
 
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double currentHeading = angles.firstAngle;
-        double wheelPower = .3;
+        double wheelPower = .2;
+        telemetry.addData("target: ", target);
+        telemetry.update();
 
         while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             if (angles != null) {
                 currentHeading = angles.firstAngle;
+                telemetry.addData("current heading: ", currentHeading);
                 telemetry.update();
                 if (target - currentHeading > 0) {
                     motorFL.setPower(-wheelPower);
@@ -713,7 +733,7 @@ abstract public class superAuto extends LinearOpMode {
 
     public double compassConverter(double raw)
     {
-           double compass = 3;
+           double compass;
 
             if (raw < 0)
             {
@@ -726,6 +746,7 @@ abstract public class superAuto extends LinearOpMode {
             }
         return compass;
     }
+    //Write convert back from compass
 
     String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
