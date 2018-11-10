@@ -33,7 +33,11 @@ public class DriveControl {
     double currentAngle;
     double trueAngle;
     double angle2turn;
-    double targetAngle = 0;
+    double startTrueAngle = 180;
+
+
+    public double moveSpeed = 0.5;
+    public double turnSpeed = 0.4;
 
     /* Declare public class object */
 
@@ -136,10 +140,51 @@ public class DriveControl {
     }
 
     public void turn2angle (int angle){
-        targetAngle = angle;
-        angle2turn = (targetAngle - trueAngle);
+        angle2turn = (angle - trueAngle);
+
+        if (angle2turn > 180){
+            angle2turn -= 360;
+        }
+        if (angle2turn < -180){
+            angle2turn += 360;
+        }
+
+        if (angle2turn > 15) {
+            turnRight(turnSpeed);
+        }
+        else if (angle2turn < -15) {
+            turnLeft(turnSpeed);
+        }
+        else {
+            stop();
+        }
     }
 
+    public void turnAngle (int angle) {
+        angle2turn = (angle + trueAngle);
+
+        if (startTrueAngle = 180) {
+            startTrueAngle = trueAngle;
+        }
+
+        if (angle2turn > 180){
+            angle2turn -= 360;
+        }
+        if (angle2turn < -180){
+            angle2turn += 360;
+        }
+
+        if (angle2turn > 15) {
+            turnRight(turnSpeed);
+        }
+        else if (angle2turn < -15) {
+            turnLeft(turnSpeed);
+        }
+        else {
+            stop();
+            startTrueAngle = 180;
+        }
+    }
     //setting power to 0
     public void stop() {
         FrontRightM.setPower(0);
