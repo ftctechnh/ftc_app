@@ -1,11 +1,18 @@
 package org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Sensors.IMU;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -19,25 +26,13 @@ public class DriveControl {
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     //private String name = "Drive Train";
     private ElapsedTime runtime = new ElapsedTime();
-
-    BNO055IMU imu;
-    Orientation angles;
+    IMU imu = new IMU();
 
     //initializing motors
     private DcMotor FrontRightM = null;
     private DcMotor FrontLeftM = null;
     private DcMotor BackRightM = null;
     private DcMotor BackLeftM = null;
-
-    double startAngle;
-    double currentAngle;
-    double trueAngle;
-    double angle2turn;
-    double startTrueAngle = 180;
-
-
-    public double moveSpeed = 0.5;
-    public double turnSpeed = 0.4;
 
     /* Declare public class object */
 
@@ -66,21 +61,6 @@ public class DriveControl {
         FrontLeftM.setPower(0);
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
-
-        /* initialize IMU */
-        // Send telemetry message to signify robot waiting;
-        telemetry.addLine("Init imu");    //
-        BNO055IMU.Parameters imu_parameters = new BNO055IMU.Parameters();
-        imu_parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        imu_parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imu_parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        imu_parameters.loggingEnabled = true;
-        imu_parameters.loggingTag = "IMU";
-        imu_parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(imu_parameters);
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-
     }
 
     //setting power to move forward
@@ -140,20 +120,20 @@ public class DriveControl {
     }
 
     public void turn2angle (int angle){
-        angle2turn = (angle - trueAngle);
+        imu.angle2turn = (angle - imu.trueAngle);
 
-        if (angle2turn > 180){
-            angle2turn -= 360;
+        if (imu.angle2turn > 180){
+            imu.angle2turn -= 360;
         }
-        if (angle2turn < -180){
-            angle2turn += 360;
+        if (imu.angle2turn < -180){
+            imu.angle2turn += 360;
         }
 
-        if (angle2turn > 15) {
-            turnRight(turnSpeed);
+        if (imu.angle2turn > 15) {
+            turnRight(imu.turnSpeed);
         }
-        else if (angle2turn < -15) {
-            turnLeft(turnSpeed);
+        else if (imu.angle2turn < -15) {
+            turnLeft(imu.turnSpeed);
         }
         else {
             stop();
@@ -161,28 +141,28 @@ public class DriveControl {
     }
 
     public void turnAngle (int angle) {
-        angle2turn = (angle + trueAngle);
+        imu.angle2turn = (angle + imu.trueAngle);
 
-        if (startTrueAngle = 180) {
-            startTrueAngle = trueAngle;
-        }
-
-        if (angle2turn > 180){
-            angle2turn -= 360;
-        }
-        if (angle2turn < -180){
-            angle2turn += 360;
+        if (imu.startTrueAngle == 180) {
+            imu.startTrueAngle = imu.trueAngle;
         }
 
-        if (angle2turn > 15) {
-            turnRight(turnSpeed);
+        if (imu.angle2turn > 180){
+            imu.angle2turn -= 360;
         }
-        else if (angle2turn < -15) {
-            turnLeft(turnSpeed);
+        if (imu.angle2turn < -180){
+            imu.angle2turn += 360;
+        }
+
+        if (imu.angle2turn > 15) {
+            turnRight(imu.turnSpeed);
+        }
+        else if (imu.angle2turn < -15) {
+            turnLeft(imu.turnSpeed);
         }
         else {
             stop();
-            startTrueAngle = 180;
+            imu.startTrueAngle = 180;
         }
     }
     //setting power to 0
@@ -227,22 +207,5 @@ public class DriveControl {
         do {
             now = runtime.seconds() - start;
         }while (now<time);
-    }
-
-    public void IMUinit (){
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX, AngleUnit.DEGREES);
-        startAngle = angles.firstAngle;
-    }
-
-    public void IMUupdate(){
-        angles = imu.getAngularOrientation(Axesreference.INTRINSIC, axesOrder.ZYX, AngleUnit.DEGREES);
-        currentAngle = angles.firstAngle;
-        trueAngle = startAngle-currentAngle;
-
-        //keeps the angle in a 360 degree range so there is only one number or each orientation
-        if (trueAngle > 180)
-            trueAngle -= 360;
-        if (trueAngle < -180)
-            trueAngle += 360;
     }
 }
