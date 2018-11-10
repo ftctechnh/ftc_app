@@ -20,11 +20,20 @@ public class DriveControl {
     //private String name = "Drive Train";
     private ElapsedTime runtime = new ElapsedTime();
 
+    BNO055IMU imu;
+    Orientation angles;
+
     //initializing motors
     private DcMotor FrontRightM = null;
     private DcMotor FrontLeftM = null;
     private DcMotor BackRightM = null;
     private DcMotor BackLeftM = null;
+
+    double startAngle;
+    double currentAngle;
+    double trueAngle;
+    double angle2turn;
+    double targetAngle = 0;
 
     /* Declare public class object */
 
@@ -53,6 +62,20 @@ public class DriveControl {
         FrontLeftM.setPower(0);
         BackRightM.setPower(0);
         BackLeftM.setPower(0);
+
+        /* initialize IMU */
+        // Send telemetry message to signify robot waiting;
+        telemetry.addLine("Init imu");    //
+        BNO055IMU.Parameters imu_parameters = new BNO055IMU.Parameters();
+        imu_parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        imu_parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        imu_parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        imu_parameters.loggingEnabled = true;
+        imu_parameters.loggingTag = "IMU";
+        imu_parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(imu_parameters);
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
     }
 
@@ -112,6 +135,11 @@ public class DriveControl {
         stop();
     }
 
+    public void turn2angle (int angle){
+        targetAngle = angle;
+        angle2turn = (targetAngle - trueAngle);
+    }
+
     //setting power to 0
     public void stop() {
         FrontRightM.setPower(0);
@@ -154,5 +182,22 @@ public class DriveControl {
         do {
             now = runtime.seconds() - start;
         }while (now<time);
+    }
+
+    public void IMUinit (){
+        angles = imu.getAngularOrientation(AxesReference.INTRINSIC,AxesOrder.ZYX, AngleUnit.DEGREES);
+        startAngle = angles.firstAngle;
+    }
+
+    public void IMUupdate(){
+        angles = imu.getAngularOrientation(Axesreference.INTRINSIC, axesOrder.ZYX, AngleUnit.DEGREES);
+        currentAngle = angles.firstAngle;
+        trueAngle = startAngle-currentAngle;
+
+        //keeps the angle in a 360 degree range so there is only one number or each orientation
+        if (trueAngle > 180)
+            trueAngle -= 360;
+        if (trueAngle < -180)
+            trueAngle += 360;
     }
 }
