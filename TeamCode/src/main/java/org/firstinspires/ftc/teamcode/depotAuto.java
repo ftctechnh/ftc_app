@@ -15,6 +15,7 @@ public class depotAuto extends LinearOpMode {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+    DcMotor plow;
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -25,15 +26,22 @@ public class depotAuto extends LinearOpMode {
         backLeft = hardwareMap.dcMotor.get("back_left");
         frontRight = hardwareMap.dcMotor.get("front_right");
         frontLeft = hardwareMap.dcMotor.get("front_left");
+        plow = hardwareMap.dcMotor.get("plow");
 
         waitForStart();
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 3.5)) {
+        while (opModeIsActive() && (runtime.seconds() < 3.0)) {
             frontLeft.setPower(0.5);
             backLeft.setPower(0.5);
-            frontRight.setPower(0.5);
-            backRight.setPower(0.5);
+            frontRight.setPower(-0.5);
+            backRight.setPower(-0.5);
+        }
+
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+            plow.setPower(0.5);
         }
 
         runtime.reset();
@@ -41,8 +49,8 @@ public class depotAuto extends LinearOpMode {
         while (opModeIsActive() && (runtime.seconds() < 2)) {
             frontLeft.setPower(-0.5);
             backLeft.setPower(-0.5);
-            frontRight.setPower(-0.5);
-            backRight.setPower(-0.5);
+            frontRight.setPower(0.5);
+            backRight.setPower(0.5);
         }
 
 

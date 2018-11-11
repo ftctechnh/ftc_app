@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -21,17 +22,18 @@ public class tankDrive extends OpMode {
     DcMotor intakeFrontRight;
     DcMotor intakeBackLeft;
     DcMotor intakeBackRight;
-
+    DcMotor plow;
     @Override
     public void init() {
         backRight = hardwareMap.dcMotor.get("back_right");
         backLeft = hardwareMap.dcMotor.get("back_left");
         frontRight = hardwareMap.dcMotor.get("front_right");
         frontLeft = hardwareMap.dcMotor.get("front_left");
-        intakeFrontLeft = hardwareMap.dcMotor.get("intake_front_left");
-        intakeFrontRight = hardwareMap.dcMotor.get("intake_front_right");
-        intakeBackLeft = hardwareMap.dcMotor.get("intake_back_left");
-        intakeBackRight = hardwareMap.dcMotor.get("intake_back_right");
+//        intakeFrontLeft = hardwareMap.dcMotor.get("intake_front_left");
+//        intakeFrontRight = hardwareMap.dcMotor.get("intake_front_right");
+//        intakeBackLeft = hardwareMap.dcMotor.get("intake_back_left");
+//        intakeBackRight = hardwareMap.dcMotor.get("intake_back_right");
+        plow = hardwareMap.dcMotor.get("plow");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
 
@@ -41,23 +43,25 @@ public class tankDrive extends OpMode {
     public void loop() {
         float leftTrigger = gamepad2.left_trigger;
         float rightTrigger = gamepad2.right_trigger;
+        float rightStick = gamepad2.left_stick_y;
 
         frontLeft.setPower(-gamepad1.left_stick_y); //Moves robot forward.
         backLeft.setPower(-gamepad1.left_stick_y);
         frontRight.setPower(-gamepad1.right_stick_y);
         backRight.setPower(-gamepad1.right_stick_y);
+        plow.setPower(-rightStick);
 
-        if(rightTrigger>0){
-            intakeFrontLeft.setPower(1.0);
-            intakeFrontRight.setPower(1.0);
-            intakeBackLeft.setPower(-1.0);
-            intakeBackRight.setPower(-1.0);
-        }
-
-        if(leftTrigger>0){
-            intakeFrontLeft.setPower(-1.0);
-            intakeFrontRight.setPower(-1.0);
-        }
+//        if(rightTrigger>0){
+//            intakeFrontLeft.setPower(1.0);
+//            intakeFrontRight.setPower(1.0);
+//            intakeBackLeft.setPower(-1.0);
+//            intakeBackRight.setPower(-1.0);
+//        }
+//
+//        if(leftTrigger>0){
+//            intakeFrontLeft.setPower(-1.0);
+//            intakeFrontRight.setPower(-1.0);
+//        }
 
 
 
