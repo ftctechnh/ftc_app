@@ -95,6 +95,7 @@ public abstract class VoltageBase extends LinearOpMode {
     public boolean RobotIsGoingForwards = true;
     public int mineralPosition = 0;
     public boolean hanging = true;
+    public int randomChangeSoICanPush = 7;
 
     @Override
     public void runOpMode() {
