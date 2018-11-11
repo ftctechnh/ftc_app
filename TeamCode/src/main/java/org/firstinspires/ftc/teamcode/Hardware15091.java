@@ -85,7 +85,7 @@ public class Hardware15091 {
         int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
         int newTarget = armDrive.getCurrentPosition() + targetDelta;
         armDrive.setTargetPosition(newTarget);
-        return armDrive.getCurrentPosition() - newTarget;
+        return Math.abs(armDrive.getCurrentPosition() - newTarget);
     }
 
     /* local OpMode members. */

@@ -66,10 +66,15 @@ public class Gamepad extends LinearOpMode {
     Hardware15091 robot = new Hardware15091();
     private ElapsedTime armtime = new ElapsedTime();
     private ElapsedTime handtime = new ElapsedTime();
+    private final double SERVO_CYCLE = 50d;
+    private final double SERVO_INCREMENT_MIN = 0.005d;
+    private final double SERVO_INCREMENT_MAX = 0.01d;
 
     // Setup a variable for each drive wheel to save power level for telemetry
     double leftPower;
     double rightPower;
+    double drive, turn;
+    int armsequence = 0;
 
     @Override
     public void runOpMode() {
@@ -84,10 +89,28 @@ public class Gamepad extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            drive = gamepad1.right_stick_y;
+            turn = gamepad1.left_stick_x;
+            if (gamepad1.dpad_down || gamepad2.dpad_down) {
+                drive = 1d;
+            } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
+                drive = -1d;
+            }
 
-            User1();
+            if (gamepad1.dpad_right || gamepad2.dpad_right) {
+                turn = 1d;
+            } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
+                turn = -1d;
+            }
 
-            User2();
+            ArmControl();
+
+            leftPower = Range.scale(drive - turn, -1d, 1d, -1.0, 1.0);
+            rightPower = Range.scale(drive + turn, -1d, 1d, -1.0, 1.0);
+
+            // Send calculated power to wheels
+            robot.leftDrive.setPower(leftPower);
+            robot.rightDrive.setPower(rightPower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -98,33 +121,7 @@ public class Gamepad extends LinearOpMode {
         }
     }
 
-    void User1() {
-        // Choose to drive using either Tank Mode, or POV Mode
-        // Comment out the method that's not used.  The default below is POV.
-
-        // POV Mode uses left stick to go forward, and right stick to turn.
-        // - This uses basic math to combine motions and is easier to drive straight.
-        double drive = gamepad1.right_stick_y;
-        double turn = gamepad1.left_stick_x;
-        if (gamepad1.y) {
-            drive = 1d;
-        } else if (gamepad1.b) {
-            drive = -1d;
-        }
-        leftPower = Range.scale(drive - turn, -1d, 1d, -1.0, 1.0);
-        rightPower = Range.scale(drive + turn, -1d, 1d, -1.0, 1.0);
-
-        // Tank Mode uses one stick to control each wheel.
-        // - This requires no math, but it is hard to drive forward slowly and keep straight.
-        // leftPower  = -gamepad1.left_stick_y ;
-        // rightPower = -gamepad1.right_stick_y ;
-
-        // Send calculated power to wheels
-        robot.leftDrive.setPower(leftPower);
-        robot.rightDrive.setPower(rightPower);
-    }
-
-    void User2() {
+    void ArmControl() {
         double p = 0d;
 
         double armPosition = robot.armServo.getPosition();
@@ -138,21 +135,37 @@ public class Gamepad extends LinearOpMode {
             p = -Range.scale(gamepad2.right_trigger, 0d, 1d, 0d, m);
         }
 
-        if (gamepad2.dpad_up) {
+        if (gamepad2.left_bumper) {
             int gap = robot.setArmTarget(1.2860d);
             p = robot.ARM_POWER;
-            if (Math.abs(gap) < 100) {
+            if (gap < 100) {
                 armPosition = 0.3239d;
-                handPosition = 0.1833d;
+                handPosition = 0.3856d;
             }
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad2.right_bumper) {
             int gap = robot.setArmTarget(2.1030d);
             p = robot.ARM_POWER;
-            if (Math.abs(gap) < 100) {
+            if (gap < 100) {
                 armPosition = 0.0739d;
-                handPosition = 0.6439d;
+                handPosition = 0.8528d;
+            }
+        } else if (gamepad2.x) {
+            if (armsequence == 0) {
+                int howmanyTurnLeft = robot.setArmTarget(0.9800d);
+                p = 0.2d;
+                if (howmanyTurnLeft <= 100) {
+                    handPosition = 0;
+                    armPosition = 1;
+                    armsequence = 1;
+                }
+            }
+
+            if (armsequence == 1) {
+                robot.setArmTarget(0.7540d);
+                p = 0.2d;
             }
         } else {
+            armsequence = 0;
             robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
@@ -164,24 +177,25 @@ public class Gamepad extends LinearOpMode {
             robot.pickupServo.setPosition(0.5d);
         }
 
+
+        if (gamepad2.left_stick_y < 0d && armtime.milliseconds() > SERVO_CYCLE) {
+            armtime.reset();
+            armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+        } else if (gamepad2.left_stick_y > 0d && armtime.milliseconds() > SERVO_CYCLE) {
+            armtime.reset();
+            armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+        }
+
+        if (gamepad2.right_stick_y < 0d && armtime.milliseconds() > SERVO_CYCLE) {
+            handtime.reset();
+            handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+        } else if (gamepad2.right_stick_y > 0d && armtime.milliseconds() > SERVO_CYCLE) {
+            handtime.reset();
+            handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+        }
+
+
         robot.armDrive.setPower(p);
-
-        if (gamepad2.left_stick_y < 0d && armtime.milliseconds() > 45d) {
-            armtime.reset();
-            armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, 0.004d, 0.0125d);
-        } else if (gamepad2.left_stick_y > 0d && armtime.milliseconds() > 45d) {
-            armtime.reset();
-            armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, 0.004d, 0.0125d);
-        }
-
-        if (gamepad2.right_stick_y < 0d && armtime.milliseconds() > 45d) {
-            handtime.reset();
-            handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, 0.004d, 0.0125d);
-        } else if (gamepad2.right_stick_y > 0d && armtime.milliseconds() > 45d) {
-            handtime.reset();
-            handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, 0.004d, 0.0125d);
-        }
-
         robot.armServo.setPosition(armPosition);
         robot.handServo.setPosition(handPosition);
     }
