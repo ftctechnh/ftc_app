@@ -157,6 +157,12 @@ public class MonsieurMallahNavigation extends OpMode {
     private VuforiaTrackable frontCraters;
     private VuforiaTrackable backSpace;
 
+    //Game State
+    private Team team;
+    private StartingPosition position;
+    private Status robotStatus;
+
+
     // Hack stuff.
     private boolean useGyroscope = true;
     private boolean useServoHand = false;
@@ -165,7 +171,7 @@ public class MonsieurMallahNavigation extends OpMode {
     private boolean useNavigation = true;
     private boolean useNavigationDisplay = true;
     private boolean useTestField = false;
-
+    private boolean tryExperiment = true;
 
 
     /**
@@ -185,6 +191,11 @@ public class MonsieurMallahNavigation extends OpMode {
             telemetry.addData("Gyro", "bosch init=" + boschInit);
             telemetry.addData("Gyro", bosch.getCalibrationStatus().toString());
         }
+
+        //init. Game State
+         team = Team.Unknown;
+        position = StartingPosition.Unknown;
+        robotStatus = Status.Lost;
 
         // Initialize the motors.
         if (useMotors) {
@@ -332,10 +343,29 @@ public class MonsieurMallahNavigation extends OpMode {
     @Override
     public void loop() {
 
-      if (gyroAngleCalibrated == false){
-          calibrateGyro();
-      }
+        //
 
+        if (team == Team.Unknown && position == StartingPosition.Unknown) {
+            robotStatus = Status.Lost;
+        } else {
+            robotStatus = Status.OK;
+        }
+
+
+
+        if (robotStatus == Status.Lost){
+
+        }
+
+
+        telemetry.addData("Team", team.name());
+        telemetry.addData("StartPos", position.name());
+        telemetry.addData("Status", robotStatus.name());
+
+
+        if (gyroAngleCalibrated == false){
+            calibrateGyro();
+        }
 
         if (useNavigation) {
             OpenGLMatrix nowLocation = null;
@@ -394,11 +424,6 @@ public class MonsieurMallahNavigation extends OpMode {
             } else {
                 telemetry.addData("Pos", "Unknown");
                 lastLocation = null;
-            }
-
-            boolean doTest = gamepad1.y;
-            if (doTest) {
-                awesomecool();
             }
         }
 
@@ -476,23 +501,9 @@ public class MonsieurMallahNavigation extends OpMode {
             }
 
             // HACK: If driver presses the secret 'y' key, go forward 12 inches, to test encoder.
-            if (useEncoders) {
-                boolean encodertest = gamepad1.y;;;;;;;;;;;;;;;;;;;;
-                if (encodertest) {
-                    double speed = 1;
-                    encoderDrive(speed, 24, 24);
-                }
-            }
-
-            // HACK: If press the secret  y key, go forward 12 inchses to test encider.
-            if (useEncoders) {
-                //boolean encodertest = gamepad1.y;
-                if (false) {
-                    double speed = 1;
-                    encoderDrive(speed, 12, 12);
-                    encoderDrive(speed, 12, -12);
-                    encoderDrive(speed, 12, 12);
-                    encoderDrive(speed,5,5);
+            if (tryExperiment && locationLocked()) {
+                if (gamepad1.y) {
+                    moveTo(new Location(-72, -72, 13));
                 }
             }
 
@@ -515,15 +526,55 @@ public class MonsieurMallahNavigation extends OpMode {
          sleep(2000/45);
      }
 
+     void moveTo(Location targetLocation){
+        //Get location
+         Location currentLocation = getLocation();
+         telemetry.addData("moveTo", "targetLoc = %.0f,%.0f", targetLocation.x,targetLocation.y);
+         telemetry.addData("moveTo", "currentLoc = %.0f,%.0f", currentLocation.x,currentLocation.y);
+
+
+         //Get angle to distination location
+         // what is the angle to the crater?
+         float oppositeSide = targetLocation.x - currentLocation.x;
+         float adjacentSide = targetLocation.y - currentLocation.y;
+         float angletoTarget = (float) Math.toDegrees((float) Math.atan2(adjacentSide, oppositeSide));
+         float currentAngle = getHeading();
+         telemetry.addData("moveTo", "opposite = %.0f, adjacent = %.0f", oppositeSide, adjacentSide);
+         telemetry.addData("moveTo", "targetAngle = %.0f, currentAngle=%.0f", angletoTarget, currentAngle);
+
+         //turn untill current angle = destination angle (or at least 2 degrees from it)
+         //TODO: Make this more fancy impliment turn left/right softly so if we get closer to angle it will turn by smaller increments so it will not make an eternal loop
+
+        /* while (angleDifference(currentAngle, angletoTarget) >= 10) {
+            turnRight();
+             //todo: if current angle is greater than dest. angle turn opposite untill = dest. angle
+         } */
+
+        float distancetoTarget = (float) Math.sqrt( (oppositeSide * oppositeSide) + (adjacentSide * adjacentSide));
+         //encoderDrive(1.0,distancetoTarget);
+         telemetry.addData("moveTo", "distanceToTarget = %.0f", distancetoTarget);
+     }
+
+     float angleDifference(float currentAngle, float angletoTarget){
+         // See https://gamedev.stackexchange.com/questions/4467/comparing-angles-and-working-out-the-difference
+         return  180 - Math.abs(Math.abs(currentAngle - angletoTarget) - 180);
+     }
+
+     enum Status {
+        OK,
+        Lost
+     }
 
     enum StartingPosition {
-        Position_A,
-        Position_B,
-        Position_C,
-        Position_D
+        Unknown,
+        RedCrater,
+        BlueCrater,
+        RedSquare,
+        BlueSquare
     };
 
     enum Team {
+        Unknown,
         TeamBlue,
         TeamRed
     };
@@ -563,14 +614,14 @@ public class MonsieurMallahNavigation extends OpMode {
     private float getGyroHeading() {
         Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         float gyroAngle = exangles.thirdAngle;
-        return gyroAngle;
+        return CrazyAngle.reverseAngle(gyroAngle);
     }
 
     // will not work if have not seen an image yet, it will return 0.0 if it comes to that
     private float getHeading() {
         if (gyroAngleCalibrated == true) {
             float gyroAngle = getGyroHeading();
-            return gyroAngle + gyroAngleOffset;
+            return CrazyAngle.normalizeAngle(gyroAngle + gyroAngleOffset);
         } else {
           float angle = getVuforiaHeading();
           return angle;
@@ -583,7 +634,7 @@ public class MonsieurMallahNavigation extends OpMode {
             return 0.0f;
         }
         float angle = getVuforiaHeadingRaw();
-        // TODO: convert angle using flynn's new functionsa in CrazyAnglre.
+
         if (lastLocationSource == LocationSource.Rover) {
             angle = CrazyAngle.convertRover(angle);
         } else if (lastLocationSource == LocationSource.Crater) {
@@ -606,6 +657,39 @@ public class MonsieurMallahNavigation extends OpMode {
         return angle;
     }
 
+    void figureoutTeam(){
+        Location loc = getLocation();
+        if (loc == null)
+            return;
+
+        float x = loc.x;
+        float y = loc.y;
+
+        // Which starting position am I in?
+        StartingPosition position;
+        if((x>0) && (y>0)){
+            position = StartingPosition.RedCrater;
+        }else if((x>0) && (y<0)) {
+            position = StartingPosition.BlueSquare;
+        }else if((x<0) && (y>0)) {
+            position = StartingPosition.RedSquare;
+        }else {
+            position = StartingPosition.BlueCrater;
+
+        }
+
+
+        // Which team am i on?
+        if ((position == StartingPosition.RedCrater) || (position == StartingPosition.RedSquare))
+        {
+            team = Team.TeamRed;
+        }
+        else
+        {
+            team = Team.TeamBlue;
+        }
+    }
+
 
     private void awesomecool () {
         // TODO: swivel camera until an image is found
@@ -615,35 +699,9 @@ public class MonsieurMallahNavigation extends OpMode {
             return;
         }
 
-        Location loc = getLocation();
-        float x = loc.x;
-        float y = loc.y;
 
-        // Which starting position am I in?
-        StartingPosition position;
-        if((x>0) && (y>0)){
-            position = StartingPosition.Position_A;
-        }else if((x>0) && (y<0)) {
-            position = StartingPosition.Position_D;
-        }else if((x<0) && (y>0)) {
-            position = StartingPosition.Position_B;
-        }else {
-            position = StartingPosition.Position_C;
-        }
 
-        // Which team am i on?
-        Team team;
-        if ((position == StartingPosition.Position_D) || (position == StartingPosition.Position_C))
-        {
-            team = Team.TeamRed;
-        }
-        else
-        {
-            team = Team.TeamBlue;
-        }
-        telemetry.addData("team", team.name());
-
-        // Which crater should i look for?
+        /* Which crater should i look for?
         int targetX = 0;
         int targetY = 0;
         if (team == Team.TeamRed){
@@ -659,7 +717,12 @@ public class MonsieurMallahNavigation extends OpMode {
         float adjacentSide = targetY - loc.y;
         float angletoTarget = (float) Math.toDegrees((float) Math.atan2(adjacentSide, oppositeSide));
         telemetry.addData("target", "x=%d, y=%d, opposite = %.0f, adjacent = %.0f", targetX, targetY, oppositeSide, adjacentSide);
-        telemetry.addData("target", "targetAngle = %.0f", angletoTarget);
+        telemetry.addData("target", "targetAngle = %.0f", angletoTarget); */
+    }
+
+    public void encoderDrive(double speed,
+                             double inches) {
+        encoderDrive(speed, inches, inches);
     }
 
     /*
@@ -942,3 +1005,5 @@ public class MonsieurMallahNavigation extends OpMode {
     }
 }
 
+//if lost
+// swivel around and try to approach nearest image to try and find its own location
