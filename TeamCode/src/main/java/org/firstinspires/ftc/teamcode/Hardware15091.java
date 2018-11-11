@@ -45,29 +45,28 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 
 /**
  * This is NOT an opmode.
- *
+ * <p>
  * This class can be used to define all the specific hardware for a single robot.
  * In this case that robot is a Pushbot.
  * See PushbotTeleopTank_Iterative and others classes starting with "Pushbot" for usage examples.
- *
+ * <p>
  * This hardware class assumes the following device names have been configured on the robot:
  * Note:  All names are lower case and some have single spaces between words.
- *
+ * <p>
  * Motor channel:  Left  drive motor:        "left_drive"
  * Motor channel:  Right drive motor:        "right_drive"
  * Motor channel:  Manipulator drive motor:  "left_arm"
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class Hardware15091
-{
+public class Hardware15091 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
-    public DcMotor  rightDrive  = null;
-    public DcMotor  armDrive     = null;
-    public Servo    armServo    = null;
-    public Servo    handServo   = null;
-    public Servo    netServo   = null;
+    public DcMotor leftDrive = null;
+    public DcMotor rightDrive = null;
+    public DcMotor armDrive = null;
+    public Servo armServo = null;
+    public Servo handServo = null;
+    public Servo pickupServo = null;
     public AnalogInput armAngle = null;
     public AndroidTextToSpeech tts = null;
     public AndroidGyroscope gyro = null;
@@ -76,47 +75,25 @@ public class Hardware15091
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
 
-    public static final double ARM_POWER    =  0.4d;
-    public static final double ARM_MIN = 0.35d, ARM_MAX = 2.08d;
-    public static final double ARM_SERVO_SPEED = 35d;
+    public static final double ARM_POWER = 0.4d;
+    public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
+    public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
 
-    public boolean autoArm = true;
-    public void toggleAutoArm() {
-        autoArm = !autoArm;
-        if (autoArm) {
-            tts.speak("Auto Arm enabled.");
-        } else {
-            tts.speak("Auto Arm disabled.");
-    }
-    }
-
-    public int armSequence = 0;
-
-    public void initiateHook() {
-        if (armSequence == 0) {
-            armSequence = 3;
-            tts.speak("Initiate hook sequence");
-        }
-    }
-
-    public  void initateScoop() {
-        if (armSequence == 0) {
-            armSequence = 6;
-        }
-    }
-
-    public  void initateShoot() {
-        if (armSequence == 0) {
-            armSequence = 9;
-        }
+    public int setArmTarget(double targetToSet) {
+        armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        double voltageDelta = armAngle.getVoltage() - targetToSet;
+        int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
+        int newTarget = armDrive.getCurrentPosition() + targetDelta;
+        armDrive.setTargetPosition(newTarget);
+        return armDrive.getCurrentPosition() - newTarget;
     }
 
     /* local OpMode members. */
-    HardwareMap hwMap           =  null;
-    private ElapsedTime period  = new ElapsedTime();
+    HardwareMap hwMap = null;
+    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
-    public Hardware15091(){
+    public Hardware15091() {
 
     }
 
@@ -126,12 +103,12 @@ public class Hardware15091
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.dcMotor.get("motor_0");
+        leftDrive = hwMap.dcMotor.get("motor_0");
         rightDrive = hwMap.dcMotor.get("motor_1");
-        armDrive    = hwMap.dcMotor.get("motor_2");
+        armDrive = hwMap.dcMotor.get("motor_2");
         armAngle = hwMap.analogInput.get("arm_angle");
         armServo = hwMap.servo.get("servo_1");
-        netServo = hwMap.servo.get("servo_2");
+        pickupServo = hwMap.servo.get("servo_2");
         handServo = hwMap.servo.get("servo_3");
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
@@ -139,7 +116,7 @@ public class Hardware15091
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
         tts = new AndroidTextToSpeech();
         tts.initialize();
@@ -153,10 +130,9 @@ public class Hardware15091
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        // Define and initialize ALL installed servos.
-        InitArm();
+        period.reset();
 
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -165,20 +141,5 @@ public class Hardware15091
 
         tts.speak("Hello aztec, good luck.");
     }
-
-    public void InitArm()
-    {
-        armServo.setPosition(0d);
-        handServo.setPosition(0d);
-        period.reset();
-
-        while(armAngle.getVoltage() > ARM_MIN && (period.seconds() < 10d)) {
-            armDrive.setPower(0.25d);
-        }
-
-        armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
- }
+}
 
