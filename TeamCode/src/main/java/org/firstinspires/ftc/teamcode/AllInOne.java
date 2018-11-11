@@ -284,7 +284,7 @@ public class AllInOne extends OpMode {
             }else{
                 boolean pullUp = gamepad1.dpad_down;
                 boolean pullOut = gamepad1.dpad_up;
-                double pullPower = 0.0;)
+                double pullPower = 0.0;
                 if (pullUp) {
                     pullPower = -1.0;
                 } else if (pullOut) {
@@ -306,9 +306,9 @@ public class AllInOne extends OpMode {
                 float suckOut = gamepad1.right_trigger;
                 double suckPower = 0.0;
                 if ((suckIn > 0.0) && (suckOut == 0.0)) {
-                    extenderPower = -1.0;
+                    suckPower = -1.0;
                 } else if ((suckOut > 0.0) && (suckIn == 0.0)) {
-                    extenderPower = 1.0;
+                    suckPower = 1.0;
                 }
                 tacVac.setPower(suckPower);
 
@@ -328,14 +328,14 @@ public class AllInOne extends OpMode {
             }
             shoulder.setPower(shoulderPower);*/
 
-            // control the vacuum
+          /*  // control the vacuum
             double suckPower = gamepad1.;
             if (gamepad2.left_bumper && gamepad2.right_bumper){
                 shoulderPower = Range.clip( shoulderPower, -0.5, 0.5);
             }else {
                 tacVac.setPower(suckPower);
 
-            }
+            } */
         }
 
 

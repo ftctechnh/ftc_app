@@ -95,7 +95,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@Autonomous(name="Bull...Bull...Bull...RUNNNN!!!! (4 wheel drive)", group="MonsieurMallah")
+@Autonomous(name="Bull...Bull...Bull...RUNNNN!!!! (4 wheel drive)", group="JoeSquishy")
 public class BullRun4 extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
@@ -104,11 +104,11 @@ public class BullRun4 extends OpMode {
     static final double MIN_POS = 0.0;     // Minimum rotational position
 
     //constants from encoder sample
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double COUNTS_PER_MOTOR_REV = 560;    // http://www.revrobotics.com/content/docs/Encoder-Guide.pdf
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 7.75;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * Math.PI);
 
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
@@ -122,8 +122,8 @@ public class BullRun4 extends OpMode {
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
-    private boolean useNavigation = true;
     private boolean madeTheRun = false;
+
     /**
      * Code to run ONCE when the driver hits INIT
      */
@@ -139,11 +139,10 @@ public class BullRun4 extends OpMode {
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-            motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
-
+            motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+            motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
 
             if (useEncoders) {
                 motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -179,7 +178,6 @@ public class BullRun4 extends OpMode {
     public void start () {
         // Reset the game timer.
         runtime.reset();
-
     }
 
     /**
@@ -187,10 +185,6 @@ public class BullRun4 extends OpMode {
      */
     @Override
     public void stop () {
-
-        if (useNavigation) {
-            /** Stop tracking the data sets we care about. */
-        }
     }
 
     /**
@@ -200,20 +194,10 @@ public class BullRun4 extends OpMode {
     public void loop () {
 
         if (madeTheRun == false) {
-            double speed = 1;
+            double speed = 0.5;
 
-            // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 43, 43);
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            turnRight();
-            encoderDrive(speed, 45, 45);
+            // forward 46 inches
+            encoderDrive(speed, 46, 46);
             madeTheRun = true;
         }
 
@@ -222,37 +206,60 @@ public class BullRun4 extends OpMode {
         telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
     }
 
-
+    /*
+     *  Method to perfmorm a relative move, based on encoder counts.
+     *  Encoders are not reset as the move is based on the current position.
+     *  Move will stop if any of three conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Move runs out of time
+     *  3) Driver stops the opmode running.
+     */
     public void encoderDrive(double speed,
                              double leftInches, double rightInches) {
-        int newLeftBackTarget;
-        int newRightBackTarget;
+        int BackLeftTarget = 0;
+        int BackRightTarget = 0;
+        int FrontLeftTarget = 0;
+        int FrontRightTarget = 0;
+
+        // Get the current position.
+        int leftBackCurrent = motorBackLeft.getCurrentPosition();
+        int rightBackCurrent = motorBackRight.getCurrentPosition();
+        int leftFrontCurrent = motorFrontLeft.getCurrentPosition();
+        int rightFrontCurrent = motorFrontRight.getCurrentPosition();
+        telemetry.addData("encoderDrive", "Starting %7d, %7d, %7d, %7d",
+                leftBackCurrent, rightBackCurrent, leftFrontCurrent, rightFrontCurrent);
 
         // Determine new target position, and pass to motor controller
-        newLeftBackTarget = motorBackRight.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightBackTarget = motorBackLeft.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        motorBackRight.setTargetPosition(newLeftBackTarget);
-        motorBackLeft.setTargetPosition(newRightBackTarget);
-        motorFrontRight.setTargetPosition(newLeftBackTarget);
-        motorFrontLeft.setTargetPosition(newRightBackTarget);
+        BackLeftTarget = leftBackCurrent + (int) (leftInches * COUNTS_PER_INCH);
+        BackRightTarget = rightBackCurrent + (int) (rightInches * COUNTS_PER_INCH);
+        FrontLeftTarget = leftFrontCurrent + (int) (leftInches * COUNTS_PER_INCH);
+        FrontRightTarget = rightFrontCurrent + (int) (rightInches * COUNTS_PER_INCH);
 
 
-        /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
+        // HACK ALERT
+        double hackFactor = 2.0; //2.6;
+        BackRightTarget = (int) (BackRightTarget / hackFactor);
+        BackLeftTarget = (int) (BackLeftTarget / hackFactor);
+
+        motorBackRight.setTargetPosition(BackRightTarget);
+        motorBackLeft.setTargetPosition(BackLeftTarget);
+        //motorFrontRight.setTargetPosition(FrontRightTarget);
+        //motorFrontLeft.setTargetPosition(FrontLeftTarget);
+        telemetry.addData("encoderDrive", "Target %7d, %7d, %7d, %7d",
+                BackLeftTarget, BackRightTarget, FrontLeftTarget, FrontRightTarget);
 
         // Turn On RUN_TO_POSITION
-        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-        motorBackRight.setPower(Math.abs(speed));
+        // Start motion.
         motorBackLeft.setPower(Math.abs(speed));
-        motorFrontRight.setPower(Math.abs(speed));
+        motorBackRight.setPower(Math.abs(speed));
         motorFrontLeft.setPower(Math.abs(speed));
+        motorFrontRight.setPower(Math.abs(speed));
+
         // keep looping while we are still active, and there is time left, and both motors are running.
         // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
         // its target position, the motion will stop.  This is "safer" in the event that the robot will
@@ -264,25 +271,40 @@ public class BullRun4 extends OpMode {
                 (motorBackRight.isBusy() && motorBackLeft.isBusy())) {
 
             // Display it for the driver.
-                   // motorBackRight.getCurrentPosition();
-                   // motorBackLeft.getCurrentPosition();
+            telemetry.addData("encoderDrive (BL, BR, FL, FR)", "Running to %7d, %7d, %7d, %7d", BackLeftTarget, BackRightTarget, FrontLeftTarget, FrontRightTarget);
+            telemetry.addData("encoderDrive (BL, BR, FL, FR)", "Running at %7d, %7d, %7d, %7d",
+                    motorBackLeft.getCurrentPosition(),
+                    motorBackRight.getCurrentPosition(),
+                    motorFrontLeft.getCurrentPosition(),
+                    motorFrontRight.getCurrentPosition());
             telemetry.update();
             sleep(100);
         }
 
         // Stop all motion;
-        motorBackRight.setPower(0);
         motorBackLeft.setPower(0);
-        motorFrontRight.setPower(0);
+        motorBackRight.setPower(0);
         motorFrontLeft.setPower(0);
-
+        motorFrontRight.setPower(0);
 
         // Turn off RUN_TO_POSITION
-        motorBackRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorBackLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorFrontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-}
+        motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        telemetry.addData("encoderDrive", "Started at %7d, %7d, %7d, %7d",
+                leftBackCurrent,
+                rightBackCurrent,
+                leftFrontCurrent,
+                rightFrontCurrent);
+        telemetry.addData("encoderDrive", "Finished at %7d, %7d, %7d, %7d",
+                motorBackLeft.getCurrentPosition(),
+                motorBackRight.getCurrentPosition(),
+                motorFrontLeft.getCurrentPosition(),
+                motorFrontRight.getCurrentPosition());
+        telemetry.addData("encoderDrive", "Finish Time at " + motorOnTime.toString());
+        //sleep(10000);
+    }
 
 
     public final void sleep(long milliseconds) {
@@ -292,24 +314,6 @@ public class BullRun4 extends OpMode {
             Thread.currentThread().interrupt();
 
         }
-    }
-
-    //tested to turn aprox. ten to twelve degrees! (Flynn did this completely(No poppa))
-    void turnLeft() {
-        motorBackLeft.setPower(-1.0);
-        motorBackRight.setPower(1.0);
-        motorFrontRight.setPower(1.0);
-        motorFrontLeft.setPower(-1.0);
-        sleep(2000 / 45);
-    }
-
-    //tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
-    void turnRight() {
-        motorBackLeft.setPower(1.0);
-        motorBackRight.setPower(-1.0);
-        motorFrontRight.setPower(-1.0);
-        motorFrontLeft.setPower(1.0);
-        sleep(2000/45);
     }
 }
 
