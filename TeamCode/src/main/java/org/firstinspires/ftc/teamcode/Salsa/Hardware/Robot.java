@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Salsa.Hardware;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Gyroscope;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -18,7 +20,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Robot {
 
-    public HardwareMap hwmap = null;
+    HardwareMap hwmap = null;
+
     private Constants constants = new Constants();
 
     public DcMotor leftFront = null;
@@ -31,20 +34,26 @@ public class Robot {
     public WebcamName webcamFront = null;
     public Orientation angles;
 
-    public void initDrivetrain(HardwareMap inputMap) {
+    public void initDrivetrain(HardwareMap ahwmap) {
 
-        hwmap = inputMap;
+        hwmap = ahwmap;
 
         //Drivetrain
-        leftFront = hwmap.get(DcMotor.class, constants.LEFT_FRONT_NAME);
-        leftBack = hwmap.get(DcMotor.class, constants.LEFT_BACK_NAME);
-        rightFront = hwmap.get(DcMotor.class, constants.RIGHT_FRONT_NAME);
-        rightBack = hwmap.get(DcMotor.class, constants.RIGHT_BACK_NAME);
+        leftFront = hwmap.dcMotor.get(constants.LEFT_FRONT_NAME);
+        leftBack = hwmap.dcMotor.get(constants.LEFT_BACK_NAME);
+        rightFront = hwmap.dcMotor.get(constants.RIGHT_FRONT_NAME);
+        rightBack = hwmap.dcMotor.get(constants.RIGHT_BACK_NAME);
+
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightFront.setDirection(DcMotorSimple.Direction.FORWARD);
+
     }
 
-    public void initSensors(HardwareMap inputMap) {
+    public void initSensors(HardwareMap ahwmap) {
 
-        hwmap = inputMap;
+        hwmap = ahwmap;
 
         //Sensors
         imu = hwmap.get(BNO055IMU.class, constants.GYRO_NAME);
@@ -54,9 +63,9 @@ public class Robot {
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }
 
-    public void initWebcam(HardwareMap inputMap) {
+    public void initWebcam(HardwareMap ahwmap) {
 
-        hwmap = inputMap;
+        hwmap = ahwmap;
 
         //Webcam
         webcamFront = hwmap.get(WebcamName.class, constants.WEBCAM_FRONT_NAME);
