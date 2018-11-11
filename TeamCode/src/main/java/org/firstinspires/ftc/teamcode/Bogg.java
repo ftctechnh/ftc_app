@@ -77,7 +77,7 @@ public class Bogg
         return spinAve;
     }
 
-    public void lift()
+    public void manualLift()
     {
         if(gamepad.y)
         {

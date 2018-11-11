@@ -19,14 +19,8 @@ public class holonomicDrive_0_1 extends LinearOpMode
         waitForStart();
         double x = .6;
 
-//        ElapsedTime timer = new ElapsedTime();
-//        lastTime = 0;
-
         while (opModeIsActive())
         {
-//            time = timer.seconds();
-//            telemetry.addData("clockTime", time-lastTime);
-//            lastTime = time;
 
             if(gamepad1.right_stick_x != 0 )
             {
@@ -37,12 +31,12 @@ public class holonomicDrive_0_1 extends LinearOpMode
                 //robot.manualDrive(Math.PI /180 * some angle in degrees);
                 robot.manualDrive();
             }
-            if(gamepad1.dpad_up)
+            if(gamepad1.dpad_up && x < .7)
             {
                 x+=.01;
             }
 
-            if(gamepad1.dpad_down )
+            if(gamepad1.dpad_down && x > .4)
             {
                 x-=.01;
             }
@@ -50,7 +44,7 @@ public class holonomicDrive_0_1 extends LinearOpMode
 
 
 
-            robot.lift();
+            robot.manualLift();
 
             // Display the current value
             telemetry.addData("Servo x", x);
