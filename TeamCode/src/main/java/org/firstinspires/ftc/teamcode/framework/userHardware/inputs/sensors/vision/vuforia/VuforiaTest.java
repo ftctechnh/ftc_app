@@ -9,7 +9,7 @@ public class VuforiaTest {
     Vuforia vuforia;
 
     public VuforiaTest(){
-        vuforia = new Vuforia();
+        vuforia = new Vuforia(true);
     }
 
     public void getPixel(){

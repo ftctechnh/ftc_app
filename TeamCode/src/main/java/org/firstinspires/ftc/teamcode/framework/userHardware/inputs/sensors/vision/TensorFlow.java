@@ -7,6 +7,9 @@ import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia.VuforiaImpl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
@@ -21,8 +24,12 @@ public class TensorFlow {
 
     private TFObjectDetector tfod;
 
-    public TensorFlow(String camera) {
-        vuforia = new VuforiaImpl(camera);
+    private CameraOrientation orientation;
+
+    public TensorFlow(CameraOrientation cameraOrientation, String camera) {
+        orientation = cameraOrientation;
+
+        vuforia = new VuforiaImpl(camera, false);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -32,8 +39,8 @@ public class TensorFlow {
         }
     }
 
-    public TensorFlow() {
-        this("BACK");
+    public TensorFlow(CameraOrientation cameraOrientation) {
+        this(cameraOrientation,"BACK");
     }
 
     private void initTfod() {
@@ -44,47 +51,175 @@ public class TensorFlow {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
+    public void start(){
+        tfod.activate();
+    }
+    
+    public void pause(){
+        tfod.deactivate();
+    }
+
     public void stop(){
         tfod.shutdown();
     }
 
+    public void setLED(boolean on){
+        vuforia.setLED(on);
+    }
+
     public SamplePosition getSamplePosition(){
         SamplePosition position = SamplePosition.UNKNOWN;
+
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            //List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            List<Recognition> updatedRecognitions = tfod.getRecognitions();
             if (updatedRecognitions != null) {
-                telemetry.addData("# Object Detected", updatedRecognitions.size());
-                if (updatedRecognitions.size() == 3) {
-                    int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                        } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                        } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                        }
-                    }
-                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                            position = SamplePosition.LEFT;
-                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                            position = SamplePosition.RIGHT;
-                        } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                            position = SamplePosition.CENTER;
-                        }
-                    }
+                ArrayList<Mineral> minerals = new ArrayList<>();
+                for(Recognition recognition:updatedRecognitions){
+                    minerals.add(new Mineral(recognition));
                 }
-                telemetry.update();
+                
+                if(minerals.size()>=3)position = samplePositionFromThreeMinerals(minerals);
+                else if(minerals.size()>0)position = samplePositionFromOneMineral(minerals, updatedRecognitions.get(0).getImageWidth(), updatedRecognitions.get(0).getImageHeight());
             }
         }
+
         return position;
+    }
+
+    private SamplePosition samplePositionFromThreeMinerals(ArrayList<Mineral> minerals){
+        SamplePosition position = SamplePosition.UNKNOWN;
+
+        Mineral[] samples = getBottomThreeMinerals(minerals);
+
+        if(samples!=null){
+            Mineral goldMineral = null, silverMineralOne = null, silverMineralTwo = null;
+            for (Mineral mineral:samples){
+                if(mineral.getType()==MineralType.GOLD)goldMineral = mineral;
+                else if(silverMineralOne==null)silverMineralOne = mineral;
+                else silverMineralTwo = mineral;
+            }
+
+            if(goldMineral==null||silverMineralOne==null||silverMineralTwo==null) return position;
+
+            if (goldMineral.getX() != -1 && silverMineralOne.getX() != -1 && silverMineralTwo.getX() != -1) {
+                if (goldMineral.getX() < silverMineralOne.getX() && goldMineral.getX() < silverMineralTwo.getX()) {
+                    position = SamplePosition.LEFT;
+                } else if (goldMineral.getX() > silverMineralOne.getX() && goldMineral.getX() > silverMineralTwo.getX()) {
+                    position = SamplePosition.RIGHT;
+                } else {
+                    position = SamplePosition.CENTER;
+                }
+            }
+        }
+
+        return position;
+    }
+
+    private SamplePosition samplePositionFromOneMineral(ArrayList<Mineral> minerals, int width, int height){
+        SamplePosition position = SamplePosition.UNKNOWN;
+
+        Mineral mineral = getBottomGoldMineral(minerals);
+
+        if(mineral==null)return position;
+
+        if(orientation==CameraOrientation.VIRTICAL){
+            if(mineral.getX()<width/3) position = SamplePosition.LEFT;
+            else if(mineral.getX()<2*(width/3)) position = SamplePosition.CENTER;
+            else position = SamplePosition.RIGHT;
+        } else {
+            if(mineral.getX()<height/3) position = SamplePosition.LEFT;
+            else if(mineral.getX()<2*(height/3)) position = SamplePosition.CENTER;
+            else position = SamplePosition.RIGHT;
+        }
+
+        return position;
+    }
+
+    private Mineral[] getBottomThreeMinerals(ArrayList<Mineral> minerals){
+        if(minerals.size()<3)return null;
+
+        Mineral[] result = minerals.toArray(new Mineral[minerals.size()]);
+
+        Arrays.sort(result, new SortByMineralY());
+
+        Mineral[] last = {result[0],result[1],result[2]};
+
+        return last;
+    }
+
+    private Mineral getBottomGoldMineral(ArrayList<Mineral> minerals){
+
+        ArrayList<Mineral> golds = new ArrayList<>();
+
+        for(Mineral mineral:minerals){
+            if(mineral.getType()==MineralType.GOLD)golds.add(mineral);
+        }
+
+        if(golds.size()<1)return null;
+
+        Mineral[] result = golds.toArray(new Mineral[golds.size()]);
+
+        Arrays.sort(result, new SortByMineralY());
+
+        return result[0];
+    }
+
+    private class SortByMineralY implements Comparator<Mineral>{
+        @Override
+        public int compare(Mineral lhs, Mineral rhs) {
+            return rhs.getY() - lhs.getY();
+        }
+    }
+
+    private class Mineral {
+        
+        private int x,y;
+                
+        double confidence;
+        
+        private MineralType mineralType;
+        
+        public Mineral(Recognition recognition){
+            if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)) mineralType = MineralType.GOLD;
+            else mineralType = MineralType.SILVER;
+            if (orientation == CameraOrientation.VIRTICAL) {
+                this.x = (int)((recognition.getLeft()+recognition.getRight())/2);
+                this.y = (int)((recognition.getTop()+recognition.getBottom())/2);
+            }
+            else {
+                this.x = (int)((recognition.getTop()+recognition.getBottom())/2);
+                this.y = recognition.getImageWidth()-(int)((recognition.getLeft()+recognition.getRight())/2);
+            }
+            this.confidence = recognition.getConfidence();
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public double getConfidence() {
+            return confidence;
+        }
+
+        public MineralType getType() {
+            return mineralType;
+        }
+    }
+
+    private enum MineralType {
+        GOLD,
+        SILVER
+    }
+    
+    public enum CameraOrientation {
+        VIRTICAL,
+        HORIZONTAL
     }
 }

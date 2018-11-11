@@ -7,7 +7,7 @@ public class RelicVuMarkTracker {
     Vuforia vuforia;
 
     public RelicVuMarkTracker(){
-        vuforia = new Vuforia();
+        vuforia = new Vuforia(true);
         //vuforia.setLED(false);
         //vuforia.startTracking("RelicVuMark");
     }

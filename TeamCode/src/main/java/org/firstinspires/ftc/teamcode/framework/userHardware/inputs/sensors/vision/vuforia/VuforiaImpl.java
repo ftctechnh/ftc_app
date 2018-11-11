@@ -6,15 +6,19 @@ public class VuforiaImpl {
 
     public Vuforia vuforia;
 
-    public VuforiaImpl(){
-        vuforia = new Vuforia();
+    public VuforiaImpl(boolean viewer){
+        vuforia = new Vuforia(viewer);
     }
 
-    public VuforiaImpl(String camera) {
-        vuforia = new Vuforia(camera);
+    public VuforiaImpl(String camera, boolean viewer) {
+        vuforia = new Vuforia(camera,viewer);
     }
 
     public VuforiaLocalizer getVuforia(){
         return vuforia.getVuforia();
+    }
+
+    public void setLED(boolean on){
+        vuforia.setLED(on);
     }
 }

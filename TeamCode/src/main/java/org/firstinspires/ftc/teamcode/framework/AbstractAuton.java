@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.framework;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -9,9 +11,9 @@ public abstract class AbstractAuton extends AbstractOpMode {
 
     private boolean threadRunning = false;
 
-    private ArrayList<Exception> exceptions = new ArrayList<>();
+    private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
 
-    public AbstractAuton(){
+    public AbstractAuton() {
     }
 
     @Override
@@ -26,28 +28,28 @@ public abstract class AbstractAuton extends AbstractOpMode {
         threadRunning = true;
         service.execute(InitThread);
 
-        while(!isStopRequested() && !isStarted()){
+        while (!isStopRequested() && !isStarted()) {
             checkException();
-            if(!threadRunning) {
+            if (!threadRunning) {
                 threadRunning = true;
                 service.execute(InitLoopThread);
             }
         }
 
-        while(!isStopRequested() && opModeIsActive() && threadRunning);
+        while (!isStopRequested() && opModeIsActive() && threadRunning) ;
 
         threadRunning = true;
         service.execute(RunThread);
 
-        while(!isStopRequested() && opModeIsActive() && threadRunning){
+        while (!isStopRequested() && opModeIsActive() && threadRunning) {
             checkException();
         }
 
-        if((isStopRequested() || !opModeIsActive()) && threadRunning){
+        if ((isStopRequested() || !opModeIsActive()) && threadRunning) {
             service.shutdownNow();
         }
 
-        while(!service.isTerminated()){
+        while (!service.isTerminated()) {
             service.shutdownNow();
             checkException();
         }
@@ -57,66 +59,79 @@ public abstract class AbstractAuton extends AbstractOpMode {
 
     public abstract void Init();
 
-    public void InitLoop(){
+    public void InitLoop() {
 
     }
 
     public abstract void Run();
 
-    public void Stop(){
+    public void Stop() {
 
     }
 
-    private void throwException(Exception e){
+    private void throwException(Exception e) {
         exceptions.add(e);
     }
 
     private void checkException() {
-        try {
-            for (Exception e : exceptions) {
-                telemetry.update();
-                for (StackTraceElement element : e.getStackTrace()) {
-                    if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
-                        telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.",""));
-                        break;
-                    }
-                }
-                telemetry.update();
-                AbstractOpMode.delay(500);
-                switch (e.getClass().getSimpleName()) {
-                    case "NullPointerException": {
-                        throw new NullPointerException(e.getMessage());
-                    }
-                    case "IllegalArgumentException": {
-                        throw new IllegalArgumentException(e.getMessage());
-                    }
-                    case "ArrayIndexOutOfBoundsException": {
-                        throw new ArrayIndexOutOfBoundsException(e.getMessage());
-                    }
-                    default: {
-                        telemetry.addData(e.toString());
-                    }
+        for (Exception e : exceptions) {
+            telemetry.update();
+            for (StackTraceElement element : e.getStackTrace()) {
+                if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
+                    telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
+                    break;
                 }
             }
-        } catch (ConcurrentModificationException e){}
+            switch (e.getClass().getSimpleName()) {
+                case "NullPointerException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    NullPointerException exception = (NullPointerException) e;
+                    throw exception;
+                }
+                case "IllegalArgumentException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    IllegalArgumentException exception = (IllegalArgumentException) e;
+                    throw exception;
+                }
+                case "ArrayIndexOutOfBoundsException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    ArrayIndexOutOfBoundsException exception = (ArrayIndexOutOfBoundsException) e;
+                    throw exception;
+                }
+                case "ConcurrentModificationException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    ConcurrentModificationException exception = (ConcurrentModificationException) e;
+                    throw exception;
+                }
+                default: {
+                    telemetry.addData(e.getClass().getSimpleName());
+                    telemetry.update();
+                    AbstractOpMode.delay(2000);
+                }
+            }
+        }
     }
 
-    class initThread implements Runnable{
-        public void run(){
+    class initThread implements Runnable {
+        public void run() {
             try {
                 Init();
-            } catch (Exception e){
+            } catch (Exception e) {
                 throwException(e);
             }
             threadRunning = false;
         }
     }
 
-    class initloopThread implements Runnable{
-        public void run(){
+    class initloopThread implements Runnable {
+        public void run() {
             try {
                 InitLoop();
-            } catch (Exception e){
+            } catch (Exception e) {
                 throwException(e);
             }
 
@@ -124,11 +139,11 @@ public abstract class AbstractAuton extends AbstractOpMode {
         }
     }
 
-    class runThread implements Runnable{
-        public void run(){
+    class runThread implements Runnable {
+        public void run() {
             try {
                 Run();
-            } catch (Exception e){
+            } catch (Exception e) {
                 throwException(e);
             }
             threadRunning = false;

@@ -6,7 +6,7 @@ public class SampleVuforia {
     Vuforia vuforia;
 
     public SampleVuforia(){
-        vuforia = new Vuforia();
+        vuforia = new Vuforia(true);
         vuforia.startTracking("Calc_OT");
     }
 
