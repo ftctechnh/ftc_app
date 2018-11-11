@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -10,7 +8,8 @@ import com.qualcomm.robotcore.hardware.TouchSensor;
 public class Sensors {
     HardwareMap hardwareMap;
 
-    Servo dServo;
+    //Servo dServoX;
+    //Servo dServoZ;
 
     public TouchSensor touchTop;
     public TouchSensor touchBottom;
@@ -18,32 +17,30 @@ public class Sensors {
     DistanceSensor dFixed;
     DistanceSensor dMobile;
 
-    ColorSensor colorSensorBottom;
-
     public Sensors(HardwareMap hardwareMap)
     {
         this.hardwareMap = hardwareMap;
-        dServo = hardwareMap.get(Servo.class, "dServo");
+        //dServoX = hardwareMap.get(Servo.class, "dServoX");
+        //dServoZ = hardwareMap.get(Servo.class, "dServoZ");
         dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
-        dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
+        dMobile = hardwareMap.get(DistanceSensor.class, "dMobileZ");
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
-        //colorSensorBottom = hardwareMap.get(ColorSensor.class, "colorSensorBottom");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
     }
 
-    public void rotateMobile(double angle) //in degrees for clarity
+    public void rotateMobileX(double rightOfCenter) //in degrees for clarity
     {
-        //angle    should go from 0   to 180
+        //angle    should go from -90   to 90
         //position should go from min to max
-        double position = angle / 180 + .5;
+        double position = rightOfCenter / 90 ;
 
-        dServo.setPosition(position);
+        //dServoX.setPosition(position);
     }
 
-    public double getMobileAngle()
-    {
-        double position = dServo.getPosition();
-        return (position - .5) * Math.PI;
-    }
+//    public double getMobileAngle()
+//    {
+//        double position = dServoX.getPosition();
+//        return position  * Math.PI;
+//    }
 
 }

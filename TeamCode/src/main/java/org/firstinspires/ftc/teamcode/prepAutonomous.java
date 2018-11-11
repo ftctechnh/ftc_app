@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
 public class prepAutonomous extends LinearOpMode
 {
@@ -24,7 +22,7 @@ public class prepAutonomous extends LinearOpMode
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         action = Mode.Stop;
-        robot.sensors.rotateMobile(0);
+        robot.sensors.rotateMobileX(0);
         waitForStart();
         action = Mode.Drop;
         timer = new ElapsedTime();
