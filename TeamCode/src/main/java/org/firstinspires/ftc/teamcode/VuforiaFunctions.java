@@ -120,7 +120,7 @@ public class VuforiaFunctions
 
     public void scanForObject()
     {
-        
+
     }
 
     public float getXPosIn()
