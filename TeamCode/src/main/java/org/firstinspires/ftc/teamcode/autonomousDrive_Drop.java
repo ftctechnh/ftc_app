@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -12,6 +13,8 @@ public class autonomousDrive_Drop extends LinearOpMode
     Bogg robot;
     Mode action;
     ElapsedTime timer;
+    final double ticksPerRev = 2240;
+    final double inPerRev = Math.PI * 5;
 
     private enum Mode
     {
@@ -24,6 +27,8 @@ public class autonomousDrive_Drop extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         action = Mode.Stop;
         robot.sensors.rotateMobileX(0);
         waitForStart();
@@ -58,12 +63,12 @@ public class autonomousDrive_Drop extends LinearOpMode
                     {
                         robot.lift(.2); //drop a bit more
                     }
-                    else if(t < .6) //for the next .5 seconds
+                    else if(encoderTest(4)) //the back encoder has moved less than 4 inches
                     {
                         robot.lift(0); //stop the lift motor
-                        robot.driveEngine.drive(.2,0); //drive to the side to unhook
+                        robot.driveEngine.drive(.1,0); //drive to the side to unhook
                     }
-                    else //if t > .6
+                    else //if the robot has unhooked
                         action = Mode.Stop;
                     break;
 
@@ -83,6 +88,11 @@ public class autonomousDrive_Drop extends LinearOpMode
             telemetry.update();
             idle();
         }
+    }
+
+    public boolean encoderTest(double back_distance)
+    {
+        return robot.driveEngine.back.getCurrentPosition() / ticksPerRev * inPerRev < back_distance;
     }
 
 
