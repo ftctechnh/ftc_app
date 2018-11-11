@@ -76,8 +76,7 @@ Also general tip, whenever you open a new set of brackets, indent everything ins
  */
 
 @Disabled
-public abstract class VoltageBase extends LinearOpMode
-{
+public abstract class VoltageBase extends LinearOpMode {
     public abstract void DefineOpMode();
 
     //Declare Motors
@@ -88,50 +87,65 @@ public abstract class VoltageBase extends LinearOpMode
     //Declare Servos
     public Servo mineralArm;
 
-
+    //variables or any other data you will use later here
     public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
+    public int encoderTicksperRevConstant = 288;
     public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
-
     public int thingsInBot = 0; //currently not used for anything.
-
     public boolean RobotIsGoingForwards = true;
-
-    //put any other data you will use later here.
+    public int mineralPosition = 0;
+    public boolean hanging = true;
 
     @Override
-    public void runOpMode()
-    {
+    public void runOpMode() {
         //put all initializing stuff here.  hardwaremaps, starting settings for motors and servos, etc.
+        //Map the Motors
+        leftDrive = hardwareMap.get(DcMotor.class, "leftDrive");
+        rightDrive = hardwareMap.get(DcMotor.class, "rightDrive");
+        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
 
-        leftDrive = hardwareMap.dcMotor.get("leftDrive");
-        rightDrive = hardwareMap.dcMotor.get("rightDrive");
+        //Map the Servos
+        mineralArm = hardwareMap.get(Servo.class, "mineralArm");
 
-        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        // Most robots need the motor on one side to be reversed to drive forward
+        // Reverse the motor that runs backwards when connected directly to the battery
+        leftDrive.setDirection(DcMotor.Direction.REVERSE); //Check 3 motors
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
+        liftMotor.setDirection(DcMotor.Direction.REVERSE);
 
+        // Don't let motors move if they're not supposed to
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        //If Using Encoders
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // Some of the servos are flipped, too
+        mineralArm.setDirection(Servo.Direction.REVERSE); //Check
 
         DefineOpMode(); //I moved waitforstart inside defineopmode to make autonomous easier.
     }
 
-    public void DriveMotors (int speed)
-    {
+    //Here is a set of methods for everything the robot needs to do.  These can be used anywhere.
+
+    //Utility Methods
+
+    public void DriveMotors(int speed) {
         leftDrive.setPower(speed);
         rightDrive.setPower(speed);
     }
 
-    public void ChangeDirection ()
-    {
+    public void ChangeDirection() {
         leftDrive.getMode();
         if (leftDrive.getDirection() == DcMotorSimple.Direction.FORWARD
-                && rightDrive.getDirection() == DcMotorSimple.Direction.REVERSE)
-        {
+                && rightDrive.getDirection() == DcMotorSimple.Direction.REVERSE) {
             leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
             rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
             RobotIsGoingForwards = false;
-        } else
-        {
+        } else {
             leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
             rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -139,56 +153,48 @@ public abstract class VoltageBase extends LinearOpMode
         }
     }
 
-    public void ThingsInBotReset ()
-    {
+    public void ThingsInBotReset() {
         thingsInBot = 0;
     }
 
-    public void OffTheLander ()
-    {
+    public void OffTheLander() {
 
     }
 
 
     //Movement Methods
 
-    public void DriveForwardsOrBackwards (int speed)
-    {
+    public void DriveForwardsOrBackwards(int speed) {
         DriveMotors(speed);
     }
 
-    public void TurnLeft (int speed)
-    {
-        leftDrive.setPower(-speed);
-        rightDrive.setPower(speed);
-    }
-
-    public void TurnRight (int speed)
-    {
+    public void TurnLeft(int speed) {
         leftDrive.setPower(speed);
         rightDrive.setPower(-speed);
     }
 
-    public void StopDriving ()
-    {
+    public void TurnRight(int speed) {
+        leftDrive.setPower(-speed);
+        rightDrive.setPower(speed);
+    }
+
+    public void StopDriving() {
         DriveMotors(0);
     }
 
-    public void DriveForwardsDistance (int speed, int inches)
-    {
+    public void DriveForwardsDistance(int speed, int inches) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(inches/inchConstant);
-        rightDrive.setTargetPosition(inches/inchConstant);
+        leftDrive.setTargetPosition(inches / inchConstant);
+        rightDrive.setTargetPosition(inches / inchConstant);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         DriveForwardsOrBackwards(speed);
 
-        while (leftDrive.isBusy() && rightDrive.isBusy())
-        {
+        while (leftDrive.isBusy() && rightDrive.isBusy()) {
 
         }
 
@@ -198,33 +204,29 @@ public abstract class VoltageBase extends LinearOpMode
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void DriveBackwards (int speed, int inches)
-    {
+    public void DriveBackwards(int speed, int inches) {
         ChangeDirection();
 
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(inches/inchConstant);
-        rightDrive.setTargetPosition(inches/inchConstant);
+        leftDrive.setTargetPosition(inches / inchConstant);
+        rightDrive.setTargetPosition(inches / inchConstant);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         DriveForwardsOrBackwards(speed);
 
-        while (leftDrive.isBusy() && rightDrive.isBusy())
-        {
+        while (leftDrive.isBusy() && rightDrive.isBusy()) {
 
         }
 
         StopDriving();
 
-        if (RobotIsGoingForwards == true)
-        {
+        if (RobotIsGoingForwards == true) {
 
-        } else
-        {
+        } else {
             ChangeDirection();
         }
 
@@ -232,13 +234,12 @@ public abstract class VoltageBase extends LinearOpMode
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void TurnLeftDegrees (int speed, int degrees)
-    {
+    public void TurnLeftDegrees(int speed, int degrees) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(-degrees/degConstant);
-        rightDrive.setTargetPosition(degrees/degConstant);
+        leftDrive.setTargetPosition(-degrees / degConstant);
+        rightDrive.setTargetPosition(degrees / degConstant);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -246,8 +247,7 @@ public abstract class VoltageBase extends LinearOpMode
         DriveForwardsOrBackwards(speed);
 
 
-        while (leftDrive.isBusy() && rightDrive.isBusy())
-        {
+        while (leftDrive.isBusy() && rightDrive.isBusy()) {
 
         }
 
@@ -257,21 +257,19 @@ public abstract class VoltageBase extends LinearOpMode
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void TurnRightDegrees(int speed, int degrees)
-    {
+    public void TurnRightDegrees(int speed, int degrees) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(degrees/degConstant);
-        rightDrive.setTargetPosition(-degrees/degConstant);
+        leftDrive.setTargetPosition(degrees / degConstant);
+        rightDrive.setTargetPosition(-degrees / degConstant);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         DriveForwardsOrBackwards(speed);
 
-        while (leftDrive.isBusy() && rightDrive.isBusy())
-        {
+        while (leftDrive.isBusy() && rightDrive.isBusy()) {
 
         }
 
@@ -284,14 +282,25 @@ public abstract class VoltageBase extends LinearOpMode
 
     //Arm Methods
 
-    public void RaiseArm ()
-    {
-        if (gamepad2.a)
-        {
+    public void extendHook() {
+        if (gamepad1.b = true) {
+            liftMotor.setPower(-0.8);
+            //Fix this – Thread.sleep(2000);
+            liftMotor.setPower(0);
         }
 
     }
 
+    public void contractHook() {
+        if (gamepad1.a = true) {
+            liftMotor.setPower(0.8);
+            //Fix this – Thread.sleep(2000);
+            liftMotor.setPower(0);
+        }
+    }
+
+}
+/*
     public void LowerArm ()
     {
 
@@ -312,6 +321,6 @@ public abstract class VoltageBase extends LinearOpMode
     public void CloseClaw ()
     {
 
-    }
+    };
+*/
 
-}
