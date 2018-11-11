@@ -79,7 +79,10 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
 
                     else if(t >= .6)
                     {
-                        robot.driveEngine.rotate(.05);
+                        if(t/1.5 - Math.floor(t)/1.5 > .60)  //rotates for 60% of 1.5 seconds
+                            robot.driveEngine.rotate(.1);
+                        else
+                            robot.driveEngine.rotate(0);  //and stops so we can see the target
 
                         if(robot.camera.targetVisible() != null) //if we see a camera (null = nothing)
                         {
