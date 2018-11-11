@@ -39,6 +39,7 @@ public class MonsieurMallahChassis extends OpMode {
 
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime dropTime = new ElapsedTime();
 
     // Internal Gyroscope in the Rev Hub.
     private BNO055IMU bosch;
@@ -46,14 +47,15 @@ public class MonsieurMallahChassis extends OpMode {
     // Motors connected to the hub.
     private DcMotor motorLeft;
     private DcMotor motorRight;
-    private DcMotor sweeper;
-    private DcMotor arm;
-    private DcMotor vacuum;
-    private DcMotor extender;
+    // private DcMotor sweeper;
+    // private DcMotor arm;
+    // private DcMotor vacuum;
+    // private DcMotor extender;
 
 
     // Hand servo.
-    private Servo servoHand;
+    // private Servo servoHand;
+    private Servo flagHolder;
     private double angleHand;
 
     // Hack stuff.
@@ -74,17 +76,22 @@ public class MonsieurMallahChassis extends OpMode {
             telemetry.addData("Gyro", bosch.getCalibrationStatus().toString());
         }
 
+
         // Initialize the motors.
         if (useMotors) {
             motorLeft = hardwareMap.get(DcMotor.class, "motor0");
             motorRight = hardwareMap.get(DcMotor.class, "motor1");
-            sweeper = hardwareMap.get(DcMotor.class, "motor2");
-            arm = hardwareMap.get(DcMotor.class, "motor3");
-            extender = hardwareMap.get(DcMotor.class, "motor5");
-            vacuum = hardwareMap.get(DcMotor.class, "motor6");
+            // sweeper = hardwareMap.get(DcMotor.class, "motor2");
+            //   arm = hardwareMap.get(DcMotor.class, "motor3");
+            //  extender = hardwareMap.get(DcMotor.class, "motor5");
+            // vacuum = hardwareMap.get(DcMotor.class, "motor6");
 
-            servoHand = hardwareMap.get(Servo.class, "servo0");
-            angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
+            // servoHand = hardwareMap.get(Servo.class, "servo0");
+            flagHolder = hardwareMap.get(Servo.class, "servo1");
+            angleHand = 0.75;
+            flagHolder.setPosition(angleHand);
+
+            //  angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -143,6 +150,12 @@ public class MonsieurMallahChassis extends OpMode {
         }
     }
 
+    public void dropFlag() {
+        angleHand = 0;
+        flagHolder.setPosition(angleHand);
+
+    }
+
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
@@ -163,8 +176,23 @@ public class MonsieurMallahChassis extends OpMode {
                     leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
             telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
 
+            telemetry.addData("DropTime", dropTime.seconds());
+
+
+            if (gamepad1.x) {
+                dropFlag();
+                dropTime.reset();
+            }
+
+            if (dropTime.seconds() > 3.0) {
+                angleHand = 0.75;
+                flagHolder.setPosition(angleHand);
+            }
+
+
             // Control the extender.
-            boolean extendOut = gamepad1.dpad_up;
+
+          /*  boolean extendOut = gamepad1.dpad_up;
             boolean extendIn = gamepad1.dpad_down;
             double extendPower = 0.0;
             if (extendOut) {
@@ -196,6 +224,7 @@ public class MonsieurMallahChassis extends OpMode {
             }
             arm.setPower(pullPower);
 
+
             // control the hand
             if (gamepad1.dpad_up) {
                 // Keep stepping up until we hit the max value.
@@ -207,10 +236,12 @@ public class MonsieurMallahChassis extends OpMode {
                 angleHand = Math.max(angleHand, MIN_POS);
             }
             servoHand.setPosition(angleHand);
+*/
 
             // HACK: If driver presses the secret 'y' key, go forward 12 inches, to test encoder.
             if (useEncoders) {
-                boolean encodertest = false;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;//gamepad1.x;
+                boolean encodertest = false;
+
                 if (encodertest) {
                     double speed = 1;
                     encoderDrive(speed, 24, 24);
@@ -220,9 +251,13 @@ public class MonsieurMallahChassis extends OpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
 
-           // telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
+
+            // telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
             telemetry.addData("Hand", " angle %5.2f", angleHand);
         }
+
+
+
 
         if (useGyroscope) {
             reportGyroscope();
@@ -291,8 +326,7 @@ public class MonsieurMallahChassis extends OpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
-                             double leftInches, double rightInches) {
+    public void encoderDrive (double speed, double leftInches, double rightInches) {
         int newLeftTarget;
         int newRightTarget;
 
