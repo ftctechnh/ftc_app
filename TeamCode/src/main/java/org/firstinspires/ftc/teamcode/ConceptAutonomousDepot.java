@@ -47,7 +47,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
         //walle.pivot(-thetaDeg);
         while (walle.getDistFromFront_In() > 18)
         {
-            while (!gamepad1.a){}
+            while (!gamepad1.a){} //edit this to be while the forward dist is less than 12
             sleep(336);
             initialD = walle.getDistFromRight_In();
 
@@ -55,32 +55,30 @@ public class ConceptAutonomousDepot extends LinearOpMode
             if (initialD < 4)
             {
                 telemetry.addData("I'm in the <4 Case!", null);
-                walle.pivot(14);
-                while (walle.getDistFromRight_In() < 5) //doing this drive forward until the robot is not too close so the statement is false
+
                 {
                     walle.driveMotorsAuto(.16f,.16f);
                 }
                 walle.stopAllMotors();
-                walle.pivot(-14);
+
             }
             else if (initialD > 7)
             {
                 telemetry.addData("I'm in the >7 Case!", null);
                 walle.pivot(-14);
                 //walle.driveStraight_In(4);
-                while (walle.getDistFromRight_In() > 7) //doing this drive forward until the robot is not too far so the statement is false
+
                 {
                     walle.driveMotorsAuto(.16f,.16f);
                 }
                 walle.stopAllMotors();
-                walle.pivot(14);
+
             }
             else
             {
                 telemetry.addData("I'm in the default Case!", null);
                 walle.driveStraight_In(distToTravel);
-                walle.getDistFromFront_In();
-                telemetry.addData("", walle.getDistFromFront_In());
+
             }
             telemetry.update();
         }
