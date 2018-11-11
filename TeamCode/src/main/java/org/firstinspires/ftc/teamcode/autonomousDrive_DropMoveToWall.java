@@ -18,9 +18,7 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
         Stop,
         Drop,
         MoveToWall,
-        MoveToDepot,
-        DropMarker,
-        MoveToCrater
+        MoveToDepot
     }
 
     private enum StartPosition
@@ -33,20 +31,12 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
     public StartPosition startPosition;
 
 
-    private final double ftPerInch = 1.0/12.0;
-    private final double tilesPerInch = 1.0/24.0;
-
-    private final double minServo = 40;
-    private final double maxServo = 70;
-
-    double x = .5;
-
     @Override
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         action = Mode.Stop;
-        robot.sensors.rotateMobile(0);
+        robot.sensors.rotateMobileX(0);
         waitForStart();
         action = Mode.Drop;
         startPosition = StartPosition.BackBlue;
@@ -61,20 +51,22 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    if(t < 1) //for the first second
-                    {
-                        robot.lift(-0.7); //pull while we
-                        robot.setBrake(.6); //disengage the brake
+                    if(!touchGround) {
+                        if (t < 1) //for the first second
+                        {
+                            robot.lift(-0.7); //pull while we
+                            robot.setBrake(.6); //disengage the brake
+                        } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
+                        {
+                            robot.lift(.2); //push up, which drops the robot
+                        }
+                        else //if we are touching the ground
+                        {
+                            touchGround = true; //set it to true
+                            timer.reset();  //reset the timer (needed because we don't know how long the first section will take)
+                        }
                     }
-                    else if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
-                    {
-                        robot.lift(.2); //push up, which drops the robot
-                    }
-                    else if(!touchGround) //if this variable hasn't been set to true yet
-                    {
-                        touchGround = true; //set it to true
-                        timer.reset();  //reset the timer (needed because we don't know how long the first section will take)
-                    }
+
                     else if(t < .1) //for an additional .1 seconds
                     {
                         robot.lift(.2); //drop a bit more
@@ -173,9 +165,6 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                     robot.lift(0);
 
             }
-
-//            if(gamepad1.right_bumper){timer.addTime(.0001);}
-//            if(gamepad1.left_bumper){timer.addTime(-.0001);}
 
             // Display the current values
             telemetry.addData("time: ", t);

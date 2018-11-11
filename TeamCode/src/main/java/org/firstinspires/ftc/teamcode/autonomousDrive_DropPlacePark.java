@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-import java.time.Clock;
-
 @Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
 public class autonomousDrive_DropPlacePark extends LinearOpMode
 {
@@ -35,20 +33,12 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
     public StartPosition startPosition;
 
 
-    private final double ftPerInch = 1.0/12.0;
-    private final double tilesPerInch = 1.0/24.0;
-
-    private final double minServo = 40;
-    private final double maxServo = 70;
-
-    double x = .5;
-
     @Override
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         action = Mode.Stop;
-        robot.sensors.rotateMobile(0);
+        robot.sensors.rotateMobileX(0);
         waitForStart();
         action = Mode.Drop;
         startPosition = StartPosition.BackBlue;
@@ -60,6 +50,8 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
         while (opModeIsActive())
         {
             double t = timer.seconds();
+            double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
+            double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
             switch(action)
             {
                 case Drop:
@@ -68,7 +60,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                         robot.lift(-0.7); //pull while we
                         robot.setBrake(.6); //disengage the brake
                     }
-                    else if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
+                    else if(mobileDistance > 2.8) //if the robot is still off the ground
                     {
                         robot.lift(.2); //push up, which drops the robot
                     }
@@ -89,6 +81,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
 
                     else if(t >= .6)
                     {
+                        //robot.sensors.dServoZ.setPosition(0);
                         robot.driveEngine.rotate(.05);
 
                         if(robot.camera.targetVisible() != null)
@@ -111,6 +104,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                     break;
 
                 case MoveToWall:
+                    //robot.sensors.dServoX.setPosition(.8);
                     double moveSpeed = .6;
                     double target_radius = 4; //inches
                     double accuracy_angle = 5;
@@ -158,24 +152,19 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                     switch (startPosition)
                     {
                         case BackBlue:
-                            x = .7;
-                            break;
-                        case BackRed:
-                            x = -.7;
-                            break;
                         case FrontRed:
                             x = .7;
                             break;
-                        case FrontBlue:
+                        default:
                             x = -.7;
                             break;
                     }
-                    double y = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
+                    double y = fixedDistance;
                     robot.driveEngine.drive(x,y/6.0);
 
-                    if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) < 6) { //TODO: need new sensor somewhere
+                    if(mobileDistance < 6) { //TODO: need new sensor somewhere or new servo
                         action = Mode.DropMarker;
-                        robot.sensors.rotateMobile(-90);
+                        robot.sensors.rotateMobileX(-90);
                         timer.reset();
                     }
                     break;
@@ -188,10 +177,10 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
 
                 case MoveToCrater:
                     x = -.7;
-                    y = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
+                    y = fixedDistance;
                     robot.driveEngine.drive(x,y/6.0);
 
-                    if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) < 24) {
+                    if(mobileDistance < 24) {
                         action = Mode.Stop;
                     }
                     break;
@@ -203,12 +192,11 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
 
             }
 
-//            if(gamepad1.right_bumper){timer.addTime(.0001);}
-//            if(gamepad1.left_bumper){timer.addTime(-.0001);}
 
             // Display the current values
             telemetry.addData("time: ", t);
-            telemetry.addData("brake x: ", x);
+            telemetry.addData("mobile distance: ", mobileDistance);
+            telemetry.addData("fixed distance", fixedDistance);
             telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
             telemetry.addData("brake position", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());

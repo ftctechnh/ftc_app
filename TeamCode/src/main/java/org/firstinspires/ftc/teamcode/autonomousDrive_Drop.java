@@ -16,41 +16,18 @@ public class autonomousDrive_Drop extends LinearOpMode
     private enum Mode
     {
         Stop,
-        Drop,
-        MoveToWall,
-        MoveToDepot,
-        DropMarker,
-        MoveToCrater
+        Drop
     }
 
-    private enum StartPosition
-    {
-        FrontBlue,
-        BackBlue,
-        FrontRed,
-        BackRed
-    }
-    public StartPosition startPosition;
-
-
-    private final double ftPerInch = 1.0/12.0;
-    private final double tilesPerInch = 1.0/24.0;
-
-    private final double minServo = 40;
-    private final double maxServo = 70;
-
-    double x = .5;
 
     @Override
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         action = Mode.Stop;
-        robot.sensors.rotateMobile(0);
+        robot.sensors.rotateMobileX(0);
         waitForStart();
         action = Mode.Drop;
-        startPosition = StartPosition.BackBlue;
-        boolean midtargetAchieved = false;
         boolean touchGround = false;
         timer = new ElapsedTime();
         timer.startTime();
@@ -77,7 +54,7 @@ public class autonomousDrive_Drop extends LinearOpMode
                         }
                     }
 
-                    else if(t < .1) //for an additional .1 seconds
+                    else if(t < .3) //for an additional .3 seconds
                     {
                         robot.lift(.2); //drop a bit more
                     }
@@ -97,14 +74,10 @@ public class autonomousDrive_Drop extends LinearOpMode
 
             }
 
-//            if(gamepad1.right_bumper){timer.addTime(.1);}
-//            if(gamepad1.left_bumper){timer.addTime(-.1);}
-
             // Display the current values
             telemetry.addData("time: ", t);
             telemetry.addData("brake position: ", robot.brake.getPosition());
             telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
-            telemetry.addData("brake position", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
             telemetry.addData("mode", action);
             telemetry.update();
