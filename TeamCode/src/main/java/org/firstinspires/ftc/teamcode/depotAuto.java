@@ -36,5 +36,15 @@ public class depotAuto extends LinearOpMode {
             backRight.setPower(0.5);
         }
 
+        runtime.reset();
+
+        while (opModeIsActive() && (runtime.seconds() < 2)) {
+            frontLeft.setPower(-0.5);
+            backLeft.setPower(-0.5);
+            frontRight.setPower(-0.5);
+            backRight.setPower(-0.5);
+        }
+
+
     }
 }
