@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import junit.framework.Test;
 
-@TeleOp(name = "Avacado Mecanum TeleOp", group = "Test")
+@TeleOp(name = "Avocado Mecanum TeleOp", group = "Test")
 
 public class TeleOpMecanum extends OpMode {
 
