@@ -278,7 +278,7 @@ public class FourWheelsTwoControllers extends OpMode {
             double suckPower = gamepad2.right_stick_y;
             if (gamepad2.left_bumper && gamepad2.right_bumper){
                 suckPower = Range.clip( suckPower, -0.5, 0.5);
-                tacVac.setPower(suckPower)
+                tacVac.setPower(suckPower);
             }else {
                 tacVac.setPower(suckPower);
 
