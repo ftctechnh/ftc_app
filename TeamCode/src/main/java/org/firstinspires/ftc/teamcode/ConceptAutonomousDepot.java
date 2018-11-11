@@ -11,7 +11,6 @@ public class ConceptAutonomousDepot extends LinearOpMode
 
     public void runOpMode()
     {
-
         walle = new ParadeBot(hardwareMap, this);
         waitForStart();
 
@@ -33,6 +32,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
 
         //drop marker into depot
         walle.pivot(120); */
+       /*
 
         float thetaDeg;
         double initialD, finalD;
@@ -44,43 +44,51 @@ public class ConceptAutonomousDepot extends LinearOpMode
         finalD = walle.getDistFromRight_In();
         thetaDeg = (float) ((Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI);
 
-        //walle.pivot(-thetaDeg);
+        walle.pivot(-thetaDeg);
+        */
+        double frontDist, rightDist;
+
+
         while (walle.getDistFromFront_In() > 18)
         {
-            while (!gamepad1.a){} //edit this to be while the forward dist is less than 12
-            sleep(336);
-            initialD = walle.getDistFromRight_In();
-
-            telemetry.addData("Distance = ", initialD);
-            if (initialD < 4)
+            sleep(400);
+            frontDist = walle.getDistFromFront_In();
+            if(frontDist < 12)
             {
-                telemetry.addData("I'm in the <4 Case!", null);
-
-                {
-                    walle.driveMotorsAuto(.16f,.16f);
-                }
                 walle.stopAllMotors();
-
-            }
-            else if (initialD > 7)
-            {
-                telemetry.addData("I'm in the >7 Case!", null);
-                walle.pivot(-14);
-                //walle.driveStraight_In(4);
-
-                {
-                    walle.driveMotorsAuto(.16f,.16f);
-                }
-                walle.stopAllMotors();
-
+                break;
             }
             else
             {
-                telemetry.addData("I'm in the default Case!", null);
-                walle.driveStraight_In(distToTravel);
+                telemetry.addData("Going forawrd 9", null);
+                walle.driveStraight_In(11);
+            }
 
+            telemetry.addData("front Dist: ", frontDist);
+
+            if (frontDist > 18)
+            {
+                rightDist = walle.getDistFromRight_In();
+                telemetry.addData("frontDist>18", null);
+                telemetry.addData("rightDist ", rightDist);
+                if (rightDist < 4)
+                {
+                    telemetry.addData("rightdist < 4", null);
+                    walle.pivot(15);
+                    walle.driveStraight_In(11);
+                    walle.pivot(-15);
+                }
+                else if (rightDist > 7)
+                {
+                    telemetry.addData("rightdist > 7", null);
+                    walle.pivot(-15);
+                    walle.driveStraight_In(11);
+                    walle.pivot(15);
+                }
             }
             telemetry.update();
+            while(!gamepad1.a)
+            {}
         }
 
         telemetry.addData("Stopped", null);
