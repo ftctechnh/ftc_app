@@ -61,20 +61,22 @@ public class autonomousDrive_Drop extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    if(t < 1) //for the first second
-                    {
-                        robot.lift(-0.7); //pull while we
-                        robot.setBrake(.6); //disengage the brake
+                    if(!touchGround) {
+                        if (t < 1) //for the first second
+                        {
+                            robot.lift(-0.7); //pull while we
+                            robot.setBrake(.6); //disengage the brake
+                        } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
+                        {
+                            robot.lift(.2); //push up, which drops the robot
+                        }
+                        else //if we are touching the ground
+                        {
+                            touchGround = true; //set it to true
+                            timer.reset();  //reset the timer (needed because we don't know how long the first section will take)
+                        }
                     }
-                    else if(robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
-                    {
-                        robot.lift(.2); //push up, which drops the robot
-                    }
-                    else if(!touchGround) //if this variable hasn't been set to true yet
-                    {
-                        touchGround = true; //set it to true
-                        timer.reset();  //reset the timer (needed because we don't know how long the first section will take)
-                    }
+
                     else if(t < .1) //for an additional .1 seconds
                     {
                         robot.lift(.2); //drop a bit more
@@ -84,7 +86,7 @@ public class autonomousDrive_Drop extends LinearOpMode
                         robot.lift(0); //stop the lift motor
                         robot.driveEngine.drive(.2,0); //drive to the side to unhook
                     }
-                    else //if t > 4
+                    else //if t > .6
                         action = Mode.Stop;
                     break;
 
