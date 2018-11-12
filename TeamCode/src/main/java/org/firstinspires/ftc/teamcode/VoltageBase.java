@@ -5,80 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
-/**
- * Created by Benla on 11/9/2018.
- */
-
-/*
-I'm filling out the structure of both team's opmodes.
-
-Here's some more programming stuff
-
-Relevant object types:
-    - int holds a whole number
-    - double and float hold decimal values, but robot hardware doesn't like these as much
-    - Strings hold strings of letters/numbers/whatever.  note that these must be in caps (String not string)
-        - unlike the others, the data they hold must be in quotes
-    - Voids are used for instructions that don't need to output anything.  robotics methods are generally voids.
-
-
-Useful Java Logic Stuff:
-
-    -If/else statements: used to do something once when a condition is met (Ex. pushing a button in teleop)
-
-        if (condition)
-        {
-            effect
-        }
-
-            -These can be chained to fit as many possible outcomes as needed:
-
-            if (condition 1)
-            {
-                effect 1;
-            } else if (condition 2)
-            {
-                effect 2;
-            } else
-            {
-                effect if none of the other conditions are met;
-            }
-
-            -You can also specify multiple conditions
-
-            if (condition1 && condition2)
-            {
-                ...
-            }
-
-
-    -While loop: used for doing something as long as a condition is met (Ex. having teleop controls as long as the game is running)
-
-        while (condition)
-        {
-            effect;
-        }
-
-
-    -In java, = changes a value to what you specify...
-            int myNumber = 2.
-
-        == checks equality.
-            if (myNumber == 2)
-            {
-                ...
-            }
-
-
-Also general tip, whenever you open a new set of brackets, indent everything inside it on level further than the outside.
-    This makes it harder to lose track.
- */
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Disabled
-public abstract class VoltageBase extends LinearOpMode {
-    public abstract void DefineOpMode();
+public abstract class VoltageBase extends LinearOpMode{
 
+    private ElapsedTime runtime = new ElapsedTime();
     //Declare Motors
     public DcMotor leftDrive;
     public DcMotor rightDrive;
@@ -96,9 +28,16 @@ public abstract class VoltageBase extends LinearOpMode {
     public int mineralPosition = 0;
     public boolean hanging = true;
     public int randomChangeSoICanPush = 7;
+    public abstract void DefineOpMode();
 
     @Override
     public void runOpMode() {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // Initialize the hardware variables. Note that the strings used here as parameters
+        // to 'get' must correspond to the names assigned during the robot configuration
+        // step (using the FTC Robot Controller app on the phone).
         //put all initializing stuff here.  hardwaremaps, starting settings for motors and servos, etc.
         //Map the Motors
         leftDrive = hardwareMap.get(DcMotor.class, "leftDrive");
@@ -110,9 +49,9 @@ public abstract class VoltageBase extends LinearOpMode {
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        leftDrive.setDirection(DcMotor.Direction.REVERSE); //Check 3 motors
+        leftDrive.setDirection(DcMotor.Direction.FORWARD); //Check motors, but left and right should be the same in this case
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        liftMotor.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Don't let motors move if they're not supposed to
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -126,8 +65,30 @@ public abstract class VoltageBase extends LinearOpMode {
         // Some of the servos are flipped, too
         mineralArm.setDirection(Servo.Direction.REVERSE); //Check
 
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+        runtime.reset();
+
+        // run until the end of the match (driver presses STOP)
         DefineOpMode(); //I moved waitforstart inside defineopmode to make autonomous easier.
+
+        //Check
+        while (opModeIsActive()) {
+            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.update();
+        }
+
+
+
     }
+
+    /** POV Mode uses left stick to go forward, and right stick to turn.
+     // - This uses basic math to combine motions and is easier to drive straight.
+     double drive = -gamepad1.left_stick_y;
+     double turn  =  gamepad1.right_stick_x;
+     leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
+     rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+     **/
 
     //Here is a set of methods for everything the robot needs to do.  These can be used anywhere.
 
@@ -141,42 +102,33 @@ public abstract class VoltageBase extends LinearOpMode {
     public void ChangeDirection() {
         leftDrive.getMode();
         if (leftDrive.getDirection() == DcMotorSimple.Direction.FORWARD
-                && rightDrive.getDirection() == DcMotorSimple.Direction.REVERSE) {
+                && rightDrive.getDirection() == DcMotorSimple.Direction.FORWARD) {
             leftDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-            rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-
+            rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
             RobotIsGoingForwards = false;
         } else {
             leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-            rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-
+            rightDrive.setDirection(DcMotorSimple.Direction.FORWARD);
             RobotIsGoingForwards = true;
         }
-    }
-
-    public void ThingsInBotReset() {
-        thingsInBot = 0;
-    }
-
-    public void OffTheLander() {
-
     }
 
 
     //Movement Methods
 
+    //Tank Drive
     public void DriveForwardsOrBackwards(int speed) {
         DriveMotors(speed);
     }
 
     public void TurnLeft(int speed) {
-        leftDrive.setPower(speed);
-        rightDrive.setPower(-speed);
+        leftDrive.setPower(-speed);
+        rightDrive.setPower(speed);
     }
 
     public void TurnRight(int speed) {
-        leftDrive.setPower(-speed);
-        rightDrive.setPower(speed);
+        leftDrive.setPower(speed);
+        rightDrive.setPower(-speed);
     }
 
     public void StopDriving() {
@@ -196,16 +148,15 @@ public abstract class VoltageBase extends LinearOpMode {
         DriveForwardsOrBackwards(speed);
 
         while (leftDrive.isBusy() && rightDrive.isBusy()) {
-
+            //Wait until the target position is reached
         }
-
+        //Stop and change modes back to normal
         StopDriving();
-
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void DriveBackwards(int speed, int inches) {
+    public void DriveBackwardsDistance(int speed, int inches) {
         ChangeDirection();
 
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -220,7 +171,7 @@ public abstract class VoltageBase extends LinearOpMode {
         DriveForwardsOrBackwards(speed);
 
         while (leftDrive.isBusy() && rightDrive.isBusy()) {
-
+            //Wait until the target position is reached
         }
 
         StopDriving();
@@ -280,11 +231,10 @@ public abstract class VoltageBase extends LinearOpMode {
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-
     //Arm Methods
 
     public void extendHook() {
-        if (gamepad1.b = true) {
+        if (gamepad2.b = true) {
             liftMotor.setPower(-0.8);
             //Fix this – Thread.sleep(2000);
             liftMotor.setPower(0);
@@ -293,7 +243,7 @@ public abstract class VoltageBase extends LinearOpMode {
     }
 
     public void contractHook() {
-        if (gamepad1.a = true) {
+        if (gamepad2.a = true) {
             liftMotor.setPower(0.8);
             //Fix this – Thread.sleep(2000);
             liftMotor.setPower(0);
@@ -301,27 +251,3 @@ public abstract class VoltageBase extends LinearOpMode {
     }
 
 }
-/*
-    public void LowerArm ()
-    {
-
-    }
-
-
-    public void DumpAndReset ()
-    {
-        //dump
-        thingsInBot = 0;
-    }
-
-    public void OpenClaw ()
-    {
-
-    }
-
-    public void CloseClaw ()
-    {
-
-    };
-*/
-
