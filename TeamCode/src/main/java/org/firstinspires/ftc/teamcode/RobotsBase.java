@@ -40,7 +40,6 @@ public abstract class RobotsBase extends LinearOpMode
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        raiseRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
