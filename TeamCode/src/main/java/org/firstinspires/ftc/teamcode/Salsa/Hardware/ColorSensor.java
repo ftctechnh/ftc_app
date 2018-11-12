@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Created by adityamavalankar on 11/5/18.
  */
 
-public class ColorSensor {
+public abstract class ColorSensor {
 
     public com.qualcomm.robotcore.hardware.ColorSensor cs;
     public HardwareMap hwmap;

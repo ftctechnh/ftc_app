@@ -38,7 +38,7 @@ public class Robot {
     public CRServo mineralFeeder = null;
     public Servo depositerRotate = null;
     public Servo depositerDump = null;
-    public SensorREV2mDistance groundDistance = null;
+    public DistanceSensor groundDistance = null;
 
     public DcMotor mineralShooter = null;
     public DcMotor craterSlides = null;
@@ -89,7 +89,7 @@ public class Robot {
         imu = hwmap.get(BNO055IMU.class, constants.GYRO_NAME);
         leftLine = hwmap.get(ColorSensor.class, constants.LEFT_COLOR_NAME);
         rightLine = hwmap.get(ColorSensor.class, constants.RIGHT_COLOR_NAME);
-        groundDistance = hwmap.get(SensorREV2mDistance.class, constants.GROUND_DISTANCE_SENSOR_NAME);
+        groundDistance = hwmap.get(DistanceSensor.class, constants.GROUND_DISTANCE_SENSOR_NAME);
 
         angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
     }

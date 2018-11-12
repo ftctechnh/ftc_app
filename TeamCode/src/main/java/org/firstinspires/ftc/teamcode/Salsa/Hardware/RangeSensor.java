@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Created by adityamavalankar on 11/5/18.
  */
 
-public class RangeSensor {
+public abstract class RangeSensor {
 
     public DistanceSensor rs;
     public HardwareMap hwmap;
