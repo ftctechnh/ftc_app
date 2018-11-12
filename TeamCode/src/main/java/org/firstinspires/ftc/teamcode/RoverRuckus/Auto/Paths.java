@@ -27,14 +27,6 @@ public class Paths {
             .lineTo(new Vector2d(3, 0), new ConstantInterpolator(0))
             .build();
 
-    static Trajectory TURN_UNHOOK = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .turn(Math.PI/3)
-            .build();
-
-    static Trajectory TURN_UNDO_UNHOOK = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .turn(-Math.PI/3)
-            .build();
-
     static Trajectory BACKUP = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(-15, 0), new ConstantInterpolator(0))
             .build();
@@ -49,7 +41,7 @@ public class Paths {
 
     public static Pose2d DEPOT_START = new Pose2d(-START_DIST, START_DIST, Math.PI*0.75);
 
-    public static Pose2d CRATER_START = new Pose2d(START_DIST, START_DIST, Math.PI*0.25);
+    public static Pose2d CRATER_START = new Pose2d(START_DIST, START_DIST, Math.PI*1.25);
     static Trajectory DEPOT_TO_SAME_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(-100, -20), new ConstantInterpolator(0))
             .build();
@@ -112,19 +104,25 @@ public class Paths {
 
     static Trajectory CRATER_SAME_RIGHT = new TrajectoryBuilder(CRATER_START, DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(26, 52, Math.PI*0.25))
+            .splineTo(new Pose2d(48, 24, Math.PI*1.25))
+            .splineTo(new Pose2d(-30, 63, Math.PI))
+            .splineTo(new Pose2d(-63, 63, Math.PI))
             .closeComposite()
             .build();
 
     static Trajectory CRATER_SAME_LEFT = new TrajectoryBuilder(CRATER_START, DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(52, 26, Math.PI*0.25))
+            .splineTo(new Pose2d(24, 48, Math.PI*1.25))
+            .splineTo(new Pose2d(-30, 63, Math.PI))
+            .splineTo(new Pose2d(-63, 63, Math.PI))
             .closeComposite()
             .build();
 
     static Trajectory CRATER_SAME_CENTER = new TrajectoryBuilder(CRATER_START, DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(36, 36, Math.PI*0.25))
+            .splineTo(new Pose2d(36, 36, Math.PI*1.25))
+            .splineTo(new Pose2d(-30, 63, Math.PI))
+            .splineTo(new Pose2d(-63, 63, Math.PI))
             .closeComposite()
             .build();
 

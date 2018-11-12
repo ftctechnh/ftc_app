@@ -10,10 +10,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 @Config
 public class Intake {
     public static double FLIPPER_START = 0;
-    public static double LEFT_DEPOSIT_DIST = 0.35;
-    public static double RIGHT_DEPOSIT_DIST = 0.35;
-    public static double LEFT_COLLECT_DIST = 0;
-    public static double RIGHT_COLLECT_DIST = 0;
+    public static double DEPOSIT_DIST = 0.35;
+    public static double COLLECT_DIST = 0;
 
     public static double MAX_INTAKE_SPEED = 0.8;
     public static double MAX_PWN = 2800;
@@ -47,18 +45,20 @@ public class Intake {
     }
 
     public void deposit() {
-        leftIntakeFlipper.setPosition(LEFT_DEPOSIT_DIST);
-        rightIntakeFlipper.setPosition(RIGHT_DEPOSIT_DIST);
+        setPos(DEPOSIT_DIST);
     }
 
     public void collect() {
-        leftIntakeFlipper.setPosition(LEFT_COLLECT_DIST);
-        rightIntakeFlipper.setPosition(RIGHT_COLLECT_DIST);
+        setPos(COLLECT_DIST);
     }
 
     public void goToMin() {
-        leftIntakeFlipper.setPosition(1);
-        rightIntakeFlipper.setPosition(1);
+        setPos(1);
+    }
+
+    public void setPos(double pos) {
+        leftIntakeFlipper.setPosition(pos);
+        rightIntakeFlipper.setPosition(pos);
     }
 
     public void enableFlippers() {
