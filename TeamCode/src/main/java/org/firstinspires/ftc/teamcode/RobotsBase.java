@@ -30,6 +30,9 @@ public abstract class RobotsBase extends LinearOpMode
     @Override
     public void runOpMode()
     {
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         leftDrive = hardwareMap.dcMotor.get("leftDrive");
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         leftArm = hardwareMap.dcMotor.get("leftArm");
@@ -40,6 +43,7 @@ public abstract class RobotsBase extends LinearOpMode
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        raiseRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

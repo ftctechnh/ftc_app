@@ -29,6 +29,8 @@ public class SprocketsTeleOp extends RobotsBase
                 ArmsDown();
             }
 
+            telemetry.update();
+
             idle();
         }
     }
