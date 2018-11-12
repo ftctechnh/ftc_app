@@ -18,6 +18,7 @@ public class TeleOpMecanum extends OpMode {
     public void loop() {
         dpad();
         TankDrive();
+        stop();
     }
 
     public void init(){
