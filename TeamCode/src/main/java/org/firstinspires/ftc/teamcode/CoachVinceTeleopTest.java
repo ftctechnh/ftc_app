@@ -51,7 +51,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             drive = drive/maxDrive;
             strafe = strafe/maxDrive;
             rotate = rotate/maxDrive;
-            double moveScaling = 0.5; // 1 for full speed
+            double moveScaling = 0.3; // 1 for full speed
             //maxDrive = Math.max(Math.max((drive+strafe+rotate),(drive - strafe + rotate)));
             hwMap.leftFrontDrive.setPower(moveScaling*(drive + strafe + rotate)); //= drive + strafe + rotate;
             hwMap.leftRearDrive.setPower(moveScaling * (drive - strafe + rotate)); //= drive - strafe + rotate;
@@ -73,10 +73,37 @@ public class CoachVinceTeleopTest extends LinearOpMode {
 
             // Read the second gamepad and move the arm
             armExtension = gamepad2.right_stick_y;
+            //telemetry.addData("ArmExtension",String.valueOf(armExtension));
+
             armRotation = gamepad2.left_stick_y;
-            double armRotationScaling = 0.7; // 1.0 for full power, used to scale the arm power
+            double armExtensionScaling = 0.2;
+            double armRotationScaling = 0.4; // 1.0 for full power, used to scale the arm power
             hwMap.armRotate.setPower(armRotationScaling * armRotation);
-            hwMap.armExtend.setPower(armRotationScaling * armExtension);
+            // Check for Extension Arm Stops, command arm if you're not in the stops
+            // ArmExtension is negative when the arm is extending, positive when it is retracting
+            //telemetry.addData("extendArm",armExtension);
+            if (armExtension > 0) {
+                telemetry.addData("Arm is:","Retracting");
+                if (hwMap.extendArmBackStop.getState() == false){
+
+                    hwMap.armExtend.setPower(armExtensionScaling * armExtension);
+                }
+                else
+                    hwMap.armExtend.setPower(0);
+            }
+                else { // armExtension < 0
+                telemetry.addData("Arm Is:","Extending");
+                if (hwMap.extendArmFrontStop.getState() == false) {
+
+                    hwMap.armExtend.setPower(armExtensionScaling * armExtension);
+                }
+                else
+                hwMap.armExtend.setPower(0);
+            }
+
+            telemetry.addData("BackStop", hwMap.extendArmBackStop.getState());
+            telemetry.addData("FrontStop", hwMap.extendArmFrontStop.getState());
+
 
             // Read the triggers and roll the Mineral Servos
             mineralServosIn = gamepad2.right_trigger;

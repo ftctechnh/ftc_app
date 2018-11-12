@@ -32,9 +32,12 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorDigitalTouch;
 
 /**
  * This is NOT an opmode.
@@ -64,6 +67,9 @@ public class HardwareBruinBot
     public DcMotor  armRotate = null;
     public CRServo    leftMineral = null;
     public CRServo    rightMineral = null;
+    public DigitalChannel extendArmBackStop;
+    public DigitalChannel extendArmFrontStop;
+
     //public DcMotor  armExt = null;  //for the arm extension
     //public DcMotor  leftArm     = null;
     //public Servo    leftClaw    = null;
@@ -98,7 +104,13 @@ public class HardwareBruinBot
         armRotate = hwMap.get(DcMotor.class, "armRotate");
         leftMineral = hwMap.get(CRServo.class, "leftMineral");
         rightMineral = hwMap.get(CRServo.class, "rightMineral");
-       // armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
+
+        extendArmBackStop = hwMap.get(DigitalChannel.class, "extendArmBackStop");
+        extendArmFrontStop = hwMap.get(DigitalChannel.class, "extendArmFrontStop");
+        extendArmBackStop.setMode(DigitalChannel.Mode.INPUT);
+        extendArmFrontStop.setMode(DigitalChannel.Mode.INPUT);
+
+        // armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
         rightRearDrive.setDirection(DcMotor.Direction.FORWARD);
