@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @Disabled
 public abstract class VoltageBase extends LinearOpMode{
 
-    private ElapsedTime runtime = new ElapsedTime();
+    public ElapsedTime runtime = new ElapsedTime();
     //Declare Motors
     public DcMotor leftDrive;
     public DcMotor rightDrive;
@@ -21,13 +21,15 @@ public abstract class VoltageBase extends LinearOpMode{
 
     //variables or any other data you will use later here
     public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
-    public int encoderTicksperRevConstant = 288;
+    public int Core_EncoderTicksperRevConstant = 288;
+    public int HD_EncoderTicksperRevConstant = 2240;
     public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
     public int thingsInBot = 0; //currently not used for anything.
     public boolean RobotIsGoingForwards = true;
-    public int mineralPosition = 0;
+    public double mineralPosition = 0;
     public boolean hanging = true;
     public int randomChangeSoICanPush = 7;
+    public final static double mineralArm_Home = 0.002;
     public abstract void DefineOpMode();
 
     @Override
@@ -53,30 +55,22 @@ public abstract class VoltageBase extends LinearOpMode{
         rightDrive.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
 
-        // Don't let motors move if they're not supposed to
+        // Don't move if they're not supposed to
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        mineralArm.setPosition(mineralArm_Home);
 
         //If Using Encoders
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Some of the servos are flipped, too
         mineralArm.setDirection(Servo.Direction.REVERSE); //Check
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        runtime.reset();
-
-        // run until the end of the match (driver presses STOP)
-        DefineOpMode(); //I moved waitforstart inside defineopmode to make autonomous easier.
-
-        //Check
-        while (opModeIsActive()) {
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.update();
-        }
+        DefineOpMode();
 
 
 
@@ -231,23 +225,58 @@ public abstract class VoltageBase extends LinearOpMode{
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    //Arm Methods
-
-    public void extendHook() {
-        if (gamepad2.b = true) {
-            liftMotor.setPower(-0.8);
-            //Fix this – Thread.sleep(2000);
-            liftMotor.setPower(0);
+    //Hook Arm Method
+    public void StopHook() {
+        liftMotor.setPower(0);
         }
-
+    public void extendHook() {
+        while (gamepad2.b = true) {
+            liftMotor.setPower(0.8);
+        }
+        StopHook();
     }
 
     public void contractHook() {
-        if (gamepad2.a = true) {
+        while (gamepad2.a = true) {
             liftMotor.setPower(0.8);
-            //Fix this – Thread.sleep(2000);
-            liftMotor.setPower(0);
         }
+        StopHook();
+    }
+    public void completeHookExtend(int speed_1, int inches_1) {
+        liftMotor.setPower(-speed_1);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setTargetPosition(-inches_1 / inchConstant); //inches = length of string
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (liftMotor.isBusy()) {
+            //Wait until the target position is reached
+        }
+        //Stop and change modes back to normal
+        StopHook();
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void completeHookContract(int speed_1, int inches_1) {
+        liftMotor.setPower(speed_1);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setTargetPosition(inches_1/ inchConstant); //inches = length of string
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        while (liftMotor.isBusy() ) {
+            //Wait until the target position is reached
+        }
+        //Stop and change modes back to normal
+        StopHook();
+        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    //Mineral Arm Method
+    public void mineralArmlowStop(){
+        mineralArm.setPosition(.20);
+    };
+    public void mineralArmHighStop() {
+        mineralArm.setPosition(.80);
     }
 
 }
