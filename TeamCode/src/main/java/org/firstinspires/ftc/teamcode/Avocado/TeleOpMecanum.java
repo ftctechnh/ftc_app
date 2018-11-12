@@ -14,13 +14,14 @@ public class TeleOpMecanum extends OpMode {
     DcMotor topRightMotor;
     DcMotor bottomRightMotor;
     byte posleft = -1;
+
     @Override
     public void loop() {
         dpad();
         TankDrive();
-        stop();
     }
 
+    @Override
     public void init(){
         topLeftMotor = hardwareMap.dcMotor.get("topLeftMotor");
         bottomLeftMotor = hardwareMap.dcMotor.get("bottomLeftMotor");
