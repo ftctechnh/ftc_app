@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.Salsa.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.CRServo;
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.ColorSensor;
 import org.firstinspires.ftc.teamcode.Salsa.Robots.Asteroid;
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Salsa.Vision.Vuforia;

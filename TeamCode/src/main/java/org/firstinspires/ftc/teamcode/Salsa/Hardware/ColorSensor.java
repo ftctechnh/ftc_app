@@ -8,14 +8,14 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class ColorSensor {
 
-    public ColorSensor cs;
+    public com.qualcomm.robotcore.hardware.ColorSensor cs;
     public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 
         hwmap = inputMap;
 
-        cs = hwmap.get(ColorSensor.class, hardwareName);
+        cs = hwmap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, hardwareName);
     }
 
 
