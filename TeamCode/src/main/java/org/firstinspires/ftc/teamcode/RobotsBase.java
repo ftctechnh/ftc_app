@@ -18,16 +18,11 @@ public abstract class RobotsBase extends LinearOpMode
     public DcMotor rightArm;
     public DcMotor armRaiser;
 
-    public String stringTestAgain = "yep this works";
-
     public abstract void DefineOpMode();
 
-    public double inchConstantActual = 1;
     public int inchConstant = 1;
-    public double degConstantActual = 1;
-    public int degConstant = 1;
 
-    public int thingsInBot = 0;
+    public int degConstant = 1;
 
     public boolean RobotIsGoingForwards = true;
 
@@ -60,7 +55,7 @@ public abstract class RobotsBase extends LinearOpMode
 
     //Utility Methods
 
-    public void DriveMotors (int speed)
+    public void DriveMotors (double speed)
     {
         leftDrive.setPower(speed);
         rightDrive.setPower(speed);
@@ -85,31 +80,31 @@ public abstract class RobotsBase extends LinearOpMode
         }
     }
 
-    public void ThingsInBotReset ()
-    {
-        thingsInBot = 0;
-    }
 
     public void OffTheLander ()
     {
+        CollectorUpAndOut();
 
+        DriveForwardsDistance(0.5, 3);
+
+        CollectorBackAndIn();
     }
 
 
     //Movement Methods
 
-    public void DriveForwardsOrBackwards (int speed)
+    public void DriveForwardsOrBackwards (double speed)
     {
         DriveMotors(speed);
     }
 
-    public void TurnLeft (int speed)
+    public void TurnLeft (double speed)
     {
         leftDrive.setPower(-speed);
         rightDrive.setPower(speed);
     }
 
-    public void TurnRight (int speed)
+    public void TurnRight (double speed)
     {
         leftDrive.setPower(speed);
         rightDrive.setPower(-speed);
@@ -120,7 +115,7 @@ public abstract class RobotsBase extends LinearOpMode
         DriveMotors(0);
     }
 
-    public void DriveForwardsDistance (int speed, int inches)
+    public void DriveForwardsDistance (double speed, int inches)
     {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -144,7 +139,7 @@ public abstract class RobotsBase extends LinearOpMode
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void DriveBackwards (int speed, int inches)
+    public void DriveBackwards (double speed, int inches)
     {
         ChangeDirection();
 
@@ -178,7 +173,7 @@ public abstract class RobotsBase extends LinearOpMode
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void TurnLeftDegrees (int speed, int degrees)
+    public void TurnLeftDegrees (double speed, int degrees)
     {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -202,7 +197,7 @@ public abstract class RobotsBase extends LinearOpMode
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void TurnRightDegrees(int speed, int degrees)
+    public void TurnRightDegrees(double speed, int degrees)
     {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -261,33 +256,21 @@ public abstract class RobotsBase extends LinearOpMode
         armRaiser.setPower(0);
     }
 
+    public void DropMarker ()
+    {
+
+    }
+
     public void CollectAThing ()
     {
-        if (thingsInBot < 2)
-        {
-            //collect
-            thingsInBot = thingsInBot+1;
-        } else
-        {
 
-        }
 
     }
 
     public void DumpAndReset ()
     {
-        //dump
-        thingsInBot = 0;
-    }
-
-    public void OpenClaw ()
-    {
 
     }
 
-    public void CloseClaw ()
-    {
-
-    }
 
 }

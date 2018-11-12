@@ -88,7 +88,7 @@ public abstract class VoltageBase extends LinearOpMode{
 
     //Utility Methods
 
-    public void DriveMotors(int speed) {
+    public void DriveMotors(double speed) {
         leftDrive.setPower(speed);
         rightDrive.setPower(speed);
     }
@@ -111,16 +111,16 @@ public abstract class VoltageBase extends LinearOpMode{
     //Movement Methods
 
     //Tank Drive
-    public void DriveForwardsOrBackwards(int speed) {
+    public void DriveForwardsOrBackwards(double speed) {
         DriveMotors(speed);
     }
 
-    public void TurnLeft(int speed) {
+    public void TurnLeft(double speed) {
         leftDrive.setPower(-speed);
         rightDrive.setPower(speed);
     }
 
-    public void TurnRight(int speed) {
+    public void TurnRight(double speed) {
         leftDrive.setPower(speed);
         rightDrive.setPower(-speed);
     }
@@ -129,7 +129,7 @@ public abstract class VoltageBase extends LinearOpMode{
         DriveMotors(0);
     }
 
-    public void DriveForwardsDistance(int speed, int inches) {
+    public void DriveForwardsDistance(double speed, int inches) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -150,7 +150,7 @@ public abstract class VoltageBase extends LinearOpMode{
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void DriveBackwardsDistance(int speed, int inches) {
+    public void DriveBackwardsDistance(double speed, int inches) {
         ChangeDirection();
 
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -180,7 +180,7 @@ public abstract class VoltageBase extends LinearOpMode{
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void TurnLeftDegrees(int speed, int degrees) {
+    public void TurnLeftDegrees(double speed, int degrees) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -203,7 +203,7 @@ public abstract class VoltageBase extends LinearOpMode{
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void TurnRightDegrees(int speed, int degrees) {
+    public void TurnRightDegrees(double speed, int degrees) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
