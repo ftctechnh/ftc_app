@@ -16,7 +16,8 @@ public abstract class RobotsBase extends LinearOpMode
     public DcMotor rightDrive;
     public DcMotor leftArm;
     public DcMotor rightArm;
-    public DcMotor armRaiser;
+    public DcMotor raiseLeft;
+    public DcMotor raiseRight;
 
     public abstract void DefineOpMode();
 
@@ -33,14 +34,14 @@ public abstract class RobotsBase extends LinearOpMode
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         leftArm = hardwareMap.dcMotor.get("leftArm");
         rightArm = hardwareMap.dcMotor.get("rightArm");
-        armRaiser = hardwareMap.dcMotor.get("armRaiser");
+        raiseLeft = hardwareMap.dcMotor.get("raiseLeft");
+        raiseRight = hardwareMap.dcMotor.get("raiseRight");
 
-
-        //hardwaremap
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        //change collector direction if needbe later
+        rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
+        raiseRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -228,7 +229,14 @@ public abstract class RobotsBase extends LinearOpMode
     {
         leftArm.setPower(0.8);
         rightArm.setPower(0.8);
-        Thread.sleep(2000); //fix this later
+        Thread.sleep(2000);
+
+        while (leftArm.isBusy() && rightArm.isBusy())
+        {
+            raiseLeft.setPower(-0.1);
+            raiseRight.setPower(-0.1);
+        }
+
         leftArm.setPower(0);
         rightArm.setPower(0);
     }
@@ -237,23 +245,34 @@ public abstract class RobotsBase extends LinearOpMode
     {
         leftArm.setPower(-0.25);
         rightArm.setPower(-0.25);
-        Thread.sleep(2000); //fix this later
+        Thread.sleep(2000);
+
+        while (leftArm.isBusy()&& rightArm.isBusy())
+        {
+            raiseLeft.setPower(0.1);
+            raiseRight.setPower(0.1);
+        }
+
         leftArm.setPower(0);
         rightArm.setPower(0);
     }
 
     public void CollectorUpAndOut ()
     {
-        armRaiser.setPower(0.5);
+        raiseLeft.setPower(0.5);
+        raiseRight.setPower(0.5);
         Thread.sleep(1000);
-        armRaiser.setPower(0);
+        raiseLeft.setPower(0);
+        raiseRight.setPower(0);
     }
 
     public void CollectorBackAndIn ()
     {
-        armRaiser.setPower(-0.5);
+        raiseLeft.setPower(-0.5);
+        raiseRight.setPower(-0.5);
         Thread.sleep(1000);
-        armRaiser.setPower(0);
+        raiseLeft.setPower(0);
+        raiseRight.setPower(0);
     }
 
     public void DropMarker ()

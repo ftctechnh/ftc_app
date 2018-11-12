@@ -16,7 +16,7 @@ public class AutoRed extends BaseAutonomous
     public float BaseY = 100;
 
     public float CraterX = 100;
-    public float CraterY = 100
+    public float CraterY = 100;
 
     @Override
     public void DriveTheRobot()
@@ -25,7 +25,11 @@ public class AutoRed extends BaseAutonomous
 
         GoToDesiredPosition(BaseX, BaseY, AutonomousBaseSpeed);
 
+        ArmsDown();
+
         DropMarker();
+
+        ArmsUp();
 
         GoToDesiredPosition(CraterX, CraterY, AutonomousBaseSpeed);
     }

@@ -19,6 +19,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Benla on 10/14/2018.
  */
@@ -248,9 +251,10 @@ public abstract class BaseAutonomous extends RobotsBase
 
             float RobotDistanceX = DesiredX - translation.get(0);
             float RobotDistanceY = DesiredY - translation.get(1);
-            float YOverX = DesiredY/DesiredX;
+            double YOverX = DesiredY/DesiredX;
+            double AtanYOverX = atan(Math.toRadians(YOverX));
 
-            float AngleToPosition = rotation.thirdAngle - (rotation.thirdAngle - atan(Math.toRadians(YOverX)));
+            double AngleToPosition = rotation.thirdAngle - (rotation.thirdAngle - Math.toDegrees(AtanYOverX));
 
             while (AngleToPosition != 0)
             {

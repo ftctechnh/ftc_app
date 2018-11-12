@@ -25,7 +25,11 @@ public class AutoBlue extends BaseAutonomous
 
         GoToDesiredPosition(BaseX, BaseY, AutonomousBaseSpeed);
 
+        ArmsDown();
+
         DropMarker();
+
+        ArmsUp();
 
         GoToDesiredPosition(CraterX, CraterY, AutonomousBaseSpeed);
     }
