@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware;
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
 
 public class PIDController {
-    private double p,i,d,iVal,lastError=0, ilimit=1;
+    private double p,i,d,iVal,lastError=0, ilimit=1, minimumOutput=0;
 
     public PIDController(){
         this(1,1,1);
@@ -20,12 +20,26 @@ public class PIDController {
         ilimit = Ilimit;
     }
 
+    public PIDController(double P, double I, double D, double Ilimit, double minOutput){
+        p = P;
+        i = I;
+        d = D;
+        ilimit = Ilimit;
+        minimumOutput = Math.abs(minOutput);
+    }
+
+    public void setMinimumOutput(double minOutput){
+        minimumOutput = Math.abs(minOutput);
+    }
+
     public double output(double target, double current){
         double error=target-current, out;
         AbstractOpMode.getTelemetry().addData("Error", error);
         AbstractOpMode.getTelemetry().addData("Last Error", lastError);
         out = PTerm(error)+ITerm(error)+DTerm(error);
         lastError = error;
+        //if(out>0 && out<minimumOutput)out = minimumOutput;
+        //if(out<0 && out>-minimumOutput)out = -minimumOutput;
         return out;
     }
 

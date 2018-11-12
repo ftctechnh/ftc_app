@@ -35,5 +35,4 @@ public class Emitter {
     public void shutdown() {
         service.shutdownNow();
     }
-
 }

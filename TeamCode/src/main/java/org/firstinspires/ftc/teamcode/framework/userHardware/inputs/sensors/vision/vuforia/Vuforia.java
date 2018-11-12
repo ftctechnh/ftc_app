@@ -22,7 +22,7 @@ public class Vuforia {
     private VuforiaLocalizer vuforia;
     private VuforiaTrackable template;
 
-    protected Vuforia(boolean viewer){
+    protected Vuforia(boolean viewer, boolean led){
         VuforiaLocalizer.Parameters parameters;
         if(viewer) {
             int cameraMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
@@ -35,10 +35,10 @@ public class Vuforia {
         this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
         vuforia.setFrameQueueCapacity(1);
         vuforia.enableConvertFrameToBitmap();
-        setLED(true);
+        setLED(led);
     }
 
-    protected Vuforia(String camera, boolean viewer){
+    protected Vuforia(String camera, boolean viewer, boolean led){
         VuforiaLocalizer.Parameters parameters;
         if(viewer) {
             int cameraMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
@@ -57,7 +57,15 @@ public class Vuforia {
         this.vuforia = ClassFactory.getInstance().createVuforia(parameters);
         vuforia.setFrameQueueCapacity(1);
         vuforia.enableConvertFrameToBitmap();
-        setLED(true);
+        setLED(led);
+    }
+
+    protected Vuforia(boolean viewer){
+        this(viewer, true);
+    }
+
+    protected Vuforia(String camera, boolean viewer){
+        this(camera, viewer, true);
     }
 
     protected VuforiaLocalizer getVuforia(){

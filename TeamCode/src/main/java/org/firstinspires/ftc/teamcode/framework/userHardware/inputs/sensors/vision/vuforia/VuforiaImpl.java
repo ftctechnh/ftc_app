@@ -6,12 +6,20 @@ public class VuforiaImpl {
 
     public Vuforia vuforia;
 
-    public VuforiaImpl(boolean viewer){
+    public VuforiaImpl(boolean viewer, boolean led){
         vuforia = new Vuforia(viewer);
     }
 
-    public VuforiaImpl(String camera, boolean viewer) {
+    public VuforiaImpl(String camera, boolean viewer, boolean led) {
         vuforia = new Vuforia(camera,viewer);
+    }
+
+    public VuforiaImpl(boolean viewer){
+        this(viewer, true);
+    }
+
+    public VuforiaImpl(String camera, boolean viewer) {
+        this(camera, viewer, true);
     }
 
     public VuforiaLocalizer getVuforia(){

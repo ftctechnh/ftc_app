@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework;
 
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
@@ -14,6 +16,7 @@ public abstract class AbstractAuton extends AbstractOpMode {
     private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
 
     public AbstractAuton() {
+
     }
 
     @Override
@@ -79,7 +82,6 @@ public abstract class AbstractAuton extends AbstractOpMode {
             for (StackTraceElement element : e.getStackTrace()) {
                 if (element.toString().contains("org.firstinspires.ftc.teamcode")) {
                     telemetry.addData(element.toString().replace("org.firstinspires.ftc.teamcode.", ""));
-                    break;
                 }
             }
             switch (e.getClass().getSimpleName()) {
@@ -105,6 +107,18 @@ public abstract class AbstractAuton extends AbstractOpMode {
                     telemetry.update();
                     AbstractOpMode.delay(500);
                     ConcurrentModificationException exception = (ConcurrentModificationException) e;
+                    throw exception;
+                }
+                case "IllegalStateException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    IllegalStateException exception = (IllegalStateException) e;
+                    throw exception;
+                }
+                case "VuforiaException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    VuforiaException exception = (VuforiaException) e;
                     throw exception;
                 }
                 default: {

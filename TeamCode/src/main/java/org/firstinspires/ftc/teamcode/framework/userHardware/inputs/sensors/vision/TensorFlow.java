@@ -26,27 +26,62 @@ public class TensorFlow {
 
     private CameraOrientation orientation;
 
+    public TensorFlow(){
+        this(CameraOrientation.VIRTICAL);
+    }
+
+    public TensorFlow(CameraOrientation cameraOrientation) {
+        this(cameraOrientation, true);
+    }
+
     public TensorFlow(CameraOrientation cameraOrientation, String camera) {
+        this(cameraOrientation, camera, true);
+    }
+
+    public TensorFlow(CameraOrientation cameraOrientation, boolean led) {
+        this(cameraOrientation,"BACK", led);
+    }
+
+    public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led) {
         orientation = cameraOrientation;
 
-        vuforia = new VuforiaImpl(camera, false);
+        do {
+            vuforia = new VuforiaImpl(camera, false);
+        } while (vuforia.getVuforia().getCameraCalibration()==null);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
+            initTfodWithViewer();
         } else {
             telemetry.addData("Sorry!", "This device is not compatible with TFOD");
             telemetry.update();
         }
     }
 
-    public TensorFlow(CameraOrientation cameraOrientation) {
-        this(cameraOrientation,"BACK");
+    public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led, boolean viewer) {
+        orientation = cameraOrientation;
+
+        do {
+            vuforia = new VuforiaImpl(camera, false);
+        } while (vuforia.getVuforia().getCameraCalibration()==null);
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfodWithoutViewer();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+            telemetry.update();
+        }
     }
 
-    private void initTfod() {
+    private void initTfodWithViewer() {
         int tfodMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
+
+    private void initTfodWithoutViewer() {
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }

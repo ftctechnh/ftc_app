@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boggiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.RobotCoreLynxModule;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
@@ -14,7 +15,8 @@ public class TensorFlowTest extends AbstractAuton {
 
     @Override
     public void Init() {
-        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL,"BACK");
+        //tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, "Webcam 1",false);
+        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
     }
 
     @Override

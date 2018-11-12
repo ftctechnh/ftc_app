@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor
 public class BoogieAuton extends AbstractAuton {
 
     Robot robot;
-    double speed = 1, error = 2;
+    double speed = 1, error = 3;
     int period = 100;
 
     private SlewDcMotor intakeMotor;
@@ -22,7 +22,6 @@ public class BoogieAuton extends AbstractAuton {
     @Override
     public void Init() {
         robot = new Robot();
-        //angle = (int)Dashboard.getInputValue("Angle");
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -47,7 +46,7 @@ public class BoogieAuton extends AbstractAuton {
 
         robot.turnTo(90,speed,error,period);
 
-        robot.driveTo(52,speed);
+        robot.driveTo(54,speed);
 
         robot.turnTo(135,speed,error,period);
 
@@ -55,7 +54,7 @@ public class BoogieAuton extends AbstractAuton {
 
         robot.driveTo(-65,speed);
 
-        robot.driveTo(-10,0.5);
+        robot.driveTo(-10,0.7);
     }
 
     public void depotSideRightMineral(){

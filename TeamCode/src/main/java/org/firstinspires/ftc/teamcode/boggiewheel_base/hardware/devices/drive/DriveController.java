@@ -49,9 +49,8 @@ public class DriveController extends SubsystemController {
         //Put general setup here
         drive = new Drive(hwMap);
         //drivePID = new PIDController(10,1.6,24, 2);
-        drivePID = new PIDController(10,1.8,28, 2);
+        drivePID = new PIDController(10,0.5,5, 1,0);
         straightPID = new PIDController(1,0.1,0,0.2);
-
         drive.setSlewSpeed(0.1);
 
         logger = new Logger("DriveControllerLog.txt");
@@ -71,6 +70,7 @@ public class DriveController extends SubsystemController {
 
         telemetry.addData("starting turn segment---------------------------");
         drivePID.reset();
+        drivePID.setMinimumOutput(0);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
         while(isOpModeActive()) {
@@ -109,7 +109,8 @@ public class DriveController extends SubsystemController {
 
         telemetry.addData("starting drive segment---------------------------");
         drivePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
-        straightPID.reset(); //''
+        straightPID.reset();
+        drivePID.setMinimumOutput(0);
         int position = (int)(distance * 50.8); //
         telemetry.addData("Encoder counts: " + position);
         double turn;
