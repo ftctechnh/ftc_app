@@ -12,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Sensors.IMU;
+import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -26,7 +26,7 @@ public class DriveControl {
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     //private String name = "Drive Train";
     private ElapsedTime runtime = new ElapsedTime();
-    IMU imu = new IMU();
+    IMUcontrol imu = new IMUcontrol();
 
     //initializing motors
     private DcMotor FrontRightM = null;
@@ -52,6 +52,7 @@ public class DriveControl {
         FrontLeftM = hwMap.dcMotor.get("FrontLeftM");
         BackRightM = hwMap.dcMotor.get("BackRightM");
         BackLeftM = hwMap.dcMotor.get("BackLeftM");
+
 
         //reverses some motors
         BackLeftM.setDirection(DcMotor.Direction.REVERSE);
@@ -119,7 +120,7 @@ public class DriveControl {
         stop();
     }
 
-    public void turn2angle (int angle){
+    public void turn2angle (double angle){
         imu.angle2turn = (angle - imu.trueAngle);
 
         if (imu.angle2turn > 180){

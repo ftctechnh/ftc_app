@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class IMU {
+public class IMUcontrol {
     HardwareMap hwMap = null;
 
     BNO055IMU imu;
@@ -26,7 +26,7 @@ public class IMU {
     public double turnSpeed = 0.4;
 
     /* Subassembly constructor */
-    public IMU() {
+    public IMUcontrol() {
     }
 
     public void init(HardwareMap ahwMap) {
@@ -55,7 +55,7 @@ public class IMU {
     public void IMUupdate(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         currentAngle = angles.firstAngle;
-        trueAngle = startAngle-currentAngle;
+        trueAngle = currentAngle-startAngle;
 
         //keeps the angle in a 360 degree range so there is only one number or each orientation
         if (trueAngle > 180){
