@@ -41,6 +41,8 @@ public class CoachVinceTeleopTest extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+
+            // DRIVING SECTION!!!! ----------------------------------------------------------------
             drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
             strafe = gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
@@ -51,12 +53,14 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             drive = drive/maxDrive;
             strafe = strafe/maxDrive;
             rotate = rotate/maxDrive;
-            double moveScaling = 0.3; // 1 for full speed
+            double moveScaling = 0.3; // 1 for full speed, 0.3 is controllable
             //maxDrive = Math.max(Math.max((drive+strafe+rotate),(drive - strafe + rotate)));
             hwMap.leftFrontDrive.setPower(moveScaling*(drive + strafe + rotate)); //= drive + strafe + rotate;
             hwMap.leftRearDrive.setPower(moveScaling * (drive - strafe + rotate)); //= drive - strafe + rotate;
             hwMap.rightFrontDrive.setPower(moveScaling * (drive - strafe - rotate)); //= drive - strafe - rotate;
             hwMap.rightRearDrive.setPower(moveScaling * (drive + strafe - rotate)); //= drive + strafe - rotate;
+
+            // LIFTING ARM SECTION!!!! --------------------------------------------------------
 
             // Read the driving gamepad triggers for the lifting arm
             liftingArmUp = gamepad1.right_trigger;
@@ -64,90 +68,67 @@ public class CoachVinceTeleopTest extends LinearOpMode {
 
             if (liftingArmUp > liftingArmDown) {
                 hwMap.landerLatchLift.setPower(liftingArmUp);
-
             }
             else
             {
                 hwMap.landerLatchLift.setPower(-liftingArmDown);
             }
 
+            // EXTENDING ARM SECTION! --------------------------------------------------------
+
             // Read the second gamepad and move the arm
             armExtension = gamepad2.right_stick_y;
-            //telemetry.addData("ArmExtension",String.valueOf(armExtension));
 
-            armRotation = gamepad2.left_stick_y;
+            //Limits the motors output. Somewhere between 0.1 and 0.2 works.  Any higher and the limit switches dont stop the rms from crashing into each other
             double armExtensionScaling = 0.2;
-            double armRotationScaling = 0.4; // 1.0 for full power, used to scale the arm power
-            hwMap.armRotate.setPower(armRotationScaling * armRotation);
+
             // Check for Extension Arm Stops, command arm if you're not in the stops
             // ArmExtension is negative when the arm is extending, positive when it is retracting
-            //telemetry.addData("extendArm",armExtension);
-            if (armExtension > 0) {
+
+            if (armExtension > 0) {  // An arm retraction is commanded
                 telemetry.addData("Arm is:","Retracting");
-                if (hwMap.extendArmBackStop.getState() == false){
+                if (hwMap.extendArmBackStop.getState() == false){// As long as the back limit switch isn't pressed, move the arm back
 
                     hwMap.armExtend.setPower(armExtensionScaling * armExtension);
                 }
                 else
-                    hwMap.armExtend.setPower(0);
+                    hwMap.armExtend.setPower(0); // Otherwise set the arm power to zero
             }
-                else { // armExtension < 0
+                else { // An arm extension is commanded
                 telemetry.addData("Arm Is:","Extending");
-                if (hwMap.extendArmFrontStop.getState() == false) {
+                if (hwMap.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
                     hwMap.armExtend.setPower(armExtensionScaling * armExtension);
                 }
                 else
-                hwMap.armExtend.setPower(0);
+                hwMap.armExtend.setPower(0);  // Otherwise set the power to zero
             }
 
-            telemetry.addData("BackStop", hwMap.extendArmBackStop.getState());
-            telemetry.addData("FrontStop", hwMap.extendArmFrontStop.getState());
+            //telemetry.addData("BackStop", hwMap.extendArmBackStop.getState());
+            //telemetry.addData("FrontStop", hwMap.extendArmFrontStop.getState());
+
+            // ARM ROTATION SECTION!!! -------------------------------------------------------------
+            armRotation = gamepad2.left_stick_y;
+            double armRotationScaling = 0.4; // 1.0 for full power, used to scale the arm power
+            hwMap.armRotate.setPower(armRotationScaling * armRotation);
 
 
+            // MINERAL SERVO SECTION!!!! -----------------------------------------------------------
             // Read the triggers and roll the Mineral Servos
             mineralServosIn = gamepad2.right_trigger;
             mineralServosOut = gamepad2.left_trigger;
             if (mineralServosIn > mineralServosOut) {
-                hwMap.leftMineral.setPower(-mineralServosIn); // These don't look right, how do I get them to rotate continuously
+                //hwMap.leftMineral.setPower(-mineralServosIn); // These don't look right, how do I get them to rotate continuously
                 hwMap.rightMineral.setPower(mineralServosIn);
             }
             else
             {
-                hwMap.leftMineral.setPower(mineralServosOut);
+                //hwMap.leftMineral.setPower(mineralServosOut);
                 hwMap.rightMineral.setPower(-mineralServosOut);
             }
 
-
-            /*
-
-            // Use gamepad left & right Bumpers to open and close the claw
-            if (gamepad1.right_bumper)
-                clawOffset += CLAW_SPEED;
-            else if (gamepad1.left_bumper)
-                clawOffset -= CLAW_SPEED;
-
-            // Move both servos to new position.  Assume servos are mirror image of each other.
-            clawOffset = Range.clip(clawOffset, -0.5, 0.5);
-            robot.leftClaw.setPosition(robot.MID_SERVO + clawOffset);
-            robot.rightClaw.setPosition(robot.MID_SERVO - clawOffset);
-
-            // Use gamepad buttons to move arm up (Y) and down (A)
-            if (gamepad1.y)
-                robot.leftArm.setPower(robot.ARM_UP_POWER);
-            else if (gamepad1.a)
-                robot.leftArm.setPower(robot.ARM_DOWN_POWER);
-            else
-                robot.leftArm.setPower(0.0);
-
-            // Send telemetry message to signify robot running;
-            telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-            telemetry.addData("left",  "%.2f", left);
-            telemetry.addData("right", "%.2f", right); */
             telemetry.update();
 
-            // Pace this loop so jaw action is reasonable speed.
-            //sleep(50);
         }
     }
 
