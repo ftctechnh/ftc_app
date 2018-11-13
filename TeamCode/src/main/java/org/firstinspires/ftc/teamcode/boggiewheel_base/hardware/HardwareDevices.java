@@ -30,6 +30,14 @@ public class HardwareDevices {
         drive.turnTo(angle, speed, error, period);
     }
 
+    public int[][] recordPath(int numSamples,int timeInterval) {
+        return drive.recordPath(numSamples, timeInterval);
+    }
+
+    public void runPath(int[] left, int[] right, int timeInterval) {
+        drive.runPath(left, right, timeInterval);
+    }
+
     public void driveTo(double distance, double speed){
         drive.driveTo(distance, speed);
     }

@@ -65,9 +65,19 @@ public class Drive {
         rightMotor.setTargetPosition(position);
     }
 
+    public void setPosition(int leftPosition, int rightPosition){
+        leftMotor.setTargetPosition(leftPosition);
+        rightMotor.setTargetPosition(rightPosition);
+    }
+
     public void setMode(DcMotor.RunMode mode){
         leftMotor.setMode(mode);
         rightMotor.setMode(mode);
+    }
+
+    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior){
+        leftMotor.setZeroPowerBehavior(behavior);
+        rightMotor.setZeroPowerBehavior(behavior);
     }
 
     public void setPosisionP(double p){

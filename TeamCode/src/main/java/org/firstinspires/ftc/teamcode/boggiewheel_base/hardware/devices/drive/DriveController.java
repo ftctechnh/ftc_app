@@ -49,8 +49,8 @@ public class DriveController extends SubsystemController {
         //Put general setup here
         drive = new Drive(hwMap);
         //drivePID = new PIDController(10,1.6,24, 2);
-        drivePID = new PIDController(10,0.5,5, 1,0);
-        straightPID = new PIDController(1,0.1,0,0.2);
+        drivePID = new PIDController(8,0.5,10, 1,0);
+        straightPID = new PIDController(0.8,0.1,0,2);
         drive.setSlewSpeed(0.1);
 
         logger = new Logger("DriveControllerLog.txt");
@@ -222,6 +222,36 @@ public class DriveController extends SubsystemController {
         telemetry.addData("left",DF.format(leftPower));
         telemetry.addData("right",DF.format(rightPower));
         drive.setPower(leftPower, rightPower);
+    }
+
+    //util methods
+    public int[][] recordPath(int numSamples, int timeInterval) {
+        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        int[][] values = new int[2][numSamples];
+        runtime.reset();
+        for (int i = 0; i < numSamples; i++) {
+            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
+            values[0][i] = drive.getLeftPosition();
+            values[1][i] = drive.getRightPosition();
+            if(!isOpModeActive()) break;
+            runtime.reset();
+        }
+        drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        return values;
+    }
+
+    public void runPath(int[] left, int[] right, int timeInterval) {
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        drive.setPower(1,1);
+        runtime.reset();
+        for (int i = 0; i < left.length; i++) {
+            while (runtime.milliseconds() < timeInterval);
+            drive.setPosition(left[i], right[i]);
+            runtime.reset();
+        }
     }
 
     private double scaleInput(double val) {

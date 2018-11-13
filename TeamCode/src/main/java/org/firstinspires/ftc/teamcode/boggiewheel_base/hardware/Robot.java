@@ -30,6 +30,14 @@ public class Robot {
         hardware.turnTo(angle, speed, error, period);
     }
 
+    public int[][] recordPath(int numSamples,int timeInterval) {
+        return hardware.recordPath(numSamples, timeInterval);
+    }
+
+    public void runPath(int[] left, int[] right, int timeInterval) {
+        hardware.runPath(left, right, timeInterval);
+    }
+
     public void driveTo(double distance, double speed){
         hardware.driveTo(distance, speed);
     }
