@@ -79,7 +79,9 @@ public class RoverRuckus15091 extends LinearOpMode {
                                                       (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
-    public int hookSequence = 0;
+    static final double     ARM_SPEED              = 0.3;
+
+    private int armSequence = 0;
 
     @Override
     public void runOpMode() {
@@ -111,56 +113,34 @@ public class RoverRuckus15091 extends LinearOpMode {
 
         // The robot will be hung on the handle to start
         // so, first thing to do is unlatch
-        unlatch();
+        landing();
 
-        // Then the robot reverse 5000 rev
-        drive(-1000);
+        // turn robot 180 degree to the right
+        encoderDrive(TURN_SPEED,-40d,40d,5d);
+        robot.tts.speak("Turn Complete");
+        //drive forward
+        encoderDrive(DRIVE_SPEED,-12d,-12d,5d);
 
-        turn(1000);
-
+        //turn 90 degrees to the left
+        encoderDrive(TURN_SPEED,10d,-10d,5d);
+        //Drive forward
+        encoderDrive(DRIVE_SPEED,-24d,-24d,5d);
         telemetry.addData("Path", "Complete");
         telemetry.update();
 
         idle();
     }
-    public void turn(int distance) {
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftDrive.setTargetPosition(distance);
-        robot.leftDrive.setPower(.3);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightDrive.setTargetPosition(-distance);
-        robot.rightDrive.setPower(.3);
-        while (robot.leftDrive.isBusy() || robot.rightDrive.isBusy())
-        {}
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
-        robot.tts.speak("Hello World");
-    }
-    public void drive(int distance) {
 
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftDrive.setTargetPosition(distance);
-        robot.leftDrive.setPower(.3);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightDrive.setTargetPosition(distance);
-        robot.rightDrive.setPower(.3);
-        while (robot.leftDrive.isBusy() || robot.rightDrive.isBusy())
-        {}
-        robot.leftDrive.setPower(0);
-        robot.rightDrive.setPower(0);
-        robot.tts.speak("Hello World");
-    }
-    public void unlatch()
+    public void landing()
     {
-        robot.armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armDrive.setTargetPosition(-5000);
-        robot.armDrive.setPower(0.2d);
+        robot.setArmTarget(1.2470d);
+        robot.armDrive.setPower(ARM_SPEED);
         while(robot.armDrive.isBusy())
         {
             //wait for motor to finish
         }
         robot.armDrive.setPower(0d);
-        robot.tts.speak("Unlatch complete");
+        robot.tts.speak("Landing complete");
     }
 
     /*

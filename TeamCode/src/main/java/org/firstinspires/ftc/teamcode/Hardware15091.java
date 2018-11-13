@@ -79,13 +79,24 @@ public class Hardware15091 {
     public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
     public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
 
-    public int setArmTarget(double targetToSet) {
+    public boolean setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double voltageDelta = armAngle.getVoltage() - targetToSet;
         int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
         int newTarget = armDrive.getCurrentPosition() + targetDelta;
         armDrive.setTargetPosition(newTarget);
-        return Math.abs(armDrive.getCurrentPosition() - newTarget);
+        int howManyTurnsLeft = Math.abs(armDrive.getCurrentPosition() - newTarget);
+        return howManyTurnsLeft < 100;
+    }
+
+    public void setArmPower(double powerToSet) {
+        if (armAngle.getVoltage() > ARM_MIN && powerToSet > 0d) {
+            armDrive.setPower(powerToSet);
+        } else if (armAngle.getVoltage() < ARM_MAX && powerToSet < 0d) {
+            armDrive.setPower(powerToSet);
+        } else {
+            armDrive.setPower(0d);
+        }
     }
 
     /* local OpMode members. */
@@ -110,13 +121,14 @@ public class Hardware15091 {
         armServo = hwMap.servo.get("servo_1");
         pickupServo = hwMap.servo.get("servo_2");
         handServo = hwMap.servo.get("servo_3");
-        sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
+        //sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
+        //sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        armDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         tts = new AndroidTextToSpeech();
         tts.initialize();
@@ -130,8 +142,9 @@ public class Hardware15091 {
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        armDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         period.reset();
 
         // Set all motors to zero power
