@@ -2,47 +2,51 @@ package org.firstinspires.ftc.teamcode.robotutil;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class Motors {
+public class MotorGroup {
 
+    private DcMotor[] motors;
+    public MotorGroup(DcMotor[] motorArray){
+        this.motors = motorArray;
+    }
 
-    public static void useEncoders(DcMotor[] motorArray){
-        for(DcMotor motor : motorArray){
+    public void useEncoders(){
+        for(DcMotor motor : this.motors){
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 
-    public static void dontUseEncoders(DcMotor[] motorArray){
-        for(DcMotor motor : motorArray){
+    public void dontUseEncoders(){
+        for(DcMotor motor : this.motors){
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
-    public static void setBrake(DcMotor[] motorArray){
-        for(DcMotor motor : motorArray){
+    public void setBrake(){
+        for(DcMotor motor : this.motors){
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
 
-    public static void setCoast(DcMotor[] motorArray){
-        for(DcMotor motor : motorArray){
+    public void setCoast(){
+        for(DcMotor motor : this.motors){
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
 
-    public static void resetEncoders(DcMotor[] motorArray){
-        for(DcMotor motor: motorArray) {
+    public void resetEncoders(){
+        for(DcMotor motor: this.motors) {
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
-    public static void runToPosition(DcMotor[] motorArray){
-        for(DcMotor motor: motorArray) {
+    public void runToPosition(){
+        for(DcMotor motor: this.motors) {
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
     }
 
-    public static void stopAll(DcMotor[] motorArray){
-        for(DcMotor motor : motorArray){
+    public void stopAll(){
+        for(DcMotor motor : this.motors){
             motor.setPower(0);
         }
     }

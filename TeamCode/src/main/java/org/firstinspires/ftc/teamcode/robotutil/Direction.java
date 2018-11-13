@@ -6,5 +6,5 @@ package org.firstinspires.ftc.teamcode.robotutil;
  */
 
 public enum Direction {
-    FORWARD, BACK,CW,CCW;
+    FORWARD,BACK,CW,CCW,LEFT,RIGHT;
 }
