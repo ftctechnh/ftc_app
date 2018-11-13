@@ -12,13 +12,17 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
+
 public class SamplingDetector {
 
     public SamplingOrderDetector samplingDetector = new SamplingOrderDetector();
     HardwareMap hwmap;
+    Robot robot = new Robot();
 
     public void initVision(HardwareMap ahwmap) {
 
+//        samplingDetector = new SamplingOrderDetector();
         hwmap = ahwmap;
 
         samplingDetector.init(hwmap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
@@ -34,7 +38,10 @@ public class SamplingDetector {
         samplingDetector.ratioScorer.weight = 15;
         samplingDetector.ratioScorer.perfectRatio = 1.0;
 
-        samplingDetector.enable(); // Start detector
+    }
+
+    public void beginTracking() {
+        samplingDetector.enable();
     }
 
     public SamplingOrderDetector.GoldLocation getSamplingOrder() {

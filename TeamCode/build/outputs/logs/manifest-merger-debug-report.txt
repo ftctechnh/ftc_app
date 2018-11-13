@@ -12,7 +12,7 @@ MERGED from [:FtcCommon-release:] /Users/adityamavalankar/.gradle/caches/transfo
 MERGED from [:WirelessP2p-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/WirelessP2p-release.aar/f1beda8cc9f98deddb539a4aa3951d0a/AndroidManifest.xml:2:1-11:12
 MERGED from [:tfod-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/tfod-release.aar/b4cf81438e2c0a6de982919f0126fc22/AndroidManifest.xml:2:1-11:12
 MERGED from [:tensorflow-lite-0.0.0-nightly:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/tensorflow-lite-0.0.0-nightly.aar/91a92d9da5c046dd3e34f0920c25ab92/AndroidManifest.xml:2:1-6:12
-MERGED from [:openCV3.4.1] /Users/adityamavalankar/Documents/ftc_app/openCV3.4.1/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-11:12
+MERGED from [:openCVLibrary3] /Users/adityamavalankar/Documents/ftc_app/openCVLibrary3/build/intermediates/manifests/full/debug/AndroidManifest.xml:2:1-11:12
 MERGED from [:Inspection-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Inspection-release.aar/f253ba0faf9d443c05c294dcc3dce26f/AndroidManifest.xml:2:1-32:12
 MERGED from [:Blocks-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Blocks-release.aar/bff2207015df27d5bafe1f20fa322180/AndroidManifest.xml:2:1-41:12
 INJECTED from /Users/adityamavalankar/Documents/ftc_app/TeamCode/src/main/AndroidManifest.xml:8:1-12:12
@@ -80,8 +80,8 @@ MERGED from [:WirelessP2p-release:] /Users/adityamavalankar/.gradle/caches/trans
 MERGED from [:WirelessP2p-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/WirelessP2p-release.aar/f1beda8cc9f98deddb539a4aa3951d0a/AndroidManifest.xml:5:5-7:41
 MERGED from [:tfod-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/tfod-release.aar/b4cf81438e2c0a6de982919f0126fc22/AndroidManifest.xml:7:5-9:41
 MERGED from [:tfod-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/tfod-release.aar/b4cf81438e2c0a6de982919f0126fc22/AndroidManifest.xml:7:5-9:41
-MERGED from [:openCV3.4.1] /Users/adityamavalankar/Documents/ftc_app/openCV3.4.1/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
-MERGED from [:openCV3.4.1] /Users/adityamavalankar/Documents/ftc_app/openCV3.4.1/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:openCVLibrary3] /Users/adityamavalankar/Documents/ftc_app/openCVLibrary3/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
+MERGED from [:openCVLibrary3] /Users/adityamavalankar/Documents/ftc_app/openCVLibrary3/build/intermediates/manifests/full/debug/AndroidManifest.xml:7:5-9:41
 MERGED from [:Inspection-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Inspection-release.aar/f253ba0faf9d443c05c294dcc3dce26f/AndroidManifest.xml:7:5-9:41
 MERGED from [:Inspection-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Inspection-release.aar/f253ba0faf9d443c05c294dcc3dce26f/AndroidManifest.xml:7:5-9:41
 MERGED from [:Blocks-release:] /Users/adityamavalankar/.gradle/caches/transforms-1/files-1.1/Blocks-release.aar/bff2207015df27d5bafe1f20fa322180/AndroidManifest.xml:7:5-9:41

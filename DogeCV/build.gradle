@@ -26,6 +26,6 @@ repositories {
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation project(path: ':openCV3.4.1')
+    implementation project(path: ':openCVLibrary3')
     implementation (name: 'RobotCore-release', ext: 'aar')
 }

@@ -24,7 +24,7 @@ public class Constants {
 
     //names for the sensors
     public final String GYRO_NAME = "imu";
-    public final String WEBCAM_FRONT_NAME = "webcam_front";
+    public final String WEBCAM_FRONT_NAME = "webcamFront";
     public final String LEFT_COLOR_NAME = "left_line";
     public final String RIGHT_COLOR_NAME = "right_line";
     public final String GROUND_DISTANCE_SENSOR_NAME = "groundDistance";
