@@ -19,15 +19,15 @@ import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 public class Vuforia {
 
     public HardwareMap hwmap = null;
-    Constants constants = new Constants();
-    Robot robot = new Robot();
-    OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia = null;
-    int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
-    VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-    VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
-    VuforiaTrackable relicTemplate = relicTrackables.get(0);
-    RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+    public Constants constants = new Constants();
+    public Robot robot = new Robot();
+    public OpenGLMatrix lastLocation = null;
+    public VuforiaLocalizer vuforia = null;
+    public int cameraMonitorViewId = hwmap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwmap.appContext.getPackageName());
+    public VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+    public VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+    public VuforiaTrackable relicTemplate = relicTrackables.get(0);
+    public RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
 
 
@@ -43,15 +43,10 @@ public class Vuforia {
 
         else if (cam == CameraUsed.PHONE) {
             if (camDirection == CameraOrientation.FRONT) {
-
                 parameters.cameraDirection = CameraDirection.FRONT;
-
             } else if (camDirection == CameraOrientation.BACK) {
-
                 parameters.cameraDirection = CameraDirection.BACK;
-
             } else {
-
                 parameters.cameraDirection = CameraDirection.BACK;
             }
         }

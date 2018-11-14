@@ -8,9 +8,11 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/DogeCV" />
             <option value="$PROJECT_DIR$/FtcRobotController" />
             <option value="$PROJECT_DIR$/TeamCode" />
             <option value="$PROJECT_DIR$/openCV3.4.1" />
+            <option value="$PROJECT_DIR$/openCVLibrary3" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
