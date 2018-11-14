@@ -20,7 +20,7 @@ public class IMUcontrol {
     public double currentAngle;
     public double trueAngle;
     public double angle2turn;
-    public double startTrueAngle = 180;
+    public double startTrueAngle;
 
     public double moveSpeed = 0.5;
     public double turnSpeed = 0.4;

@@ -123,49 +123,48 @@ public class DriveControl {
     public void turn2angle (double angle){
         imu.angle2turn = (angle - imu.trueAngle);
 
-        if (imu.angle2turn > 180){
-            imu.angle2turn -= 360;
-        }
-        if (imu.angle2turn < -180){
-            imu.angle2turn += 360;
-        }
+        do{
+            if (imu.angle2turn > 180){
+                imu.angle2turn -= 360;
+            }
+            if (imu.angle2turn < -180){
+                imu.angle2turn += 360;
+            }
 
-        if (imu.angle2turn > 15) {
-            turnRight(imu.turnSpeed);
-        }
-        else if (imu.angle2turn < -15) {
-            turnLeft(imu.turnSpeed);
-        }
-        else {
-            stop();
-            return;
-        }
+            if (imu.angle2turn > 15) {
+                turnRight(imu.turnSpeed);
+            }
+            else if (imu.angle2turn < -15) {
+                turnLeft(imu.turnSpeed);
+            }
+            else {
+                stop();
+            }
+        } while (imu.angle2turn > 15 || imu.angle2turn < -15);
     }
 
     public void turnAngle (int angle) {
         imu.angle2turn = (angle + imu.trueAngle);
 
-        if (imu.startTrueAngle == 180) {
-            imu.startTrueAngle = imu.trueAngle;
-        }
+        do{
+            if (imu.angle2turn > 180){
+                imu.angle2turn -= 360;
+            }
+            if (imu.angle2turn < -180){
+                imu.angle2turn += 360;
+            }
 
-        if (imu.angle2turn > 180){
-            imu.angle2turn -= 360;
-        }
-        if (imu.angle2turn < -180){
-            imu.angle2turn += 360;
-        }
-
-        if (imu.angle2turn > 15) {
-            turnRight(imu.turnSpeed);
-        }
-        else if (imu.angle2turn < -15) {
-            turnLeft(imu.turnSpeed);
-        }
-        else {
-            stop();
-            imu.startTrueAngle = 180;
-        }
+            if (imu.angle2turn > 15) {
+                turnRight(imu.turnSpeed);
+            }
+            else if (imu.angle2turn < -15) {
+                turnLeft(imu.turnSpeed);
+            }
+            else {
+                stop();
+                imu.startTrueAngle = 180;
+            }
+        } while (imu.angle2turn > 15 || imu.angle2turn < -15);
     }
     //setting power to 0
     public void stop() {
