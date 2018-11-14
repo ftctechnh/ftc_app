@@ -5,19 +5,34 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import junit.framework.Test;
 
-@TeleOp(name = "Avacado Mecanum TeleOp", group = "Test")
+@TeleOp(name = "Avacado Mecanum TeleOp", group = "Final")
 
 public class TeleOpMecanum extends OpMode {
 
+    // Gamepad 1
     DcMotor topLeftMotor;
     DcMotor bottomLeftMotor;
     DcMotor topRightMotor;
     DcMotor bottomRightMotor;
     byte posleft = -1;
+
+
+    //Gamepad 2
+
+    DcMotor hanger;
+    DcMotor hanger2;
+    DcMotor claw;
+    DcMotor tiltMotor;
+
+
+
     @Override
     public void loop() {
         dpad();
         TankDrive();
+        //angles();
+        //collect();
+        //lift();
     }
 
     public void init(){
@@ -70,6 +85,76 @@ public class TeleOpMecanum extends OpMode {
         }
     }
 
+/*    public void collect() {
+
+
+
+
+    } */
+
+/* Note that x, y, and z serve as placeholder values for the position of the motor: uncommenting
+this will cause syntax errors as the placeholder variables are undefined.
+
+    public void angles() {
+
+        if(gamepad2.dpad_up) {
+
+            while(tiltMotor.getCurrentPosition() < x) {
+
+                tiltMotor.setPower(0.75);
+
+            }
+
+            while(tiltMotor.getCurrentPosition() > x) {
+
+                tiltMotor.setPower(-0.75);
+
+            }
+
+        }
+
+        if(gamepad2.dpad_left) {
+
+            while(tiltMotor.getCurrentPosition() > y) {
+
+                tiltMotor.setPower(-0.75);
+
+            }
+
+            while(tiltMotor.getCurrentPosition() < y) {
+
+                tiltMotor.setPower(0.75);
+
+            }
+
+        }
+
+        if(gamepad2.dpad_down) {
+
+            while(tiltMotor.getCurrentPosition() > z) {
+
+                tiltMotor.setPower(-0.75);
+
+            }
+
+            while(tiltMotor.getCurrentPosition() < z) {
+
+                tiltMotor.setPower(0.75);
+
+            }
+
+        }
+
+        }
+*/
+/*
+    public void lift() {
+
+        float leftY_gp2 = (-gamepad2.left_stick_y);
+        float rightY_gp2 = (-gamepad2.right_stick_y);
+
+    }
+*/
     public void stop(){
 
     }
