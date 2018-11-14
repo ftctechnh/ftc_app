@@ -23,6 +23,7 @@ public class LiftTest extends LinearOpMode {
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
+        Lift.init(hardwareMap);
         telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC

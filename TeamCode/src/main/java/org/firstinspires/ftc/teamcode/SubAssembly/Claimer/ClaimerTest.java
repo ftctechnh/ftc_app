@@ -24,12 +24,13 @@ public class ClaimerTest extends LinearOpMode {
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
+        Claimer.init(hardwareMap);
+
         telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC
         waitForStart();
 
-        Claimer.init(hardwareMap);
 
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
