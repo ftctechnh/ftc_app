@@ -27,8 +27,9 @@ public class ParadeBotUsingBasicBot extends BasicBot
             super.driveMotors(-pow, pow);
         }
 
-        while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
+        while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
         {
+
         }
         driveMotors(0,0);
     }
