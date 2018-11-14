@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
@@ -41,45 +42,49 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
+ * otherwise you would use: PushbotAutoDriveByTime;
+ * <p>
+ * This code ALSO requires that the drive Motors have been configured such that a positive
+ * power command moves them forwards, and causes the encoders to count UP.
+ * <p>
+ * The desired path in this example is:
+ * - Drive forward for 48 inches
+ * - Spin right for 12 Inches
+ * - Drive Backwards for 24 inches
+ * - Stop and close the claw.
+ * <p>
+ * The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ * that performs the actual movement.
+ * This methods assumes that each movement is relative to the last stopping place.
+ * There are other ways to perform encoder based moves, but this method is probably the simplest.
+ * This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Rover Ruckus", group="Pushbot")
+@Autonomous(name = "Rover Ruckus", group = "Pushbot")
 //@Disabled
 public class RoverRuckus15091 extends LinearOpMode {
 
     /* Declare OpMode members. */
-    Hardware15091           robot   = new Hardware15091();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    Hardware15091 robot = new Hardware15091();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 288 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 3.5 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-                                                      (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
-    static final double     ARM_SPEED              = 0.3;
+    static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+            (WHEEL_DIAMETER_INCHES * 3.1415);
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
+    static final double ARM_SPEED = 0.3;
+
+    static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
+    static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
+    static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
 
     private int armSequence = 0;
 
@@ -103,40 +108,46 @@ public class RoverRuckus15091 extends LinearOpMode {
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0",  "Starting at %7d :%7d",
-                          robot.leftDrive.getCurrentPosition(),
-                          robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Path0", "Starting at %7d :%7d",
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition());
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
-        waitForStart();
+        while (!isStarted()) {
+            telemetry.addData(">", "Robot Heading = %.4f", robot.getHeading());
+            telemetry.update();
+        }
 
-        // The robot will be hung on the handle to start
-        // so, first thing to do is unlatch
-        landing();
+        if (opModeIsActive()) {
+            // The robot will be hung on the handle to start
+            // so, first thing to do is unlatch
+            landing();
 
-        // turn robot 180 degree to the right
-        encoderDrive(TURN_SPEED,-40d,40d,5d);
-        robot.tts.speak("Turn Complete");
-        //drive forward
-        encoderDrive(DRIVE_SPEED,-12d,-12d,5d);
+            // turn robot 180 degree to the right
+            //encoderDrive(TURN_SPEED, -40d, 40d, 5d);
+            //gyroTurn(TURN_SPEED, -90d);
+            //gyroTurn(TURN_SPEED, -180d);
 
-        //turn 90 degrees to the left
-        encoderDrive(TURN_SPEED,10d,-10d,5d);
-        //Drive forward
-        encoderDrive(DRIVE_SPEED,-24d,-24d,5d);
-        telemetry.addData("Path", "Complete");
-        telemetry.update();
+            //drive forward
+            //encoderDrive(DRIVE_SPEED, -12d, -12d, 5d);
+            gyroDrive(DRIVE_SPEED, -24d, 0d);
 
-        idle();
+            //turn 90 degrees to the left
+            //encoderDrive(TURN_SPEED, 10d, -10d, 5d);
+            //Drive forward
+            //encoderDrive(DRIVE_SPEED, -24d, -24d, 5d);
+            telemetry.addData("Path", "Complete");
+            telemetry.update();
+        }
+
+
     }
 
-    public void landing()
-    {
+    public void landing() {
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(ARM_SPEED);
-        while(robot.armDrive.isBusy())
-        {
+        while (robot.armDrive.isBusy()) {
             //wait for motor to finish
         }
         robot.armDrive.setPower(0d);
@@ -161,8 +172,8 @@ public class RoverRuckus15091 extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.rightDrive.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
+            newRightTarget = robot.rightDrive.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
             robot.leftDrive.setTargetPosition(newLeftTarget);
             robot.rightDrive.setTargetPosition(newRightTarget);
 
@@ -182,14 +193,14 @@ public class RoverRuckus15091 extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                   (runtime.seconds() < timeoutS) &&
-                   (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+                    (runtime.seconds() < timeoutS) &&
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
                 // Display it for the driver.
-                telemetry.addData("Path1",  "Running to %7d :%7d", newLeftTarget,  newRightTarget);
-                telemetry.addData("Path2",  "Running at %7d :%7d",
-                                            robot.leftDrive.getCurrentPosition(),
-                                            robot.rightDrive.getCurrentPosition());
+                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Path2", "Running at %7d :%7d",
+                        robot.leftDrive.getCurrentPosition(),
+                        robot.rightDrive.getCurrentPosition());
                 telemetry.update();
             }
 
@@ -203,5 +214,156 @@ public class RoverRuckus15091 extends LinearOpMode {
 
             //  sleep(250);   // optional pause after each move
         }
+    }
+
+    public void gyroHold( double speed, double angle, double holdTime) {
+
+        ElapsedTime holdTimer = new ElapsedTime();
+
+        // keep looping while we have time remaining.
+        holdTimer.reset();
+        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+            // Update telemetry & Allow time for other processes to run.
+            onHeading(speed, angle, P_TURN_COEFF);
+            telemetry.update();
+        }
+
+        // Stop all motion;
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
+    }
+
+    public void gyroDrive(double speed,
+                          double distance,
+                          double angle) {
+
+        int newLeftTarget;
+        int newRightTarget;
+        int moveCounts;
+        double max;
+        double error;
+        double steer;
+        double leftSpeed;
+        double rightSpeed;
+
+        // Ensure that the opmode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int) (distance * COUNTS_PER_INCH);
+            newLeftTarget = robot.leftDrive.getCurrentPosition() + moveCounts;
+            newRightTarget = robot.rightDrive.getCurrentPosition() + moveCounts;
+
+            // Set Target and Turn On RUN_TO_POSITION
+            robot.leftDrive.setTargetPosition(newLeftTarget);
+            robot.rightDrive.setTargetPosition(newRightTarget);
+
+            robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // start motion.
+            speed = Range.clip(Math.abs(speed), 0.0, 1.0);
+            robot.leftDrive.setPower(speed);
+            robot.rightDrive.setPower(speed);
+
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() &&
+                    (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
+
+                // adjust relative speed based on heading error.
+                error = getError(angle);
+                steer = getSteer(error, P_DRIVE_COEFF);
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    steer *= -1.0;
+
+                leftSpeed = speed + steer;
+                rightSpeed = speed - steer;
+
+                // Normalize speeds if either one exceeds +/- 1.0;
+                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                if (max > 1.0) {
+                    leftSpeed /= max;
+                    rightSpeed /= max;
+                }
+
+                robot.leftDrive.setPower(leftSpeed);
+                robot.rightDrive.setPower(rightSpeed);
+
+                // Display drive status for the driver.
+                telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
+                telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Actual", "%7d:%7d", robot.leftDrive.getCurrentPosition(),
+                        robot.rightDrive.getCurrentPosition());
+                telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+                telemetry.update();
+            }
+
+            // Stop all motion;
+            robot.leftDrive.setPower(0);
+            robot.rightDrive.setPower(0);
+
+            // Turn off RUN_TO_POSITION
+            robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+    }
+
+    public void gyroTurn(double speed, double angle) {
+
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+        }
+    }
+
+    boolean onHeading(double speed, double angle, double PCoeff) {
+        double error;
+        double steer;
+        boolean onTarget = false;
+        double leftSpeed;
+        double rightSpeed;
+
+        // determine turn power based on +/- error
+        error = getError(angle);
+
+        if (Math.abs(error) <= HEADING_THRESHOLD) {
+            steer = 0.0;
+            leftSpeed = 0.0;
+            rightSpeed = 0.0;
+            onTarget = true;
+        } else {
+            steer = getSteer(error, PCoeff);
+            leftSpeed = speed * steer;
+            rightSpeed = -leftSpeed;
+        }
+
+        // Send desired speeds to motors.
+        robot.leftDrive.setPower(leftSpeed);
+        robot.rightDrive.setPower(rightSpeed);
+
+        // Display it for the driver.
+        telemetry.addData("Target", "%5.2f", angle);
+        telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+
+        return onTarget;
+    }
+
+    public double getError(double targetAngle) {
+
+        double robotError;
+
+        // calculate error in -179 to +180 range  (
+        robotError = targetAngle - robot.getHeading();
+        while (robotError > 180) robotError -= 360;
+        while (robotError <= -180) robotError += 360;
+        return robotError;
+    }
+
+    public double getSteer(double error, double PCoeff) {
+        return Range.clip(error * PCoeff, -1, 1);
     }
 }

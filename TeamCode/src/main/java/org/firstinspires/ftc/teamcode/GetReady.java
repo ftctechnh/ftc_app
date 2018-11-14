@@ -68,11 +68,11 @@ public class GetReady extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        robot.setArmTarget(0.9800d);
+        robot.setArmTarget(1.125d);
         robot.armDrive.setPower(0.3d);
 
         while (opModeIsActive() &&
-                (runtime.seconds() < 3d) &&
+                (runtime.seconds() < 7d) &&
                 (robot.armDrive.isBusy()))
         {
             //wait for arm to reach
@@ -86,7 +86,7 @@ public class GetReady extends LinearOpMode {
         robot.armDrive.setPower(0.3d);
 
         while (opModeIsActive() &&
-                (runtime.seconds() < 3d) &&
+                (runtime.seconds() < 5d) &&
                 (robot.armDrive.isBusy()))
         {
             //wait for arm to reach

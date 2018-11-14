@@ -42,6 +42,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 
 /**
@@ -115,9 +118,13 @@ public class Gamepad extends LinearOpMode {
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.4f), right (%.4f)", leftPower, rightPower);
-            telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)", robot.armServo.getPosition(), robot.handServo.getPosition());
-            telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)", robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
+            telemetry.addData("Motors", "left (%.4f), right (%.4f)",
+                            leftPower, rightPower);
+            telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)",
+                            robot.armServo.getPosition(), robot.handServo.getPosition());
+            telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",
+                            robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
+            telemetry.addData("Heading", "%.4f", robot.getHeading());
             telemetry.update();
         }
     }

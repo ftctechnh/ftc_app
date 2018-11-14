@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -42,6 +44,11 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
 import org.firstinspires.ftc.robotcore.external.android.AndroidOrientation;
 import org.firstinspires.ftc.robotcore.external.android.AndroidSoundPool;
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  * This is NOT an opmode.
@@ -69,9 +76,7 @@ public class Hardware15091 {
     public Servo pickupServo = null;
     public AnalogInput armAngle = null;
     public AndroidTextToSpeech tts = null;
-    public AndroidGyroscope gyro = null;
-    public AndroidOrientation orientation = null;
-    public AndroidAccelerometer accelerometer = null;
+    public BNO055IMU imu;
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
 
@@ -108,6 +113,12 @@ public class Hardware15091 {
 
     }
 
+    public double getHeading() {
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        return heading;
+    }
+
     /* Initialize standard Hardware interfaces */
     public void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
@@ -134,10 +145,6 @@ public class Hardware15091 {
         tts.initialize();
         tts.setLanguage("eng");
 
-        gyro = new AndroidGyroscope();
-        accelerometer = new AndroidAccelerometer();
-        orientation = new AndroidOrientation();
-
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
         leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -151,6 +158,23 @@ public class Hardware15091 {
         leftDrive.setPower(0);
         rightDrive.setPower(0);
         armDrive.setPower(0);
+
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         tts.speak("Hello aztec, good luck.");
     }
