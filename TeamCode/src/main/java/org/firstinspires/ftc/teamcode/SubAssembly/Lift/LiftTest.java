@@ -43,6 +43,10 @@ public class LiftTest extends LinearOpMode {
                 Lift.ManualStop();
             }
 
+            if (egamepad1.a.state)
+                Lift.Lock();
+            if (egamepad1.b.state)
+                Lift.Unlock();
 
             telemetry.update();
 
