@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 
+import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 
 /* Sub Assembly Test OpMode
@@ -17,11 +18,15 @@ public class teleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addLine("Drive Test: ");
+        telemetry.addLine("Ready Player One");
+        telemetry.addLine("Ready Player Two");
+        
         double speed = 1.0;
 
         /* initialize sub-assemblies
          */
         DriveControl Drive = new DriveControl();
+        LiftControl Lift = new LiftControl();
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
@@ -35,9 +40,12 @@ public class teleop extends LinearOpMode {
         while (opModeIsActive()) {
 
             Drive.init(hardwareMap);
+            Lift.init(hardwareMap);
 
             egamepad1.updateEdge();
             egamepad2.updateEdge();
+
+            // "Ready Player One" - Halliday
 
             //speed control
             if (egamepad1.right_bumper.pressed) {
@@ -48,7 +56,6 @@ public class teleop extends LinearOpMode {
                 speed -= 0.25;
                 if (speed < 0) speed = 0;
             }
-
             if (egamepad1.dpad_left.state) {
                 Drive.tankRightForward(speed);
             } else if (egamepad1.dpad_right.state) {
@@ -66,6 +73,22 @@ public class teleop extends LinearOpMode {
             } else if (gamepad1.left_stick_x < -0.4) {
                 Drive.turnLeft(speed/2);
             }
+
+
+            //ready player two
+
+            if (egamepad2.dpad_up.state) {
+                Lift.ManualExtend();
+            } else if (egamepad2.dpad_down.state) {
+                Lift.ManualRetract();
+            } else  {
+                Lift.ManualStop();
+            }
+
+            if (egamepad2.a.state)
+                Lift.Lock();
+            if (egamepad2.b.state)
+                Lift.Unlock();
 
             telemetry.addLine("Speed: " + speed);
 

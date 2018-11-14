@@ -51,13 +51,13 @@ public class LiftControl {
     }
 
     public void ManualExtend() {
-        LifterLeftM.setPower(0.35);
-        LifterRightM.setPower(0.35);
+        LifterLeftM.setPower(0.50);
+        LifterRightM.setPower(0.50);
     }
 
     public void ManualRetract() {
-        LifterLeftM.setPower(-0.35);
-        LifterRightM.setPower(-0.35);
+        LifterLeftM.setPower(-0.50);
+        LifterRightM.setPower(-0.50);
     }
 
     public void ManualStop() {
@@ -67,11 +67,11 @@ public class LiftControl {
 
     //setting power to lower the robot or reach the lift up
     public void AutoExtend() {
-        while (!LifterButtonT.isPressed()) {
-            LifterLeftM.setPower(0.35);
-            LifterRightM.setPower(0.35);
+        if (!LifterButtonT.isPressed()) {
+            LifterLeftM.setPower(0.50);
+            LifterRightM.setPower(0.50);
         }
-        while (LifterButtonT.isPressed()) {
+        else if (LifterButtonT.isPressed()) {
             LifterLeftM.setPower(0);
             LifterRightM.setPower(0);
         }
@@ -80,11 +80,11 @@ public class LiftControl {
 
     //setting power to raise the robot or pull the lift back in
     public void AutoRetract() {
-        while (!LifterButtonB.isPressed()) {
-            LifterLeftM.setPower(-0.35);
-            LifterRightM.setPower(-0.35);
+        if (!LifterButtonB.isPressed()) {
+            LifterLeftM.setPower(-0.50);
+            LifterRightM.setPower(-0.50);
         }
-        while (LifterButtonB.isPressed()) {
+        else if (LifterButtonB.isPressed()) {
             LifterLeftM.setPower(0);
             LifterRightM.setPower(0);
         }
