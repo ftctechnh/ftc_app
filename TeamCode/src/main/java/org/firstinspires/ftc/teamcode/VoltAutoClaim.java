@@ -10,6 +10,7 @@ public class VoltAutoClaim extends VoltageBaseAutonomous{
     @Override
     public void DriveTheRobot()
     {
+
         //position-specific instructions here
     }
 
