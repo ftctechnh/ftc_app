@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import junit.framework.Test;
 import org.firstinspires.ftc.teamcode.Avocado.Hardware.hardwaremap_TeleOpMecanum;
 
-@TeleOp(name = "Avacado Mecanum TeleOp", group = "Final")
+@TeleOp(name = "Avacado TeleOp", group = "Test")
 
 
 public class TeleOpMecanum extends OpMode {

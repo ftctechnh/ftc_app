@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Avocado.TeleOP.old;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -7,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * This file provides code for a sample IterativeOpMode that pertains to a possible range of viable robots for the ROVER RUCKUS challenge.
  */
 
-
+@Disabled
 @TeleOp(name="Basic Tank Drive", group="Test")
 
 

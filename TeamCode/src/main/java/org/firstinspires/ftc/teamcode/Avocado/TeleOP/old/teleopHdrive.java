@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.Avocado.TeleOP.old;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -6,9 +7,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Team Inspiration 11128
  */
 
-
+@Disabled
 @TeleOp(name="Basic H Drive (2 Wheel)", group="Test")
-
 
 public class teleopHdrive extends OpMode{
 
