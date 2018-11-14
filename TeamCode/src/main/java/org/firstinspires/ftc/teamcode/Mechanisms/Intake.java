@@ -31,12 +31,16 @@ public class Intake {
 
         this.leftIntakeRoller = leftIntakeRoller;
         this.rightIntakeRoller = rightIntakeRoller;
-        leftIntakeFlipper.setPwmDisable();
-        rightIntakeFlipper.setPwmDisable();
 
-        rightIntakeRoller.setDirection(CRServoImplEx.Direction.REVERSE);
-        leftIntakeFlipper.setDirection(ServoImplEx.Direction.FORWARD);
-        rightIntakeFlipper.setDirection(ServoImplEx.Direction.REVERSE);
+        // In case we are mocking this
+        try {
+            leftIntakeFlipper.setPwmDisable();
+            rightIntakeFlipper.setPwmDisable();
+
+            rightIntakeRoller.setDirection(CRServoImplEx.Direction.REVERSE);
+            leftIntakeFlipper.setDirection(ServoImplEx.Direction.FORWARD);
+            rightIntakeFlipper.setDirection(ServoImplEx.Direction.REVERSE);
+        } catch (NullPointerException e) {}
     }
 
     public void setIntakeSpeed(double s) {

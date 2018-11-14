@@ -18,6 +18,7 @@ public abstract class SophisticatedSampling extends AutoUtils {
         robot.init(true);
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
         initVuforia();
+        setWinchHoldPosition();
 
         // Display telemetry feedback
         telemetry.log().add("Running sophisticated sampling op-mode");

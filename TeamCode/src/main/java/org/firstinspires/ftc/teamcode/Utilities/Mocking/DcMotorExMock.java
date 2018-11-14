@@ -1,5 +1,6 @@
-package TestUtilities;
+package org.firstinspires.ftc.teamcode.Utilities.Mocking;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -8,22 +9,83 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-/**
- * Created by guberti on 1/9/2018.
- */
+public class DcMotorExMock implements DcMotorEx {
 
-public class MockDcMotor implements DcMotorEx {
+    DcMotor.RunMode mode = RunMode.RUN_WITHOUT_ENCODER;
 
-    double speed;
-    RunMode mode;
-    int targetPos;
-    int currentPos;
+    @Override
+    public void setMotorEnable() {
 
-    public MockDcMotor() {
-        double speed = 0.0;
-        RunMode mode = RunMode.RUN_WITHOUT_ENCODER;
-        int targetPos = 0;
-        int currentPos = 0;
+    }
+
+    @Override
+    public void setMotorDisable() {
+
+    }
+
+    @Override
+    public boolean isMotorEnabled() {
+        return false;
+    }
+
+    @Override
+    public void setVelocity(double angularRate) {
+
+    }
+
+    @Override
+    public void setVelocity(double angularRate, AngleUnit unit) {
+
+    }
+
+    @Override
+    public double getVelocity() {
+        return 0;
+    }
+
+    @Override
+    public double getVelocity(AngleUnit unit) {
+        return 0;
+    }
+
+    @Override
+    public void setPIDCoefficients(RunMode mode, PIDCoefficients pidCoefficients) {
+
+    }
+
+    @Override
+    public void setPIDFCoefficients(RunMode mode, PIDFCoefficients pidfCoefficients) throws UnsupportedOperationException {
+
+    }
+
+    @Override
+    public void setVelocityPIDFCoefficients(double p, double i, double d, double f) {
+
+    }
+
+    @Override
+    public void setPositionPIDFCoefficients(double p) {
+
+    }
+
+    @Override
+    public PIDCoefficients getPIDCoefficients(RunMode mode) {
+        return null;
+    }
+
+    @Override
+    public PIDFCoefficients getPIDFCoefficients(RunMode mode) {
+        return null;
+    }
+
+    @Override
+    public void setTargetPositionTolerance(int tolerance) {
+
+    }
+
+    @Override
+    public int getTargetPositionTolerance() {
+        return 0;
     }
 
     @Override
@@ -68,12 +130,12 @@ public class MockDcMotor implements DcMotorEx {
 
     @Override
     public void setTargetPosition(int position) {
-        targetPos = position;
+
     }
 
     @Override
     public int getTargetPosition() {
-        return targetPos;
+        return 0;
     }
 
     @Override
@@ -83,10 +145,8 @@ public class MockDcMotor implements DcMotorEx {
 
     @Override
     public int getCurrentPosition() {
-        return currentPos;
+        return 0;
     }
-
-    public void setCurrentPosition(int m) { currentPos = m;}
 
     @Override
     public void setMode(RunMode mode) {
@@ -110,12 +170,12 @@ public class MockDcMotor implements DcMotorEx {
 
     @Override
     public void setPower(double power) {
-        this.speed = power;
+
     }
 
     @Override
     public double getPower() {
-        return speed;
+        return 0;
     }
 
     @Override
@@ -144,62 +204,7 @@ public class MockDcMotor implements DcMotorEx {
     }
 
     @Override
-    public void close() {}
-
-    @Override
-    public void setMotorEnable() {}
-
-    @Override
-    public void setMotorDisable() {}
-
-    @Override
-    public boolean isMotorEnabled() {return false;}
-
-    @Override
-    public void setVelocity(double angularRate) {
+    public void close() {
 
     }
-
-    @Override
-    public void setVelocity(double angularRate, AngleUnit unit) {}
-
-    @Override
-    public double getVelocity() {
-        return 0;
-    }
-
-    @Override
-    public double getVelocity(AngleUnit unit) {return 0;}
-
-    @Override
-    public void setPIDCoefficients(RunMode mode, PIDCoefficients pidCoefficients) {}
-
-    @Override
-    public void setPIDFCoefficients(RunMode mode, PIDFCoefficients pidfCoefficients) throws UnsupportedOperationException {
-
-    }
-
-    @Override
-    public void setVelocityPIDFCoefficients(double p, double i, double d, double f) {
-
-    }
-
-    @Override
-    public void setPositionPIDFCoefficients(double p) {
-
-    }
-
-    @Override
-    public PIDCoefficients getPIDCoefficients(RunMode mode) {return null;}
-
-    @Override
-    public PIDFCoefficients getPIDFCoefficients(RunMode mode) {
-        return null;
-    }
-
-    @Override
-    public void setTargetPositionTolerance(int tolerance) {}
-
-    @Override
-    public int getTargetPositionTolerance() {return 0;}
 }

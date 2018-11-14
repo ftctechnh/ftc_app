@@ -25,7 +25,7 @@ public class TandemMapping extends SoloMapping {
     final static double MIN_ARM_MOVE_SPEED = 0.15;
     @Override
     public double armSpeed() {
-        return removeLowVals(gamepad2.left_trigger - gamepad2.right_trigger, 0.05) * 0.4;
+        return removeLowVals(gamepad2.left_trigger - gamepad2.right_trigger, 0.05);
     }
 
     public double getExtendSpeed() {
