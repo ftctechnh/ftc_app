@@ -49,12 +49,29 @@ public class LiftControl {
         LifterLeftM.setPower(0);
         LifterRightM.setDirection(DcMotor.Direction.REVERSE);
     }
+
+    public void ManualExtend() {
+        LifterLeftM.setPower(0.50);
+        LifterRightM.setPower(0.50);
+    }
+
+    public void ManualRetract() {
+        LifterLeftM.setPower(-0.50);
+        LifterRightM.setPower(-0.50);
+    }
+
+    public void ManualStop() {
+        LifterLeftM.setPower(0);
+        LifterRightM.setPower(0);
+    }
+
     //setting power to lower the robot or reach the lift up
-    public void Extend() {
-        while (!LifterButtonT.isPressed()) {
-            LifterLeftM.setPower(0.35);
-            LifterRightM.setPower(0.35);
-        } while (LifterButtonT.isPressed()) {
+    public void AutoExtend() {
+        if (!LifterButtonT.isPressed()) {
+            LifterLeftM.setPower(0.50);
+            LifterRightM.setPower(0.50);
+        }
+        else if (LifterButtonT.isPressed()) {
             LifterLeftM.setPower(0);
             LifterRightM.setPower(0);
         }
@@ -62,18 +79,16 @@ public class LiftControl {
     }
 
     //setting power to raise the robot or pull the lift back in
-    public void Retract() {
-        while (!LifterButtonB.isPressed()) {
-            LifterLeftM.setPower(-0.35);
-            LifterRightM.setPower(-0.35);
-        } while (LifterButtonB.isPressed()) {
+    public void AutoRetract() {
+        if (!LifterButtonB.isPressed()) {
+            LifterLeftM.setPower(-0.50);
+            LifterRightM.setPower(-0.50);
+        }
+        else if (LifterButtonB.isPressed()) {
             LifterLeftM.setPower(0);
             LifterRightM.setPower(0);
         }
     }
-
-   
-
 
 
     //locking the servos into place to hold position
