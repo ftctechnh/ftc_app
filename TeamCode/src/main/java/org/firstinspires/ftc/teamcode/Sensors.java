@@ -32,9 +32,22 @@ public class Sensors {
     {
         //angle    should go from -90   to 90
         //position should go from min to max
-        double position = rightOfCenter / 90 ;
+        double center = 0;
+        double right = 1;
+        double position = (right - center) * rightOfCenter / 90 ;
 
         //dServoX.setPosition(position);
+    }
+
+    public void rotateMobileZ(double upwardsOfHorizontal) //in degrees for clarity
+    {
+        //angle    should go from -90   to 90
+        //position should go from min to max
+        double center = 0;
+        double down = -1;
+        double position = (center - down) * upwardsOfHorizontal / 90 ;
+
+        //dServoZ.setPosition(position);
     }
 
 //    public double getMobileAngle()

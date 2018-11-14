@@ -13,10 +13,14 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
     Mode action;
     ElapsedTime timer;
 
+    final double ticksPerRev = 2240;
+    final double inPerRev = Math.PI * 5;
+
     private enum Mode
     {
         Stop,
         Drop,
+        Slide,
         MoveToWall,
         MoveToDepot
     }
@@ -35,13 +39,13 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot.driveEngine.driveAtAngle(Math.PI);
         action = Mode.Stop;
-        robot.sensors.rotateMobileX(0);
+
         waitForStart();
         action = Mode.Drop;
         startPosition = StartPosition.BackBlue;
         boolean midtargetAchieved = false;
-        boolean touchGround = false;
         timer = new ElapsedTime();
         timer.startTime();
 
@@ -51,38 +55,37 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    if(!touchGround) {
-                        if (t < 1) //for the first second
-                        {
-                            robot.lift(-0.7); //pull while we
-                            robot.setBrake(.6); //disengage the brake
-                        } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
-                        {
-                            robot.lift(.2); //push up, which drops the robot
-                        }
-                        else //if we are touching the ground
-                        {
-                            touchGround = true; //set it to true
-                            timer.reset();  //reset the timer (needed because we don't know how long the first section will take)
-                        }
+                    if (t < 1) //for the first second
+                    {
+                        robot.lift(-0.7); //pull while we
+                        robot.setBrake(false); //disengage the brake
+                    } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
+                    {
+                        robot.lift(.2); //push up, which drops the robot
                     }
-
-                    else if(t < .1) //for an additional .1 seconds
+                    else {
+                        timer.reset();
+                        //robot.sensors.dServoZ.setPosition(0);
+                        action = Mode.Slide;
+                    }
+                case Slide:
+                    if(t < .3) //for an additional .3 seconds
                     {
                         robot.lift(.2); //drop a bit more
                     }
-                    else if(t < .6) //for the next .5 seconds
+                    else if(encoderTest(4)) //the back encoder has moved less than 4 inches
                     {
                         robot.lift(0); //stop the lift motor
-                        robot.driveEngine.drive(.2,0); //drive to the side to unhook
+                        robot.driveEngine.drive(.1,0); //drive to the side to unhook
                     }
-
-                    else if(t >= .6)
+                    else
                     {
-                        if(t/1.5 - Math.floor(t)/1.5 > .60)  //rotates for 60% of 1.5 seconds
+                        if(t/1.5 - Math.floor(t)/1.5 < .60)  //rotates for 60% of 1.5 seconds
                             robot.driveEngine.rotate(.1);
                         else
                             robot.driveEngine.rotate(0);  //and stops so we can see the target
+
+                        //robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .1 : 0);
 
                         if(robot.camera.targetVisible() != null) //if we see a camera (null = nothing)
                         {
@@ -104,9 +107,14 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                     break;
 
                 case MoveToWall:
+                    if(robot.camera.targetVisible() == null){
+                        //robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .1 : 0);
+                    }
+
                     double moveSpeed = .6;
                     double target_radius = 4; //inches
                     double accuracy_angle = 5;
+
                     switch(startPosition)
                     {
                         case FrontRed:
@@ -179,6 +187,11 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
             telemetry.update();
             idle();
         }
+    }
+
+    public boolean encoderTest(double back_distance)
+    {
+        return robot.driveEngine.back.getCurrentPosition() / ticksPerRev * inPerRev < back_distance;
     }
 
 

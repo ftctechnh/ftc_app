@@ -28,7 +28,7 @@ public class holonomicDrive_0_1 extends LinearOpMode
             }
             else
             {
-                robot.manualDrive((Math.PI/180) * 180); //Positive is counterclockwise
+                robot.manualDrive();
             }
             if(gamepad1.dpad_up && x < .7)
             {

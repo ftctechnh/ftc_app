@@ -117,11 +117,11 @@ public class Bogg
             lift.setPower(smoothLift(0));
     }
 
-    public void setBrake(boolean position)
+    public void setBrake(boolean on)
     {
-        if(position == true)
+        if(on)
             brake.setPosition(.5);
-        else
+        else //off
             brake.setPosition(.6);
     }
 
@@ -133,14 +133,16 @@ public class Bogg
     public void manualDrive()
     {
         if(gamepad.left_stick_button)
-            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y);
+            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y,true);
         else
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }
     public void manualDrive(double theta)
     {
+        driveEngine.driveAtAngle(theta);
+
         if(gamepad.left_stick_button)
-            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y, theta);
+            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y,true);
         else
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }

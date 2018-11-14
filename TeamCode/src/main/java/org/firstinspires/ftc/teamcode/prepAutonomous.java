@@ -23,6 +23,7 @@ public class prepAutonomous extends LinearOpMode
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         action = Mode.Stop;
         robot.sensors.rotateMobileX(0);
+        robot.sensors.rotateMobileZ(-90);
         waitForStart();
         action = Mode.Drop;
         timer = new ElapsedTime();

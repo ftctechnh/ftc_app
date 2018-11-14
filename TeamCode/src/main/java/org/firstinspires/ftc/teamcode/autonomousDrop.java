@@ -26,13 +26,13 @@ public class autonomousDrop extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot.driveEngine.driveAtAngle(Math.PI);
         action = Mode.Stop;
 
         waitForStart();
         timer = new ElapsedTime();
         timer.startTime();
         action = Mode.Drop;
-        boolean touchGround = false;
 
         while (opModeIsActive())
         {

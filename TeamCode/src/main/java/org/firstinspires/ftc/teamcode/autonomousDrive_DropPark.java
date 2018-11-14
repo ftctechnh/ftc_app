@@ -12,11 +12,15 @@ public class autonomousDrive_DropPark extends LinearOpMode
     Bogg robot;
     Mode action;
     ElapsedTime timer;
+    final double ticksPerRev = 2240;
+    final double inPerRev = Math.PI * 5;
 
     private enum Mode
     {
         Stop,
-        Drop
+        Slide,
+        Drop,
+        Park
     }
 
 
@@ -24,11 +28,11 @@ public class autonomousDrive_DropPark extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot.driveEngine.driveAtAngle(Math.PI);
         action = Mode.Stop;
-        robot.sensors.rotateMobileX(0);
+
         waitForStart();
         action = Mode.Drop;
-        boolean touchGround = false;
         timer = new ElapsedTime();
         timer.startTime();
 
@@ -38,42 +42,43 @@ public class autonomousDrive_DropPark extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    if(!touchGround) {
-                        if (t < 1) //for the first second
-                        {
-                            robot.lift(-0.7); //pull while we
-                            robot.setBrake(.6); //disengage the brake
-                        } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
-                        {
-                            robot.lift(.2); //push up, which drops the robot
-                        }
-                        else //if we are touching the ground
-                        {
-                            touchGround = true; //set it to true
-                            timer.reset();  //reset the timer (needed because we don't know how long the first section will take)
-                        }
+                    if (t < 1) //for the first second
+                    {
+                        robot.lift(-0.7); //pull while we
+                        robot.setBrake(false); //disengage the brake
+                    } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
+                    {
+                        robot.lift(.2); //push up, which drops the robot
                     }
-
-                    else if(t < .1) //for an additional .1 seconds
+                    else {
+                        timer.reset();
+                        action = Mode.Slide;
+                    }
+                case Slide:
+                    if(t < .3) //for an additional .3 seconds
                     {
                         robot.lift(.2); //drop a bit more
                     }
-                    else if(t < .6) //for the next .5 seconds
+                    else if(encoderTest(4)) //the back encoder has moved less than 4 inches
                     {
                         robot.lift(0); //stop the lift motor
-                        robot.driveEngine.drive(.2,0); //drive to the side to unhook
+                        robot.driveEngine.drive(.1,0); //drive to the side to unhook
                     }
-
-                    else if(t < 4) //for the next 3.4 seconds
+                    else{ //if the robot has unhooked
+                        timer.reset();
+                        action = Mode.Park;
+                    }
+                    break;
+                case Park:
+                    if(t < 3.5)
                     {
-                        robot.driveEngine.drive(-.4,.4); //drive diagonally
-
+                        robot.driveEngine.drive(0,.4);
                     }
-                    else //if t > 4
+                    else //if t > 3.5
                         action = Mode.Stop;
                     break;
 
-                default: //if action !Drop e.g. Stop
+                default: //if action !(Drop || Park) e.g. Stop
                     robot.driveEngine.drive(0,0); //Stop driving
                     robot.lift(0); //Stop Lifting
 
@@ -90,7 +95,10 @@ public class autonomousDrive_DropPark extends LinearOpMode
             idle();
         }
     }
-
+    public boolean encoderTest(double back_distance)
+    {
+        return robot.driveEngine.back.getCurrentPosition() / ticksPerRev * inPerRev < back_distance;
+    }
 
 }
 

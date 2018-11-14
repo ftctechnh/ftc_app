@@ -8,12 +8,15 @@ public class DriveEngine {
     DcMotor right;
     DcMotor left;
 
+    private double theta;
+
     public DriveEngine(HardwareMap hardwareMap) {
         back  = hardwareMap.dcMotor.get("back");
         right = hardwareMap.dcMotor.get("right");
         left  = hardwareMap.dcMotor.get("left");
+        theta = 0;
 
-//        back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -28,16 +31,6 @@ public class DriveEngine {
     }
 
     public void drive(double x, double y) {
-        //back.setPower(Math.cos(0) * x + Math.sin(0) * y);
-        //right.setPower(Math.cos(Math.PI * 2 / 3) * x + Math.sin(Math.PI * 2 / 3) * y);
-        //left.setPower(Math.cos(Math.PI * 4 / 3) * x + Math.sin(Math.PI * 4 / 3) * y);
-
-        back.setPower(x);
-        right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );
-        left.setPower ( (-x/2) + ( (-y*Math.sqrt(3)) / 2 ) );
-    }
-
-    public void drive(double x, double y, double theta) {
         double xprime = x * Math.cos(theta) - y * Math.sin(theta);
         double yprime = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -47,6 +40,36 @@ public class DriveEngine {
         back.setPower(x);
         right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );
         left.setPower ( (-x/2) + ( (-y*Math.sqrt(3)) / 2 ) );
+    }
+
+
+    public void drive(double x, double y,boolean op) {
+        double xprime = x * Math.cos(theta) - y * Math.sin(theta);
+        double yprime = x * Math.sin(theta) + y * Math.cos(theta);
+
+        x = xprime;
+        y = yprime;
+
+        double backPower = x;
+        double rightPower = (-x/2) + y * (Math.sqrt(3)/2) ;
+        double leftPower  = (-x/2) - y * (Math.sqrt(3)/2) ;
+
+        if(op && Math.sqrt(x*x + y*y) > .90)
+        {
+            double max = Math.max(Math.max(backPower,rightPower),leftPower);
+            backPower  *= 1 / max;
+            rightPower *= 1 / max;
+            leftPower  *= 1 / max;
+        }
+
+        back.setPower(backPower);
+        right.setPower(rightPower);
+        left.setPower (leftPower);
+    }
+
+    public void driveAtAngle(double theta)
+    {
+        this.theta = theta;
     }
 
     public void rotate(double y) {

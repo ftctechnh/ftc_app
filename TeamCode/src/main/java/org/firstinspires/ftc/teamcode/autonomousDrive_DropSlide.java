@@ -2,20 +2,24 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
-public class autonomousDrive_Drop extends LinearOpMode
+public class autonomousDrive_DropSlide extends LinearOpMode
 {
     Bogg robot;
     Mode action;
     ElapsedTime timer;
+    final double ticksPerRev = 2240;
+    final double inPerRev = Math.PI * 5;
 
     private enum Mode
     {
         Stop,
+        Slide,
         Drop
     }
 
@@ -26,6 +30,7 @@ public class autonomousDrive_Drop extends LinearOpMode
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
         action = Mode.Stop;
+        robot.sensors.rotateMobileX(0);
 
         waitForStart();
         action = Mode.Drop;
@@ -45,7 +50,21 @@ public class autonomousDrive_Drop extends LinearOpMode
                     {
                         robot.lift(.2); //push up, which drops the robot
                     }
-                    else //if we are touching the ground
+                    else {
+                        timer.reset();
+                        action = Mode.Slide;
+                    }
+                case Slide:
+                    if(t < .3) //for an additional .3 seconds
+                    {
+                        robot.lift(.2); //drop a bit more
+                    }
+                    else if(encoderTest(4)) //the back encoder has moved less than 4 inches
+                    {
+                        robot.lift(0); //stop the lift motor
+                        robot.driveEngine.drive(.1,0); //drive to the side to unhook
+                    }
+                    else //if the robot has unhooked
                         action = Mode.Stop;
                     break;
 
@@ -59,11 +78,17 @@ public class autonomousDrive_Drop extends LinearOpMode
             // Display the current values
             telemetry.addData("time: ", t);
             telemetry.addData("brake position: ", robot.brake.getPosition());
+            telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
             telemetry.addData("mode", action);
             telemetry.update();
             idle();
         }
+    }
+
+    public boolean encoderTest(double back_distance)
+    {
+        return robot.driveEngine.back.getCurrentPosition() / ticksPerRev * inPerRev < back_distance;
     }
 
 
