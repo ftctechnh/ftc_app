@@ -42,7 +42,7 @@ public class VoltageTeleOp extends VoltageBase
                         mineralPosition = topPOS;
                         rampUp = !rampUp;   // Switch ramp direction
                     }
-                servo.setPosition(mineralPosition);  // Set the servo to the new position
+                mineralArm.setPosition(mineralPosition);  // Set the servo to the new position
                 telemetry.addData("Servo Position", mineralArm.getPosition());
                 telemetry.update();
             } else if (gamepad2.b && mineralPosition>bottomPOS) {
@@ -52,7 +52,7 @@ public class VoltageTeleOp extends VoltageBase
                         mineralPosition = bottomPOS;
                         rampUp = !rampUp;  // Switch ramp direction
                     }
-                servo.setPosition(mineralPosition);  // Set the servo to the new position
+                mineralArm.setPosition(mineralPosition);  // Set the servo to the new position
                 telemetry.addData("Servo Position", mineralArm.getPosition());
                 telemetry.update();
                 }
@@ -64,7 +64,7 @@ public class VoltageTeleOp extends VoltageBase
             }
 
             else if(gamepad2.right_bumper) {
-                completeHookExtend(0.8, 6);
+                completeHookExtend(0.8);
             }
 
             idle(); //put this at the end of larger while loops to let the software catch up with itself.

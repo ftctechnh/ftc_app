@@ -19,11 +19,12 @@ public abstract class VoltageBase extends LinearOpMode{
     //Declare Servos
     public Servo mineralArm;
 
-    //variables or any other data you will use later here
+    //Variables or any other data you will use later here
+    public final static int stringInches = 6; //length of pulley string in inches
     public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
     public int Core_EncoderTicksperRevConstant = 288;
     public int HD_EncoderTicksperRevConstant = 2240;
-    public final static int HD_EncoderExtendedPosition = 6*2240;
+    public final static int HD_EncoderExtendedPosition = stringInches*2240;
     public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
     public int thingsInBot = 0; //currently not used for anything.
     public boolean RobotIsGoingForwards = true;
@@ -38,7 +39,6 @@ public abstract class VoltageBase extends LinearOpMode{
     static final double bottomPOS     =  1.0;     // Minimum rotational position
 
     // Define class members
-    Servo   servo;
     double  mineralPosition = (bottomPOS - topPOS); // Start at bottom position
     boolean rampUp = true;
 
@@ -253,7 +253,7 @@ public abstract class VoltageBase extends LinearOpMode{
             StopHook();
     } */
 
-    public void completeHookExtend(double speed_1, int stringInches) {
+    public void completeHookExtend(double speed_1) {
         liftMotor.setPower(-speed_1);
         //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -289,6 +289,5 @@ public abstract class VoltageBase extends LinearOpMode{
     public void mineralArmHighStop() {
         mineralArm.setPosition(.80);
     }
-
 
 }
