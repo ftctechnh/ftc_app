@@ -1,25 +1,19 @@
-package org.firstinspires.ftc.teamcode.Avocado.old;
+package org.firstinspires.ftc.teamcode.Avocado.TeleOP.old;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Avocado.old.hardwareprofile;
-
 /**
  * Team Inspiration 11128
- * This file provides code for a sample IterativeOpMode that pertains to a possible range of viable robots for the ROVER RUCKUS challenge.
  */
 
 
-@TeleOp(name="Basic Tank Drive", group="Test")
+@TeleOp(name="Basic H Drive (2 Wheel)", group="Test")
 
 
-public class teleop extends OpMode{
+public class teleopHdrive extends OpMode{
 
     /* Define hardware */
-    hardwareprofile robot       = new hardwareprofile(); // use the class created to define a Pushbot's hardware
-
-    // double          clawOffset  = 0.0 ;                  // Servo mid position
-    // final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
+    hardwareprofileHdrive robot       = new hardwareprofileHdrive(); // use the class created to define a Pushbot's hardware
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -40,7 +34,9 @@ public class teleop extends OpMode{
      */
     @Override
     public void init_loop() {
+
     }
+
 
     /*
      * Code to run ONCE when the driver hits PLAY
@@ -48,6 +44,7 @@ public class teleop extends OpMode{
     @Override
     public void start() {
         loop();
+
     }
 
     /*
@@ -57,29 +54,27 @@ public class teleop extends OpMode{
     public void loop() {
         double left;
         double right;
+        double middle;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
+        left = -gamepad1.left_stick_y;
+        right = gamepad1.right_stick_y;
 
         robot.topLeftMotor.setPower(left);
-        robot.bottomLeftMotor.setPower(left);
+
         robot.topRightMotor.setPower(right);
-        robot.bottomRightMotor.setPower(right);
+        if (gamepad1.dpad_left && !gamepad1.dpad_right) {
+            robot.middleMotor.setPower(1);
 
-        if (gamepad1.a) {
-            robot.linearLift.setPower(0.8);
-        } else if (gamepad1.y) {
-            robot.linearLift.setPower(-1);
-        }
+        } else if (!gamepad1.dpad_left && !gamepad1.dpad_right) {
 
-        if (gamepad1.x) {
-            robot.claw.setPower(0.5);
-        } else if (gamepad1.b) {
-
-            robot.claw.setPower(1);
+            robot.middleMotor.setPower(0);
+        } else if (gamepad1.dpad_right && !gamepad1.dpad_left) {
+            robot.middleMotor.setPower(-1);
 
         }
+        telemetry.addData("Joystick value", left);
+        telemetry.update();
 
     }
 
