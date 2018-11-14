@@ -29,7 +29,7 @@ public class DriveControl {
     IMUcontrol imu = new IMUcontrol();
 
     //initializing motors
-    private DcMotor FrontRightM = null;
+       private DcMotor FrontRightM = null;
     private DcMotor FrontLeftM = null;
     private DcMotor BackRightM = null;
     private DcMotor BackLeftM = null;
@@ -138,6 +138,7 @@ public class DriveControl {
         }
         else {
             stop();
+            return;
         }
     }
 

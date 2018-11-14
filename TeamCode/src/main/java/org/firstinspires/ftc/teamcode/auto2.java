@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SamplingOrderExample;
-import org.firstinspires.ftc.teamcode.Sensors.IMU;
+import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
 //import static org.firstinspires.ftc.teamcode.auto2.State.STATE_STOP;
 
 @Autonomous(name = "Auto2", group = "Drive")
@@ -20,7 +20,7 @@ public class auto2 extends LinearOpMode {
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
-    IMU imu = new IMU();
+    IMUcontrol imu = new IMUcontrol();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
