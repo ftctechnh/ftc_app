@@ -156,9 +156,11 @@ public class DriveTrainNew {
         driveMotors.useEncoders();
     }
 
-
     // Untested proportional IMU rotation
-    public void rotateIMU(Direction direction, double angle, double power, double allowedError, double timeoutS) {
+    public void rotateIMU(Direction direction, double angle, double power, double timeoutS) {
+        double kp = 180 * power;
+        double minError = 2;
+
         double currentHeading = imu.getAngle(Axis.HEADING);
         double targetHeading;
 
@@ -177,8 +179,8 @@ public class DriveTrainNew {
         double error = getError(currentHeading, targetHeading);
         double startTime = System.currentTimeMillis();
 
-        while (error > allowedError && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
-            double proportionalPower = power * error / 180;
+        while (error > minError && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
+            double proportionalPower = kp * error;
             move(direction,proportionalPower);
 
             currentHeading = imu.getAngle(Axis.HEADING);
@@ -186,6 +188,18 @@ public class DriveTrainNew {
         }
 
         driveMotors.stopAll();
+    }
+
+    public void rotateToHeading(double targetHeading, double power, double timeoutS) {
+        Direction direction;
+        double angle = targetHeading - imu.getAngle(Axis.HEADING);
+        if (angle < 0) {
+            angle = Math.abs(angle);
+            direction = Direction.CCW;
+        } else {
+            direction = Direction.CW;
+        }
+        rotateIMU(direction, angle, power, timeoutS);
     }
 
     // Get angle between -180 and 180
