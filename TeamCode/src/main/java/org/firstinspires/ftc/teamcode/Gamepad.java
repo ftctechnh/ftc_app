@@ -119,11 +119,11 @@ public class Gamepad extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.4f), right (%.4f)",
-                            leftPower, rightPower);
+                    leftPower, rightPower);
             telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)",
-                            robot.armServo.getPosition(), robot.handServo.getPosition());
+                    robot.armServo.getPosition(), robot.handServo.getPosition());
             telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",
-                            robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
+                    robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
             telemetry.addData("Heading", "%.4f", robot.getHeading());
             telemetry.update();
         }
@@ -144,14 +144,19 @@ public class Gamepad extends LinearOpMode {
             armPower = -Range.scale(gamepad1.right_trigger, 0d, 1d, 0d, 1d);
         }
 
-        if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
+        if (gamepad2.left_bumper || gamepad1.left_bumper || gamepad2.y || gamepad1.y) { //set arm to drop mineral
             if (armSequence == 0) {
                 boolean isDone = robot.setArmTarget(1.3050d);
 
                 armPower = robot.ARM_POWER;
                 if (isDone) {
-                    armPosition = 0.2922d;
-                    handPosition = 0.3661d;
+                    if (gamepad2.left_bumper || gamepad1.left_bumper) {
+                        armPosition = 0.2922d;
+                        handPosition = 0.3661d;
+                    } else {
+                        handPosition = 0d;
+                        armPosition = 1d;
+                    }
                     armSequence = 2;
                 }
             }
