@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 public class Sensors {
@@ -23,7 +22,7 @@ public class Sensors {
         //dServoX = hardwareMap.get(Servo.class, "dServoX");
         //dServoZ = hardwareMap.get(Servo.class, "dServoZ");
         dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
-        dMobile = hardwareMap.get(DistanceSensor.class, "dMobileZ");
+        dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
     }

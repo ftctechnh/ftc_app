@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
+@Autonomous(name="prepAutonomous", group = "Testing")
 public class prepAutonomous extends LinearOpMode
 {
     Bogg robot;

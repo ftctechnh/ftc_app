@@ -37,7 +37,7 @@ public class autonomousDrive_Drop extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    if (t < 1) //for the first second
+                    if (t < 4) //for the first second
                     {
                         robot.lift(-0.7); //pull while we
                         robot.setBrake(false); //disengage the brake
