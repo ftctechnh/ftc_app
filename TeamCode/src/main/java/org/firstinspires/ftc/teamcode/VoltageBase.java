@@ -19,18 +19,28 @@ public abstract class VoltageBase extends LinearOpMode{
     //Declare Servos
     public Servo mineralArm;
 
-    //variables or any other data you will use later here
+    //Variables or any other data you will use later here
+    public final static int stringInches = 6; //length of pulley string in inches
     public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
     public int Core_EncoderTicksperRevConstant = 288;
     public int HD_EncoderTicksperRevConstant = 2240;
+    public final static int HD_EncoderExtendedPosition = stringInches*2240;
     public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
     public int thingsInBot = 0; //currently not used for anything.
     public boolean RobotIsGoingForwards = true;
-    public double mineralPosition = 0;
+
     public boolean hanging = true;
     public int randomChangeSoICanPush = 7;
     public final static double mineralArm_Home = 0.002;
     public abstract void DefineOpMode();
+    static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int    CYCLE_MS    =   50;     // period of each cycle
+    static final double topPOS     =  0.0;     // Maximum rotational position
+    static final double bottomPOS     =  1.0;     // Minimum rotational position
+
+    // Define class members
+    double  mineralPosition = (bottomPOS - topPOS); // Start at bottom position
+    boolean rampUp = true;
 
     @Override
     public void runOpMode() {
@@ -65,6 +75,7 @@ public abstract class VoltageBase extends LinearOpMode{
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);//Encoder set to zero at complete contract position
 
         // Some of the servos are flipped, too
         mineralArm.setDirection(Servo.Direction.REVERSE); //Check
@@ -226,27 +237,27 @@ public abstract class VoltageBase extends LinearOpMode{
     }
 
     //Hook Arm Method
+
     public void StopHook() {
         liftMotor.setPower(0);
         }
-    public void extendHook() {
-        while (gamepad2.b = true) {
-            liftMotor.setPower(0.8);
-        }
-        StopHook();
-    }
 
-    public void contractHook() {
-        while (gamepad2.a = true) {
+    /*public void extendHook() {
             liftMotor.setPower(0.8);
-        }
-        StopHook();
+            liftMotor.setTargetPosition(0); //check
+            StopHook();
     }
-    public void completeHookExtend(int speed_1, int inches_1) {
+    public void contractHook() {
+            liftMotor.setPower(0.8);
+            liftMotor.setTargetPosition(HD_EncoderExtendedPosition); //check
+            StopHook();
+    } */
+
+    public void completeHookExtend(double speed_1) {
         liftMotor.setPower(-speed_1);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setTargetPosition(-inches_1 / inchConstant); //inches = length of string
+        liftMotor.setTargetPosition(stringInches / inchConstant); //stringInches = length of string
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (liftMotor.isBusy()) {
@@ -257,11 +268,11 @@ public abstract class VoltageBase extends LinearOpMode{
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void completeHookContract(int speed_1, int inches_1) {
+    public void completeHookContract(double speed_1) {
         liftMotor.setPower(speed_1);
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setTargetPosition(inches_1/ inchConstant); //inches = length of string
+        liftMotor.setTargetPosition(0); //Check
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (liftMotor.isBusy() ) {
