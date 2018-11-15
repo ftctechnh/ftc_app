@@ -20,23 +20,28 @@ public abstract class VoltageBase extends LinearOpMode{
     public Servo mineralArm;
 
     //Variables or any other data you will use later here
-    public final static int stringInches = 6; //length of pulley string in inches
-    public int inchConstant = 1; //if you are using encoders on your drivewheels, change this to the ratio of ticks to inches.
-    public int Core_EncoderTicksperRevConstant = 288;
-    public int HD_EncoderTicksperRevConstant = 2240;
-    public final static int HD_EncoderExtendedPosition = stringInches*2240;
-    public int degConstant = 1;  //and this to the ratio between ticks and turn degrees.
-    public int thingsInBot = 0; //currently not used for anything.
-    public boolean RobotIsGoingForwards = true;
+    public final static int Core_EncoderTicksperRevolution = (288/1);
+    public final static int HD_EncoderTicksperRevolution = (2240/1);
+    public final static double one_revolutionperInchDistanceofDrive = (1/0.7539822369); //60mm diameter to inches times pi = wheel circumference"
 
-    public boolean hanging = true;
-    public int randomChangeSoICanPush = 7;
-    public final static double mineralArm_Home = 0.002;
+    public final static int stringInches = 6; //length of pulley string in inches //check
+    public double one_RevolutionperInchDistanceofPulley = (1/1.5); //distance or circumference of string w/ each revolution //check
+    public double liftTicksPerInch = (one_RevolutionperInchDistanceofPulley*HD_EncoderTicksperRevolution);
+    public double driveTicksPerInch = (one_revolutionperInchDistanceofDrive*Core_EncoderTicksperRevolution);
+    public final static int HD_EncoderExtendedPosition = stringInches*2240;
+
+    public double driveDegreeToTicks = (1/360)*(Core_EncoderTicksperRevolution);  //and this to the ratio between ticks and turn degrees.
+    public boolean RobotIsGoingForwards = true;
     public abstract void DefineOpMode();
+
+    //Variables for servo mineral Arm
+    public final static double mineralArm_Home = 0.99; //all the way down for servo
     static final double INCREMENT   = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int    CYCLE_MS    =   50;     // period of each cycle
-    static final double topPOS     =  0.0;     // Maximum rotational position
-    static final double bottomPOS     =  1.0;     // Minimum rotational position
+    static final int    CYCLE_MS    =   50;     // period of each cycle    sleep(CYCLE_MS);
+    static final double topPOS      =  0.0;     // Maximum rotational position
+    static final double bottomPOS   =  1.0;     // Minimum rotational position
+    static final double mineralReadyPOS =  0.1; // move to about 162 degrees.
+    static final double mineralRaisedPOS =  0.8; // move to about 36 degrees.
 
     // Define class members
     double  mineralPosition = (bottomPOS - topPOS); // Start at bottom position
@@ -140,12 +145,11 @@ public abstract class VoltageBase extends LinearOpMode{
         DriveMotors(0);
     }
 
-    public void DriveForwardsDistance(double speed, int inches) {
+    public void DriveForwardsDistance(double speed, double inches) {
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftDrive.setTargetPosition(inches / inchConstant);
-        rightDrive.setTargetPosition(inches / inchConstant);
+        leftDrive.setTargetPosition((int)Math.round(inches*Core_EncoderTicksperRevolution));
+        rightDrive.setTargetPosition((int)Math.round(inches*Core_EncoderTicksperRevolution));
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -161,14 +165,13 @@ public abstract class VoltageBase extends LinearOpMode{
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public void DriveBackwardsDistance(double speed, int inches) {
+    public void DriveBackwardsDistance(double speed, double inches) {
         ChangeDirection();
 
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftDrive.setTargetPosition(inches / inchConstant);
-        rightDrive.setTargetPosition(inches / inchConstant);
+        leftDrive.setTargetPosition((int)Math.round(inches*Core_EncoderTicksperRevolution));
+        rightDrive.setTargetPosition((int)Math.round(inches*Core_EncoderTicksperRevolution));
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -195,8 +198,8 @@ public abstract class VoltageBase extends LinearOpMode{
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(-degrees / degConstant);
-        rightDrive.setTargetPosition(degrees / degConstant);
+        leftDrive.setTargetPosition( (int) Math.round (-degrees * driveDegreeToTicks)); //check
+        rightDrive.setTargetPosition( (int) Math.round (degrees * driveDegreeToTicks));
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -218,8 +221,8 @@ public abstract class VoltageBase extends LinearOpMode{
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(degrees / degConstant);
-        rightDrive.setTargetPosition(-degrees / degConstant);
+        leftDrive.setTargetPosition((int) Math.round (degrees * driveDegreeToTicks));
+        rightDrive.setTargetPosition((int) Math.round (-degrees * driveDegreeToTicks));
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -253,11 +256,11 @@ public abstract class VoltageBase extends LinearOpMode{
             StopHook();
     } */
 
-    public void completeHookExtend(double speed_1) {
+    public void completeHookExtend(double speed_1, double inches) {
         liftMotor.setPower(-speed_1);
         //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        liftMotor.setTargetPosition(stringInches / inchConstant); //stringInches = length of string
+        liftMotor.setTargetPosition((int)Math.round(inches * stringInches*one_RevolutionperInchDistanceofPulley*HD_EncoderTicksperRevolution)); //stringInches = length of string
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         while (liftMotor.isBusy()) {

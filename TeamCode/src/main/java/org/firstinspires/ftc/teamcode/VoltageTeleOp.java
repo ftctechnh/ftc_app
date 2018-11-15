@@ -27,12 +27,12 @@ public class VoltageTeleOp extends VoltageBase
             // Mineral arm servo movement
             if(gamepad2.y) {
                 // move to about 36 degrees.
-                mineralArm.setPosition(.8);
+                mineralArm.setPosition(mineralRaisedPOS);
                 telemetry.addData("Servo Position", mineralArm.getPosition());
                 telemetry.update();
             } else if (gamepad2.x) {
                 // move to about 162 degrees.
-                mineralArm.setPosition(0.1);
+                mineralArm.setPosition(mineralReadyPOS);
                 telemetry.addData("Servo Position", mineralArm.getPosition());
                 telemetry.update();
             } else if (gamepad2.b && mineralPosition<topPOS) {
@@ -64,7 +64,7 @@ public class VoltageTeleOp extends VoltageBase
             }
 
             else if(gamepad2.right_bumper) {
-                completeHookExtend(0.8);
+                completeHookExtend(0.8, stringInches);
             }
 
             idle(); //put this at the end of larger while loops to let the software catch up with itself.
