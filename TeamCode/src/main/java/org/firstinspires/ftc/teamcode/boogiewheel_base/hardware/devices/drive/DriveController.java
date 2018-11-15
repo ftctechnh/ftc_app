@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.devices.drive;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -181,7 +181,7 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.setPower(range(power),range(power));
-        drive.setPosition(position);
+        drive.setTargetPosition(position);
     }
 
     public double getHeading(){
@@ -224,7 +224,7 @@ public class DriveController extends SubsystemController {
         drive.setPower(leftPower, rightPower);
     }
 
-    //util methods
+    //Util Methods
     public int[][] recordPath(int numSamples, int timeInterval) {
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -247,9 +247,10 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         drive.setPower(1,1);
         runtime.reset();
-        for (int i = 0; i < left.length; i++) {
-            while (runtime.milliseconds() < timeInterval);
-            drive.setPosition(left[i], right[i]);
+        for (int i = 0; i < (left.length-right.length<=0 ? right.length : left.length); i++) {
+            while (runtime.milliseconds() < timeInterval && isOpModeActive());
+            drive.setTargetPosition(left[i], right[i]);
+            if(!isOpModeActive()) break;
             runtime.reset();
         }
     }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.devices.drive;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -60,12 +60,12 @@ public class Drive {
 
     }
 
-    public void setPosition(int position){
+    public void setTargetPosition(int position){
         leftMotor.setTargetPosition(position);
         rightMotor.setTargetPosition(position);
     }
 
-    public void setPosition(int leftPosition, int rightPosition){
+    public void setTargetPosition(int leftPosition, int rightPosition){
         leftMotor.setTargetPosition(leftPosition);
         rightMotor.setTargetPosition(rightPosition);
     }

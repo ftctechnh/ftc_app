@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base;
+package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.Robot;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
 @TeleOp(name="boggiewheel_teleop", group="New")
 //@Disabled
 
-public class BoggieTeleOp extends AbstractTeleop {
+public class BoogieTeleOp extends AbstractTeleop {
 
     private Robot robot;
 

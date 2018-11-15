@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base.hardware;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
-import org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.devices.drive.DriveController;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive.DriveController;
 
 public class HardwareDevices {
 

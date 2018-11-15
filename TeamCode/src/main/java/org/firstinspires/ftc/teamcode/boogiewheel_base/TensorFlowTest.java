@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base;
+package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.RobotCoreLynxModule;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;

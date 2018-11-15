@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base.hardware;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
 

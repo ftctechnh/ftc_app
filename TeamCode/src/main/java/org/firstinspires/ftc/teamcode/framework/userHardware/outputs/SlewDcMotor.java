@@ -87,7 +87,7 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
 
     public double getSetPower() {return SetPower;}
 
-    public void motorSlew(double newSpeed) {
+    private void motorSlew(double newSpeed) {
         currentSpeed = lastSpeed;
         lastSpeed = newSpeed;
         //If no speed change stop function

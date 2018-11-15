@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.boggiewheel_base;
+package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.boggiewheel_base.hardware.Robot;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name="boggiewheel_paths", group="New")
 //@Disabled
 
-public class BoggieWheelPaths extends AbstractAuton {
+public class BoogieWheelPaths extends AbstractAuton {
     private Robot robot;
 
 
@@ -62,5 +62,4 @@ public class BoggieWheelPaths extends AbstractAuton {
         message = message + values[1][values[1].length-1] + "};";
         telemetry.addData(message);
     }
-
 }
