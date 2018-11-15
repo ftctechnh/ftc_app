@@ -50,7 +50,7 @@ public class DriveController extends SubsystemController {
         drive = new Drive(hwMap);
         //drivePID = new PIDController(10,1.6,24, 2);
         drivePID = new PIDController(8,0.5,10, 1,0);
-        straightPID = new PIDController(0.8,0.1,0,2);
+        straightPID = new PIDController(0.6,0.1,0,2);
         drive.setSlewSpeed(0.1);
 
         logger = new Logger("DriveControllerLog.txt");
