@@ -18,12 +18,15 @@ public abstract class RobotsBase extends LinearOpMode
     public DcMotor rightArm;
     public DcMotor raiseLeft;
     public DcMotor raiseRight;
+    public DcMotor armRaiser;
 
     public abstract void DefineOpMode();
 
-    public int inchConstant = 1;
+    public static final int inchConstant = 1;
 
-    public int degConstant = 1;
+    public static final int degConstant = 1;
+
+    public static final double AutonomousBaseSpeed = 0.5;
 
     public boolean RobotIsGoingForwards = true;
 
@@ -39,6 +42,7 @@ public abstract class RobotsBase extends LinearOpMode
         rightArm = hardwareMap.dcMotor.get("rightArm");
         raiseLeft = hardwareMap.dcMotor.get("raiseLeft");
         raiseRight = hardwareMap.dcMotor.get("raiseRight");
+        armRaiser =  hardwareMap.dcMotor.get("armRaiser");
 
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -262,21 +266,17 @@ public abstract class RobotsBase extends LinearOpMode
 
     public void CollectorUpAndOut ()
     {
-        raiseLeft.setPower(0.5);
-        raiseRight.setPower(0.5);
+        armRaiser.setPower(0.5);
         Thread.sleep(1000);
-        raiseLeft.setPower(0);
-        raiseRight.setPower(0);
+        armRaiser.setPower(0);
     }
 
     public void CollectorBackAndIn ()
     {
-        raiseLeft.setPower(-0.5);
-        raiseRight.setPower(-0.5);
+        armRaiser.setPower(-0.5);
         Thread.sleep(1000);
-        raiseLeft.setPower(0);
-        raiseRight.setPower(0);
-    }
+        armRaiser.setPower(0);
+}
 
     public void DropMarker ()
     {
