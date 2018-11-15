@@ -40,8 +40,6 @@ public abstract class BaseAutonomous extends RobotsBase
 
     public static final float mmAnyPositionZ = 200;  //This must equal the height of the phone on the robot.
 
-    public static final double AutonomousBaseSpeed = 0.5;
-
 
     // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
     // Valid choices are:  BACK or FRONT
