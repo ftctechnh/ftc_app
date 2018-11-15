@@ -34,6 +34,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.tasks.DriveTrainTaskMecanum;
 import org.firstinspires.ftc.teamcode.tasks.HangTask;
 
@@ -42,23 +43,24 @@ import org.firstinspires.ftc.teamcode.tasks.HangTask;
 public class HangTele extends LinearOpMode {
     private HangTask hangTask;
     private DriveTrainTaskMecanum driveTrainTask;
+    private Telemetry.Item opmodeStatus = telemetry.addData("STATUS","CONSTRUCTING");
 
     public void runOpMode() throws InterruptedException{
-        telemetry.addData("STATUS","INITIALIZING");
+        opmodeStatus.setValue("INITIALIZING");
         telemetry.update();
         initialize();
-        telemetry.addData("STATUS","READY");
+        opmodeStatus.setValue("READY");
         telemetry.update();
         waitForStart();
         hangTask.start();
         driveTrainTask.start();
         while(opModeIsActive() && !isStopRequested()) {
-            telemetry.addData("STATUS","RUNNING");
+            opmodeStatus.setValue("RUNNING");
             telemetry.update();
         }
         hangTask.running = false;
         driveTrainTask.running = false;
-        telemetry.addData("STATUS","STOPPED");
+        opmodeStatus.setValue("STOPPED");
         telemetry.update();
     }
 

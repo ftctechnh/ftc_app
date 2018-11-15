@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.IMU;
 
 public class DriveTrainTaskMecanum extends TaskThread {
@@ -15,11 +16,12 @@ public class DriveTrainTaskMecanum extends TaskThread {
     private IMU imu;
     private double r,robotAngle,rightX,frontLeft,frontRight,backLeft,backRight,slowMultiplier;
 
+    private Telemetry.Item telRobotangle,telRightX,telHypot,telMultiplier,telLF,telRF,telLB,telRB,telIMUAngle;
+
     ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
     public DriveTrainTaskMecanum(LinearOpMode opMode) {
         this.opMode = opMode;
-
         initialize();
     }
 
@@ -49,17 +51,15 @@ public class DriveTrainTaskMecanum extends TaskThread {
             lB.setPower(backLeft);
             rB.setPower(backRight);
 
-            opMode.telemetry.addData("Robot angle: " ,robotAngle);
-            opMode.telemetry.addData("Right X: " ,rightX);
-            opMode.telemetry.addData("Hypot: " ,r);
-            opMode.telemetry.addData("Multiplier: ",slowMultiplier);
-
-            opMode.telemetry.addData("LF: " ,frontLeft*100);
-            opMode.telemetry.addData("RF: " ,frontLeft*100);
-            opMode.telemetry.addData("LB: " ,frontLeft*100);
-            opMode.telemetry.addData("RB: " ,frontLeft*100);
-
-            opMode.telemetry.addData("IMU Angle: ",imu.getAngle());
+            telRobotangle.setValue(robotAngle);
+            telRightX.setValue(rightX);
+            telHypot.setValue(r);
+            telMultiplier.setValue(slowMultiplier);
+            telLF.setValue(lF.getPower()*100);
+            telRF.setValue(rF.getPower()*100);
+            telLB.setValue(lB.getPower()*100);
+            telRB.setValue(rB.getPower()*100);
+            telIMUAngle.setValue(imu.getAngle());
 
         }
     }
@@ -70,10 +70,10 @@ public class DriveTrainTaskMecanum extends TaskThread {
         lB = opMode.hardwareMap.dcMotor.get("lbDrive");
         rB = opMode.hardwareMap.dcMotor.get("rbDrive");
 
-        lB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rB.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rB.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rF.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         lF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rF.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -86,6 +86,16 @@ public class DriveTrainTaskMecanum extends TaskThread {
         lF.setDirection(DcMotorSimple.Direction.FORWARD);
         adaImu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu = new IMU(adaImu);
+
+        telRobotangle =  opMode.telemetry.addData("Robot angle: " ,robotAngle);
+        telRightX =      opMode.telemetry.addData("Right X: " ,rightX);
+         telHypot =       opMode.telemetry.addData("Hypot: " ,r);
+        telMultiplier =  opMode.telemetry.addData("Multiplier: ",slowMultiplier);
+        telLF =          opMode.telemetry.addData("LF: " ,frontLeft*100);
+         telRF =          opMode.telemetry.addData("RF: " ,frontLeft*100);
+         telLB =          opMode.telemetry.addData("LB: " ,frontLeft*100);
+         telRB =          opMode.telemetry.addData("RB: " ,frontLeft*100);
+         telIMUAngle =    opMode.telemetry.addData("IMU Angle: ",imu.getAngle());
 
     }
 }

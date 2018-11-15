@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.tasks;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Sweeper;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.robotutil.Sweeper;
  */
 public class HangTask extends TaskThread {
     private HangSlides slides;
+    private Telemetry.Item slideStatus;
 
     public HangTask(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -38,7 +40,7 @@ public class HangTask extends TaskThread {
                 slideString = "IDLE";
             }
 
-            opMode.telemetry.addData("Slides: ",slideString);
+            slideStatus.setValue(slideString);
         }
     }
 
@@ -48,6 +50,7 @@ public class HangTask extends TaskThread {
         DcMotor hangBottom = opMode.hardwareMap.dcMotor.get("hangBottom");
 
         this.slides = new HangSlides(this.opMode, hangTop, hangBottom);
+        slideStatus = opMode.telemetry.addData("Slide", "INITIALIZED");
     }
 }
 
