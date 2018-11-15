@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by Benla on 10/14/2018.
@@ -16,19 +17,29 @@ public abstract class RobotsBase extends LinearOpMode
     public DcMotor rightDrive;
     public DcMotor leftArm;
     public DcMotor rightArm;
-    public DcMotor raiseLeft;
-    public DcMotor raiseRight;
     public DcMotor armRaiser;
+
+    public Servo leftClaw;
+    public Servo rightClaw;
 
     public abstract void DefineOpMode();
 
-    public static final int inchConstant = 1;
+    public static final int inchConstant = 22; // this is a little low, so add a few inches to any long-distance value.
 
     public static final int degConstant = 1;
 
     public static final double AutonomousBaseSpeed = 0.5;
 
     public boolean RobotIsGoingForwards = true;
+
+    public double LeftClawOpenPosition = 0;
+    public double LeftClawClosedPosition = 1;
+
+    public double RightClawOpenPosition = 1;
+    public double RightClawClosedPosition = 0;
+
+    public boolean LeftClawClosed = false;
+    public boolean RightClawClosed = false;
 
     @Override
     public void runOpMode()
@@ -40,14 +51,14 @@ public abstract class RobotsBase extends LinearOpMode
         rightDrive = hardwareMap.dcMotor.get("rightDrive");
         leftArm = hardwareMap.dcMotor.get("leftArm");
         rightArm = hardwareMap.dcMotor.get("rightArm");
-        raiseLeft = hardwareMap.dcMotor.get("raiseLeft");
-        raiseRight = hardwareMap.dcMotor.get("raiseRight");
         armRaiser =  hardwareMap.dcMotor.get("armRaiser");
+
+        leftClaw = hardwareMap.servo.get("leftClaw");
+        rightClaw = hardwareMap.servo.get("rightClaw");
 
 
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         rightArm.setDirection(DcMotorSimple.Direction.REVERSE);
-        raiseRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -128,8 +139,8 @@ public abstract class RobotsBase extends LinearOpMode
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(inches/inchConstant);
-        rightDrive.setTargetPosition(inches/inchConstant);
+        leftDrive.setTargetPosition(inches*inchConstant);
+        rightDrive.setTargetPosition(inches*inchConstant);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -154,8 +165,8 @@ public abstract class RobotsBase extends LinearOpMode
         leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        leftDrive.setTargetPosition(inches/inchConstant);
-        rightDrive.setTargetPosition(inches/inchConstant);
+        leftDrive.setTargetPosition(inches*inchConstant);
+        rightDrive.setTargetPosition(inches*inchConstant);
 
         leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -240,8 +251,7 @@ public abstract class RobotsBase extends LinearOpMode
 
         while (leftArm.isBusy() && rightArm.isBusy())
         {
-            raiseLeft.setPower(-0.1);
-            raiseRight.setPower(-0.1);
+            armRaiser.setPower(-0.1);
         }
 
         leftArm.setPower(0);
@@ -256,8 +266,7 @@ public abstract class RobotsBase extends LinearOpMode
 
         while (leftArm.isBusy()&& rightArm.isBusy())
         {
-            raiseLeft.setPower(0.1);
-            raiseRight.setPower(0.1);
+            armRaiser.setPower(0.1);
         }
 
         leftArm.setPower(0);
