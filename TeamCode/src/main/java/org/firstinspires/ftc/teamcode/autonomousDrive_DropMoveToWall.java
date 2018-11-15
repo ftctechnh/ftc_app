@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
+@Autonomous(name="autonomousDrive_DropMoveToWall", group = "Testing")
 public class autonomousDrive_DropMoveToWall extends LinearOpMode
 {
     Bogg robot;
@@ -125,7 +125,7 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                             else
                                 if(robot.driveToTarget(0,5.5, moveSpeed, target_radius)) //drive to the wall
                                 {
-                                    if(robot.rotateToTarget(90, accuracy_angle)) //align to the wall; if we're good then
+                                    if(robot.rotateToTargetAngle(90, accuracy_angle)) //align to the wall; if we're good then
                                         action = Mode.MoveToDepot;                            //move to the depot
                                 }
                             break;
@@ -137,7 +137,7 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                             else
                             if(robot.driveToTarget(-5.5,0,moveSpeed, target_radius))
                                 {
-                                    if(robot.rotateToTarget(0, accuracy_angle))
+                                    if(robot.rotateToTargetAngle(0, accuracy_angle))
                                         action = Mode.MoveToDepot;
                                 }
                             break;
@@ -149,7 +149,7 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                             else
                             if(robot.driveToTarget(5.5,0,moveSpeed, target_radius))
                                 {
-                                    if(robot.rotateToTarget(270, accuracy_angle))
+                                    if(robot.rotateToTargetAngle(270, accuracy_angle))
                                         action = Mode.MoveToDepot;
                                 }
                             break;
@@ -161,7 +161,7 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                             else
                             if(robot.driveToTarget(-5.5,0,moveSpeed, target_radius))
                                 {
-                                    if(robot.rotateToTarget(180, accuracy_angle))
+                                    if(robot.rotateToTargetAngle(180, accuracy_angle))
                                         action = Mode.MoveToDepot;
                                 }
                             break;

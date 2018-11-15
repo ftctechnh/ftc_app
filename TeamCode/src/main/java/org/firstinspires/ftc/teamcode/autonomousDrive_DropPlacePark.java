@@ -14,6 +14,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
     ElapsedTime timer;
     final double ticksPerRev = 2240;
     final double inPerRev = Math.PI * 5;
+    double x;
 
     private enum Mode
     {
@@ -135,7 +136,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                                     midtargetAchieved = true; //say that we have acheived the midtarget
                             } else if (robot.driveToTarget(0, 5.5, moveSpeed, target_radius)) //drive to the wall
                             {
-                                if (robot.rotateToTarget(90, accuracy_angle)) //align to the wall; if we're good then
+                                if (robot.rotateToTargetAngle(90, accuracy_angle)) //align to the wall; if we're good then
                                     action = Mode.MoveToDepot;                            //move to the depot
                             }
                             break;
@@ -144,7 +145,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                                 if (robot.driveToTarget(-3, 0, moveSpeed, target_radius))
                                     midtargetAchieved = true;
                             } else if (robot.driveToTarget(-5.5, 0, moveSpeed, target_radius)) {
-                                if (robot.rotateToTarget(180, accuracy_angle))
+                                if (robot.rotateToTargetAngle(180, accuracy_angle))
                                     action = Mode.MoveToDepot;
                             }
                             break;
@@ -153,7 +154,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                                 if (robot.driveToTarget(3, 0, moveSpeed, target_radius))
                                     midtargetAchieved = true;
                             } else if (robot.driveToTarget(5.5, 0, moveSpeed, target_radius)) {
-                                if (robot.rotateToTarget(0, accuracy_angle))
+                                if (robot.rotateToTargetAngle(0, accuracy_angle))
                                     action = Mode.MoveToDepot;
                             }
                             break;
@@ -162,13 +163,12 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                                 if (robot.driveToTarget(-3, 0, moveSpeed, target_radius))
                                     midtargetAchieved = true;
                             } else if (robot.driveToTarget(-5.5, 0, moveSpeed, target_radius)) {
-                                if (robot.rotateToTarget(270, accuracy_angle))
+                                if (robot.rotateToTargetAngle(270, accuracy_angle))
                                     action = Mode.MoveToDepot;
                             }
                             break;
                     }
                 case MoveToDepot:
-                    double x = 0;
                     switch (startPosition)
                     {
                         case BackBlue:
@@ -180,7 +180,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                             break;
                     }
                     double y = fixedDistance;
-                    robot.driveEngine.drive(x,y/6.0);
+                    robot.driveEngine.drive(x,-(y-6)/6.0);
 
                     if(mobileDistance < 6) { //TODO: need new sensor somewhere or new servo
                         action = Mode.DropMarker;
@@ -196,9 +196,18 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                     break;
 
                 case MoveToCrater:
-                    x = -.7;
+                    switch (startPosition)
+                    {
+                        case BackBlue:
+                        case FrontRed:
+                            x = -.7;
+                            break;
+                        default:
+                            x = .7;
+                            break;
+                    }
                     y = fixedDistance;
-                    robot.driveEngine.drive(x,y/6.0);
+                    robot.driveEngine.drive(x,-(y-6)/6.0);
 
                     if(mobileDistance < 24) {
                         action = Mode.Stop;

@@ -2,12 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
+@Autonomous(name="autonomousDrive_DropSlide", group = "Testing")
 public class autonomousDrive_DropSlide extends LinearOpMode
 {
     Bogg robot;

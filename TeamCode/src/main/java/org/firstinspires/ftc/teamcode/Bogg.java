@@ -137,15 +137,6 @@ public class Bogg
         else
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }
-    public void manualDrive(double theta)
-    {
-        driveEngine.driveAtAngle(theta);
-
-        if(gamepad.left_stick_button)
-            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y,true);
-        else
-            driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
-    }
 
     public boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
     {
@@ -181,7 +172,7 @@ public class Bogg
             return true;
     }
 
-    public boolean rotateToTarget(double targetHeading, double accuracy_angle)
+    public boolean rotateToTargetAngle(double targetHeading, double accuracy_angle)
     {
         double[] location = camera.getLocation();
         if(location != null)
@@ -202,6 +193,48 @@ public class Bogg
         }
         return true;
     }
+    public boolean rotateToTarget(double accuracy_angle)
+    {
+        double[] location = camera.getLocation();
+        double targetHeading;
+        if(location != null)
+        {
+            String name = camera.targetVisible().getName();
+
+            switch(name)
+            {
+                case "Blue-Rover":
+                    targetHeading = 180;
+                    break;
+                case "Red-Footprint":
+                    targetHeading = 0;
+                    break;
+                case "Front-Craters":
+                    targetHeading = 270;
+                    break;
+                default: //"Back-Space"
+                    targetHeading = 90;
+            }
+
+            //the direction a compass would tell us
+            double currentHeading = camera.getHeading() * 180 / Math.PI;
+
+            double headingDifference = targetHeading - currentHeading;
+
+            if(Math.abs(headingDifference) < accuracy_angle)
+                return true;
+            else
+            {
+                if(headingDifference < 0)
+                    driveEngine.rotate(.2);
+                else
+                    driveEngine.rotate(-.2);
+            }
+
+            return false;
+        }
+        return true;
+    }
 
     public void incAlpha()
     {
@@ -218,10 +251,6 @@ public class Bogg
     public double getAlpha()
     {
         return alpha;
-    }
-
-    public double getSmoothSpin() {
-        return smoothSpin(gamepad.right_stick_x);
     }
 
     public void manualRotate()

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
+@Autonomous(name="autonomousDrive_Drop", group = "Testing")
 public class autonomousDrive_Drop extends LinearOpMode
 {
     Bogg robot;
