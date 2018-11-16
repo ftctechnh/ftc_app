@@ -167,8 +167,8 @@ public class DriveTrainNew {
 
     // Untested proportional IMU rotation
     public void rotateIMU(Direction direction, double angle, double power, double timeoutS) {
-        final double kp = 1.0 / 180.0;
-        double minError = 2;
+        final double kp = 1.0 / 45.0;
+        final double minError = 2.0;
 
         double currentHeading = imu.getAngle();
         double targetHeading;
@@ -194,8 +194,11 @@ public class DriveTrainNew {
         Telemetry.Item powerStat = opMode.telemetry.addData("kp,power,error",String.format("%.3f || %.3f || %.3f",kp,power,error));
 
         Telemetry.Item timeLeft = opMode.telemetry.addData("time left",(System.currentTimeMillis() - startTime));
-        while (error > minError && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
-            double proportionalPower = kp * power * error;
+        while (Math.abs(error) > minError
+//                && (System.currentTimeMillis() - startTime) / 1000 < timeoutS
+                ) {
+            double proportionalPower = Math.min(power, kp * power * error);
+
             move(Direction.CW, proportionalPower);
 
             telPower.setValue(proportionalPower);
