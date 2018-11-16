@@ -31,22 +31,18 @@ public class AutoNew extends LinearOpMode {
 
         if (opModeIsActive()) {
 //            vision.startVision();
-//            waitForButton("Next: CCW 90 0.7");
-//
-//            dt.rotateIMU(Direction.CCW, 90, .7, 10);
-//            waitForButton("Next: CCW 180 0.7");
-//
-//            dt.rotateIMU(Direction.CCW, 180, .7, 10);
-//            waitForButton("Next: CW 180 1");
-//
-//            dt.rotateIMU(Direction.CW, 180, 1, 10);
-            waitForButton("Next: FW encoder drive 18 0.3");
 
-            dt.move(Direction.FORWARD, 0.3, 18,10);
+            dt.rotateIMU(Direction.CCW, 90, .3, 5);
+            waitForButton();
 
-            waitForButton("Next: BW encoder drive 18 0.3");
+            dt.rotateIMU(Direction.CW, 90, .3, 5);
+            waitForButton();
 
-            dt.move(Direction.BACK, 0.3, 18, 10);
+            dt.rotateIMU(Direction.CCW, 180, .3, 5);
+            waitForButton();
+
+            dt.rotateIMU(Direction.CW, 180, .3, 5);
+            waitForButton();
 
             // Land
 
@@ -54,7 +50,7 @@ public class AutoNew extends LinearOpMode {
 //            dt.rotateToHeading(180 , 0.5, 5);
 
             // Align with gold mineral
-//            goldAlign(0.5, 5);
+            goldAlign(0.5, 5);
 //
 //            // Encoder drive forward
 //            dt.move(Direction.FORWARD, 0.5, DIST_TO_GOLD, 10);
@@ -78,11 +74,11 @@ public class AutoNew extends LinearOpMode {
 //            dt.move(Direction.FORWARD, 0.5, DIST_TO_CRATER, 10);
         }
 
-//        vision.shutDown();
+        vision.shutDown();
     }
 
-    private void waitForButton(String message){
-        telemetry.addLine(message);
+    private void waitForButton(){
+        telemetry.addLine("waiting for joystick");
         telemetry.update();
         while(!this.gamepad1.a && opModeIsActive() && !isStopRequested()){
             sleep(100);
