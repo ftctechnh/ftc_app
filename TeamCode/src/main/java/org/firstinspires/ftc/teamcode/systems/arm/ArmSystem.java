@@ -68,7 +68,7 @@ public class ArmSystem extends System {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtPickupPosition()) {
-            telemetry.log("power", rampDown.scaleX(potentiometer.getVoltage()));
+            telemetry.log("voltage", rampDown.scaleX(potentiometer.getVoltage()));
             motor1.setPower(0.2);
             motor2.setPower(-0.2);
             telemetry.write();
