@@ -20,7 +20,7 @@ public class DriveTrainTaskMecanum extends TaskThread {
     private Telemetry.Item telRobotangle,telRightX,telHypot,telMultiplier,telLF,telRF,telLB,telRB,telIMUAngle,rfPos,lfPos,rbPos,lbPos;
 
     ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-    MotorGroup driveMotors = new MotorGroup(new DcMotor[]{lF,rF,lB,rB});
+    MotorGroup driveMotors;
     public DriveTrainTaskMecanum(LinearOpMode opMode) {
         this.opMode = opMode;
         initialize();
@@ -74,7 +74,7 @@ public class DriveTrainTaskMecanum extends TaskThread {
         rF = opMode.hardwareMap.dcMotor.get("rfDrive");
         lB = opMode.hardwareMap.dcMotor.get("lbDrive");
         rB = opMode.hardwareMap.dcMotor.get("rbDrive");
-
+        driveMotors =  new MotorGroup(new DcMotor[]{lF,rF,lB,rB});
         driveMotors.setBrake();
         driveMotors.resetEncoders();
 // top two lines should make it obsolete

@@ -16,6 +16,7 @@ public class AutoNew extends LinearOpMode {
     private Vision vision;
 
     private Telemetry.Item goldXTelem;
+    private Telemetry.Item direction;
 
     // Tune these
     private final double DIST_TO_GOLD = 12;
@@ -29,9 +30,19 @@ public class AutoNew extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
-            vision.startVision();
+//            vision.startVision();
 
-            dt.rotateIMU(Direction.CCW, 70, 0.1, 3);
+            dt.rotateIMU(Direction.CCW, 90, .3, 5);
+            waitForButton();
+
+            dt.rotateIMU(Direction.CW, 90, .3, 5);
+            waitForButton();
+
+            dt.rotateIMU(Direction.CCW, 180, .3, 5);
+            waitForButton();
+
+            dt.rotateIMU(Direction.CW, 180, .3, 5);
+            waitForButton();
 
             // Land
 
@@ -39,7 +50,7 @@ public class AutoNew extends LinearOpMode {
 //            dt.rotateToHeading(180 , 0.5, 5);
 
             // Align with gold mineral
-//            goldAlign(0.5, 5);
+            goldAlign(0.5, 5);
 //
 //            // Encoder drive forward
 //            dt.move(Direction.FORWARD, 0.5, DIST_TO_GOLD, 10);
@@ -64,6 +75,16 @@ public class AutoNew extends LinearOpMode {
         }
 
         vision.shutDown();
+    }
+
+    private void waitForButton(){
+        telemetry.addLine("waiting for joystick");
+        telemetry.update();
+        while(!this.gamepad1.a && opModeIsActive() && !isStopRequested()){
+            sleep(100);
+        }
+        telemetry.addLine("proceeding");
+        telemetry.update();
     }
 
     private void goldAlign(double power, double timeoutS) {
@@ -100,6 +121,7 @@ public class AutoNew extends LinearOpMode {
         vision = new Vision(this);
 
         goldXTelem = telemetry.addData("Gold mineral position", -1);
+        direction = telemetry.addData("Direction", "NONE");
     }
 
     private void haltUntilPressStart() {

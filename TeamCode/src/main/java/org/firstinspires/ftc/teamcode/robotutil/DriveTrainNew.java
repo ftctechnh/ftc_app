@@ -21,29 +21,28 @@ import org.firstinspires.ftc.robotcore.internal.android.dex.util.ExceptionWithCo
 public class DriveTrainNew {
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     private DcMotor lfDrive,lbDrive,rfDrive,rbDrive;
-    private IMUNew imu;
+    private BNO055IMU adaImu;
+    private IMU imu;
     private LinearOpMode opMode;
     private MotorGroup driveMotors;
-    private Telemetry.Item powerTelem;
 
     public DriveTrainNew(LinearOpMode opMode) {
         this.opMode = opMode;
         lfDrive = opMode.hardwareMap.dcMotor.get("lfDrive");
-        lbDrive = opMode.hardwareMap.dcMotor.get("rbDrive");
+        lbDrive = opMode.hardwareMap.dcMotor.get("lbDrive");
         rfDrive = opMode.hardwareMap.dcMotor.get("rfDrive");
         rbDrive = opMode.hardwareMap.dcMotor.get("rbDrive");
 
         lfDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         lbDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rbDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        rfDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        rbDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rfDrive.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        this.imu = new IMUNew("imu",this.opMode);
+        adaImu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
+        imu = new IMU(adaImu);
         DcMotor[] driveMotorArray = new DcMotor[]{lfDrive,rfDrive,lbDrive,rbDrive};
         this.driveMotors = new MotorGroup(driveMotorArray);
         initMotors();
-        this.imu.init();
-        this.powerTelem = opMode.telemetry.addData("Power:", 0);
     }
 
 
@@ -61,9 +60,11 @@ public class DriveTrainNew {
         rfDrive.setPower(rf);
     }
 
-    public void move(Direction direction,double power){
-        power = Math.abs(power);
+    public void stopAll(){
+        setPowers(0, 0, 0, 0);
+    }
 
+    public void move(Direction direction,double power){
         switch(direction){
             case BACK:
                 setPowers(-power,-power,
@@ -74,17 +75,23 @@ public class DriveTrainNew {
                         power,power);
                 break;
             case LEFT:
-                setPowers(-power,-power,
-                        power,power);
+                setPowers(power,-power,
+                        -power,power);
+                break;
             case RIGHT:
-                setPowers(power,power,
-                        -power,-power);
+                setPowers(-power,power,
+                        power,-power);
+                break;
             case CW:
                 setPowers(power,-power,
                         power,-power);
+                break;
             case CCW:
                 setPowers(-power,power,
-                        power,-power);
+                        -power,power);
+                break;
+            default:
+                setPowers(0, 0, 0, 0);
         }
     }
 
@@ -160,10 +167,10 @@ public class DriveTrainNew {
 
     // Untested proportional IMU rotation
     public void rotateIMU(Direction direction, double angle, double power, double timeoutS) {
-        double kp = power / 180;
+        final double kp = 1.0 / 180.0;
         double minError = 2;
 
-        double currentHeading = imu.getAngle(Axis.HEADING);
+        double currentHeading = imu.getAngle();
         double targetHeading;
 
         switch (direction) {
@@ -178,17 +185,27 @@ public class DriveTrainNew {
         }
         targetHeading = fixAngle(targetHeading);
 
-        double error = getError(currentHeading, targetHeading);
+        double error = fixAngle(targetHeading - currentHeading);
         double startTime = System.currentTimeMillis();
 
+        Telemetry.Item telPower = opMode.telemetry.addData("power", 0);
+        Telemetry.Item telCurrAngle = opMode.telemetry.addData("angle",currentHeading);
+        Telemetry.Item telError = opMode.telemetry.addData("error",error);
+        Telemetry.Item powerStat = opMode.telemetry.addData("kp,power,error",String.format("%.3f || %.3f || %.3f",kp,power,error));
+
+        Telemetry.Item timeLeft = opMode.telemetry.addData("time left",(System.currentTimeMillis() - startTime));
         while (error > minError && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
-            double proportionalPower = kp * error;
+            double proportionalPower = kp * power * error;
             move(direction,proportionalPower);
-            powerTelem.setValue(proportionalPower);
+            telPower.setValue(proportionalPower);
+            telCurrAngle.setValue(currentHeading);
+            powerStat.setValue(String.format("%.3f || %.3f || %.3f",kp,power,error));
+            telError.setValue(error);
+            timeLeft.setValue((System.currentTimeMillis() - startTime));
             this.opMode.telemetry.update();
 
-            currentHeading = imu.getAngle(Axis.HEADING);
-            error = getError(currentHeading, targetHeading);
+            currentHeading = imu.getAngle();
+            error = fixAngle(targetHeading - currentHeading);
         }
 
         driveMotors.stopAll();
@@ -196,7 +213,7 @@ public class DriveTrainNew {
 
     public void rotateToHeading(double targetHeading, double power, double timeoutS) {
         Direction direction;
-        double angle = targetHeading - imu.getAngle(Axis.HEADING);
+        double angle = targetHeading - imu.getAngle();
         if (angle < 0) {
             angle = Math.abs(angle);
             direction = Direction.CCW;
@@ -208,14 +225,14 @@ public class DriveTrainNew {
 
     // Get angle between -180 and 180
     private double fixAngle(double angle) {
-        while (angle > 180 || angle < -180) {
-            angle += (angle < 180) ? 360 : -360;
+        while (angle > 360 || angle < 0) {
+            if (angle > 360) {
+                angle -= 360;
+            } else {
+                angle += 360;
+            }
         }
         return angle;
-    }
-
-    private double getError(double currentHeading, double targetHeading) {
-        return Math.abs(fixAngle(targetHeading - currentHeading));
     }
 
 }
