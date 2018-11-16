@@ -4,82 +4,83 @@ package org.firstinspires.ftc.teamcode.robotutil;
  * PID Controller: kp * (e + (integral(e) / ti) + (td * derivative(e))).
  * https://en.wikipedia.org/wiki/PID_controller#Ideal_versus_standard_PID_form
  */
-public class PID {
-    /**
-     * Creates a PID Controller.
-     * @param kp Proportional factor to scale error to output.
-     * @param ti The number of seconds to eliminate all past errors.
-     * @param td The number of seconds to predict the error in the future.
-     * @param integralMin The min of the running integral.
-     * @param integralMax The max of the running integral.
-     */
 
-    public PID(double kp, double ti, double td, double integralMin, double integralMax) {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+public class PID {
+    private double kp;
+    private double ki;
+    private double kd;
+
+
+    private double previousError;
+    private double runningIntegral;
+    private double lastRegistereedTime;
+    private Telemetry tel;
+
+    private Telemetry.Item constants, telIntegral,telProportional,telRunningIntegral,telDerivative,telClampedOutput,telRawOutput,telError,telTimeDiff;
+
+    public PID(double kp, double ki, double kd, Telemetry telemetry) {
         this.kp = kp;
-        this.ti = ti;
-        this.td = td;
-        this.integralMin = integralMin;
-        this.integralMax = integralMax;
+        this.ki = ki;
+        this.kd = kd;
 
         this.previousError = 0;
         this.runningIntegral = 0;
+        this.lastRegistereedTime = System.currentTimeMillis();
+        this.constants = tel.addData("kP,kI,kD",String.format("%.2f || %.2f || %.2f",kp,ki,kd));
+        this.telError = tel.addData("error","N/A");
+        this.telTimeDiff = tel.addData("time diff","N/A");
+        this.telProportional = tel.addData("P","N/A");
+        this.telIntegral = tel.addData("Curr_I","N/A");
+        this.telRunningIntegral = tel.addData("Running_I","N/A");
+        this.telDerivative = tel.addData("D","N/A");
+
+        this.telRawOutput = tel.addData("Raw out","N/A");
+        this.telClampedOutput = tel.addData("clamp out","N/A");
+
+
+
     }
 
-    /**
-     * Performs a PID update and returns the output control.
-     * @param desiredValue The desired state value (e.g. speed).
-     * @param actualValue The actual state value (e.g. speed).
-     * @param dt The amount of time (sec) elapsed since last update.
-     * @return The output which impacts state value (e.g. motor throttle).
-     */
-    public double update(double desiredValue, double actualValue, double dt) {
-        double e = desiredValue - actualValue;
-        runningIntegral = runningIntegral + ((e + previousError) / 2) * dt;
-        double d = (e - previousError) / dt;
+    public Double getOutput(double desired, double actual){
+        double error = (desired-actual);
 
-        double output = kp * (e + (runningIntegral / ti) + (td * d));
+        double time = System.currentTimeMillis();
+        double timeDifference = time - lastRegistereedTime;
 
-        // clamp between 0.2 and 1.0 or -0.2 and -1.0
-        if(output > 1) {
+        double proportional = kp*error;
 
-            output = clampValue(output, integralMin, integralMax);
 
-        } else {
+        double newIntegral = ki*error*time;
+        runningIntegral += newIntegral;
 
-            output = clampValue(Math.abs(output), integralMin, integralMax);
-            output = output * -1;
+        double derivative = kd * ((error - previousError) / timeDifference);
 
-        }
+        lastRegistereedTime = time;
+        previousError = error;
 
-        previousError = e;
-        return output;
+        double rawOutput = proportional + derivative + runningIntegral;
+        double clampedOutput =  clampValue(rawOutput,-1.0,1.0);
+
+
+        this.telProportional.setValue(proportional);
+        this.telIntegral.setValue(newIntegral);
+        this.telRunningIntegral.setValue(runningIntegral);
+        telDerivative.setValue(derivative);
+        this.telRawOutput.setValue(rawOutput);
+        this.telClampedOutput.setValue(clampedOutput);
+        this.telError.setValue(error);
+        this.telTimeDiff.setValue(timeDifference);
+
+        this.tel.update();
+        return clampedOutput;
+
     }
 
-
-    /**
-     * Clamps a value to a given range.
-     * @param value The value to clamp.
-     * @param min The min clamp.
-     * @param max The max clamp.
-     * @return The clamped value.
-     */
-    public static double clampValue(double value, double min, double max) {
+    private static double clampValue(double value, double min, double max) {
         return Math.min(max, Math.max(min, value));
     }
 
-    // Proportional factor to scale error to output.
-    private double kp;
-    // The number of seconds to eliminate all past errors.
-    private double ti;
-    // The number of seconds to predict the error in the future.
-    private double td;
-    // The min of the running integral.
-    private double integralMin;
-    // The max of the running integral.
-    private double integralMax;
 
-    // The last error value.
-    private double previousError;
-    // The discrete running integral (bounded by integralMax).
-    private double runningIntegral;
+
 }
