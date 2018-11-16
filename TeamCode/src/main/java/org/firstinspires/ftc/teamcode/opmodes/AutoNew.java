@@ -40,13 +40,21 @@ public class AutoNew extends LinearOpMode {
 //            waitForButton("Next: CW 180 1");
 //
 //            dt.rotateIMU(Direction.CW, 180, 1, 10);
-            waitForButton("Next: FW encoder drive 18 0.3");
+            waitForButton("Next: FW prop encoder drive 18 0.3");
 
-            dt.move(Direction.FORWARD, 0.3, 18,10);
+            dt.moveP(Direction.FORWARD, 0.3, 18,10);
 
-            waitForButton("Next: BW encoder drive 18 0.3");
+            waitForButton("Next: BW prop encoder drive 18 0.3");
 
-            dt.move(Direction.BACK, 0.3, 18, 10);
+            dt.moveP(Direction.BACK, 0.3, 18, 10);
+
+            waitForButton("Next: CCW 90 0.5");
+
+            dt.rotateIMU(Direction.CCW, 90, 0.5, 10);
+
+            waitForButton("Next: CW 90 0.5");
+
+            dt.rotateIMU(Direction.CW, 90, 0.5, 10);
 
             // Land
 

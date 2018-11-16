@@ -1,20 +1,13 @@
 package org.firstinspires.ftc.teamcode.robotutil;
 
-import android.util.Log;
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.internal.android.dex.util.ExceptionWithContext;
 
 //import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 
@@ -106,28 +99,28 @@ public class DriveTrainNew {
         int rfTarget,lfTarget,lbTarget,rbTarget;
         switch (direction) {
             case FORWARD:
-                rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
-                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
-                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
-                rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
+                rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
             case BACK:
-                rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
-                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
-                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
-                rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
+                rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
             case RIGHT:
-                rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
-                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
-                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
-                rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
+                rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
             case LEFT:
-                rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
-                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.ticksPerInch);
-                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
-                rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.ticksPerInch);
+                rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
 
             default:
@@ -165,6 +158,84 @@ public class DriveTrainNew {
         driveMotors.useEncoders();
     }
 
+    private double minAbs(double a, double b) {
+        if (Math.abs(a) > Math.abs(b)) {
+            return a;
+        } else {
+            return b;
+        }
+    }
+
+    public void moveP(Direction direction,double power,double inches,double timeoutS) {
+        final double minError = Values.TICKS_PER_INCH_FORWARD * 0.5;
+        final double kp = 1 / (6 * Values.TICKS_PER_INCH_FORWARD);
+
+        driveMotors.resetEncoders();
+        driveMotors.useEncoders();
+        int rfTarget,lfTarget,lbTarget,rbTarget;
+        switch (direction) {
+            case FORWARD:
+                rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                break;
+            case BACK:
+                rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                break;
+            case RIGHT:
+                rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                break;
+            case LEFT:
+                rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                break;
+
+            default:
+                rfTarget = 0;
+                lfTarget = 0;
+                lbTarget = 0;
+                rbTarget = 0;
+
+        }
+
+        double rfError = rfTarget - rfDrive.getCurrentPosition();
+        double lfError = rfTarget - lfDrive.getCurrentPosition();
+        double rbError = rfTarget - rbDrive.getCurrentPosition();
+        double lbError = rfTarget - lbDrive.getCurrentPosition();
+
+        double startTime = System.currentTimeMillis();
+
+        while (Math.abs(rfError) > minError && Math.abs(lfError) > minError &&
+                Math.abs(rbError) > minError && Math.abs(lbError) > minError &&
+                (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
+
+            double rfPower = minAbs(power, kp * rfError * power);
+            double lfPower = minAbs(power, kp * lfError * power);
+            double rbPower = minAbs(power, kp * rbError * power);
+            double lbPower = minAbs(power, kp * lbError * power);
+
+            setPowers(lfPower, rfPower,
+                    lbPower, rbPower);
+
+            rfError = rfTarget - rfDrive.getCurrentPosition();
+            lfError = lfTarget - lfDrive.getCurrentPosition();
+            rbError = rbTarget - rbDrive.getCurrentPosition();
+            lbError = lbTarget - lbDrive.getCurrentPosition();
+        }
+
+        stopAll();
+
+    }
+
     // Untested proportional IMU rotation
     public void rotateIMU(Direction direction, double angle, double power, double timeoutS) {
         final double kp = 1.0 / 45.0;
@@ -197,7 +268,7 @@ public class DriveTrainNew {
         while (Math.abs(error) > minError
 //                && (System.currentTimeMillis() - startTime) / 1000 < timeoutS
                 ) {
-            double proportionalPower = Math.min(power, kp * power * error);
+            double proportionalPower = minAbs(power, Math.abs(kp * power * error));
 
             move(Direction.CW, proportionalPower);
 

@@ -6,7 +6,9 @@ package org.firstinspires.ftc.teamcode.robotutil;
 
 public class Values {
 
-    public static double ticksPerInch = 95;
+    public static double TICKS_PER_INCH_FORWARD = 60;
+    // 61.3
+    public static double TICKS_PER_INCH_STRAFE = 92;
 
     public static double gyroTurnErrorMargin = 3;
     public static double minRotationPower = 0.07;
@@ -34,7 +36,6 @@ public class Values {
     public static double cryptoDownPos = 0.56;
     public static double cryptoUpPos = cryptoDownPos - 0.5;
     //AUTONOMOUS DISTANCE VALUES
-    public static double TICKS_PER_INCH_STRAFE = 61.3;
 
     public enum RotationMode {
         ABSOLOUTE,RELATIVE

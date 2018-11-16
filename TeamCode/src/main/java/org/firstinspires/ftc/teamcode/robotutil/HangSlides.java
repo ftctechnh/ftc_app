@@ -8,7 +8,7 @@ public class HangSlides {
     LinearOpMode opMode;
 //    private int[] encoderStartPosition;
 
-    private static final int TOTAL_TICKS = (int) (12 * Values.ticksPerInch);
+    private static final int TOTAL_TICKS = (int) (12 * Values.TICKS_PER_INCH_FORWARD);
 
     public HangSlides(LinearOpMode opMode, DcMotor hangTop, DcMotor hangBottom) {
         this.opMode = opMode;
