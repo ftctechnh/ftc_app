@@ -158,11 +158,13 @@ public class DriveTrainNew {
         driveMotors.useEncoders();
     }
 
-    private double minAbs(double a, double b) {
-        if (Math.abs(a) > Math.abs(b)) {
-            return a;
+    private double getProportionalPower(double cap, double proportionalPower) {
+        cap = Math.abs(cap);
+        if (proportionalPower > 0) {
+            return Math.min(cap, proportionalPower);
         } else {
-            return b;
+            cap *= -1;
+            return Math.max(cap, proportionalPower);
         }
     }
 
@@ -218,10 +220,10 @@ public class DriveTrainNew {
                 Math.abs(rbError) > minError && Math.abs(lbError) > minError &&
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
 
-            double rfPower = minAbs(power, kp * rfError * power);
-            double lfPower = minAbs(power, kp * lfError * power);
-            double rbPower = minAbs(power, kp * rbError * power);
-            double lbPower = minAbs(power, kp * lbError * power);
+            double rfPower = getProportionalPower(power, kp * rfError * power);
+            double lfPower = getProportionalPower(power, kp * lfError * power);
+            double rbPower = getProportionalPower(power, kp * rbError * power);
+            double lbPower = getProportionalPower(power, kp * lbError * power);
 
             setPowers(lfPower, rfPower,
                     lbPower, rbPower);
@@ -268,7 +270,7 @@ public class DriveTrainNew {
         while (Math.abs(error) > minError
 //                && (System.currentTimeMillis() - startTime) / 1000 < timeoutS
                 ) {
-            double proportionalPower = minAbs(power, Math.abs(kp * power * error));
+            double proportionalPower = getProportionalPower(power, kp * power * error);
 
             move(Direction.CW, proportionalPower);
 
