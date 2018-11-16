@@ -80,7 +80,7 @@ public class Hardware15091 {
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
 
-    public static final double ARM_POWER = 0.4d;
+    public static final double ARM_POWER = 0.6d;
     public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
     public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
 

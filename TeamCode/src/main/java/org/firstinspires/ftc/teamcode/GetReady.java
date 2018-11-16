@@ -69,27 +69,31 @@ public class GetReady extends LinearOpMode {
         runtime.reset();
 
         robot.setArmTarget(1.125d);
-        robot.armDrive.setPower(0.3d);
+        robot.armDrive.setPower(0.2d);
 
         while (opModeIsActive() &&
-                (runtime.seconds() < 7d) &&
+                (runtime.seconds() < 10d) &&
                 (robot.armDrive.isBusy()))
         {
-            //wait for arm to reach
+            robot.setArmTarget(1.125d);
         }
 
-        runtime.reset();
+        robot.armDrive.setPower(0d);
         robot.armServo.setPosition(1d);
         robot.handServo.setPosition(0d);
 
-        robot.setArmTarget(0.72d);
-        robot.armDrive.setPower(0.3d);
+        idle();
+        sleep(2000l);
+
+        runtime.reset();
+        robot.setArmTarget(0.725d);
+        robot.armDrive.setPower(0.2d);
 
         while (opModeIsActive() &&
-                (runtime.seconds() < 5d) &&
+                (runtime.seconds() < 10d) &&
                 (robot.armDrive.isBusy()))
         {
-            //wait for arm to reach
+            robot.setArmTarget(0.725d);
         }
     }
 }
