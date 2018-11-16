@@ -4,9 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Hardware.controller.TriggerType;
-
-import java.util.logging.Handler;
+import org.firstinspires.ftc.teamcode.hardware.controller.TriggerType;
 
 @TeleOp(name = "TeleOpTestybois", group = "TeleOp")
 public class TeleOpTestybois extends BaseTeleOpMode {

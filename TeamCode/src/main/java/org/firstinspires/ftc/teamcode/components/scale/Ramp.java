@@ -11,6 +11,7 @@ abstract public class Ramp implements IScale
         this.point2 = point2;
     }
 
+    public Point getPoint1() { return point1; }
     public Point getPoint2() {
         return point2;
     }

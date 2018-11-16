@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.systems;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -13,7 +12,8 @@ import org.firstinspires.ftc.teamcode.components.scale.IScale;
 import org.firstinspires.ftc.teamcode.components.scale.LinearScale;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
-import org.firstinspires.ftc.teamcode.systems.BaseSystems.DriveSystem4Wheel;
+import org.firstinspires.ftc.teamcode.systems.base.DriveSystem4Wheel;
+import org.firstinspires.ftc.teamcode.systems.imu.IMUSystem;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -70,14 +70,9 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         double backLeftPower = leftY + leftX + rightX;
 
         this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
-        telemetry.log("Mecanum Drive System","FRpower: {0}", Range.clip(frontRightPower, -1, 1));
         this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
-        telemetry.log("Mecanum Drive System","BRPower: {0}", Range.clip(backRightPower, -1, 1));
         this.motorFrontLeft.setPower(Range.clip(frontLeftPower - leftX, -1, 1));
-        telemetry.log("Mecanum Drive System", "FLPower: {0}", Range.clip(frontLeftPower - leftX, -1, 1));
         this.motorBackLeft.setPower(Range.clip(backLeftPower + leftX, -1, 1));
-        telemetry.log("Mecanum Drive System", "BLPower: {0}", Range.clip(backLeftPower + leftX, -1, 1));
-        telemetry.write();
     }
 
     private float scaleJoystickValue(float joystickValue) {
