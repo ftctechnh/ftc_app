@@ -15,9 +15,10 @@ public class ArmSystem extends System {
     private DcMotor motor2;
     private AnalogInput potentiometer;
 
-    private final double PotentiometerMaximum = 0.5;
-    private final double PotentiometerLatch = 0.2;
-    private final double PotentiometerMinimum = 0.0;
+    private final double PotentiometerMaximum = 1.1;
+    private final double PotentiometerLatch = 0.86;
+    private final double PotentiometerRange = 0.01;
+    private final double PotentiometerMinimum = 0.075;
 
     private ArmState currentState;
 
@@ -57,8 +58,8 @@ public class ArmSystem extends System {
             telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
             telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
 
-            motor1.setPower(-0.05);
-            motor2.setPower(0.05);
+            motor1.setPower(0.05);
+            motor2.setPower(-0.05);
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);
@@ -88,12 +89,12 @@ public class ArmSystem extends System {
     }
 
     private boolean isAtRotateLatch() {
-        return potentiometer.getVoltage() >= PotentiometerLatch - 0.05 ||
-                potentiometer.getVoltage() <= PotentiometerLatch + 0.05;
+        return potentiometer.getVoltage() >= PotentiometerLatch - PotentiometerRange &&
+                potentiometer.getVoltage() <= PotentiometerLatch + PotentiometerRange;
     }
 
     private double getPower() {
-        return potentiometer.getVoltage() > PotentiometerLatch + 0.05 ?
+        return potentiometer.getVoltage() > PotentiometerLatch + PotentiometerRange ?
                 -0.05 :
                 0.05;
     }
@@ -105,8 +106,8 @@ public class ArmSystem extends System {
         telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
         telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
         if (!isAtDropPosition()) {
-            motor1.setPower(0.05);
-            motor2.setPower(-0.05);
+            motor1.setPower(-0.05);
+            motor2.setPower(0.05);
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);

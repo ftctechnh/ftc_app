@@ -17,7 +17,7 @@ public class SlideSystem extends System
        TODO:
        - ramp the encoder values
      */
-    private final double WinchPower = 0.7;
+    private final double WinchPower = 0.3;
     private final int EncoderLoadRange = 100;
 
     private DigitalChannel limitTop;

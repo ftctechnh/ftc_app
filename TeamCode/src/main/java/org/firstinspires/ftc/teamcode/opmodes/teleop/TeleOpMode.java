@@ -11,18 +11,20 @@ import org.firstinspires.ftc.teamcode.opmodes.debuggers.TeleOpModeDebugger;
 import org.firstinspires.ftc.teamcode.systems.arm.ArmState;
 import org.firstinspires.ftc.teamcode.systems.arm.ArmSystem;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
+import org.firstinspires.ftc.teamcode.systems.flail.Flail;
 import org.firstinspires.ftc.teamcode.systems.slide.SlideState;
 import org.firstinspires.ftc.teamcode.systems.slide.SlideSystem;
 
 /**
  * Created by idiot on 10/11/17.
  */
-@TeleOp(name = "TeleOp", group="TeleOp")
+@TeleOp(name = "CompetitionTeleOp", group="TeleOp")
 public class TeleOpMode extends TeleOpModeDebugger {
     private Controller controller1;
     private MecanumDriveSystem driveSystem;
     private ArmSystem armSystem;
     private SlideSystem slideSystem;
+    private Flail flail;
 
     public TeleOpMode() {
         msStuckDetectLoop = 1000000000;
@@ -35,6 +37,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
         armSystem = new ArmSystem(this);
         slideSystem = new SlideSystem(this);
         this.driveSystem = new MecanumDriveSystem(this);
+        this.flail = new Flail(this);
         initButton();
     }
 
@@ -50,6 +53,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
         telemetry.update();
         addWinchButton();
         addRotateButton();
+        addFlailButton();
     }
 
     private void addWinchButton() {
@@ -106,6 +110,25 @@ public class TeleOpMode extends TeleOpModeDebugger {
             }
         };
         controller1.addButton(rotateButton);
+    }
+
+    private void addFlailButton() {
+        controller1.rightTrigger.pressedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                flail.start();
+            }
+        };
+        controller1.rightTrigger.releasedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                flail.stop();
+            }
+        };
     }
 
     @Override
