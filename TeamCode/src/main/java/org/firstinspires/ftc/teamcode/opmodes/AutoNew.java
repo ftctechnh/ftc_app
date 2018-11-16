@@ -159,11 +159,11 @@ public class AutoNew extends LinearOpMode {
             } else if (gamepad1.y) {
                 if (gamepad1.dpad_up) {
                     if (value < 180) {
-                        method++;
+                        value++;
                     }
                 } else if (gamepad1.dpad_down) {
-                    if (method > 0) {
-                        method--;
+                    if (value > 0) {
+                        value--;
                     }
                 }
             } else if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
@@ -174,7 +174,7 @@ public class AutoNew extends LinearOpMode {
             updateOptions();
             telemetry.update();
 
-            Utils.waitFor(300);
+            Utils.waitFor(100);
         }
     }
 

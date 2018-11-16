@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Util;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -170,7 +171,7 @@ public class DriveTrainNew {
 
     public void moveP(Direction direction,double power,double inches,double timeoutS) {
         final double minError = Values.TICKS_PER_INCH_FORWARD * 0.5;
-        final double kp = 1 / (6 * Values.TICKS_PER_INCH_FORWARD);
+        final double kp = 1 / (12 * Values.TICKS_PER_INCH_FORWARD);
 
         driveMotors.resetEncoders();
         driveMotors.useEncoders();
@@ -232,6 +233,12 @@ public class DriveTrainNew {
             lfError = lfTarget - lfDrive.getCurrentPosition();
             rbError = rbTarget - rbDrive.getCurrentPosition();
             lbError = lbTarget - lbDrive.getCurrentPosition();
+
+            if (Math.abs(rfError) < minError || Math.abs(lfError) < minError ||
+                    Math.abs(rbError) < minError || Math.abs(lbError) < minError) {
+                stopAll();
+                Utils.waitFor(300);
+            }
         }
 
         stopAll();
