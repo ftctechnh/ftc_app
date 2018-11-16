@@ -8,17 +8,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.components.scale.LogarithmicRamp;
+import org.firstinspires.ftc.teamcode.components.scale.Point;
+import org.firstinspires.ftc.teamcode.components.scale.Ramp;
 import org.firstinspires.ftc.teamcode.systems.base.System;
 
 public class ArmSystem extends System {
     private DcMotor motor1;
     private DcMotor motor2;
     private AnalogInput potentiometer;
+    private Ramp rampUp;
+    private Ramp rampDown;
 
     private final double PotentiometerMaximum = 1.1;
+    private final double PotentiometerMiddle = 0.55;
     private final double PotentiometerLatch = 0.86;
     private final double PotentiometerRange = 0.01;
-    private final double PotentiometerMinimum = 0.075;
+    private final double PotentiometerMinimum = 0.08;
+    private final double MaxPower = 0.3;
+    private final double MinPower = 0.01;
 
     private ArmState currentState;
 
@@ -28,6 +36,14 @@ public class ArmSystem extends System {
         motor2 = hardwareMap.dcMotor.get( "parallelM2");
         potentiometer = hardwareMap.get(AnalogInput.class, "potentiometer");
         setState(ArmState.IDLE);
+        rampUp = new LogarithmicRamp(
+                new Point(PotentiometerMiddle, MaxPower),
+                new Point(PotentiometerMaximum, MinPower)
+        );
+        rampDown = new LogarithmicRamp(
+                new Point(PotentiometerMinimum, MinPower),
+                new Point(PotentiometerMaximum, MaxPower)
+        );
     }
 
     public void setState(ArmState state) {
@@ -35,7 +51,6 @@ public class ArmSystem extends System {
     }
 
     public void run() {
-        telemetry.log("voltage", potentiometer.getVoltage());
         switch (currentState) {
             case ROTATING_DROP:
                 rotateDrop();
@@ -47,19 +62,16 @@ public class ArmSystem extends System {
                 rotatePickup();
                 break;
         }
-        telemetry.write();
     }
   
     public void rotatePickup() {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtPickupPosition()) {
-            telemetry.log("Potentiometer", potentiometer.getVoltage());
-            telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
-            telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
-
-            motor1.setPower(0.05);
-            motor2.setPower(-0.05);
+            telemetry.log("power", rampDown.scaleX(potentiometer.getVoltage()));
+            motor1.setPower(0.2);
+            motor2.setPower(-0.2);
+            telemetry.write();
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);
@@ -75,10 +87,6 @@ public class ArmSystem extends System {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtRotateLatch()) {
-            telemetry.log("Potentiometer", potentiometer.getVoltage());
-            telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
-            telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
-
             motor1.setPower(-getPower());
             motor2.setPower(getPower());
         } else {
@@ -95,19 +103,16 @@ public class ArmSystem extends System {
 
     private double getPower() {
         return potentiometer.getVoltage() > PotentiometerLatch + PotentiometerRange ?
-                -0.05 :
-                0.05;
+                -MaxPower :
+                MaxPower;
     }
 
     public void rotateDrop() {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        telemetry.log("Potentiometer", potentiometer.getVoltage());
-        telemetry.log("Motor 1", "Encoder {0}", motor1.getCurrentPosition());
-        telemetry.log("Motor 2", "Encoder {0}", motor2.getCurrentPosition());
         if (!isAtDropPosition()) {
-            motor1.setPower(-0.05);
-            motor2.setPower(0.05);
+            motor1.setPower(-0.2);
+            motor2.setPower(0.2);
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);
