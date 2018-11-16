@@ -43,42 +43,44 @@ public class AutoNew extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
-        options();
         waitForStart();
 
         if (opModeIsActive()) {
-            waitForButton(String.format("Next: %d %d %f %f",
-                    method, direction, power, value));
+            while (opModeIsActive()) {
+                options();
+                waitForButton(String.format("Next: %d %d %f %f",
+                        method, direction, power, value));
 
-            Direction dir;
-            switch (direction) {
-                case 0:
-                    dir = Direction.FORWARD;
-                    break;
-                case 1:
-                    dir = Direction.BACK;
-                    break;
-                case 2:
-                    dir = Direction.RIGHT;
-                    break;
-                case 3:
-                    dir = Direction.LEFT;
-                    break;
-                case 4:
-                    dir = Direction.CW;
-                    break;
-                case 5:
-                    dir = Direction.CCW;
-                    break;
-                default:
-                    dir = Direction.FORWARD;
-            }
+                Direction dir;
+                switch (direction) {
+                    case 0:
+                        dir = Direction.FORWARD;
+                        break;
+                    case 1:
+                        dir = Direction.BACK;
+                        break;
+                    case 2:
+                        dir = Direction.RIGHT;
+                        break;
+                    case 3:
+                        dir = Direction.LEFT;
+                        break;
+                    case 4:
+                        dir = Direction.CW;
+                        break;
+                    case 5:
+                        dir = Direction.CCW;
+                        break;
+                    default:
+                        dir = Direction.FORWARD;
+                }
 
-            switch (method) {
-                case 0:
-                    dt.moveP(dir, power, value, 10);
-                case 1:
-                    dt.rotateIMU(dir, power, value, 10);
+                switch (method) {
+                    case 0:
+                        dt.moveP(dir, power, value, 10);
+                    case 1:
+                        dt.rotateIMUPID(dir, value, 10);
+                }
             }
 
             // Land

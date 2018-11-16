@@ -44,6 +44,38 @@ public class PID {
 
 
 
+    }public Double getOutput(double error){
+
+        double time = System.currentTimeMillis();
+        double timeDifference = time - lastRegistereedTime;
+
+        double proportional = kp*error;
+
+
+        double newIntegral = ki*error*time;
+        runningIntegral += newIntegral;
+
+        double derivative = kd * ((error - previousError) / timeDifference);
+
+        lastRegistereedTime = time;
+        previousError = error;
+
+        double rawOutput = proportional + derivative + runningIntegral;
+        double clampedOutput =  clampValue(rawOutput,-1.0,1.0);
+
+
+        this.telProportional.setValue(proportional);
+        this.telIntegral.setValue(newIntegral);
+        this.telRunningIntegral.setValue(runningIntegral);
+        this.telDerivative.setValue(derivative);
+        this.telRawOutput.setValue(rawOutput);
+        this.telClampedOutput.setValue(clampedOutput);
+        this.telError.setValue(error);
+        this.telTimeDiff.setValue(timeDifference);
+
+        this.tel.update();
+        return clampedOutput;
+
     }
 
     public Double getOutput(double desired, double actual){

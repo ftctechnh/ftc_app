@@ -245,7 +245,65 @@ public class DriveTrainNew {
 
     }
 
-    // Untested proportional IMU rotation
+    public void rotateIMUPID(Direction direction, double angle, double timeoutS) {
+        final double kp = 1.0 / 45.0;
+        final double ki = 0;
+        final double kd = 0;
+        final double minError = 2.0;
+
+        PID pid = new PID(kp, ki, kd, opMode.telemetry);
+
+        double currentHeading = imu.getAngle();
+        double targetHeading;
+
+        switch (direction) {
+            case CW:
+                targetHeading = currentHeading + angle;
+                break;
+            case CCW:
+                targetHeading = currentHeading - angle;
+                break;
+            default:
+                targetHeading = currentHeading;
+        }
+        targetHeading = fixAngle(targetHeading);
+
+        double error = fixAngle(targetHeading - currentHeading);
+        double startTime = System.currentTimeMillis();
+
+        Telemetry.Item telPower = opMode.telemetry.addData("power", 0);
+        Telemetry.Item telCurrAngle = opMode.telemetry.addData("angle",currentHeading);
+        Telemetry.Item telError = opMode.telemetry.addData("error",error);
+//        Telemetry.Item powerStat = opMode.telemetry.addData("kp,power,error",String.format("%.3f || %.3f || %.3f",kp,power,error));
+        Telemetry.Item timeLeft = opMode.telemetry.addData("time left",(System.currentTimeMillis() - startTime));
+
+        while (Math.abs(error) > minError
+                && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
+            double proportionalPower = pid.getOutput(error);
+
+            move(Direction.CW, proportionalPower);
+
+            telPower.setValue(proportionalPower);
+            telCurrAngle.setValue(currentHeading);
+//            powerStat.setValue(String.format("%.3f || %.3f || %.3f",kp,power,error));
+            telError.setValue(error);
+            timeLeft.setValue((System.currentTimeMillis() - startTime));
+            this.opMode.telemetry.update();
+
+            currentHeading = imu.getAngle();
+            error = fixAngle(targetHeading - currentHeading);
+
+            if (Math.abs(error) < minError) {
+                stopAll();
+                Utils.waitFor(300);
+                currentHeading = imu.getAngle();
+                error = fixAngle(targetHeading - currentHeading);
+            }
+        }
+
+        driveMotors.stopAll();
+    }
+
     public void rotateIMU(Direction direction, double angle, double power, double timeoutS) {
         final double kp = 1.0 / 45.0;
         final double minError = 2.0;
