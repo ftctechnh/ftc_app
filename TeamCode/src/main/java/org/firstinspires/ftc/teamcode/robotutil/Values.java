@@ -7,6 +7,7 @@ package org.firstinspires.ftc.teamcode.robotutil;
 public class Values {
 
     public static double TICKS_PER_INCH_FORWARD = 60;
+    public static double HANG_TOCKS_PER_INCH = 10;
     // 61.3
     public static double TICKS_PER_INCH_STRAFE = 92;
 

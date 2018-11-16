@@ -51,4 +51,10 @@ public class MotorGroup {
         }
     }
 
+    public void setPower(double power){
+        for(DcMotor motor : this.motors){
+            motor.setPower(power);
+        }
+    }
+
 }
