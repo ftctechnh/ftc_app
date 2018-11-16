@@ -15,13 +15,18 @@ public class MotorTelemetry {
         this.motor = motor;
         this.motorName = motor.getDeviceName();
         this.telemetry = telemetry;
-        updateTel();
+        createTelemetry();
 
     }
 
-    public void updateTel(){
+    private void createTelemetry(){
         this.motorPower = telemetry.addData("%s PRW",this.motor.getPower());
         this.motorPos = telemetry.addData("%s PRW",this.motor.getCurrentPosition());
+    }
+
+    public void update(){
+        this.motorPower.setValue(this.motor.getPower());
+        this.motorPos.setValue(this.motor.getCurrentPosition());
     }
 
     public DcMotor getMotor() {
