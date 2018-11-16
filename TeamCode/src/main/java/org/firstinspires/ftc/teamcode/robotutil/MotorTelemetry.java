@@ -24,7 +24,7 @@ public class MotorTelemetry {
         this.motorPos = telemetry.addData("%s PRW",this.motor.getCurrentPosition());
     }
 
-    public void updateTel(){
+    public void update(){
         this.motorPower.setValue(this.motor.getPower());
         this.motorPos.setValue(this.motor.getCurrentPosition());
     }
