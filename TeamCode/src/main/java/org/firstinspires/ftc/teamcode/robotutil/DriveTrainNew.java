@@ -196,7 +196,8 @@ public class DriveTrainNew {
         Telemetry.Item timeLeft = opMode.telemetry.addData("time left",(System.currentTimeMillis() - startTime));
         while (error > minError && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
             double proportionalPower = kp * power * error;
-            move(direction,proportionalPower);
+            move(Direction.CW, proportionalPower);
+
             telPower.setValue(proportionalPower);
             telCurrAngle.setValue(currentHeading);
             powerStat.setValue(String.format("%.3f || %.3f || %.3f",kp,power,error));
@@ -225,8 +226,8 @@ public class DriveTrainNew {
 
     // Get angle between -180 and 180
     private double fixAngle(double angle) {
-        while (angle > 360 || angle < 0) {
-            if (angle > 360) {
+        while (angle > 180 || angle < -180) {
+            if (angle > 180) {
                 angle -= 360;
             } else {
                 angle += 360;
