@@ -15,7 +15,7 @@ public class DriveTrainNew {
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
     private DcMotor lfDrive,lbDrive,rfDrive,rbDrive;
     private BNO055IMU adaImu;
-    public IMU imu;
+    private IMU imu;
     private LinearOpMode opMode;
     private MotorGroup driveMotors;
 

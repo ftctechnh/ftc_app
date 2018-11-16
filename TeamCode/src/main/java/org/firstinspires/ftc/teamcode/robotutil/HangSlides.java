@@ -4,19 +4,18 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 public class HangSlides {
-    private DcMotor[] hangMotorArray;
+    private DcMotor[] hangMotors;
     LinearOpMode opMode;
-    private MotorGroup hangMotors;
 //    private int[] encoderStartPosition;
 
     private static final int TOTAL_TICKS = (int) (12 * Values.TICKS_PER_INCH_FORWARD);
 
     public HangSlides(LinearOpMode opMode, DcMotor hangTop, DcMotor hangBottom) {
         this.opMode = opMode;
-        this.hangMotorArray = new DcMotor[]{hangTop, hangBottom};
-        this.hangMotors = new MotorGroup(hangMotorArray);
-        hangMotors.dontUseEncoders();
-        hangMotors.setBrake();
+        this.hangMotors = new DcMotor[]{hangTop, hangBottom};
+
+        Motors.dontUseEncoders(hangMotors);
+        Motors.setBrake(hangMotors);
 
 //        this.encoderStartPosition = new int[]{
 //                hangMotors[0].getCurrentPosition(),
@@ -25,7 +24,7 @@ public class HangSlides {
     }
 
     public void setPower(double power) {
-        for (DcMotor motor : hangMotorArray) {
+        for (DcMotor motor : hangMotors) {
             motor.setPower(power);
         }
     }
