@@ -24,6 +24,7 @@ public class DriveTrainNew {
     private IMUNew imu;
     private LinearOpMode opMode;
     private MotorGroup driveMotors;
+    private Telemetry.Item powerTelem;
 
     public DriveTrainNew(LinearOpMode opMode) {
         this.opMode = opMode;
@@ -42,6 +43,7 @@ public class DriveTrainNew {
         this.driveMotors = new MotorGroup(driveMotorArray);
         initMotors();
         this.imu.init();
+        this.powerTelem = opMode.telemetry.addData("Power:", 0);
     }
 
 
@@ -158,7 +160,7 @@ public class DriveTrainNew {
 
     // Untested proportional IMU rotation
     public void rotateIMU(Direction direction, double angle, double power, double timeoutS) {
-        double kp = 180 * power;
+        double kp = power / 180;
         double minError = 2;
 
         double currentHeading = imu.getAngle(Axis.HEADING);
@@ -182,6 +184,8 @@ public class DriveTrainNew {
         while (error > minError && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
             double proportionalPower = kp * error;
             move(direction,proportionalPower);
+            powerTelem.setValue(proportionalPower);
+            this.opMode.telemetry.update();
 
             currentHeading = imu.getAngle(Axis.HEADING);
             error = getError(currentHeading, targetHeading);
