@@ -6,15 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-/**
- * Created by Libby on 12/14/17.
- */
+@TeleOp(name="no")
+public class BaseChassis extends LinearOpMode{
 
-@TeleOp(name="Om Nom Base", group="Linear Opmode")
-
-public class BaseChassis extends LinearOpMode {
-
-    // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FrontLeftDrive = null;
     private DcMotor FrontRightDrive = null;
@@ -24,7 +18,7 @@ public class BaseChassis extends LinearOpMode {
     // Define class members
     double strafepower = 1;
 
-    controllerPos previousDrive = controllerPos.ZERO;
+    BaseChassis.controllerPos previousDrive = BaseChassis.controllerPos.ZERO;
 
     @Override
     public void runOpMode() {
@@ -66,35 +60,34 @@ public class BaseChassis extends LinearOpMode {
 
 
     //DRIVER CONTROL
-    //MOTORS
-
+    //MOTORs
 
     public void moveRobot() {
         double drive = -gamepad1.left_stick_y;
         double diagonalDrive = -gamepad1.left_stick_x;
         double turn = (-gamepad1.right_stick_x/1.2);
 
-        if(drive > 0.1 && (previousDrive == controllerPos.DRIVE_FOWARD || previousDrive == controllerPos.ZERO)) {
-            previousDrive = controllerPos.DRIVE_FOWARD;
+        if(drive > 0.1 && (previousDrive == BaseChassis.controllerPos.DRIVE_FOWARD || previousDrive == BaseChassis.controllerPos.ZERO)) {
+            previousDrive = BaseChassis.controllerPos.DRIVE_FOWARD;
             Drive(drive, diagonalDrive);
-        } else if(drive < -0.1 && (previousDrive == controllerPos.DRIVE_BACK || previousDrive == controllerPos.ZERO)) {
-            previousDrive = controllerPos.DRIVE_BACK;
+        } else if(drive < -0.1 && (previousDrive == BaseChassis.controllerPos.DRIVE_BACK || previousDrive == BaseChassis.controllerPos.ZERO)) {
+            previousDrive = BaseChassis.controllerPos.DRIVE_BACK;
             Drive(drive, diagonalDrive);
-        } else if((diagonalDrive<-.4 || gamepad1.dpad_right) && (previousDrive == controllerPos.STRAFE_RIGHT || previousDrive == controllerPos.ZERO)) {
-            previousDrive = controllerPos.STRAFE_RIGHT;
+        } else if((diagonalDrive<-.4 || gamepad1.dpad_right) && (previousDrive == BaseChassis.controllerPos.STRAFE_RIGHT || previousDrive == BaseChassis.controllerPos.ZERO)) {
+            previousDrive = BaseChassis.controllerPos.STRAFE_RIGHT;
             Strafe(-1);
-        } else if((diagonalDrive>.4 || gamepad1.dpad_left) && (previousDrive == controllerPos.STRAFE_LEFT || previousDrive == controllerPos.ZERO)) {
-            previousDrive = controllerPos.STRAFE_LEFT;
+        } else if((diagonalDrive>.4 || gamepad1.dpad_left) && (previousDrive == BaseChassis.controllerPos.STRAFE_LEFT || previousDrive == BaseChassis.controllerPos.ZERO)) {
+            previousDrive = BaseChassis.controllerPos.STRAFE_LEFT;
             Strafe(1);
-        }  else if(turn > 0.25 &&(previousDrive == controllerPos.TURN_RIGHT || previousDrive == controllerPos.ZERO)){
-            previousDrive = controllerPos.TURN_RIGHT;
+        }  else if(turn > 0.25 &&(previousDrive == BaseChassis.controllerPos.TURN_RIGHT || previousDrive == BaseChassis.controllerPos.ZERO)){
+            previousDrive = BaseChassis.controllerPos.TURN_RIGHT;
             turn(turn);
-        } else if(turn < -0.25 &&(previousDrive == controllerPos.TURN_LEFT || previousDrive == controllerPos.ZERO)){
-            previousDrive = controllerPos.TURN_LEFT;
+        } else if(turn < -0.25 &&(previousDrive == BaseChassis.controllerPos.TURN_LEFT || previousDrive == BaseChassis.controllerPos.ZERO)){
+            previousDrive = BaseChassis.controllerPos.TURN_LEFT;
             turn(turn);
         }
         else {
-            previousDrive = controllerPos.ZERO;
+            previousDrive = BaseChassis.controllerPos.ZERO;
             FrontLeftDrive.setPower(0);
             BackLeftDrive.setPower(0);
             FrontRightDrive.setPower(0);
@@ -211,6 +204,8 @@ public class BaseChassis extends LinearOpMode {
         telemetry.addData("Motors", "drive power (%.2f)", drivePower);
         telemetry.update();
     }
+
+
 
     public void turn(double turn){
         double Rpower = turn;
