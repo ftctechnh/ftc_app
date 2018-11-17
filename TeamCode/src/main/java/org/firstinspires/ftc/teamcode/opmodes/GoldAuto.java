@@ -173,6 +173,7 @@ public class GoldAuto extends LinearOpMode {
         t.setValue("found!!!!!");
         goldXTelem.setValue(vision.detect());
         telemetry.update();
+        Utils.waitFor(5000);
         Direction direction;
         int goldX;
         int error;
@@ -188,7 +189,6 @@ public class GoldAuto extends LinearOpMode {
             } else {
                 direction = Direction.CCW;
                 telDir.setValue("CCW");
-
             }
             telError.setValue(error);
             goldXTelem.setValue(goldX);
@@ -199,6 +199,7 @@ public class GoldAuto extends LinearOpMode {
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
 
         dt.stopAll();
+        Utils.waitFor(5000);
     }
 
     private void initialize() {

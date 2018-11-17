@@ -39,7 +39,7 @@ public class Vision {
     public int detect() {
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
-            opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());
+//            opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());
             int goldMineralX = -1;
             for (Recognition recognition : updatedRecognitions) {
                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
@@ -48,7 +48,7 @@ public class Vision {
             }
             return goldMineralX;
         }else{
-            opMode.telemetry.addLine("No objects deteced :(");
+//            opMode.telemetry.addLine("No objects deteced :(");
             return -1;
         }
     }
