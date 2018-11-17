@@ -46,11 +46,8 @@ public class GoldAuto extends LinearOpMode {
 
         if (opModeIsActive()) {
 
-            while (opModeIsActive()) {
 //                options();
-                waitForButton(String.format("Next: "));
-                    goldAlign(.2,10);
-            }
+            goldAlign(.2,10);
         }
 
             // Land
@@ -190,6 +187,7 @@ public class GoldAuto extends LinearOpMode {
                     Math.abs(error) > minError &&
                     (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
         }
+        dt.stopAll();
     }
 
     private void initialize() {
