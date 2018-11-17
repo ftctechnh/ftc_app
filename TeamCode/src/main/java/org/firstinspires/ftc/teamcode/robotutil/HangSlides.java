@@ -13,11 +13,11 @@ public class HangSlides {
 
     public HangSlides(LinearOpMode opMode) {
         this.opMode = opMode;
+        this.topMotor = opMode.hardwareMap.dcMotor.get("hangTop");
+        this.bottomMotor = opMode.hardwareMap.dcMotor.get("hangBottom");
         this.hangMotors = new MotorGroup(new DcMotor[]{topMotor, bottomMotor});
         hangMotors.useEncoders();
         hangMotors.setBrake();
-        this.topMotor = opMode.hardwareMap.dcMotor.get("topMotor");
-        this.bottomMotor = opMode.hardwareMap.dcMotor.get("bottomMotor");
 
     }
 
