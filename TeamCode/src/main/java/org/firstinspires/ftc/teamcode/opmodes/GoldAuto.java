@@ -160,33 +160,44 @@ public class GoldAuto extends LinearOpMode {
     private void goldAlign(double power, double timeoutS) {
         double minError = 10;
         goldXTelem = this.telemetry.addData("gold x","N/A");
+        Telemetry.Item t = this.telemetry.addData("status","initializing");
+        Telemetry.Item telDir = this.telemetry.addData("direction","idk");
+        Telemetry.Item telError = this.telemetry.addData("error","idk");
 
-        if (vision.detect() == -1) {
+        while (vision.detect() == -1) {
             goldXTelem.setValue(-1);
+            t.setValue("cannot detect :/");
             telemetry.update();
-        } else {
-            Direction direction;
-            int goldX;
-            int error;
-
-            double startTime = System.currentTimeMillis();
-            do {
-                goldX = vision.detect();
-                error = GOLD_ALIGN_LOC - goldX;
-
-                if (error > 0) {
-                    direction = Direction.CW;
-                } else {
-                    direction = Direction.CCW;
-                }
-
-                dt.move(direction, power);
-                goldXTelem.setValue(goldX);
-                telemetry.update();
-            } while (goldX != -1 &&
-                    Math.abs(error) > minError &&
-                    (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
         }
+
+        t.setValue("found!!!!!");
+        goldXTelem.setValue(vision.detect());
+        telemetry.update();
+        Direction direction;
+        int goldX;
+        int error;
+
+        double startTime = System.currentTimeMillis();
+        do {
+            goldX = vision.detect();
+            error = GOLD_ALIGN_LOC - goldX;
+
+            if (error > 0) {
+                direction = Direction.CW;
+                telDir.setValue("CW");
+            } else {
+                direction = Direction.CCW;
+                telDir.setValue("CCW");
+
+            }
+            telError.setValue(error);
+            goldXTelem.setValue(goldX);
+            telemetry.update();
+            dt.move(direction, power);
+        } while (goldX != -1 &&
+                Math.abs(error) > minError &&
+                (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
+
         dt.stopAll();
     }
 
