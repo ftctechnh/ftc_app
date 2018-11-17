@@ -31,7 +31,7 @@ public class AutoNew extends LinearOpMode {
     private final double DIST_TO_GOLD = 12;
     private final double DIST_TO_DEPOT = 36;
     private final double DIST_TO_CRATER = 36;
-    private final int GOLD_ALIGN_LOC = 100;
+    private final int GOLD_ALIGN_LOC = 550;
 
     private Telemetry.Item opMethod;
     private Telemetry.Item opDirection;

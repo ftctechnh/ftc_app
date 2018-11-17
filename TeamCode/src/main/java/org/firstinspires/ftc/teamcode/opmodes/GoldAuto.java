@@ -163,15 +163,15 @@ public class GoldAuto extends LinearOpMode {
         Telemetry.Item t = this.telemetry.addData("status","initializing");
         Telemetry.Item telDir = this.telemetry.addData("direction","idk");
         Telemetry.Item telError = this.telemetry.addData("error","idk");
-
-        while (vision.detect() == -1) {
+        int j = vision.detect();
+        while (j == -1) {
             goldXTelem.setValue(-1);
             t.setValue("cannot detect :/");
             telemetry.update();
         }
 
         t.setValue("found!!!!!");
-        goldXTelem.setValue(vision.detect());
+        goldXTelem.setValue(j);
         telemetry.update();
         Utils.waitFor(5000);
         Direction direction;
@@ -181,6 +181,7 @@ public class GoldAuto extends LinearOpMode {
         double startTime = System.currentTimeMillis();
         do {
             goldX = vision.detect();
+
             error = GOLD_ALIGN_LOC - goldX;
 
             if (error > 0) {
