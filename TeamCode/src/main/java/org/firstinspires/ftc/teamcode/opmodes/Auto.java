@@ -51,6 +51,7 @@ public class Auto extends LinearOpMode {
                         dt.drive(dir, inches, timeoutS);
                         break;
                     case "strafe":
+                        dt.strafe(dir, inches, timeoutS);
                         break;
                     case "rotate":
                         dt.rotate(dir, angle, timeoutS);
@@ -62,6 +63,8 @@ public class Auto extends LinearOpMode {
 
                 options.setOptions();
             }
+
+            dt.stopAll();
         }
     }
 
@@ -81,7 +84,9 @@ public class Auto extends LinearOpMode {
         options.addQuantitativeOption("power", 0, 1, 0.05);
         options.addQuantitativeOption("inches", 0, 24, 0.5);
         options.addQuantitativeOption("angle", 0, 180, 10);
-        options.addQuantitativeOption("timeoutS", 0, 100, 1);
+        options.addQuantitativeOption("timeoutS", 0, 30, 1);
+        options.addQuantitativeOption("1 / kp", 0, 360, 10);
+        options.addQuantitativeOption("1 / ki", 0, 1000, 10);
     }
 
     private void waitForButton(String message){

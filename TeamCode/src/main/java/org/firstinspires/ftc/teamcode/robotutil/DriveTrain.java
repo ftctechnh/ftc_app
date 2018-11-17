@@ -22,10 +22,11 @@ public class DriveTrain {
         put("minError", Values.TICKS_PER_INCH_FORWARD * 0.5);
     }};
     private static final HashMap<String, Double> PID_ROTATE = new HashMap<String, Double>() {{
-        put("kp", 1.0 / 45.0);
+        put("kp", 1.0 / 90.0);
         put("ki", 0.0);
         put("kd", 0.0);
         put("minError", 2.0);
+        put("minPower", 0.2);
     }};
     private static final HashMap<String, Double> PID_STRAFE = new HashMap<String, Double>() {{
         put("kp", 1.0 / (6 * Values.TICKS_PER_INCH_STRAFE));
@@ -144,35 +145,70 @@ public class DriveTrain {
 
         driveMotors.addPID(PID_STRAFE.get("kp"), PID_STRAFE.get("ki"),
                 PID_DRIVE.get("kd"), PID_DRIVE.get("minError"));
+        PID imuPID = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
+                PID_ROTATE.get("kd"), opMode.telemetry);
 
         int dir = direction.getValue();
         int val = (int) (inches * Values.TICKS_PER_INCH_STRAFE);
         driveMotors.setTargets(
-                dir * val,
-                -dir * val,
-                dir * val,
-                -dir * val
+                -dir * val, dir * val,
+                dir * val, -dir * val
         );
+
+        double targetHeading = imu.getAngle();
+        double currentHeading;
+        double imuError;
 
         double startTime = System.currentTimeMillis();
         do {
             driveMotors.updateErrors();
-            driveMotors.setPowers(driveMotors.getPIDOutput());
-        } while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
-                !driveMotors.withinMinError() &&
-                (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
+            currentHeading = imu.getAngle();
+            imuError = fixAngle(targetHeading - currentHeading);
+
+            double[] drivePowers = driveMotors.getPIDOutput();
+//            double imuCorrection = imuPID.getOutput(imuError);
+//
+//            opMode.telemetry.addData("original lf", drivePowers[0]);
+//            opMode.telemetry.addData("original rf", drivePowers[1]);
+//            opMode.telemetry.addData("original lb", drivePowers[2]);
+//            opMode.telemetry.addData("original rb", drivePowers[3]);
+//
+//            drivePowers[0] += dir * imuCorrection;
+//            drivePowers[1] += dir * imuCorrection;
+//            drivePowers[2] -= dir * imuCorrection;
+//            drivePowers[3] -= dir * imuCorrection;
+
+//            opMode.telemetry.addData("imuCorrection", imuCorrection);
+            opMode.telemetry.addData("dir", dir);
+            opMode.telemetry.addData("lf", drivePowers[0]);
+            opMode.telemetry.addData("rf", drivePowers[1]);
+            opMode.telemetry.addData("lb", drivePowers[2]);
+            opMode.telemetry.addData("rb", drivePowers[3]);
+            opMode.telemetry.update();
+
+            driveMotors.setPowers(drivePowers);
+        } while (((opMode.opModeIsActive() && !opMode.isStopRequested() &&
+                !driveMotors.withinMinError()) ||
+                Math.abs(imuError) > PID_ROTATE.get("minError")) &&
+                        (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
 
         stopAll();
     }
 
     public void rotate(Direction direction, double angle, double timeoutS) {
-        PID pid = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
-                PID_ROTATE.get("kd"), opMode.telemetry);
-
         int dir = direction.getValue();
 
         double currentHeading = imu.getAngle();
         double targetHeading = fixAngle(currentHeading + dir * angle);
+
+        rotateTo(targetHeading, timeoutS);
+    }
+
+    public void rotateTo(double targetHeading, double timeoutS) {
+        PID pid = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
+                PID_ROTATE.get("kd"), opMode.telemetry);
+
+        double currentHeading = imu.getAngle();
         double error;
 
         double startTime = System.currentTimeMillis();
@@ -181,6 +217,10 @@ public class DriveTrain {
             error = fixAngle(targetHeading - currentHeading);
 
             double proportionalPower = pid.getOutput(error);
+            proportionalPower += (proportionalPower > 0) ?
+                    PID_ROTATE.get("minPower") : -PID_ROTATE.get("minPower");
+            opMode.telemetry.addData("power", proportionalPower);
+            opMode.telemetry.update();
             move(Direction.CW, proportionalPower);
 
             if (Math.abs(error) < PID_ROTATE.get("minError")) {

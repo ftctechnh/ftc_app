@@ -9,12 +9,14 @@ import java.util.ArrayList;
 
 public class Options {
 
+    private LinearOpMode opMode;
     private Telemetry telemetry;
     private Gamepad gamepad;
     private ArrayList<Option> options;
     private int optionIndex;
 
     public Options(LinearOpMode opMode) {
+        this.opMode = opMode;
         this.telemetry = opMode.telemetry;
         this.gamepad = opMode.gamepad1;
         this.options = new ArrayList<>();
@@ -27,7 +29,8 @@ public class Options {
         double debounce = 200;
 
         while (!confirmed) {
-            if (System.currentTimeMillis() - lastPressed > debounce) {
+            if (!opMode.isStopRequested() &&
+                    System.currentTimeMillis() - lastPressed > debounce) {
                 if (gamepad.dpad_down && optionIndex < options.size() - 1) {
                     optionIndex++;
                     lastPressed = System.currentTimeMillis();
