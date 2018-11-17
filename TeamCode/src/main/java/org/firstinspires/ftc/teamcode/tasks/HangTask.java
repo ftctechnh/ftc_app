@@ -49,7 +49,7 @@ public class HangTask extends TaskThread {
         DcMotor hangTop = opMode.hardwareMap.dcMotor.get("hangTop");
         DcMotor hangBottom = opMode.hardwareMap.dcMotor.get("hangBottom");
 
-        this.slides = new HangSlides(this.opMode, hangTop, hangBottom);
+        this.slides = new HangSlides(this.opMode);
         slideStatus = opMode.telemetry.addData("Slide", "INITIALIZED");
     }
 }

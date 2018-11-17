@@ -6,17 +6,23 @@ import com.qualcomm.robotcore.util.Util;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
+import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
+import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Utils;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 import java.lang.reflect.Method;
+import java.util.Locale;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous", group="FinalShit")
 
 public class AutoNew extends LinearOpMode {
 
     private DriveTrainNew dt;
+    private HangSlides hs;
     private Vision vision;
+
+    private Options options;
 
     private Telemetry.Item goldXTelem;
     private Telemetry.Item telemDirection;
@@ -27,14 +33,6 @@ public class AutoNew extends LinearOpMode {
     private final double DIST_TO_CRATER = 36;
     private final int GOLD_ALIGN_LOC = 100;
 
-    // Options
-    // Method: 0 = moveP, 1 = rotateIMU
-    // Direction: 0 = FW, 1 = BW, 2 = R, 3 = L, 4 = CW, 5 = CCW
-    private int method;
-    private int direction;
-    private double power;
-    private double value;
-
     private Telemetry.Item opMethod;
     private Telemetry.Item opDirection;
     private Telemetry.Item opPower;
@@ -43,43 +41,73 @@ public class AutoNew extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
+//        initOptions();
         waitForStart();
 
         if (opModeIsActive()) {
+//            waitForButton("LEFT 0.5");
+//            dt.move(Direction.LEFT, 0.5);
+//            waitForButton("stop");
+//
+//            waitForButton("FORWARD 0.5");
+//            dt.move(Direction.FORWARD, 0.5);
+//            waitForButton("stop");
+//
+//            waitForButton("RIGHT 0.5");
+//            dt.moveP(Direction.RIGHT, 0.5, 18, 10);
+//            waitForButton("stop");
+
             while (opModeIsActive()) {
-                options();
-                waitForButton(String.format("Next: %d %d %f %f",
-                        method, direction, power, value));
+                options.setOptions();
+                String method = options.getOption("method").getChoice();
+                String direction = options.getOption("direction").getChoice();
+                double power = options.getOption("power").getValue();
+                double value = options.getOption("value").getValue();
 
                 Direction dir;
                 switch (direction) {
-                    case 0:
+                    case "FORWARD":
                         dir = Direction.FORWARD;
                         break;
-                    case 1:
+                    case "BACK":
                         dir = Direction.BACK;
                         break;
-                    case 2:
+                    case "RIGHT":
                         dir = Direction.RIGHT;
                         break;
-                    case 3:
+                    case "LEFT":
                         dir = Direction.LEFT;
                         break;
-                    case 4:
+                    case "CW":
                         dir = Direction.CW;
                         break;
-                    case 5:
+                    case "CCW":
                         dir = Direction.CCW;
+                        break;
+                    case "UP":
+                        dir = Direction.UP;
+                        break;
+                    case "DOWN":
+                        dir = Direction.DOWN;
                         break;
                     default:
                         dir = Direction.FORWARD;
                 }
 
                 switch (method) {
-                    case 0:
+                    case "move":
+                        dt.move(dir, power);
+                        waitForButton("Press a to stop");
+                        break;
+                    case "moveP":
                         dt.moveP(dir, power, value, 10);
-                    case 1:
+                        break;
+                    case "rotateIMU":
                         dt.rotateIMUPID(dir, value, 10);
+                        break;
+                    case "moveSlides":
+                        hs.moveSlides(dir, power, value, 10);
+                        break;
                 }
             }
 
@@ -116,69 +144,83 @@ public class AutoNew extends LinearOpMode {
 //        vision.shutDown();
     }
 
-    private void updateOptions() {
-        opMethod = telemetry.addData("Method", method);
-        opDirection = telemetry.addData("Direction", direction);
-        opPower = telemetry.addData("Power", power);
-        opValue = telemetry.addData("Value", value);
+    private void initialize() {
+        dt = new DriveTrainNew(this);
+        hs = new HangSlides(this);
+        vision = new Vision(this);
+
+//        goldXTelem = telemetry.addData("Gold mineral position", -1);
+//        telemDirection = telemetry.addData("Direction", "NONE");
+
+        telemetry.update();
     }
 
-    private void options() {
-        boolean confirmed = false;
-
-        while(!confirmed) {
-
-            if (gamepad1.a) {
-                if (gamepad1.dpad_up) {
-                    if (method < 1) {
-                        method++;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (method > 0) {
-                        method--;
-                    }
-                }
-            } else if (gamepad1.b) {
-                if (gamepad1.dpad_up) {
-                    if (direction < 5) {
-                        direction++;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (direction > 0) {
-                        direction--;
-                    }
-                }
-            } else if (gamepad1.x) {
-                if (gamepad1.dpad_up) {
-                    if (power < 1.0) {
-                        power += 0.05;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (power > 0) {
-                        power -= 0.05;
-                    }
-                }
-            } else if (gamepad1.y) {
-                if (gamepad1.dpad_up) {
-                    if (value < 180) {
-                        value++;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (value > 0) {
-                        value--;
-                    }
-                }
-            } else if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
-                telemetry.addLine("Confirmed!");
-                confirmed = true;
-            }
-
-            updateOptions();
-            telemetry.update();
-
-            Utils.waitFor(100);
-        }
+    private void initOptions() {
+        options = new Options(this);
+        options.addCategoricalOption("method",
+                new String[]{"move", "moveP", "rotateIMU", "moveSlides"});
+        options.addCategoricalOption("direction",
+                new String[]{"FORWARD", "BACK", "LEFT", "RIGHT", "CW", "CCW", "UP", "DOWN"});
+        options.addQuantitativeOption("power", 0, 1, 0.05);
+        options.addQuantitativeOption("value", 0, 180, 1);
     }
+
+//    private void options() {
+//        boolean confirmed = false;
+//
+//        while(!confirmed) {
+//
+//            if (gamepad1.a) {
+//                if (gamepad1.dpad_up) {
+//                    if (method < 1) {
+//                        method++;
+//                    }
+//                } else if (gamepad1.dpad_down) {
+//                    if (method > 0) {
+//                        method--;
+//                    }
+//                }
+//            } else if (gamepad1.b) {
+//                if (gamepad1.dpad_up) {
+//                    if (direction < 5) {
+//                        direction++;
+//                    }
+//                } else if (gamepad1.dpad_down) {
+//                    if (direction > 0) {
+//                        direction--;
+//                    }
+//                }
+//            } else if (gamepad1.x) {
+//                if (gamepad1.dpad_up) {
+//                    if (power < 1.0) {
+//                        power += 0.05;
+//                    }
+//                } else if (gamepad1.dpad_down) {
+//                    if (power > 0) {
+//                        power -= 0.05;
+//                    }
+//                }
+//            } else if (gamepad1.y) {
+//                if (gamepad1.dpad_up) {
+//                    if (value < 180) {
+//                        value++;
+//                    }
+//                } else if (gamepad1.dpad_down) {
+//                    if (value > 0) {
+//                        value--;
+//                    }
+//                }
+//            } else if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
+//                telemetry.addLine("Confirmed!");
+//                confirmed = true;
+//            }
+//
+//            updateOptions();
+//            telemetry.update();
+//
+//            Utils.waitFor(100);
+//        }
+//    }
 
     private void waitForButton(String message){
         telemetry.addLine(message);
@@ -217,22 +259,6 @@ public class AutoNew extends LinearOpMode {
                     Math.abs(error) > minError &&
                     (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
         }
-    }
-
-    private void initialize() {
-        dt = new DriveTrainNew(this);
-        vision = new Vision(this);
-
-//        goldXTelem = telemetry.addData("Gold mineral position", -1);
-//        telemDirection = telemetry.addData("Direction", "NONE");
-
-        method = 0;
-        direction = 0;
-        power = 0.5;
-        value = 18;
-
-        updateOptions();
-        telemetry.update();
     }
 
     private void haltUntilPressStart() {
