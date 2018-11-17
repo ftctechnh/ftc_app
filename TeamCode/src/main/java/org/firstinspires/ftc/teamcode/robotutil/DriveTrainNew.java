@@ -171,6 +171,8 @@ public class DriveTrainNew {
 
     public void moveP(Direction direction,double power,double inches,double timeoutS) {
         final double minError = Values.TICKS_PER_INCH_FORWARD * 0.5;
+        final double minIMUError = 2;
+        final double kpIMU = 1.0 / 180.0;
         final double kp = 1 / (12 * Values.TICKS_PER_INCH_FORWARD);
 
         driveMotors.resetEncoders();
@@ -210,21 +212,40 @@ public class DriveTrainNew {
 
         }
 
+//        Telemetry.Item telemRf = opMode.telemetry.addData("rf", rfPower);
+
         double rfError = rfTarget - rfDrive.getCurrentPosition();
         double lfError = rfTarget - lfDrive.getCurrentPosition();
         double rbError = rfTarget - rbDrive.getCurrentPosition();
         double lbError = rfTarget - lbDrive.getCurrentPosition();
 
+        double originalHeading = imu.getAngle();
+        double currentHeading = originalHeading;
+        double imuError = fixAngle(originalHeading - currentHeading);
+
         double startTime = System.currentTimeMillis();
 
         while (Math.abs(rfError) > minError && Math.abs(lfError) > minError &&
                 Math.abs(rbError) > minError && Math.abs(lbError) > minError &&
+                imuError < minIMUError &&
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
 
             double rfPower = getProportionalPower(power, kp * rfError * power);
             double lfPower = getProportionalPower(power, kp * lfError * power);
             double rbPower = getProportionalPower(power, kp * rbError * power);
             double lbPower = getProportionalPower(power, kp * lbError * power);
+
+            if (direction == Direction.LEFT) {
+                rfPower += kpIMU * imuError;
+                lfPower += kpIMU * imuError;
+                rbPower -= kpIMU * imuError;
+                lbPower -= kpIMU * imuError;
+            } else if (direction == Direction.RIGHT) {
+                rfPower -= kpIMU * imuError;
+                lfPower -= kpIMU * imuError;
+                rbPower += kpIMU * imuError;
+                lbPower += kpIMU * imuError;
+            }
 
             setPowers(lfPower, rfPower,
                     lbPower, rbPower);
@@ -233,11 +254,19 @@ public class DriveTrainNew {
             lfError = lfTarget - lfDrive.getCurrentPosition();
             rbError = rbTarget - rbDrive.getCurrentPosition();
             lbError = lbTarget - lbDrive.getCurrentPosition();
+            currentHeading = imu.getAngle();
+            imuError = fixAngle(originalHeading - currentHeading);
 
-            if (Math.abs(rfError) < minError || Math.abs(lfError) < minError ||
-                    Math.abs(rbError) < minError || Math.abs(lbError) < minError) {
+            if ((Math.abs(rfError) < minError || Math.abs(lfError) < minError ||
+                    Math.abs(rbError) < minError || Math.abs(lbError) < minError) &&
+                    imuError < imu.getAngle()) {
                 stopAll();
                 Utils.waitFor(300);
+
+                rfError = rfTarget - rfDrive.getCurrentPosition();
+                lfError = lfTarget - lfDrive.getCurrentPosition();
+                rbError = rbTarget - rbDrive.getCurrentPosition();
+                lbError = lbTarget - lbDrive.getCurrentPosition();
             }
         }
 

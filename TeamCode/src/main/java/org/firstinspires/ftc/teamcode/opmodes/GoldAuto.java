@@ -47,8 +47,8 @@ public class GoldAuto extends LinearOpMode {
 //                options();
                 waitForButton(String.format("Next: "));
                     goldAlign(.3,10);
-                }
             }
+        }
 
             // Land
 
@@ -78,10 +78,10 @@ public class GoldAuto extends LinearOpMode {
 //
 //            // Drive to crater
 //            dt.move(Direction.FORWARD, 0.5, DIST_TO_CRATER, 10);
-        }
+    }
 
 //        vision.shutDown();
-    }
+
 
     private void updateOptions() {
         opMethod = telemetry.addData("Method", method);
