@@ -21,9 +21,11 @@ public class HangSlides {
 
     }
 
+    public void setPower(double power) {
+        hangMotors.setPower(0);
+    }
 
-
-    public void moveP(Direction direction,double power,double inches,double timeoutS) {
+    public void moveSlides(Direction direction,double power,double inches,double timeoutS) {
 
         hangMotors.resetEncoders();
         hangMotors.useEncoders();
