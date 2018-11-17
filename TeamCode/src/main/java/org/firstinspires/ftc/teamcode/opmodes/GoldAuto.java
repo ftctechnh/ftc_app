@@ -75,15 +75,15 @@ public class GoldAuto extends LinearOpMode {
         Telemetry.Item telError = this.telemetry.addData("error","idk");
         Telemetry.Item telPower = this.telemetry.addData("power","idk");
 
-        int j = vision.robustDetect();
+        int j = vision.detectRobust(10);
         while (j == -1) {
             dt.rotate(Direction.CCW, 20, 5);
 
             telGoldX.setValue(j);
-            t.setValue("cannot robustDetect :/");
+            t.setValue("cannot detectRobust(10:/");
             telemetry.update();
             sleep(100);
-            j = vision.robustDetect();
+            j = vision.detectRobust(10);
         }
         dt.stopAll();
 
@@ -97,7 +97,7 @@ public class GoldAuto extends LinearOpMode {
         double startTime = System.currentTimeMillis();
 
         do {
-            goldX = vision.robustDetect();
+            goldX = vision.detectRobust(10);
             error = GOLD_ALIGN_LOC - goldX;
 
             if (goldX != -1) {
@@ -122,7 +122,7 @@ public class GoldAuto extends LinearOpMode {
                 if (Math.abs(error) < minError) {
                     dt.stopAll();
                     sleep(300);
-                    goldX = vision.robustDetect();
+                    goldX = vision.detectRobust(10);
                     error = GOLD_ALIGN_LOC - goldX;
                 }
             }
