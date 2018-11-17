@@ -162,6 +162,7 @@ public class GoldAuto extends LinearOpMode {
 
     private void goldAlign(double power, double timeoutS) {
         double minError = 10;
+        goldXTelem = this.telemetry.addData("gold x","N/A");
 
         if (vision.detect() == -1) {
             goldXTelem.setValue(-1);

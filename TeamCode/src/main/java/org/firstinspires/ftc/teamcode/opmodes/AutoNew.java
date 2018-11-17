@@ -164,7 +164,7 @@ public class AutoNew extends LinearOpMode {
                 new String[]{"FORWARD", "BACK", "LEFT", "RIGHT", "CW", "CCW", "UP", "DOWN"});
         options.addQuantitativeOption("power", 0, 1, 0.05);
         options.addQuantitativeOption("value", 0, 180, 1);
-    }
+    }`
 
 //    private void options() {
 //        boolean confirmed = false;

@@ -53,9 +53,6 @@ public class Vision {
         }
     }
 
-
-
-
     /**
      * Initialize the Vuforia localization engine.
      */
