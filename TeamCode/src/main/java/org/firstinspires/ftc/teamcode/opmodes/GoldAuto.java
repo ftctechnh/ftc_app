@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.Util;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
+import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Utils;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
@@ -16,6 +17,7 @@ public class GoldAuto extends LinearOpMode {
 
     private DriveTrainNew dt;
     private Vision vision;
+    private HangSlides hangSlides;
 
     private Options options;
 
@@ -32,7 +34,10 @@ public class GoldAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         options.setOptions();
+        hangSlides.moveSlides(Direction.UP,.5,3,5);
         waitForStart();
+        hangSlides.moveSlides(Direction.DOWN,.5,3,5);
+
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -52,7 +57,9 @@ public class GoldAuto extends LinearOpMode {
         dt = new DriveTrainNew(this);
         vision = new Vision(this);
         vision.startVision();
+        hangSlides = new HangSlides(this);
         initOptions();
+
     }
 
 
@@ -125,6 +132,5 @@ public class GoldAuto extends LinearOpMode {
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS && opModeIsActive() && !isStopRequested());
 
         dt.stopAll();
-        Utils.waitFor(5000);
     }
 }
