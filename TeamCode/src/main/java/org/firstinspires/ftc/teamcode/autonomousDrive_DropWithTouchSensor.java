@@ -4,10 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-@Autonomous(name="autonomousDrive_Drop", group = "Testing")
-public class autonomousDrive_Drop extends LinearOpMode
+@Autonomous(name="autonomousDrive_DropWithTouchSensor", group = "Testing")
+public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
 {
     Bogg robot;
     Mode action;
@@ -41,7 +39,7 @@ public class autonomousDrive_Drop extends LinearOpMode
                     {
                         robot.lift(-0.7); //pull while we
                         robot.setBrake(false); //disengage the brake
-                    } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
+                    } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
                     {
                         robot.lift(.2); //push up, which drops the robot
                     }
