@@ -179,9 +179,9 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
 
             // Display the current values
             telemetry.addData("time: ", t);
+            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition()/ ticksPerRev * inPerRev);
             telemetry.addData("brake position: ", robot.brake.getPosition());
             telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
-            telemetry.addData("brake position", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
             telemetry.addData("mode", action);
             telemetry.update();
