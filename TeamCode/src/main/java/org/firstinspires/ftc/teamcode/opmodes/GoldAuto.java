@@ -51,6 +51,7 @@ public class GoldAuto extends LinearOpMode {
                 goldAlign(.3,100000, goldAlignKp);
                 GoldPosition goldPos = determinePosition();
 
+                dt.rotateTo(goldPos.getValue(), 10);
                 switch (goldPos) {
                     case LEFT:
                         dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
