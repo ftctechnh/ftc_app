@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
+import org.firstinspires.ftc.teamcode.robotutil.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 public class GoldAuto extends LinearOpMode {
 
-    private DriveTrainNew dt;
+    private DriveTrain dt;
     private Vision vision;
     private HangSlides hangSlides;
 
@@ -35,8 +36,8 @@ public class GoldAuto extends LinearOpMode {
         hangSlides.moveSlides(Direction.DOWN,.5,3,5);
         waitForStart();
         hangSlides.moveSlides(Direction.UP,.5,3,5);
-        dt.moveP(Direction.FORWARD, 0.3, 6, 10);
-        dt.rotateIMUPID(Direction.CW,25,10000);
+        dt.drive(Direction.FORWARD,6,100);
+        dt.rotate(Direction.CW,25,10000);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -44,7 +45,7 @@ public class GoldAuto extends LinearOpMode {
                 MIN_TURN_POWER = options.getOption("minPower").getValue();
 
                 goldAlign(.3,100000, goldAlignKp);
-                dt.moveP(Direction.FORWARD, 0.7, 30, 10);
+                dt.drive(Direction.FORWARD, 30, 10);
 
                 options.setOptions();
             }
@@ -53,7 +54,7 @@ public class GoldAuto extends LinearOpMode {
 
 
     private void initialize() {
-        dt = new DriveTrainNew(this);
+        dt = new DriveTrain(this);
         vision = new Vision(this);
         vision.startVision();
         hangSlides = new HangSlides(this);
@@ -76,7 +77,7 @@ public class GoldAuto extends LinearOpMode {
 
         int j = vision.robustDetect();
         while (j == -1) {
-            dt.rotateIMUPID(Direction.CCW, 20, 5);
+            dt.rotate(Direction.CCW, 20, 5);
 
             telGoldX.setValue(j);
             t.setValue("cannot robustDetect :/");
