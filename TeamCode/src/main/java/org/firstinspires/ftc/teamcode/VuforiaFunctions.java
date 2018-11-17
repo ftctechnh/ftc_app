@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -10,8 +11,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
@@ -40,9 +44,15 @@ public class VuforiaFunctions
     private VectorF translation;
     private Orientation rotation;
 
+    private TFObjectDetector tfod;
+    public static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    public static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    public static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
+
     public final float HALFFIELDLENGTH_MM = 1828.8f;
 
-    public VuforiaFunctions(OpMode opMode_In)
+    public VuforiaFunctions(OpMode opMode_In, HardwareMap hardwareMap)
     {
         int cameraMonitorViewId = opMode_In.hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", opMode_In.hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
@@ -96,6 +106,13 @@ public class VuforiaFunctions
         }
 
         targetsRoverRuckus.activate();
+
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        tfod.activate();
     }
 
     public boolean hasSeenTarget()
@@ -149,5 +166,18 @@ public class VuforiaFunctions
     public String getCurrentNameOfTargetSeen()
     {
         return currentNameOfTargetSeen;
+    }
+
+    public boolean isDetectingFieldObject()
+    {
+        if (tfod.getUpdatedRecognitions() != null)
+            return false;
+        else
+            return true;
+    }
+
+    public List<Recognition>  getUpdatedRecognitions()
+    {
+        return tfod.getUpdatedRecognitions();
     }
 }
