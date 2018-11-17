@@ -39,34 +39,38 @@ public class GoldAuto extends LinearOpMode {
 //        hangSlides.moveSlides(Direction.DOWN,.5,2.5,5);
         waitForStart();
 //        hangSlides.moveSlides(Direction.UP,.5,2.5,5);
-        dt.strafe(Direction.RIGHT,3,100);
-        dt.drive(Direction.FORWARD,6,100);
-        dt.rotate(Direction.CW,25,10000);
 
         if (opModeIsActive()) {
-            while (opModeIsActive() && !isStopRequested()) {
-                goldAlignKp = 1.0 / options.getOption("kp").getValue();
-                MIN_TURN_POWER = options.getOption("minPower").getValue();
 
-                goldAlign(.3,100000, goldAlignKp);
-                GoldPosition goldPos = determinePosition();
+            goldAlignKp = 1.0 / options.getOption("kp").getValue();
+            MIN_TURN_POWER = options.getOption("minPower").getValue();
 
-                dt.rotateTo(goldPos.getValue(), 10);
-                switch (goldPos) {
-                    case LEFT:
-                        dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
-                        dt.rotateTo(45, 5);
-                        dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
-                        break;
-                    case CENTER:
-                        dt.drive(Direction.FORWARD, DIST_TO_CRATER_CENTER, 5);
-                        break;
-                    case RIGHT:
-                        dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
-                        dt.rotateTo(-45, 5);
-                        dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
-                        break;
-                }
+
+            dt.strafe(Direction.RIGHT,3,100);
+            sleep(500);
+            dt.drive(Direction.FORWARD,6,100);
+            sleep(500);
+
+            rotateToGold();
+            GoldPosition goldPos;
+            goldPos = determinePosition();
+            dt.drive(Direction.FORWARD,30,1000);
+
+            switch (goldPos) {
+                case LEFT:
+                    dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
+                    dt.rotateTo(45, 5);
+                    dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
+                    break;
+                case CENTER:
+                    dt.drive(Direction.FORWARD, DIST_TO_CRATER_CENTER, 5);
+                    break;
+                case RIGHT:
+                    dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
+                    dt.rotateTo(-45, 5);
+                    dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
+                    break;
+            }
 
 //                waitForButton("forward 30 inches");
 //                dt.drive(Direction.FORWARD, 30, 10);
@@ -77,11 +81,24 @@ public class GoldAuto extends LinearOpMode {
 //                dt.drive(Direction.FORWARD, 12, 10);
 //                waitForButton("rotate absoloute");
 //                dt.rotate(Direction.CW, 12, 10);
-                options.setOptions();
-            }
         }
+
     }
 
+    private void rotateToGold() {
+        dt.rotateTo(GoldPosition.RIGHT.getValue(),10000);
+        if(Math.abs(vision.detectRobust(10) - GOLD_ALIGN_LOC) < 300){
+            return;
+        }
+        dt.rotateTo(GoldPosition.CENTER.getValue(),10000);
+        if(Math.abs(vision.detectRobust(10) - GOLD_ALIGN_LOC) < 300){
+            return;
+        }
+        dt.rotateTo(GoldPosition.LEFT.getValue(),10000);
+        if(Math.abs(vision.detectRobust(10) - GOLD_ALIGN_LOC) < 300){
+            return;
+        }
+    }
 
 
     private void waitForButton(String message){
@@ -114,19 +131,19 @@ public class GoldAuto extends LinearOpMode {
         Telemetry.Item telError = this.telemetry.addData("error","idk");
         Telemetry.Item telPower = this.telemetry.addData("power","idk");
 
-        int j = vision.detectRobust(10);
-        while (j == -1) {
-            dt.rotate(Direction.CCW, 10, 5);
-            telGoldX.setValue(j);
-            t.setValue("cannot detectRobust(10:/");
-            telemetry.update();
-            j = vision.detectRobust(10);
-        }
-        dt.stopAll();
-
-        t.setValue("found!!!!!");
-        telGoldX.setValue(j);
-        telemetry.update();
+//        int j = vision.detectRobust(10);
+//        while (j == -1) {
+//            dt.rotate(Direction.CCW,5);
+//            telGoldX.setValue(j);
+//            t.setValue("cannot detectRobust(10:/");
+//            telemetry.update();
+//            j = vision.detectRobust(10);
+//        }
+//        dt.stopAll();
+//
+//        t.setValue("found!!!!!");
+//        telGoldX.setValue(j);
+//        telemetry.update();
 
         int goldX;
         int error;
