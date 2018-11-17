@@ -40,9 +40,12 @@ public class GoldAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
+        vision  = new Vision(this);
+        vision.startVision();
         waitForStart();
 
         if (opModeIsActive()) {
+
             while (opModeIsActive()) {
 //                options();
                 waitForButton(String.format("Next: "));
