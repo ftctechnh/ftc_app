@@ -6,17 +6,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
+import org.firstinspires.ftc.teamcode.robotutil.GoldPosition;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutonomousGold", group="FinalShit")
-enum GoldPosition {
-    LEFT(-35), CENTER(0), RIGHT(35);
-    private final int dir;
-    private GoldPosition(int dir) { this.dir = dir; }
-    int getValue() { return dir; }
-}
 
 
 public class GoldAuto extends LinearOpMode {
