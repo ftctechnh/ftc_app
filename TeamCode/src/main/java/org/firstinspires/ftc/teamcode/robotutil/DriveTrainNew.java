@@ -327,7 +327,6 @@ public class DriveTrainNew {
         Telemetry.Item telPower = opMode.telemetry.addData("power", 0);
         Telemetry.Item telCurrAngle = opMode.telemetry.addData("angle",currentHeading);
         Telemetry.Item telError = opMode.telemetry.addData("error",error);
-//        Telemetry.Item powerStat = opMode.telemetry.addData("kp,power,error",String.format("%.3f || %.3f || %.3f",kp,power,error));
         Telemetry.Item timeLeft = opMode.telemetry.addData("time left",(System.currentTimeMillis() - startTime));
 
         while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
@@ -339,7 +338,6 @@ public class DriveTrainNew {
 
             telPower.setValue(proportionalPower);
             telCurrAngle.setValue(currentHeading);
-//            powerStat.setValue(String.format("%.3f || %.3f || %.3f",kp,power,error));
             telError.setValue(error);
             timeLeft.setValue((System.currentTimeMillis() - startTime));
             this.opMode.telemetry.update();

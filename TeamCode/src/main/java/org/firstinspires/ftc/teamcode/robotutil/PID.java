@@ -29,7 +29,6 @@ public class PID {
         this.previousError = 0;
         this.runningIntegral = 0;
         this.lastRegistereedTime = System.currentTimeMillis();
-//        this.constants = tel.addData("kP,kI,kD",String.format("%.2f || %.2f || %.2f",kp,ki,kd));
 
         this.tel = telemetry;
         this.telError = tel.addData("error","N/A");
@@ -41,10 +40,13 @@ public class PID {
         this.telRawOutput = tel.addData("Raw out","N/A");
         this.telClampedOutput = tel.addData("clamp out","N/A");
         this.tel.update();
+    }
 
+    public double getPreviousError() {
+        return previousError;
+    }
 
-
-    }public Double getOutput(double error){
+    public double getOutput(double error){
 
         double time = System.currentTimeMillis();
         double timeDifference = time - lastRegistereedTime;
@@ -75,10 +77,9 @@ public class PID {
 
         this.tel.update();
         return clampedOutput;
-
     }
 
-    public Double getOutput(double desired, double actual){
+    public double getOutput(double desired, double actual){
         double error = (desired-actual);
 
         double time = System.currentTimeMillis();
