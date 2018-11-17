@@ -14,6 +14,10 @@ public class DriveTrain {
     private Motors driveMotors;
     private IMU imu;
 
+    public IMU getImu() {
+        return imu;
+    }
+
     // PID Values (kp, ki, kd, minError)
     private static final HashMap<String, Double> PID_DRIVE = new HashMap<String, Double>() {{
         put("kp", 1.0 / (18 * Values.TICKS_PER_INCH_FORWARD));

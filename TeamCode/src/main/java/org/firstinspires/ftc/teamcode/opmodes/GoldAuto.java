@@ -11,6 +11,13 @@ import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutonomousGold", group="FinalShit")
+enum GoldPosition {
+    LEFT(-35), CENTER(0), RIGHT(35);
+    private final int dir;
+    private GoldPosition(int dir) { this.dir = dir; }
+    int getValue() { return dir; }
+}
+
 
 public class GoldAuto extends LinearOpMode {
 
@@ -21,8 +28,9 @@ public class GoldAuto extends LinearOpMode {
     private Options options;
 
     // Tune these
-    private final double DIST_TO_GOLD = 12;
-    private final double DIST_TO_DEPOT = 36;
+    private final double DIST_TO_GOLD_LR = 40;
+    private final double DIST_TO_CRATER_CENTER = 50;
+    private final double DIST_TO_DEPOT = 24;
     private final double DIST_TO_CRATER = 36;
     private final int GOLD_ALIGN_LOC = 550;
 
@@ -36,22 +44,57 @@ public class GoldAuto extends LinearOpMode {
 //        hangSlides.moveSlides(Direction.DOWN,.5,2.5,5);
         waitForStart();
 //        hangSlides.moveSlides(Direction.UP,.5,2.5,5);
+        dt.drive(Direction.RIGHT,3,100);
         dt.drive(Direction.FORWARD,6,100);
         dt.rotate(Direction.CW,25,10000);
 
         if (opModeIsActive()) {
-            while (opModeIsActive()) {
+            while (opModeIsActive() && !isStopRequested()) {
                 goldAlignKp = 1.0 / options.getOption("kp").getValue();
                 MIN_TURN_POWER = options.getOption("minPower").getValue();
 
                 goldAlign(.3,100000, goldAlignKp);
-                dt.drive(Direction.FORWARD, 30, 10);
+                GoldPosition goldPos = determinePosition();
 
+                switch (goldPos) {
+                    case LEFT:
+                        dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
+                        dt.rotateTo(45, 5);
+                        dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
+                        break;
+                    case CENTER:
+                        dt.drive(Direction.FORWARD, DIST_TO_CRATER_CENTER, 5);
+                        break;
+                    case RIGHT:
+                        dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
+                        dt.rotateTo(-45, 5);
+                        dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
+                        break;
+                }
+
+//                waitForButton("forward 30 inches");
+//                dt.drive(Direction.FORWARD, 30, 10);
+//
+//                waitForButton("rotate absoloute");
+//                dt.rotateTo(0);
+//                waitForButton("drive forward");
+//                dt.drive(Direction.FORWARD, 12, 10);
+//                waitForButton("rotate absoloute");
+//                dt.rotate(Direction.CW, 12, 10);
                 options.setOptions();
             }
         }
     }
 
+
+
+    private void waitForButton(String message){
+        telemetry.addLine(message);
+        telemetry.update();
+        while(!this.gamepad1.a && opModeIsActive() && !isStopRequested()){
+            sleep(100);
+        }
+    }
 
     private void initialize() {
         dt = new DriveTrain(this);
@@ -131,5 +174,27 @@ public class GoldAuto extends LinearOpMode {
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS && opModeIsActive() && !isStopRequested());
 
         dt.stopAll();
+    }
+
+    public GoldPosition determinePosition(){
+        double p = dt.getImu().getAngle();
+        double leftDiff = Math.abs(p-GoldPosition.LEFT.getValue());
+        double centerDiff = Math.abs(p-GoldPosition.CENTER.getValue());
+        double rightDiff = Math.abs(p-GoldPosition.RIGHT.getValue());
+
+
+       if(leftDiff < centerDiff && leftDiff < rightDiff){
+           return GoldPosition.LEFT;
+       }
+       if(rightDiff < centerDiff && rightDiff < leftDiff){
+            return GoldPosition.RIGHT;
+        }
+        if(centerDiff <= leftDiff && centerDiff <= rightDiff){
+            return GoldPosition.CENTER;
+        }
+
+        else{
+           return null;
+        }
     }
 }
