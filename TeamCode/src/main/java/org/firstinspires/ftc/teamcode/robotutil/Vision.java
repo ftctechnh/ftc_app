@@ -1,18 +1,18 @@
 
 package org.firstinspires.ftc.teamcode.robotutil;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+
+import static java.lang.Thread.sleep;
 
 public class Vision {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
@@ -36,7 +36,23 @@ public class Vision {
         tfod.shutdown();
     }
 
-    public int detect() {
+    public int detectRobust(int numPolls){
+        Telemetry.Item detected = opMode.telemetry.addData("Robust detection","INIT");
+        int d;
+        for(int i = 0;i<numPolls;i++){
+            d = robustDetect();
+            detected.setValue(String.valueOf(d) +"-  cycle: " +  String.valueOf(i));
+            opMode.telemetry.update();
+            Utils.waitFor(1000);
+            if(d != -1){
+                return d;
+            }
+            Utils.waitFor(50);
+        }
+        return -1;
+    }
+
+    public int robustDetect() {
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
 //            opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());

@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.Util;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
-import org.firstinspires.ftc.teamcode.robotutil.Utils;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutonomousGold", group="FinalShit")
@@ -34,10 +32,11 @@ public class GoldAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         options.setOptions();
-        hangSlides.moveSlides(Direction.UP,.5,3,5);
-        waitForStart();
         hangSlides.moveSlides(Direction.DOWN,.5,3,5);
-
+        waitForStart();
+        hangSlides.moveSlides(Direction.UP,.5,3,5);
+        dt.moveP(Direction.FORWARD, 0.3, 6, 10);
+        dt.rotateIMUPID(Direction.CW,25,10000);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
@@ -45,7 +44,7 @@ public class GoldAuto extends LinearOpMode {
                 MIN_TURN_POWER = options.getOption("minPower").getValue();
 
                 goldAlign(.3,100000, goldAlignKp);
-                dt.moveP(Direction.FORWARD, 0.7, 24, 10);
+                dt.moveP(Direction.FORWARD, 0.7, 30, 10);
 
                 options.setOptions();
             }
@@ -62,7 +61,6 @@ public class GoldAuto extends LinearOpMode {
 
     }
 
-
     private void initOptions() {
         options = new Options(this);
         options.addQuantitativeOption("kp", 150, 360, 10);
@@ -76,15 +74,15 @@ public class GoldAuto extends LinearOpMode {
         Telemetry.Item telError = this.telemetry.addData("error","idk");
         Telemetry.Item telPower = this.telemetry.addData("power","idk");
 
-        int j = vision.detect();
+        int j = vision.robustDetect();
         while (j == -1) {
             dt.rotateIMUPID(Direction.CCW, 20, 5);
 
             telGoldX.setValue(j);
-            t.setValue("cannot detect :/");
+            t.setValue("cannot robustDetect :/");
             telemetry.update();
             sleep(100);
-            j = vision.detect();
+            j = vision.robustDetect();
         }
         dt.stopAll();
 
@@ -98,7 +96,7 @@ public class GoldAuto extends LinearOpMode {
         double startTime = System.currentTimeMillis();
 
         do {
-            goldX = vision.detect();
+            goldX = vision.robustDetect();
             error = GOLD_ALIGN_LOC - goldX;
 
             if (goldX != -1) {
@@ -123,7 +121,7 @@ public class GoldAuto extends LinearOpMode {
                 if (Math.abs(error) < minError) {
                     dt.stopAll();
                     sleep(300);
-                    goldX = vision.detect();
+                    goldX = vision.robustDetect();
                     error = GOLD_ALIGN_LOC - goldX;
                 }
             }
