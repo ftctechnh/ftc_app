@@ -40,6 +40,7 @@ public class GoldAuto extends LinearOpMode {
                 MIN_TURN_POWER = options.getOption("minPower").getValue();
 
                 goldAlign(.3,100000, goldAlignKp);
+                dt.moveP(Direction.FORWARD, 0.7, 24, 10);
 
                 options.setOptions();
             }

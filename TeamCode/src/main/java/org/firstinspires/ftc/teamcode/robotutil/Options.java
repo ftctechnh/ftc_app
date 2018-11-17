@@ -27,7 +27,7 @@ public class Options {
         double debounce = 200;
 
         while (!confirmed) {
-            if (System.currentTimeMillis() - lastPressed > 200) {
+            if (System.currentTimeMillis() - lastPressed > debounce) {
                 if (gamepad.dpad_down && optionIndex < options.size() - 1) {
                     optionIndex++;
                     lastPressed = System.currentTimeMillis();

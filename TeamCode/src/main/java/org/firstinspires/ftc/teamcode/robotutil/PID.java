@@ -46,7 +46,7 @@ public class PID {
         return previousError;
     }
 
-    public double getOutput(double error){
+    public double getOutput(double error) {
 
         double time = System.currentTimeMillis();
         double timeDifference = time - lastRegistereedTime;

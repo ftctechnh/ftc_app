@@ -15,7 +15,7 @@ public class MotorGroup {
         }
     }
 
-    public void dontUseEncoders(){
+    public void withoutEncoders(){
         for(DcMotor motor : this.motors){
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -39,6 +39,7 @@ public class MotorGroup {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
+
     public void runToPosition(){
         for(DcMotor motor: this.motors) {
             motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

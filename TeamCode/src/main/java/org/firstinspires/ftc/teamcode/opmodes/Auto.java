@@ -3,16 +3,16 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
-import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
+import org.firstinspires.ftc.teamcode.robotutil.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Autonomous", group="FinalShit")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutoWithNewDriveTrain", group="FinalShit")
 
-public class AutoNew extends LinearOpMode {
+public class Auto extends LinearOpMode {
 
-    private DriveTrainNew dt;
+    private DriveTrain dt;
     private HangSlides hs;
     private Vision vision;
 
@@ -35,7 +35,9 @@ public class AutoNew extends LinearOpMode {
                 String method = options.getOption("method").getChoice();
                 String direction = options.getOption("direction").getChoice();
                 double power = options.getOption("power").getValue();
-                double value = options.getOption("value").getValue();
+                double inches = options.getOption("inches").getValue();
+                double angle = options.getOption("angle").getValue();
+                double timeoutS = options.getOption("timeoutS").getValue();
 
                 Direction dir = Direction.valueOf(direction);
 
@@ -45,14 +47,16 @@ public class AutoNew extends LinearOpMode {
                         waitForButton("Press a to stop");
                         dt.stopAll();
                         break;
-                    case "moveP":
-                        dt.moveP(dir, power, value, 10);
+                    case "drive":
+                        dt.drive(dir, inches, timeoutS);
                         break;
-                    case "rotateIMU":
-                        dt.rotateIMUPID(dir, value, 10);
+                    case "strafe":
+                        break;
+                    case "rotate":
+                        dt.rotate(dir, angle, timeoutS);
                         break;
                     case "moveSlides":
-                        hs.moveSlides(dir, power, value, 10);
+                        hs.moveSlides(dir, power, inches, timeoutS);
                         break;
                 }
 
@@ -62,7 +66,7 @@ public class AutoNew extends LinearOpMode {
     }
 
     private void initialize() {
-        dt = new DriveTrainNew(this);
+        dt = new DriveTrain(this);
         hs = new HangSlides(this);
         vision = new Vision(this);
         initOptions();
@@ -71,11 +75,13 @@ public class AutoNew extends LinearOpMode {
     private void initOptions() {
         options = new Options(this);
         options.addCategoricalOption("method",
-                new String[]{"move", "moveP", "rotateIMU", "moveSlides"});
+                new String[]{"move", "drive", "strafe", "rotate", "moveSlides"});
         options.addCategoricalOption("direction",
                 new String[]{"FORWARD", "BACK", "LEFT", "RIGHT", "CW", "CCW", "UP", "DOWN"});
         options.addQuantitativeOption("power", 0, 1, 0.05);
-        options.addQuantitativeOption("value", 0, 180, 1);
+        options.addQuantitativeOption("inches", 0, 24, 0.5);
+        options.addQuantitativeOption("angle", 0, 180, 10);
+        options.addQuantitativeOption("timeoutS", 0, 100, 1);
     }
 
     private void waitForButton(String message){
