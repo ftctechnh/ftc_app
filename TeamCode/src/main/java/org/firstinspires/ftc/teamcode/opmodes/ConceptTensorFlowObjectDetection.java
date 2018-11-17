@@ -129,10 +129,16 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                         if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                           if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
+                              telemetry.addData("Gold Mineral Position:", goldMineralX);
+
                           } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Right");
+                              telemetry.addData("Gold Mineral Position:", goldMineralX);
+
                           } else {
                             telemetry.addData("Gold Mineral Position", "Center");
+                              telemetry.addData("Gold Mineral Position:", goldMineralX);
+
                           }
                         }
                       }
