@@ -120,7 +120,6 @@ public class GoldAuto extends LinearOpMode {
             telGoldX.setValue(j);
             t.setValue("cannot detectRobust(10:/");
             telemetry.update();
-            sleep(100);
             j = vision.detectRobust(10);
         }
         dt.stopAll();
@@ -153,9 +152,9 @@ public class GoldAuto extends LinearOpMode {
                 telemetry.update();
 
                 dt.move(Direction.CCW, propPower);
-                sleep(200);
+                sleep(100);
                 dt.stopAll();
-                sleep(200);
+                sleep(100);
 
                 if (Math.abs(error) < minError) {
                     dt.stopAll();
