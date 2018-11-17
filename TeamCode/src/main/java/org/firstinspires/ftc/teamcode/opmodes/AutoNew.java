@@ -263,6 +263,8 @@ public class AutoNew extends LinearOpMode {
                     Math.abs(error) > minError &&
                     (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
         }
+        dt.stopAll();
+        telemetry.update();
     }
 
     private void haltUntilPressStart() {

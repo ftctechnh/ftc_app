@@ -49,7 +49,7 @@ public class GoldAuto extends LinearOpMode {
             while (opModeIsActive()) {
 //                options();
                 waitForButton(String.format("Next: "));
-                    goldAlign(.3,10);
+                    goldAlign(.2,10);
             }
         }
 
