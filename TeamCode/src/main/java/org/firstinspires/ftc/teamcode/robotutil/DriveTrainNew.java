@@ -215,13 +215,26 @@ public class DriveTrainNew {
 //        Telemetry.Item telemRf = opMode.telemetry.addData("rf", rfPower);
 
         double rfError = rfTarget - rfDrive.getCurrentPosition();
-        double lfError = rfTarget - lfDrive.getCurrentPosition();
-        double rbError = rfTarget - rbDrive.getCurrentPosition();
-        double lbError = rfTarget - lbDrive.getCurrentPosition();
+        double lfError = lfTarget - lfDrive.getCurrentPosition();
+        double rbError = rbTarget - rbDrive.getCurrentPosition();
+        double lbError = lbTarget - lbDrive.getCurrentPosition();
 
         double originalHeading = imu.getAngle();
         double currentHeading = originalHeading;
         double imuError = fixAngle(originalHeading - currentHeading);
+
+        Telemetry.Item targets = opMode.telemetry.addData("targets",
+                String.format("%d %d %d %d", rfTarget, lfTarget, rbTarget, lbTarget));
+
+        Telemetry.Item rfTelem = opMode.telemetry.addData("rf", 0);
+        Telemetry.Item lfTelem = opMode.telemetry.addData("lf", 0);
+        Telemetry.Item rbTelem = opMode.telemetry.addData("rb", 0);
+        Telemetry.Item lbTelem = opMode.telemetry.addData("lb", 0);
+        Telemetry.Item rfErrorTelem = opMode.telemetry.addData("rf error", rfError);
+        Telemetry.Item lfErrorTelem = opMode.telemetry.addData("lf error", lfError);
+        Telemetry.Item rbErrorTelem = opMode.telemetry.addData("rb error", rbError);
+        Telemetry.Item lbErrorTelem = opMode.telemetry.addData("lb error", lbError);
+        Telemetry.Item imuErrorTelem = opMode.telemetry.addData("imu error", imuError);
 
         double startTime = System.currentTimeMillis();
 
@@ -256,6 +269,18 @@ public class DriveTrainNew {
             lbError = lbTarget - lbDrive.getCurrentPosition();
             currentHeading = imu.getAngle();
             imuError = fixAngle(originalHeading - currentHeading);
+
+            targets.setValue(String.format("%d %d %d %d", rfTarget, lfTarget, rbTarget, lbTarget));
+            rfTelem.setValue(rfPower);
+            lfTelem.setValue(lfPower);
+            rbTelem.setValue(rbPower);
+            lbTelem.setValue(lbPower);
+            rfErrorTelem.setValue(rfPower);
+            lfErrorTelem.setValue(lfPower);
+            rbErrorTelem.setValue(rbPower);
+            lbErrorTelem.setValue(lbPower);
+            imuErrorTelem.setValue(imuError);
+            opMode.telemetry.update();
 
             if ((Math.abs(rfError) < minError || Math.abs(lfError) < minError ||
                     Math.abs(rbError) < minError || Math.abs(lbError) < minError) &&
