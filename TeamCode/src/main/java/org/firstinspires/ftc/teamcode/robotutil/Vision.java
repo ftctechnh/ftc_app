@@ -40,19 +40,18 @@ public class Vision {
         Telemetry.Item detected = opMode.telemetry.addData("Robust detection","INIT");
         int d;
         for(int i = 0;i<numPolls;i++){
-            d = robustDetect();
+            d = detect();
             detected.setValue(String.valueOf(d) +"-  cycle: " +  String.valueOf(i));
             opMode.telemetry.update();
-            Utils.waitFor(1000);
             if(d != -1){
                 return d;
             }
-            Utils.waitFor(50);
+            Utils.waitFor(75);
         }
         return -1;
     }
 
-    public int robustDetect() {
+    public int detect() {
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
 //            opMode.telemetry.addData("# Object Detected", updatedRecognitions.size());

@@ -33,9 +33,9 @@ public class GoldAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initialize();
         options.setOptions();
-        hangSlides.moveSlides(Direction.DOWN,.5,3,5);
+//        hangSlides.moveSlides(Direction.DOWN,.5,2.5,5);
         waitForStart();
-        hangSlides.moveSlides(Direction.UP,.5,3,5);
+//        hangSlides.moveSlides(Direction.UP,.5,2.5,5);
         dt.drive(Direction.FORWARD,6,100);
         dt.rotate(Direction.CW,25,10000);
 
