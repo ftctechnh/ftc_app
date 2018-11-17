@@ -163,7 +163,7 @@ public class AutoNew extends LinearOpMode {
         options.addCategoricalOption("direction",
                 new String[]{"FORWARD", "BACK", "LEFT", "RIGHT", "CW", "CCW", "UP", "DOWN"});
         options.addQuantitativeOption("power", 0, 1, 0.05);
-        options.addQuantitativeOption("value", 0, 180, 1);
+        options.addQuantitativeOption("value", 0, 180, 0.2);
     }
 
 //    private void options() {

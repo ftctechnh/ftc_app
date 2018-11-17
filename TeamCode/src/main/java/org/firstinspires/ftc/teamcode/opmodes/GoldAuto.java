@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.Util;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
+import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Utils;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
@@ -14,9 +16,11 @@ public class GoldAuto extends LinearOpMode {
 
     private DriveTrainNew dt;
     private Vision vision;
-
+    private static double MIN_TURN_POWER = 0.07;
     private Telemetry.Item goldXTelem;
     private Telemetry.Item telemDirection;
+
+    private Options options;
 
     // Tune these
     private final double DIST_TO_GOLD = 12;
@@ -40,14 +44,17 @@ public class GoldAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
+        initOptions();
+        options.setOptions();
         vision  = new Vision(this);
         vision.startVision();
         waitForStart();
 
         if (opModeIsActive()) {
 
-//                options();
-            goldAlign(.2,10);
+            double kp = options.getOption("kp").getValue();
+            MIN_TURN_POWER = options.getOption("minPower").getValue();
+            goldAlign(.3,100000, 1.0/kp);
         }
 
             // Land
@@ -83,68 +90,11 @@ public class GoldAuto extends LinearOpMode {
 //        vision.shutDown();
 
 
-    private void updateOptions() {
-        opMethod = telemetry.addData("Method", method);
-        opDirection = telemetry.addData("Direction", direction);
-        opPower = telemetry.addData("Power", power);
-        opValue = telemetry.addData("Value", value);
-    }
 
-    private void options() {
-        boolean confirmed = false;
-
-        while(!confirmed) {
-
-            if (gamepad1.a) {
-                if (gamepad1.dpad_up) {
-                    if (method < 1) {
-                        method++;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (method > 0) {
-                        method--;
-                    }
-                }
-            } else if (gamepad1.b) {
-                if (gamepad1.dpad_up) {
-                    if (direction < 5) {
-                        direction++;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (direction > 0) {
-                        direction--;
-                    }
-                }
-            } else if (gamepad1.x) {
-                if (gamepad1.dpad_up) {
-                    if (power < 1.0) {
-                        power += 0.05;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (power > 0) {
-                        power -= 0.05;
-                    }
-                }
-            } else if (gamepad1.y) {
-                if (gamepad1.dpad_up) {
-                    if (value < 180) {
-                        value++;
-                    }
-                } else if (gamepad1.dpad_down) {
-                    if (value > 0) {
-                        value--;
-                    }
-                }
-            } else if (gamepad1.left_stick_button && gamepad1.right_stick_button) {
-                telemetry.addLine("Confirmed!");
-                confirmed = true;
-            }
-
-            updateOptions();
-            telemetry.update();
-
-            Utils.waitFor(100);
-        }
+    private void initOptions() {
+        options = new Options(this);
+        options.addQuantitativeOption("kp", 150, 360, 10);
+        options.addQuantitativeOption("minPower", 0.1, 0.3, 0.02);
     }
 
     private void waitForButton(String message){
@@ -157,47 +107,81 @@ public class GoldAuto extends LinearOpMode {
         telemetry.update();
     }
 
-    private void goldAlign(double power, double timeoutS) {
+    private void goldAlign(double power, double timeoutS, double kp) {
         double minError = 10;
         goldXTelem = this.telemetry.addData("gold x","N/A");
         Telemetry.Item t = this.telemetry.addData("status","initializing");
         Telemetry.Item telDir = this.telemetry.addData("direction","idk");
         Telemetry.Item telError = this.telemetry.addData("error","idk");
+        Telemetry.Item telPower = this.telemetry.addData("power","idk");
         int j = vision.detect();
         while (j == -1) {
-            goldXTelem.setValue(-1);
+//            dt.move(Direction.CCW, MIN_TURN_POWER);
+//            sleep(200);
+//            dt.stopAll();
+            dt.rotateIMUPID(Direction.CCW, 20, 5);
+
+            goldXTelem.setValue(j);
             t.setValue("cannot detect :/");
             telemetry.update();
+            sleep(100);
+            j = vision.detect();
         }
-
+        dt.stopAll();
         t.setValue("found!!!!!");
         goldXTelem.setValue(j);
         telemetry.update();
-        Utils.waitFor(5000);
         Direction direction;
         int goldX;
         int error;
-
+        double propPower;
         double startTime = System.currentTimeMillis();
         do {
             goldX = vision.detect();
-
             error = GOLD_ALIGN_LOC - goldX;
 
-            if (error > 0) {
-                direction = Direction.CW;
-                telDir.setValue("CW");
-            } else {
-                direction = Direction.CCW;
-                telDir.setValue("CCW");
+            if (goldX != -1) {
+
+//                if (error < 0) {
+//                    direction = Direction.CW;
+//                    telDir.setValue("CW");
+//                } else {
+//                    direction = Direction.CCW;
+//                    telDir.setValue("CCW");
+//                }
+                telError.setValue(error);
+                goldXTelem.setValue(goldX);
+                propPower = kp * power * error;
+                if (propPower < 0){
+                    propPower -= MIN_TURN_POWER;
+                }else{
+                    propPower += MIN_TURN_POWER;
+                }
+                telPower.setValue(propPower);
+                dt.move(Direction.CCW, propPower);
+                telemetry.update();
+                sleep(200);
+                dt.stopAll();
+                sleep(200);
+
+//                sleep(50);
+                if (Math.abs(error) < minError) {
+                    dt.stopAll();
+                    sleep(300);
+                    goldX = vision.detect();
+                    error = GOLD_ALIGN_LOC - goldX;
+                }
             }
-            telError.setValue(error);
-            goldXTelem.setValue(goldX);
-            telemetry.update();
-            dt.move(direction, power);
-        } while (goldX != -1 &&
-                Math.abs(error) > minError &&
-                (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
+//            } else {
+//                goldXTelem.setValue(goldX);
+//                telemetry.update();
+//                dt.stopAll();
+//                sleep(500
+//                );
+//            }
+
+        } while (Math.abs(error) > minError &&
+                (System.currentTimeMillis() - startTime) / 1000 < timeoutS && opModeIsActive() && !isStopRequested());
 
         dt.stopAll();
         Utils.waitFor(5000);
@@ -215,7 +199,6 @@ public class GoldAuto extends LinearOpMode {
         power = 0.5;
         value = 18;
 
-        updateOptions();
         telemetry.update();
     }
 

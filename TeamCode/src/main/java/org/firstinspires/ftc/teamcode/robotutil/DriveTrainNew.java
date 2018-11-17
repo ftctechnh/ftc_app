@@ -159,7 +159,7 @@ public class DriveTrainNew {
         driveMotors.useEncoders();
     }
 
-    private double getProportionalPower(double cap, double proportionalPower) {
+    public double getProportionalPower(double cap, double proportionalPower) {
         cap = Math.abs(cap);
         if (proportionalPower > 0) {
             return Math.min(cap, proportionalPower);
@@ -172,8 +172,8 @@ public class DriveTrainNew {
     public void moveP(Direction direction,double power,double inches,double timeoutS) {
         final double minError = Values.TICKS_PER_INCH_FORWARD * 0.5;
         final double minIMUError = 2;
-        final double kpIMU = 1.0 / 180.0;
-        final double kp = 1 / (12 * Values.TICKS_PER_INCH_FORWARD);
+        final double kpIMU = 1.0 / 60.0;
+        final double kp = 1.0 / (12.0 * Values.TICKS_PER_INCH_FORWARD);
 
         driveMotors.resetEncoders();
         driveMotors.useEncoders();
@@ -212,8 +212,6 @@ public class DriveTrainNew {
 
         }
 
-//        Telemetry.Item telemRf = opMode.telemetry.addData("rf", rfPower);
-
         double rfError = rfTarget - rfDrive.getCurrentPosition();
         double lfError = lfTarget - lfDrive.getCurrentPosition();
         double rbError = rbTarget - rbDrive.getCurrentPosition();
@@ -238,10 +236,11 @@ public class DriveTrainNew {
 
         double startTime = System.currentTimeMillis();
 
-        while (Math.abs(rfError) > minError && Math.abs(lfError) > minError &&
+        while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
+                (Math.abs(rfError) > minError && Math.abs(lfError) > minError &&
                 Math.abs(rbError) > minError && Math.abs(lbError) > minError &&
-                imuError < minIMUError &&
-                (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
+                (System.currentTimeMillis() - startTime) / 1000 < timeoutS) ||
+                imuError > minIMUError) {
 
             double rfPower = getProportionalPower(power, kp * rfError * power);
             double lfPower = getProportionalPower(power, kp * lfError * power);
@@ -249,15 +248,15 @@ public class DriveTrainNew {
             double lbPower = getProportionalPower(power, kp * lbError * power);
 
             if (direction == Direction.LEFT) {
-                rfPower += kpIMU * imuError;
-                lfPower += kpIMU * imuError;
-                rbPower -= kpIMU * imuError;
-                lbPower -= kpIMU * imuError;
-            } else if (direction == Direction.RIGHT) {
                 rfPower -= kpIMU * imuError;
                 lfPower -= kpIMU * imuError;
                 rbPower += kpIMU * imuError;
                 lbPower += kpIMU * imuError;
+            } else if (direction == Direction.RIGHT) {
+                rfPower += kpIMU * imuError;
+                lfPower += kpIMU * imuError;
+                rbPower -= kpIMU * imuError;
+                lbPower -= kpIMU * imuError;
             }
 
             setPowers(lfPower, rfPower,
@@ -275,16 +274,16 @@ public class DriveTrainNew {
             lfTelem.setValue(lfPower);
             rbTelem.setValue(rbPower);
             lbTelem.setValue(lbPower);
-            rfErrorTelem.setValue(rfPower);
-            lfErrorTelem.setValue(lfPower);
-            rbErrorTelem.setValue(rbPower);
-            lbErrorTelem.setValue(lbPower);
+            rfErrorTelem.setValue(rfError);
+            lfErrorTelem.setValue(lfError);
+            rbErrorTelem.setValue(rbError);
+            lbErrorTelem.setValue(lbError);
             imuErrorTelem.setValue(imuError);
             opMode.telemetry.update();
 
             if ((Math.abs(rfError) < minError || Math.abs(lfError) < minError ||
                     Math.abs(rbError) < minError || Math.abs(lbError) < minError) &&
-                    imuError < imu.getAngle()) {
+                    imuError < minIMUError) {
                 stopAll();
                 Utils.waitFor(300);
 
@@ -331,7 +330,8 @@ public class DriveTrainNew {
 //        Telemetry.Item powerStat = opMode.telemetry.addData("kp,power,error",String.format("%.3f || %.3f || %.3f",kp,power,error));
         Telemetry.Item timeLeft = opMode.telemetry.addData("time left",(System.currentTimeMillis() - startTime));
 
-        while (Math.abs(error) > minError
+        while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
+                Math.abs(error) > minError
                 && (System.currentTimeMillis() - startTime) / 1000 < timeoutS) {
             double proportionalPower = pid.getOutput(error);
 

@@ -23,23 +23,32 @@ public class Options {
 
     public void setOptions() {
         boolean confirmed = false;
+        double lastPressed = 0;
+        double debounce = 200;
 
         while (!confirmed) {
-            if (gamepad.dpad_up && optionIndex < options.size() - 1) {
-                optionIndex++;
-            } else if (gamepad.dpad_down && optionIndex > 0) {
-                optionIndex--;
-            } else if (gamepad.x) {
-                options.get(optionIndex).increment(true);
-            } else if (gamepad.y) {
-                options.get(optionIndex).increment(false);
-            } else if (gamepad.left_stick_button && gamepad.right_stick_button) {
-                telemetry.addLine("Confirmed!");
-                confirmed = true;
+            if (System.currentTimeMillis() - lastPressed > 200) {
+                if (gamepad.dpad_down && optionIndex < options.size() - 1) {
+                    optionIndex++;
+                    lastPressed = System.currentTimeMillis();
+                } else if (gamepad.dpad_up && optionIndex > 0) {
+                    optionIndex--;
+                    lastPressed = System.currentTimeMillis();
+                } else if (gamepad.y) {
+                    options.get(optionIndex).increment(true);
+                    lastPressed = System.currentTimeMillis();
+                } else if (gamepad.a) {
+                    options.get(optionIndex).increment(false);
+                    lastPressed = System.currentTimeMillis();
+                } else if (gamepad.left_stick_button && gamepad.right_stick_button) {
+                    telemetry.addLine("Confirmed!");
+                    confirmed = true;
+                }
             }
+
             displayOptions();
 
-            Utils.waitFor(100);
+            Utils.waitFor(30);
         }
     }
 
