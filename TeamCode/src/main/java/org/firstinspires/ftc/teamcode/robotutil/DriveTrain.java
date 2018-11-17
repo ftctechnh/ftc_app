@@ -149,8 +149,6 @@ public class DriveTrain {
 
         driveMotors.addPID(PID_STRAFE.get("kp"), PID_STRAFE.get("ki"),
                 PID_DRIVE.get("kd"), PID_DRIVE.get("minError"));
-        PID imuPID = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
-                PID_ROTATE.get("kd"), opMode.telemetry);
 
         int dir = direction.getValue();
         int val = (int) (inches * Values.TICKS_PER_INCH_STRAFE);
@@ -159,30 +157,11 @@ public class DriveTrain {
                 dir * val, -dir * val
         );
 
-        double targetHeading = imu.getAngle();
-        double currentHeading;
-        double imuError;
-
         double startTime = System.currentTimeMillis();
         do {
             driveMotors.updateErrors();
-            currentHeading = imu.getAngle();
-            imuError = fixAngle(targetHeading - currentHeading);
-
             double[] drivePowers = driveMotors.getPIDOutput();
-//            double imuCorrection = imuPID.getOutput(imuError);
-//
-//            opMode.telemetry.addData("original lf", drivePowers[0]);
-//            opMode.telemetry.addData("original rf", drivePowers[1]);
-//            opMode.telemetry.addData("original lb", drivePowers[2]);
-//            opMode.telemetry.addData("original rb", drivePowers[3]);
-//
-//            drivePowers[0] += dir * imuCorrection;
-//            drivePowers[1] += dir * imuCorrection;
-//            drivePowers[2] -= dir * imuCorrection;
-//            drivePowers[3] -= dir * imuCorrection;
 
-//            opMode.telemetry.addData("imuCorrection", imuCorrection);
             opMode.telemetry.addData("dir", dir);
             opMode.telemetry.addData("lf", drivePowers[0]);
             opMode.telemetry.addData("rf", drivePowers[1]);
@@ -191,10 +170,9 @@ public class DriveTrain {
             opMode.telemetry.update();
 
             driveMotors.setPowers(drivePowers);
-        } while (((opMode.opModeIsActive() && !opMode.isStopRequested() &&
-                !driveMotors.withinMinError()) ||
-                Math.abs(imuError) > PID_ROTATE.get("minError")) &&
-                        (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
+        } while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
+                !driveMotors.withinMinError() &&
+                (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
 
         stopAll();
     }
