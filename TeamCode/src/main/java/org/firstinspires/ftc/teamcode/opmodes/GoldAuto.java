@@ -44,7 +44,7 @@ public class GoldAuto extends LinearOpMode {
 //        hangSlides.moveSlides(Direction.DOWN,.5,2.5,5);
         waitForStart();
 //        hangSlides.moveSlides(Direction.UP,.5,2.5,5);
-        dt.drive(Direction.RIGHT,3,100);
+        dt.strafe(Direction.RIGHT,3,100);
         dt.drive(Direction.FORWARD,6,100);
         dt.rotate(Direction.CW,25,10000);
 
@@ -113,7 +113,7 @@ public class GoldAuto extends LinearOpMode {
     }
 
     private void goldAlign(double power, double timeoutS, double kp) {
-        double minError = 10;
+        double minError = 50;
         Telemetry.Item t = this.telemetry.addData("status","initializing");
         Telemetry.Item telGoldX = this.telemetry.addData("gold x","N/A");
         Telemetry.Item telError = this.telemetry.addData("error","idk");
@@ -121,8 +121,7 @@ public class GoldAuto extends LinearOpMode {
 
         int j = vision.detectRobust(10);
         while (j == -1) {
-            dt.rotate(Direction.CCW, 20, 5);
-
+            dt.rotate(Direction.CCW, 10, 5);
             telGoldX.setValue(j);
             t.setValue("cannot detectRobust(10:/");
             telemetry.update();

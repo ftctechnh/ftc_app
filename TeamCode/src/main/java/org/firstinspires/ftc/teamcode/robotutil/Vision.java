@@ -46,7 +46,7 @@ public class Vision {
             if(d != -1){
                 return d;
             }
-            Utils.waitFor(75);
+            Utils.waitFor(50);
         }
         return -1;
     }
