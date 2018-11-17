@@ -70,20 +70,20 @@ public class ConceptAutonomousDepot extends LinearOpMode
             {
                 rightDist = walle.getDistFromRight_In();
                 telemetry.addData("frontDist>18", null);
-                telemetry.addData("rightDist ", rightDist);
+                telemetry.addData("leftDist ", rightDist);
                 if (rightDist < 4)
                 {
-                    telemetry.addData("rightdist < 4", null);
-                    walle.pivot(15);
-                    walle.driveStraight_In(11);
+                    telemetry.addData("leftdist < 4", null);
                     walle.pivot(-15);
+                    walle.driveStraight_In(11);
+                    walle.pivot(15);
                 }
                 else if (rightDist > 7)
                 {
-                    telemetry.addData("rightdist > 7", null);
-                    walle.pivot(-15);
-                    walle.driveStraight_In(11);
+                    telemetry.addData("leftdist > 7", null);
                     walle.pivot(15);
+                    walle.driveStraight_In(11);
+                    walle.pivot(-15);
                 }
             }
             telemetry.update();
