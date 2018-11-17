@@ -41,7 +41,7 @@ public class AutoNew extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         initialize();
-//        initOptions();
+        initOptions();
         waitForStart();
 
         if (opModeIsActive()) {
@@ -98,6 +98,7 @@ public class AutoNew extends LinearOpMode {
                     case "move":
                         dt.move(dir, power);
                         waitForButton("Press a to stop");
+                        dt.stopAll();
                         break;
                     case "moveP":
                         dt.moveP(dir, power, value, 10);

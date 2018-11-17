@@ -113,14 +113,14 @@ public class DriveTrainNew {
                 break;
             case RIGHT:
                 rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
             case LEFT:
                 rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
 
@@ -191,14 +191,14 @@ public class DriveTrainNew {
                 break;
             case RIGHT:
                 rfTarget = rfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 rbTarget = rbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
             case LEFT:
                 rfTarget = rfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lfTarget = lfDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
-                lbTarget = lbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lfTarget = lfDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
+                lbTarget = lbDrive.getCurrentPosition() - (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 rbTarget = rbDrive.getCurrentPosition() + (int) (inches * Values.TICKS_PER_INCH_FORWARD);
                 break;
 
