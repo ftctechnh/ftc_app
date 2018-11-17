@@ -164,7 +164,7 @@ public class AutoNew extends LinearOpMode {
                 new String[]{"FORWARD", "BACK", "LEFT", "RIGHT", "CW", "CCW", "UP", "DOWN"});
         options.addQuantitativeOption("power", 0, 1, 0.05);
         options.addQuantitativeOption("value", 0, 180, 1);
-    }`
+    }
 
 //    private void options() {
 //        boolean confirmed = false;
@@ -234,7 +234,7 @@ public class AutoNew extends LinearOpMode {
     }
 
     private void goldAlign(double power, double timeoutS) {
-        double minError = 10;
+        double minError = 100;
 
         if (vision.detect() == -1) {
             goldXTelem.setValue(-1);
@@ -248,14 +248,17 @@ public class AutoNew extends LinearOpMode {
                 goldX = vision.detect();
                 error = GOLD_ALIGN_LOC - goldX;
 
-                if (error > 0) {
+                if (error < 0) {
                     direction = Direction.CW;
-                } else {
+                }else if(error>0) {
                     direction = Direction.CCW;
+                }else{
+                    return;
                 }
 
                 dt.move(direction, power);
                 goldXTelem.setValue(goldX);
+                telemetry.update();
             } while (goldX != -1 &&
                     Math.abs(error) > minError &&
                     (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
