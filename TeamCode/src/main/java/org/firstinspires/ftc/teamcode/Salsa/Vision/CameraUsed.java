@@ -6,5 +6,5 @@ package org.firstinspires.ftc.teamcode.Salsa.Vision;
 
 public enum CameraUsed {
     PHONE,
-    WEBCAM;
+    WEBCAM
 }

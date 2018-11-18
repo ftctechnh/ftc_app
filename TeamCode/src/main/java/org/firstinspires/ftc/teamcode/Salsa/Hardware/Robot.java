@@ -167,13 +167,13 @@ public class Robot {
      * Here, we enable the vision, which means we actively begin to track and capture data
      */
     public void enableVision() {
-        samplingDetector.samplingDetector.enable();
+        samplingDetector.enable();
     }
 
     public SamplingOrderDetector.GoldLocation getSamplingOrder() {
 
         SamplingOrderDetector.GoldLocation order;
-        order = samplingDetector.samplingDetector.getCurrentOrder();
+        order = samplingDetector.getCurrentOrder();
 
         return order;
     }
@@ -181,13 +181,13 @@ public class Robot {
     public SamplingOrderDetector.GoldLocation getLastOrder() {
 
         SamplingOrderDetector.GoldLocation lastOrder;
-        lastOrder = samplingDetector.samplingDetector.getLastOrder();
+        lastOrder = samplingDetector.getLastOrder();
 
         return lastOrder;
     }
 
     public void disableVision() {
-        samplingDetector.samplingDetector.disable();
+        samplingDetector.disable();
     }
 
 

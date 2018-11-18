@@ -7,5 +7,5 @@ package org.firstinspires.ftc.teamcode.Salsa.Vision;
 public enum CameraCropAngle {
         LEFT,
         RIGHT,
-        NO_CROP;
+        NO_CROP
 }

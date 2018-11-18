@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Salsa.Methods;
+package org.firstinspires.ftc.teamcode.Salsa.OpModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

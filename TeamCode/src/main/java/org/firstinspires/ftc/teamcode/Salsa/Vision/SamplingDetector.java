@@ -14,9 +14,9 @@ import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 
-public class SamplingDetector {
+public class SamplingDetector extends SamplingOrderDetector {
 
-    public SamplingOrderDetector samplingDetector = new SamplingOrderDetector();
+    private SamplingOrderDetector samplingDetector = new SamplingOrderDetector();
     HardwareMap hwmap;
     Robot robot = new Robot();
 

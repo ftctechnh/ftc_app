@@ -6,5 +6,5 @@ package org.firstinspires.ftc.teamcode.Salsa.Vision;
 
 public enum CameraOrientation {
         FRONT,
-        BACK;
+        BACK
 }

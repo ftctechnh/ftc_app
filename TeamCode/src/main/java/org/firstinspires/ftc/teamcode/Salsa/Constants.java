@@ -10,9 +10,10 @@ import org.firstinspires.ftc.teamcode.Salsa.Vision.CameraCropAngle;
 
 public abstract class Constants {
 
-    //these are the names for the drivetrain motors in the HardwareMap()
-    //This allows you to modify them without severe repercussions, and it keeps nomenclature consistent among the various programs
-    //If you modify the name here, you must update on the driver station/robot controller
+    /**
+     * The constants program is meant to make things consistent throughout our programs, without much fiddling with the code.
+     * The benefit of having constant names is that one configuration file works with everything!
+     */
     public final String LEFT_FRONT_NAME = "leftFront";
     public final String RIGHT_FRONT_NAME = "rightFront";
     public final String LEFT_BACK_NAME = "leftBack";
@@ -21,7 +22,6 @@ public abstract class Constants {
     public final String CRATER_SLIDES_NAME = "craterSlides";
     public final String INTAKE_MOTOR_NAME = "intakeMotor";
     public final String LIFT_SLIDES_NAME = "liftSlides";
-    public final CameraCropAngle CAMERA_AIM_DIRECTION = CameraCropAngle.RIGHT;
 
 
     //names for the sensors
@@ -46,6 +46,8 @@ public abstract class Constants {
             "JjvH5JCKF/Hxz+beHfVqdWQ0BVZdgGMXG4yEzLN5AI+4NIkQeLvI7Cwz5pIlksoH+rb/e6+YExoWZbQWhDTiRiemlWjvDM" +
             "1z2a0kteGDz0wTyHz48IkV4M0YsSQIFKwu3YB2a1vkB9FiRfMrBI+CyInjgNoO8V0EEOtRc6Vqsf3XbF3fGXricZUhl7RIl5" +
             "M/IkFOgeAZ4ML+JcrjTqfZb2Yh3JNx1me524cK";
+    public final CameraCropAngle CAMERA_AIM_DIRECTION = CameraCropAngle.RIGHT;
+
 
 
     //constant numbers meant for autonomous with encoders
