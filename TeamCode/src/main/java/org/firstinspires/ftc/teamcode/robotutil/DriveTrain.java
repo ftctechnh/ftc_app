@@ -13,10 +13,7 @@ public class DriveTrain {
     private Motor lfDrive, rfDrive, lbDrive, rbDrive;
     private Motors driveMotors;
     private IMU imu;
-
-    public IMU getImu() {
-        return imu;
-    }
+    private Logger l;
 
     // PID Values (kp, ki, kd, minError)
     private static final HashMap<String, Double> PID_DRIVE = new HashMap<String, Double>() {{
@@ -43,6 +40,7 @@ public class DriveTrain {
         this.opMode = opMode;
         initMotors();
         initIMU();
+        this.l = new Logger("Drive Train");
     }
 
     private void initMotors() {
@@ -83,6 +81,10 @@ public class DriveTrain {
             }
         }
         return angle;
+    }
+
+    public IMU getImu() {
+        return imu;
     }
 
     public void setPowers(double lf, double rf, double lb, double rb) {
