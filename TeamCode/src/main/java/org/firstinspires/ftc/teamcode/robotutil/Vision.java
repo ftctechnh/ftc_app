@@ -24,6 +24,7 @@ public class Vision {
     private TFObjectDetector tfod;
     OpMode opMode;
 
+
     public Vision(OpMode opmode) {
         this.opMode = opmode;
     }
@@ -46,7 +47,7 @@ public class Vision {
             if(d != -1){
                 return d;
             }
-            Utils.waitFor(50);
+            Utils.waitFor(10);
         }
         return -1;
     }

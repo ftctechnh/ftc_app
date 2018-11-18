@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.robotcore.external.Function;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrain;
@@ -10,7 +11,7 @@ import org.firstinspires.ftc.teamcode.robotutil.GoldPosition;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
-
+import android.util.*;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutonomousGold", group="FinalShit")
 
 
@@ -28,17 +29,24 @@ public class GoldAuto extends LinearOpMode {
     private final double DIST_TO_DEPOT = 24;
     private final double DIST_TO_CRATER = 36;
     private final int GOLD_ALIGN_LOC = 550;
+    private final double MIN_GOLD_ROTATION_POWER = 0.1;
+    private final int GOLD_ROTATE_SLEEP_TIME = 300;
+    private Logger l = new Logger("AUTO GOLD");
 
     private static double MIN_TURN_POWER = 0.07;
     private double goldAlignKp = 1.0 / 180.0;
 
     @Override
     public void runOpMode() throws InterruptedException {
+        l.log("starting opmode");
+
+
         initialize();
         options.setOptions();
-//        hangSlides.moveSlides(Direction.DOWN,.5,2.5,5);
+        waitForButton("Press button to init slides");
+        hangSlides.moveSlides(Direction.DOWN,.5,2.5,5);
         waitForStart();
-//        hangSlides.moveSlides(Direction.UP,.5,2.5,5);
+        hangSlides.moveSlides(Direction.UP,.5,2.5,5);
 
         if (opModeIsActive()) {
 
@@ -51,7 +59,7 @@ public class GoldAuto extends LinearOpMode {
             dt.drive(Direction.FORWARD,6,100);
             sleep(500);
 
-            rotateToGold();
+            rotateToGold2();
             GoldPosition goldPos;
             goldPos = determinePosition();
             dt.drive(Direction.FORWARD,30,1000);
@@ -85,6 +93,27 @@ public class GoldAuto extends LinearOpMode {
 
     }
 
+    private Boolean rotateToGold2(){
+        dt.rotateTo(GoldPosition.RIGHT.getValue(),100);
+        waitForButton("press button to start scanning");
+        int detectedGoldPosition = -1;
+        while(detectedGoldPosition == -1 || Math.abs(detectedGoldPosition - GOLD_ALIGN_LOC) < 300){
+            detectedGoldPosition  = vision.detectRobust(10);
+            dt.move(Direction.CCW,MIN_GOLD_ROTATION_POWER);
+            sleep(GOLD_ROTATE_SLEEP_TIME);
+            dt.stopAll();
+
+            if(dt.getImu().getAngle() > GoldPosition.LEFT.getValue()){
+                return false;
+                // looked thru full spectrum and did not find
+
+            }
+        }
+        return true;
+        //gound gold and reutrn true
+
+
+    }
     private void rotateToGold() {
         dt.rotateTo(GoldPosition.RIGHT.getValue(),10000);
         if(Math.abs(vision.detectRobust(10) - GOLD_ALIGN_LOC) < 300){
