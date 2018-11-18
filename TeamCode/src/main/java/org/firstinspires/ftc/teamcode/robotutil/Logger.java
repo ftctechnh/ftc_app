@@ -12,4 +12,8 @@ public class Logger {
     public void log(String text){
         Log.i("[INTERSECT]", "[" + this.tag +  "] " +  text);
     }
+
+    public void logData(String dataName, double data){
+        Log.i("[INTERSECT]", "[" + this.tag +  "] " + dataName + ": " + String.valueOf(data));
+    }
 }
