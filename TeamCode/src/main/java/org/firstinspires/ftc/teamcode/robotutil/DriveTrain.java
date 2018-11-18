@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 public class DriveTrain {
 
@@ -44,6 +45,8 @@ public class DriveTrain {
     }
 
     private void initMotors() {
+        l.log("Initializing motors...");
+
         DcMotor lf = opMode.hardwareMap.dcMotor.get("lfDrive");
         DcMotor rf = opMode.hardwareMap.dcMotor.get("rfDrive");
         DcMotor lb = opMode.hardwareMap.dcMotor.get("lbDrive");
@@ -60,16 +63,21 @@ public class DriveTrain {
         rbDrive = new Motor(rb, this.opMode);
 
         this.driveMotors = new Motors(new Motor[]{lfDrive, rfDrive, lbDrive, rbDrive});
+
+        l.log("Motors initialized!");
     }
 
     private void resetMotors() {
+        l.log("Motors reset");
         driveMotors.resetEncoders();
         driveMotors.useEncoders();
     }
 
     private void initIMU() {
+        l.log("Initializing IMU...");
         BNO055IMU adaImu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu = new IMU(adaImu);
+        l.log("IMU Initialized!");
     }
 
     private double fixAngle(double angle) {
@@ -89,13 +97,19 @@ public class DriveTrain {
 
     public void setPowers(double lf, double rf, double lb, double rb) {
         driveMotors.setPowers(lf, rf, lb, rb);
+        l.logData("lfPower", lf);
+        l.logData("rfPower", rf);
+        l.logData("lbPower", lb);
+        l.logData("rbPower", rb);
     }
 
-    public void stopAll(){
+    public void stopAll() {
         setPowers(0, 0, 0, 0);
+        l.log("Motors stopped!");
     }
 
     public void move(Direction direction, double power) {
+        l.log("Moving " + direction.toString());
         switch(direction) {
             case FORWARD:
                 setPowers(power,power,
@@ -127,6 +141,13 @@ public class DriveTrain {
     }
 
     public void drive(Direction direction, double inches, double timeoutS) {
+        l.log(String.format(Locale.getDefault(), "Started driving %s %f inches",
+                direction.toString(), inches));
+        l.logData("Kp", PID_DRIVE.get("kp"));
+        l.logData("Ki", PID_DRIVE.get("ki"));
+        l.logData("Kd", PID_DRIVE.get("kd"));
+        l.logData("minError", PID_DRIVE.get("minError"));
+
         resetMotors();
 
         driveMotors.addPID(PID_DRIVE.get("kp"), PID_DRIVE.get("ki"),
@@ -138,15 +159,30 @@ public class DriveTrain {
         double startTime = System.currentTimeMillis();
         do {
             driveMotors.updateErrors();
+
+            double[] errors = driveMotors.getErrors();
+            l.logData("lfError", errors[0]);
+            l.logData("rfError", errors[1]);
+            l.logData("lbError", errors[2]);
+            l.logData("rbError", errors[3]);
+
             driveMotors.setPowers(driveMotors.getPIDOutput());
         } while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
                 !driveMotors.withinMinError() &&
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
 
         stopAll();
+
+        l.log("Finished driving!");
     }
 
     public void strafe(Direction direction, double inches, double timeoutS) {
+        l.log("Strafing " + Double.toString(inches) + " inches...");
+        l.logData("Kp", PID_STRAFE.get("kp"));
+        l.logData("Ki", PID_STRAFE.get("ki"));
+        l.logData("Kd", PID_STRAFE.get("kd"));
+        l.logData("minError", PID_STRAFE.get("minError"));
+
         resetMotors();
 
         driveMotors.addPID(PID_STRAFE.get("kp"), PID_STRAFE.get("ki"),
@@ -162,14 +198,14 @@ public class DriveTrain {
         double startTime = System.currentTimeMillis();
         do {
             driveMotors.updateErrors();
-            double[] drivePowers = driveMotors.getPIDOutput();
 
-            opMode.telemetry.addData("dir", dir);
-            opMode.telemetry.addData("lf", drivePowers[0]);
-            opMode.telemetry.addData("rf", drivePowers[1]);
-            opMode.telemetry.addData("lb", drivePowers[2]);
-            opMode.telemetry.addData("rb", drivePowers[3]);
-            opMode.telemetry.update();
+            double[] errors = driveMotors.getErrors();
+            l.logData("lfError", errors[0]);
+            l.logData("rfError", errors[1]);
+            l.logData("lbError", errors[2]);
+            l.logData("rbError", errors[3]);
+
+            double[] drivePowers = driveMotors.getPIDOutput();
 
             driveMotors.setPowers(drivePowers);
         } while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
@@ -177,9 +213,13 @@ public class DriveTrain {
                 (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
 
         stopAll();
+
+        l.log("Finished strafing!");
     }
 
     public void rotate(Direction direction, double angle, double timeoutS) {
+        l.log("Rotating " + Double.toString(angle) + " degrees...");
+
         int dir = direction.getValue();
 
         double currentHeading = imu.getAngle();
@@ -189,10 +229,20 @@ public class DriveTrain {
     }
 
     public void rotateTo(double targetHeading, double timeoutS) {
+        double minError = PID_ROTATE.get("minError");
+        double minPower = PID_ROTATE.get("minPower");
+
+        l.log("Started rotating...");
+        l.logData("targetHeading", targetHeading);
+        l.logData("Kp", PID_ROTATE.get("kp"));
+        l.logData("Ki", PID_ROTATE.get("ki"));
+        l.logData("Kd", PID_ROTATE.get("kd"));
+        l.logData("minError", minError);
+
         PID pid = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
                 PID_ROTATE.get("kd"), opMode.telemetry);
 
-        double currentHeading = imu.getAngle();
+        double currentHeading;
         double error;
 
         double startTime = System.currentTimeMillis();
@@ -200,24 +250,27 @@ public class DriveTrain {
             currentHeading = imu.getAngle();
             error = fixAngle(targetHeading - currentHeading);
 
+            l.logData("currentHeading", currentHeading);
+            l.logData("error", error);
+
             double proportionalPower = pid.getOutput(error);
-            proportionalPower += (proportionalPower > 0) ?
-                    PID_ROTATE.get("minPower") : -PID_ROTATE.get("minPower");
-            opMode.telemetry.addData("power", proportionalPower);
-            opMode.telemetry.update();
+            proportionalPower += (proportionalPower > 0) ? minPower : -minPower;
             move(Direction.CW, proportionalPower);
 
-            if (Math.abs(error) < PID_ROTATE.get("minError")) {
+            if (Math.abs(error) < minError) {
+                l.log("Within minError! Waiting...");
                 stopAll();
                 Utils.waitFor(300);
                 currentHeading = imu.getAngle();
                 error = fixAngle(targetHeading - currentHeading);
             }
         } while (opMode.opModeIsActive() && !opMode.isStopRequested() &&
-                Math.abs(error) > PID_ROTATE.get("minError")
+                Math.abs(error) > minError
                 && (System.currentTimeMillis() - startTime) / 1000 < timeoutS);
 
         stopAll();
+
+        l.log("Done rotating!");
     }
 
 }

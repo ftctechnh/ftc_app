@@ -22,6 +22,14 @@ public class Motors {
         return currentPositions;
     }
 
+    public double[] getErrors() {
+        double[] errors = new double[motors.length];
+        for (int i = 0; i < motors.length; i++) {
+            errors[i] = motors[i].getError();
+        }
+        return errors;
+    }
+
     public void setPowers(double... powers) {
         if (powers.length == motors.length) {
             for (int i = 0; i < motors.length; i++) {
