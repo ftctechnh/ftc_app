@@ -29,7 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -70,10 +74,11 @@ public class HardwareBruinBot
     public DigitalChannel extendArmBackStop;
     public DigitalChannel extendArmFrontStop;
 
-    //public DcMotor  armExt = null;  //for the arm extension
-    //public DcMotor  leftArm     = null;
-    //public Servo    leftClaw    = null;
-    //public Servo    rightClaw   = null;
+    public ModernRoboticsI2cRangeSensor rangeSensor;
+    public ModernRoboticsI2cGyro gyro;
+    public ColorSensor colorSensor;
+    public AnalogInput sonarSensor;
+
 
     public static final double MID_SERVO       =  0.5 ;
     public static final double ARM_UP_POWER    =  0.45 ;
@@ -102,7 +107,7 @@ public class HardwareBruinBot
         landerLatchLift = hwMap.get(DcMotor.class, "landerLatchLift");
         armExtend = hwMap.get(DcMotor.class, "armExtend");
         armRotate = hwMap.get(DcMotor.class, "armRotate");
-        leftMineral = hwMap.get(CRServo.class, "leftMineral");
+
         rightMineral = hwMap.get(CRServo.class, "rightMineral");
 
         extendArmBackStop = hwMap.get(DigitalChannel.class, "extendArmBackStop");
@@ -110,12 +115,21 @@ public class HardwareBruinBot
         extendArmBackStop.setMode(DigitalChannel.Mode.INPUT);
         extendArmFrontStop.setMode(DigitalChannel.Mode.INPUT);
 
+        // Initialize I2C Sensors
+        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
+
+        // Initialize Analog Sonar Sensor
+        sonarSensor = hwMap.get(AnalogInput.class,"sonarSensor");
+
+
         // armExt = hwMap.get(DcMotor.class, "armExt"); //arm extension
         //leftArm    = hwMap.get(DcMotor.class, "left_arm");
-        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightRearDrive.setDirection(DcMotor.Direction.FORWARD);
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftRearDrive.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
+        leftRearDrive.setDirection(DcMotor.Direction.REVERSE);
 
 
 
@@ -127,8 +141,7 @@ public class HardwareBruinBot
         armExtend.setPower(0);
         armRotate.setPower(0);
         landerLatchLift.setPower(0);
-       // armExt.setPower(0); //arm extension
-        //leftArm.setPower(0);
+
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -145,13 +158,11 @@ public class HardwareBruinBot
 
         landerLatchLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         landerLatchLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-       // armExt.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER); //arm extension
-        //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        // Define and initialize ALL installed servos.
-        //leftClaw  = hwMap.get(Servo.class, "left_hand");
-        //rightClaw = hwMap.get(Servo.class, "right_hand");
-        //leftClaw.setPosition(MID_SERVO);
-        //rightClaw.setPosition(MID_SERVO);
+
+
+        // Set the LED on
+        colorSensor.enableLed(true);
+
     }
 }
 
