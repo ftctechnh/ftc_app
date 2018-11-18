@@ -1,28 +1,28 @@
 package org.firstinspires.ftc.teamcode.Avocado.TeleOP;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import junit.framework.Test;
-import org.firstinspires.ftc.teamcode.Avocado.Hardware.hardwaremap_TeleOpMecanum;
 
-@TeleOp(name = "Avacado TeleOp", group = "Test")
+import org.firstinspires.ftc.teamcode.Avocado.Robot.Robot;
+
+@TeleOp(name = "Avacado TeleOp_Avocado", group = "Test")
 
 
 public class TeleOpMecanum extends OpMode {
 
 
-    hardwaremap_TeleOpMecanum robot = new hardwaremap_TeleOpMecanum();
+    Robot robot = new Robot();
 
     byte posleft = -1;
 
 
     @Override
     public void loop() {
+
         dpad();
         TankDrive();
         //angles();
         //collect();
-        //lift();
+        lift();
     }
 
     @Override
@@ -135,14 +135,16 @@ public class TeleOpMecanum extends OpMode {
 
             }
     */
-/*
+
     public void lift() {
 
         float leftY_gp2 = (-gamepad2.left_stick_y);
         float rightY_gp2 = (-gamepad2.right_stick_y);
 
+        robot.hanger.setPower(leftY_gp2);
+
     }
-*/
+
     public void stop(){
 
     }
