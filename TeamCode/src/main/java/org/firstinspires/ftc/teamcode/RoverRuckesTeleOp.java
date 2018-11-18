@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp
+@TeleOp(name = "RoverRuckesTeleOp")
 public class RoverRuckesTeleOp extends LinearOpMode {
 
     @Override
@@ -16,7 +16,7 @@ public class RoverRuckesTeleOp extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            robot.setWheelPower(this);
+            robot.manualDrive(this);
 
             telemetry.update();
         }
