@@ -36,38 +36,56 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.tasks.DriveTrainTaskMecanum;
+import org.firstinspires.ftc.teamcode.tasks.DumperTask;
 import org.firstinspires.ftc.teamcode.tasks.HangTask;
+import org.firstinspires.ftc.teamcode.tasks.SweeperTask;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Hang Teleop")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Teleop Final")
 
 public class HangTele extends LinearOpMode {
     private HangTask hangTask;
     private DriveTrainTaskMecanum driveTrainTask;
+    private DumperTask dumperTask;
+    private SweeperTask sweeperTask;
     private Telemetry.Item opmodeStatus = telemetry.addData("STATUS","CONSTRUCTING");
 
     public void runOpMode() throws InterruptedException{
         opmodeStatus.setValue("INITIALIZING");
         telemetry.update();
+
         initialize();
         opmodeStatus.setValue("READY");
         telemetry.update();
+
         waitForStart();
-        hangTask.start();
-        driveTrainTask.start();
+        if(opModeIsActive()){
+            startAllThreads();
+        }
         while(opModeIsActive() && !isStopRequested()) {
             opmodeStatus.setValue("RUNNING");
             telemetry.update();
         }
-        hangTask.running = false;
-        driveTrainTask.running = false;
+        stopAllThreads();
+    }
+    private void startAllThreads(){
+        hangTask.start();
+        driveTrainTask.start();
+        dumperTask.start();
+        sweeperTask.start();
+    }
+    private void stopAllThreads(){
+        hangTask.stopThread();
+        driveTrainTask.stopThread();
+        sweeperTask.stopThread();
+        dumperTask.stopThread();
         opmodeStatus.setValue("STOPPED");
         telemetry.update();
     }
-
-    private void initialize(){
+    private void initialize() {
         hangTask = new HangTask(this);
         driveTrainTask = new DriveTrainTaskMecanum(this);
+        sweeperTask = new SweeperTask(this);
+        dumperTask = new DumperTask(this);
     }
-
 
 }

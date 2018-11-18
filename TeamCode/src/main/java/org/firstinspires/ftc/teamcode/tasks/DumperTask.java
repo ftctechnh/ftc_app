@@ -1,13 +1,8 @@
 package org.firstinspires.ftc.teamcode.tasks;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
 import org.firstinspires.ftc.teamcode.robotutil.Dumper;
-import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
-import org.firstinspires.ftc.teamcode.robotutil.Sweeper;
 
 /**
  * Created by Howard on 10/15/16.
@@ -25,9 +20,13 @@ public class DumperTask extends TaskThread {
         timer.reset();
         boolean retracted = true;
 
+        boolean triggered;
         while (opMode.opModeIsActive() && !opMode.isStopRequested()
                 && this.running) {
-            if (opMode.gamepad1.y || opMode.gamepad2.y) {
+
+            triggered = opMode.gamepad1.start || opMode.gamepad2.start;
+
+            if (triggered) {
                 if (retracted) {
                     dumper.dump();
                     retracted = false;
@@ -35,6 +34,8 @@ public class DumperTask extends TaskThread {
                     dumper.retract();
                     retracted = true;
                 }
+                sleep(300);
+
             }
         }
     }

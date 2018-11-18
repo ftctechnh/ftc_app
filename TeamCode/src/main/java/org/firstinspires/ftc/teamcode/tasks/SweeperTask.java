@@ -18,11 +18,15 @@ public class SweeperTask extends TaskThread {
 
     @Override
     public void run() {
+        boolean triggerIntake,triggerReverse;
         timer.reset();
         while (opMode.opModeIsActive() && this.running) {
-            if (opMode.gamepad1.a){
+            triggerIntake = opMode.gamepad1.x || opMode.gamepad2.x;
+            triggerReverse = opMode.gamepad1.y || opMode.gamepad2.y;
+
+            if (triggerIntake){
                 sweeper.setPower(1);
-            }else if (opMode.gamepad1.y){
+            }else if (triggerReverse){
                 sweeper.setPower(-1);
             }else{
                 sweeper.setPower(0);

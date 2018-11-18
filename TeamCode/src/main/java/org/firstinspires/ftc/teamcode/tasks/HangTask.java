@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.tasks;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
-import org.firstinspires.ftc.teamcode.robotutil.Sweeper;
 
 /**
  * Created by Howard on 10/15/16.
@@ -27,12 +24,17 @@ public class HangTask extends TaskThread {
         double power = 1.0;
         String slideString;
 
-
+        boolean triggerUp,triggerDown;
         while (opMode.opModeIsActive() && this.running) {
-            if (opMode.gamepad2.dpad_up) {
+
+            //TRIGGER FUNCTIONS
+            triggerUp = opMode.gamepad2.dpad_up ||opMode.gamepad1.dpad_up;
+            triggerDown = opMode.gamepad2.dpad_down || opMode.gamepad1.dpad_down;
+
+            if (triggerUp) {
                 slides.setPower(power);
                 slideString = "UP";
-            } else if (opMode.gamepad2.dpad_down) {
+            } else if (triggerDown) {
                 slides.setPower(-1 * power);
                 slideString = "DOWN";
             } else {
