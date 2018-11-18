@@ -143,6 +143,12 @@ public class TeleOpMecanum extends OpMode {
 
     }
 */
+    public void hangar(){
+
+
+
+    }
+
     public void stop(){
 
     }
