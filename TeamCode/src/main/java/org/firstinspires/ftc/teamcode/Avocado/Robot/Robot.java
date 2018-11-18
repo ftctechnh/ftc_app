@@ -3,8 +3,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
- * This file contains all the code that is being executed when a method is called in the main TeleOp file.
- * Additionally, this file contains the robot's hardware.
+ * This file contains all the methods and hardware for Avocado's robot as of 11/18/18
  */
 
 public class Robot {
@@ -51,12 +50,22 @@ public class Robot {
 
     }
 
-    public void lift(float lift) {
+    public void lift_a(float lift) {
 
         float leftY_gp2 = (-lift);
         float rightY_gp2 = (-lift);
 
         hanger.setPower(leftY_gp2);
+
+    }
+
+    public void lift_b(boolean lift) {
+
+        if(lift) {
+
+            hanger.setPower(1);
+
+        }
 
     }
 
