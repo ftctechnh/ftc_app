@@ -15,15 +15,28 @@ public class Sweeper {
     private DcMotor sweeperMotor;
     LinearOpMode opMode;
 
+
     public Sweeper(LinearOpMode opMode) {
         this.opMode = opMode;
         sweeperMotor = opMode.hardwareMap.dcMotor.get("sweeper");
-        sweeperMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        sweeperMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        sweeperMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     public void setPower(double power){
         this.sweeperMotor.setPower(power);
     }
 
+    public void intake(){
+        setPower(1);
+    }
+
+    public void reverseIntake(){
+        setPower(-1);
+    }
+
+    public void stop(){
+        setPower(0);
+    }
 
 }

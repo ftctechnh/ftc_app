@@ -23,17 +23,17 @@ public class RotateTest extends LinearOpMode {
 
         if (opModeIsActive()) {
             dt.drive(Direction.FORWARD, 12, 5);
-            Utils.waitFor(500);
+            Utils.waitFor(5000);
             dt.rotateTo(-45, 5);
-            Utils.waitFor(500);
+            Utils.waitFor(5000);
             dt.rotateTo(45, 5);
-            Utils.waitFor(500);
+            Utils.waitFor(5000);
             dt.drive(Direction.BACK, 12, 5);
-            Utils.waitFor(500);
+            Utils.waitFor(5000);
             dt.rotateTo(-45, 5);
-            Utils.waitFor(500);
+            Utils.waitFor(5000);
             dt.rotateTo(45, 5);
-            Utils.waitFor(500);
+            Utils.waitFor(5000);
             dt.rotate(Direction.CCW, 180, 5);
 
             dt.stopAll();

@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.robotutil.GoldPosition;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Logger;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
+import org.firstinspires.ftc.teamcode.robotutil.Sweeper;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutonomousGold", group="FinalShit")
@@ -21,19 +22,19 @@ public class GoldAuto extends LinearOpMode {
     private Vision vision;
     private HangSlides hangSlides;
     private Dumper dumper;
+    private Sweeper sweeper;
 
     private Options options;
 
     // Tune these
-    private final double DIST_TO_GOLD_LR = 40;
-    private final double DIST_TO_CRATER_CENTER = 50;
+    private final double DIST_TO_GOLD_LR = 35;
+    private final double DIST_TO_CRATER_CENTER = 40;
     private final double DIST_TO_DEPOT = 20;
     private final double DIST_TO_CRATER = 36;
     private final int GOLD_ALIGN_LOC = 550;
     private final double MIN_GOLD_ROTATION_POWER = .4;
     private final int GOLD_ROTATE_SLEEP_TIME = 350;
     private Logger l = new Logger("AUTO GOLD");
-
     private static double MIN_TURN_POWER = 0.07;
     private double goldAlignKp = 1.0 / 180.0;
 
@@ -62,7 +63,7 @@ public class GoldAuto extends LinearOpMode {
             dt.strafe(Direction.RIGHT,3,100);
             sleep(500);
             l.log("moving forward");
-            dt.drive(Direction.FORWARD,6,100);
+            dt.drive(Direction.FORWARD,4,100);
             sleep(500);
 //            waitForButton("rotate to gold");
             l.log("rotate to gold");
@@ -80,26 +81,36 @@ public class GoldAuto extends LinearOpMode {
             l.log("Gold pos: " + goldPos.toString());
 
 //            dt.drive(Direction.FORWARD,30,1000);
+            sweeper.reverseIntake();
 
             switch (goldPos) {
                 case LEFT:
                     dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
                     dt.rotateTo(45, 5);
-                    dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
+                    dt.drive(Direction.FORWARD, DIST_TO_DEPOT + 18, 5);
+                    dt.rotateTo(45, 5);
+
                     break;
                 case CENTER:
-                    dt.drive(Direction.FORWARD, DIST_TO_CRATER_CENTER + 10, 5);
+                    dt.drive(Direction.FORWARD, DIST_TO_CRATER_CENTER, 5);
+                    dt.rotateTo(45, 5);
+                    dt.drive(Direction.FORWARD, 12, 5);
+
                     break;
                 case RIGHT:
                     dt.drive(Direction.FORWARD, DIST_TO_GOLD_LR, 5);
                     dt.rotateTo(-45, 5);
-                    dt.drive(Direction.FORWARD, DIST_TO_DEPOT + 18, 5);
+                    dt.drive(Direction.FORWARD, DIST_TO_DEPOT, 5);
+                    dt.rotateTo(45, 5);
+
                     break;
             }
 
-            dt.rotateTo(45, 5);
+
             dumper.dump();
-            sleep(1000);
+            sleep(2000);
+            sweeper.stop();
+
 
 
 //                waitForButton("forward 30 inches");
@@ -181,6 +192,8 @@ public class GoldAuto extends LinearOpMode {
         hangSlides = new HangSlides(this);
         dumper = new Dumper(this);
         dumper.retract();
+
+        sweeper = new Sweeper(this);
         initOptions();
 
     }

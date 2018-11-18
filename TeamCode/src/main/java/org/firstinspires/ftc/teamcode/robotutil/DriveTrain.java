@@ -245,7 +245,7 @@ public class DriveTrain {
         l.logData("minError", minError);
         l.logData("minPower", minPower);
 
-        PID pid = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
+        PID pid = new PID(1, PID_ROTATE.get("ki"),
                 PID_ROTATE.get("kd"), opMode.telemetry);
 
         double currentHeading;
