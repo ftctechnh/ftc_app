@@ -20,6 +20,7 @@ import org.firstinspires.ftc.teamcode.Salsa.Vision.Vuforia;
 public class AsteroidDrive extends OpMode {
 
     public Asteroid asteroid = new Asteroid();
+    public Motor motor;
 
     @Override
     public void init() {

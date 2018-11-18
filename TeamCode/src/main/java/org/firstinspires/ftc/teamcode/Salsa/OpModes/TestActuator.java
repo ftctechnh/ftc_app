@@ -35,14 +35,14 @@ public class TestActuator extends OpMode {
 
     public void actuatorMove() {
         if(gamepad1.dpad_up) {
-            actuator.dcm.setPower(1);
+            actuator.setPower(1);
         }
 
         else if(gamepad1.dpad_down) {
-            actuator.dcm.setPower(-1);
+            actuator.setPower(-1);
         }
         else {
-            actuator.dcm.setPower(0);
+            actuator.setPower(0);
         }
     }
 }

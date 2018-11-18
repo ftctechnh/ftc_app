@@ -6,16 +6,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Created by adityamavalankar on 11/5/18.
  */
 
-public abstract class ColorSensor {
+public abstract class ColorSensor implements com.qualcomm.robotcore.hardware.ColorSensor {
 
-    public com.qualcomm.robotcore.hardware.ColorSensor cs;
+    private com.qualcomm.robotcore.hardware.ColorSensor cs;
     public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
 
         hwmap = inputMap;
 
-        cs = hwmap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, hardwareName);
+        this.cs = hwmap.get(com.qualcomm.robotcore.hardware.ColorSensor.class, hardwareName);
     }
 
 

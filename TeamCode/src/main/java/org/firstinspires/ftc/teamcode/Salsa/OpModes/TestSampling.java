@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Salsa.OpModes;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 import org.firstinspires.ftc.teamcode.Salsa.Vision.CameraCropAngle;
 import org.firstinspires.ftc.teamcode.Salsa.Vision.SamplingDetector;
 
@@ -13,23 +14,21 @@ import org.firstinspires.ftc.teamcode.Salsa.Vision.SamplingDetector;
 @TeleOp(name="Sampling Test DogeCV")
 public class TestSampling extends OpMode {
 
-    SamplingDetector detector = null;
+    Robot robot = new Robot();
 
     @Override
     public void init() {
-        detector = new SamplingDetector();
-        detector.initVision(hardwareMap, CameraCropAngle.RIGHT);
-        detector.enableVision();
+        robot.samplingDetector.initVision(hardwareMap);
     }
 
     @Override
     public void loop() {
-        telemetry.addData("Order", detector.getSamplingOrder());
+        telemetry.addData("Order", robot.samplingDetector.getSamplingOrder());
         telemetry.update();
     }
 
     @Override
     public void stop() {
-        detector.disableVision();
+        robot.samplingDetector.disableVision();
     }
 }

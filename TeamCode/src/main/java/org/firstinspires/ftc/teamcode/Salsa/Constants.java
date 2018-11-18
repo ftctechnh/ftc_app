@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Salsa;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.Salsa.Vision.CameraCropAngle;
+
 /**
  * Created by adityamavalankar on 11/4/18.
  */
@@ -19,7 +21,7 @@ public abstract class Constants {
     public final String CRATER_SLIDES_NAME = "craterSlides";
     public final String INTAKE_MOTOR_NAME = "intakeMotor";
     public final String LIFT_SLIDES_NAME = "liftSlides";
-
+    public final CameraCropAngle CAMERA_AIM_DIRECTION = CameraCropAngle.RIGHT;
 
 
     //names for the sensors
@@ -57,7 +59,9 @@ public abstract class Constants {
     public final double TICKS_PER_CM = (TICKS_PER_ROTATION)/(WHEEL_CIRCUMFERENCE_CM);
     public final double TICKS_PER_IN = (TICKS_PER_ROTATION)/(WHEEL_CIRCUMFERENCE_IN);
 
-
+    public final double ENC_DRIVE_TIME_MULTIPLIER = 1.5;
     public final int NEVEREST_40_RPM = 160;
+
+    public final int LIFT_SLIDES_REVERSE_CONSTANT = 1;
 
 }

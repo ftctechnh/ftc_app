@@ -1,18 +1,20 @@
 package org.firstinspires.ftc.teamcode.Salsa.Hardware;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.Salsa.Vision.CameraCropAngle;
+import org.firstinspires.ftc.teamcode.Salsa.Vision.SamplingDetector;
 
 /**
  * Created by adityamavalankar on 11/4/18.
@@ -22,7 +24,7 @@ public class Robot {
 
     HardwareMap hwmap = null;
 
-    private Constants constants = null;
+    public Constants constants = null;
 
     public DcMotor leftFront = null;
     public DcMotor leftBack = null;
@@ -47,6 +49,9 @@ public class Robot {
 
     public Servo intakeLifter = null;
     public Servo markerDepositer = null;
+
+    public SamplingDetector samplingDetector = new SamplingDetector();
+
 
     public void initDrivetrain(HardwareMap ahwmap) {
 
@@ -118,6 +123,43 @@ public class Robot {
 
     }
 
+    public void initSampling(HardwareMap ahwmap) {
+
+        samplingDetector.initVision(ahwmap, constants.CAMERA_AIM_DIRECTION);
+
+    }
+
+    public void initSampling(HardwareMap ahwmap, CameraCropAngle cropAngle) {
+
+        samplingDetector.initVision(ahwmap, cropAngle);
+
+    }
+
+    public void enableVision() {
+        samplingDetector.samplingDetector.enable();
+    }
+
+    public SamplingOrderDetector.GoldLocation getSamplingOrder() {
+
+        SamplingOrderDetector.GoldLocation order;
+        order = samplingDetector.samplingDetector.getCurrentOrder();
+
+        return order;
+    }
+
+    public SamplingOrderDetector.GoldLocation getLastOrder() {
+
+        SamplingOrderDetector.GoldLocation lastOrder;
+        lastOrder = samplingDetector.samplingDetector.getLastOrder();
+
+        return lastOrder;
+    }
+
+    public void disableVision() {
+        samplingDetector.samplingDetector.disable();
+    }
+
+
     public void initAll(HardwareMap ahwmap) {
 
         initDrivetrain(ahwmap);
@@ -125,6 +167,7 @@ public class Robot {
         initWebcam(ahwmap);
         initServos(ahwmap);
         initMotors(ahwmap);
+        initSampling(ahwmap);
     }
 
     public void sleep(int ms) {

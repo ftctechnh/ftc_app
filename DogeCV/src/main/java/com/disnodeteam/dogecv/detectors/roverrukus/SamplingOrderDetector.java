@@ -214,7 +214,7 @@ public class SamplingOrderDetector extends DogeCVDetector {
                         new Scalar(255, 255, 255), 2);
                 Imgproc.putText(displayMat,
                         "Silver: " + String.format("Score %.2f ", score) ,
-                        new Point(rect.x - 5, rect.y - 10),
+                        new Point(rect.x - 5, rect.y - 15),
                         Core.FONT_HERSHEY_PLAIN,
                         1.3,
                         new Scalar(255, 255, 255),

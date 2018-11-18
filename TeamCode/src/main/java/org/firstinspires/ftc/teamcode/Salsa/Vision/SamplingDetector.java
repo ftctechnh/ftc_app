@@ -23,7 +23,7 @@ public class SamplingDetector {
     public void initVision(HardwareMap ahwmap) {
 
 //        samplingDetector = new SamplingOrderDetector();
-        initVision(ahwmap, CameraCropAngle.NO_CROP);
+        initVision(ahwmap, robot.constants.CAMERA_AIM_DIRECTION);
 
     }
 
