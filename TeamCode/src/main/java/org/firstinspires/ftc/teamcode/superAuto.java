@@ -411,7 +411,7 @@ abstract public class superAuto extends LinearOpMode {
                 int degrees = (int)currentHeading;
                 while (targetVisible == false) {
                     degrees+=13;
-                    if (degrees >360)//This is incorrect since there is no 360. Range is from 0->180, -180->0
+                    if (degrees >180)//This is incorrect since there is no 360. Range is from 0->180, -180->0
                         break;
                     pivotTo(degrees);
                     Wait(2);
@@ -446,7 +446,7 @@ abstract public class superAuto extends LinearOpMode {
 
         // While not at desired location
         while (go) {
-            CurrentX = getLocation(0); //Eventually I would like to directly take the readings. These #s are made up...
+            CurrentX = getLocation(0); //Method to Read current location
             CurrentY = getLocation(1);
             X = (DestinationX - CurrentX);
             Y = (DestinationY - CurrentY);
