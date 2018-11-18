@@ -63,6 +63,7 @@ public class drivee extends LinearOpMode {
             pullUp();
             nom();
             place();
+            telemetry.addData("servo", servo.getPosition());
 
             telemetry.update();
             idle();
@@ -71,7 +72,7 @@ public class drivee extends LinearOpMode {
 
     public void moveRobot() {
         double y = -gamepad1.left_stick_y;
-        double x = -gamepad1.left_stick_x;
+        double x = -gamepad1.right_stick_x;
 
         //if y >.1  and x is in between certain values go forwards
         //
@@ -93,21 +94,23 @@ public class drivee extends LinearOpMode {
 //            previousDrive = controllerPos.TURN_LEFT;
 //            turn(turn);
 //        }
+
+        //some slight redundancies - b/c turning and linear motion on dif sticks
         if (Math.abs(x) <= Math.abs(y)) {
-            if (y > .1) {
+            if (y > .3) {
                 forwards(1);
-            } else if (y < -.1) {
-                backwards(1);
+            } else if (y < -.3) {
+                forwards(-1);
             } else {
                 Left.setPower(0);
                 Right.setPower(0);
             }
 
         } else {
-            if (x > .1) {
-                clock(1);
-            } else if (x < .1) {
+            if (x > .3) {
                 counter(1);
+            } else if (x < -.3) {
+                clock(1);
             } else {
                 Left.setPower(0);
                 Right.setPower(0);
@@ -117,25 +120,21 @@ public class drivee extends LinearOpMode {
     }
 
     public void forwards(double drivePower) {
-        drivePower = 1;
         Left.setPower(drivePower);
         Right.setPower(drivePower);
     }
 
     public void backwards(double drivePower) {
-        drivePower = -1;
         Left.setPower(drivePower);
         Right.setPower(drivePower);
     }
 
     public void clock(double drivePower) {
-        drivePower = 1;
         Left.setPower(drivePower);
         Right.setPower(-drivePower);
     }
 
     public void counter(double drivePower) {
-        drivePower = 1;
         Left.setPower(-drivePower);
         Right.setPower(drivePower);
     }
@@ -171,6 +170,13 @@ public class drivee extends LinearOpMode {
         } else {
             Pulley.setPower(0);
         }
+        if(gamepad2.a) {
+            servo.setPosition(.5);
+        } else if(gamepad2.b) {
+            servo.setPosition(1);
+        } else if(gamepad2.x) {
+            servo.setPosition(0);
+        }
     }
 
     /**public void drive(double drivePower, double diagonalPower) {
@@ -182,7 +188,7 @@ public class drivee extends LinearOpMode {
      // -1 -.9 -.15 0 .15 .9 1
 
      if (diagonalPower >= .15 && diagonalPower <= .9) {
-     Left.setPower(drivePower - diagonalPower);
+     Le             ft.setPower(drivePower - diagonalPower);
      Right.setPower(drivePower);
      } else if (diagonalPower <= -.15 && diagonalPower >= -.9) {
      Left.setPower(drivePower);
