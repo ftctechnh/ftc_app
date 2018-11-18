@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Salsa.Vision.CameraCropAngle;
-import org.firstinspires.ftc.teamcode.Salsa.Vision.SamplingDetector;
 
 /**
  * Created by adityamavalankar on 11/12/18.

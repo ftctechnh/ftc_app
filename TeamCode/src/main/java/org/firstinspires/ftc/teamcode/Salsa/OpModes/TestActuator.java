@@ -14,13 +14,13 @@ import org.firstinspires.ftc.teamcode.Salsa.Robots.Asteroid;
 @TeleOp(name = "Test Actuator")
 public class TestActuator extends OpMode {
 
-    Asteroid robot = new Asteroid();
+    Asteroid robot;
     Motor actuator;
 
     @Override
     public void init() {
 
-        robot.robot.initDrivetrain(hardwareMap);
+        robot.initDrivetrain(hardwareMap);
         actuator.init("actuator", hardwareMap);
 
     }
@@ -28,7 +28,7 @@ public class TestActuator extends OpMode {
     @Override
     public void loop() {
 
-        robot.drive(gamepad1.left_stick_y, gamepad1.right_stick_y);
+        robot.drive();
         actuatorMove();
 
     }

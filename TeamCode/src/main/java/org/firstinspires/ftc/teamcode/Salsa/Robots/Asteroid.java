@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Created by adityamavalankar on 11/5/18.
  */
 
-public class Asteroid {
+public abstract class Asteroid extends Robot {
 
     public Robot robot = new Robot();
     public Constants constants;
@@ -67,6 +67,11 @@ public class Asteroid {
         }
     }
 
+    public void mecanumDrive() {
+
+        mecanumDrive(opMode.gamepad1.dpad_left, opMode.gamepad1.dpad_right);
+    }
+
     public void setTargetPosition(int target) {
         robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + target);
         robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition() + target);
@@ -84,7 +89,6 @@ public class Asteroid {
 
     public void encoderDriveCM(double cm, double speed) {
         int timeSec = driveTimeCM(cm, speed);
-        int timeSec_spaced = (int)(timeSec*constants.ENC_DRIVE_TIME_MULTIPLIER);
 
         int distanceEnc = (int)(constants.TICKS_PER_CM * cm);
 
@@ -94,7 +98,7 @@ public class Asteroid {
         setPower(Math.abs(speed));
         runtime.reset();
 
-        while(linearOpMode.opModeIsActive() && (runtime.seconds() < timeSec_spaced) && robot.leftFront.isBusy()
+        while(linearOpMode.opModeIsActive() && (runtime.seconds() < timeSec) && robot.leftFront.isBusy()
                 && robot.leftBack.isBusy() && robot.rightFront.isBusy() && robot.rightBack.isBusy()) {
             telemetry.addLine("Robot in Encoder Drive");
             telemetry.addData("Target Distance (cm)", cm);
@@ -123,7 +127,7 @@ public class Asteroid {
         double timeMin = (abs_distCM/dist_perMin);
         double timeSec = (timeMin*60);
 
-        return (int)timeSec;
+        return (int)(timeSec*constants.ENC_DRIVE_TIME_MULTIPLIER);
     }
 
 }
