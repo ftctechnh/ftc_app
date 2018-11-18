@@ -13,9 +13,20 @@ import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 
 public abstract class SalsaOpMode extends OpMode {
 
+    /**
+     * This is a modified version of the {OpMode} class, with all of the functions
+     * meant for TeleOp, without having extra work to make them, and the remote-controlled OpMode
+     * to both work
+     */
+
     public Robot robot = new Robot();
 
     public Constants constants;
+
+    /**
+     * For the functions, we have one of each where we can input the gamepad controls, and one where it is
+     * automatically put in
+     */
 
     public void drive() {
 
@@ -41,6 +52,12 @@ public abstract class SalsaOpMode extends OpMode {
 
         liftHanger(this.gamepad2.right_stick_y);
     }
+
+    /**
+     * For mecanumDrive(), we use the dpad to go left/right. We move the alternate motors forward/reverse.
+     * @param dpad_left
+     * @param dpad_right
+     */
 
     public void mecanumDrive(boolean dpad_left, boolean dpad_right) {
 

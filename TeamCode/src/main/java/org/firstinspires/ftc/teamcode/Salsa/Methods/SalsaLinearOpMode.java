@@ -15,9 +15,21 @@ import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 
 public abstract class SalsaLinearOpMode extends LinearOpMode {
 
+    /**
+     * This is a modified version of the {LinearOpMode} class, with all of the functions
+     * meant for autonomous, without having extra work to make them, and the autonomous LinearOpMode
+     * to both work
+     */
+
     public Robot robot = new Robot();
     public Constants constants;
     private ElapsedTime runtime = new ElapsedTime();
+
+    /**
+     * Sets the target position for the drivetrain motors. We figure out what to set target
+     * to in the later functions
+     * @param target
+     */
 
     public void setTargetPosition(int target) {
         robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + target);
@@ -33,6 +45,16 @@ public abstract class SalsaLinearOpMode extends LinearOpMode {
         robot.rightBack.setPower(power);
 
     }
+
+    /**
+     * We first convert the inputted distance (in cm) to encoder ticks with the constants.TICKS_PER_CM constant, while
+     * setting motors to the runMode RUN_TO_POSITION.
+     * Then, we see the expected time the motors should run at using the { timeSec() } function
+     * Then, we set the target position, set motors to move at desired speed, until we hit the correct position
+     * Then, we set speed to zero
+     * @param cm
+     * @param speed
+     */
 
     public void encoderDriveCM(double cm, double speed) {
         int timeSec = driveTimeCM(cm, speed);
@@ -64,6 +86,15 @@ public abstract class SalsaLinearOpMode extends LinearOpMode {
         robot.leftBack.setMode(runmode);
         robot.rightBack.setMode(runmode);
     }
+
+    /**
+     * The expected drive time is calculated with some math. We multiply speed by RPM of motor, and multiply that
+     * by wheel circumference. Then, we divide the distance to be traveled by the total speed per minute.
+     * Then, we will convert from minutes to seconds
+     * @param cm
+     * @param speed
+     * @return The total distance that movement should take, multiplied by 1.5 for padding
+     */
 
     public int driveTimeCM(double cm, double speed) {
         double abs_speed = Math.abs(speed * constants.NEVEREST_40_RPM);

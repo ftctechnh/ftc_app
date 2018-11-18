@@ -22,6 +22,13 @@ import org.firstinspires.ftc.teamcode.Salsa.Vision.SamplingDetector;
 
 public class Robot {
 
+
+    /** The Robot class is a class meant to combine all of the major hardware and HardwareMap() of all of the functions
+     *  in one file. Hence, later we will not have to modify any of the hardware, as we have made all of the hardware
+     *  for the pre-configured hardware. Please refer to the Google Docs file at {https://goo.gl/yfN7XZ} to see al of the
+     *  hardware and its configuration on the robot.
+     */
+
     HardwareMap hwmap = null;
 
     public Constants constants = null;
@@ -52,6 +59,14 @@ public class Robot {
 
     public SamplingDetector samplingDetector = new SamplingDetector();
 
+
+    /**
+     * Each of these init functions for the hardware is meant to be able to modularize the initiation of the hardware
+     * This is so that if we want just a drivetrain, we get just a drivetrain
+     * @param ahwmap
+     *
+     * The ahwmap object is so that we can have an OpMode-specific function without it being an OpMode
+     */
 
     public void initDrivetrain(HardwareMap ahwmap) {
 
@@ -123,11 +138,24 @@ public class Robot {
 
     }
 
+    /**
+     * The next six functions are meant for the Computer Vision sampling of the three objects
+     * First, we init, then enable, then take the input, then disable
+     * @param ahwmap
+     */
+
     public void initSampling(HardwareMap ahwmap) {
 
         samplingDetector.initVision(ahwmap, constants.CAMERA_AIM_DIRECTION);
 
     }
+
+    /**
+     * By default, we will be looking for just the right two, but in case we want to be able select
+     * which crop view we want, we can use this function.
+     * @param ahwmap
+     * @param cropAngle
+     */
 
     public void initSampling(HardwareMap ahwmap, CameraCropAngle cropAngle) {
 
@@ -135,6 +163,9 @@ public class Robot {
 
     }
 
+    /**
+     * Here, we enable the vision, which means we actively begin to track and capture data
+     */
     public void enableVision() {
         samplingDetector.samplingDetector.enable();
     }

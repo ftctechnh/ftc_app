@@ -14,12 +14,15 @@ public class TestActuator extends SalsaOpMode {
 
     Motor actuator;
 
+    /**
+     * An example class which demonstrates the actuator. It also shows how we can add a single object
+     * like the Motor actuator
+     */
+
     @Override
     public void init() {
-
         robot.initDrivetrain(hardwareMap);
         actuator.init("actuator", hardwareMap);
-
     }
 
     @Override

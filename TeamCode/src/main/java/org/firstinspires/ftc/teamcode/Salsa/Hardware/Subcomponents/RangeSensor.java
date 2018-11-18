@@ -9,6 +9,12 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public abstract class RangeSensor implements DistanceSensor {
 
+    /** This is a slightly modified version of the {com.qualcomm.robotcore.hardware.DistanceSensor} class
+     *  It is meant to interface better with the object oriented nature of the Team Salsa code
+     *  In this case, all of the functions are inherited from the {com.qualcomm.robotcore.hardware.DistanceSensor} class
+     *  The init() function here is meant to HardwareMap() more effectively, without much extra work
+     */
+
     private DistanceSensor rs;
     public HardwareMap hwmap;
 
