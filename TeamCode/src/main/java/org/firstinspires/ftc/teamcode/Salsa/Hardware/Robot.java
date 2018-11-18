@@ -22,7 +22,7 @@ public class Robot {
 
     HardwareMap hwmap = null;
 
-    private Constants constants = new Constants();
+    private Constants constants = null;
 
     public DcMotor leftFront = null;
     public DcMotor leftBack = null;

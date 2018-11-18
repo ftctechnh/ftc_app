@@ -18,7 +18,8 @@ import java.util.List;
  * Created by Victo on 9/10/2018.
  */
 
-public abstract class DogeCVDetector extends OpenCVPipeline{
+public abstract class
+DogeCVDetector extends OpenCVPipeline{
 
     public abstract Mat process(Mat input);
     public abstract void useDefaults();

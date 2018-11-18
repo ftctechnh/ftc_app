@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
  * Created by adityamavalankar on 11/4/18.
  */
 
-public class Constants {
+public abstract class Constants {
 
     //these are the names for the drivetrain motors in the HardwareMap()
     //This allows you to modify them without severe repercussions, and it keeps nomenclature consistent among the various programs
@@ -39,7 +39,11 @@ public class Constants {
     public final String MARKER_DEPOSITER_NAME = "maerkerDepositer";
 
     //Vuforia license key, DO NOT TOUCH!
-    public final String VUFORIA_KEY = "AffveYv/////AAAAGQ5VbB9zQUgjlHWrneVac2MnNgfMDlq6EwI3tyURgRK6CHargOTFidfzKod6GLQwGD4m9MPLkR+0NfUrnY8+o8FqAKcQbrAsjk8ONdkWYTPZDfoBRgDLNWRuB7LU1MOp9KqAWpXBJjvH5JCKF/Hxz+beHfVqdWQ0BVZdgGMXG4yEzLN5AI+4NIkQeLvI7Cwz5pIlksoH+rb/e6+YExoWZbQWhDTiRiemlWjvDM1z2a0kteGDz0wTyHz48IkV4M0YsSQIFKwu3YB2a1vkB9FiRfMrBI+CyInjgNoO8V0EEOtRc6Vqsf3XbF3fGXricZUhl7RIl5M/IkFOgeAZ4ML+JcrjTqfZb2Yh3JNx1me524cK";
+    public final String VUFORIA_KEY = "AffveYv/////AAAAGQ5VbB9zQUgjlHWrneVac2MnNgfMDlq6EwI3tyURgRK6C" +
+            "HargOTFidfzKod6GLQwGD4m9MPLkR+0NfUrnY8+o8FqAKcQbrAsjk8ONdkWYTPZDfoBRgDLNWRuB7LU1MOp9KqAWpXB" +
+            "JjvH5JCKF/Hxz+beHfVqdWQ0BVZdgGMXG4yEzLN5AI+4NIkQeLvI7Cwz5pIlksoH+rb/e6+YExoWZbQWhDTiRiemlWjvDM" +
+            "1z2a0kteGDz0wTyHz48IkV4M0YsSQIFKwu3YB2a1vkB9FiRfMrBI+CyInjgNoO8V0EEOtRc6Vqsf3XbF3fGXricZUhl7RIl5" +
+            "M/IkFOgeAZ4ML+JcrjTqfZb2Yh3JNx1me524cK";
 
 
     //constant numbers meant for autonomous with encoders
@@ -52,5 +56,8 @@ public class Constants {
 
     public final double TICKS_PER_CM = (TICKS_PER_ROTATION)/(WHEEL_CIRCUMFERENCE_CM);
     public final double TICKS_PER_IN = (TICKS_PER_ROTATION)/(WHEEL_CIRCUMFERENCE_IN);
+
+
+    public final int NEVEREST_40_RPM = 160;
 
 }

@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Salsa.Robots;
 
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
+import org.opencv.core.Mat;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 
@@ -12,6 +14,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 public class Asteroid {
 
     public Robot robot = new Robot();
+    public Constants constants;
 
     public void drive(double leftJoystick, double rightJoystick) {
 
@@ -36,6 +39,24 @@ public class Asteroid {
             robot.rightFront.setPower(1);
             robot.rightBack.setPower(-1);
         }
+    }
+
+    public void encoderDriveCM(double cm, double speed) {
+        int timeSec = driveTimeCM(cm, speed);
+        int timeSec_spaced = (int)(timeSec*1.7);
+
+    }
+
+    public int driveTimeCM(double cm, double speed) {
+        double abs_speed = Math.abs(speed * constants.NEVEREST_40_RPM);
+        double abs_distCM = Math.abs(cm);
+
+        double circ = constants.WHEEL_CIRCUMFERENCE_CM;
+        double dist_perMin = (abs_speed * circ);
+        double timeMin = (abs_distCM/dist_perMin);
+        double timeSec = (timeMin*60);
+
+        return (int)timeSec;
     }
 
 }
