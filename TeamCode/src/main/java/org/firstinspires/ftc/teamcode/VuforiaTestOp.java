@@ -12,7 +12,7 @@ public class VuforiaTestOp extends OpMode
     VuforiaFunctions vuforiaFunctions;
     public void init()
     {
-        vuforiaFunctions = new VuforiaFunctions(this);
+        vuforiaFunctions = new VuforiaFunctions(this, hardwareMap);
     }
 
     public void start()
