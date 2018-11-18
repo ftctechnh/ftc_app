@@ -18,6 +18,8 @@ public class PID {
     private double runningIntegral;
     private double lastRegistereedTime;
     private Telemetry tel;
+    private Logger l = new Logger("PID");
+
 
     private Telemetry.Item constants, telIntegral,telProportional,telRunningIntegral,telDerivative,telClampedOutput,telRawOutput,telError,telTimeDiff;
 
@@ -40,6 +42,7 @@ public class PID {
         this.telRawOutput = tel.addData("Raw out","N/A");
         this.telClampedOutput = tel.addData("clamp out","N/A");
         this.tel.update();
+
     }
 
     public double getPreviousError() {
@@ -65,6 +68,16 @@ public class PID {
         double rawOutput = proportional + derivative + runningIntegral;
         double clampedOutput =  clampValue(rawOutput,-1.0,1.0);
 
+
+
+        l.logData("Proportional",proportional);
+        l.logData("telIntegral",newIntegral);
+        l.logData("telRunningIntegral",runningIntegral);
+        l.logData("telDerivative",derivative);
+        l.logData("telRawOutput",rawOutput);
+        l.logData("telClampedOutput",clampedOutput);
+        l.logData("telError",error);
+        l.logData("telTimeDiff",timeDifference);
 
         this.telProportional.setValue(proportional);
         this.telIntegral.setValue(newIntegral);
