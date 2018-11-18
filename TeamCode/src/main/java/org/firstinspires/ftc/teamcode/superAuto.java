@@ -52,11 +52,10 @@ abstract public class superAuto extends LinearOpMode {
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor motorConL;
-    DcMotor motorConR;
-    DcMotor motorFlip;
+    DcMotor mineralLiftL;
+    DcMotor mineralLiftR;
+    Servo servo;
 
-    static final float ridgeDepth = 4;
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
     static final int gyroFlipped = -1;
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
@@ -68,7 +67,6 @@ abstract public class superAuto extends LinearOpMode {
     Acceleration gravity;
 
     ModernRoboticsI2cRangeSensor rangeSensor;
-    RelicRecoveryVuMark vuMark;
 
     VuforiaTrackables targetsRoverRuckus;
     List<VuforiaTrackable> allTrackables;
@@ -110,20 +108,19 @@ abstract public class superAuto extends LinearOpMode {
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
 
-        motorFlip = hardwareMap.dcMotor.get("motorFlip");
-        motorFlip.setDirection(DcMotor.Direction.FORWARD);
         motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorFR = hardwareMap.dcMotor.get("motorFR");
-        motorFR.setDirection(DcMotor.Direction.FORWARD);
+        motorFR.setDirection(DcMotor.Direction.REVERSE);
         motorBL = hardwareMap.dcMotor.get("motorBL");
-        motorBL.setDirection(DcMotor.Direction.REVERSE);
+        motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
-        motorConL = hardwareMap.dcMotor.get("motorConL");
-        motorConL.setDirection(DcMotor.Direction.FORWARD);
-        motorConR = hardwareMap.dcMotor.get("motorConR");
-        motorConR.setDirection(DcMotor.Direction.FORWARD);
+        mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
+        mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
+        mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
+        mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
+        servo = hardwareMap.servo.get("servo");
     }
 
     void composeTelemetry() {
@@ -196,109 +193,6 @@ abstract public class superAuto extends LinearOpMode {
                                         + gravity.zAccel * gravity.zAccel));
                     }
                 });
-    }
-
-
-    void congfigVuforia() {
-         final String TAG = "Vuforia Navigation Sample";
-        OpenGLMatrix lastLocation = null;
-        VuforiaLocalizer vuforia;
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "AYhHUgX/////AAABmTO0g2PsdUqpg5xo" +
-                "96O7OkOB7qrwOjE24wV71lIm/MF9g96awd677rj7LrgQKUJAewgWkAAxn1MUJtUyiq" +
-                "9iesjKF+QNXlKr5qCAb69hI268sYjjCJ+PqVBtMrlcIG1F4l2osl9zIk9tYAYfLXKl" +
-                "T351h1yRW1AqAdHJaHwt861ztrh4EW/1WjOV3/yT4SDtrJivhfmU0c51IqPUEJ0xqbWFr2saxvS/cSkH4e+hFIImM/jIw5JkaizeznuFTA" +
-                "TnWTq9Spp/EhPPaQXJtScNP3DDaNDdfiqT9opwsxuQlEe1YF19sHjtenGD7/PcUlQXVS+VKbxaSqd/Cnq4+/3bOuhNzFoTVbBKZ16DQ9EZeCJM";
-
-        //PUT NEW KEY HERE^^^^^
-         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-         vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-            VuforiaTrackables stonesAndChips = vuforia.loadTrackablesFromAsset("FTC_2016-17");
-            VuforiaTrackable redClose2Ramp = stonesAndChips.get(3);
-            redClose2Ramp.setName("RedTarget");  // gears
-
-            VuforiaTrackable redFarFromRamp = stonesAndChips.get(1);
-            redFarFromRamp.setName("RedTarget");  // tools
-
-            VuforiaTrackable blueFarFromRamp = stonesAndChips.get(2);
-            blueFarFromRamp.setName("BlueTarget");  // legos
-
-            VuforiaTrackable blueClose2Ramp = stonesAndChips.get(0);
-            blueClose2Ramp.setName("BlueTarget");  // wheels
-
-            /** For convenience, gather together all the trackable objects in one easily-iterable collection */
-            List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-            allTrackables.addAll(stonesAndChips);
-            float mmPerInch        = 25.4f;
-            float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
-            float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
-            OpenGLMatrix redClose2RampLoc = OpenGLMatrix
-                    /* Then we translate the target off to the RED WALL. Our translation here
-                    is a negative translation in X.*/
-                    .translation(-mmFTCFieldWidth/2, -298.333f, 0)
-                    .multiplied(Orientation.getRotationMatrix(
-                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
-                            AxesReference.EXTRINSIC, AxesOrder.XZX,
-                            AngleUnit.DEGREES, 90, 90, 0));
-            redClose2Ramp.setLocation(redClose2RampLoc);
-            RobotLog.ii(TAG, "Red Close to Ramp=%s", format(redClose2RampLoc));
-
-            OpenGLMatrix redFarFromRampLoc = OpenGLMatrix
-                    /* Then we translate the target off to the RED WALL. Our translation here
-                    is a negative translation in X.*/
-                    .translation(-mmFTCFieldWidth/2, 895, 0)
-                    .multiplied(Orientation.getRotationMatrix(
-                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
-                            AxesReference.EXTRINSIC, AxesOrder.XZX,
-                            AngleUnit.DEGREES, 90, 90, 0));
-            redFarFromRamp.setLocation(redFarFromRampLoc);
-            RobotLog.ii(TAG, "Red Far From Ramp=%s", format(redFarFromRampLoc));
-
-            OpenGLMatrix blueClose2RampLoc = OpenGLMatrix
-                    /* Then we translate the target off to the RED WALL. Our translation here
-                    is a negative translation in X.*/
-                    .translation(298.333f,-mmFTCFieldWidth/2,0)
-                    .multiplied(Orientation.getRotationMatrix(
-                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
-                            AxesReference.EXTRINSIC, AxesOrder.XZX,
-                            AngleUnit.DEGREES, 90, 0, 0));
-            blueClose2Ramp.setLocation(blueClose2RampLoc);
-            RobotLog.ii(TAG, "Blue Close To Ramp=%s", format(blueClose2RampLoc));
-
-            /*
-             * To place the Stones Target on the Blue Audience wall:
-             * - First we rotate it 90 around the field's X axis to flip it upright
-             * - Finally, we translate it along the Y axis towards the blue audience wall.
-             */
-            OpenGLMatrix blueFarFromRampLoc= OpenGLMatrix
-                    /* Then we translate the target off to the Blue Audience wall.
-                    Our translation here is a positive translation in Y.*/
-                    .translation(-895, mmFTCFieldWidth/2, 0)
-                    .multiplied(Orientation.getRotationMatrix(
-                            /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
-                            AxesReference.EXTRINSIC, AxesOrder.XZX,
-                            AngleUnit.DEGREES, 90, 0, 0));
-            blueFarFromRamp.setLocation(blueFarFromRampLoc);
-            RobotLog.ii(TAG, "Blue Far From Ramp =%s", format(blueFarFromRampLoc));
-            OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                    .translation(mmBotWidth/2,0,0)
-                    .multiplied(Orientation.getRotationMatrix(
-                            AxesReference.EXTRINSIC, AxesOrder.YZY,
-                            AngleUnit.DEGREES, -90, 0, 0));
-            RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
-            ((VuforiaTrackableDefaultListener)redClose2Ramp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-            ((VuforiaTrackableDefaultListener)redFarFromRamp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-            ((VuforiaTrackableDefaultListener)blueClose2Ramp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-            ((VuforiaTrackableDefaultListener)blueFarFromRamp.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-
-            /** Wait for the game to begin */
-            /** Start tracking the data sets we care about. */
-            stonesAndChips.activate();
-
-            float robotX;
-            float robotY;
-            float robotBearing;
     }
 
     void configVuforiaRoverRuckus() {
@@ -517,70 +411,6 @@ abstract public class superAuto extends LinearOpMode {
 
     }
 
-    void cryptoState(int targetHeading, float basePosx, float basePosy) {
-        runtime.reset();
-
-        // Grab first distance
-        double currentDist = rangeSensor.getDistance(DistanceUnit.CM);
-        double previousDist = currentDist;
-
-        // Red game
-        if (iAmRed) {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                vuMark = RelicRecoveryVuMark.RIGHT;
-            }
-            boxOrder[0] = RelicRecoveryVuMark.UNKNOWN;
-            boxOrder[1] = RelicRecoveryVuMark.RIGHT;
-            boxOrder[2] = RelicRecoveryVuMark.CENTER;
-            boxOrder[3] = RelicRecoveryVuMark.LEFT;
-        }
-        // Blue game
-        else {
-            if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-                vuMark = RelicRecoveryVuMark.LEFT;
-            }
-            boxOrder[0] = RelicRecoveryVuMark.LEFT;
-            boxOrder[1] = RelicRecoveryVuMark.CENTER;
-            boxOrder[2] = RelicRecoveryVuMark.RIGHT;
-            boxOrder[3] = RelicRecoveryVuMark.UNKNOWN;
-        }
-
-        // Simple state machine
-        int i = 0;
-        boolean go = true;
-        RelicRecoveryVuMark state = boxOrder[i];
-
-        // While not our state do ...
-        while (go) {
-
-            // Move & take reading
-            adjustHeading(targetHeading, basePosx, basePosy);
-            previousDist = currentDist;
-            currentDist = rangeSensor.getDistance(DistanceUnit.CM);
-
-            // Found a divider, change state
-            if ((currentDist - previousDist) >= 4) {
-                i++;
-                state = boxOrder[i];
-                if (state == vuMark) {
-                    go = false;
-                }
-            }
-
-            // Debugging info
-            telemetry.addData("Previous Distance after read: ", previousDist);
-            telemetry.addData("Current Distance after read: ", currentDist);
-            telemetry.addData("State", state);
-            telemetry.addData("i", i);
-            telemetry.update();
-
-        }
-        telemetry.addData("We have made it this far... ", state);
-        // Stop the robot
-        sR();
-
-    }
-
     void followHeading(int targetHeading, double time, float basePosx, float basePosy) {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
@@ -608,18 +438,6 @@ abstract public class superAuto extends LinearOpMode {
         }
     }
 
-    void flip() {
-        distCorrector(20);
-        motorFlip.setPower(.5d);
-        Wait(1d);
-        motorFlip.setPower(0d);
-        Wait(1);
-        motorFlip.setPower(-.5d);
-        Wait(.5);
-        motorFlip.setPower(0d);
-        distCorrector(15);
-        distCorrector(25);
-    }
     void fancyGyroPivot (double target) {
 
         //First set up variables
@@ -772,43 +590,6 @@ abstract public class superAuto extends LinearOpMode {
         motorBR.setPower(0);
     }
 
-    void setUpVuforia(){
-
-        VuforiaLocalizer vuforia;
-
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = "Ac+mNz7/////AAAAGarZm7vF6EvSku/Zvonu0Dtf199jWYNFXcXymm3KQ4XngzMBntb" +
-                    "NeMXt0qCPqACXugivtrYvwDU3VhMDRJwlwdMi4C2F6Su/8LZBrPIFtxUtr7MMagebQM/+4CSUIOQQdKNpdBttrX8yWM" +
-                    "SrdyfnkNhh/vhXpQd7pXWwJ02UcnEVT1CiLeyTcl+bJUo1+xNonNaNEs8861zxmtO2TBtf9gyXhunlM6lpBJjC6nYWQ3" +
-                    "BM2DOODFNz2EU3F3N1WxnOvCERQ+c934JKPajgCrNs5dquSo1wpcr0Kkf3u29hzK0DornR8s9j03g8Ea7q5cYN8WLn/e" +
-                    "q1dUOFznng+6y2/7/fvw9wrzokOP9nP1QujkUN";
-
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        parameters.useExtendedTracking = false;
-        vuforia = ClassFactory.createVuforiaLocalizer(parameters);
-
-        VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
-        VuforiaTrackable relicTemplate = relicTrackables.get(0);
-        relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-
-        relicTrackables.activate();
-        int timeRecongnize=0;
-
-        for(int t = 0; t<2e6; t++) {
-            timeRecongnize = t;
-            vuMark = RelicRecoveryVuMark.from(relicTemplate);
-            if (vuMark != RelicRecoveryVuMark.UNKNOWN){
-                break;
-            }
-        }
-        telemetry.addData("VuMark", "%s visible", vuMark);
-        telemetry.addData("Time Recognize", "%d", timeRecongnize);
-        telemetry.update();
-    }
-
     void distCorrector(double trgDistance) {
 
         double curDistance = rangeSensor.getDistance(DistanceUnit.CM);
@@ -859,32 +640,5 @@ abstract public class superAuto extends LinearOpMode {
         //    }
         }
         sR();
-    }
-
-
-    void jewel(){
-
-        // J e w e l s
-
-        boolean iSeeBlue = false;
-        boolean iSeeRed = false;
-
-
-        telemetry.update();
-
-        telemetry.addLine()
-                .addData("iSeeRed", "%b", iSeeRed)
-                .addData("iSeeBlue", "%b", iSeeBlue)
-                .addData ( "iSeeRed && iAmRed", "%b", (iSeeRed && iAmRed))
-                .addData ( "iSeeBlue && iAmBlue", "%b", (iSeeBlue && iAmBlue))
-                .addData ( "Final Boolean", "%b", ((iSeeRed && iAmRed) || (iSeeBlue && iAmBlue)));
-
-        telemetry.update();
-
-        Wait(1f);
-
-
-        telemetry.update();
-
     }
 }
