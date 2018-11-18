@@ -1,76 +1,23 @@
-package org.firstinspires.ftc.teamcode.Salsa.Robots;
+package org.firstinspires.ftc.teamcode.Salsa.Methods;
+
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
 import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
-import org.opencv.core.Mat;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
 
 /**
- * Created by adityamavalankar on 11/5/18.
+ * Created by adityamavalankar on 11/17/18.
  */
 
-public abstract class Asteroid extends Robot {
+public abstract class SalsaLinearOpMode extends LinearOpMode {
 
     public Robot robot = new Robot();
     public Constants constants;
-    private LinearOpMode linearOpMode;
-    private OpMode opMode;
     private ElapsedTime runtime = new ElapsedTime();
-    private Telemetry telemetry;
-
-
-    public void drive() {
-
-        drive(opMode.gamepad1.left_stick_y, opMode.gamepad1.right_stick_y);
-    }
-
-    public void drive(double leftJoystick, double rightJoystick) {
-
-        robot.leftBack.setPower(leftJoystick);
-        robot.leftFront.setPower(leftJoystick);
-        robot.rightFront.setPower(rightJoystick);
-        robot.rightBack.setPower(rightJoystick);
-
-    }
-
-    public void liftHanger(double g2_rightJoystick) {
-
-     robot.liftSlides.setPower(g2_rightJoystick * constants.LIFT_SLIDES_REVERSE_CONSTANT);
-
-    }
-
-    public void liftHanger() {
-
-        liftHanger(opMode.gamepad2.right_stick_y);
-    }
-
-    public void mecanumDrive(boolean dpad_left, boolean dpad_right) {
-
-        if (dpad_left) {
-            robot.leftBack.setPower(-1);
-            robot.leftFront.setPower(1);
-            robot.rightFront.setPower(-1);
-            robot.rightBack.setPower(1);
-        }
-        else if (dpad_right) {
-            robot.leftBack.setPower(1);
-            robot.leftFront.setPower(-1);
-            robot.rightFront.setPower(1);
-            robot.rightBack.setPower(-1);
-        }
-    }
-
-    public void mecanumDrive() {
-
-        mecanumDrive(opMode.gamepad1.dpad_left, opMode.gamepad1.dpad_right);
-    }
 
     public void setTargetPosition(int target) {
         robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + target);
@@ -98,7 +45,7 @@ public abstract class Asteroid extends Robot {
         setPower(Math.abs(speed));
         runtime.reset();
 
-        while(linearOpMode.opModeIsActive() && (runtime.seconds() < timeSec) && robot.leftFront.isBusy()
+        while(this.opModeIsActive() && (runtime.seconds() < timeSec) && robot.leftFront.isBusy()
                 && robot.leftBack.isBusy() && robot.rightFront.isBusy() && robot.rightBack.isBusy()) {
             telemetry.addLine("Robot in Encoder Drive");
             telemetry.addData("Target Distance (cm)", cm);
@@ -129,5 +76,4 @@ public abstract class Asteroid extends Robot {
 
         return (int)(timeSec*constants.ENC_DRIVE_TIME_MULTIPLIER);
     }
-
 }

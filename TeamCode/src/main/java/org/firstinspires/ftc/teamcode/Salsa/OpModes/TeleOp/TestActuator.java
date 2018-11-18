@@ -1,20 +1,17 @@
-package org.firstinspires.ftc.teamcode.Salsa.OpModes;
+package org.firstinspires.ftc.teamcode.Salsa.OpModes.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Salsa.Hardware.Motor;
-import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
-import org.firstinspires.ftc.teamcode.Salsa.Robots.Asteroid;
+import org.firstinspires.ftc.teamcode.Salsa.Hardware.Subcomponents.Motor;
+import org.firstinspires.ftc.teamcode.Salsa.Methods.SalsaOpMode;
 
 /**
  * Created by adityamavalankar on 11/15/18.
  */
 
 @TeleOp(name = "Test Actuator")
-public class TestActuator extends OpMode {
+public class TestActuator extends SalsaOpMode {
 
-    Asteroid robot;
     Motor actuator;
 
     @Override
@@ -28,7 +25,7 @@ public class TestActuator extends OpMode {
     @Override
     public void loop() {
 
-        robot.drive();
+        drive();
         actuatorMove();
 
     }

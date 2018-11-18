@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Salsa.Hardware;
+package org.firstinspires.ftc.teamcode.Salsa.Hardware.Subcomponents;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 

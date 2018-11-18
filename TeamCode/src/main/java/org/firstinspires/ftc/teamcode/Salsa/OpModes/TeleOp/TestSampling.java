@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Salsa.OpModes;
+package org.firstinspires.ftc.teamcode.Salsa.OpModes.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
