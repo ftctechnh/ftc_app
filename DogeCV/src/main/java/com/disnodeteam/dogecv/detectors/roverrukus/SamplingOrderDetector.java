@@ -55,6 +55,8 @@ public class SamplingOrderDetector extends DogeCVDetector {
     private GoldLocation currentOrder = GoldLocation.UNKNOWN;
     private GoldLocation lastOrder    = GoldLocation.UNKNOWN;
     private boolean      isFound      = false;
+    public boolean positionCamLeft = false;
+    public boolean positionCamRight = false;
 
     // Create the mats used
     private Mat workingMat  = new Mat();
@@ -212,7 +214,7 @@ public class SamplingOrderDetector extends DogeCVDetector {
                         new Scalar(255, 255, 255), 2);
                 Imgproc.putText(displayMat,
                         "Silver: " + String.format("Score %.2f ", score) ,
-                        new Point(rect.x - 5, rect.y - 10),
+                        new Point(rect.x - 5, rect.y - 15),
                         Core.FONT_HERSHEY_PLAIN,
                         1.3,
                         new Scalar(255, 255, 255),
@@ -245,7 +247,57 @@ public class SamplingOrderDetector extends DogeCVDetector {
             isFound = true;
             lastOrder = currentOrder;
 
-        }else{
+        } else if (positionCamRight || positionCamLeft) {
+
+            if(choosenWhiteRect.get(0) != null && (choosenWhiteRect.get(1) != null || chosenYellowRect != null)) {
+
+                if (chosenYellowRect == null) {
+                    if(positionCamLeft) {
+                        currentOrder = GoldLocation.RIGHT;
+                    }
+
+                    else if(positionCamRight) {
+                        currentOrder = GoldLocation.LEFT;
+                    }
+                }
+
+                else if (chosenYellowRect != null) {
+
+                    if (positionCamLeft) {
+
+                        Rect rect = choosenWhiteRect.get(0);
+                        if (chosenYellowRect.x > rect.x) {
+                            currentOrder = GoldLocation.CENTER;
+                        }
+                        else if (chosenYellowRect.x < rect.x) {
+                            currentOrder = GoldLocation.LEFT;
+                        }
+
+                    }
+
+                    else if (positionCamRight) {
+
+                        Rect rect = choosenWhiteRect.get(0);
+                        if (chosenYellowRect.x > rect.x) {
+                            currentOrder = GoldLocation.RIGHT;
+                        }
+                        else if (chosenYellowRect.x < rect.x) {
+                            currentOrder = GoldLocation.CENTER;
+                        }
+                    }
+
+
+                }
+
+            }
+
+            else {
+                currentOrder = SamplingOrderDetector.GoldLocation.UNKNOWN;
+                isFound = false;
+            }
+        }
+
+        else {
             currentOrder = SamplingOrderDetector.GoldLocation.UNKNOWN;
             isFound = false;
         }
@@ -267,6 +319,23 @@ public class SamplingOrderDetector extends DogeCVDetector {
             addScorer(perfectAreaScorer);
         }
         addScorer(ratioScorer);
+    }
+
+    public void setCroppedAngle(boolean useRight) {
+        if (useRight) {
+            positionCamRight = true;
+            positionCamLeft = false;
+        }
+
+        else if (useRight == false) {
+            positionCamRight = false;
+            positionCamLeft = true;
+        }
+
+        else {
+            positionCamLeft = false;
+            positionCamRight = false;
+        }
     }
 
     /**

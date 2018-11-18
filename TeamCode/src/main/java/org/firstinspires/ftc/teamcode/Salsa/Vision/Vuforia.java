@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Salsa.Hardware.Robot;
 public class Vuforia {
 
     public HardwareMap hwmap = null;
-    public Constants constants = new Constants();
+    public Constants constants;
     public Robot robot = new Robot();
     public OpenGLMatrix lastLocation = null;
     public VuforiaLocalizer vuforia = null;

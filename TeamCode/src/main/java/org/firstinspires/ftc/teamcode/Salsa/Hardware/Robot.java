@@ -1,18 +1,20 @@
 package org.firstinspires.ftc.teamcode.Salsa.Hardware;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorREV2mDistance;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Salsa.Constants;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.teamcode.Salsa.Vision.CameraCropAngle;
+import org.firstinspires.ftc.teamcode.Salsa.Vision.SamplingDetector;
 
 /**
  * Created by adityamavalankar on 11/4/18.
@@ -20,9 +22,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 public class Robot {
 
+
+    /** The Robot class is a class meant to combine all of the major hardware and HardwareMap() of all of the functions
+     *  in one file. Hence, later we will not have to modify any of the hardware, as we have made all of the hardware
+     *  for the pre-configured hardware. Please refer to the Google Docs file at {https://goo.gl/yfN7XZ} to see al of the
+     *  hardware and its configuration on the robot.
+     */
+
     HardwareMap hwmap = null;
 
-    private Constants constants = new Constants();
+    public Constants constants = null;
 
     public DcMotor leftFront = null;
     public DcMotor leftBack = null;
@@ -47,6 +56,17 @@ public class Robot {
 
     public Servo intakeLifter = null;
     public Servo markerDepositer = null;
+
+    public SamplingDetector samplingDetector = new SamplingDetector();
+
+
+    /**
+     * Each of these init functions for the hardware is meant to be able to modularize the initiation of the hardware
+     * This is so that if we want just a drivetrain, we get just a drivetrain
+     * @param ahwmap
+     *
+     * The ahwmap object is so that we can have an OpMode-specific function without it being an OpMode
+     */
 
     public void initDrivetrain(HardwareMap ahwmap) {
 
@@ -118,6 +138,59 @@ public class Robot {
 
     }
 
+    /**
+     * The next six functions are meant for the Computer Vision sampling of the three objects
+     * First, we init, then enable, then take the input, then disable
+     * @param ahwmap
+     */
+
+    public void initSampling(HardwareMap ahwmap) {
+
+        samplingDetector.initVision(ahwmap, constants.CAMERA_AIM_DIRECTION);
+
+    }
+
+    /**
+     * By default, we will be looking for just the right two, but in case we want to be able select
+     * which crop view we want, we can use this function.
+     * @param ahwmap
+     * @param cropAngle
+     */
+
+    public void initSampling(HardwareMap ahwmap, CameraCropAngle cropAngle) {
+
+        samplingDetector.initVision(ahwmap, cropAngle);
+
+    }
+
+    /**
+     * Here, we enable the vision, which means we actively begin to track and capture data
+     */
+    public void enableVision() {
+        samplingDetector.samplingDetector.enable();
+    }
+
+    public SamplingOrderDetector.GoldLocation getSamplingOrder() {
+
+        SamplingOrderDetector.GoldLocation order;
+        order = samplingDetector.samplingDetector.getCurrentOrder();
+
+        return order;
+    }
+
+    public SamplingOrderDetector.GoldLocation getLastOrder() {
+
+        SamplingOrderDetector.GoldLocation lastOrder;
+        lastOrder = samplingDetector.samplingDetector.getLastOrder();
+
+        return lastOrder;
+    }
+
+    public void disableVision() {
+        samplingDetector.samplingDetector.disable();
+    }
+
+
     public void initAll(HardwareMap ahwmap) {
 
         initDrivetrain(ahwmap);
@@ -125,6 +198,7 @@ public class Robot {
         initWebcam(ahwmap);
         initServos(ahwmap);
         initMotors(ahwmap);
+        initSampling(ahwmap);
     }
 
     public void sleep(int ms) {
