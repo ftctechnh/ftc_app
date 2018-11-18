@@ -35,6 +35,7 @@ package org.firstinspires.ftc.teamcode.opmodes;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robotutil.Logger;
 import org.firstinspires.ftc.teamcode.tasks.DriveTrainTaskMecanum;
 import org.firstinspires.ftc.teamcode.tasks.DumperTask;
 import org.firstinspires.ftc.teamcode.tasks.HangTask;
@@ -48,22 +49,27 @@ public class HangTele extends LinearOpMode {
     private DumperTask dumperTask;
     private SweeperTask sweeperTask;
     private Telemetry.Item opmodeStatus = telemetry.addData("STATUS","CONSTRUCTING");
+    private Logger l = new Logger("TELEOP");
 
     public void runOpMode() throws InterruptedException{
         opmodeStatus.setValue("INITIALIZING");
         telemetry.update();
+        l.log("initializing");
 
         initialize();
         opmodeStatus.setValue("READY");
         telemetry.update();
+        l.log("waiting for start");
 
         waitForStart();
         if(opModeIsActive()){
             startAllThreads();
+            l.log("started threads");
         }
         while(opModeIsActive() && !isStopRequested()) {
             opmodeStatus.setValue("RUNNING");
             telemetry.update();
+
         }
         stopAllThreads();
     }
@@ -80,6 +86,7 @@ public class HangTele extends LinearOpMode {
         dumperTask.stopThread();
         opmodeStatus.setValue("STOPPED");
         telemetry.update();
+        l.log("stopped");
     }
     private void initialize() {
         hangTask = new HangTask(this);
