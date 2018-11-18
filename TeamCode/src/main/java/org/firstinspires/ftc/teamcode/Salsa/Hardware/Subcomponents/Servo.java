@@ -7,9 +7,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Created by adityamavalankar on 11/5/18.
  */
 
-public abstract class Servo {
+public abstract class Servo implements com.qualcomm.robotcore.hardware.Servo{
 
-    public com.qualcomm.robotcore.hardware.Servo s;
+    private com.qualcomm.robotcore.hardware.Servo s;
     public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {

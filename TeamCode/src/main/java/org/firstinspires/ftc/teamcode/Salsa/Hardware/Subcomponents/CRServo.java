@@ -6,9 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  * Created by adityamavalankar on 11/5/18.
  */
 
-public abstract class CRServo {
+public abstract class CRServo implements com.qualcomm.robotcore.hardware.CRServo{
 
-    public com.qualcomm.robotcore.hardware.CRServo crs;
+    private com.qualcomm.robotcore.hardware.CRServo crs;
     public HardwareMap hwmap;
 
     public void init(String hardwareName, HardwareMap inputMap) {
