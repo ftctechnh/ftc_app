@@ -338,7 +338,25 @@ public class ParadeBot
 
         stopAllMotors();
     }
+    public void pivot(double encoder)//Utilizes two motors at a time; spins in place
+    {
+        resetEncoders();
 
+        //It pivots in the direction of how to unit circle spins
+        if (encoder < 0) //Pivot Clockwise
+        {
+            driveRightOne.setPower(-.8);
+            driveLeftOne.setPower(-.8);
+
+        } else //CounterClockwise
+        {
+            driveRightOne.setPower(.8);
+            driveLeftOne.setPower(.8);
+        }
+
+        stopAllMotors();
+        stopDriveMotors();
+    }
     public void pivot(float degrees)
     {
         pivot(degrees, .8);

@@ -8,15 +8,16 @@ public class PictureFirstAuto extends LinearOpMode
 {
     ParadeBot walle;
     VuforiaFunctions vuforiaFunctions;
-   public void runOpMode()
+    public void runOpMode()
     {       walle = new ParadeBot(hardwareMap, this);
-            vuforiaFunctions = new VuforiaFunctions(this);
+            vuforiaFunctions = new VuforiaFunctions(this, hardwareMap);
             double yawAngle = 90.0;
+            double fudgeFactor = 4;
             double yawAngleTurn;
             waitForStart();
             walle.driveStraight_In(10,.6);
             walle.pivot(-40,-.6);
-            while (walle.getDistFromFront_In() > 24)
+            while (walle.getDistFromFront_In() > 18)
                 walle.driveStraight_In(6);
 
         {
@@ -36,7 +37,7 @@ public class PictureFirstAuto extends LinearOpMode
                 else
                 {
                     telemetry.addData("Such target is not in my sight!",null);
-                    walle.pivot(-90, .6);
+                    walle.pivot(-45, .8);
                 }
 
                 telemetry.update();
@@ -45,20 +46,19 @@ public class PictureFirstAuto extends LinearOpMode
 
         double frontDist, rightDist;
 
-
-        while (walle.getDistFromFront_In() > 18)
+        while(walle.getDistFromFront_In() > 18)
         {
             sleep(400);
             frontDist = walle.getDistFromFront_In();
             if(frontDist < 12)
             {
                 walle.stopAllMotors();
-                break;
-            }
+                break;      }
             else
             {
-                telemetry.addData("Going forawrd 9", null);
+                telemetry.addData("Going forward 9", null);
                 walle.driveStraight_In(11);
+                sleep(400);
             }
 
             telemetry.addData("front Dist: ", frontDist);
@@ -66,29 +66,32 @@ public class PictureFirstAuto extends LinearOpMode
             if (frontDist > 18)
             {
                 rightDist = walle.getDistFromRight_In();
-                telemetry.addData("frontDist>18", null);
-                telemetry.addData("leftDist ", rightDist);
-                if (rightDist < 4)
+                telemetry.addData("front Dist>18", null);
+                telemetry.addData("left Dist ", rightDist);
+                sleep(400);
+                if (rightDist < 4+ fudgeFactor)
                 {
-                    telemetry.addData("leftdist < 4", null);
-                    walle.pivot(-15);
+                    telemetry.addData("left dist < 4", null);
+                    walle.pivot(-7, .8);
                     walle.driveStraight_In(11);
-                    walle.pivot(15);
+                    walle.pivot(7, .8);
+                    sleep(400);
                 }
-                else if (rightDist > 7)
+                else if (rightDist > 7 + fudgeFactor)
                 {
-                    telemetry.addData("leftdist > 7", null);
-                    walle.pivot(15);
+                    telemetry.addData("left dist > 7", null);
+                    walle.pivot(7, .8);
                     walle.driveStraight_In(11);
-                    walle.pivot(-15);
+                    walle.pivot(7, .8);
+                    sleep(400);
                 }
             }
             telemetry.update();
             while(!gamepad1.a)
             {}
         }
-
         telemetry.addData("Stopped", null);
+        sleep(400);
         telemetry.update();
         while (!isStopRequested())
         {
