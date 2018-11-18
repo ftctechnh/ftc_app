@@ -43,8 +43,8 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             // DRIVING SECTION!!!! ----------------------------------------------------------------
-            drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
-            strafe = gamepad1.left_stick_x;
+            drive = gamepad1.left_stick_y;
+            strafe = -gamepad1.left_stick_x;// Negative because the gamepad is weird
             rotate = gamepad1.right_stick_x;
  /*
             frontMax = Math.max(Math.abs(drive + strafe + rotate), Math.abs(drive - strafe - rotate));
