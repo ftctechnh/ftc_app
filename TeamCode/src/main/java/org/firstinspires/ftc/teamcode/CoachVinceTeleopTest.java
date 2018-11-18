@@ -61,7 +61,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             robot.rightFrontDrive.setPower(moveScaling * (drive - strafe - rotate)); //= drive - strafe - rotate;
             robot.rightRearDrive.setPower(moveScaling * (drive + strafe - rotate)); //= drive + strafe - rotate;
             */
-            moveBot(drive, rotate, strafe,0.5);
+            moveBot(drive, rotate, strafe,0.3);
 
             // LIFTING ARM SECTION!!!! --------------------------------------------------------
 
@@ -141,16 +141,16 @@ public class CoachVinceTeleopTest extends LinearOpMode {
 
 
         // Find the maximum value of the inputs and normalize
-        //frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
-        //rearMax = Math.max(Math.abs((float)drive - (float)strafe + (float)rotate), Math.abs((float)drive + (float)strafe - (float)rotate));
-        //maxDrive = Math.max(frontMax, rearMax);
-        //maxDrive = (float) Math.max(maxDrive,(float)DRIVE_SPEED);
-        //drive = drive/maxDrive;
-        //strafe = strafe/maxDrive;
-        //rotate = rotate/maxDrive;
+        frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
+        rearMax = Math.max(Math.abs((float)drive - (float)strafe + (float)rotate), Math.abs((float)drive + (float)strafe - (float)rotate));
+        maxDrive = Math.max(frontMax, rearMax);
+        maxDrive = (float) Math.max(maxDrive,(float)scaleFactor);
+        drive = drive/maxDrive;
+        strafe = strafe/maxDrive;
+        rotate = rotate/maxDrive;
+
+/*
         //calculate motor powers
-
-
         //double scaleFactor = .7; // Max autonomous speed of the robot
         double tmpScale = 1;
         // Ensuring we don't have a divide by zero error
@@ -196,7 +196,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         if (tmpScale < scaleFactor) {
             scaleFactor = tmpScale;
         }
-
+*/
 
         robot.leftFrontDrive.setPower(scaleFactor*(drive + strafe) + rotate);
         robot.leftRearDrive.setPower(scaleFactor*(drive - strafe) + rotate);
