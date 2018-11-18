@@ -14,7 +14,7 @@ public class DriveTrain {
     private Motor lfDrive, rfDrive, lbDrive, rbDrive;
     private Motors driveMotors;
     private IMU imu;
-    private Logger l;
+    private Logger l = new Logger("Drive Train");
 
     // PID Values (kp, ki, kd, minError)
     private static final HashMap<String, Double> PID_DRIVE = new HashMap<String, Double>() {{
@@ -24,11 +24,12 @@ public class DriveTrain {
         put("minError", Values.TICKS_PER_INCH_FORWARD * 0.5);
     }};
     private static final HashMap<String, Double> PID_ROTATE = new HashMap<String, Double>() {{
-        put("kp", 1.0 / 90.0);
+        put("kp", 1.0 / 45.0);
+//        put("kp", 1.0 / 90.0);
         put("ki", 0.0);
         put("kd", 0.0);
         put("minError", 2.0);
-        put("minPower", 0.2);
+        put("minPower", 0.4);
     }};
     private static final HashMap<String, Double> PID_STRAFE = new HashMap<String, Double>() {{
         put("kp", 1.0 / (6 * Values.TICKS_PER_INCH_STRAFE));
@@ -41,7 +42,6 @@ public class DriveTrain {
         this.opMode = opMode;
         initMotors();
         initIMU();
-        this.l = new Logger("Drive Train");
     }
 
     private void initMotors() {
@@ -65,12 +65,14 @@ public class DriveTrain {
         this.driveMotors = new Motors(new Motor[]{lfDrive, rfDrive, lbDrive, rbDrive});
 
         l.log("Motors initialized!");
+        l.lineBreak();
     }
 
     private void resetMotors() {
         l.log("Motors reset");
         driveMotors.resetEncoders();
         driveMotors.useEncoders();
+        l.lineBreak();
     }
 
     private void initIMU() {
@@ -78,6 +80,7 @@ public class DriveTrain {
         BNO055IMU adaImu = opMode.hardwareMap.get(BNO055IMU.class, "imu");
         imu = new IMU(adaImu);
         l.log("IMU Initialized!");
+        l.lineBreak();
     }
 
     private double fixAngle(double angle) {
@@ -174,6 +177,7 @@ public class DriveTrain {
         stopAll();
 
         l.log("Finished driving!");
+        l.lineBreak();
     }
 
     public void strafe(Direction direction, double inches, double timeoutS) {
@@ -215,6 +219,7 @@ public class DriveTrain {
         stopAll();
 
         l.log("Finished strafing!");
+        l.lineBreak();
     }
 
     public void rotate(Direction direction, double angle, double timeoutS) {
@@ -238,6 +243,7 @@ public class DriveTrain {
         l.logData("Ki", PID_ROTATE.get("ki"));
         l.logData("Kd", PID_ROTATE.get("kd"));
         l.logData("minError", minError);
+        l.logData("minPower", minPower);
 
         PID pid = new PID(PID_ROTATE.get("kp"), PID_ROTATE.get("ki"),
                 PID_ROTATE.get("kd"), opMode.telemetry);
@@ -254,7 +260,15 @@ public class DriveTrain {
             l.logData("error", error);
 
             double proportionalPower = pid.getOutput(error);
-            proportionalPower += (proportionalPower > 0) ? minPower : -minPower;
+            l.logData("proportionalPower", proportionalPower);
+
+            if (proportionalPower > 0) {
+                proportionalPower = Math.max(proportionalPower + 0.1, minPower);
+            } else {
+                proportionalPower = Math.min(proportionalPower - 0.1, -minPower);
+            }
+
+//            proportionalPower += (proportionalPower > 0) ? minPower : -minPower;
             move(Direction.CW, proportionalPower);
 
             if (Math.abs(error) < minError) {
@@ -271,6 +285,7 @@ public class DriveTrain {
         stopAll();
 
         l.log("Done rotating!");
+        l.lineBreak();
     }
 
 }

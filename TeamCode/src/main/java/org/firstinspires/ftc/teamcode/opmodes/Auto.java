@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Options;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "AutoWithNewDriveTrain", group="FinalShit")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto Test", group="FinalShit")
 
 public class Auto extends LinearOpMode {
 
@@ -56,6 +56,9 @@ public class Auto extends LinearOpMode {
                     case "rotate":
                         dt.rotate(dir, angle, timeoutS);
                         break;
+                    case "rotateTo":
+                        dt.rotateTo(angle, timeoutS);
+                        break;
                     case "moveSlides":
                         hs.moveSlides(dir, power, inches, timeoutS);
                         break;
@@ -78,7 +81,7 @@ public class Auto extends LinearOpMode {
     private void initOptions() {
         options = new Options(this);
         options.addCategoricalOption("method",
-                new String[]{"move", "drive", "strafe", "rotate", "moveSlides"});
+                new String[]{"move", "drive", "strafe", "rotate", "rotateTo", "moveSlides"});
         options.addCategoricalOption("direction",
                 new String[]{"FORWARD", "BACK", "LEFT", "RIGHT", "CW", "CCW", "UP", "DOWN"});
         options.addQuantitativeOption("power", 0, 1, 0.05);

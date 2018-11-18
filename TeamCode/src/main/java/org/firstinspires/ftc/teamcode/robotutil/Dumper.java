@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Dumper {
     LinearOpMode opMode;
     private Servo dumpServo;
-    private final double RETRACT_POSITION = 0.1;
-    private final double  DUMP_POSITION = 0.9;
+    private final double RETRACT_POSITION = 0.6;
+    private final double  DUMP_POSITION = 0.1;
     private Logger l = new Logger("DUMPER");
 
 
@@ -28,12 +28,13 @@ public class Dumper {
     public void dump(){
         setDumpServo(DUMP_POSITION);
         l.log("setting dumping position");
+        l.lineBreak();
 
     }
     public void retract(){
         setDumpServo(RETRACT_POSITION);
         l.log("setting retract position position");
-
+        l.lineBreak();
     }
 
 }
