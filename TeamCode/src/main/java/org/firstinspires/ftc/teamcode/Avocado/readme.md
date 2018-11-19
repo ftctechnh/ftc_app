@@ -14,7 +14,13 @@ In order to call a method, simply create an object of the corresponding class un
 ### List of methods
 *Note: Methods that are listed as analog will only take analog inputs (joysticks, triggers, etc), while the methods that are listed as binary will only take binary inputs (buttons). Some methods will have analog and binary equivalents.
 
+#### TeleOp
+
 * TankDrive - *Analog* - controls: (leftdrive, rightdrive)
-* strafe - *Binary* - parameters: (left, right, up, down)
+* strafe - *Binary* - parameters: (left, right, up, down, speed) - SPEED ONLY APPLIES TO FORWARD AND BACKWARD MOTION, NOT STRAFING
 * lift_a - *Analog* - parameters: (float lift)
-* lift_b - *Binary* - parameters: (up, down)
+* lift_b - *Binary* - parameters: (up, down, speed)
+
+#### Autonomous
+
+* encoderDrive - controls: (double speed, double leftCM, double rightCM, double timeoutS)

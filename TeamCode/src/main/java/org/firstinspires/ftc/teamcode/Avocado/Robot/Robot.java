@@ -69,22 +69,22 @@ public class Robot extends Autonomous_Avocado {
 
     }
 
-    public void lift_b(boolean up, boolean down) {
+    public void lift_b(boolean up, boolean down, float speed) {
 
         // If up is pressed move motor in a positive direction. If down is pressed, move it in a negative direction.
         if (up) {
 
-            hanger.setPower(1);
+            hanger.setPower(speed);
 
         } else if (down) {
 
-            hanger.setPower(-1);
+            hanger.setPower(speed);
 
         }
 
     }
 
-    public void strafe(boolean left, boolean right, boolean up, boolean down) {
+    public void strafe(boolean left, boolean right, boolean up, boolean down, float speed) {
         // Move robot in the direction corresponding to the DPad
         if (left) {
 
@@ -102,18 +102,18 @@ public class Robot extends Autonomous_Avocado {
 
         } else if (up) {
 
-            topLeftMotor.setPower(0.5 * posleft);
-            bottomLeftMotor.setPower(0.5 * posleft);
-            topRightMotor.setPower(0.5);
-            bottomRightMotor.setPower(0.5);
+            topLeftMotor.setPower(speed * posleft);
+            bottomLeftMotor.setPower(speed * posleft);
+            topRightMotor.setPower(speed);
+            bottomRightMotor.setPower(speed);
 
 
         } else if (down) {
 
-            topLeftMotor.setPower(-0.5 * posleft);
-            bottomLeftMotor.setPower(-0.5 * posleft);
-            topRightMotor.setPower(-0.5);
-            bottomRightMotor.setPower(-0.5);
+            topLeftMotor.setPower(-speed * posleft);
+            bottomLeftMotor.setPower(-speed * posleft);
+            topRightMotor.setPower(-speed);
+            bottomRightMotor.setPower(-speed);
 
         }
 
