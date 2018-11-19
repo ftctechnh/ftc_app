@@ -23,7 +23,7 @@ public class IMUcontrol {
     public double startTrueAngle;
 
     public double moveSpeed = 0.5;
-    public double turnSpeed = 0.4;
+    public double turnSpeed = 0.3;
 
     /* Subassembly constructor */
     public IMUcontrol() {

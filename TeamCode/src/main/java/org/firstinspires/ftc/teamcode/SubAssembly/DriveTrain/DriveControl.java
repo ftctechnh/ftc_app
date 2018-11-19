@@ -26,7 +26,7 @@ public class DriveControl {
     HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
     //private String name = "Drive Train";
     private ElapsedTime runtime = new ElapsedTime();
-    IMUcontrol imu = new IMUcontrol();
+    public IMUcontrol imu = new IMUcontrol();
 
     //initializing motors
        private DcMotor FrontRightM = null;
@@ -43,6 +43,8 @@ public class DriveControl {
     public void init(HardwareMap ahwMap) {
         /* Set local copies from opmode class */
         hwMap = ahwMap;
+
+        imu.init(ahwMap);
 
         //telemetry.addLine(name + " initialize");
 
@@ -121,9 +123,14 @@ public class DriveControl {
     }
 
     public void turn2angle (double angle){
-        imu.angle2turn = (angle - imu.trueAngle);
+
+
 
         do{
+            imu.IMUupdate();
+
+            imu.angle2turn = (angle - imu.trueAngle);
+
             if (imu.angle2turn > 180){
                 imu.angle2turn -= 360;
             }
