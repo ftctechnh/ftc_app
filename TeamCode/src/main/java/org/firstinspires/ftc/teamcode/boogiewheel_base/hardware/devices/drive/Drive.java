@@ -11,11 +11,11 @@ public class Drive {
     private SlewDcMotor leftMotor, rightMotor;
     private IMU imu;
 
-    public Drive(HardwareMap hwMap){
+    public Drive(HardwareMap hardwareMap){
 
         //Motors
-        leftMotor = new SlewDcMotor(hwMap.dcMotor.get("left"));
-        rightMotor = new SlewDcMotor(hwMap.dcMotor.get("right"));
+        leftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("left"));
+        rightMotor = new SlewDcMotor(hardwareMap.dcMotor.get("right"));
 
         //Motor Set Up
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -42,7 +42,7 @@ public class Drive {
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         */
 
-        imu = new IMU(hwMap);
+        imu = new IMU(hardwareMap);
     }
 
     public void setSlewSpeed(double ss){

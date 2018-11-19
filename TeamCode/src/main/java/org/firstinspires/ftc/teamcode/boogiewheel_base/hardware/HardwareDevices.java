@@ -1,64 +1,25 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive.DriveController;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.intake.IntakeController;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift.MineralLiftController;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.robot_lift.RobotLiftController;
 
 public class HardwareDevices {
 
-    private DriveController drive;
+    public DriveController drive;
+    public IntakeController intake;
+    public MineralLiftController mineralLift;
+    public RobotLiftController robotLift;
 
     public HardwareDevices(){
         drive = new DriveController();
     }
 
-    public void setDriveY(double y){
-        drive.setY(y);
-    }
-
-    public void setDriveZ(double z){
-        drive.setZ(z);
-    }
-
-    public void setPower(double l, double r){
-        drive.setPower(l,r);
-    }
-
-    public void updateDrive(){
-        drive.update();
-    }
-
-    public void turnTo(double angle, double speed, double error, int period){
-        drive.turnTo(angle, speed, error, period);
-    }
-
-    public int[][] recordPath(int numSamples,int timeInterval) {
-        return drive.recordPath(numSamples, timeInterval);
-    }
-
-    public void runPath(int[] left, int[] right, int timeInterval) {
-        drive.runPath(left, right, timeInterval);
-    }
-
-    public void driveTo(double distance, double speed){
-        drive.driveTo(distance, speed);
-    }
-
-    public void setPosition(int position, double power) {
-        drive.setPosition(position, power);
-    }
-
     public void stop(){
         drive.stop();
-    }
-
-    public boolean isGyroCalibrated() {
-        return drive.isGyroCalibrated();
-    }
-
-    public double GyroCalibrationTime() {
-        return drive.GyroCalibrationTime();
-    }
-
-    public double getHeading(){
-        return drive.getHeading();
+        intake.stop();
+        mineralLift.stop();
+        robotLift.stop();
     }
 }

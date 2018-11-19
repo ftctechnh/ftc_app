@@ -13,3 +13,9 @@ apply from: '../build.common.gradle'
 dependencies {
     implementation project(':FtcDashboard')
 }
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}

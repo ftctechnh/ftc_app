@@ -12,7 +12,7 @@ import com.kauailabs.navx.ftc.navXPIDController;*///****************************
 //**************************************************************************************************//
 
 public class Navx {
-    /*private HardwareMap hwMap;
+    /*private HardwareMap hardwareMap;
 
     // This is the port on the Core Device Interface Module
     // in which the navX-Model Device is connected.  Modify this
@@ -42,16 +42,16 @@ public class Navx {
 
     public Navx(){
         try {
-            hwMap = AbstractAuton.getOpModeInstance().hardwareMap;
+            hardwareMap = AbstractAuton.getOpModeInstance().hardwareMap;
         }
         catch (NullPointerException e){
-            hwMap = AbstractTeleop.getOpModeInstance().hardwareMap;
+            hardwareMap = AbstractTeleop.getOpModeInstance().hardwareMap;
         }
 
-        dim = this.hwMap.deviceInterfaceModule.get("dim");
+        dim = this.hardwareMap.deviceInterfaceModule.get("dim");
 
         //navx
-        navx_device = AHRS.getInstance(this.hwMap.deviceInterfaceModule.get("dim"),
+        navx_device = AHRS.getInstance(this.hardwareMap.deviceInterfaceModule.get("dim"),
                 NAVX_DIM_I2C_PORT,
                 AHRS.DeviceDataType.kProcessedData,
                 NAVX_DEVICE_UPDATE_RATE_HZ);

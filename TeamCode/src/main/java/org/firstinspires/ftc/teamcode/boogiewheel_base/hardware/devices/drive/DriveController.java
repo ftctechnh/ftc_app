@@ -40,14 +40,14 @@ public class DriveController extends SubsystemController {
 
     public void init(){
 
-        runtime = new ElapsedTime();
-
         opModeSetup();
+
+        runtime = new ElapsedTime();
 
         DF = new DecimalFormat("#.##");
 
         //Put general setup here
-        drive = new Drive(hwMap);
+        drive = new Drive(hardwareMap);
         //drivePID = new PIDController(10,1.6,24, 2);
         drivePID = new PIDController(8,0.5,10, 1,0);
         straightPID = new PIDController(0.6,0.1,0,2);

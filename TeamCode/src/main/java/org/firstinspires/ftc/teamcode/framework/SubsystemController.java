@@ -7,8 +7,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 public abstract class SubsystemController {
 
     public DoubleTelemetry telemetry;
-    public HardwareMap hwMap;
-    public mode Mode;
+    public HardwareMap hardwareMap;
 
     public abstract void init();
 
@@ -16,10 +15,6 @@ public abstract class SubsystemController {
 
     public void opModeSetup(){
         telemetry = AbstractOpMode.getTelemetry();
-        hwMap = AbstractOpMode.getOpModeInstance().hardwareMap;
-    }
-
-    public enum mode{
-        Teleop,Auton,Match
+        hardwareMap = AbstractOpMode.getOpModeInstance().hardwareMap;
     }
 }

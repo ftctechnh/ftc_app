@@ -60,7 +60,7 @@ public class IMU {
     /*private BNO055IMU imu1, imu2;
     private BNO055IMU.Parameters parameters;
 
-    public IMU(HardwareMap hwMap){
+    public IMU(HardwareMap hardwareMap){
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -69,8 +69,8 @@ public class IMU {
 
         //parameters.mode = BNO055IMU.SensorMode.GYRONLY;
 
-        imu1 = hwMap.tryGet(BNO055IMU.class,"imu1");
-        imu2 = hwMap.tryGet(BNO055IMU.class,"imu2");
+        imu1 = hardwareMap.tryGet(BNO055IMU.class,"imu1");
+        imu2 = hardwareMap.tryGet(BNO055IMU.class,"imu2");
 
         if(imu1!=null) {
             imu1.initialize(parameters);
