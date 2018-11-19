@@ -104,38 +104,38 @@ public class AutoTestCoachVince extends LinearOpMode {
         //robot.landerLatchLift.setPower(0);
 
         // Move the robot a little bit backwards to unhook
-        //moveBot(-fwdSpeed,0,0);
-        //sleep(200);
-        //stopBot();
+/*        moveBot(-fwdSpeed,0,0,0.3);
+        sleep(200);
+        stopBot();
         //sleep(3000);
         // Move the robot forward until it sees the Red line with the color sensor
-        /*while (robot.colorSensor.red() < 2 && robot.colorSensor.green() > 0 && robot.colorSensor.blue() < 0) {
-            moveBot(0,0,strafe);
+        while (robot.colorSensor.red() < 2 && robot.colorSensor.green() > 0 && robot.colorSensor.blue() < 0) {
+            moveBot(0,0,strafe,0.3);
         }
         stopBot();
         sleep(3000);
-        */
+  */
         // Find the Gold mineral and knock it off the spot
 
         // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
-        //gyroHold(fwdSpeed,315,2000);
+        gyroSpin(0);
+        gyroHold(0.2,45,3);
         //sleep(3000);
-        // Rotate to a heading of 270
-        //gyroSpin(270);
-        //sleep (3000);
-        //gyroSpin(90);
+        // Rotate to a heading of 315R
+        gyroSpin(315);
+
 
         // Move towards the wall until 7 inches away while maintaining a heading of 270
-        //while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
-            //gyroStrafe(0);
-       //}
+        while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
+            gyroStrafe(.2,315);
+       }
        //stopBot();
          //Drive backwards maintaining 2-4 inches from the wall until you see the red tape line
-        while(sonarDistance() > 12){
+/*        while(sonarDistance() > 12){
             double wsteer=wallSteer(5);
             moveBot(0.2,0,wsteer,0.5);
         }
-        stopBot();
+ */       stopBot();
         // Drop the totem
 
         // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
@@ -205,12 +205,13 @@ public class AutoTestCoachVince extends LinearOpMode {
     public void gyroSpin(double heading) {
         double error = getError(heading);
         while (Math.abs(error) > 5) {
-            error = getError(heading);
+
             if (error < 0 && Math.abs(error) > 5) {
-                moveBot(0, .3, 0, 0.4);
-            } else {
                 moveBot(0, -0.3, 0, 0.4);
+            } else {
+                moveBot(0, 0.3, 0, 0.4);
             }
+            error = getError(heading);
             telemetry.addData("Heading",robot.gyro.getIntegratedZValue());
             telemetry.update();
         }
@@ -249,13 +250,13 @@ public class AutoTestCoachVince extends LinearOpMode {
     public void gyroHold( double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
-
+        double error;
         // keep looping while we have time remaining.
         holdTimer.reset();
-        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+        while ((holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
-            telemetry.update();
+            error = Range.clip(getError(angle),-0.3,0.3);
+            moveBot(speed,error,0,0.3);
         }
 
         // Stop all motion;
