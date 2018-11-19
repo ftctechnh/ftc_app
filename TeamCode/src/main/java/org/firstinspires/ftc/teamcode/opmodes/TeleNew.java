@@ -38,12 +38,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Logger;
 import org.firstinspires.ftc.teamcode.tasks.DumperTask;
 import org.firstinspires.ftc.teamcode.tasks.HangTask;
+import org.firstinspires.ftc.teamcode.tasks.HookTask;
 import org.firstinspires.ftc.teamcode.tasks.SweeperTask;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Teleop NO DT")
 
 public class TeleNew extends LinearOpMode {
     private HangTask hangTask;
+    private HookTask hookTask;
     private Telemetry.Item opmodeStatus = telemetry.addData("STATUS","CONSTRUCTING");
     private Logger l = new Logger("TELEOP");
 
@@ -71,16 +73,18 @@ public class TeleNew extends LinearOpMode {
     }
     private void startAllThreads(){
         hangTask.start();
+        hookTask.start();
     }
     private void stopAllThreads(){
         hangTask.stopThread();
+        hookTask.stopThread();
         opmodeStatus.setValue("STOPPED");
         telemetry.update();
         l.log("stopped");
     }
     private void initialize() {
         hangTask = new HangTask(this);
-
+        hookTask = new HookTask(this);
     }
 
 }

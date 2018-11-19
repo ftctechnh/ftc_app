@@ -34,8 +34,8 @@ public class MotorGroup {
 
     public void resetEncoders(){
         for(DcMotor motor: this.motors) {
-            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }

@@ -39,6 +39,7 @@ import org.firstinspires.ftc.teamcode.robotutil.Logger;
 import org.firstinspires.ftc.teamcode.tasks.DriveTrainTaskMecanum;
 import org.firstinspires.ftc.teamcode.tasks.DumperTask;
 import org.firstinspires.ftc.teamcode.tasks.HangTask;
+import org.firstinspires.ftc.teamcode.tasks.HookTask;
 import org.firstinspires.ftc.teamcode.tasks.SweeperTask;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "Teleop Final")
@@ -48,6 +49,7 @@ public class HangTele extends LinearOpMode {
     private DriveTrainTaskMecanum driveTrainTask;
     private DumperTask dumperTask;
     private SweeperTask sweeperTask;
+    private HookTask hookTask;
     private Telemetry.Item opmodeStatus = telemetry.addData("STATUS","CONSTRUCTING");
     private Logger l = new Logger("TELEOP");
 
@@ -78,12 +80,14 @@ public class HangTele extends LinearOpMode {
         driveTrainTask.start();
         dumperTask.start();
         sweeperTask.start();
+        hookTask.start();
     }
     private void stopAllThreads(){
         hangTask.stopThread();
         driveTrainTask.stopThread();
         sweeperTask.stopThread();
         dumperTask.stopThread();
+        hookTask.stopThread();
         opmodeStatus.setValue("STOPPED");
         telemetry.update();
         l.log("stopped");
@@ -93,6 +97,7 @@ public class HangTele extends LinearOpMode {
         driveTrainTask = new DriveTrainTaskMecanum(this);
         sweeperTask = new SweeperTask(this);
         dumperTask = new DumperTask(this);
+        hookTask = new HookTask(this);
     }
 
 }
