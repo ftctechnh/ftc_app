@@ -20,7 +20,6 @@ public class Auto3imu extends LinearOpMode {
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
-    IMUcontrol imu = new IMUcontrol();
     private ElapsedTime runtime = new ElapsedTime();
     private double HomeAngle;
     /* Arrays */
@@ -48,6 +47,7 @@ public class Auto3imu extends LinearOpMode {
             telemetry.addLine("Depot");
             orientation = Start.Depot;
         }
+        telemetry.update();
     }
 
     //Sample position testing array
@@ -69,6 +69,7 @@ public class Auto3imu extends LinearOpMode {
             telemetry.addLine("Left");
             sample = PracticeSample.Left;
         }
+        telemetry.update();
     }
 
     public void resetClock() {
@@ -116,14 +117,13 @@ public class Auto3imu extends LinearOpMode {
 
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
-        imu.init(hardwareMap);
         //Sample.init();
 
         telemetry.addLine("Autonomous");
 
         startPosition();
-
-        sample = PracticeSample.Center;
+        samplePosition();
+        //sample = PracticeSample.Center;
 
 
         AutoTransitioner.transitionOnStop(this, "teleOp");
@@ -133,16 +133,17 @@ public class Auto3imu extends LinearOpMode {
 //put sample position code here
         newState(State.STATE_INITIAL);
 
-        imu.IMUinit();
-
+        Drive.imu.IMUinit();
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
 
             now = runtime.seconds() - lastReset;
 
-            telemetry.addData("startAngle", imu.startAngle);
-            telemetry.addData("currentAngle", imu.currentAngle);
-            telemetry.addData("trueAngle", imu.trueAngle);
+            Drive.imu.IMUupdate();
+
+            telemetry.addData("startAngle", Drive.imu.startAngle);
+            telemetry.addData("currentAngle", Drive.imu.currentAngle);
+            telemetry.addData("trueAngle", Drive.imu.trueAngle);
             telemetry.update();
 
             //state switch
@@ -155,7 +156,6 @@ public class Auto3imu extends LinearOpMode {
                     break;
 
                 case STATE_ADJUST:
-                    imu.IMUupdate();
                    Drive.turn2angle(0);
                     newState(State.STATE_INITIAL);
                     break;
@@ -216,7 +216,7 @@ public class Auto3imu extends LinearOpMode {
                     }
                     //Center
                     else {
-                        Drive.moveForward(0.5, 1.90);
+                        Drive.moveForward(0.5, 1.50);
                         newState(State.STATE_CLAIM);
                     }
                     break;
