@@ -69,7 +69,7 @@ public class Robot extends Autonomous_Avocado {
 
     }
 
-    public void lift_b(boolean up, boolean down, float speed) {
+    public void lift_b(boolean up, boolean down, double speed) {
 
         // If up is pressed move motor in a positive direction. If down is pressed, move it in a negative direction.
         if (up) {
@@ -84,7 +84,7 @@ public class Robot extends Autonomous_Avocado {
 
     }
 
-    public void strafe(boolean left, boolean right, boolean up, boolean down, float speed) {
+    public void strafe(boolean left, boolean right, boolean up, boolean down, double speed) {
         // Move robot in the direction corresponding to the DPad
         if (left) {
 
