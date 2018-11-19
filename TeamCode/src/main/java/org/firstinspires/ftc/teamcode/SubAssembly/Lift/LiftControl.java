@@ -22,8 +22,8 @@ public class LiftControl {
     private DcMotor LifterLeftM;
     private Servo LockRightS;
     private Servo LockLeftS;
-    private TouchSensor LifterButtonT;
-    private TouchSensor LifterButtonB;
+    public TouchSensor LifterButtonT;
+    public TouchSensor LifterButtonB;
 
     /* Subassembly constructor */
     public LiftControl() {
@@ -50,44 +50,19 @@ public class LiftControl {
         LifterRightM.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    public void ManualExtend() {
+    public void Extend() {
         LifterLeftM.setPower(0.50);
         LifterRightM.setPower(0.50);
     }
 
-    public void ManualRetract() {
+    public void Retract() {
         LifterLeftM.setPower(-0.50);
         LifterRightM.setPower(-0.50);
     }
 
-    public void ManualStop() {
+    public void Stop() {
         LifterLeftM.setPower(0);
         LifterRightM.setPower(0);
-    }
-
-    //setting power to lower the robot or reach the lift up
-    public void AutoExtend() {
-        if (!LifterButtonT.isPressed()) {
-            LifterLeftM.setPower(0.50);
-            LifterRightM.setPower(0.50);
-        }
-        else if (LifterButtonT.isPressed()) {
-            LifterLeftM.setPower(0);
-            LifterRightM.setPower(0);
-        }
-
-    }
-
-    //setting power to raise the robot or pull the lift back in
-    public void AutoRetract() {
-        if (!LifterButtonB.isPressed()) {
-            LifterLeftM.setPower(-0.50);
-            LifterRightM.setPower(-0.50);
-        }
-        else if (LifterButtonB.isPressed()) {
-            LifterLeftM.setPower(0);
-            LifterRightM.setPower(0);
-        }
     }
 
     //locking the servos into place to hold position

@@ -35,15 +35,15 @@ public class LiftTest extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-            if (egamepad2.dpad_up.state) {
-                Lift.ManualExtend();
-            } else if (egamepad2.dpad_down.state) {
-                Lift.ManualRetract();
-            } else  {
-                Lift.ManualStop();
+            if ((egamepad2.dpad_up.state) && (!Lift.LifterButtonT.isPressed())) {
+                Lift.Extend();
+            } else if ((egamepad2.dpad_down.state) && (!Lift.LifterButtonB.isPressed())) {
+                Lift.Retract();
+            } else {
+                Lift.Stop();
             }
 
-            if (egamepad2.a.released) {
+            if (egamepad2.x.released) {
                 Lift.Lock();
             }
             else if (egamepad2.b.released) {
