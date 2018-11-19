@@ -113,6 +113,11 @@ public class SensorMRGyro extends LinearOpMode {
       }
       lastResetState = curResetState;
 
+      if (gamepad1.dpad_left) {
+        modernRoboticsI2cGyro.setZAxisOffset((short)90);
+        telemetry.addLine("Set Z Xis Offset to 90");
+      }
+
       // The raw() methods report the angular rate of change about each of the
       // three axes directly as reported by the underlying sensor IC.
       int rawX = modernRoboticsI2cGyro.rawX();

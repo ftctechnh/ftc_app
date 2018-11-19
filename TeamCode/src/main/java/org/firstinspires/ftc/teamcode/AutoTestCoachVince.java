@@ -21,7 +21,7 @@ public class AutoTestCoachVince extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.2;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 4 ;      // As tight as we can make it with an integer gyro
+    static final double     HEADING_THRESHOLD       = 5 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
 
@@ -79,8 +79,9 @@ public class AutoTestCoachVince extends LinearOpMode {
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.update();
         }
-/*
-        // Stressing Drive Test Sequence
+
+
+ /*       // Stressing Drive Test Sequence
         moveBot(1,0,0,1);
         sleep(300);
         moveBot(0,0,1,1);
@@ -93,7 +94,7 @@ public class AutoTestCoachVince extends LinearOpMode {
         gyroSpin(0);
         sleep(300);
         moveBot(1,1,1,1);
-        sleep(300)
+        sleep(300);
         stopBot();
 */
 
@@ -103,32 +104,34 @@ public class AutoTestCoachVince extends LinearOpMode {
         //robot.landerLatchLift.setPower(0);
 
         // Move the robot a little bit backwards to unhook
-        //moveBot(-fwdSpeed,0,0);
-        //sleep(200);
-        //stopBot();
+/*        moveBot(-fwdSpeed,0,0,0.3);
+        sleep(200);
+        stopBot();
         //sleep(3000);
         // Move the robot forward until it sees the Red line with the color sensor
-        /*while (robot.colorSensor.red() < 2 && robot.colorSensor.green() > 0 && robot.colorSensor.blue() < 0) {
-            moveBot(0,0,strafe);
+        while (robot.colorSensor.red() < 2 && robot.colorSensor.green() > 0 && robot.colorSensor.blue() < 0) {
+            moveBot(0,0,strafe,0.3);
         }
         stopBot();
         sleep(3000);
-        */
+  */
         // Find the Gold mineral and knock it off the spot
 
         // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
-        //gyroHold(fwdSpeed,315,2000);
+        gyroSpin(0);
+        gyroHold(0.2,45,3);
         //sleep(3000);
-        // Rotate to a heading of 270
-        //gyroSpin(270);
+        // Rotate to a heading of 315R
+        gyroSpin(315);
+
 
         // Move towards the wall until 7 inches away while maintaining a heading of 270
-        //while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
-            //gyroStrafe(0);
-       //}
+        while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
+            gyroStrafe(.2,315);
+       }
        //stopBot();
-        // Drive backwards maintaining 2-4 inches from the wall until you see the red tape line
- /*       while(sonarDistance() > 12){
+         //Drive backwards maintaining 2-4 inches from the wall until you see the red tape line
+/*        while(sonarDistance() > 12){
             double wsteer=wallSteer(5);
             moveBot(0.2,0,wsteer,0.5);
         }
@@ -144,74 +147,38 @@ public class AutoTestCoachVince extends LinearOpMode {
 }
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
     {
-        // This module takes inputs, normalizes them to DRIVE_SPEED, and drives the motors
-        float maxDrive;
-        float frontMax;
-        float rearMax;
+        // This module takes inputs, normalizes them, applies a scaleFactor, and drives the motors
+        double wheelSpeeds[] = new double[4];
+        wheelSpeeds[0] = drive + strafe - rotate;
+        wheelSpeeds[1] = drive - strafe - rotate;
+        wheelSpeeds[2] = drive - strafe + rotate;
+        wheelSpeeds[3] = drive + strafe + rotate;
 
+        double maxMagnitude = Math.abs(wheelSpeeds[0]);
 
-        // Find the maximum value of the inputs and normalize
-        //frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
-        //rearMax = Math.max(Math.abs((float)drive - (float)strafe + (float)rotate), Math.abs((float)drive + (float)strafe - (float)rotate));
-        //maxDrive = Math.max(frontMax, rearMax);
-        //maxDrive = (float) Math.max(maxDrive,(float)DRIVE_SPEED);
-        //drive = drive/maxDrive;
-        //strafe = strafe/maxDrive;
-        //rotate = rotate/maxDrive;
-        //calculate motor powers
+        // Check the WheelSpeeds to find the maximum value
+        for (int i = 1; i < wheelSpeeds.length; i++)
+        {
+            double magnitude = Math.abs(wheelSpeeds[i]);
+            if (magnitude > maxMagnitude)
+            {
+                maxMagnitude = magnitude;
+            }
+        }
+        // Normalize the WheelSpeeds against the max value
+        if (maxMagnitude > 1.0)
+        {
+            for (int i = 0; i < wheelSpeeds.length; i++)
+            {
+                wheelSpeeds[i] /= maxMagnitude;
+            }
+        }
+        // Drive the motors scaled by scaleFactor
+        robot.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
+        robot.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
+        robot.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
+        robot.rightRearDrive.setPower(scaleFactor * wheelSpeeds[3]);
 
-
-        //double scaleFactor = .7; // Max autonomous speed of the robot
-        double tmpScale = 1;
-        // Ensuring we don't have a divide by zero error
-        if (((drive + strafe) == 0) || ((drive-strafe) == 0))
-            drive=drive+0.00001;
-
-        // Solve this equation backwards:
-        // MotorX = TranslationX * scaleFactor + RotationX
-        // to find scaleFactor that ensures -1 <= MotorX <= 1 and 0 < scaleFactor <= 1
-        // drive+strafe+rotate
-        if (Math.abs(strafe + drive + rotate)>1) {
-            tmpScale = (1 - rotate) / (drive + strafe);
-        } else if ((strafe + rotate + drive)<-1) {
-            tmpScale = (rotate - 1) / (drive + strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-        // drive-strafe+rotate
-        if (Math.abs(-strafe + drive + rotate)>1) {
-            tmpScale = (1 - rotate) / (drive + -strafe);
-        } else if ((-strafe + rotate + drive)<-1) {
-            tmpScale = (rotate - 1) / (drive + -strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-        //drive-strafe-rotate
-        if (Math.abs(-strafe + drive + -rotate)>1) {
-            tmpScale = (1 - -rotate) / (drive + -strafe);
-        } else if ((strafe + -rotate + drive)<-1) {
-            tmpScale = (-rotate - 1) / (drive + -strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-        // drive + strafe - rotate
-        if (Math.abs(strafe + drive + -rotate)>1) {
-            tmpScale = (1 - -rotate) / (drive + strafe);
-        } else if ((strafe+rotate+drive)<-1) {
-            tmpScale = (-rotate - 1) / (drive + strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-
-
-        robot.leftFrontDrive.setPower(scaleFactor*(drive + strafe) + rotate);
-        robot.leftRearDrive.setPower(scaleFactor*(drive - strafe) + rotate);
-        robot.rightFrontDrive.setPower(scaleFactor*(drive - strafe) - rotate);
-        robot.rightRearDrive.setPower(scaleFactor*(drive + strafe) - rotate);
         //telemetry.addData("drive",drive);
         //telemetry.addData("strafe",strafe);
         //telemetry.addData("rotate",rotate);
@@ -238,12 +205,13 @@ public class AutoTestCoachVince extends LinearOpMode {
     public void gyroSpin(double heading) {
         double error = getError(heading);
         while (Math.abs(error) > 5) {
-            error = getError(heading);
+
             if (error < 0 && Math.abs(error) > 5) {
-                moveBot(0, .2, 0, 0.2);
+                moveBot(0, -0.3, 0, 0.4);
             } else {
-                moveBot(0, -0.2, 0, 0.2);
+                moveBot(0, 0.3, 0, 0.4);
             }
+            error = getError(heading);
             telemetry.addData("Heading",robot.gyro.getIntegratedZValue());
             telemetry.update();
         }
@@ -282,13 +250,13 @@ public class AutoTestCoachVince extends LinearOpMode {
     public void gyroHold( double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
-
+        double error;
         // keep looping while we have time remaining.
         holdTimer.reset();
-        while (opModeIsActive() && (holdTimer.time() < holdTime)) {
+        while ((holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
-            telemetry.update();
+            error = Range.clip(getError(angle),-0.3,0.3);
+            moveBot(speed,error,0,0.3);
         }
 
         // Stop all motion;

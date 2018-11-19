@@ -89,7 +89,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             // ArmExtension is negative when the arm is extending, positive when it is retracting
 
             if (armExtension > 0) {  // An arm retraction is commanded
-                telemetry.addData("Arm is:","Retracting");
+                //telemetry.addData("Arm is:","Retracting");
                 if (robot.extendArmBackStop.getState() == false){// As long as the back limit switch isn't pressed, move the arm back
 
                     robot.armExtend.setPower(armExtensionScaling * armExtension);
@@ -98,7 +98,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
                     robot.armExtend.setPower(0); // Otherwise set the arm power to zero
             }
                 else { // An arm extension is commanded
-                telemetry.addData("Arm Is:","Extending");
+                //telemetry.addData("Arm Is:","Extending");
                 if (robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
                     robot.armExtend.setPower(armExtensionScaling * armExtension);
@@ -141,14 +141,18 @@ public class CoachVinceTeleopTest extends LinearOpMode {
 
 
         // Find the maximum value of the inputs and normalize
-        frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
+/*        frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
         rearMax = Math.max(Math.abs((float)drive - (float)strafe + (float)rotate), Math.abs((float)drive + (float)strafe - (float)rotate));
         maxDrive = Math.max(frontMax, rearMax);
         maxDrive = (float) Math.max(maxDrive,(float)scaleFactor);
         drive = drive/maxDrive;
         strafe = strafe/maxDrive;
         rotate = rotate/maxDrive;
-
+        robot.leftFrontDrive.setPower(drive + strafe + rotate);
+        robot.leftRearDrive.setPower(drive - strafe + rotate);
+        robot.rightFrontDrive.setPower(drive - strafe - rotate);
+        robot.rightRearDrive.setPower(drive + strafe - rotate);
+*/
 /*
         //calculate motor powers
         //double scaleFactor = .7; // Max autonomous speed of the robot
@@ -196,17 +200,50 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         if (tmpScale < scaleFactor) {
             scaleFactor = tmpScale;
         }
-*/
 
-        robot.leftFrontDrive.setPower(scaleFactor*(drive + strafe) + rotate);
-        robot.leftRearDrive.setPower(scaleFactor*(drive - strafe) + rotate);
-        robot.rightFrontDrive.setPower(scaleFactor*(drive - strafe) - rotate);
-        robot.rightRearDrive.setPower(scaleFactor*(drive + strafe) - rotate);
-        //telemetry.addData("drive",drive);
-        //telemetry.addData("strafe",strafe);
-        //telemetry.addData("rotate",rotate);
-        //telemetry.addData("scaleFactor",scaleFactor);
-        //telemetry.update();
+
+        //robot.leftFrontDrive.setPower(scaleFactor*(drive + strafe) + rotate);
+        //robot.leftRearDrive.setPower(scaleFactor*(drive - strafe) + rotate);
+        //robot.rightFrontDrive.setPower(scaleFactor*(drive - strafe) - rotate);
+        //robot.rightRearDrive.setPower(scaleFactor*(drive + strafe) - rotate);
+
+        */
+
+        // Version 3
+        double wheelSpeeds[] = new double[4];
+        wheelSpeeds[0] = drive + strafe - rotate;
+        wheelSpeeds[1] = drive - strafe - rotate;
+        wheelSpeeds[2] = drive - strafe + rotate;
+        wheelSpeeds[3] = drive + strafe + rotate;
+
+        double maxMagnitude = Math.abs(wheelSpeeds[0]);
+
+        for (int i = 1; i < wheelSpeeds.length; i++)
+        {
+            double magnitude = Math.abs(wheelSpeeds[i]);
+            if (magnitude > maxMagnitude)
+            {
+                maxMagnitude = magnitude;
+            }
+        }
+
+        if (maxMagnitude > 1.0)
+        {
+            for (int i = 0; i < wheelSpeeds.length; i++)
+            {
+                wheelSpeeds[i] /= maxMagnitude;
+            }
+        }
+        robot.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
+        robot.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
+        robot.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
+        robot.rightRearDrive.setPower(scaleFactor * wheelSpeeds[3]);
+
+        telemetry.addData("drive",drive);
+        telemetry.addData("strafe",strafe);
+        telemetry.addData("rotate",rotate);
+        telemetry.addData("scaleFactor",scaleFactor);
+        telemetry.update();
     }
 }
 
