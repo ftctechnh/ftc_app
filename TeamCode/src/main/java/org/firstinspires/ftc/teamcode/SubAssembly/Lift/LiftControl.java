@@ -90,7 +90,6 @@ public class LiftControl {
         }
     }
 
-
     //locking the servos into place to hold position
     public void Lock() {
         LockRightS.setPosition(0.44);
