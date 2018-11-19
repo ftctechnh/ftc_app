@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -12,6 +13,9 @@ public class IMU {
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
+
+    ElapsedTime GyroTimeOut;
+    double GyroCalibrationTime = 0;
 
     public IMU(HardwareMap hwMap){
         parameters = new BNO055IMU.Parameters();
@@ -25,9 +29,14 @@ public class IMU {
 
         imu.initialize(parameters);
 
+        GyroTimeOut = new ElapsedTime();
+        GyroTimeOut.reset();
 
-
-        while (!imu.isGyroCalibrated());
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) {
+            //wait to be calibrated
+        }
+        //examples in milliseconds == 452 , 458 , 458, 452, 458
+        GyroCalibrationTime = GyroTimeOut.milliseconds();
     }
 
     public double getHeading(){
@@ -38,6 +47,14 @@ public class IMU {
     public void resetAngleToZero() {
         imu.initialize(parameters);
         while (!imu.isGyroCalibrated());
+    }
+
+    public boolean isGyroCalibrated() {
+        return imu.isGyroCalibrated();
+    }
+
+    public double GyroCalibrationTime() {
+        return GyroCalibrationTime;
     }
 
     /*private BNO055IMU imu1, imu2;

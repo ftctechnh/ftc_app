@@ -53,4 +53,16 @@ public class Robot {
     public void delay(int time){
         AbstractOpMode.delay(time);
     }
+
+    public boolean isGyroCalibrated() {
+        return hardware.isGyroCalibrated();
+    }
+
+    public double GyroCalibrationTime() {
+        return hardware.GyroCalibrationTime();
+    }
+
+    public double getHeading(){
+        return hardware.getHeading();
+    }
 }

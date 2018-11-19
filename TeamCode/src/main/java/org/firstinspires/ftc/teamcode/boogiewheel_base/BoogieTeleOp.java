@@ -29,6 +29,9 @@ public class BoogieTeleOp extends AbstractTeleop {
     public void Loop() {
         robot.updateDrive();
         telemetry.addData("Loop");
+        telemetry.addData("Gyro Status = " + robot.isGyroCalibrated());
+        telemetry.addData("Gyro Calibration time" + robot.GyroCalibrationTime());
+        telemetry.addData("Angle = " + robot.getHeading());
         telemetry.addData("Distance sensor reading"+ distanceSensor1.getDistanceIN());
         telemetry.update();
     }

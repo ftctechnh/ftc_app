@@ -271,4 +271,14 @@ public class DriveController extends SubsystemController {
 
         return y >= lowerRange && y <= upperRange;
     }
+
+    public boolean isGyroCalibrated() {
+        return drive.isGyroCalibrated();
+    }
+
+    public double GyroCalibrationTime() {
+        return drive.GyroCalibrationTime();
+    }
+
+
 }

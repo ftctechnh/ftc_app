@@ -50,4 +50,15 @@ public class HardwareDevices {
         drive.stop();
     }
 
+    public boolean isGyroCalibrated() {
+        return drive.isGyroCalibrated();
+    }
+
+    public double GyroCalibrationTime() {
+        return drive.GyroCalibrationTime();
+    }
+
+    public double getHeading(){
+        return drive.getHeading();
+    }
 }
