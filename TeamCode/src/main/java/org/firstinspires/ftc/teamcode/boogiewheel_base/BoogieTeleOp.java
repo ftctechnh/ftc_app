@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
+import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.DistanceSensor2m;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
 @TeleOp(name="boggiewheel_teleop", group="New")
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor
 public class BoogieTeleOp extends AbstractTeleop {
 
     private Robot robot;
-
+    DistanceSensor2m distanceSensor1;
     private SlewDcMotor intakeMotor;
 
     @Override
@@ -21,12 +22,14 @@ public class BoogieTeleOp extends AbstractTeleop {
         robot = new Robot();
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        distanceSensor1= new DistanceSensor2m("distance1");
     }
 
     @Override
     public void Loop() {
         robot.updateDrive();
         telemetry.addData("Loop");
+        telemetry.addData("Distance sensor reading"+ distanceSensor1.getDistanceIN());
         telemetry.update();
     }
 
