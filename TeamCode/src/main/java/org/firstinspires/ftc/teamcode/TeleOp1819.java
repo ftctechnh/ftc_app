@@ -58,7 +58,7 @@ public class TeleOp1819 extends OpMode
         mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
         mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
         mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
-        mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
+        mineralLiftR.setDirection(DcMotor.Direction.REVERSE);
         servo = hardwareMap.servo.get("servo");
     }
 

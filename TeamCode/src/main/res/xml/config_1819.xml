@@ -9,5 +9,9 @@
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
             <Servo name="servo" port="1"/>
         </LynxModule>
+        <LynxModule name="Expansion Hub 3" port="3">
+            <NeveRest20Gearmotor name="mineralLiftL" port="0" />
+            <NeveRest20Gearmotor name="mineralLiftR" port="1" />
+        </LynxModule>
     </LynxUsbDevice>
 </Robot>
