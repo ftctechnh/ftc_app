@@ -47,7 +47,7 @@ public class teleop extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-            // "Ready Player One" - Halliday
+            // Ready Player One
 
             //speed control
             if (egamepad1.right_bumper.pressed) {
@@ -79,17 +79,17 @@ public class teleop extends LinearOpMode {
             else { Drive.stop();}
 
 
-            //ready player two
+            //Ready Player Two
 
-            if (egamepad2.dpad_up.state) {
-                Lift.ManualExtend();
-            } else if (egamepad2.dpad_down.state) {
-                Lift.ManualRetract();
+            if ((egamepad2.dpad_up.state) && (!Lift.LifterButtonT.isPressed())) {
+                Lift.Extend();
+            } else if ((egamepad2.dpad_down.state) && (!Lift.LifterButtonB.isPressed())) {
+                Lift.Retract();
             } else {
-                Lift.ManualStop();
+                Lift.Stop();
             }
 
-            if (egamepad2.a.released) {
+            if (egamepad2.x.released) {
                 Lift.Lock();
             }
             else if (egamepad2.b.released) {
