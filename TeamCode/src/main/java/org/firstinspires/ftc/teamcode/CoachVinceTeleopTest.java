@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.HardwareBruinBot;
 @TeleOp(name = "Coach Vince Teleop Test", group = "Vince")
 public class CoachVinceTeleopTest extends LinearOpMode {
 
-    HardwareBruinBot hwMap = new HardwareBruinBot();
+    HardwareBruinBot robot = new HardwareBruinBot();
     public void runOpMode() {
         float drive;
         float strafe;
@@ -28,7 +28,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        hwMap.init(hardwareMap);
+        robot.init(hardwareMap);
 
 
 
@@ -43,9 +43,10 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             // DRIVING SECTION!!!! ----------------------------------------------------------------
-            drive = -gamepad1.left_stick_y;  // Negative because the gamepad is weird
+            drive = -gamepad1.left_stick_y;// Negative because the gamepad is weird
             strafe = gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
+ /*
             frontMax = Math.max(Math.abs(drive + strafe + rotate), Math.abs(drive - strafe - rotate));
             rearMax = Math.max(Math.abs(drive - strafe + rotate), Math.abs(drive + strafe - rotate));
             maxDrive = Math.max(frontMax, rearMax);
@@ -55,10 +56,12 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             rotate = rotate/maxDrive;
             double moveScaling = 0.3; // 1 for full speed, 0.3 is controllable
             //maxDrive = Math.max(Math.max((drive+strafe+rotate),(drive - strafe + rotate)));
-            hwMap.leftFrontDrive.setPower(moveScaling*(drive + strafe + rotate)); //= drive + strafe + rotate;
-            hwMap.leftRearDrive.setPower(moveScaling * (drive - strafe + rotate)); //= drive - strafe + rotate;
-            hwMap.rightFrontDrive.setPower(moveScaling * (drive - strafe - rotate)); //= drive - strafe - rotate;
-            hwMap.rightRearDrive.setPower(moveScaling * (drive + strafe - rotate)); //= drive + strafe - rotate;
+            robot.leftFrontDrive.setPower(moveScaling*(drive + strafe + rotate)); //= drive + strafe + rotate;
+            robot.leftRearDrive.setPower(moveScaling * (drive - strafe + rotate)); //= drive - strafe + rotate;
+            robot.rightFrontDrive.setPower(moveScaling * (drive - strafe - rotate)); //= drive - strafe - rotate;
+            robot.rightRearDrive.setPower(moveScaling * (drive + strafe - rotate)); //= drive + strafe - rotate;
+            */
+            moveBot(drive, rotate, strafe,0.3);
 
             // LIFTING ARM SECTION!!!! --------------------------------------------------------
 
@@ -67,11 +70,11 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             liftingArmDown = gamepad1.left_trigger;
 
             if (liftingArmUp > liftingArmDown) {
-                hwMap.landerLatchLift.setPower(liftingArmUp);
+                robot.landerLatchLift.setPower(liftingArmUp);
             }
             else
             {
-                hwMap.landerLatchLift.setPower(-liftingArmDown);
+                robot.landerLatchLift.setPower(-liftingArmDown);
             }
 
             // EXTENDING ARM SECTION! --------------------------------------------------------
@@ -80,28 +83,28 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             armExtension = gamepad2.right_stick_y;
 
             //Limits the motors output. Somewhere between 0.1 and 0.2 works.  Any higher and the limit switches dont stop the rms from crashing into each other
-            double armExtensionScaling = 0.2;
+            double armExtensionScaling = 0.15;
 
             // Check for Extension Arm Stops, command arm if you're not in the stops
             // ArmExtension is negative when the arm is extending, positive when it is retracting
 
             if (armExtension > 0) {  // An arm retraction is commanded
                 telemetry.addData("Arm is:","Retracting");
-                if (hwMap.extendArmBackStop.getState() == false){// As long as the back limit switch isn't pressed, move the arm back
+                if (robot.extendArmBackStop.getState() == false){// As long as the back limit switch isn't pressed, move the arm back
 
-                    hwMap.armExtend.setPower(armExtensionScaling * armExtension);
+                    robot.armExtend.setPower(armExtensionScaling * armExtension);
                 }
                 else
-                    hwMap.armExtend.setPower(0); // Otherwise set the arm power to zero
+                    robot.armExtend.setPower(0); // Otherwise set the arm power to zero
             }
                 else { // An arm extension is commanded
                 telemetry.addData("Arm Is:","Extending");
-                if (hwMap.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
+                if (robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
-                    hwMap.armExtend.setPower(armExtensionScaling * armExtension);
+                    robot.armExtend.setPower(armExtensionScaling * armExtension);
                 }
                 else
-                hwMap.armExtend.setPower(0);  // Otherwise set the power to zero
+                    robot.armExtend.setPower(0);  // Otherwise set the power to zero
             }
 
             //telemetry.addData("BackStop", hwMap.extendArmBackStop.getState());
@@ -110,7 +113,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             // ARM ROTATION SECTION!!! -------------------------------------------------------------
             armRotation = gamepad2.left_stick_y;
             double armRotationScaling = 0.4; // 1.0 for full power, used to scale the arm power
-            hwMap.armRotate.setPower(armRotationScaling * armRotation);
+            robot.armRotate.setPower(armRotationScaling * armRotation);
 
 
             // MINERAL SERVO SECTION!!!! -----------------------------------------------------------
@@ -118,20 +121,93 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             mineralServosIn = gamepad2.right_trigger;
             mineralServosOut = gamepad2.left_trigger;
             if (mineralServosIn > mineralServosOut) {
-                //hwMap.leftMineral.setPower(-mineralServosIn); // These don't look right, how do I get them to rotate continuously
-                hwMap.rightMineral.setPower(mineralServosIn);
+                robot.rightMineral.setPower(mineralServosIn);
             }
             else
             {
-                //hwMap.leftMineral.setPower(mineralServosOut);
-                hwMap.rightMineral.setPower(-mineralServosOut);
+                robot.rightMineral.setPower(-mineralServosOut);
             }
 
             telemetry.update();
 
         }
     }
+    public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
+    {
+        // This module takes inputs, normalizes them to DRIVE_SPEED, and drives the motors
+        float maxDrive;
+        float frontMax;
+        float rearMax;
 
+
+        // Find the maximum value of the inputs and normalize
+        frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
+        rearMax = Math.max(Math.abs((float)drive - (float)strafe + (float)rotate), Math.abs((float)drive + (float)strafe - (float)rotate));
+        maxDrive = Math.max(frontMax, rearMax);
+        maxDrive = (float) Math.max(maxDrive,(float)scaleFactor);
+        drive = drive/maxDrive;
+        strafe = strafe/maxDrive;
+        rotate = rotate/maxDrive;
+
+/*
+        //calculate motor powers
+        //double scaleFactor = .7; // Max autonomous speed of the robot
+        double tmpScale = 1;
+        // Ensuring we don't have a divide by zero error
+        if (((drive + strafe) == 0) || ((drive-strafe) == 0))
+            drive=drive+0.00001;
+
+        // Solve this equation backwards:
+        // MotorX = TranslationX * scaleFactor + RotationX
+        // to find scaleFactor that ensures -1 <= MotorX <= 1 and 0 < scaleFactor <= 1
+        // drive+strafe+rotate
+        if (Math.abs(strafe + drive + rotate)>1) {
+            tmpScale = (1 - rotate) / (drive + strafe);
+        } else if ((strafe + rotate + drive)<-1) {
+            tmpScale = (rotate - 1) / (drive + strafe);
+        }
+        if (tmpScale < scaleFactor) {
+            scaleFactor = tmpScale;
+        }
+        // drive-strafe+rotate
+        if (Math.abs(-strafe + drive + rotate)>1) {
+            tmpScale = (1 - rotate) / (drive + -strafe);
+        } else if ((-strafe + rotate + drive)<-1) {
+            tmpScale = (rotate - 1) / (drive + -strafe);
+        }
+        if (tmpScale < scaleFactor) {
+            scaleFactor = tmpScale;
+        }
+        //drive-strafe-rotate
+        if (Math.abs(-strafe + drive + -rotate)>1) {
+            tmpScale = (1 - -rotate) / (drive + -strafe);
+        } else if ((strafe + -rotate + drive)<-1) {
+            tmpScale = (-rotate - 1) / (drive + -strafe);
+        }
+        if (tmpScale < scaleFactor) {
+            scaleFactor = tmpScale;
+        }
+        // drive + strafe - rotate
+        if (Math.abs(strafe + drive + -rotate)>1) {
+            tmpScale = (1 - -rotate) / (drive + strafe);
+        } else if ((strafe+rotate+drive)<-1) {
+            tmpScale = (-rotate - 1) / (drive + strafe);
+        }
+        if (tmpScale < scaleFactor) {
+            scaleFactor = tmpScale;
+        }
+*/
+
+        robot.leftFrontDrive.setPower(scaleFactor*(drive + strafe) + rotate);
+        robot.leftRearDrive.setPower(scaleFactor*(drive - strafe) + rotate);
+        robot.rightFrontDrive.setPower(scaleFactor*(drive - strafe) - rotate);
+        robot.rightRearDrive.setPower(scaleFactor*(drive + strafe) - rotate);
+        //telemetry.addData("drive",drive);
+        //telemetry.addData("strafe",strafe);
+        //telemetry.addData("rotate",rotate);
+        //telemetry.addData("scaleFactor",scaleFactor);
+        //telemetry.update();
+    }
 }
 
 
