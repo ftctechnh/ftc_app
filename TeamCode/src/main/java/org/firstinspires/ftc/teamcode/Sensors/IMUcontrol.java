@@ -20,7 +20,7 @@ public class IMUcontrol {
     public double currentAngle;
     public double trueAngle;
     public double angle2turn;
-    public double startTrueAngle = 180;
+    public double startTrueAngle;
 
     public double moveSpeed = 0.5;
     public double turnSpeed = 0.4;
@@ -55,7 +55,7 @@ public class IMUcontrol {
     public void IMUupdate(){
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         currentAngle = angles.firstAngle;
-        trueAngle = currentAngle-startAngle;
+        trueAngle = startAngle-currentAngle;
 
         //keeps the angle in a 360 degree range so there is only one number or each orientation
         if (trueAngle > 180){
@@ -65,4 +65,7 @@ public class IMUcontrol {
             trueAngle += 360;
         }
     }
+
+
 }
+

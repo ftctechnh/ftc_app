@@ -140,12 +140,14 @@ public class Auto3imu extends LinearOpMode {
 
             now = runtime.seconds() - lastReset;
 
+            telemetry.addData("startAngle", imu.startAngle);
+            telemetry.addData("currentAngle", imu.currentAngle);
+            telemetry.addData("trueAngle", imu.trueAngle);
+            telemetry.update();
+
             //state switch
             switch (mCurrentState) {
                 case STATE_LAND:
-                    HomeAngle = imu.startAngle;
-                    telemetry.addData("Start Angle", HomeAngle);
-                    telemetry.update();
                     //Lower the robot
                     sleep(1000);
                     //detach
@@ -158,7 +160,7 @@ public class Auto3imu extends LinearOpMode {
                     newState(State.STATE_INITIAL);
                     break;
 
-                    case STATE_INITIAL:
+                case STATE_INITIAL:
                     /*Sample.init();
                     Sample.start();
                     Sample.loop();*/
