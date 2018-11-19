@@ -24,6 +24,7 @@ public class DriveTest extends LinearOpMode {
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
+        Drive.init(hardwareMap);
 
         telemetry.update();
 
@@ -33,7 +34,7 @@ public class DriveTest extends LinearOpMode {
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
 
-            Drive.init(hardwareMap);
+
 
             egamepad1.updateEdge();
             egamepad2.updateEdge();
@@ -54,17 +55,18 @@ public class DriveTest extends LinearOpMode {
                 Drive.tankLeftForward(speed);
             }
 
-            if (-gamepad1.left_stick_y < -0.4) {
+             else if (-gamepad1.left_stick_y < -0.4) {
                 Drive.moveBackward(speed);
             } else if (-gamepad1.left_stick_y > 0.4) {
                 Drive.moveForward(speed);
             }
 
-            if (gamepad1.left_stick_x > 0.4) {
+            else if (gamepad1.left_stick_x > 0.4) {
                 Drive.turnRight(speed/2);
             } else if (gamepad1.left_stick_x < -0.4) {
                 Drive.turnLeft(speed/2);
             }
+            else { Drive.stop();}
 
             telemetry.addLine("Speed: " + speed);
 
