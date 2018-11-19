@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.Trackable;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -29,8 +31,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous (name = "AutoMineralCoachVince", group = "Rohan")
-public class AutoMineralCoachVince extends LinearOpMode {
+@Autonomous (name = "AutoMineralRohan2", group = "Rohan")
+public class AutoMineralRohan2 extends LinearOpMode {
 
     HardwareBruinBot hwMap = new HardwareBruinBot();
 
@@ -263,7 +265,9 @@ public class AutoMineralCoachVince extends LinearOpMode {
         telemetry.update();
 
         // Wait for the Start button to be pushed
+        /** Isn't this a silly while loop because we already started?? */
         while (!isStarted()) {
+
             // Put things to do prior to start in here
             telemetry.addData(">", "Robot Heading = %d", gyro.getIntegratedZValue());
             telemetry.update();
@@ -271,9 +275,9 @@ public class AutoMineralCoachVince extends LinearOpMode {
 
         /**Mile Marker 20**/
 
-        double fwdSpeed=0.0;  // Forward Speed, Normally 0.1
+        //double fwdSpeed=0.0;  // Forward Speed, Normally 0.1
+        //double strafe = 0.1;  // Strafe Speed
         double rotate = 0.1; // Rotation Speed
-        double strafe = 0.1;  // Strafe Speed
 
         hwMap.landerLatchLift.setPower(0.3);
         sleep(2000);
@@ -287,14 +291,15 @@ public class AutoMineralCoachVince extends LinearOpMode {
            telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
            telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
            telemetry.addLine("testing");
-           if(detector.getAligned())
-           {
-               fwdSpeed = 0.1;
-           }
-           else
-           {
-               fwdSpeed = 0.0;
-           }
+
+           //if(detector.getAligned())
+           //{
+            //      fwdSpeed = 0.1;
+           //}
+           //else
+           //{
+           //    fwdSpeed = 0.0;
+           //}
 
             //For a 0.5 second period, move the robot forward away from the lander;
             // I don't think we need this - "sleep" takes care of this while (runtime.seconds() < 0.5)
@@ -346,14 +351,14 @@ public class AutoMineralCoachVince extends LinearOpMode {
            telemetry.update();
         }
 
-        /**Mile Marker 30*/*
+        /**Mile Marker 30**/
 
         //Now we move the robot forward slightly to push the mineral.
         //These are still very rough estimates... they need to be changed
         move(0,0,0.25);
         sleep(500);
         stopBot();
-        move(0,0,-0.25);
+        /*move(0,0,-0.25);
         sleep(500);
         move(0.1,0,0);
         sleep(1000);
@@ -363,7 +368,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
         sleep(500);
         move(-0.1,0,0);
         sleep(2500);
-
+        */
         //Below is code to get the robot to the depot position
         //Determine if we can see a Target
         // If a target is visible, then move toward the depot.  If target not visible will have to take last
@@ -371,25 +376,57 @@ public class AutoMineralCoachVince extends LinearOpMode {
 
         /**Mile Marker 40**/
 
-        /**How do we get RobotVector to return two variables??***/
-        OpenGLMatrix location = getRobotVector();
-        targetVisible = getRobotVector();
-        boolean InDepot;
+        //OpenGLMatrix location; - don't need this, not using
+        //location = getRobotVector(); - don't need this
+        lastLocation = null;
+        targetVisible = false;
 
-        if !targetVisible {
-            //Move robot from minerals to depot in a pre-programmed manner **NEED TO FILL IN**
+        // check the trackable targets to see which one (if any) is visible and pull robot position
+        for (VuforiaTrackable trackable : allTrackables) {
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                telemetry.addData("Visible Target", trackable.getName());
+                targetVisible = true;
+                // getUpdatedRobotLocation() will return null if no new information is available since
+                // the last time that call was made, or if the trackable is not currently visible.
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null) {
+                    lastLocation = robotLocationTransform;
+                }
+                break;
+            }
+        }
+
+        // If we don't see Vuforia, then move using a pre-programmed direction
+        if (!targetVisible) {
+            /**Move robot from minerals to depot in a pre-programmed manner **NEED TO FILL IN**/
             move(3, 4, 0);
         }
 
-        //If we see a target, then move toward that target for a small distance and then
-        // re-assess and keep repeating until the target disappears or reached the depot
+        // However, if a trackable was seen, navigate using the trackable until it is no longer visible
         else {
+            boolean InDepot = false;
 
-        while !InDepot () {
-                OpenGLMatrix location = getRobotVector();
+            //If we see a target, then move toward that target for a small distance and then
+            // re-assess and keep repeating until the target disappears or reached the depot
 
-            // express position (translation) of robot in inches. Trying the expression "location" rather than lastLocation
-            VectorF translation = location.getTranslation();
+        while (!InDepot) {
+
+            // check the trackable targets to see which one (if any) is visible and pull robot position
+            for (VuforiaTrackable trackable : allTrackables) {
+                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
+                    telemetry.addData("Visible Target", trackable.getName());
+                    targetVisible = true;
+                    // getUpdatedRobotLocation() will return null if no new information is available since
+                    // the last time that call was made, or if the trackable is not currently visible.
+                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                    if (robotLocationTransform != null) {
+                        lastLocation = robotLocationTransform;
+                    }
+                    break;
+                }
+            }
+            // express position (translation) of robot in inches.
+            VectorF translation = lastLocation.getTranslation();
             telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                     translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
@@ -406,14 +443,14 @@ public class AutoMineralCoachVince extends LinearOpMode {
             double DeltaXPos = depotXPos - RobotXPos;
             double DeltaYPos = depotYPos - RobotYPos;
             double RotationToDepot = Math.atan(DeltaYPos/DeltaXPos);
-            double DistanceToDepot = Math.sqrt(DeltaXPos^2 + DeltaYPos^2);
+            double RobotRotation = Math.atan(RobotYPos/RobotXPos);
+            double DistanceToDepot = Math.sqrt((DeltaXPos*DeltaXPos)+(DeltaYPos*DeltaYPos));
             double RotationFromRobot = RotationToDepot - RobotRotation;
 
             //Need some fancy math here to tell the robot to move in the direction RotationFromRobot
                 move(RotationFromRobot, 0, -RotationFromRobot);
 
-                /**Mile Marker 50**
-                */
+                /**Mile Marker 50***/
 
                 //Check distance to depot; if the distance is small, then we are 'In Depot'
                     if ((DistanceToDepot)<0.5) {
@@ -422,21 +459,28 @@ public class AutoMineralCoachVince extends LinearOpMode {
                     else {
                         InDepot = false;
                     }
+
                     //If we've lost view of the target, then move the rest of the way to target
-                    if !targetVisible {
+                    /**work on this for how to move the robot with last Vuforia position**/
+
+                    if (!targetVisible) {
                     move(RotationFromRobot, 0, DistanceToDepot);
                     InDepot = true;
                     telemetry.addData("Visible Target", "none");
                 telemetry.update();
                     }
+
+                    //Wait 100 ms before checking Vuforia again
+                    sleep(100);
                 }
             }
             //Reached the depot. **NOW Drop the token and move to crater!!**
-        }
-        //End of OpMode
 
 
     }
+        //End of OpMode
+
+
 
     public void move(double drive, double rotate, double strafe)
     {
@@ -474,28 +518,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
         hwMap.rightRearDrive.setPower(0);
     }
 
-    //This is creating a method that can return the vector position of the robot
-    public OpenGLMatrix getRobotVector () {
-        // check all the trackable target to see which one (if any) is visible.
-        targetVisible = false;
-        for (VuforiaTrackable trackable : allTrackables) {
-            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                telemetry.addData("Visible Target", trackable.getName());
-                targetVisible = true;
 
-                // getUpdatedRobotLocation() will return null if no new information is available since
-                // the last time that call was made, or if the trackable is not currently visible.
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-                if (robotLocationTransform != null) {
-                    lastLocation = robotLocationTransform;
-                    return lastLocation;
-                    //how do we also return targetVisible?
-                    return targetVisible;
-                }
-                break;
-            }
-        }
-    }
 
 
 // Below is code to spin the robot using the gyro, commented out
@@ -509,7 +532,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
      * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
-     */
+     *
     /*public void gyroTurn (  double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
@@ -529,7 +552,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
      *                   If a relative angle is required, add/subtract from current heading.
      * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
-    /*
+    /**
     public void gyroHold( double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
@@ -556,7 +579,7 @@ public class AutoMineralCoachVince extends LinearOpMode {
      * @param PCoeff    Proportional Gain coefficient
      * @return
      */
-    /*boolean onHeading(double speed, double angle, double PCoeff) {
+    /**boolean onHeading(double speed, double angle, double PCoeff) {
         double   error ;
         double   steer ;
         boolean  onTarget = false ;

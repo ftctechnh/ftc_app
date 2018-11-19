@@ -3,15 +3,12 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.HardwareBruinBot;
 
 @Autonomous (name = "AutoRedDepotCoachVince", group = "Vince")
 public class AutoRedDepotCoachVince extends LinearOpMode {
@@ -83,6 +80,32 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
 
 
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoMineralRohan2.java
+            //For a 0.5 second period, move the robot forward away from the lander;
+            // I don't think we need this - "sleep" takes care of this while (runtime.seconds() < 0.5)
+            if(detector.getXPosition() < 240)
+            {
+                //double rotate = 0.2;
+                hwMap.leftFrontDrive.setPower(rotate); //= drive + strafe + rotate;
+                hwMap.leftRearDrive.setPower(rotate); //= drive - strafe + rotate;
+                hwMap.rightFrontDrive.setPower(-rotate); //= drive - strafe - rotate;
+                hwMap.rightRearDrive.setPower(-rotate); //= drive + strafe - rotate;
+
+            }
+            else if(detector.getXPosition() > 370)
+            {
+                //double rotate = -0.2;
+                hwMap.leftFrontDrive.setPower(-rotate); //= drive + strafe + rotate;
+                hwMap.leftRearDrive.setPower(-rotate); //= drive - strafe + rotate;
+                hwMap.rightFrontDrive.setPower(rotate); //= drive - strafe - rotate;
+                hwMap.rightRearDrive.setPower(rotate); //= drive + strafe - rotate;
+            }
+            else
+            {
+                move(0,0, 0.25);
+                sleep(200);
+            }
+=======
         // Lower the Robot from the lander
         robot.landerLatchLift.setPower(0.3);
         sleep(2000);
@@ -92,6 +115,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
         moveBot(-fwdSpeed,0,0);
         sleep(200);
         stopBot();
+>>>>>>> 03c93fbfd1c18a04d9c6499b70c97050e661b31b:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRedDepotCoachVince.java
 
         // Move the robot forward until it sees the Red line with the color sensor
         while (robot.colorSensor.red() < 160) {
@@ -118,6 +142,23 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
         }
         // Drop the totem
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoMineralRohan2.java
+        //Now we move the robot forward slightly to push the mineral.
+        move(0,0,0.25);
+        sleep(500);
+        stopBot();
+        move(0,0,-0.25);
+        sleep(500);
+        move(0.1,0,0);
+        sleep(1000);
+        move(0,0.1,0);
+        sleep(250);
+        move(0.1,0,0);
+        sleep(500);
+        move(-0.1,0,0);
+        sleep(2500);
+
+=======
         // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
         // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
 
@@ -127,6 +168,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
         //Need to change this to "while not detected" like in the GoldAlignExample program;
 
         stopBot();
+>>>>>>> 03c93fbfd1c18a04d9c6499b70c97050e661b31b:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoRedDepotCoachVince.java
 
     }
     public void moveBot(double drive, double rotate, double strafe)
