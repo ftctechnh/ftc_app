@@ -17,4 +17,4 @@ In order to call a method, simply create an object of the corresponding class un
 * TankDrive - *Analog* - controls: (leftdrive, rightdrive)
 * strafe - *Binary* - parameters: (left, right, up, down)
 * lift_a - *Analog* - parameters: (float lift)
-* lift_b - *Binary* - parameters: (boolean lift)
+* lift_b - *Binary* - parameters: (up, down)

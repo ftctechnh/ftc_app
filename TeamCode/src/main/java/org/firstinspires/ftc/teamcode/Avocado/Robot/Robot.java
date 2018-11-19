@@ -8,17 +8,18 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Robot {
 
-    // Gamepad 1
+/* Hardware ------------------------------------------------------------------------------------ */
+
+    // Hardware controlled by Gamepad 1
     public DcMotor topLeftMotor;
     public DcMotor bottomLeftMotor;
     public DcMotor topRightMotor;
     public DcMotor bottomRightMotor;
 
-    //Gamepad 2
+    // Hardware controlled by Gamepad 2
     public DcMotor hanger;
     public DcMotor claw;
     public DcMotor tiltMotor;
-
 
     HardwareMap hwmap = null;
 
@@ -39,10 +40,12 @@ public class Robot {
 
 /* Methods ------------------------------------------------------------------------------------ */
 
+    // posleft is used to correct the direction of the motors on the left side of the robot
     byte posleft = -1;
 
     public void TankDrive(float leftdrive, float rightdrive) {
 
+        // Passes controller values to the motors
         topLeftMotor.setPower(-leftdrive);
         bottomLeftMotor.setPower(-leftdrive);
         topRightMotor.setPower(rightdrive);
@@ -52,25 +55,28 @@ public class Robot {
 
     public void lift_a(float lift) {
 
-        float leftY_gp2 = (-lift);
-        float rightY_gp2 = (-lift);
-
-        hanger.setPower(leftY_gp2);
+        // Pass controller value into the lift motor
+        hanger.setPower(-lift);
 
     }
 
-    public void lift_b(boolean lift) {
+    public void lift_b(boolean up, boolean down) {
 
-        if(lift) {
+        // If up is pressed move motor in a positive direction. If down is pressed, move it in a negative direction.
+        if(up) {
 
             hanger.setPower(1);
+
+        } else if(down) {
+
+            hanger.setPower(-1);
 
         }
 
     }
 
     public void strafe(boolean left, boolean right, boolean up, boolean down) {
-
+    // Move robot in the direction corresponding to the DPad
         if (left) {
 
             topLeftMotor.setPower(1 * posleft);
@@ -110,9 +116,6 @@ public class Robot {
 
 
 /* Constants ---------------------------------------------------------------------------------- */
-    public interface Constants {
 
-        int x = 1;
-    }
 
 }
