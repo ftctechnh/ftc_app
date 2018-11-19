@@ -35,12 +35,11 @@ public class DriveTest extends LinearOpMode {
         while (opModeIsActive()) {
 
 
-
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
             //speed control
-            if (egamepad1.right_bumper.pressed) {
+            if (egamepad1.left_stick_button.pressed) {
                 speed += 0.25;
                 if (speed > 3) speed = 3;
             }
@@ -53,20 +52,17 @@ public class DriveTest extends LinearOpMode {
                 Drive.tankRightForward(speed);
             } else if (egamepad1.dpad_right.state) {
                 Drive.tankLeftForward(speed);
-            }
-
-             else if (-gamepad1.left_stick_y < -0.4) {
+            } else if (-gamepad1.left_stick_y < -0.4) {
                 Drive.moveBackward(speed);
             } else if (-gamepad1.left_stick_y > 0.4) {
                 Drive.moveForward(speed);
-            }
-
-            else if (gamepad1.left_stick_x > 0.4) {
-                Drive.turnRight(speed/2);
+            } else if (gamepad1.left_stick_x > 0.4) {
+                Drive.turnRight(speed / 2);
             } else if (gamepad1.left_stick_x < -0.4) {
-                Drive.turnLeft(speed/2);
+                Drive.turnLeft(speed / 2);
+            } else {
+                Drive.stop();
             }
-            else { Drive.stop();}
 
             telemetry.addLine("Speed: " + speed);
 
