@@ -6,6 +6,9 @@ public class MineralLiftController extends SubsystemController{
 
     private MineralLift mineralLift;
 
+    private final int COLLECT_POSITION = 0;
+    private final int DUMP_POSITION = 1000;
+
     public MineralLiftController(){
         init();
     }
@@ -15,6 +18,14 @@ public class MineralLiftController extends SubsystemController{
         opModeSetup();
 
         mineralLift = new MineralLift(hardwareMap);
+    }
+
+    public void moveToCollectPosition(){
+        mineralLift.setPosition(COLLECT_POSITION);
+    }
+
+    public void moveToDumpPosition(){
+        mineralLift.setPosition(DUMP_POSITION);
     }
 
     @Override

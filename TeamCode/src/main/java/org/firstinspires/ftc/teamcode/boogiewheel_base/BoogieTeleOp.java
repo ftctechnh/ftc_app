@@ -10,35 +10,26 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor
 
 import java.util.concurrent.Callable;
 
-@TeleOp(name="boggiewheel_teleop", group="New")
+@TeleOp(name="BoogieWheel Teleop", group="New")
 //@Disabled
 
 public class BoogieTeleOp extends AbstractTeleop {
 
     private Robot robot;
-    private SlewDcMotor intakeMotor;
 
     @Override
     public void RegisterEvents() {
-        addEvent("lsy_change", () -> {
-            robot.setDriveY(gamepad1.left_stick_y);
-            return true;
-        });
+        addEvent("lsy_change", robot.setDriveY(gamepad1.left_stick_y));
 
-        addEvent("rsx_change", () -> {
-            robot.setDriveZ(gamepad1.right_stick_x);
-            return true;
-        });
+        addEvent("rsx_change", robot.setDriveZ(gamepad1.right_stick_x));
 
-        addEvent("a_down", () -> {
-            intakeMotor.setPower(-1);
-            return true;
-        });
+        addEvent("a_down", robot.finishIntaking());
 
-        addEvent("a_down", () -> {
-            intakeMotor.setPower(0);
-            return true;
-        });
+        addEvent("b_down", robot.beginIntaking());
+
+        addEvent("lb_down", robot.moveMineralLiftToCollectPosition());
+
+        addEvent("rb_down", robot.moveMineralLiftToDumpPosition());
     }
 
     @Override
@@ -49,13 +40,11 @@ public class BoogieTeleOp extends AbstractTeleop {
     @Override
     public void Init() {
         robot = new Robot();
-        intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public void Loop() {
-
+        robot.updateDrive();
     }
 
     @Override

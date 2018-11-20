@@ -1,10 +1,13 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
+import android.telecom.Call;
+
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.AbstractRobot;
 
 import java.util.concurrent.Callable;
 
-public class Robot {
+public class Robot extends AbstractRobot{
 
     private HardwareDevices hardware;
 
@@ -13,16 +16,25 @@ public class Robot {
     }
 
     //Drive Methods
-    public void setDriveY(double y){
-        hardware.drive.setY(y);
+    public Callable setDriveY(double y){
+        return ()->{
+            hardware.drive.setY(y);
+            return true;
+        };
     }
 
-    public void setDriveZ(double z){
-        hardware.drive.setZ(z);
+    public Callable setDriveZ(double z){
+        return ()-> {
+            hardware.drive.setZ(z);
+            return true;
+        };
     }
 
-    public void setDrivePower(double l, double r){
-        hardware.drive.setPower(l,r);
+    public Callable setDrivePower(double l, double r){
+        return ()-> {
+            hardware.drive.setPower(l, r);
+            return true;
+        };
     }
 
     public void updateDrive(){
@@ -62,18 +74,32 @@ public class Robot {
     }
 
     //Intake Methods
-    public void beginIntaking(){
-
+    public Callable beginIntaking(){
+        return ()->{
+            hardware.intake.beginIntaking();
+            return true;
+        };
     }
 
     public Callable finishIntaking(){
-        return () -> {
-          hardware.intake.beginIntaking();
+        return ()->{
+          hardware.intake.finishIntaking();
           return true;
         };
     }
 
-    public void delay(int time){
-        AbstractOpMode.delay(time);
+    //Mineral Lift Methods
+    public Callable moveMineralLiftToCollectPosition(){
+        return ()->{
+            hardware.mineralLift.moveToCollectPosition();
+            return true;
+        };
+    }
+    
+    public Callable moveMineralLiftToDumpPosition(){
+        return ()->{
+            hardware.mineralLift.moveToDumpPosition();
+            return true;
+        };
     }
 }

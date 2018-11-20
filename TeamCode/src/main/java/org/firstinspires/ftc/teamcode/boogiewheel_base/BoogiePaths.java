@@ -7,10 +7,10 @@ import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 import org.upacreekrobotics.dashboard.Dashboard;
 
-@Autonomous(name="boggiewheel_paths", group="New")
+@Autonomous(name="BoogieWheel Paths", group="New")
 //@Disabled
 
-public class BoogieWheelPaths extends AbstractAuton {
+public class BoogiePaths extends AbstractAuton {
     private Robot robot;
 
     @Override

@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.visi
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
-@Autonomous(name = "boogiewheel_auton_tensorflow", group = "New")
+@Autonomous(name = "BoogieWheel Auton Tensorflow", group = "New")
 //@Disabled
 
 public class BoogieAutonTensorFlow extends AbstractAuton {

@@ -61,6 +61,7 @@ public class Emitter {
         return new EmptyResult();
     }
 
+    //TODO Matt should look at this
     public void refresh(){
         Enumeration<String> set = cache.keys();
         while(set.hasMoreElements()){

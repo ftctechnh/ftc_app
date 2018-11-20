@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
 
-@TeleOp(name="test_teleop", group="New")
+@TeleOp(name="Test Teleop", group="New")
 //@Disabled
 
 public class FrameworkTest extends AbstractTeleop{
@@ -20,7 +20,7 @@ public class FrameworkTest extends AbstractTeleop{
             return true;
         });
 
-        addEvent("odd_down", () -> {
+        addEvent("even_up", () -> {
             telemetry.addData("odd");
             telemetry.update();
             return true;
@@ -29,10 +29,9 @@ public class FrameworkTest extends AbstractTeleop{
 
     @Override
     public void UpdateEvents() {
-        boolean even = (((int)runTime.milliseconds())%2==0);
-        telemetry.update();
+        boolean even = (((int)runTime.seconds())%2==0);
         checkBooleanInput("even",even);
-        checkBooleanInput("odd",!even);
+        //checkBooleanInput("odd",!even);
     }
 
     @Override

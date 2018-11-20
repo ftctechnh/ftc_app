@@ -76,6 +76,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             }
         }
 
+        //TODO remake our shutdown procedure
         emitter.shutdown();
 
         while (!service.isTerminated()) {
@@ -213,7 +214,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
     }
 
     private void checkEvents() {
-        emitter.refresh();
+        //emitter.refresh();
 
         // boolean buttons
         checkBooleanInput("a", gamepad1.a);
@@ -259,11 +260,13 @@ public abstract class AbstractTeleop extends AbstractOpMode {
     // This is a lazy map. It only tracks buttons that have been pressed. It can
     // easily scale to handle as many buttons as you have unique names.
     class ButtonStateMap {
+
         ConcurrentHashMap<String, Boolean> state;
-        boolean oldVal;
+
         ButtonStateMap() {
             state = new ConcurrentHashMap<String,Boolean>();
         }
+
         boolean isChanged(String name, boolean newVal) {
             if (!state.containsKey(name)) {
                 AbstractOpMode.getTelemetry().addData("Adding: "+name);
@@ -271,10 +274,10 @@ public abstract class AbstractTeleop extends AbstractOpMode {
                 state.put(name, newVal);
                 return newVal;
             }
-            oldVal = state.get(name);
-            //state.replace(name, newVal);
-            return oldVal != newVal;
+
+            return state.get(name) != newVal;
         }
+
         void change(String name, boolean newVal) {
             state.replace(name, newVal);
         }
@@ -282,21 +285,23 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     // This is a float variant of a ButtonStateMap.
     class FloatStateMap {
+
         ConcurrentHashMap<String, Float> state;
-        float oldVal;
+
         FloatStateMap() {
             state = new ConcurrentHashMap<String,Float>();
         }
+
         boolean isChanged(String name, float newVal) {
             if (!state.containsKey(name)) {
                 // If it's not 0, it's changed
                 state.put(name, newVal);
                 return newVal == 0.0;
             }
-            oldVal = state.get(name);
-            //state.replace(name, newVal);
+
             return state.get(name) != newVal;
         }
+
         void change(String name, float newVal) {
             state.replace(name, newVal);
         }

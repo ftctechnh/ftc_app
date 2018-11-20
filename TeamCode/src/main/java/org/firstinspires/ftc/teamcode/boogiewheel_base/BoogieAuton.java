@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
-@Autonomous(name="boggiewheel_auton", group="New")
+@Autonomous(name="BoogieWheel Auton", group="New")
 //@Disabled
 
 public class BoogieAuton extends AbstractAuton {

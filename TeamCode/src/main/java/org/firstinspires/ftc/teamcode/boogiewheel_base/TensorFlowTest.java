@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
 
-@Autonomous(name="TensorFlow_Test", group="New")
+@Autonomous(name="TensorFlow Test", group="New")
 //@Disabled
 
 public class TensorFlowTest extends AbstractAuton {
