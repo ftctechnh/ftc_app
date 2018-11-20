@@ -13,6 +13,7 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+apply plugin: 'kotlin-android'
 
 repositories {
     flatDir {
@@ -26,4 +27,7 @@ repositories {
 
 android {
     buildToolsVersion '28.0.3'
+}
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
