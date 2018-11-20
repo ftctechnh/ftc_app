@@ -64,7 +64,7 @@ public class BullRun4 extends OpMode {
     // Hack stuff.
     private boolean useMotors = true;
     private boolean madeTheRun = false;
-
+    private boolean useFourWheelDrive = false;
     /**
      * Code to run ONCE when the driver hits INIT
      */
@@ -75,27 +75,33 @@ public class BullRun4 extends OpMode {
         if (useMotors) {
             motorBackLeft = hardwareMap.get(DcMotor.class, "motor0");
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
-            motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
-            motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
+
+            if(useFourWheelDrive) {
+                motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
+                motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
+                motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+                motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+                motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-            motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-            motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-            motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+
 
             // initilize the encoder
             motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
             //tell the encoder what mode to run in
             motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         }
     }
 
