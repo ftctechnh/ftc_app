@@ -172,9 +172,9 @@ public class BullRunChaChaCha4 extends OpMode {
             double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 23, 23);
+            encoderDrive(speed, 56, 56);
             turnRight(90);
-           // encoderDrive(speed, 25, 25);
+            encoderDrive(speed, 30, 30);
             madeTheRun = true;
 
         }
