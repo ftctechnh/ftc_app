@@ -4,6 +4,5 @@ public enum ArmState
 {
     ROTATING_DROP,
     ROTATING_PICKUP,
-    ROTATING_LATCH,
     IDLE
 }

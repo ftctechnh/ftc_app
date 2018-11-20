@@ -20,11 +20,11 @@ public class ArmSystem extends System {
     private Ramp rampUp;
     private Ramp rampDown;
 
-    private final double PotentiometerMaximum = 1.1;
-    private final double PotentiometerMiddle = 0.55;
-    private final double PotentiometerLatch = 0.86;
+    private final double PotentiometerMaximum = 1.6;
+    private final double PotentiometerMiddle = 1.05;
+    private final double PotentiometerLatch = 1.5;
     private final double PotentiometerRange = 0.01;
-    private final double PotentiometerMinimum = 0.08;
+    private final double PotentiometerMinimum = 1.1;
     private final double MaxPower = 0.3;
     private final double MinPower = 0.01;
 
@@ -55,9 +55,6 @@ public class ArmSystem extends System {
             case ROTATING_DROP:
                 rotateDrop();
                 break;
-            case ROTATING_LATCH:
-                rotateLatch();
-                break;
             case ROTATING_PICKUP:
                 rotatePickup();
                 break;
@@ -68,9 +65,9 @@ public class ArmSystem extends System {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtPickupPosition()) {
-            telemetry.log("voltage", rampDown.scaleX(potentiometer.getVoltage()));
-            motor1.setPower(0.2);
-            motor2.setPower(-0.2);
+            telemetry.log("voltage", potentiometer.getVoltage());
+            motor1.setPower(0.05);
+            motor2.setPower(-0.05);
             telemetry.write();
         } else {
             setState(ArmState.IDLE);
@@ -83,36 +80,14 @@ public class ArmSystem extends System {
         return potentiometer.getVoltage() <= PotentiometerMinimum;
     }
 
-    public void rotateLatch(){
-        motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (!isAtRotateLatch()) {
-            motor1.setPower(-getPower());
-            motor2.setPower(getPower());
-        } else {
-            setState(ArmState.IDLE);
-            motor1.setPower(0.0);
-            motor2.setPower(0.0);
-        }
-    }
-
-    private boolean isAtRotateLatch() {
-        return potentiometer.getVoltage() >= PotentiometerLatch - PotentiometerRange &&
-                potentiometer.getVoltage() <= PotentiometerLatch + PotentiometerRange;
-    }
-
-    private double getPower() {
-        return potentiometer.getVoltage() > PotentiometerLatch + PotentiometerRange ?
-                -MaxPower :
-                MaxPower;
-    }
-
     public void rotateDrop() {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtDropPosition()) {
-            motor1.setPower(-0.2);
-            motor2.setPower(0.2);
+            telemetry.log("voltage", potentiometer.getVoltage());
+            motor1.setPower(-0.05);
+            motor2.setPower(0.05);
+            telemetry.write();
         } else {
             setState(ArmState.IDLE);
             motor1.setPower(0.0);
