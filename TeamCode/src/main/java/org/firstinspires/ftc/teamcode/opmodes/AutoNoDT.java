@@ -55,7 +55,7 @@ public class AutoNoDT extends LinearOpMode {
 
 
 
-            straight`atapault.flick(0.5,500);
+            straightCatapault.flick(0.5,500);
             Utils.waitFor(1000);
             straightCatapault.flick(-.3,800);
 
