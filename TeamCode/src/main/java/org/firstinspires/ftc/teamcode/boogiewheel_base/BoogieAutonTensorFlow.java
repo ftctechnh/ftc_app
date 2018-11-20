@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
@@ -16,35 +17,68 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor
 public class BoogieAutonTensorFlow extends AbstractAuton {
 
     private TensorFlow tensorFlow;
+    ElapsedTime Mineraltimer;
+
 
     Robot robot;
     double speed = 1, error = 3;
     int period = 100;
 
     private SlewDcMotor intakeMotor;
-
+    final boolean IntakeHardwareEnabled = false;
     @Override
     public void Init() {
+        //IF YOU HIT INIT AND WAIT A LITTLE BIT, THE CAMERA WILL FIND THE OBJECT MUCH FASTER
         robot = new Robot();
-        intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
 
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
+            intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
+        Mineraltimer = new ElapsedTime();
     }
 
     @Override
     public void Run() {
+        SamplePosition TensorPosition;
+        double MineraldetectionTime;
+
+
         tensorFlow.start();
+        Mineraltimer.reset();  //timer = 0
 
-        while (tensorFlow.getSamplePosition() == SamplePosition.UNKNOWN);
 
-        switch (tensorFlow.getSamplePosition()) {
+        //If the object is not found then it will wait until it finds the object
+        while (   isOpModeActive()
+                   && (tensorFlow.getSamplePosition() == SamplePosition.UNKNOWN)
+                   && (Mineraltimer.milliseconds() < 10000)
+              )
+        {
+            // wait indefinitly until position of object is returned
+            //If position == unknown then it waits until it finds it ....
+
+        }
+        MineraldetectionTime = Mineraltimer.milliseconds();
+        telemetry.addData("Mineral Time = " + MineraldetectionTime  );
+        //after it exits the while loop, find out where mineral is
+        TensorPosition = (tensorFlow.getSamplePosition());
+
+        if (TensorPosition == SamplePosition.UNKNOWN)
+        {
+           TensorPosition = SamplePosition.LEFT;
+        }
+
+
+        switch (TensorPosition) {
             case LEFT: {
+
                 telemetry.addData("-----LEFT-----");
                 telemetry.update();
                 tensorFlow.stop();
-                craterSideLeftMineral();
+              //  craterSideLeftMineral();
                 break;
             }
 
@@ -52,7 +86,7 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
                 telemetry.addData("-----CENTER-----");
                 telemetry.update();
                 tensorFlow.stop();
-                craterSideCenterMineral();
+                //craterSideCenterMineral();
                 break;
             }
 
@@ -60,10 +94,14 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
                 telemetry.addData("-----RIGHT-----");
                 telemetry.update();
                 tensorFlow.stop();
-                craterSideRightMineral();
+                //craterSideRightMineral();
                 break;
+
             }
-        }
+
+        } //Switch statement
+
+        delay(5000);
     }
 
     @Override
@@ -77,12 +115,19 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
 
         robot.turnTo(25, speed, error, period);
 
-        intakeMotor.setPower(1);
+
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor.setPower(1);
+        }
 
         robot.driveTo(24, speed);
 
-        intakeMotor.setPower(0);
 
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor.setPower(0);
+        }
         robot.turnTo(45, speed, error, period);
 
         robot.driveTo(-8, speed);
@@ -93,11 +138,17 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
     public void craterSideCenterMineral() {
         robot.driveTo(6, speed);
 
-        intakeMotor.setPower(1);
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor.setPower(1);
+        }
+
 
         robot.driveTo(24, speed);
-
-        intakeMotor.setPower(0);
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor.setPower(0);
+        }
 
         robot.driveTo(-6, speed);
 
@@ -108,12 +159,16 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
         robot.driveTo(6, speed);
 
         robot.turnTo(-25, speed, error, period);
-
-        intakeMotor.setPower(1);
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor.setPower(1);
+        }
 
         robot.driveTo(24, speed);
-
-        intakeMotor.setPower(0);
+        if (IntakeHardwareEnabled)
+        {
+            intakeMotor.setPower(0);
+        }
 
         robot.turnTo(-45, speed, error, period);
 
