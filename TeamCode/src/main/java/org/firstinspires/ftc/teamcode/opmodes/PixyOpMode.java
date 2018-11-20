@@ -8,7 +8,6 @@ import org.firstinspires.ftc.teamcode.components.pixycam.LegoPixyCam;
 //import org.firstinspires.ftc.teamcode.components.pixycam.PixyCam;
 import org.firstinspires.ftc.teamcode.opmodes.debuggers.LinearOpModeDebugger;
 import org.firstinspires.ftc.teamcode.systems.MecanumDriveSystem;
-import org.firstinspires.ftc.teamcode.systems.PixySystem;
 
 import java.util.ArrayList;
 
