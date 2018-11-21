@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.framework;
 
 import android.support.annotation.NonNull;
 
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
+
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -62,7 +64,11 @@ public class Emitter {
     }
 
     //TODO Matt should look at this
-    public void refresh(){
+    public void refresh(DoubleTelemetry telemetry){
+        telemetry.addData("active threads", ((java.util.concurrent.ThreadPoolExecutor)this.service).getActiveCount());
+        telemetry.addData("pool size", ((java.util.concurrent.ThreadPoolExecutor)this.service).getPoolSize());
+        telemetry.update();
+        /*
         Enumeration<String> set = cache.keys();
         while(set.hasMoreElements()){
             String next = set.nextElement();
@@ -71,6 +77,7 @@ public class Emitter {
                 cache.remove(next);
             }
         }
+        */
     }
 
     public void shutdown() {

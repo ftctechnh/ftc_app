@@ -14,6 +14,9 @@ public class HardwareDevices {
 
     public HardwareDevices(){
         drive = new DriveController();
+        intake = new IntakeController();
+        mineralLift = new MineralLiftController();
+        robotLift = new RobotLiftController();
     }
 
     public void stop(){

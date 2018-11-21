@@ -25,7 +25,6 @@ public class DriveController extends SubsystemController {
     private double motorPosition, baseHeading = 0;
 
     private double turnY=0, turn_z=0, leftPower=0, rightPower=0, Drive_Power = 1.0;
-    private boolean myTestDriveButtonInProgress = false;
 
     public ElapsedTime runtime;
 
@@ -111,7 +110,7 @@ public class DriveController extends SubsystemController {
         drivePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
         straightPID.reset();
         drivePID.setMinimumOutput(0);
-        int position = (int)(distance * 50.8); //
+        int position = (int)(distance * 38); //
         telemetry.addData("Encoder counts: " + position);
         double turn;
         speed = range(speed);
@@ -199,7 +198,7 @@ public class DriveController extends SubsystemController {
     }
 
     public void setY(double y){
-        turnY = y;
+        turnY = -y;
         turnY = (float) scaleInput(turnY);
     }
 
@@ -209,18 +208,9 @@ public class DriveController extends SubsystemController {
     }
 
     public void update(){
-        //if button test is running don't drive robot
-        if(myTestDriveButtonInProgress) {
-            return;
-        }
         leftPower = range((turnY + turn_z) * Drive_Power);
         rightPower = range((turnY - turn_z) * Drive_Power);
-        telemetry.addData("turnY",DF.format(turnY));
-        telemetry.addData("turn_z",DF.format(turn_z));
-        telemetry.addData("Drive_Power",Drive_Power);
 
-        telemetry.addData("left",DF.format(leftPower));
-        telemetry.addData("right",DF.format(rightPower));
         drive.setPower(leftPower, rightPower);
     }
 
@@ -256,7 +246,7 @@ public class DriveController extends SubsystemController {
     }
 
     private double scaleInput(double val) {
-        return range(pow(val, 3));
+        return (range(pow(val, 3)))*0.5;
     }
 
     private double range(double val){

@@ -29,7 +29,6 @@ public class BoogieAuton extends AbstractAuton {
 
     @Override
     public void Run() {
-        //depotSideRightMineral();
         craterSideRightMineral();
     }
 

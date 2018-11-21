@@ -7,7 +7,7 @@ public class MineralLiftController extends SubsystemController{
     private MineralLift mineralLift;
 
     private final int COLLECT_POSITION = 0;
-    private final int DUMP_POSITION = 1000;
+    private final int DUMP_POSITION = 3500;
 
     public MineralLiftController(){
         init();

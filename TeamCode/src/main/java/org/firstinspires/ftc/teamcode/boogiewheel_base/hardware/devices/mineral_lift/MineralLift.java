@@ -20,7 +20,7 @@ public class MineralLift {
     }
 
     public void setPosition(int position){
-        liftMotor.setPower(0.3);
+        liftMotor.setPower(1);
         liftMotor.setTargetPosition(position);
     }
 

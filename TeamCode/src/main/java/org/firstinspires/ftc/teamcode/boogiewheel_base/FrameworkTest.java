@@ -14,13 +14,13 @@ public class FrameworkTest extends AbstractTeleop{
 
     @Override
     public void RegisterEvents() {
-        addEvent("even_down", () -> {
+        addEventHandler("even_down", () -> {
             telemetry.addData("even");
             telemetry.update();
             return true;
         });
 
-        addEvent("even_up", () -> {
+        addEventHandler("even_up", () -> {
             telemetry.addData("odd");
             telemetry.update();
             return true;

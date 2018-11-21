@@ -16,25 +16,16 @@ public class Robot extends AbstractRobot{
     }
 
     //Drive Methods
-    public Callable setDriveY(double y){
-        return ()->{
-            hardware.drive.setY(y);
-            return true;
-        };
+    public void setDriveY(double y){
+        hardware.drive.setY(y);
     }
 
-    public Callable setDriveZ(double z){
-        return ()-> {
-            hardware.drive.setZ(z);
-            return true;
-        };
+    public void setDriveZ(double z){
+        hardware.drive.setZ(z);
     }
 
-    public Callable setDrivePower(double l, double r){
-        return ()-> {
-            hardware.drive.setPower(l, r);
-            return true;
-        };
+    public void setDrivePower(double l, double r){
+        hardware.drive.setPower(l, r);
     }
 
     public void updateDrive(){
@@ -88,18 +79,33 @@ public class Robot extends AbstractRobot{
         };
     }
 
+    public Callable reverseIntake(){
+        return ()->{
+            hardware.intake.reverseIntake();
+            return true;
+        };
+    }
+
     //Mineral Lift Methods
-    public Callable moveMineralLiftToCollectPosition(){
+    public Callable moveMineralLiftToCollectPositionCallable(){
         return ()->{
             hardware.mineralLift.moveToCollectPosition();
             return true;
         };
     }
-    
-    public Callable moveMineralLiftToDumpPosition(){
+
+    public void moveMineralLiftToCollectPosition() {
+        hardware.mineralLift.moveToCollectPosition();
+    }
+
+    public Callable moveMineralLiftToDumpPositionCallable(){
         return ()->{
             hardware.mineralLift.moveToDumpPosition();
             return true;
         };
+    }
+
+    public void moveMineralLiftToDumpPosition(){
+        hardware.mineralLift.moveToDumpPosition();
     }
 }

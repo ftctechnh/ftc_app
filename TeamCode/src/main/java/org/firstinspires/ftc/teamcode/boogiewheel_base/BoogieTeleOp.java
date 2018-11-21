@@ -1,14 +1,9 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
-import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.DistanceSensor2m;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
-
-import java.util.concurrent.Callable;
 
 @TeleOp(name="BoogieWheel Teleop", group="New")
 //@Disabled
@@ -19,17 +14,35 @@ public class BoogieTeleOp extends AbstractTeleop {
 
     @Override
     public void RegisterEvents() {
-        addEvent("lsy_change", robot.setDriveY(gamepad1.left_stick_y));
+        addEventHandler("lsy_change", ()->{
+            robot.setDriveY(gamepad1.left_stick_y);
+            return true;
+        });
 
-        addEvent("rsx_change", robot.setDriveZ(gamepad1.right_stick_x));
+        addEventHandler("rsx_change", ()->{
+            robot.setDriveZ(gamepad1.right_stick_x);
+            return true;
+        });
 
-        addEvent("a_down", robot.finishIntaking());
+        addEventHandler("b_down", robot.finishIntaking());
 
-        addEvent("b_down", robot.beginIntaking());
+        addEventHandler("a_down", robot.beginIntaking());
 
-        addEvent("lb_down", robot.moveMineralLiftToCollectPosition());
+        addEventHandler("y_down", robot.reverseIntake());
 
-        addEvent("rb_down", robot.moveMineralLiftToDumpPosition());
+        //addEventHandler("x_down", robot.moveMineralLiftToCollectPositionCallable());
+
+        //addEventHandler("y_down", robot.moveMineralLiftToDumpPositionCallable());
+
+        addEventHandler("lt_change", ()->{
+            if(gamepad1.left_trigger>0.5) robot.moveMineralLiftToCollectPosition();
+            return true;
+        });
+
+        addEventHandler("rt_change", ()->{
+            if(gamepad1.right_trigger>0.5) robot.moveMineralLiftToDumpPosition();
+            return true;
+        });
     }
 
     @Override

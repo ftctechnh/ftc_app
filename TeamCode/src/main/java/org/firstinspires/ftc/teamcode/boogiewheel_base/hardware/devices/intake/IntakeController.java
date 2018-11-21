@@ -26,6 +26,10 @@ public class IntakeController extends SubsystemController{
         intake.setIntakePower(0);
     }
 
+    public void reverseIntake(){
+        intake.setIntakePower(-1);
+    }
+
     @Override
     public void stop() {
         intake.stop();

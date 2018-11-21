@@ -40,7 +40,6 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         //sets up emitter
         states = new ButtonStateMap();
         floatStates = new FloatStateMap();
-        RegisterEvents();
 
         //calls user init
         service.execute(InitThread);
@@ -55,6 +54,8 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         }
 
         while (!isStopRequested() && threadRunning);
+
+        RegisterEvents();
 
         if(!isStopRequested()) {
             checkException();
@@ -209,12 +210,12 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         }
     }
 
-    public void addEvent(String name, Callable event){
+    public void addEventHandler(String name, Callable event){
         emitter.on(name, event);
     }
 
     private void checkEvents() {
-        //emitter.refresh();
+        emitter.refresh(telemetry);
 
         // boolean buttons
         checkBooleanInput("a", gamepad1.a);
