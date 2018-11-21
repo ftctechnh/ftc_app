@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.Utils.Logger
 
-public class Motor(val hardwareMap: HardwareMap,val motorName:String ){
+class Motor(val hardwareMap: HardwareMap,val motorName:String ){
     val motor = hardwareMap.dcMotor.get(motorName)
     val l = Logger("MOTOR", motorName)
 

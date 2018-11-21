@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Components
 
+import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.Utils.Logger
-import kotlin.math.min
+import android.R.attr.angle
+import android.R.attr.direction
+
+
 
 enum class Direction(val intRepr: Int) {
     FORWARD(1),
@@ -24,16 +26,18 @@ class DriveTrain(val opMode: LinearOpMode){
     val rDrive  = Motor(opMode.hardwareMap, "rDrive")
     val driveMotors = MotorGroup()
 
-    init {
-        initMotors()
-    }
+    val imu = IMU(opMode.hardwareMap.get(BNO055IMU::class.java, "imu"))
 
-    fun initMotors() {
-        lDrive.setDirection(DcMotorSimple.Direction.FORWARD)
-        rDrive.setDirection(DcMotorSimple.Direction.REVERSE)
-        driveMotors.addMotor(lDrive)
-        driveMotors.addMotor(rDrive)
-        l.log("Initialized motors")
+    init {
+        fun initMotors() {
+            lDrive.setDirection(DcMotorSimple.Direction.FORWARD)
+            rDrive.setDirection(DcMotorSimple.Direction.REVERSE)
+            driveMotors.addMotor(lDrive)
+            driveMotors.addMotor(rDrive)
+            l.log("Initialized motors")
+        }
+
+        initMotors()
     }
 
     fun setPowers(lPower: Double, rPower: Double) {
@@ -41,7 +45,7 @@ class DriveTrain(val opMode: LinearOpMode){
         rDrive.setPower(rPower)
     }
 
-    fun stopALL(coast: Boolean = false) {
+    fun stopAll(coast: Boolean = false) {
         lDrive.stop(coast)
         rDrive.stop(coast)
     }
@@ -82,15 +86,59 @@ class DriveTrain(val opMode: LinearOpMode){
             )
         }
 
-        stopALL()
+        stopAll()
     }
 
     fun rotate(dir: Direction, angle: Int, timeout: Int = 10) {
-        TODO()
+        val targetHeading = fixAngle(imu.angle + dir.intRepr * angle)
+        rotateTo(targetHeading, timeout)
     }
 
-    fun rotateTo(heading: Double, timeout: Int = 10) {
-        TODO()
+    fun fixAngle(angle: Double): Double {
+        var fixedAngle = angle
+        while (fixedAngle > 180 || fixedAngle < -180) {
+            if (fixedAngle > 180) {
+                fixedAngle -= 360
+            } else {
+                fixedAngle += 360
+            }
+        }
+        return fixedAngle
+    }
+
+    fun rotateTo(targetHeading: Double, timeout: Int = 10) {
+        val minError = 2
+        val minPower = 2.0
+
+        val pid = PID(PIDCoefficients(0.0, 0.0, 0.0), targetHeading)
+
+        var currentHeading: Double = imu.angle
+
+        pid.initController(currentHeading)
+        do {
+            currentHeading = imu.getAngle()
+
+            var proportionalPower = pid.output(currentHeading, this::fixAngle)
+
+            proportionalPower = if (proportionalPower > 0) {
+                Math.max(proportionalPower + 0.1, minPower)
+            } else {
+                Math.min(proportionalPower - 0.1, -minPower)
+            }
+
+            move(Direction.SPIN_CW, proportionalPower)
+
+            if (Math.abs(pid.prevError!!) < minError) {
+                l.log("Within minError! Waiting...")
+                stopAll()
+                opMode.sleep(300)
+                currentHeading = imu.getAngle()
+                pid.output(currentHeading, this::fixAngle)
+            }
+        } while (opMode.opModeIsActive() && !opMode.isStopRequested &&
+                Math.abs(pid.prevError!!) > minError)
+
+        stopAll()
     }
 
 }

@@ -12,7 +12,7 @@ class PID(val pidCoefficients: PIDCoefficients, val desiredVal: Double) {
         prevError = desiredVal - actualVal
     }
 
-    fun output(actualVal: Double): Double {
+    fun output(actualVal: Double, correctError: (Double) -> Double = { a -> a }): Double {
         if (prevTime != null && prevError != null) {
             val e: Double = desiredVal - actualVal
             val de = e - prevError!!
