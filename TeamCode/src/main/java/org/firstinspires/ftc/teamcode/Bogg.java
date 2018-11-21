@@ -26,6 +26,16 @@ public class Bogg
     double liftAve = 0;
     boolean goingUp;
 
+    public Bogg(HardwareMap hardwareMap, Gamepad gamepad)
+    {
+        this.gamepad = gamepad;
+        this.hardwareMap = hardwareMap;
+        driveEngine = new DriveEngine(hardwareMap);
+        lift  = hardwareMap.dcMotor.get("lift");
+        sensors = new Sensors(hardwareMap);
+        brake = hardwareMap.servo.get("brake");
+    }
+
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
     {
         this.gamepad = gamepad;
