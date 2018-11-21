@@ -11,22 +11,31 @@ public class Servo(val hardwareMap: HardwareMap, val name:String){
     var INIT_ANGLE = 90
     var MAX_POSITION = 180
     var MIN_ANGLE = 0
+    var POSITION_BLOCKING_THRESHOLD = 0.01
 
-
-    fun setPosition(angle:Int){
-        servo.position = angle/POSITION_TO_ANGLE
+    fun setPosition(angle:Int,blockUntilFinished:Boolean=false){
+        val targetPosition = angle/POSITION_TO_ANGLE
+        servo.position = targetPosition
+        if(blockUntilFinished){
+            while(Math.abs(servo.position-targetPosition) < POSITION_BLOCKING_THRESHOLD){
+                l.log("Blocking until servo rotation complete.")
+                l.logData("Target Pos",targetPosition)
+                l.logData("Target Angle",angle)
+                logInfo()
+            }
+        }
     }
 
-    fun setMaxAngle(){
-        setPosition(MAX_POSITION)
+    fun setMaxAngle(blockUntilFinished:Boolean=false){
+        setPosition(MAX_POSITION,blockUntilFinished)
     }
 
-    fun setMinAngle(){
-        setPosition(MIN_ANGLE)
+    fun setMinAngle(blockUntilFinished:Boolean=false){
+        setPosition(MIN_ANGLE,blockUntilFinished)
     }
 
-    fun setInitAngle(){
-        setPosition(INIT_ANGLE)
+    fun setInitAngle(blockUntilFinished:Boolean=false){
+        setPosition(INIT_ANGLE,blockUntilFinished)
     }
 
     fun setDirection(direction:com.qualcomm.robotcore.hardware.Servo.Direction){
