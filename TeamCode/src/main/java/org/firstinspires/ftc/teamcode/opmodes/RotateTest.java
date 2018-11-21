@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
 import org.firstinspires.ftc.teamcode.robotutil.DriveTrain;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
-import org.firstinspires.ftc.teamcode.robotutil.Utils;
+import org.firstinspires.ftc.teamcode.Utils.Utils;
 import org.firstinspires.ftc.teamcode.robotutil.Vision;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Rotate Test", group="FinalShit")

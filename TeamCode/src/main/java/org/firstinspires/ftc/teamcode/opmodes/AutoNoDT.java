@@ -2,19 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robotutil.Catapault;
 import org.firstinspires.ftc.teamcode.robotutil.Direction;
-import org.firstinspires.ftc.teamcode.robotutil.DriveTrain;
-import org.firstinspires.ftc.teamcode.robotutil.Dumper;
-import org.firstinspires.ftc.teamcode.robotutil.GoldPosition;
 import org.firstinspires.ftc.teamcode.robotutil.HangSlides;
 import org.firstinspires.ftc.teamcode.robotutil.Hook;
 import org.firstinspires.ftc.teamcode.robotutil.Logger;
-import org.firstinspires.ftc.teamcode.robotutil.Options;
-import org.firstinspires.ftc.teamcode.robotutil.Sweeper;
-import org.firstinspires.ftc.teamcode.robotutil.Utils;
-import org.firstinspires.ftc.teamcode.robotutil.Vision;
+import org.firstinspires.ftc.teamcode.Utils.Utils;
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auto No DT", group="FinalShit")
 
