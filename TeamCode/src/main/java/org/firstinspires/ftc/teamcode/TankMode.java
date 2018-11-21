@@ -38,24 +38,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="TankModeControl", group="Linear Opmode")
 
 public class TankMode extends LinearOpMode {
 
-    // Declare OpMode members.
+    // Declaram motoarele si runtime-ul pentru telemetrie
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor FrontRightMotor = null;
     private DcMotor BackRightMotor = null;
@@ -67,42 +55,48 @@ public class TankMode extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
+        // Initializam motoare cu nume explicite pentru a putea fi selectate eficient la configurare
+
         FrontRightMotor  = hardwareMap.get(DcMotor.class, " Right_Front");
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "Left_Front");
         BackRightMotor = hardwareMap.get (DcMotor.class, "Right_Back");
         BackLeftMotor = hardwareMap.get (DcMotor.class, "Left_Back");
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
+
+        // Datorita regulii maini drepte, inversam motoarele din dreapta si le lasam normale pe cele din dreapta pentru a putea merge drept
+
         FrontLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         FrontRightMotor.setDirection(DcMotor.Direction.REVERSE);
         BackLeftMotor.setDirection(DcMotor.Direction.FORWARD);
         BackRightMotor.setDirection(DcMotor.Direction.REVERSE);
-        // Wait for the game to start (driver presses PLAY)
+
+        // De aici coach-ul apasa start si OpMode-ul va rula pana va apasa stop de pe Driver Station
+
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
+        // Atata timp cat OpMode-ul este activ va rula pana la oprire urmatorul cod
         while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
+            // Declaram o variabila pentru fiecare set e motoare, stanga si dreapta
+
             double leftPower;
             double rightPower;
 
 
-            // Tank Mode uses one stick to control each wheel.
-            // - This requires no math, but it is hard to drive forward slowly and keep straight.
+            // Le initializam astfel incat:
+            // Atunci cand joystick-ul din stanga este actionat pe axa Y, motoarele din stanga vor porni iar robotul va merge spre dreapta
+            // Atunci cand joystick-ul din dreapta, este actionat pe axa Y, motoarele din dreapta vor porni si vor duce robotul in stanga
+
             leftPower  = -gamepad1.left_stick_y ;
             rightPower = -gamepad1.right_stick_y ;
 
-            // Send calculated power to wheels
+            // Trimitem valorile initializate la motoare
             BackLeftMotor.setPower(leftPower);
             BackRightMotor.setPower(rightPower);
             FrontRightMotor.setPower(rightPower);
             FrontLeftMotor.setPower(leftPower);
-            // Show the elapsed game time and wheel power.
+
+            // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
             telemetry.update();
