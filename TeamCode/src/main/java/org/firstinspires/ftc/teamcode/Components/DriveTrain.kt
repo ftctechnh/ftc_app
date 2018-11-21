@@ -61,8 +61,8 @@ class DriveTrain(val opMode: LinearOpMode){
                 dir.intRepr * Values.TICKS_PER_INCH_FORWARD * dist
         val minError = 50
 
-        val lPID = PID(PIDConstants(0.0, 0.0, 0.0), lTarget)
-        val rPID = PID(PIDConstants(0.0, 0.0, 0.0), rTarget)
+        val lPID = PIDController(PIDConstants(0.0, 0.0, 0.0), lTarget)
+        val rPID = PIDController(PIDConstants(0.0, 0.0, 0.0), rTarget)
 
         lPID.initController(lDrive.motor.currentPosition.toDouble())
         rPID.initController(rDrive.motor.currentPosition.toDouble())
@@ -99,7 +99,7 @@ class DriveTrain(val opMode: LinearOpMode){
         val minError = 2
         val minPower = 2.0
 
-        val pid = PID(PIDConstants(0.0, 0.0, 0.0), targetHeading)
+        val pid = PIDController(PIDConstants(0.0, 0.0, 0.0), targetHeading)
 
         var currentHeading: Double = imu.angle
 
