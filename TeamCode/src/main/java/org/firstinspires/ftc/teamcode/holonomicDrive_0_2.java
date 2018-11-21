@@ -11,12 +11,13 @@ public class holonomicDrive_0_2 extends LinearOpMode
 {
     Bogg robot;
     double time;
+    DcMotor hex;
 
     @Override
     public void runOpMode()
     {
-        DcMotor hex = hardwareMap.dcMotor.get("hex");
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        hex = hardwareMap.dcMotor.get("hex");
+        robot = new Bogg(hardwareMap, gamepad1);
         waitForStart();
         double x = .6;
         boolean changingAngle = false;
@@ -53,7 +54,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
             {
                 if(magnitude > .90)
                 {
-                    double deltaAngle = Math.atan2(x2, y2) - initialAngle;
+                    double deltaAngle = Math.atan2(y2, x2) - initialAngle;
                     robot.driveEngine.driveAtAngle(initialAngle + deltaAngle);
                 }
                 else
@@ -66,9 +67,10 @@ public class holonomicDrive_0_2 extends LinearOpMode
                 if(magnitude > .90)
                 {
                     changingAngle = true;
-                    initialAngle = Math.atan2(x2, y2);
+                    initialAngle = Math.atan2(y2, x2);
                 }
             }
+            setHexAngle(robot.driveEngine.theta);
 
             robot.manualLift();
 
@@ -83,6 +85,13 @@ public class holonomicDrive_0_2 extends LinearOpMode
             telemetry.update();
             idle();
         }
+    }
+
+    double ticksPerRev = 2240;
+    void setHexAngle(double angle)
+    {
+        double revs = angle/ (2* Math.PI);
+        hex.setTargetPosition((int) (revs * ticksPerRev));
     }
 }
 
