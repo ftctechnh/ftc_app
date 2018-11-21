@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Components
 import org.firstinspires.ftc.teamcode.Models.PIDConstants
 
 
-class PID(val pidConstants: PIDConstants, val desiredVal: Double) {
+class PIDController(val pidConstants: PIDConstants, val desiredVal: Double) {
     var prevTime: Long? = null
     var prevError: Double? = null
     var runningI: Double = 0.0
@@ -25,7 +25,7 @@ class PID(val pidConstants: PIDConstants, val desiredVal: Double) {
 
             return P + runningI + D
         } else {
-            throw KotlinNullPointerException("PID controller not initialized!")
+            throw KotlinNullPointerException("PIDController controller not initialized!")
         }
     }
 }
