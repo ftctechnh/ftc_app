@@ -87,8 +87,8 @@ public class TankMode extends LinearOpMode {
             // Atunci cand joystick-ul din stanga este actionat pe axa Y, motoarele din stanga vor porni iar robotul va merge spre dreapta
             // Atunci cand joystick-ul din dreapta, este actionat pe axa Y, motoarele din dreapta vor porni si vor duce robotul in stanga
 
-            leftPower  = -gamepad1.left_stick_y ;
-            rightPower = -gamepad1.right_stick_y ;
+            leftPower  = -gamepad1.left_trigger ;
+            rightPower = -gamepad1.right_trigger ;
 
             // Trimitem valorile initializate la motoare
             BackLeftMotor.setPower(leftPower);
