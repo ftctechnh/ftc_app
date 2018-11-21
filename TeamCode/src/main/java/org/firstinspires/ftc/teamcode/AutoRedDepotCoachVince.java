@@ -80,7 +80,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
 
 
 
-<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoMineralRohan2.java
+/*<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/AutoMineralRohan2.java
             //For a 0.5 second period, move the robot forward away from the lander;
             // I don't think we need this - "sleep" takes care of this while (runtime.seconds() < 0.5)
             if(detector.getXPosition() < 240)
@@ -222,7 +222,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
      */
-    public void gyroTurn (  double speed, double angle) {
+    /*public void gyroTurn (  double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
@@ -242,7 +242,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
      * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
 
-    public void gyroHold( double speed, double angle, double holdTime) {
+   /** public void gyroHold( double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
 
@@ -250,12 +250,12 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
         holdTimer.reset();
         while (opModeIsActive() && (holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
+          //  onHeading(speed, angle, P_TURN_COEFF);
             telemetry.update();
         }
 
         // Stop all motion;
-        stopBot();
+      //  stopBot();
     }
 
     /**
@@ -268,7 +268,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
      * @param PCoeff    Proportional Gain coefficient
      * @return
      */
-    boolean onHeading(double speed, double angle, double PCoeff) {
+   /** boolean onHeading(double speed, double angle, double PCoeff) {
         double   error ;
         double   steer ;
         boolean  onTarget = false ;
@@ -276,7 +276,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
         double rightSpeed;
 
         // determine turn power based on +/- error
-        error = getError(angle);
+      /** error = getError(angle);
 
         if (Math.abs(error) <= HEADING_THRESHOLD) {
             steer = 0.0;
@@ -285,7 +285,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
             onTarget = true;
         }
         else {
-            steer = getSteer(error, PCoeff);
+        //    steer = getSteer(error, PCoeff);
             //rightSpeed  = speed * steer;
             //leftSpeed   = -rightSpeed;
         }
@@ -307,7 +307,7 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
      * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
      *          +ve error means the robot should turn LEFT (CCW) to reduce error.
      */
-    public double getError(double targetAngle) {
+   /** public double getError(double targetAngle) {
 
         double robotError;
 
@@ -401,4 +401,4 @@ public class AutoRedDepotCoachVince extends LinearOpMode {
         sleep(1000);*/
     }
 
-}
+//}

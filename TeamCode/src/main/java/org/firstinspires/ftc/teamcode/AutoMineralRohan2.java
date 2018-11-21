@@ -37,7 +37,7 @@ public class AutoMineralRohan2 extends LinearOpMode {
     HardwareBruinBot hwMap = new HardwareBruinBot();
 
     //intializing all Vurforia stuff ; copied from ConceptVuforiaNavRoverRuckus
-    private static final String VUFORIA_KEY = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+    private static final String VUFORIA_KEY = "AbWhgRH/////AAABme+2ePT63UiSuzJNrfa+WXBbWbwcQLDqKhyMEVj4Ncx4ixlcJw/71puJYhRyCRXySs6qVDuZOfjjinTUI2t1YI/KOHE16vOk0HhGe8VmHDyk3Ik9lp08g0qtgtVodzZ4PHpeX58FermuDp3rVIGK/rFdUueibwO+B/RFQWWdkFxmbaNMk0QaupjDVdIm1KK7WWiPWleXtueSV/OWq1oghDoQbtXLVYIQaIzAY9AYF9zAyVQRj51f62LzhmyEVI1idrTdYRxGCCkuChXNfsrSCebYOHgRMhW+agnw9Nfl+s9MquyGn3pahFmMaqaZTZJVQfQGjAm9QymQQPNz24xpaXf/3t+wjIDnDQyd+aGcBf3n\n";
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
@@ -199,8 +199,8 @@ public class AutoMineralRohan2 extends LinearOpMode {
         frontCraters.setLocation(frontCratersLocationOnField);
 
         //Establish depot location
-        float depotXPos = 10;
-        float depotYPos = 20;
+        float depotXPos = mmFTCFieldWidth;
+        float depotYPos = -mmFTCFieldWidth;
 
         /**
          * To place the BackSpace target in the middle of the back perimeter wall:
@@ -238,9 +238,9 @@ public class AutoMineralRohan2 extends LinearOpMode {
          */
         //Need to Correct these for the actual Robot Parameters
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 70;   // eg: Camera is 110 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 70;   // eg: Camera is 200 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = -150;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -277,11 +277,13 @@ public class AutoMineralRohan2 extends LinearOpMode {
 
         //double fwdSpeed=0.0;  // Forward Speed, Normally 0.1
         //double strafe = 0.1;  // Strafe Speed
-        double rotate = 0.1; // Rotation Speed
+        double rotate = 0.2; // Rotation Speed
 
-        hwMap.landerLatchLift.setPower(0.3);
-        sleep(2000);
-        hwMap.landerLatchLift.setPower(0);
+        //hwMap.landerLatchLift.setPower(0.3);
+        //sleep(2000);
+        //hwMap.landerLatchLift.setPower(0);
+//add a detector enable
+       detector.enable();
 
         //This loop runs until the gold mineral is found;
         //Need to change this to "while not detected" like in the GoldAlignExample program;
@@ -292,17 +294,6 @@ public class AutoMineralRohan2 extends LinearOpMode {
            telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
            telemetry.addLine("testing");
 
-           //if(detector.getAligned())
-           //{
-            //      fwdSpeed = 0.1;
-           //}
-           //else
-           //{
-           //    fwdSpeed = 0.0;
-           //}
-
-            //For a 0.5 second period, move the robot forward away from the lander;
-            // I don't think we need this - "sleep" takes care of this while (runtime.seconds() < 0.5)
             if(detector.getXPosition() < 240)
             {
                 //double rotate = 0.2;
@@ -322,7 +313,7 @@ public class AutoMineralRohan2 extends LinearOpMode {
             }
             else
             {
-                move(0,0, 0.25);
+                move(0,0, 0.4);
                 sleep(200);
             }
 
@@ -399,7 +390,8 @@ public class AutoMineralRohan2 extends LinearOpMode {
         // If we don't see Vuforia, then move using a pre-programmed direction
         if (!targetVisible) {
             /**Move robot from minerals to depot in a pre-programmed manner **NEED TO FILL IN**/
-            move(3, 4, 0);
+            move(.2, 0, 0);
+            sleep(500);
         }
 
         // However, if a trackable was seen, navigate using the trackable until it is no longer visible
@@ -448,7 +440,9 @@ public class AutoMineralRohan2 extends LinearOpMode {
             double RotationFromRobot = RotationToDepot - RobotRotation;
 
             //Need some fancy math here to tell the robot to move in the direction RotationFromRobot
-                move(RotationFromRobot, 0, -RotationFromRobot);
+                //Forward movement = sin(angle), Strafe movement = cos(angle)
+
+             move(Math.sin(RotationFromRobot), 0, Math.cos(RotationFromRobot));
 
                 /**Mile Marker 50***/
 
@@ -464,7 +458,10 @@ public class AutoMineralRohan2 extends LinearOpMode {
                     /**work on this for how to move the robot with last Vuforia position**/
 
                     if (!targetVisible) {
+                        /**Really need to change this to the direction to depot*/
                     move(RotationFromRobot, 0, DistanceToDepot);
+                    /**Sleep to let it move a bit - this should relate to distance to depot*/
+                    sleep(200);
                     InDepot = true;
                     telemetry.addData("Visible Target", "none");
                 telemetry.update();
