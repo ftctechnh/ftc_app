@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class BasicBot
@@ -13,8 +14,8 @@ public class BasicBot
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
 
-        driveRightOne.setDirection(DcMotorImplEx.Direction.FORWARD);
-        driveLeftOne.setDirection(DcMotorImplEx.Direction.REVERSE);
+        driveRightOne.setDirection(DcMotorImplEx.Direction.REVERSE);
+        driveLeftOne.setDirection(DcMotorImplEx.Direction.FORWARD);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
