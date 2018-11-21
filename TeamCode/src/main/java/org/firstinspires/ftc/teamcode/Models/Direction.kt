@@ -5,8 +5,8 @@ enum class Direction(val intRepr: Int) {
     BACKWARD(-1),
     SPIN_CW(1),
     SPIN_CCW(-1),
-    FORWARD_LEFT(1),
-    FORWARD_RIGHT(-1),
-    BACKWARD_LEFT(1),
-    BACKWARD_RIGHT(-1)
+    FORWARD_CCW(1),
+    FORWARD_CW(-1),
+    BACKWARD_CCW(1),
+    BACKWARD_CW(-1)
 }

@@ -4,8 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.Utils.Logger
-import android.R.attr.angle
-import android.R.attr.direction
 import org.firstinspires.ftc.teamcode.Models.Direction
 import org.firstinspires.ftc.teamcode.Models.PIDConstants
 
@@ -46,10 +44,10 @@ class DriveTrain(val opMode: LinearOpMode){
             Direction.BACKWARD -> { setPowers(-power, -power) }
             Direction.SPIN_CW -> { setPowers(-power, power) }
             Direction.SPIN_CCW -> { setPowers(power, -power) }
-            Direction.FORWARD_LEFT -> { setPowers(0.0, power) }
-            Direction.FORWARD_RIGHT -> { setPowers(power, 0.0) }
-            Direction.BACKWARD_LEFT -> { setPowers(0.0, -power) }
-            Direction.BACKWARD_RIGHT -> { setPowers(-power, 0.0) }
+            Direction.FORWARD_CCW -> { setPowers(0.0, power) }
+            Direction.FORWARD_CW -> { setPowers(power, 0.0) }
+            Direction.BACKWARD_CCW -> { setPowers(0.0, -power) }
+            Direction.BACKWARD_CW -> { setPowers(-power, 0.0) }
         }
     }
 
