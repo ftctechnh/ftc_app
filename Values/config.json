@@ -1,0 +1,23 @@
+{
+  "pid":{
+    "rotation":{
+      "kP":0.1,
+      "kI":0.1,
+      "kD":0.1
+    },
+    "drive":{
+      "kP":0.1,
+      "kI":0.1,
+      "kD":0.1
+    }
+  },
+  "encoder":{
+    "drivetrain":{
+      "ticksPerInch":100
+    },
+    "rackPinion":{
+      "ticksPerInch":100
+    }
+  }
+
+}
