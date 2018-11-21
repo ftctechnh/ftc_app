@@ -15,6 +15,7 @@ public class DriveTrainTask(opMode:LinearOpMode, taskName:String): Task(opMode,t
         dt.setPowers(
                 opMode.gamepad1.left_stick_y.toDouble(),
                 opMode.gamepad1.right_stick_y.toDouble()
-        );    }
+        );
+    }
 
 }
