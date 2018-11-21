@@ -1,14 +1,9 @@
-package org.firstinspires.ftc.teamcode.robotutil
+package org.firstinspires.ftc.teamcode.Components
 
-import com.qualcomm.hardware.bosch.BNO055IMU
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import com.qualcomm.robotcore.eventloop.opmode.OpMode
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DcMotorSimple
-import com.qualcomm.robotcore.hardware.HardwareDevice
-import com.qualcomm.robotcore.hardware.HardwareMap
 import org.firstinspires.ftc.teamcode.Utils.Logger
-import org.firstinspires.ftc.teamcode.Utils.Utils
 
 public class DriveTrain2(val opMode: OpMode){
     val l:Logger = Logger("DRIVETRAIN2")

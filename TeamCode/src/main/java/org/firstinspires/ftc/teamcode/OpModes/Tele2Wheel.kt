@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.opmodes
+package org.firstinspires.ftc.teamcode.OpModes
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.Utils.Logger
-import org.firstinspires.ftc.teamcode.Utils.wait
-import org.firstinspires.ftc.teamcode.robotutil.DriveTrain2
-import org.firstinspires.ftc.teamcode.robotutil.DriveTrainNew
+import org.firstinspires.ftc.teamcode.Components.DriveTrain2
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "teleop 2 wheel")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp 2 Wheel")
 
 class  Tele2Wheel: LinearOpMode(){
     val l:Logger = Logger("TELE2WHEEL")
