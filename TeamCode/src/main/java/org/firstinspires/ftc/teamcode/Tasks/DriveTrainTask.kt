@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.Tasks
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.Components.DriveTrain
+import org.firstinspires.ftc.teamcode.Models.Task
 
-public class DriveTrainTask(opMode:LinearOpMode, taskName:String):Task(opMode,taskName){
+public class DriveTrainTask(opMode:LinearOpMode, taskName:String): Task(opMode,taskName){
     var dt = DriveTrain(opMode)
 
     override fun run(){

@@ -6,19 +6,9 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.Utils.Logger
 import android.R.attr.angle
 import android.R.attr.direction
+import org.firstinspires.ftc.teamcode.Models.Direction
+import org.firstinspires.ftc.teamcode.Models.PIDConstants
 
-
-
-enum class Direction(val intRepr: Int) {
-    FORWARD(1),
-    BACKWARD(-1),
-    SPIN_CW(1),
-    SPIN_CCW(-1),
-    FORWARD_LEFT(1),
-    FORWARD_RIGHT(-1),
-    BACKWARD_LEFT(1),
-    BACKWARD_RIGHT(-1)
-}
 
 class DriveTrain(val opMode: LinearOpMode){
     val l:Logger = Logger("DRIVETRAIN2")
@@ -72,8 +62,8 @@ class DriveTrain(val opMode: LinearOpMode){
                 dir.intRepr * Values.TICKS_PER_INCH_FORWARD * dist
         val minError = 50
 
-        val lPID = PID(PIDCoefficients(0.0, 0.0, 0.0), lTarget)
-        val rPID = PID(PIDCoefficients(0.0, 0.0, 0.0), rTarget)
+        val lPID = PID(PIDConstants(0.0, 0.0, 0.0), lTarget)
+        val rPID = PID(PIDConstants(0.0, 0.0, 0.0), rTarget)
 
         lPID.initController(lDrive.motor.currentPosition.toDouble())
         rPID.initController(rDrive.motor.currentPosition.toDouble())
@@ -110,7 +100,7 @@ class DriveTrain(val opMode: LinearOpMode){
         val minError = 2
         val minPower = 2.0
 
-        val pid = PID(PIDCoefficients(0.0, 0.0, 0.0), targetHeading)
+        val pid = PID(PIDConstants(0.0, 0.0, 0.0), targetHeading)
 
         var currentHeading: Double = imu.angle
 
