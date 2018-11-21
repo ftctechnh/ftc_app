@@ -12,7 +12,7 @@ public class PictureFirstAuto extends LinearOpMode
     {       walle = new ParadeBot(hardwareMap, this);
             vuforiaFunctions = new VuforiaFunctions(this, hardwareMap);
             double yawAngle = 90.0;
-            double fudgeFactor = 4;
+            double sensorDepth = 4;
             double yawAngleTurn;
             waitForStart();
             walle.driveStraight_In(10,.6);
@@ -31,7 +31,7 @@ public class PictureFirstAuto extends LinearOpMode
                     telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
                     sleep(1000);
                     yawAngle = vuforiaFunctions.getYawDeg();
-                    yawAngleTurn = 100.0- yawAngle;
+                    yawAngleTurn = 115.0- yawAngle;
                     walle.pivot(-yawAngleTurn, .6);
                 }
                 else
@@ -69,20 +69,26 @@ public class PictureFirstAuto extends LinearOpMode
                 telemetry.addData("front Dist>18", null);
                 telemetry.addData("left Dist ", rightDist);
                 sleep(400);
-                if (rightDist < 4+ fudgeFactor)
+                if (rightDist < 6 + sensorDepth)
                 {
                     telemetry.addData("left dist < 4", null);
                     walle.pivot(-7, .8);
-                    walle.driveStraight_In(11);
+                    walle.driveStraight_In(8);
                     walle.pivot(7, .8);
                     sleep(400);
                 }
-                else if (rightDist > 7 + fudgeFactor)
+                else if (rightDist > 9 + sensorDepth)
                 {
                     telemetry.addData("left dist > 7", null);
                     walle.pivot(7, .8);
-                    walle.driveStraight_In(11);
-                    walle.pivot(7, .8);
+                    walle.driveStraight_In(8);
+                    walle.pivot(-7, .8);
+                    sleep(400);
+                }
+                else if ((6 + sensorDepth < rightDist)&(rightDist < 9 + sensorDepth))
+                {
+                    telemetry.addData("neutral zone, 4-7 in", null);
+                    walle.driveStraight_In(8, .6);
                     sleep(400);
                 }
             }
@@ -91,12 +97,11 @@ public class PictureFirstAuto extends LinearOpMode
             {}
         }
         telemetry.addData("Stopped", null);
-        sleep(400);
+        sleep(2000); //drop team marker into depot
         telemetry.update();
-        while (!isStopRequested())
-        {
-            walle.stopAllMotors();
-        }
+        walle.pivot(-90,.8);
+        walle.driveStraight_In(96, .6);
+        walle.stopAllMotors();
     }
 
 }
