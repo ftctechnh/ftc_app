@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.Utils
 
+import java.io.File
+import java.io.InputStream
+
 
 public fun wait(mill: Int) {
     try {

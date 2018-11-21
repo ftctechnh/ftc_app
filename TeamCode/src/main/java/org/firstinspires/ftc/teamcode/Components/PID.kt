@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.Components
 
-data class PIDCoefficients(val Kp: Double, val Ki: Double, val Kd: Double)
+import org.firstinspires.ftc.teamcode.Models.PIDConstants
 
-class PID(val pidCoefficients: PIDCoefficients, val desiredVal: Double) {
+
+class PID(val pidConstants: PIDConstants, val desiredVal: Double) {
     var prevTime: Long? = null
     var prevError: Double? = null
     var runningI: Double = 0.0
@@ -18,9 +19,9 @@ class PID(val pidCoefficients: PIDCoefficients, val desiredVal: Double) {
             val de = e - prevError!!
             val dt = prevTime!! - System.currentTimeMillis()
 
-            val P = pidCoefficients.Kp * e
-            runningI += pidCoefficients.Ki * e * dt
-            val D = pidCoefficients.Kd * de / dt
+            val P = pidConstants.Kp * e
+            runningI += pidConstants.Ki * e * dt
+            val D = pidConstants.Kd * de / dt
 
             return P + runningI + D
         } else {
