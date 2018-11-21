@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.Utils.Logger
-import org.firstinspires.ftc.teamcode.Components.DriveTrain2
+import org.firstinspires.ftc.teamcode.Components.DriveTrain
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp 2 Wheel")
 
@@ -12,7 +12,7 @@ class  Tele2Wheel: LinearOpMode(){
         l.log("Initialized")
     }
     override fun runOpMode() {
-        val dt = DriveTrain2(this)
+        val dt = DriveTrain(this)
         l.log("waiting for start")
 
         waitForStart()
