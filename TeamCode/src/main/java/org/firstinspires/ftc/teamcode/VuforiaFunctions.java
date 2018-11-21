@@ -135,11 +135,6 @@ public class VuforiaFunctions
         return false;
     }
 
-    public void scanForObject()
-    {
-
-    }
-
     public float getXPosIn()
     {
         return translation.get(0) / 25.4f;
