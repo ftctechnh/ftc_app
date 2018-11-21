@@ -17,11 +17,12 @@ public class WallECalibrate extends LinearOpMode
         {
             if (gamepad1.a)
             {
-                wallE.pivot(-120);
+                wallE.pivot(-25);
+                wallE.pivot(25);
             }
             else if (gamepad1.b)
             {
-                wallE.pivot(120);
+                wallE.pivot(25);
             }
         }
     }

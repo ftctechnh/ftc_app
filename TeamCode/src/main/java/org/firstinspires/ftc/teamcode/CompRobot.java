@@ -21,15 +21,17 @@ public class CompRobot extends BasicBot
     public void driveStraight(float dist_In, float pow)
     {
         super.resetEncoders();
-        if (dist_In > 0)
+       if (dist_In > 0)
         {
             super.goForward(pow, pow);
-        } else
+        }
+        else
         {
             super.goBackwards(pow, pow);
         }
 
         dist_In = Math.abs(dist_In);
+
 
         while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < dist_In && Math.abs(super.getDriveRightOne().getCurrentPosition()) < dist_In && !linearOpMode.isStopRequested())
         {
@@ -38,7 +40,7 @@ public class CompRobot extends BasicBot
         super.stopDriveMotors();
     }
 
-    public void pivot(float degrees, float pow)
+    public void pivotenc(float degrees, float pow)
     {
         pow = Math.abs(pow);
         super.resetEncoders();
