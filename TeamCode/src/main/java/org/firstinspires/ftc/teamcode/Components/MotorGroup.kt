@@ -6,9 +6,9 @@ public class MotorGroup(){
     var motors:List<Motor> = listOf()
 
 
-    fun addMotor(motor: Motor){
-        motors.ad
-    }
+//    fun addMotor(motor: Motor){
+//        motors.ad
+//    }
 
 
 }
