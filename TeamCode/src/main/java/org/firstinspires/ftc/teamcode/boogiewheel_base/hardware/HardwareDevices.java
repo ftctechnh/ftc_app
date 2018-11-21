@@ -20,9 +20,10 @@ public class HardwareDevices {
     }
 
     public void stop(){
-        drive.stop();
-        intake.stop();
-        mineralLift.stop();
-        robotLift.stop();
+        //YOU CANNOT USE AN OBJECT BEFORE ASSIGNING IT
+        //drive.stop();
+        //intake.stop();
+        //mineralLift.stop();
+        //robotLift.stop();
     }
 }
