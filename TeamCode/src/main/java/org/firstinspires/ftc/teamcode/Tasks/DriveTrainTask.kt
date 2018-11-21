@@ -1,11 +1,10 @@
 package org.firstinspires.ftc.teamcode.Tasks
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
-import com.qualcomm.robotcore.eventloop.opmode.OpMode
-import org.firstinspires.ftc.teamcode.Components.DriveTrain2
+import org.firstinspires.ftc.teamcode.Components.DriveTrain
 
 public class DriveTrainTask(opMode:LinearOpMode, taskName:String):Task(opMode,taskName){
-    var dt = DriveTrain2(opMode)
+    var dt = DriveTrain(opMode)
 
     override fun run(){
         runWhileActive(this::main)

@@ -18,7 +18,7 @@ enum class Direction(val intRepr: Int) {
     BACKWARD_RIGHT(-1)
 }
 
-class DriveTrain2(val opMode: LinearOpMode){
+class DriveTrain(val opMode: LinearOpMode){
     val l:Logger = Logger("DRIVETRAIN2")
     val lDrive = Motor(opMode.hardwareMap, "lDrive")
     val rDrive  = Motor(opMode.hardwareMap, "rDrive")
