@@ -19,6 +19,10 @@ public class Logger(vararg var tags: String){
         log("${name}: ${value}")
     }
 
+    fun logData(name: String, value: String){
+        log("${name}: ${value}")
+    }
+
     fun logData(name: String, value: Boolean){
         log("${name}: ${value}")
     }
