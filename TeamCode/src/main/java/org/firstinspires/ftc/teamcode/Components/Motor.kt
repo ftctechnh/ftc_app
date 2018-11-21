@@ -1,10 +1,11 @@
-package org.firstinspires.ftc.teamcode.Utils
+package org.firstinspires.ftc.teamcode.Components
 import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.HardwareMap
+import org.firstinspires.ftc.teamcode.Utils.Logger
 
 public class Motor(val hardwareMap: HardwareMap,val motorName:String ){
     val motor = hardwareMap.dcMotor.get(motorName)
-    val l = Logger("MOTOR",motorName)
+    val l = Logger("MOTOR", motorName)
 
     fun setPower(power:Double){
         motor.power = power
