@@ -11,7 +11,7 @@ public class holonomicDrive_test_alpha extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, gamepad1);
         waitForStart();
 
         while (opModeIsActive())

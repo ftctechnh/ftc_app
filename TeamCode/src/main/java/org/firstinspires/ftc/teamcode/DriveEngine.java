@@ -8,7 +8,7 @@ public class DriveEngine {
     DcMotor right;
     DcMotor left;
 
-    private double theta;
+    double theta;
 
     public DriveEngine(HardwareMap hardwareMap) {
         back  = hardwareMap.dcMotor.get("back");
