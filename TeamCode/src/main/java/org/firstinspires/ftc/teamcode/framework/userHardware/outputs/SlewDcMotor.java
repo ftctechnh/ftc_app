@@ -29,16 +29,17 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     public SlewDcMotor(DcMotor motor){
         this.motor = motor;
         this.motorEx = (DcMotorEx) motor;
+        setMotorEnable();
 
         //Threading
-        t = new Thread(this,"motor");
+        t = new Thread(this,"motor "+motor.getDeviceName());
         t.start();
     }
 
     //Threading
     @Override
     public void run() {
-        while(running&& AbstractOpMode.isOpModeActive()){
+        while(running && AbstractOpMode.isOpModeActive()){
             motorSlew(getSetPower());
             AbstractOpMode.delay(15);
         }
@@ -57,6 +58,8 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
         setCurrentPosition(0);
         setTargetPosition(0);
         setMode(RunMode.STOP_AND_RESET_ENCODER);
+        this.motor.close();
+        this.motorEx.close();
     }
 
     //Motor

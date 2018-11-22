@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
 
 @TeleOp(name="Test Teleop", group="New")
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
 public class FrameworkTest extends AbstractTeleop{
 
     ElapsedTime runTime;
+    Robot robot;
 
     @Override
     public void RegisterEvents() {
@@ -20,7 +22,7 @@ public class FrameworkTest extends AbstractTeleop{
             return true;
         });
 
-        addEventHandler("even_up", () -> {
+        addEventHandler("odd_down", () -> {
             telemetry.addData("odd");
             telemetry.update();
             return true;
@@ -31,17 +33,23 @@ public class FrameworkTest extends AbstractTeleop{
     public void UpdateEvents() {
         boolean even = (((int)runTime.seconds())%2==0);
         checkBooleanInput("even",even);
-        //checkBooleanInput("odd",!even);
+        checkBooleanInput("odd",!even);
     }
 
     @Override
     public void Init() {
         runTime = new ElapsedTime();
         runTime.reset();
+        robot = new Robot();
     }
 
     @Override
     public void Loop() {
+
+    }
+
+    @Override
+    public void Stop(){
 
     }
 }

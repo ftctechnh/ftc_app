@@ -65,21 +65,21 @@ public class Robot extends AbstractRobot{
     }
 
     //Intake Methods
-    public Callable beginIntaking(){
+    public Callable beginIntakingCallable(){
         return ()->{
             hardware.intake.beginIntaking();
             return true;
         };
     }
 
-    public Callable finishIntaking(){
+    public Callable finishIntakingCallable(){
         return ()->{
           hardware.intake.finishIntaking();
           return true;
         };
     }
 
-    public Callable reverseIntake(){
+    public Callable reverseIntakeCallable(){
         return ()->{
             hardware.intake.reverseIntake();
             return true;

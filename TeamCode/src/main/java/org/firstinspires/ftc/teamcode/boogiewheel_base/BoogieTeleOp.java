@@ -24,17 +24,21 @@ public class BoogieTeleOp extends AbstractTeleop {
             return true;
         });
 
-        addEventHandler("b_down", robot.finishIntaking());
+        addEventHandler("b_down", robot.finishIntakingCallable());
 
-        addEventHandler("a_down", robot.beginIntaking());
+        addEventHandler("a_down", robot.beginIntakingCallable());
 
-        addEventHandler("y_down", robot.reverseIntake());
+        addEventHandler("y_down", robot.reverseIntakeCallable());
 
         //addEventHandler("x_down", robot.moveMineralLiftToCollectPositionCallable());
 
         //addEventHandler("y_down", robot.moveMineralLiftToDumpPositionCallable());
 
-        addEventHandler("lt_change", ()->{
+        addEventHandler("rt_down", robot.moveMineralLiftToDumpPositionCallable());
+
+        addEventHandler("lt_down", robot.moveMineralLiftToCollectPositionCallable());
+
+        /*addEventHandler("lt_change", ()->{
             if(gamepad1.left_trigger>0.5) robot.moveMineralLiftToCollectPosition();
             return true;
         });
@@ -42,12 +46,14 @@ public class BoogieTeleOp extends AbstractTeleop {
         addEventHandler("rt_change", ()->{
             if(gamepad1.right_trigger>0.5) robot.moveMineralLiftToDumpPosition();
             return true;
-        });
+        });*/
     }
 
     @Override
     public void UpdateEvents() {
-
+        //NEVER EVER PUT BLOCKING CODE HERE!!!
+        checkBooleanInput("lt",gamepad1.left_trigger>0.5);
+        checkBooleanInput("rt",gamepad1.right_trigger>0.5);
     }
 
     @Override

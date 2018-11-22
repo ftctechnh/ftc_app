@@ -24,19 +24,11 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
     double speed = 1, error = 3;
     int period = 100;
 
-    private SlewDcMotor intakeMotor;
-    final boolean IntakeHardwareEnabled = false;
     @Override
     public void Init() {
         //IF YOU HIT INIT AND WAIT A LITTLE BIT, THE CAMERA WILL FIND THE OBJECT MUCH FASTER
         robot = new Robot();
 
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
-            intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        }
         tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
         Mineraltimer = new ElapsedTime();
     }
@@ -115,19 +107,8 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
 
         robot.turnTo(25, speed, error, period);
 
-
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor.setPower(1);
-        }
-
         robot.driveTo(24, speed);
 
-
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor.setPower(0);
-        }
         robot.turnTo(45, speed, error, period);
 
         robot.driveTo(-8, speed);
@@ -138,17 +119,7 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
     public void craterSideCenterMineral() {
         robot.driveTo(6, speed);
 
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor.setPower(1);
-        }
-
-
         robot.driveTo(24, speed);
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor.setPower(0);
-        }
 
         robot.driveTo(-6, speed);
 
@@ -159,16 +130,8 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
         robot.driveTo(6, speed);
 
         robot.turnTo(-25, speed, error, period);
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor.setPower(1);
-        }
 
         robot.driveTo(24, speed);
-        if (IntakeHardwareEnabled)
-        {
-            intakeMotor.setPower(0);
-        }
 
         robot.turnTo(-45, speed, error, period);
 
