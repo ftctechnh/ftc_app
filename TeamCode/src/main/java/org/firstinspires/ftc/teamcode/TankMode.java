@@ -49,15 +49,21 @@ public class TankMode extends LinearOpMode {
     private DcMotor BackRightMotor = null;
     private DcMotor FrontLeftMotor = null;
     private DcMotor BackLeftMotor = null;
+    private double RotatePower=0.5;
 
-    private void RulajFataDreapta(){
-        FrontRightMotor.setPower(1.0);
-        BackLeftMotor.setPower(1.0);
+    private void RotateLeft(){
+        FrontRightMotor.setPower(RotatePower);
+        BackLeftMotor.setPower(RotatePower);
+        FrontLeftMotor.setPower(-RotatePower);
+        BackRightMotor.setPower(-RotatePower);
     }
 
-    private void RulajFataStanga(){
-        FrontLeftMotor.setPower(1.0);
-        BackRightMotor.setPower(1.0);
+    private void RotateRight(){
+
+        FrontLeftMotor.setPower(RotatePower);
+        BackRightMotor.setPower(RotatePower);
+        BackLeftMotor.setPower(-RotatePower);
+        FrontLeftMotor.setPower(-RotatePower);
     }
 
     @Override
@@ -100,11 +106,11 @@ public class TankMode extends LinearOpMode {
             // Atunci cand joystick-ul din dreapta, este actionat pe axa Y, motoarele din dreapta vor porni si vor duce robotul in stanga
 
             if(gamepad1.left_bumper){
-                RulajFataDreapta();
+                RotateLeft();
             }
 
             if(gamepad1.right_bumper){
-                RulajFataStanga();
+                RotateLeft();
             }
 
             leftPower  = gamepad1.left_trigger;
