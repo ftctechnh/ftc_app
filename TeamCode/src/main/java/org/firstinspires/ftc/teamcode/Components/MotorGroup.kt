@@ -21,10 +21,10 @@ public class MotorGroup(){
     fun setPower(power:Double){
         motors.forEach { setPower(power) }
     }
-
-    fun logInfo(){
-        motors.forEach { logInfo() }
-    }
+//
+//    fun logInfo(){
+//        motors.forEach { logInfo() }
+//    }
 
     fun prepareEncoderDrive(){
         motors.forEach { prepareEncoderDrive() }

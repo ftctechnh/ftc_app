@@ -23,7 +23,7 @@ class DriveTrain(val opMode: LinearOpMode){
             driveMotors.addMotor(lDrive)
             driveMotors.addMotor(rDrive)
             l.log("Initialized motors")
-            driveMotors.logInfo()
+//            driveMotors.logInfo()
         }
 
         initMotors()
