@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Config;
+package org.firstinspires.ftc.teamcode.components.configs;
 
 import android.os.Environment;
 
