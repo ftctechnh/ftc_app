@@ -31,4 +31,7 @@ android {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+    implementation 'com.android.support:multidex:1.0.3'
+
+
 }
