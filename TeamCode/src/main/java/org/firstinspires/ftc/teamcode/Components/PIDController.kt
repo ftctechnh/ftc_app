@@ -19,9 +19,9 @@ class PIDController(val pidConstants: PIDConstants, val desiredVal: Double) {
             val de = e - prevError!!
             val dt = prevTime!! - System.currentTimeMillis()
 
-            val P = pidConstants.Kp * e
-            runningI += pidConstants.Ki * e * dt
-            val D = pidConstants.Kd * de / dt
+            val P = pidConstants.kP * e
+            runningI += pidConstants.kI * e * dt
+            val D = pidConstants.kD * de / dt
 
             return P + runningI + D
         } else {
