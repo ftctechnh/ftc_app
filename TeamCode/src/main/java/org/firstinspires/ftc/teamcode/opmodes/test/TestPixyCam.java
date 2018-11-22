@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.opmodes.Test;
+package org.firstinspires.ftc.teamcode.opmodes.test;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.components.pixy.PixyCam;
+import org.firstinspires.ftc.teamcode.components.pixycam.PixyCam;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;

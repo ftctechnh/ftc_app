@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
+import org.firstinspires.ftc.teamcode.systems.base.System;
 
 import java.util.HashSet;
 

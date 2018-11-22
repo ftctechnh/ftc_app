@@ -1,9 +1,8 @@
-package org.firstinspires.ftc.teamcode.Hardware.controller;
+package org.firstinspires.ftc.teamcode.hardware.controller;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.teamcode.Config.ConfigParser;
 
 /**
  * Created by idiot on 11/3/17.

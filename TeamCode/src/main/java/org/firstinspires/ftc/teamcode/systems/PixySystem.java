@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.systems;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.components.pixycam.PixyCam;
-import org.firstinspires.ftc.teamcode.systems.BaseSystems.System;
+import org.firstinspires.ftc.teamcode.systems.base.System;
 
 import java.util.ArrayList;
 
