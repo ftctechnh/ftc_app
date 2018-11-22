@@ -49,9 +49,13 @@ public class TankMode extends LinearOpMode {
     private DcMotor BackRightMotor = null;
     private DcMotor FrontLeftMotor = null;
     private DcMotor BackLeftMotor = null;
-    private double RotatePower=0.5;
 
+    // Puterea pt rotate
+    private double RotatePower = 0.5;
+
+    // Invartire pe loc
     private void RotateLeft(){
+
         FrontRightMotor.setPower(RotatePower);
         BackLeftMotor.setPower(RotatePower);
         FrontLeftMotor.setPower(-RotatePower);
@@ -90,9 +94,6 @@ public class TankMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-
-
-
         // Atata timp cat OpMode-ul este activ va rula pana la oprire urmatorul cod
         while (opModeIsActive()) {
 
@@ -110,18 +111,31 @@ public class TankMode extends LinearOpMode {
             }
 
             if(gamepad1.right_bumper){
-                RotateLeft();
+                RotateRight();
             }
 
+            // Setam puterea pentru triggere
             leftPower  = gamepad1.left_trigger;
             rightPower = gamepad1.right_trigger;
 
-            // Trimitem valorile initializate la motoare
-            BackLeftMotor.setPower(leftPower);
-            BackRightMotor.setPower(rightPower);
-            FrontRightMotor.setPower(rightPower);
-            FrontLeftMotor.setPower(leftPower);
 
+            // Trimitem valorile initializate la motoare
+            if(gamepad1.a){
+
+                BackLeftMotor.setPower(-leftPower);
+                BackRightMotor.setPower(-rightPower);
+                FrontRightMotor.setPower(-rightPower);
+                FrontLeftMotor.setPower(-leftPower);
+
+            }
+            else {
+
+                BackLeftMotor.setPower(leftPower);
+                BackRightMotor.setPower(rightPower);
+                FrontRightMotor.setPower(rightPower);
+                FrontLeftMotor.setPower(leftPower);
+
+            }
             // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
