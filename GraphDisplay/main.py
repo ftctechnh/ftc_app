@@ -9,7 +9,7 @@ ax1 = fig.add_subplot(1,1,1)
 
 
 def animate(i):
-    graph_data = open('example.txt','r').read()
+    graph_data = open('pidReadout.txt','r').read()
     lines = graph_data.split('\n')
     xs = []
     ys = []
@@ -21,5 +21,7 @@ def animate(i):
     ax1.clear()
     ax1.plot(xs, ys)
 
-ani = animation.FuncAnimation(fig, animate, interval=100)
-plt.show()
+
+if __name__ == "__main__":
+    ani = animation.FuncAnimation(fig, animate, interval=100)
+    plt.show()
