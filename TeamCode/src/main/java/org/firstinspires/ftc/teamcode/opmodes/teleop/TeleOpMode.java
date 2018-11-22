@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import android.transition.Slide;
 
