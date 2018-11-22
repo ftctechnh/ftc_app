@@ -39,7 +39,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 
-@TeleOp(name="TankModeControl", group="Linear Opmode")
+@TeleOp(name="DANAAAAA", group="Linear Opmode")
 
 public class TankMode extends LinearOpMode {
 
@@ -49,6 +49,16 @@ public class TankMode extends LinearOpMode {
     private DcMotor BackRightMotor = null;
     private DcMotor FrontLeftMotor = null;
     private DcMotor BackLeftMotor = null;
+
+    private void RulajFataDreapta(){
+        FrontRightMotor.setPower(1.0);
+        BackLeftMotor.setPower(1.0);
+    }
+
+    private void RulajFataStanga(){
+        FrontLeftMotor.setPower(1.0);
+        BackRightMotor.setPower(1.0);
+    }
 
     @Override
     public void runOpMode() {
@@ -74,6 +84,9 @@ public class TankMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+
+
+
         // Atata timp cat OpMode-ul este activ va rula pana la oprire urmatorul cod
         while (opModeIsActive()) {
 
@@ -87,15 +100,11 @@ public class TankMode extends LinearOpMode {
             // Atunci cand joystick-ul din dreapta, este actionat pe axa Y, motoarele din dreapta vor porni si vor duce robotul in stanga
 
             if(gamepad1.left_bumper){
-
-                FrontLeftMotor.setPower(1.0);
-                BackRightMotor.setPower(1.0);
+                RulajFataDreapta();
             }
 
             if(gamepad1.right_bumper){
-
-                FrontRightMotor.setPower(1.0);
-                BackLeftMotor.setPower(1.0);
+                RulajFataStanga();
             }
 
             leftPower  = gamepad1.left_trigger;
