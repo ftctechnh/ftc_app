@@ -92,13 +92,35 @@ public class TankMode extends LinearOpMode {
             leftPower  = gamepad1.right_trigger;
             rightPower = gamepad1.left_trigger;
 
-            rotateRightPower=gamepad1.left_stick_y;
+            rotateRightPower=0.5;
 
 
 
 
             // Trimitem valorile initializate la motoare
-            if(gamepad1.a){
+            if(!gamepad1.a){
+
+                BackLeftMotor.setPower(leftPower);
+                BackRightMotor.setPower(rightPower);
+                FrontRightMotor.setPower(rightPower);
+                FrontLeftMotor.setPower(leftPower);
+
+                if(gamepad1.b){
+
+                    BackLeftMotor.setPower(-rotateRightPower);
+                    BackRightMotor.setPower(rotateRightPower);
+                    FrontRightMotor.setPower(rotateRightPower);
+                    FrontLeftMotor.setPower(-rotateRightPower);
+                }
+                if(gamepad1.x){
+
+                    BackLeftMotor.setPower(rotateRightPower);
+                    BackRightMotor.setPower(-rotateRightPower);
+                    FrontRightMotor.setPower(-rotateRightPower);
+                    FrontLeftMotor.setPower(rotateRightPower);
+                }
+            }
+            else {
 
                 BackLeftMotor.setPower(-leftPower);
                 BackRightMotor.setPower(-rightPower);
@@ -106,19 +128,10 @@ public class TankMode extends LinearOpMode {
                 FrontLeftMotor.setPower(-leftPower);
 
             }
-            else {
-
-                BackLeftMotor.setPower(leftPower);
-                BackRightMotor.setPower(rightPower);
-                FrontRightMotor.setPower(rightPower);
-                FrontLeftMotor.setPower(leftPower);
 
 
-                BackLeftMotor.setPower(-rotateRightPower);
-                BackRightMotor.setPower(rotateRightPower);
-                FrontRightMotor.setPower(rotateRightPower);
-                FrontLeftMotor.setPower(-rotateRightPower);
-            }
+
+
             // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
