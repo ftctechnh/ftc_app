@@ -25,15 +25,35 @@ class PIDController(val pidConstants: PIDConstants, val desiredVal: Double,val b
         }
     }
 
-    fun output(actualVal: Double, correctError: (Double) -> Double = { a -> a }): Double {
+    fun output(actualVal: Double): Double {
         if (prevTime != null && prevError != null) {
             val e: Double = desiredVal - actualVal
             val de = e - prevError!!
-            val dt = prevTime!! - System.currentTimeMillis()
+            val dt:Double = (prevTime!! - System.currentTimeMillis()).toDouble()/1000
 
             val P = pidConstants.kP * e
-            runningI += pidConstants.kI * e * dt
-            val D = pidConstants.kD * de / dt
+            runningI += -pidConstants.kI * e * dt
+            println(dt)
+            println(runningI)
+            var D = pidConstants.kD * de / dt
+
+            if(e>0){
+                if(D>0){
+                    //error is positive and slope is positive, moving further away.
+                    D*=-1
+                }else{
+                    //error is pos but moving negative, good. make D positive.
+                }
+            }else{
+                if(D>0){
+                    //error is neg and slope is positive, moving closer to desired.
+                }else{
+                    //error is neg and slope is neg, moving further to desired.
+                    D*=-1
+                }
+            }
+
+            println(D)
             val output = P + runningI + D
 
             if(broadcast && wss != null){
