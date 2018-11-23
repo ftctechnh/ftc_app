@@ -50,26 +50,6 @@ public class TankMode extends LinearOpMode {
     private DcMotor FrontLeftMotor = null;
     private DcMotor BackLeftMotor = null;
 
-    // Puterea pt rotate
-    private double RotatePower = 0.5;
-
-    // Invartire pe loc
-    private void RotateLeft(){
-
-        FrontRightMotor.setPower(RotatePower);
-        BackLeftMotor.setPower(RotatePower);
-        FrontLeftMotor.setPower(-RotatePower);
-        BackRightMotor.setPower(-RotatePower);
-    }
-
-    private void RotateRight(){
-
-        FrontLeftMotor.setPower(RotatePower);
-        BackRightMotor.setPower(RotatePower);
-        BackLeftMotor.setPower(-RotatePower);
-        FrontLeftMotor.setPower(-RotatePower);
-    }
-
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -101,22 +81,20 @@ public class TankMode extends LinearOpMode {
 
             double leftPower;
             double rightPower;
+            double rotateRightPower;
 
             // Le initializam astfel incat:
             // Atunci cand joystick-ul din stanga este actionat pe axa Y, motoarele din stanga vor porni iar robotul va merge spre dreapta
             // Atunci cand joystick-ul din dreapta, este actionat pe axa Y, motoarele din dreapta vor porni si vor duce robotul in stanga
 
-            if(gamepad1.left_bumper){
-                RotateLeft();
-            }
-
-            if(gamepad1.right_bumper){
-                RotateRight();
-            }
 
             // Setam puterea pentru triggere
-            leftPower  = gamepad1.left_trigger;
-            rightPower = gamepad1.right_trigger;
+            leftPower  = gamepad1.right_trigger;
+            rightPower = gamepad1.left_trigger;
+
+            rotateRightPower=gamepad1.left_stick_y;
+
+
 
 
             // Trimitem valorile initializate la motoare
@@ -135,6 +113,11 @@ public class TankMode extends LinearOpMode {
                 FrontRightMotor.setPower(rightPower);
                 FrontLeftMotor.setPower(leftPower);
 
+
+                BackLeftMotor.setPower(-rotateRightPower);
+                BackRightMotor.setPower(rotateRightPower);
+                FrontRightMotor.setPower(rotateRightPower);
+                FrontLeftMotor.setPower(-rotateRightPower);
             }
             // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
