@@ -40,8 +40,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  *
  */
-@Autonomous(name="MarkerRun(pos1)", group="MonsieurMallah")
-public class TeamMarkerRun extends OpMode {
+@Autonomous(name="MarkerRun(pos2)", group="MonsieurMallah")
+public class TeamMarkerRun2 extends OpMode {
 
     // MAGIC NUMBERS for the motor encoders
     static final double COUNTS_PER_MOTOR_REV = 560;    // http://www.revrobotics.com/content/docs/Encoder-Guide.pdf
@@ -187,16 +187,18 @@ public class TeamMarkerRun extends OpMode {
             double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 44, 44);
-            turnLeft(90);
+            encoderDrive(speed, 10, 10);
+            turnLeft(68);
             encoderDrive(speed, 30, 30);
+            turnLeft(55);
+            encoderDrive(speed, 45, 45);
 
             dropFlag();
             sleep(3000);
             angleHand = 0.75;
             flagHolder.setPosition(angleHand);
 
-            turnRight(180);
+            turnRight(165);
             encoderDrive(speed, 76, 76);
 
             madeTheRun = true;
