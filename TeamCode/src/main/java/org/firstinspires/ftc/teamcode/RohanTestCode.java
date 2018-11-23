@@ -31,6 +31,18 @@ public void runOpMode () {
     move(0,0,0.5);
     sleep(1000);
     stopBot();
+    move(0,0.5,0);
+    sleep(1000);
+    stopBot();
+    move(0,-0.5,0);
+    sleep(1000);
+    stopBot();
+    move(0,-0.5,0);
+    sleep(1000);
+    stopBot();
+    move(0,0.5,0);
+    sleep(1000);
+    stopBot();
     }
     public void move(double drive, double rotate, double strafe)
     {
