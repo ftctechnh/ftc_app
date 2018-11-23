@@ -1,6 +1,10 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.hitechnic.HiTechnicNxtAccelerationSensor;
+import com.qualcomm.hardware.lynx.LynxEmbeddedIMU;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,20 +13,21 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class IMU {
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters;
 
     ElapsedTime GyroTimeOut;
-    double GyroCalibrationTime = 0;
-
     public IMU(HardwareMap hwMap){
         parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-        parameters.mode = BNO055IMU.SensorMode.IMU;
+        parameters.mode = BNO055IMU.SensorMode.GYRONLY;
 
 
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -32,11 +37,7 @@ public class IMU {
         GyroTimeOut = new ElapsedTime();
         GyroTimeOut.reset();
 
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) {
-            //wait to be calibrated
-        }
-        //examples in milliseconds == 452 , 458 , 458, 452, 458
-        GyroCalibrationTime = GyroTimeOut.milliseconds();
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 2000);
     }
 
     public double getHeading(){
@@ -46,15 +47,12 @@ public class IMU {
 
     public void resetAngleToZero() {
         imu.initialize(parameters);
-        while (!imu.isGyroCalibrated());
+
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 2000);
     }
 
     public boolean isGyroCalibrated() {
         return imu.isGyroCalibrated();
-    }
-
-    public double GyroCalibrationTime() {
-        return GyroCalibrationTime;
     }
 
     /*private BNO055IMU imu1, imu2;

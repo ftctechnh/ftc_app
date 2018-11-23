@@ -1,10 +1,12 @@
 package org.upacreekrobotics.dashboard;
 
+import android.app.Notification;
 import android.content.Context;
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.BatteryChecker;
@@ -28,9 +30,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private dashboardtelemetry DashboardTelemtry;
     private String lastInputValue;
     private boolean connected = false;
-    private VoltageSensor voltageSensor2;
-    private VoltageSensor voltageSensor3;
-    private VoltageSensor voltageSensor4;
+    private List<VoltageSensor> voltageSensors = null;
     private boolean restartRequested = false;
     private boolean isRunning = false;
     private BatteryChecker.BatteryWatcher batteryWatcher;
@@ -275,47 +275,20 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     public String battery(){
         double sensors = 0;
         double voltage = 0;
-        try {
-            if (voltageSensor2.getVoltage() != 0) {
-                sensors++;
-                voltage += voltageSensor2.getVoltage();
-            }
-        } catch (NullPointerException e){
-            try {
-                HardwareMap hwMap = opModeManager.getHardwareMap();
-                voltageSensor2 = hwMap.voltageSensor.get("Expansion Hub 2");
-            } catch (RuntimeException ee){
-            }
-        } catch (RuntimeException e){
-        } catch (AssertionError e){
+        if(voltageSensors==null){
+            voltageSensors = opModeManager.getHardwareMap().getAll(VoltageSensor.class);
         }
-        try {
-            if (voltageSensor3.getVoltage() != 0) {
-                sensors++;
-                voltage += voltageSensor3.getVoltage();
+        if(voltageSensors.size()>0){
+            for(VoltageSensor voltageSensor:voltageSensors){
+                try {
+                    if (voltageSensor.getVoltage() != 0) {
+                        sensors++;
+                        voltage += voltageSensor.getVoltage();
+                    }
+                } catch (Exception e){
+                    DashboardTelemtry.write("Robot Battery Voltage Read Error");
+                }
             }
-        } catch (NullPointerException e){
-            try {
-                HardwareMap hwMap = opModeManager.getHardwareMap();
-                voltageSensor3 = hwMap.voltageSensor.get("Expansion Hub 3");
-            } catch (RuntimeException ee){
-            }
-        } catch (RuntimeException e){
-        } catch (AssertionError e){
-        }
-        try {
-            if (voltageSensor4.getVoltage() != 0) {
-                sensors++;
-                voltage += voltageSensor4.getVoltage();
-            }
-        } catch (NullPointerException e){
-            try {
-                HardwareMap hwMap = opModeManager.getHardwareMap();
-                voltageSensor4 = hwMap.voltageSensor.get("Expansion Hub 4");
-            } catch (RuntimeException ee){
-            }
-        } catch (RuntimeException e){
-        } catch (AssertionError e){
         }
         if(sensors!=0) return String.format("%.2f",voltage/sensors);
         return String.valueOf(0);
@@ -369,9 +342,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private void internalRestartComplete(){
         if(data!=null){
             data.write(new Message(MessageType.RESTART_ROBOT,"HI"));
-            voltageSensor2 = null;
-            voltageSensor3 = null;
-            voltageSensor4 = null;
+            voltageSensors = null;
         }
     }
 

@@ -81,6 +81,11 @@ public class Emitter {
     }
 
     public void shutdown() {
+        for (Map.Entry<String, Future<Boolean>> future:cache.entrySet()){
+            if(!futureFor(future.getKey()).isDone()){
+                futureFor(future.getKey()).cancel(true);
+            }
+        }
         service.shutdownNow();
     }
 

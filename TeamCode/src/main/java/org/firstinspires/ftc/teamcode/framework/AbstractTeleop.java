@@ -10,10 +10,9 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public abstract class AbstractTeleop extends AbstractOpMode {
-
-    private boolean threadRunning = false;
 
     private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
 
@@ -32,36 +31,67 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 
-        Thread InitThread = new Thread(new initThread());
-        Thread InitLoopThread = new Thread(new initloopThread());
-        Thread StartThread = new Thread(new startThread());
-        Thread RunThread = new Thread(new runThread());
+        Callable<Boolean> InitThread = ()->{
+            try {
+                Init();
+            } catch (Exception e){ throwException(e); }
+            return true;
+        };
+        Callable<Boolean> InitLoopThread = ()->{
+            try {
+                InitLoop();
+            } catch (Exception e){ throwException(e); }
+        return true;
+        };
+        Callable<Boolean> StartThread = ()-> {
+        try{
+            Start();
+        } catch (Exception e){ throwException(e); }
+            return true;
+        };
+        Callable<Boolean> LoopThread = ()->{
+            try {
+                Loop();
+            } catch (Exception e){ throwException(e); }
+        return true;
+        };
+
+        Future<Boolean> CurrentFuture;
 
         //sets up emitter
         states = new ButtonStateMap();
         floatStates = new FloatStateMap();
 
         //calls user init
-        service.execute(InitThread);
+        CurrentFuture = service.submit(InitThread);
+
+        telemetry.addData("Init");
+        telemetry.update();
+
+        int i = 0;
 
         while (!isStopRequested() && !isStarted()){
             checkException();
 
-            if(!threadRunning) {
-                threadRunning = true;
-                service.execute(InitLoopThread);
+            if(CurrentFuture.isDone()) {
+                telemetry.addData("Init Loop: "+i);
+                telemetry.update();
+                i++;
+                CurrentFuture = service.submit(InitLoopThread);
             }
         }
 
-        while (!isStopRequested() && threadRunning);
+        while (!isStopRequested() && !CurrentFuture.isDone());
+
+        telemetry.addData("Starting");
+        telemetry.update();
 
         RegisterEvents();
 
         if(!isStopRequested()) {
             checkException();
 
-            threadRunning = true;
-            service.execute(StartThread);
+            CurrentFuture = service.submit(StartThread);
         }
 
         while (opModeIsActive()) {
@@ -71,13 +101,13 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             checkEvents();
 
             //calls user loop
-            if(!threadRunning) {
-                threadRunning = true;
-                service.execute(RunThread);
+            if(CurrentFuture.isDone()) {
+                CurrentFuture = service.submit(LoopThread);
             }
         }
 
         //TODO remake our shutdown procedure
+        CurrentFuture.cancel(true);
         emitter.shutdown();
 
         while (!service.isTerminated()) {
@@ -166,56 +196,12 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         }
     }
 
-    class initThread implements Runnable{
-        public void run(){
-            try {
-                Init();
-            } catch (Exception e){
-                throwException(e);
-            }
-            threadRunning = false;
-        }
-    }
-
-    class initloopThread implements Runnable{
-        public void run(){
-            try {
-                InitLoop();
-            } catch (Exception e){
-                throwException(e);
-            }
-            threadRunning = false;
-        }
-    }
-
-    class startThread implements Runnable{
-        public void run(){
-            try{
-                Start();
-            } catch (Exception e){
-                throwException(e);
-            }
-            threadRunning = false;
-        }
-    }
-
-    class runThread implements Runnable{
-        public void run(){
-            try{
-                Loop();
-            } catch (Exception e){
-                throwException(e);
-            }
-            threadRunning = false;
-        }
-    }
-
     public void addEventHandler(String name, Callable event){
         emitter.on(name, event);
     }
 
     private void checkEvents() {
-        emitter.refresh(telemetry);
+        //emitter.refresh(telemetry);
 
         // boolean buttons
         checkBooleanInput("a", gamepad1.a);

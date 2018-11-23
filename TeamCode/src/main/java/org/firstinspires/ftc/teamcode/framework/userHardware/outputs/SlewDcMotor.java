@@ -29,7 +29,6 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     public SlewDcMotor(DcMotor motor){
         this.motor = motor;
         this.motorEx = (DcMotorEx) motor;
-        setMotorEnable();
 
         //Threading
         t = new Thread(this,"motor "+motor.getDeviceName());
@@ -39,6 +38,7 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     //Threading
     @Override
     public void run() {
+        setMotorEnable();
         while(running && AbstractOpMode.isOpModeActive()){
             motorSlew(getSetPower());
             AbstractOpMode.delay(15);

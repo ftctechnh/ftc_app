@@ -16,14 +16,38 @@ public class FrameworkTest extends AbstractTeleop{
 
     @Override
     public void RegisterEvents() {
-        addEventHandler("even_down", () -> {
+        addEventHandler("even_down", ()->{
             telemetry.addData("even");
+            //telemetry.update();
+            return true;
+        });
+
+        addEventHandler("odd_down", ()->{
+            telemetry.addData("odd");
+            //telemetry.update();
+            return true;
+        });
+
+        addEventHandler("a_down", ()->{
+            telemetry.addData("a_down");
             telemetry.update();
             return true;
         });
 
-        addEventHandler("odd_down", () -> {
-            telemetry.addData("odd");
+        addEventHandler("a_up", ()->{
+            telemetry.addData("a_up");
+            telemetry.update();
+            return true;
+        });
+
+        addEventHandler("b_down", ()->{
+            telemetry.addData("b_down");
+            telemetry.update();
+            return true;
+        });
+
+        addEventHandler("b_up", ()->{
+            telemetry.addData("b_up");
             telemetry.update();
             return true;
         });
@@ -44,8 +68,8 @@ public class FrameworkTest extends AbstractTeleop{
     }
 
     @Override
-    public void Loop() {
-
+    public void Loop(){
+        
     }
 
     @Override

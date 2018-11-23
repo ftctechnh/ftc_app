@@ -265,10 +265,4 @@ public class DriveController extends SubsystemController {
     public boolean isGyroCalibrated() {
         return drive.isGyroCalibrated();
     }
-
-    public double GyroCalibrationTime() {
-        return drive.GyroCalibrationTime();
-    }
-
-
 }

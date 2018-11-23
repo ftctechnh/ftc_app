@@ -111,10 +111,6 @@ public class Drive {
         return imu.isGyroCalibrated();
     }
 
-    public double GyroCalibrationTime() {
-        return imu.GyroCalibrationTime();
-    }
-
     public void stop(){
         //Stops Update Threads
         leftMotor.stop();
