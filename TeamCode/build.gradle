@@ -52,4 +52,5 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+'
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'org.openftc:rev-extensions-2:1.1'
 }
