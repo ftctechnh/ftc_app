@@ -24,7 +24,6 @@ repositories {
 }
 
 
-
 android {
     buildToolsVersion '28.0.3'
     compileOptions {
@@ -32,6 +31,21 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     compileSdkVersion 24
+
+    packagingOptions {
+        exclude 'org/eclipse/jetty/http/encoding.properties'
+        exclude 'META-INF/DEPENDENCIES.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/dependencies.txt'
+        exclude 'META-INF/LGPL2.1'
+    }
+
 }
 dependencies {
     implementation 'io.javalin:javalin:2.4.0'
