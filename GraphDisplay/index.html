@@ -1,0 +1,114 @@
+<!-- Latest compiled and minified plotly.js JavaScript -->
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+<!-- OR use a specific plotly.js release (e.g. version 1.5.0) -->
+<script src="https://cdn.plot.ly/plotly-1.5.0.min.js"></script>
+
+<!-- OR an un-minified version is also available -->
+<script src="https://cdn.plot.ly/plotly-latest.js" charset="utf-8"></script>
+
+<div id="tester" style="width:600px;height:250px;"></div>
+
+<script>
+    GRAPH = document.getElementById('tester');
+
+    Plotly.plot( GRAPH,
+        [
+            {
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#e12c40'},
+                name: 'Error'
+            },
+            {
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#80CAF6'},
+                name: 'Output'
+            },
+            {
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#0d8164'},
+                name: 'de'
+            },
+            {
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#0e57ac'},
+                name: 'p'
+            },
+            {
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#0bc8ae'},
+                name: 'i'
+            },
+            {
+                x: [],
+                y: [],
+                mode: 'lines',
+                line: {color: '#000000'},
+                name: 'd'
+            }
+        ], {
+            margin: { t: 0 }
+        }
+    );
+
+    while(true){
+        try {
+            var exampleSocket = new WebSocket("ws://127.0.0.1:8080");
+            break
+        }
+        catch(error) {
+            console.error(error);
+        }
+
+    }
+
+
+    exampleSocket.onmessage = function (event) {
+        console.log(event.data);
+        j = JSON.parse(event.data);
+        ts = j.ts;
+        err = j.error;
+        output = j.output;
+        de = j.de;
+        p = j.p;
+        i = j.i;
+        d = j.d;
+
+
+        // xArr.push(x);
+        // yArr.push(y);
+        // console.log(xArr);
+        // console.log(yArr);
+
+        update(ts,err,output,de,p,i,d);
+        Plotly.relayout(GRAPH,{
+            xaxis: {
+                // type: 'date',
+                range: [ts-60000,ts] // 1 minute roll
+            }
+        });
+
+    };
+
+    function update(x,y1,y2,y3,y4,y5,y6) {
+        GRAPH = document.getElementById('tester');
+
+        var update = {
+            x:[[x],[x],[x],[x],[x],[x]],
+            y: [[y1],[y2],[y3],[y4],[y5],[y6]]
+        };
+
+        Plotly.extendTraces(GRAPH,update,[0,1,2,3,4,5])
+    }
+
+</script>
