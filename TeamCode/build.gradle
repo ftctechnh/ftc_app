@@ -27,11 +27,15 @@ repositories {
 
 android {
     buildToolsVersion '28.0.3'
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    compileSdkVersion 24
 }
 dependencies {
-    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    compile "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+"
+    implementation 'io.javalin:javalin:2.4.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.9.+'
     implementation 'com.android.support:multidex:1.0.3'
-
-
 }
