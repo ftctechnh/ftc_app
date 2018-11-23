@@ -187,7 +187,7 @@ public class TeamMarkerRun2 extends OpMode {
             double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 10, 10);
+            encoderDrive(speed, 15, 15);
             turnLeft(68);
             encoderDrive(speed, 30, 30);
             turnLeft(55);
