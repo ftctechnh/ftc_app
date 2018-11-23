@@ -38,7 +38,7 @@ class WSS(val port:Int,val path:String) {
     fun start(){
         if (ws != null) {
             l.log("Starting websocket")
-            ws!!.start()
+            ws!!.start(port)
         }else{
             throw java.lang.NullPointerException("Must create websocket before starting")
         }
