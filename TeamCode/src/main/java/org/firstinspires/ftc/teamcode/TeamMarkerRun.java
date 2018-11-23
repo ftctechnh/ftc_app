@@ -39,6 +39,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 /**
  *
+ *  This is from the position closest to the team depot
  */
 @Autonomous(name="MarkerRun(pos1)", group="MonsieurMallah")
 public class TeamMarkerRun extends OpMode {
@@ -187,17 +188,16 @@ public class TeamMarkerRun extends OpMode {
             double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 44, 44);
-            turnLeft(90);
-            encoderDrive(speed, 30, 30);
+            encoderDrive(speed, 55, 55);
 
             dropFlag();
             sleep(3000);
             angleHand = 0.75;
             flagHolder.setPosition(angleHand);
 
-            turnRight(180);
-            encoderDrive(speed, 76, 76);
+
+            turnRight(130);
+            encoderDrive(speed, 80, 80);
 
             madeTheRun = true;
 
