@@ -54,12 +54,16 @@ public class TeamMarkerRun extends OpMode {
 
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime dropTime = new ElapsedTime();
 
     // Motors connected to the hub.
     private DcMotor motorBackLeft;
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
+
+    private Servo flagHolder;
+    private double angleHand;
 
     //gyroscope built into hub
     private BNO055IMU bosch;
@@ -80,6 +84,10 @@ public class TeamMarkerRun extends OpMode {
         if (useMotors) {
             motorBackLeft = hardwareMap.get(DcMotor.class, "motor0");
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
+
+            flagHolder = hardwareMap.get(Servo.class, "servo1");
+            angleHand = 0.75;
+            flagHolder.setPosition(angleHand);
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -162,6 +170,13 @@ public class TeamMarkerRun extends OpMode {
     public void stop () {
     }
 
+
+    public void dropFlag() {
+        angleHand = 0;
+        flagHolder.setPosition(angleHand);
+
+    }
+
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
@@ -172,19 +187,18 @@ public class TeamMarkerRun extends OpMode {
             double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-           //HACK encoderDrive(speed, 59, 59);
+            encoderDrive(speed, 44, 44);
             turnLeft(90);
-            sleep( 2000);
-           turnRight(180);
-            sleep( 2000);
-           turnLeft(180);
-          sleep( 2000);
-           turnLeft(90);
-            //HACK encoderDrive(speed, 22, 22);
-            //HACK sleep( 4000);
-            //HACK turnRight(180);
-            //HACK encoderDrive(speed, 64, 64);
-            // encoderDrive(speed, 25, 25);
+            encoderDrive(speed, 30, 30);
+
+            dropFlag();
+            sleep(3000);
+            angleHand = 0.75;
+            flagHolder.setPosition(angleHand);
+
+            turnRight(180);
+            encoderDrive(speed, 76, 76);
+
             madeTheRun = true;
 
         }
@@ -192,16 +206,14 @@ public class TeamMarkerRun extends OpMode {
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());
         telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
+
     }
 
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-     */
+
+
+
+
+
     public void encoderDrive(double speed,
                              double leftInches, double rightInches) {
 
