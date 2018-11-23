@@ -78,3 +78,21 @@ class WSS(val port:Int,val path:String) {
         l.lineBreak()
     }
 }
+
+//fun main(args: Array<String>) {
+//    val const = PIDConstants(1.5,0.05,0.5)
+//    val pid  = PIDController(const,10.0,true,8080,"")
+//    var currentVal = 0.0
+//    pid.initController(currentVal)
+//    var counter = 0
+//    sleep(5000)
+//    while(true){
+//        currentVal += pid.output(currentVal)
+//        println("Current val: $currentVal")
+//        sleep(500)
+//        counter ++
+//        if(counter%50==0){
+//            currentVal += Math.random()-0.5*20
+//        }
+//    }
+//}
