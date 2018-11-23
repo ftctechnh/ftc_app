@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode.OpModes
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.Components.DriveTrain
-import org.firstinspires.ftc.teamcode.Components.PIDController
-import org.firstinspires.ftc.teamcode.Models.PIDConstants
 import org.firstinspires.ftc.teamcode.Utils.*
-import java.util.*
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp 2 Wheel")
 

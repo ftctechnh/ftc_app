@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple
 import org.firstinspires.ftc.teamcode.Utils.Logger
 import org.firstinspires.ftc.teamcode.Models.Direction
 import org.firstinspires.ftc.teamcode.Models.PIDConstants
+import org.firstinspires.ftc.teamcode.Utils.PIDController
 
 
 class DriveTrain(val opMode: LinearOpMode){
