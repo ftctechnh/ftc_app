@@ -25,7 +25,7 @@ fun writeFile(path:String,content:String,overWrite:Boolean=false){
         file.writeText(content)
 
     }else{
-        file.appendText(content)
+        file.appendText(content+ "\n")
     }
     l.log("Wrote $content")
 }
