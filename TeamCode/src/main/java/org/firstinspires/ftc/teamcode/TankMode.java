@@ -50,6 +50,42 @@ public class TankMode extends LinearOpMode {
     private DcMotor FrontLeftMotor = null;
     private DcMotor BackLeftMotor = null;
 
+
+    // Miscare Normala cu fata
+    private void NormalMovement(double leftPower, double rightPower){
+
+        BackLeftMotor.setPower(leftPower);
+        BackRightMotor.setPower(rightPower);
+        FrontRightMotor.setPower(rightPower);
+        FrontLeftMotor.setPower(leftPower);
+    }
+    // Inversam fata cu spatele
+    private  void InvertedMovement(double leftPower, double rightPower){
+
+        BackLeftMotor.setPower(-leftPower);
+        BackRightMotor.setPower(-rightPower);
+        FrontRightMotor.setPower(-rightPower);
+        FrontLeftMotor.setPower(-leftPower);
+    }
+
+    // Rotire in jurul propriului ax in dreapta
+    private void SelfAxisRotateRight(double rotatePower){
+
+        BackLeftMotor.setPower(-rotatePower);
+        BackRightMotor.setPower(rotatePower);
+        FrontRightMotor.setPower(rotatePower);
+        FrontLeftMotor.setPower(-rotatePower);
+    }
+
+    // Rotire in jurul propriului ax in stanga
+    private void SelfAxisRotateLeft(double rotatePower){
+
+        BackLeftMotor.setPower(rotatePower);
+        BackRightMotor.setPower(-rotatePower);
+        FrontRightMotor.setPower(-rotatePower);
+        FrontLeftMotor.setPower(rotatePower);
+    }
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -81,7 +117,7 @@ public class TankMode extends LinearOpMode {
 
             double leftPower;
             double rightPower;
-            double rotateRightPower;
+            double rotatePower;
 
             // Le initializam astfel incat:
             // Atunci cand joystick-ul din stanga este actionat pe axa Y, motoarele din stanga vor porni iar robotul va merge spre dreapta
@@ -92,45 +128,23 @@ public class TankMode extends LinearOpMode {
             leftPower  = gamepad1.right_trigger;
             rightPower = gamepad1.left_trigger;
 
-            rotateRightPower=0.5;
-
-
-
+            rotatePower=0.5;
 
             // Trimitem valorile initializate la motoare
             if(!gamepad1.a){
-
-                BackLeftMotor.setPower(leftPower);
-                BackRightMotor.setPower(rightPower);
-                FrontRightMotor.setPower(rightPower);
-                FrontLeftMotor.setPower(leftPower);
+                NormalMovement(leftPower, rightPower);
 
                 if(gamepad1.b){
-
-                    BackLeftMotor.setPower(-rotateRightPower);
-                    BackRightMotor.setPower(rotateRightPower);
-                    FrontRightMotor.setPower(rotateRightPower);
-                    FrontLeftMotor.setPower(-rotateRightPower);
+                    SelfAxisRotateRight(rotatePower);
                 }
                 if(gamepad1.x){
-
-                    BackLeftMotor.setPower(rotateRightPower);
-                    BackRightMotor.setPower(-rotateRightPower);
-                    FrontRightMotor.setPower(-rotateRightPower);
-                    FrontLeftMotor.setPower(rotateRightPower);
+                    SelfAxisRotateLeft(rotatePower);
                 }
             }
             else {
-
-                BackLeftMotor.setPower(-leftPower);
-                BackRightMotor.setPower(-rightPower);
-                FrontRightMotor.setPower(-rightPower);
-                FrontLeftMotor.setPower(-leftPower);
+                InvertedMovement(leftPower, rightPower);
 
             }
-
-
-
 
             // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
