@@ -18,7 +18,7 @@ public class AutonomousFinalDepot extends LinearOpMode
 
         // have servos move robot down to the ground
 
-        compRobot.driveStraight(36);
+        compRobot.driveStraight(36, .8f);
         sleep(500);
 
         while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 16 && compRobot.getFrontRightDistSens().getDistance(DistanceUnit.INCH) > 16)
@@ -28,7 +28,7 @@ public class AutonomousFinalDepot extends LinearOpMode
 
         compRobot.stopDriveMotors();
         //drop marker into depot
-        compRobot.pivotenc(120);
+        compRobot.pivotenc(120, .5f);
 
         compRobot.hugWall(4,7, 18, true);
 

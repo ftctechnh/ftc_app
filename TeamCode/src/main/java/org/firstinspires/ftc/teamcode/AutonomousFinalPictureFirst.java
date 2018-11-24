@@ -24,7 +24,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         //walle.pivot(-40, -.6); //For the line above, not sure if you want it to turn positive 40 deg or -40.
 
         while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 18)
-            compRobot.driveStraight(6); //Is this supposed to be inside the while loop? I'll just leave as it was
+            compRobot.driveStraight(6, .8f); //Is this supposed to be inside the while loop? I'll just leave as it was
 
         {
             if (vuforiaFunctions.hasSeenTarget())
