@@ -94,6 +94,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import org.upacreekrobotics.dashboard.Dashboard;
+import org.upacreekrobotics.eventloop.OurEventLoop;
 
 
 @SuppressWarnings("WeakerAccess")
@@ -137,7 +138,7 @@ public class FtcRobotControllerActivity extends Activity {
     protected FtcRobotControllerService controllerService;
     protected NetworkType networkType;
 
-    protected FtcEventLoop eventLoop;
+    //protected FtcEventLoop eventLoop;
     protected Queue<UsbDevice> receivedUsbAttachmentNotifications;
 
     protected WifiMuteStateMachine wifiMuteStateMachine;
@@ -145,8 +146,9 @@ public class FtcRobotControllerActivity extends Activity {
 
 
     //THIS IS OUR CODE
-    Thread RestartThread;
-    RobotRestartChecker RestartChecker;
+    protected Thread RestartThread;
+    protected RobotRestartChecker RestartChecker;
+    protected OurEventLoop eventLoop; //Replacing line 141
 
     protected class RobotRestarter implements Restarter {
 
@@ -632,7 +634,7 @@ public class FtcRobotControllerActivity extends Activity {
         }
 
         OpModeRegister userOpModeRegister = createOpModeRegister();
-        eventLoop = new FtcEventLoop(hardwareFactory, userOpModeRegister, callback, this, programmingModeController);
+        eventLoop = new OurEventLoop(hardwareFactory, userOpModeRegister, callback, this, programmingModeController);
         FtcEventLoopIdle idleLoop = new FtcEventLoopIdle(hardwareFactory, userOpModeRegister, callback, this, programmingModeController);
 
         controllerService.setCallback(callback);

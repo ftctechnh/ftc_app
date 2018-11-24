@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
+import org.upacreekrobotics.dashboard.Dashboard;
 
 @TeleOp(name="Test Teleop", group="New")
 //@Disabled
@@ -69,7 +70,8 @@ public class FrameworkTest extends AbstractTeleop{
 
     @Override
     public void Loop(){
-        
+        telemetry.addData(Dashboard.getInputValueString("Enter string").toUpperCase());
+        telemetry.update();
     }
 
     @Override

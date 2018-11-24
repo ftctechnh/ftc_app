@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name="BoogieWheel Paths", group="New")
@@ -20,7 +19,7 @@ public class BoogiePaths extends AbstractAuton {
 
     @Override
     public void Run() {
-        switch ((int)Dashboard.getInputValue("Create(0) of Run(1)?")) {
+        switch ((int)Dashboard.getInputValueDouble("Create(0) of Run(1)?")) {
             case 0:{
                 createPath();
                 break;
@@ -33,7 +32,7 @@ public class BoogiePaths extends AbstractAuton {
     }
 
     public void createPath() {
-        Dashboard.getInputValue("Press Enter to continue");
+        Dashboard.getInputValueDouble("Press Enter to continue");
 
         printArrays(robot.recordPath(40,250));
     }
