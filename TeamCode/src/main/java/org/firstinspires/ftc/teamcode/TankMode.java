@@ -134,6 +134,7 @@ public class TankMode extends LinearOpMode {
             if(!gamepad1.a){
                 NormalMovement(leftPower, rightPower);
 
+
                 if(gamepad1.b){
                     SelfAxisRotateRight(rotatePower);
                 }
@@ -148,7 +149,7 @@ public class TankMode extends LinearOpMode {
 
             // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+            telemetry.addData("Motors", "left (%.2f), right (%.2f), rotate (%.2f)", leftPower, rightPower, rotatePower);
             telemetry.update();
         }
     }
