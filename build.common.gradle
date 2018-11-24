@@ -32,6 +32,10 @@ android {
         }
     }
 
+    aaptOptions {
+        noCompress "tflite"
+    }
+
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 19
@@ -73,7 +77,7 @@ android {
             // Disable debugging for release versions so it can be uploaded to Google Play.
             //debuggable true
             ndk {
-                abiFilters "armeabi-v7a"
+                //abiFilters "armeabi-v7a"
             }
         }
         debug {
@@ -81,7 +85,7 @@ android {
             jniDebuggable true
             renderscriptDebuggable true
             ndk {
-                abiFilters "armeabi-v7a"
+                //abiFilters "armeabi-v7a"
             }
         }
     }
