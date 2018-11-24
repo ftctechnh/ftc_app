@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.components.configs.ConfigParser;
 import org.firstinspires.ftc.teamcode.components.scale.ExponentialRamp;
 import org.firstinspires.ftc.teamcode.components.scale.IScale;
 import org.firstinspires.ftc.teamcode.components.scale.LinearScale;
@@ -18,19 +19,18 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class MecanumDriveSystem extends DriveSystem4Wheel {
+public class MecanumDriveSystem extends DriveSystem4Wheel
+{
 
-    //private ConfigParser config;
+    private ConfigParser config;
 
-    private double TICKS_TO_INCHES;
+    public double TICKS_IN_INCH;
+    public double TICKS_IN_INCH_STRAFE;
     private final IScale JOYSTICK_SCALE = new LinearScale(0.62, 0);
     private static double TURN_RAMP_POWER_CUTOFF = 0.1;
-    private static double RAMP_POWER_CUTOFF;
+    public static double RAMP_POWER_CUTOFF;
 
     public IMUSystem imuSystem;
-
-    Telemetry.Item distanceItem;
-    Telemetry.Item powerItem;
 
     private double initialHeading;
 
@@ -38,21 +38,18 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         super(opMode, "MecanumDrive");
 
         //this.config = new ConfigParser("Testy.omc");
-        TICKS_TO_INCHES = 67;
+        TICKS_IN_INCH = 69;
+        TICKS_IN_INCH_STRAFE = 69;
         RAMP_POWER_CUTOFF = 0.3;
 
         imuSystem = new IMUSystem(opMode);
-        initialHeading = Math.toRadians(imuSystem.getHeading());
+        initialHeading = imuSystem.getHeading();
 
         telemetry.log("MecanumDriveSystem","power: {0}", 0);
         telemetry.log("MecanumDriveSystem","distance: {0}", 0);
     }
 
-    private void telem(String message) {
-        telemetry.log("MecanumDriveSystem", message);
-        telemetry.write();
-    }
-
+    // test
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
         rightX = Range.clip(rightX, -1, 1);
         leftX = Range.clip(leftX, -1, 1);
@@ -62,16 +59,21 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         leftX = scaleJoystickValue(leftX);
         leftY = scaleJoystickValue(leftY);
 
-        // write the values to the motors
-        double frontRightPower = leftY + leftX - rightX;
-        double backRightPower = leftY - leftX - rightX;
-        double frontLeftPower = leftY - leftX + rightX;
-        double backLeftPower = leftY + leftX + rightX;
+        // write the values to the motors 1
+        double frontRightPower = leftY + leftX + rightX;
+        double backRightPower = -leftY + leftX + rightX;
+        double frontLeftPower = -leftY + leftX - rightX;
+        double backLeftPower = leftY + leftX - rightX;
 
         this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
+        telemetry.log("Mecanum Drive System","FRpower: {0}", Range.clip(frontRightPower, -1, 1));
         this.motorBackRight.setPower(Range.clip(backRightPower, -1, 1));
-        this.motorFrontLeft.setPower(Range.clip(frontLeftPower - leftX, -1, 1));
-        this.motorBackLeft.setPower(Range.clip(backLeftPower + leftX, -1, 1));
+        telemetry.log("Mecanum Drive System","BRPower: {0}", Range.clip(backRightPower, -1, 1));
+        this.motorFrontLeft.setPower(Range.clip(frontLeftPower, -1, 1));
+        telemetry.log("Mecanum Drive System", "FLPower: {0}", Range.clip(frontLeftPower, -1, 1));
+        this.motorBackLeft.setPower(Range.clip(backLeftPower, -1, 1));
+        telemetry.log("Mecanum Drive System", "BLPower: {0}", Range.clip(backLeftPower, -1, 1));
+        telemetry.write();
     }
 
     private float scaleJoystickValue(float joystickValue) {
@@ -141,15 +143,27 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
 
     public void driveToPositionInches(int inches, double power) {
         int ticks = (int) inchesToTicks(inches);
+        setDirection(DriveDirection.FORWARD);
+        driveToPositionTicks(ticks, power);
+    }
+
+    public void strafeLeftToPositionInches(int inches, double power) {
+        setDirection(MecanumDriveDirection.STRAFE_LEFT);
+        int ticks = (int) inchesToTicksStrafe(inches);
+        driveToPositionTicks(ticks, power);
+    }
+
+    public void strafeRightToPositionInches(int inches, double power) {
+        setDirection(MecanumDriveDirection.STRAFE_RIGHT);
+        int ticks = (int) inchesToTicksStrafe(inches);
+        driveToPositionTicks(ticks, power);
+    }
+
+    private void driveToPositionTicks(int ticks, double power) {
         motorBackRight.setPower(0);
         motorBackLeft.setPower(0);
         motorFrontLeft.setPower(0);
         motorFrontRight.setPower(0);
-
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
         motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
         motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() + ticks);
@@ -209,7 +223,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         motorFrontLeft.setPower(0);
     }
 
-    private int  getMinDistanceFromTarget() {
+    public int  getMinDistanceFromTarget() {
         int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
         d = min(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
         d = min(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
@@ -217,14 +231,13 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         return d;
     }
 
-    private double ticksToInches(int ticks) {
-        return ticks / TICKS_TO_INCHES;
+    public double inchesToTicks(int inches) {
+        return inches * TICKS_IN_INCH;
     }
 
-    private double inchesToTicks(int ticks) {
-        return ticks * TICKS_TO_INCHES;
+    public double inchesToTicksStrafe(int inches) {
+        return inches * TICKS_IN_INCH_STRAFE;
     }
-
 
     private int min(int d1, int d2) {
         if (d1 < d2) {
@@ -234,9 +247,17 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         }
     }
 
-    public void turn(double degrees, double maxPower) {
+    public void turnAbsolute(double degrees, double maxPower) {
+        turn(degrees, maxPower, initialHeading);
+    }
 
-        double heading = -imuSystem.getHeading();
+    public void turn(double degrees, double maxPower) {
+        turn(degrees, maxPower, imuSystem.getHeading());
+    }
+
+    private void turn(double degrees, double maxPower, double initialHeading) {
+
+        double heading = -initialHeading;
         double targetHeading = 0;
 
         if ((degrees % 360) > 180) {
@@ -265,17 +286,6 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         this.setPower(0);
     }
 
-    public void tankDrive(double leftPower, double rightPower) {
-        this.motorFrontLeft.setPower(leftPower);
-        this.motorBackLeft.setPower(leftPower);
-        this.motorFrontRight.setPower(rightPower);
-        this.motorBackRight.setPower(rightPower);
-    }
-
-    private double computeDegreesDiff(double targetHeading, double heading) {
-        return targetHeading - heading;
-    }
-
     private double getTurnPower(Ramp ramp, double targetHeading, double heading) {
         double diff = computeDegreesDiff(targetHeading, heading);
 
@@ -284,5 +294,45 @@ public class MecanumDriveSystem extends DriveSystem4Wheel {
         } else {
             return ramp.scaleX(Math.abs(diff));
         }
+    }
+
+    private double computeDegreesDiff(double targetHeading, double heading) {
+        return targetHeading - heading;
+    }
+
+    public void parkOnCrater(double maxPower) {
+        double initPitch = imuSystem.getpitch();
+        double initRoll = imuSystem.getRoll();
+        double criticalAngle = 1.5;
+
+        setDirection(DriveDirection.FORWARD);
+        setPower(maxPower);
+
+        while ((Math.abs(imuSystem.getpitch() - initPitch) < criticalAngle) &&
+                (Math.abs(imuSystem.getRoll() - initRoll) < criticalAngle)) {
+            setPower(maxPower);
+        }
+        setPower(0);
+    }
+
+    public void setDirection(MecanumDriveDirection direction) {
+        switch (direction){
+            case STRAFE_LEFT:
+                motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                break;
+            case STRAFE_RIGHT:
+                motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                break;
+        }
+    }
+
+    public enum MecanumDriveDirection {
+        STRAFE_RIGHT, STRAFE_LEFT;
     }
 }

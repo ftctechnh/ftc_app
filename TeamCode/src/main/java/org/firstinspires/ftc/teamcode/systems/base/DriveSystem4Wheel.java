@@ -4,7 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-public class DriveSystem4Wheel extends System {
+public class DriveSystem4Wheel extends System
+{
 
     public DcMotor motorFrontLeft;
     public DcMotor motorFrontRight;
@@ -12,17 +13,14 @@ public class DriveSystem4Wheel extends System {
     public DcMotor motorBackRight;
 
     public DriveSystem4Wheel(OpMode opMode, String systemName) {
-        super(opMode, "MecanumDrive");
+        super(opMode, "DriveSystem4Wheel");
 
-        this.motorFrontLeft = hardwareMap.dcMotor.get("motorFL"/*config.getString("motorFL")*/);
-        this.motorFrontRight = hardwareMap.dcMotor.get("motorFR"/*config.getString("motorFR")*/);
-        this.motorBackRight = hardwareMap.dcMotor.get("motorBR"/*config.getString("motorBR")*/);
-        this.motorBackLeft = hardwareMap.dcMotor.get("motorBL"/*config.getString("motorBL")*/);
+        this.motorFrontLeft = hardwareMap.dcMotor.get("motorFL");
+        this.motorFrontRight = hardwareMap.dcMotor.get("motorFR");
+        this.motorBackRight = hardwareMap.dcMotor.get("motorBR");
+        this.motorBackLeft = hardwareMap.dcMotor.get("motorBL");
 
-        motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        setDirection(DriveDirection.FORWARD);
 
         this.motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -44,17 +42,8 @@ public class DriveSystem4Wheel extends System {
         this.motorBackRight.setPower(power);
     }
 
-    public void setDirection(DcMotorSimple.Direction direction)
-    {
-        motorFrontLeft.setDirection(direction);
-        motorFrontRight.setDirection(direction);
-        motorBackLeft.setDirection(direction);
-        motorBackRight.setDirection(direction);
-    }
-
     public boolean anyMotorsBusy()
     {
-        // lick left kneecap daddy pimple
         return motorFrontLeft.isBusy() ||
                 motorFrontRight.isBusy() ||
                 motorBackLeft.isBusy() ||
@@ -63,7 +52,7 @@ public class DriveSystem4Wheel extends System {
 
     public void setTargetPosition(int ticks)
     {
-        motorBackLeft.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
+        motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition() + ticks);
         motorBackRight.setTargetPosition(motorBackRight.getCurrentPosition() + ticks);
         motorFrontLeft.setTargetPosition(motorFrontLeft.getCurrentPosition() + ticks);
         motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
@@ -71,9 +60,38 @@ public class DriveSystem4Wheel extends System {
 
     public void setRunMode(DcMotor.RunMode runMode)
     {
+        // lick left kneecap daddy pimple
         motorFrontLeft.setMode(runMode);
         motorFrontRight.setMode(runMode);
         motorBackLeft.setMode(runMode);
         motorBackRight.setMode(runMode);
+    }
+
+    public void tankDrive(double leftPower, double rightPower) {
+        this.motorFrontLeft.setPower(-leftPower);
+        this.motorBackLeft.setPower(leftPower);
+        this.motorFrontRight.setPower(rightPower);
+        this.motorBackRight.setPower(-rightPower);
+    }
+
+    public void setDirection(DriveDirection direction) {
+        switch (direction){
+            case FORWARD:
+                motorFrontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                break;
+            case BACKWARD:
+                motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
+                motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+                break;
+        }
+    }
+
+    public enum DriveDirection {
+        FORWARD, BACKWARD;
     }
 }
