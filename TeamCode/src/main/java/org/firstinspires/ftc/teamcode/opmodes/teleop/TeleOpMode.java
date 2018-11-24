@@ -57,63 +57,77 @@ public class TeleOpMode extends TeleOpModeDebugger {
     }
 
     private void addWinchButton() {
-        final StepButton<SlideState> winchButton = new StepButton<>(
-                controller1.y,
-                controller1.a,
-                SlideState.WINCHING_TO_BOTTOM,
-                SlideState.WINCHING_TO_LOAD,
-                SlideState.WINCHING_TO_TOP
-        );
-        winchButton.setOffset(1);
-        winchButton.incrementAction = new Handler()
+        controller1.rightTrigger.pressedHandler = new Handler()
         {
             @Override
             public void invoke() throws Exception
             {
-                slideSystem.setState(winchButton.getCurrentState());
-            }
-        } ;
-        winchButton.decrementAction = new Handler()
-        {
-            @Override
-            public void invoke() throws Exception
-            {
-                slideSystem.setState(winchButton.getCurrentState());
+                slideSystem.setState(SlideState.WINCHING_TO_TOP);
             }
         };
-        controller1.addButton(winchButton);
+        controller1.rightTrigger.releasedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                slideSystem.setState(SlideState.IDLE);
+            }
+        };
+        controller1.leftTrigger.pressedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                slideSystem.setState(SlideState.WINCHING_TO_BOTTOM);
+            }
+        };
+        controller1.leftTrigger.releasedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                slideSystem.setState(SlideState.IDLE);
+            }
+        };
     }
 
     private void addRotateButton() {
-        final StepButton<ArmState> rotateButton = new StepButton<ArmState>(
-                controller1.dPadUp,
-                controller1.dPadDown,
-                ArmState.ROTATING_PICKUP,
-                ArmState.ROTATING_LATCH,
-                ArmState.ROTATING_DROP
-        );
-        rotateButton.setOffset(1);
-        rotateButton.incrementAction = new Handler()
+        controller1.dPadDown.pressedHandler = new Handler()
         {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.setState(rotateButton.getCurrentState());
+                armSystem.setState(ArmState.ROTATING_PICKUP);
             }
         };
-        rotateButton.decrementAction = new Handler()
+        controller1.dPadDown.releasedHandler = new Handler()
         {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.setState(rotateButton.getCurrentState());
+                armSystem.setState(ArmState.IDLE);
             }
         };
-        controller1.addButton(rotateButton);
+        controller1.dPadUp.pressedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                armSystem.setState(ArmState.ROTATING_DROP);
+            }
+        };
+        controller1.dPadUp.releasedHandler = new Handler()
+        {
+            @Override
+            public void invoke() throws Exception
+            {
+                armSystem.setState(ArmState.IDLE);
+            }
+        };
     }
 
     private void addFlailButton() {
-        controller1.rightTrigger.pressedHandler = new Handler()
+        controller1.rightBumper.pressedHandler = new Handler()
         {
             @Override
             public void invoke() throws Exception
@@ -121,7 +135,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
                 flail.start();
             }
         };
-        controller1.rightTrigger.releasedHandler = new Handler()
+        controller1.rightBumper.releasedHandler = new Handler()
         {
             @Override
             public void invoke() throws Exception

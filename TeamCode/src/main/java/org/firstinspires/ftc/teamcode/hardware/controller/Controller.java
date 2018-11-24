@@ -56,10 +56,6 @@ public class Controller
 
     public Controller(final Gamepad gamepad)
     {
-        //this.parser = new ConfigParser("Controller");
-        //DEFAULT_TRIGGER_VALUE = parser.getFloat("default_trigger");
-        //this.rightTriggerValue = DEFAULT_TRIGGER_VALUE;
-        //this.leftTriggerValue = DEFAULT_TRIGGER_VALUE;
         this.gamepad = gamepad;
         uniqueButtons = new ArrayList<Button>();
 

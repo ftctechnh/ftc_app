@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.systems.slide;
 
+import android.transition.Slide;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -12,25 +14,15 @@ import org.firstinspires.ftc.teamcode.systems.base.System;
 
 public class SlideSystem extends System
 {
-
-    /*
-       TODO:
-       - ramp the encoder values
-     */
-    private final double WinchPower = 0.3;
-    private final int EncoderLoadRange = 100;
+    private final double WinchPower = -0.2;
 
     private DigitalChannel limitTop;
     private DigitalChannel limitMiddle;
     private DcMotor winch;
 
-    private final int EncoderBottom = 11000;
-    private final int EncoderLoad = 3340;
+    private SlideState state;
 
-    private boolean hasSetOrigin;
     private double winchOrigin;
-
-    private SlideState currentState;
 
     public SlideSystem(OpMode opMode)
     {
@@ -39,32 +31,28 @@ public class SlideSystem extends System
         limitTop = hardwareMap.get(DigitalChannel.class, "limitTop");
         limitMiddle = hardwareMap.get(DigitalChannel.class, "limitMiddle");
 
-        hasSetOrigin = false;
+        winchOrigin = winch.getCurrentPosition();
         setState(SlideState.IDLE);
-
         limitTop.setMode(DigitalChannel.Mode.INPUT);
         limitMiddle.setMode(DigitalChannel.Mode.INPUT);
     }
 
-    public void setState(SlideState state)
-    {
-        currentState = state;
+    public void setState(SlideState state) {
+        this.state = state;
     }
 
-    public void run()
-    {
-        switch (currentState) {
+    public void run() {
+        switch (state) {
             case WINCHING_TO_TOP:
                 slideUp();
                 break;
             case WINCHING_TO_BOTTOM:
                 slideDown();
                 break;
-            case WINCHING_TO_LOAD:
-                slideLoad();
+            default:
+                stop();
                 break;
         }
-        telemetry.write();
     }
 
     public void slideUp()
@@ -77,8 +65,6 @@ public class SlideSystem extends System
         else
         {
             winch.setPower(0.0);
-            setState(SlideState.IDLE);
-            setOrigin();
         }
     }
 
@@ -86,54 +72,25 @@ public class SlideSystem extends System
         return !limitTop.getState() && !limitMiddle.getState();
     }
 
-    private void setOrigin() {
-        if (!hasSetOrigin) {
-            hasSetOrigin = true;
-            winchOrigin = winch.getCurrentPosition();
-        }
-    }
-
     public void slideDown()
     {
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (hasSetOrigin && !isAtBottom())
+        if (!isAtBottom())
         {
             winch.setPower(-WinchPower);
         }
         else
         {
-            setState(SlideState.IDLE);
             winch.setPower(0);
         }
     }
 
     private boolean isAtBottom() {
-        return winch.getCurrentPosition() <= winchOrigin - EncoderBottom;
+        return winch.getCurrentPosition() >= winchOrigin;
     }
 
-    public void slideLoad()
-    {
-        winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        if (hasSetOrigin && !isInLoadRange())
-        {
-            winch.setPower(getLoadPower());
-        }
-        else
-        {
-            setState(SlideState.IDLE);
-            winch.setPower(0);
-        }
-    }
-
-    private boolean isInLoadRange() {
-        return winch.getCurrentPosition() <= winchOrigin - EncoderLoad + EncoderLoadRange &&
-                winch.getCurrentPosition() >= winchOrigin - EncoderLoad - EncoderLoadRange;
-    }
-
-    private double getLoadPower()
-    {
-        return winch.getCurrentPosition() > winchOrigin - EncoderLoad ?
-                -WinchPower :
-                WinchPower;
+    public void stop() {
+        setState(SlideState.IDLE);
+        winch.setPower(0);
     }
 }
