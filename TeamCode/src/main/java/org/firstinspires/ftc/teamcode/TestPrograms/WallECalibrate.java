@@ -1,9 +1,13 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TestPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.ParadeBot;
+
 @Autonomous(name = "WallECalibrate")
+@Disabled
 public class WallECalibrate extends LinearOpMode
 {
     ParadeBot wallE;

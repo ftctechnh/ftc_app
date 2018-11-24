@@ -30,7 +30,7 @@ public class AutonomousFinalDepot extends LinearOpMode
         //drop marker into depot
         compRobot.pivotenc(120);
 
-        compRobot.hugWallForward(4,7, 18);
+        compRobot.hugWall(4,7, 18, true);
 
         telemetry.addData("Stopped", null);
         telemetry.update();

@@ -10,7 +10,7 @@ public class CompRobot extends BasicBot
 {
     LinearOpMode linearOpMode;
 
-    private DistanceSensor frontDistSens, frontRightDistSens;
+    private DistanceSensor frontDistSens, frontRightDistSens, backDistSens;
 
     public CompRobot(HardwareMap hardwareMap)
     {
@@ -78,6 +78,59 @@ public class CompRobot extends BasicBot
         pivotenc(degrees, .5f);
     }
 
+    public void hugWall(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, boolean isGoingForward)
+    {
+        double straightDist, rightDist;
+
+        float stepDistance = 11;
+        float stepPivotAmtDeg = 15;
+
+        DistanceSensor usingDistSensor = frontDistSens;
+
+        if (!isGoingForward)
+        {
+            usingDistSensor = backDistSens;
+            stepDistance = -stepDistance;
+            stepPivotAmtDeg = -stepPivotAmtDeg;
+        }
+
+        while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
+        {
+            linearOpMode.sleep(400);
+            straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
+            if(straightDist < distAwayFromFrontWall - Math.abs(stepDistance)/2)
+            {
+                super.stopDriveMotors();
+                break;
+            }
+            else
+                driveStraight(stepDistance);
+
+            if (straightDist > distAwayFromFrontWall)
+            {
+                rightDist = frontRightDistSens.getDistance(DistanceUnit.INCH);
+
+                if (rightDist < lowerDistFromSideWall)
+                {
+                    pivotenc(-stepPivotAmtDeg);
+                    driveStraight(stepDistance);
+                    pivotenc(stepPivotAmtDeg);
+                }
+                else if (rightDist > upperDistFromSideWall)
+                {
+                    pivotenc(stepPivotAmtDeg);
+                    driveStraight(stepDistance);
+                    pivotenc(-stepPivotAmtDeg);
+                }
+                else
+                {
+                    driveStraight(stepDistance * .69f);
+                }
+            }
+        }
+    }
+
+    /* Old hugwall code,
     public void hugWallForward(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall)
     {
         double frontDist, rightDist;
@@ -110,9 +163,14 @@ public class CompRobot extends BasicBot
                     driveStraight(11);
                     pivotenc(-15);
                 }
+                else if (lowerDistFromSideWall < rightDist & rightDist < upperDistFromSideWall) //To note in the future, maybe replace with else
+                {
+                    driveStraight(8);
+                }
             }
         }
     }
+    */
 
     public DistanceSensor getFrontRightDistSens()
     {
