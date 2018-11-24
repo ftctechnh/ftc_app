@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.OpModes
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.teamcode.Components.DriveTrain
-import org.firstinspires.ftc.teamcode.Utils.*
+import org.firstinspires.ftc.teamcode.Utils.Logger
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp 2 Wheel")
 
 class  Tele2Wheel: LinearOpMode(){
-    val l:Logger = Logger("TELE2WHEEL")
+    val l: Logger = Logger("TELE2WHEEL")
     init{
         l.log("Initialized")
 //        val pid:PIDConstants = getPIDConstantsFromFile("pid_rotation.json")

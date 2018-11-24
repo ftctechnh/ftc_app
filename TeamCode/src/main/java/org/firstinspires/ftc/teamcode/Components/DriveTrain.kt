@@ -7,14 +7,14 @@ import org.firstinspires.ftc.teamcode.Utils.Logger
 import org.firstinspires.ftc.teamcode.Models.Direction
 import org.firstinspires.ftc.teamcode.Models.PIDConstants
 import org.firstinspires.ftc.teamcode.Utils.PIDController
+import org.firstinspires.ftc.teamcode.Utils.WSS
 
 
-class DriveTrain(val opMode: LinearOpMode){
+class DriveTrain(val opMode: LinearOpMode,val wss:WSS?=null){
     val l:Logger = Logger("DRIVETRAIN2")
     val lDrive = Motor(opMode.hardwareMap, "lDrive")
     val rDrive  = Motor(opMode.hardwareMap, "rDrive")
     val driveMotors = MotorGroup()
-
     val imu = IMU(opMode.hardwareMap.get(BNO055IMU::class.java, "imu"))
 
     init {
@@ -26,6 +26,7 @@ class DriveTrain(val opMode: LinearOpMode){
             l.log("Initialized motors")
 //            driveMotors.logInfo()
         }
+        l.log("Websocket initialized: ${wss!=null}")
 
         initMotors()
     }
@@ -79,9 +80,9 @@ class DriveTrain(val opMode: LinearOpMode){
         stopAll()
     }
 
-    fun rotate(dir: Direction, angle: Int, timeout: Int = 10) {
+    fun rotate(dir: Direction, angle: Int, timeout: Int = 10,broadcast:Boolean=false,pidConstants: PIDConstants) {
         val targetHeading = fixAngle(imu.angle + dir.intRepr * angle)
-        rotateTo(targetHeading, timeout)
+        rotateTo(targetHeading, timeout,broadcast=broadcast,pidConstants = pidConstants)
     }
 
     fun fixAngle(angle: Double): Double {
@@ -96,11 +97,11 @@ class DriveTrain(val opMode: LinearOpMode){
         return fixedAngle
     }
 
-    fun rotateTo(targetHeading: Double, timeout: Int = 10) {
+    fun rotateTo(targetHeading: Double, timeout: Int = 10,broadcast:Boolean=false,pidConstants: PIDConstants) {
         val minError = 2
         val minPower = 2.0
 
-        val pid = PIDController(PIDConstants(0.0, 0.0, 0.0), targetHeading)
+        val pid = PIDController(pidConstants, targetHeading,broadcast=broadcast,wss=wss)
 
         var currentHeading: Double = imu.angle
 
@@ -110,12 +111,13 @@ class DriveTrain(val opMode: LinearOpMode){
 
             var proportionalPower = pid.output(currentHeading, this::fixAngle)
 
-            proportionalPower = if (proportionalPower > 0) {
-                Math.max(proportionalPower + 0.1, minPower)
-            } else {
-                Math.min(proportionalPower - 0.1, -minPower)
-            }
+//            proportionalPower = if (proportionalPower > 0) {
+//                Math.max(proportionalPower + 0.1, minPower)
+//            } else {
+//                Math.min(proportionalPower - 0.1, -minPower)
+//            }
 
+            l.logData("P Power",proportionalPower)
             move(Direction.SPIN_CW, proportionalPower)
 
             if (Math.abs(pid.prevError!!) < minError) {
@@ -127,7 +129,6 @@ class DriveTrain(val opMode: LinearOpMode){
             }
         } while (opMode.opModeIsActive() && !opMode.isStopRequested &&
                 Math.abs(pid.prevError!!) > minError)
-
         stopAll()
     }
 
