@@ -149,7 +149,7 @@ public class TankMode extends LinearOpMode {
 
             // Afisam pe Driver Station timpul in care robotul a rulat si puterea rotilor
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "left (%.2f), right (%.2f), rotate (%.2f)", leftPower, rightPower, rotatePower);
+            telemetry.addData("Motors", "right (%.2f), left (%.2f), rotate (%.2f)", leftPower, rightPower, rotatePower);
             telemetry.update();
         }
     }
