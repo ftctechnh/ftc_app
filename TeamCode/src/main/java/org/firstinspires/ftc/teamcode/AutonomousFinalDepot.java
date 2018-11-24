@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name = "!Depot")
+@Autonomous(name = "!FinalDepot")
 public class AutonomousFinalDepot extends LinearOpMode
 {
 
