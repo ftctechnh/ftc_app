@@ -48,15 +48,20 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
 
             telemetry.update();
         }
-        compRobot.hugWallForward(6 + sensorDepth, 9 + sensorDepth, 18);
+        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 18, true);
         //The hug wall code in the method is a bit different than the one that was in the original auto file
         //make sure that it still runs as intended.
 
         telemetry.addData("Stopped", null);
         sleep(2000); //drop team marker into depot
         telemetry.update();
+        
+        /* So i'm assuming that this old code is being used to substitute a backwards wall hugging code,
         compRobot.pivotenc(-90, .8f);
         compRobot.driveStraight(96, .6f);
         compRobot.stopDriveMotors();
+        */
+
+        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 18, false);
     }
 }
