@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name = "!PictureFirst")
+@Autonomous(name = "!FinalPictureFirst")
 public class AutonomousFinalPictureFirst extends LinearOpMode
 {
     CompRobot compRobot;
@@ -21,7 +21,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         waitForStart();
         compRobot.driveStraight(10,.6f);
         compRobot.pivotenc(-40, .6f);
-        //walle.pivot(-40, -.6); For the line above, not sure if you want it to turn positive 40 deg or -40.
+        //walle.pivot(-40, -.6); //For the line above, not sure if you want it to turn positive 40 deg or -40.
 
         while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 18)
             compRobot.driveStraight(6); //Is this supposed to be inside the while loop? I'll just leave as it was
@@ -56,12 +56,12 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         sleep(2000); //drop team marker into depot
         telemetry.update();
         
-        /* So i'm assuming that this old code is being used to substitute a backwards wall hugging code,
+        /* So I'm assuming that this old code is being used to substitute a backwards wall hugging code,
         compRobot.pivotenc(-90, .8f);
-        compRobot.driveStraight(96, .6f);
+        compRobot.drive Straight(96, .6f);
         compRobot.stopDriveMotors();
         */
 
-        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 18, false);
+       // compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 18, false);
     }
 }
