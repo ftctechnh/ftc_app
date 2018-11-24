@@ -4,8 +4,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.HardwareBruinBot;
-//import com.qualcomm.robotcore.hardware.HardwareMap;
-//import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Coach Vince Teleop Test", group = "Vince")
 public class CoachVinceTeleopTest extends LinearOpMode {
@@ -15,9 +13,6 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         float drive;
         float strafe;
         float rotate;
-        float maxDrive;
-        float frontMax;
-        float rearMax;
         float armExtension;
         float armRotation;
         float mineralServosIn;
@@ -29,7 +24,6 @@ public class CoachVinceTeleopTest extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-
 
 
         // Send telemetry message to signify robot waiting;
@@ -46,21 +40,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             drive = -gamepad1.left_stick_y;// Negative because the gamepad is weird
             strafe = gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
- /*
-            frontMax = Math.max(Math.abs(drive + strafe + rotate), Math.abs(drive - strafe - rotate));
-            rearMax = Math.max(Math.abs(drive - strafe + rotate), Math.abs(drive + strafe - rotate));
-            maxDrive = Math.max(frontMax, rearMax);
-            maxDrive = Math.max(maxDrive,1);
-            drive = drive/maxDrive;
-            strafe = strafe/maxDrive;
-            rotate = rotate/maxDrive;
-            double moveScaling = 0.3; // 1 for full speed, 0.3 is controllable
-            //maxDrive = Math.max(Math.max((drive+strafe+rotate),(drive - strafe + rotate)));
-            robot.leftFrontDrive.setPower(moveScaling*(drive + strafe + rotate)); //= drive + strafe + rotate;
-            robot.leftRearDrive.setPower(moveScaling * (drive - strafe + rotate)); //= drive - strafe + rotate;
-            robot.rightFrontDrive.setPower(moveScaling * (drive - strafe - rotate)); //= drive - strafe - rotate;
-            robot.rightRearDrive.setPower(moveScaling * (drive + strafe - rotate)); //= drive + strafe - rotate;
-            */
+
             moveBot(drive, rotate, strafe,0.3);
 
             // LIFTING ARM SECTION!!!! --------------------------------------------------------
@@ -135,89 +115,17 @@ public class CoachVinceTeleopTest extends LinearOpMode {
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
     {
         // This module takes inputs, normalizes them to DRIVE_SPEED, and drives the motors
-        float maxDrive;
-        float frontMax;
-        float rearMax;
 
-
-        // Find the maximum value of the inputs and normalize
-/*        frontMax = Math.max(Math.abs((float)drive + (float)strafe + (float)rotate), Math.abs((float)drive - (float)strafe - (float)rotate));
-        rearMax = Math.max(Math.abs((float)drive - (float)strafe + (float)rotate), Math.abs((float)drive + (float)strafe - (float)rotate));
-        maxDrive = Math.max(frontMax, rearMax);
-        maxDrive = (float) Math.max(maxDrive,(float)scaleFactor);
-        drive = drive/maxDrive;
-        strafe = strafe/maxDrive;
-        rotate = rotate/maxDrive;
-        robot.leftFrontDrive.setPower(drive + strafe + rotate);
-        robot.leftRearDrive.setPower(drive - strafe + rotate);
-        robot.rightFrontDrive.setPower(drive - strafe - rotate);
-        robot.rightRearDrive.setPower(drive + strafe - rotate);
-*/
-/*
-        //calculate motor powers
-        //double scaleFactor = .7; // Max autonomous speed of the robot
-        double tmpScale = 1;
-        // Ensuring we don't have a divide by zero error
-        if (((drive + strafe) == 0) || ((drive-strafe) == 0))
-            drive=drive+0.00001;
-
-        // Solve this equation backwards:
-        // MotorX = TranslationX * scaleFactor + RotationX
-        // to find scaleFactor that ensures -1 <= MotorX <= 1 and 0 < scaleFactor <= 1
-        // drive+strafe+rotate
-        if (Math.abs(strafe + drive + rotate)>1) {
-            tmpScale = (1 - rotate) / (drive + strafe);
-        } else if ((strafe + rotate + drive)<-1) {
-            tmpScale = (rotate - 1) / (drive + strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-        // drive-strafe+rotate
-        if (Math.abs(-strafe + drive + rotate)>1) {
-            tmpScale = (1 - rotate) / (drive + -strafe);
-        } else if ((-strafe + rotate + drive)<-1) {
-            tmpScale = (rotate - 1) / (drive + -strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-        //drive-strafe-rotate
-        if (Math.abs(-strafe + drive + -rotate)>1) {
-            tmpScale = (1 - -rotate) / (drive + -strafe);
-        } else if ((strafe + -rotate + drive)<-1) {
-            tmpScale = (-rotate - 1) / (drive + -strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-        // drive + strafe - rotate
-        if (Math.abs(strafe + drive + -rotate)>1) {
-            tmpScale = (1 - -rotate) / (drive + strafe);
-        } else if ((strafe+rotate+drive)<-1) {
-            tmpScale = (-rotate - 1) / (drive + strafe);
-        }
-        if (tmpScale < scaleFactor) {
-            scaleFactor = tmpScale;
-        }
-
-
-        //robot.leftFrontDrive.setPower(scaleFactor*(drive + strafe) + rotate);
-        //robot.leftRearDrive.setPower(scaleFactor*(drive - strafe) + rotate);
-        //robot.rightFrontDrive.setPower(scaleFactor*(drive - strafe) - rotate);
-        //robot.rightRearDrive.setPower(scaleFactor*(drive + strafe) - rotate);
-
-        */
-
-        // Version 3
+        // How to normalize...Version 3
+        //Put the raw wheel speeds into an array
         double wheelSpeeds[] = new double[4];
         wheelSpeeds[0] = drive + strafe - rotate;
         wheelSpeeds[1] = drive - strafe - rotate;
         wheelSpeeds[2] = drive - strafe + rotate;
         wheelSpeeds[3] = drive + strafe + rotate;
-
+        // Find the magnitude of the first element in the array
         double maxMagnitude = Math.abs(wheelSpeeds[0]);
-
+        // If any of the other wheel speeds are bigger, save that value in maxMagnitude
         for (int i = 1; i < wheelSpeeds.length; i++)
         {
             double magnitude = Math.abs(wheelSpeeds[i]);
@@ -226,7 +134,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
                 maxMagnitude = magnitude;
             }
         }
-
+        // Normalize all of the magnitudes to below 1
         if (maxMagnitude > 1.0)
         {
             for (int i = 0; i < wheelSpeeds.length; i++)
@@ -234,16 +142,12 @@ public class CoachVinceTeleopTest extends LinearOpMode {
                 wheelSpeeds[i] /= maxMagnitude;
             }
         }
+        // Send the normalized values to the wheels, further scaled by the user
         robot.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
         robot.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
         robot.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
         robot.rightRearDrive.setPower(scaleFactor * wheelSpeeds[3]);
 
-        telemetry.addData("drive",drive);
-        telemetry.addData("strafe",strafe);
-        telemetry.addData("rotate",rotate);
-        telemetry.addData("scaleFactor",scaleFactor);
-        telemetry.update();
     }
 }
 

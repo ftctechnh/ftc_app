@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.HardwareBruinBot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.CameraViewDisplay;
@@ -28,7 +29,7 @@ public class AutoMineral extends LinearOpMode {
         detector.useDefaults();
 
         // Optional Tuning
-        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignSize = 50; // Was 100 How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
         detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
@@ -49,11 +50,13 @@ public class AutoMineral extends LinearOpMode {
         while (!isStarted()) {
             // Put things to do prior to start in here
         }
-        double fwdSpeed=0.0;  // Forward Speed, Normally 0.1
-        double rotate = 0.1; // Rotation Speed
-        double strafe = 0.1;  // Strafe Speed
+        double fwdSpeed=0.3;  // Forward Speed, Normally 0.1
+        double rotate = 0.2; // Rotation Speed
+        double strafe = 0.5;  // Strafe Speed
         //This loop runs until the gold mineral is found;
         //Need to change this to "while not detected" like in the GoldAlignExample program;
+        double detectorCt = 0;  // Used to make sure the robot has settled on a heading
+        double error = 0;
         while (detector.isFound()) {
         //boolean isAligned = false;
         //!! This is where we need to poll the detector
@@ -69,31 +72,55 @@ public class AutoMineral extends LinearOpMode {
                fwdSpeed = 0.0;
            }
 
+           // Rotate to align with the mineral
+           while( detectorCt <= 15) {
+               // Calculate the heading error
+               error = getXError(300,30);
+               // Command the bot to move
+               moveBot(0,error,0,0.15);
+               // Count up how long it remains aligned.  Could also use gyro heading being stable?
+                if (error == 0) {
+                    detectorCt = detectorCt + 1;
+                } else {
+                    detectorCt = 0;
+                }
+               telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
+               telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
+               telemetry.addData("error", error);
+               telemetry.addData("detectorCt",detectorCt);
+               telemetry.update();
+            }
+            // strafe into mineral
+            moveBot(0,0,.5,0.5);
+           sleep(2000);
+           stopBot();
             //For a 0.5 second period, move the robot forward away from the lander;
             // I don't think we need this - "sleep" takes care of this while (runtime.seconds() < 0.5)
-            if(detector.getXPosition() < 270)
+/*            if(detector.getXPosition() < 290)
             {
+                moveBot(0,-0.2,0,0.5);
                 //double rotate = 0.2;
-                hwMap.leftFrontDrive.setPower(fwdSpeed + rotate); //= drive + strafe + rotate;
-                hwMap.leftRearDrive.setPower(fwdSpeed + rotate); //= drive - strafe + rotate;
-                hwMap.rightFrontDrive.setPower(fwdSpeed - rotate); //= drive - strafe - rotate;
-                hwMap.rightRearDrive.setPower(fwdSpeed - rotate); //= drive + strafe - rotate;
+                //hwMap.leftFrontDrive.setPower(fwdSpeed + rotate); //= drive + strafe + rotate;
+                //hwMap.leftRearDrive.setPower(fwdSpeed + rotate); //= drive - strafe + rotate;
+                //hwMap.rightFrontDrive.setPower(fwdSpeed - rotate); //= drive - strafe - rotate;
+                //hwMap.rightRearDrive.setPower(fwdSpeed - rotate); //= drive + strafe - rotate;
 
             }
-            else if(detector.getXPosition() > 330)
+            else if(detector.getXPosition() > 310)
             {
+                moveBot(0,0.2,0,0.5);
                 //double rotate = -0.2;
-                hwMap.leftFrontDrive.setPower(fwdSpeed - rotate); //= drive + strafe + rotate;
-                hwMap.leftRearDrive.setPower(fwdSpeed - rotate); //= drive - strafe + rotate;
-                hwMap.rightFrontDrive.setPower(fwdSpeed + rotate); //= drive - strafe - rotate;
-                hwMap.rightRearDrive.setPower(fwdSpeed + rotate); //= drive + strafe - rotate;
+                //hwMap.leftFrontDrive.setPower(fwdSpeed - rotate); //= drive + strafe + rotate;
+                //hwMap.leftRearDrive.setPower(fwdSpeed - rotate); //= drive - strafe + rotate;
+                //hwMap.rightFrontDrive.setPower(fwdSpeed + rotate); //= drive - strafe - rotate;
+                //hwMap.rightRearDrive.setPower(fwdSpeed + rotate); //= drive + strafe - rotate;
             }
             else
             {
-                hwMap.leftFrontDrive.setPower(fwdSpeed); //= drive + strafe + rotate;
-                hwMap.leftRearDrive.setPower(fwdSpeed); //= drive - strafe + rotate;
-                hwMap.rightFrontDrive.setPower(fwdSpeed); //= drive - strafe - rotate;
-                hwMap.rightRearDrive.setPower(fwdSpeed); //= drive + strafe - rotate;
+                //hwMap.leftFrontDrive.setPower(fwdSpeed); //= drive + strafe + rotate;
+                //hwMap.leftRearDrive.setPower(fwdSpeed); //= drive - strafe + rotate;
+                //hwMap.rightFrontDrive.setPower(fwdSpeed); //= drive - strafe - rotate;
+                //hwMap.rightRearDrive.setPower(fwdSpeed); //= drive + strafe - rotate;
             }
 
             sleep(50);
@@ -117,6 +144,7 @@ public class AutoMineral extends LinearOpMode {
                 hwMap.rightRearDrive.setPower(0.1 - rotate); //= drive + strafe - rotate;
 
             }*/
+
             //This is where we no longer see the mineral and stop the robot
            telemetry.update();
         }
@@ -127,10 +155,78 @@ public class AutoMineral extends LinearOpMode {
             hwMap.rightFrontDrive.setPower(0.1); //= drive - strafe - rotate;
             hwMap.rightRearDrive.setPower(0.1); //= drive + strafe - rotate;
         sleep(1000);*/
+           stopBot();
+           detector.disable();
+        //hwMap.leftFrontDrive.setPower(0);
+        //hwMap.leftRearDrive.setPower(0);
+        //hwMap.rightFrontDrive.setPower(0);
+        //hwMap.rightRearDrive.setPower(0);
+
+    }
+
+    public double  getXError (double centerPixel, double deadBand) {
+        // This function accepts a center pixel location (usually 300)
+        // and a dead band around that pixel and provides a
+        // proportional steering signal back
+        double responseSignal = 0;
+        double error = detector.getXPosition() - centerPixel;
+        double slope = 0.01;  // Proportional multipler
+        if ( Math.abs(error) <= deadBand ){
+            // Error is inside deadband
+            responseSignal = 0;
+        } else
+        {
+            responseSignal = slope * error;
+        }
+        return responseSignal;
+
+    }
+    public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
+    {
+        // This module takes inputs, normalizes them, applies a scaleFactor, and drives the motors
+        double wheelSpeeds[] = new double[4];
+        wheelSpeeds[0] = drive + strafe - rotate;
+        wheelSpeeds[1] = drive - strafe - rotate;
+        wheelSpeeds[2] = drive - strafe + rotate;
+        wheelSpeeds[3] = drive + strafe + rotate;
+
+        double maxMagnitude = Math.abs(wheelSpeeds[0]);
+
+        // Check the WheelSpeeds to find the maximum value
+        for (int i = 1; i < wheelSpeeds.length; i++)
+        {
+            double magnitude = Math.abs(wheelSpeeds[i]);
+            if (magnitude > maxMagnitude)
+            {
+                maxMagnitude = magnitude;
+            }
+        }
+        // Normalize the WheelSpeeds against the max value
+        if (maxMagnitude > 1.0)
+        {
+            for (int i = 0; i < wheelSpeeds.length; i++)
+            {
+                wheelSpeeds[i] /= maxMagnitude;
+            }
+        }
+        // Drive the motors scaled by scaleFactor
+        hwMap.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
+        hwMap.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
+        hwMap.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
+        hwMap.rightRearDrive.setPower(scaleFactor * wheelSpeeds[3]);
+
+        //telemetry.addData("drive",drive);
+        //telemetry.addData("strafe",strafe);
+        //telemetry.addData("rotate",rotate);
+        //telemetry.addData("scaleFactor",scaleFactor);
+        //telemetry.update();
+    }
+    public void stopBot()
+    {
+        // This function stops the robot
         hwMap.leftFrontDrive.setPower(0);
         hwMap.leftRearDrive.setPower(0);
         hwMap.rightFrontDrive.setPower(0);
         hwMap.rightRearDrive.setPower(0);
-
     }
 }

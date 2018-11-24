@@ -1,5 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
+
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
@@ -7,9 +13,33 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.vuforia.CameraDevice;
+import com.vuforia.Vuforia;
+import com.vuforia.CameraDevice;
+import com.vuforia.DataSet;
+import com.vuforia.Frame;
+import com.vuforia.HINT;
+import com.vuforia.Image;
+import com.vuforia.Matrix34F;
+import com.vuforia.ObjectTracker;
+import com.vuforia.PIXEL_FORMAT;
+import com.vuforia.STORAGE_TYPE;
+import com.vuforia.State;
+import com.vuforia.Tool;
+import com.vuforia.Trackable;
+import com.vuforia.TrackableResult;
+import com.vuforia.Tracker;
+import com.vuforia.TrackerManager;
+import com.vuforia.Vec2F;
+import com.vuforia.Vec3F;
+import com.vuforia.Vuforia;
 
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+
+import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
 @Autonomous (name = "AutoTestCoachVince", group = "Vince")
 public class AutoTestCoachVince extends LinearOpMode {
@@ -33,7 +63,10 @@ public class AutoTestCoachVince extends LinearOpMode {
     private GoldAlignDetector detector;
 
 
-
+  /*  private static final String VUFORIA_KEY = "AU8YYQn/////AAAAGXFrahulqEjulTTNdLAcySmHbygwS4xr5RSUhekqrTcj7ErEbW1t0GxYBrB1fZFvZQcM3NCjk0dHuDH0I5cqwrblwH33sSHg0IO6XB9zE60YKnY2UiLPE8H9DQLAZjBoAAoOoNhJJQuFD2+hxs0vU74jNqyvyvsGUqqHQ7aj2EMCEbP4p6xElobK2w374MQsFvtnviNJ/pGZxeFlzta1W/DXRpq7xJY9+1eheCOGrRrkzIvS5i/L/nb9OKUP5kwJefb4oi0wMi7O1xxSMfUq+Aq1JfI4sXTXgLM/Z7dPb9zod+x8Kl9GnJ2e43OUGYqChmcpKKH0SguasN741T3zcrs1+iynm9ATD4NOk87F56xT";
+    VuforiaLocalizer vuforia;
+    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
+*/
     private ElapsedTime runtime = new ElapsedTime();
     //public boolean found() { return GoldAlignExample.isFound(); }
     //public boolean isAligned() { return detector.getAligned(); }
@@ -50,9 +83,24 @@ public class AutoTestCoachVince extends LinearOpMode {
             sleep(50);
             idle();
         }
-        //robot.gyro.setZAxisOffset(STARTING_HEADING);
 
-        /*detector = new GoldAlignDetector();
+        //flashlight.turnOnFlash();
+
+ /*       // Try turning on the flashlight
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parameters.vuforiaLicenseKey = VUFORIA_KEY ;
+        parameters.cameraDirection   = CAMERA_CHOICE;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        CameraDevice.getInstance().init(CameraDevice.CAMERA_DIRECTION.CAMERA_DIRECTION_BACK);
+
+        CameraDevice.getInstance().start();
+        CameraDevice.getInstance().setFlashTorchMode(true);
+*/
+        //Variable setting rotation angle;
+        detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
 
@@ -61,18 +109,18 @@ public class AutoTestCoachVince extends LinearOpMode {
         detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
-        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA; // Can also be PERFECT_AREA
+        detector.perfectAreaScorer.perfectArea = 5000; // if using PERFECT_AREA scoring
         detector.maxAreaScorer.weight = 0.005;
 
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
         detector.enable();
-        //Variable setting rotation angle;
 
 
-*/
+
+
         // Wait for the Start button to be pushed ----------------------------START----------------------------------------------
         while (!isStarted()) {
             // Put things to do prior to start in here
@@ -100,6 +148,7 @@ public class AutoTestCoachVince extends LinearOpMode {
 
         // Lower the Robot from the lander
         //robot.landerLatchLift.setPower(0.3);
+        //moveBot(-0.05,0,0,0.1);
         //sleep(2000);
         //robot.landerLatchLift.setPower(0);
 
@@ -116,8 +165,49 @@ public class AutoTestCoachVince extends LinearOpMode {
         sleep(3000);
   */
         // Find the Gold mineral and knock it off the spot
+        // Initialize a counter to count our attempts to get a little closer to the mineral
+        double mineralCt = 0;
+        boolean bumpSuccess = false;
+        // Strafe a little closer to the minerals
+        gyroStrafe(0.5,0);
+        sleep(500);
+        stopBot();
 
-        // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+        while (mineralCt <3 && !bumpSuccess) {
+            sleep(500); // Give the detector a second to register the cube
+            if (detector.isFound()) {
+                telemetry.addLine("Found it, going to mineralBump");
+                telemetry.addData("mineralCt = ", mineralCt);
+                telemetry.update();
+                sleep(2000);
+                bumpSuccess = mineralBump(1);
+            } else {
+                //gyroSpin(-12);  // Spin to the left to look for the mineral
+                gyroHold(-0.4, 0,.9);
+                sleep(2000);
+                if (detector.isFound()) {
+                    bumpSuccess = mineralBump(1);
+                } else {
+                    //gyroSpin(12);  // Spin to the right to look for the mineral
+                    gyroHold(0.4, 0,1.8);
+                    sleep(2000);
+
+                    if (detector.isFound()) {
+                        bumpSuccess = mineralBump(1);
+                    }
+                }
+            }
+            if (!bumpSuccess) {
+                mineralCt = mineralCt + 1;
+                //gyroSpin(0);
+                //moveBot(0,0,0.5,0.5);
+                //sleep(1000);
+                stopBot();
+
+            }
+        }
+
+/*        // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
         gyroSpin(0);
         gyroHold(0.2,45,3);
         //sleep(3000);
@@ -129,13 +219,14 @@ public class AutoTestCoachVince extends LinearOpMode {
         while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
             gyroStrafe(.2,315);
        }
-       //stopBot();
+  */     //stopBot();
          //Drive backwards maintaining 2-4 inches from the wall until you see the red tape line
 /*        while(sonarDistance() > 12){
             double wsteer=wallSteer(5);
             moveBot(0.2,0,wsteer,0.5);
         }
  */       stopBot();
+            detector.disable();
         // Drop the totem
 
         // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
@@ -145,6 +236,8 @@ public class AutoTestCoachVince extends LinearOpMode {
 
 
 }
+
+
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
     {
         // This module takes inputs, normalizes them, applies a scaleFactor, and drives the motors
@@ -195,6 +288,9 @@ public class AutoTestCoachVince extends LinearOpMode {
     }
 
     public double wallSteer( double distance) {
+        // This function uses the side mounted ultrasonic sensor to return a
+        // steering signal based on a desired distance from the wall
+        // Tested to work as a strafe input to moveBot()
         // distance is in inches
         double steer = 0;
         steer = robot.rangeSensor.getDistance(DistanceUnit.INCH) - distance;
@@ -203,14 +299,20 @@ public class AutoTestCoachVince extends LinearOpMode {
     }
 
     public void gyroSpin(double heading) {
-        double error = getError(heading);
-        while (Math.abs(error) > 5) {
+        // This function spins the robot in place to a desired heading
 
+        // Get the current heading error between actual and desired
+        double error = getError(heading);
+        // While we are greater than 5 degrees from desired heading (5 seems to work best)
+        while (Math.abs(error) > 5) {
+            // Rotate the robot in the correct direction.
+            // Don't use more than 0.3 input power or it goes too fast
             if (error < 0 && Math.abs(error) > 5) {
-                moveBot(0, -0.3, 0, 0.4);
+                moveBot(0, -0.4, 0, 0.4);
             } else {
-                moveBot(0, 0.3, 0, 0.4);
+                moveBot(0, 0.4, 0, 0.4);
             }
+            //Check the error again for the next loop
             error = getError(heading);
             telemetry.addData("Heading",robot.gyro.getIntegratedZValue());
             telemetry.update();
@@ -219,17 +321,17 @@ public class AutoTestCoachVince extends LinearOpMode {
     }
 
     public void gyroStrafe ( double speed, double heading){
-
+        // This function will strafe the robot at a given speed while holding a heading
 
         double error = getError(heading);
-
+        double deadband = 3;
             error = getError(heading);
-            if (error < 0 && Math.abs(error) > 5) {
+            if (error < 0 && Math.abs(error) > deadband) {
                 // Nagative error greater than 5 degrees, left of desired heading, input positive rotation
-                moveBot(0, .1, 0.6, 0.6);
-            } else if (error > 0 && Math.abs(error) > 5){
+                moveBot(0, .1, speed, 0.6);
+            } else if (error > 0 && Math.abs(error) > deadband){
                 // Positive Error greater than 5 degrees, right of desired heading, input negative rotation
-                moveBot(0, -0.1, 0.6, 0.6);
+                moveBot(0, -0.1, speed, 0.6);
             } else {
                 // Robot is on course
                 moveBot(0, 0, speed, 0.6);
@@ -248,14 +350,17 @@ public class AutoTestCoachVince extends LinearOpMode {
      */
 
     public void gyroHold( double speed, double angle, double holdTime) {
-
+        // This function drives on a specified heading for a given time
+        // Time is in seconds!!!!!
         ElapsedTime holdTimer = new ElapsedTime();
         double error;
+        double PCoeff = 0.01;
         // keep looping while we have time remaining.
         holdTimer.reset();
         while ((holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
-            error = Range.clip(getError(angle),-0.3,0.3);
+            //error = Range.clip(getError(angle),-0.3,0.3);
+            error = PCoeff * getError(angle);
             moveBot(speed,error,0,0.3);
         }
 
@@ -326,7 +431,7 @@ public class AutoTestCoachVince extends LinearOpMode {
 
     public double sonarDistance (){
         // Returns distance from the sonar sensor over an average of 4 values
-        // Trying to get around nose in the sensor
+        // Trying to get around noise in the sensor
         // 110 is the scaling factor between voltage and distance in INCHES
         // based on data collected on 11/17/2018
         double average;
@@ -338,6 +443,77 @@ public class AutoTestCoachVince extends LinearOpMode {
         sleep(1);
         average = average + robot.sonarSensor.getVoltage();
         return (average*110)/4;
+
+    }
+
+    public boolean mineralBump(double time){
+        // This function will rotate to center on the mineral, drive to bump it, and
+        // return to its original position
+        // Set left and right boundaries for alignment
+
+        // Set our initial getAligned limits
+        detector.setAlignSettings(0,30);
+        double leftLimit = 290;
+        double rightLimit = 310;
+        double gyroTemp;
+        double error = 0;
+        double detectorCt = 0;
+
+        telemetry.addLine("in MineralBump!");
+        telemetry.update();
+        sleep(2000);
+
+        while( detectorCt <= 30) {
+            // Calculate the heading error
+            error = getXError(300,20);
+            // Command the bot to move
+            moveBot(0,error,0,0.15);
+            // Count up how long it remains aligned.  Could also use gyro heading being stable?
+            if (error == 0) {
+                detectorCt = detectorCt + 1;
+            } else {
+                detectorCt = 0;
+            }
+            telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
+            telemetry.addData("error", error);
+            telemetry.addData("detectorCt",detectorCt);
+            telemetry.update();
+        }
+        // Save the aligned heading
+        gyroTemp = robot.gyro.getIntegratedZValue();
+        // Strafe on the heading for the appropriate time
+        gyroStrafe(0.5,gyroTemp);
+        sleep((long)time*1000);
+        //gyroSpin(gyroTemp+90);
+        //gyroHold(0.4,gyroTemp+90, 2);
+        stopBot();
+        // Return to somewhere near the starting position
+        gyroStrafe(-0.5,gyroTemp);
+        sleep((long)time*1000);
+        //gyroHold(-0.4,gyroTemp+90,2);
+        stopBot();
+        // return to the starting heading
+        gyroSpin(0);
+        return true;
+    }
+
+
+    public double  getXError (double centerPixel, double deadBand) {
+        // This function accepts a center pixel location (usually 300)
+        // and a dead band around that pixel and provides a
+        // proportional steering signal back
+        double responseSignal = 0;
+        double error = detector.getXPosition() - centerPixel;
+        double slope = 0.01;  // Proportional multipler
+        if ( Math.abs(error) <= deadBand ){
+            // Error is inside deadband
+            responseSignal = 0;
+        } else
+        {
+            responseSignal = slope * error;
+        }
+        return responseSignal;
 
     }
 
