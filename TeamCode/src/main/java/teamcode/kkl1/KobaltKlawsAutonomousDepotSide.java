@@ -1,11 +1,11 @@
-package teamcode.klawsv1;
+package teamcode.kkl1;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous(name = "KobaltKlawsAutonomousCraterSide", group = "Linear OpMode")
-public class KobaltKlawsAutonomousCraterSide extends LinearOpMode {
+@Autonomous(name = "KobaltKlawsAutonomousDepotSide", group = "Linear OpMode")
+public class KobaltKlawsAutonomousDepotSide extends LinearOpMode {
 
     private static final double TICKS_PER_INCH_COVERED = -44.5633840657;
     /**
@@ -25,7 +25,9 @@ public class KobaltKlawsAutonomousCraterSide extends LinearOpMode {
         sleep(800);
         HardwareManager.liftMotor.setPower(0.0);
         sleep(1000);
-        drive(40, 1.0);
+        drive(65, 0.5);
+        HardwareManager.intakeServo.setPosition(1.0); // opens right claw
+        sleep(3000);
     }
 
     private void initialize() {
@@ -107,5 +109,4 @@ public class KobaltKlawsAutonomousCraterSide extends LinearOpMode {
         HardwareManager.armWristServo.setPosition(0.0);
         sleep(1000);
     }
-
 }
