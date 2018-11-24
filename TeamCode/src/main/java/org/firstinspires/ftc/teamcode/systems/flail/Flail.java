@@ -14,7 +14,7 @@ public class Flail extends System {
     }
 
     public void start() {
-        flailMotor.setPower(1);
+        flailMotor.setPower(-1);
     }
 
     public void stop() {
