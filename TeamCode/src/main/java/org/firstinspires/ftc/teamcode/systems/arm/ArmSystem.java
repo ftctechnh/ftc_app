@@ -1,7 +1,4 @@
-package org.firstinspires.ftc.teamcode.systems.arm;/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- */
-
+package org.firstinspires.ftc.teamcode.systems.arm;
 
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,11 +17,9 @@ public class ArmSystem extends System {
     private Ramp rampUp;
     private Ramp rampDown;
 
-    private final double PotentiometerMaximum = 1.6;
-    private final double PotentiometerMiddle = 1.05;
-    private final double PotentiometerLatch = 1.5;
-    private final double PotentiometerRange = 0.01;
-    private final double PotentiometerMinimum = 1.1;
+    private final double PotentiometerMaximum = 1.1;
+    private final double PotentiometerMiddle = 0.55;
+    private final double PotentiometerMinimum = 0.01;
     private final double MaxPower = 0.3;
     private final double MinPower = 0.01;
 
@@ -58,6 +53,9 @@ public class ArmSystem extends System {
             case ROTATING_PICKUP:
                 rotatePickup();
                 break;
+            default:
+                stop();
+                break;
         }
     }
   
@@ -65,14 +63,10 @@ public class ArmSystem extends System {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtPickupPosition()) {
-            telemetry.log("voltage", potentiometer.getVoltage());
-            motor1.setPower(0.05);
-            motor2.setPower(-0.05);
-            telemetry.write();
+            motor1.setPower(MaxPower);
+            motor2.setPower(-MaxPower);
         } else {
-            setState(ArmState.IDLE);
-            motor1.setPower(0.0);
-            motor2.setPower(0.0);
+            stop();
         }
     }
 
@@ -84,15 +78,17 @@ public class ArmSystem extends System {
         motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         motor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         if (!isAtDropPosition()) {
-            telemetry.log("voltage", potentiometer.getVoltage());
-            motor1.setPower(-0.05);
-            motor2.setPower(0.05);
-            telemetry.write();
+            motor1.setPower(-MaxPower);
+            motor2.setPower(MaxPower);
         } else {
-            setState(ArmState.IDLE);
-            motor1.setPower(0.0);
-            motor2.setPower(0.0);
+            stop();
         }
+    }
+
+    private void stop() {
+        setState(ArmState.IDLE);
+        motor1.setPower(0);
+        motor2.setPower(0);
     }
 
     private boolean isAtDropPosition() {

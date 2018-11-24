@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.TeleOp;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import android.transition.Slide;
 
@@ -113,7 +113,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.setState(ArmState.ROTATING_PICKUP);
+                armSystem.setState(ArmState.ROTATING_DROP);
             }
         };
         controller1.dPadUp.releasedHandler = new Handler()
@@ -150,7 +150,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
         controller1.handle();
         armSystem.run();
         slideSystem.run();
-
 
         float rx = controller1.gamepad.right_stick_x;
         float ry = controller1.gamepad.right_stick_y;

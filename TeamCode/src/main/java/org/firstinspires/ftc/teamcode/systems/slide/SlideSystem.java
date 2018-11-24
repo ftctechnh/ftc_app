@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.systems.base.System;
 
 public class SlideSystem extends System
 {
-    private final double WinchPower = -0.01;
+    private final double WinchPower = -0.2;
 
     private DigitalChannel limitTop;
     private DigitalChannel limitMiddle;
@@ -45,10 +45,13 @@ public class SlideSystem extends System
         switch (state) {
             case WINCHING_TO_TOP:
                 slideUp();
+                break;
             case WINCHING_TO_BOTTOM:
                 slideDown();
+                break;
             default:
                 stop();
+                break;
         }
     }
 
@@ -87,6 +90,7 @@ public class SlideSystem extends System
     }
 
     public void stop() {
+        setState(SlideState.IDLE);
         winch.setPower(0);
     }
 }
