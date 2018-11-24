@@ -39,18 +39,13 @@ public class CompRobot extends BasicBot
             super.goBackwards(pow, pow);
 
         dist_In = Math.abs(dist_In);
-        float encTarget = .5143f * dist_In + 2.27701f;
+        float encTarget = 19.4366f * dist_In -44.004f ;
 
         while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
         {
 
         }
         super.stopDriveMotors();
-    }
-
-    public void driveStraight(float dist_In)
-    {
-        driveStraight(dist_In, 1);
     }
 
     public void pivotenc(float degrees, float pow)
@@ -71,11 +66,6 @@ public class CompRobot extends BasicBot
 
         }
         super.stopDriveMotors();
-    }
-
-    public void pivotenc(float degrees)
-    {
-        pivotenc(degrees, .5f);
     }
 
     public void hugWall(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, boolean isGoingForward)
@@ -104,7 +94,7 @@ public class CompRobot extends BasicBot
                 break;
             }
             else
-                driveStraight(stepDistance);
+                driveStraight(stepDistance, .8f);
 
             if (straightDist > distAwayFromFrontWall)
             {
@@ -112,19 +102,19 @@ public class CompRobot extends BasicBot
 
                 if (rightDist < lowerDistFromSideWall)
                 {
-                    pivotenc(-stepPivotAmtDeg);
-                    driveStraight(stepDistance);
-                    pivotenc(stepPivotAmtDeg);
+                    pivotenc(-stepPivotAmtDeg, .5f);
+                    driveStraight(stepDistance , .8f);
+                    pivotenc(stepPivotAmtDeg, .5f);
                 }
                 else if (rightDist > upperDistFromSideWall)
                 {
-                    pivotenc(stepPivotAmtDeg);
-                    driveStraight(stepDistance);
-                    pivotenc(-stepPivotAmtDeg);
+                    pivotenc(stepPivotAmtDeg, .5f);
+                    driveStraight(stepDistance , .8f);
+                    pivotenc(-stepPivotAmtDeg, .5f);
                 }
                 else
                 {
-                    driveStraight(stepDistance * .69f);
+                    driveStraight(stepDistance * .69f , .8f);
                 }
             }
         }
