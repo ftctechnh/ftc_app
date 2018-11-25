@@ -37,14 +37,15 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-
 /**
+ *
  */
-public abstract class BullRun4 extends StandardChassis {
+public abstract class TeamMarkerRun2 extends StandardChassis {
 
+    // Hack stuff.
     private boolean madeTheRun = false;
 
-    public BullRun4(ChassisConfig config) {
+    protected TeamMarkerRun2(ChassisConfig config) {
         super(config);
     }
 
@@ -55,8 +56,12 @@ public abstract class BullRun4 extends StandardChassis {
     public void init() {
 
         initMotors();
-    }
 
+        //init internal gyroscope of hub
+        initGyroscope();
+
+        initTimeouts();
+    }
 
     /**
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -90,14 +95,28 @@ public abstract class BullRun4 extends StandardChassis {
         if (madeTheRun == false) {
             double speed = 0.5;
 
-            // forward 46 inches
-            encoderDrive(speed, 46, 46);
+            // forward 35 inches, turn 90degrees, forward 40 inches
+            encoderDrive(speed, 15, 15);
+            turnLeft(68);
+            encoderDrive(speed, 30, 30);
+            turnLeft(55);
+            encoderDrive(speed, 45, 45);
+
+            dropFlag();
+            sleep(3000);
+            angleHand = 0.75;
+            flagHolder.setPosition(angleHand);
+
+            turnRight(165);
+            encoderDrive(speed, 76, 76);
+
             madeTheRun = true;
+
         }
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());
         telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
+
     }
 }
-
