@@ -26,8 +26,8 @@ public class CompRobot extends BasicBot
 
     public void initSensors(HardwareMap hardwareMap)
     {
-        frontRightDistSens = hardwareMap.get(DistanceSensor.class, "frontRightDistSens");
-        frontDistSens = hardwareMap.get(DistanceSensor.class, "frontLeftDistSens");
+        frontRightDistSens = hardwareMap.get(DistanceSensor.class, "rightDistSens");
+        frontDistSens = hardwareMap.get(DistanceSensor.class, "frontDistSens");
     }
 
     public void driveStraight(float dist_In, float pow)
@@ -59,7 +59,7 @@ public class CompRobot extends BasicBot
             super.driveMotors(pow, -pow);
 
         degrees = Math.abs(degrees);
-        float encTarget = 2.36578f * degrees - 4.71071f;
+        float encTarget = 2.36578f * degrees + 2.5f;
 
         while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
         {
@@ -86,36 +86,45 @@ public class CompRobot extends BasicBot
 
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
         {
-            linearOpMode.sleep(400);
             straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
             if(straightDist < distAwayFromFrontWall - Math.abs(stepDistance)/2)
             {
+
                 super.stopDriveMotors();
                 break;
             }
             else
+            {
+                linearOpMode.telemetry.addData("Going forawrd 11", null);
                 driveStraight(stepDistance, .8f);
+            }
+            linearOpMode.telemetry.addData("front Dist: ", straightDist);
 
             if (straightDist > distAwayFromFrontWall)
             {
                 rightDist = frontRightDistSens.getDistance(DistanceUnit.INCH);
 
+                linearOpMode.telemetry.addData("front Dist>18", null);
+                linearOpMode.telemetry.addData("right Dist ", rightDist);
                 if (rightDist < lowerDistFromSideWall)
                 {
+                    linearOpMode.telemetry.addData("rightdist < 4", null);
                     pivotenc(-stepPivotAmtDeg, .5f);
                     driveStraight(stepDistance , .8f);
                     pivotenc(stepPivotAmtDeg, .5f);
                 }
                 else if (rightDist > upperDistFromSideWall)
                 {
+                    linearOpMode.telemetry.addData("right dist > 7", null);
                     pivotenc(stepPivotAmtDeg, .5f);
                     driveStraight(stepDistance , .8f);
                     pivotenc(-stepPivotAmtDeg, .5f);
                 }
-                else
+               /* else
                 {
                     driveStraight(stepDistance * .69f , .8f);
-                }
+                }*/
+               linearOpMode.telemetry.update();
             }
         }
     }
