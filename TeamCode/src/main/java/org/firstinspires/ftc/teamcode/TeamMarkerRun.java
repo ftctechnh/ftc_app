@@ -40,17 +40,17 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  *
  */
-@Autonomous(name="ChaChaCha4", group="MonsieurMallah")
-public class BullRunChaChaCha4 extends OpMode {
+@Autonomous(name="MarkerRun", group="MonsieurMallah")
+public class TeamMarkerRun extends OpMode {
 
     // MAGIC NUMBERS for the motor encoders
     static final double COUNTS_PER_MOTOR_REV = 560;    // http://www.revrobotics.com/content/docs/Encoder-Guide.pdf
-                                                        // 28 cycles per rotation at the main motor, times 20:1 geared down
-    static final double COUNTS_PER_MOTOR_TORQUENADO = 1440; // https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecifications.pdf
-                                                        // 24 cycles per revolution, times 60:1 geared down.
+    // 28 cycles per rotation at the main motor, times 20:1 geared down
+    static final double COUNTS_PER_MOTOR_TORKNADO = 1440; // https://asset.pitsco.com/sharedimages/resources/torquenado_dcmotorspecifications.pdf
+    // 24 cycles per revolution, times 60:1 geared down.
 
     static final double WHEEL_DIAMETER_INCHES = 4.9375;     // For figuring circumference
-    static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_TORQUENADO / (WHEEL_DIAMETER_INCHES * Math.PI);
+    static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_TORKNADO / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();
@@ -115,12 +115,12 @@ public class BullRunChaChaCha4 extends OpMode {
 
         // This code prevents the OpMode from freaking out if you go to sleep for more than a second.
         if (hackTimeouts) {
-           this.msStuckDetectInit = 30000;
-           this.msStuckDetectInitLoop = 30000;
-           this.msStuckDetectStart = 30000;
-           this.msStuckDetectLoop = 30000;
-           this.msStuckDetectStop = 30000;
-       }
+            this.msStuckDetectInit = 30000;
+            this.msStuckDetectInitLoop = 30000;
+            this.msStuckDetectStart = 30000;
+            this.msStuckDetectLoop = 30000;
+            this.msStuckDetectStop = 30000;
+        }
     }
 
     private boolean initGyroscope() {
@@ -172,9 +172,19 @@ public class BullRunChaChaCha4 extends OpMode {
             double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 56, 56);
-            turnRight(90);
-            encoderDrive(speed, 30, 30);
+           //HACK encoderDrive(speed, 59, 59);
+            turnLeft(90);
+            sleep( 2000);
+           turnRight(180);
+            sleep( 2000);
+           turnLeft(180);
+          sleep( 2000);
+           turnLeft(90);
+            //HACK encoderDrive(speed, 22, 22);
+            //HACK sleep( 4000);
+            //HACK turnRight(180);
+            //HACK encoderDrive(speed, 64, 64);
+            // encoderDrive(speed, 25, 25);
             madeTheRun = true;
 
         }
@@ -227,7 +237,7 @@ public class BullRunChaChaCha4 extends OpMode {
                 (motorBackRight.isBusy() && motorBackLeft.isBusy())) {
 
             // Display it for the driver.
-          // telemetry.addData("encoderDrive", "Running to %7d, %7d", motorBackLeft, motorBackRight);
+            // telemetry.addData("encoderDrive", "Running to %7d, %7d", motorBackLeft, motorBackRight);
             telemetry.addData("encoderDrive", "Running at %7d, %7d",
                     motorBackLeft.getCurrentPosition(),
                     motorBackRight.getCurrentPosition());
@@ -241,7 +251,7 @@ public class BullRunChaChaCha4 extends OpMode {
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-       telemetry.addData("encoderDrive", "Finished (%s) at %7d, %7d to [%7d, %7d] (%7d, %7d)",
+        telemetry.addData("encoderDrive", "Finished (%s) at %7d, %7d to [%7d, %7d] (%7d, %7d)",
                 motorOnTime.toString(),
                 leftBackStart,
                 rightBackStart,
@@ -262,58 +272,15 @@ public class BullRunChaChaCha4 extends OpMode {
         }
     }
 
+    // Always returns a number from 0-359.9999
     private float getGyroscopeAngle() {
         Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         float gyroAngle = exangles.thirdAngle;
-        return CrazyAngle.reverseAngle(gyroAngle);
+        return CrazyAngle.normalizeAngle(CrazyAngle.reverseAngle(gyroAngle));
     }
 
 
-    void turnRight(float deltaAngle) {
-        //determining the destination angle(da) by using the current angle(ca). if da is over 360, get the difference between the two.
-        float ca_original = getGyroscopeAngle();
-        float ca = ca_original;
-        float da = ca + deltaAngle;
-        while(da>360) {
-            da=da-360;
-        }
-
-        boolean reachedDestination = false;
-        if(reachedDestination == false) {
-            // TODO: fix this so it works over the 360->0 boundary (when it wraps)
-            float angleToGo = da - ca;
-           // if (angleToGo < 0)
-           //     angleToGo = angleToGo + 360;
-
-            while(angleToGo > 0) {
-
-                float oldAngle = getGyroscopeAngle();
-
-                nudgeRight();
-                ca = getGyroscopeAngle();
-
-                float justMoved = ca - oldAngle;
-                float stillNeed = da - ca;
-
-                telemetry.addData("turnRight", "current = %.0f, destination = %.0f, moved=%.0f, need=%.0f", ca, da, justMoved, stillNeed);
-                telemetry.update();
-
-                angleToGo = da - ca;
-            }
-            reachedDestination = true;
-        }
-
-        // turn off power now that we are done turning
-        motorBackLeft.setPower(0);
-        motorBackRight.setPower(0);
-
-        telemetry.addData("turnRight", "ending current = %.0f, destination = %.0f", ca, da);
-        telemetry.update();
-        sleep(1000);
-    }
-
-
-    //tested to turn aprox. ten to twelve degrees! (Same here!(no poppa))
+    // This nudges over about 2 degrees.
     void nudgeRight() {
         float power = 0.5f;
         motorBackLeft.setPower(power);
@@ -321,5 +288,98 @@ public class BullRunChaChaCha4 extends OpMode {
         sleep(2); // TODO: is 100 milliseconds a good value????????
         motorBackLeft.setPower(0);
         motorBackRight.setPower(0);
+    }
+
+    // This nudges over about 2 degrees.
+    void nudgeLeft() {
+        float power = 0.5f;
+        motorBackLeft.setPower(-power);
+        motorBackRight.setPower(power);
+        sleep(2); // TODO: is 100 milliseconds a good value????????
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+    }
+
+
+    void turnLeft(float deltaAngle) {
+        assert(deltaAngle > 0.0);
+        assert(deltaAngle <= 360.0);
+
+        // does it wrap at all? (go around the zero mark?)
+        float currentAngle = getGyroscopeAngle();
+        float destinationAngle = currentAngle - deltaAngle;
+        boolean doesItWrapAtAll = (destinationAngle < 0.0);
+        destinationAngle = CrazyAngle.normalizeAngle(destinationAngle);
+
+        // Get it past the zero mark.
+        if (doesItWrapAtAll) {
+            boolean keepGoing = true;
+            while (keepGoing) {
+                float oldAngle = currentAngle;
+                nudgeLeft();
+                currentAngle = getGyroscopeAngle();
+
+                float justMoved = oldAngle - currentAngle;
+                float stillNeed = currentAngle;
+                telemetry.addData("turnLeft1", "current=%.0f, old=%.0f, dst=%.0f, moved=%.0f, need=%.0f", currentAngle, oldAngle, destinationAngle, justMoved, stillNeed);
+                telemetry.update();
+
+                keepGoing = (justMoved > -50.0);
+            }
+        }
+
+        // turn the last part
+        while ((currentAngle - destinationAngle) > 5.0) {
+
+            float oldAngle = currentAngle;
+            nudgeLeft();
+            currentAngle = getGyroscopeAngle();
+
+            float justMoved = oldAngle - currentAngle;
+            float stillNeed = currentAngle - destinationAngle;
+            telemetry.addData("turnLeft2", "current = %.0f, destination = %.0f, moved=%.0f, need=%.0f", currentAngle, destinationAngle, justMoved, stillNeed);
+            telemetry.update();
+        }
+    }
+
+    void turnRight(float deltaAngle) {
+        assert(deltaAngle > 0.0);
+        assert(deltaAngle <= 360.0);
+
+        // does it wrap at all?
+        float currentAngle = getGyroscopeAngle();
+        float destinationAngle = currentAngle + deltaAngle;
+        boolean doesItWrapAtAll = (destinationAngle > 360.0);
+        destinationAngle = CrazyAngle.normalizeAngle(destinationAngle);
+
+        // Get it past the zero mark.
+        if (doesItWrapAtAll) {
+            boolean keepGoing = true;
+            while (keepGoing) {
+                float oldAngle = currentAngle;
+                nudgeRight();
+                currentAngle = getGyroscopeAngle();
+
+                float justMoved = currentAngle - oldAngle;
+                float stillNeed = 360.0f - currentAngle;
+                telemetry.addData("turRight1", "current=%.0f, old=%.0f, dst=%.0f, moved=%.0f, need=%.0f", currentAngle, oldAngle, destinationAngle, justMoved, stillNeed);
+                telemetry.update();
+
+                keepGoing = (justMoved > -50.0);
+            }
+        }
+
+        // turn the last part
+        while ((destinationAngle - currentAngle) > 5.0) {
+
+            float oldAngle = currentAngle;
+            nudgeRight();
+            currentAngle = getGyroscopeAngle();
+
+            float justMoved = currentAngle - oldAngle;
+            float stillNeed = destinationAngle - currentAngle;
+            telemetry.addData("turnRight2", "current = %.0f, destination = %.0f, moved=%.0f, need=%.0f", currentAngle, destinationAngle, justMoved, stillNeed);
+            telemetry.update();
+        }
     }
 }
