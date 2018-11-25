@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import java.util.List;
+
+import teamcode.examples.Mineral;
 import teamcode.examples.TensorFlowManager;
 
 @Autonomous(name = "TTAuto", group = "Linear OpMode")
@@ -24,10 +27,43 @@ public class TTAuto extends LinearOpMode {
         resetDriveEncoders();
 
         while (opModeIsActive()) {
+            List<Mineral> minerals = this.tfManager.getRecognizedMinerals();
+            Mineral gold = null;
 
-            // drive towards the gold
+            if (minerals != null) {
+                for (Mineral mineral : minerals) {
+                    if (mineral.isGold()) {
+                        // update the gold mineral data
+                        gold = mineral;
+                        break;
+                    }
+                }
+            }
+
+            if (gold != null) {
+                // drive towards the gold
+
+            }
         }
 
+    }
+
+    private void driveLateral() {
+        /*
+        frontLeftPow = -x;
+        frontRightPow = x;
+        backLeftPow = x;
+        backRightPow = -x;
+        */
+    }
+
+    private void driveVertical() {
+        /*
+        frontLeftPow = y;
+        frontRightPow = y;
+        backLeftPow = y;
+        backRightPow = y;
+        */
     }
 
     private void drive(double meters, double power) {
