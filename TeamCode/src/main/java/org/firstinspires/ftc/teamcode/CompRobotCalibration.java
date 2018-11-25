@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 @Autonomous(name = "CompRobotCalibration")
 public class CompRobotCalibration extends LinearOpMode
 {
@@ -11,6 +14,13 @@ public class CompRobotCalibration extends LinearOpMode
     {
         festus = new CompRobot(hardwareMap, this);
         waitForStart();
+        while (!gamepad1.a && !isStopRequested())
+        {
+            telemetry.addData("front ", festus.getFrontDistSens().getDistance(DistanceUnit.INCH));
+            telemetry.addData("right ", festus.getFrontRightDistSens().getDistance(DistanceUnit.INCH));
+            telemetry.update();
+        }
+
         /*festus.driveStraight(100, 1);
         while (!gamepad1.a && !isStopRequested())
         {
@@ -71,7 +81,8 @@ public class CompRobotCalibration extends LinearOpMode
         {
 
         }*/
-        festus.pivotenc(25,.5f);
+
+      /*  festus.pivotenc(25,.5f);
         while (!gamepad1.a && !isStopRequested())
         {
 
@@ -91,5 +102,6 @@ public class CompRobotCalibration extends LinearOpMode
         {
 
         }
+        */
     }
 }
