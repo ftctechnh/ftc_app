@@ -3,8 +3,8 @@ package teamcode.ttl2;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name = "TTTeleOp", group = "Linear OpMode")
-public class TTTeleOp extends LinearOpMode {
+@TeleOp(name = "TTL2TeleOp", group = "Linear OpMode")
+public class TTL2TeleOp extends LinearOpMode {
 
     private static final float POWER_MULTIPLIER = 1.0F;
 
@@ -17,7 +17,7 @@ public class TTTeleOp extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        TTHardwareManager.initialize(this);
+        TTL2HardwareManager.initialize(this);
         waitForStart();
         while (opModeIsActive()) {
             float driveX = gamepad1.left_stick_x;
@@ -64,22 +64,22 @@ public class TTTeleOp extends LinearOpMode {
             backRightPow = 0.0F;
             translationalMovementThisUpdate = false;
         }
-        TTHardwareManager.frontLeftDrive.setPower(frontLeftPow);
-        TTHardwareManager.frontRightDrive.setPower(frontRightPow);
-        TTHardwareManager.backLeftDrive.setPower(backLeftPow);
-        TTHardwareManager.backRightDrive.setPower(backRightPow);
+        TTL2HardwareManager.frontLeftDrive.setPower(frontLeftPow);
+        TTL2HardwareManager.frontRightDrive.setPower(frontRightPow);
+        TTL2HardwareManager.backLeftDrive.setPower(backLeftPow);
+        TTL2HardwareManager.backRightDrive.setPower(backRightPow);
     }
 
     private void turn(float turn) {
-        TTHardwareManager.frontLeftDrive.setPower(-turn);
-        TTHardwareManager.frontRightDrive.setPower(turn);
-        TTHardwareManager.backLeftDrive.setPower(-turn);
-        TTHardwareManager.backRightDrive.setPower(turn);
+        TTL2HardwareManager.frontLeftDrive.setPower(-turn);
+        TTL2HardwareManager.frontRightDrive.setPower(turn);
+        TTL2HardwareManager.backLeftDrive.setPower(-turn);
+        TTL2HardwareManager.backRightDrive.setPower(turn);
     }
 
     private void setMoveMechanismPower(double power) {
-        TTHardwareManager.liftMotorL.setPower(power);
-        TTHardwareManager.liftMotorR.setPower(power);
+        TTL2HardwareManager.liftMotorL.setPower(power);
+        TTL2HardwareManager.liftMotorR.setPower(power);
     }
 
 }

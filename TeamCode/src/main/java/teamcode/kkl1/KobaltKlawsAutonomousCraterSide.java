@@ -70,7 +70,8 @@ public class KobaltKlawsAutonomousCraterSide extends LinearOpMode {
         int currentLDriveMotorPos = HardwareManager.lDriveMotor.getCurrentPosition();
         int targetRDriveMotorPos = HardwareManager.rDriveMotor.getTargetPosition();
         int currentRDriveMotorPos = HardwareManager.rDriveMotor.getCurrentPosition();
-        return Math.abs(currentLDriveMotorPos - targetLDriveMotorPos) < 10.0 && Math.abs(currentRDriveMotorPos - targetRDriveMotorPos) < 10.0;
+        return Math.abs(currentLDriveMotorPos - targetLDriveMotorPos) < 10.0
+                && Math.abs(currentRDriveMotorPos - targetRDriveMotorPos) < 10.0;
     }
 
     private void resetEncoders() {
