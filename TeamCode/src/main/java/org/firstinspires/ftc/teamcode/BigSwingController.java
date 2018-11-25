@@ -1,16 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.MagneticFlux;
@@ -19,8 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="Monsieur Mallah Chassis", group="MonsieurMallah")
-public class MonsieurMallahChassis extends OpMode {
+@TeleOp(name="PhatSwipeController", group="MonsieurMallah")
+public class BigSwingController extends OpMode {
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int CYCLE_MS = 50;     // period of each cycle
@@ -48,15 +47,15 @@ public class MonsieurMallahChassis extends OpMode {
     private DcMotor motorLeft;
     private DcMotor motorRight;
     // private DcMotor sweeper;
-    // private DcMotor arm;
+    private DcMotor arm;
     // private DcMotor vacuum;
-    // private DcMotor extender;
+    private DcMotor extender;
 
 
     // Hand servo.
     // private Servo servoHand;
-    private Servo flagHolder;
-    private double angleHand;
+    //private Servo flagHolder;
+    //private double angleHand;
 
     // Hack stuff.
     private boolean useGyroscope = false;
@@ -82,14 +81,13 @@ public class MonsieurMallahChassis extends OpMode {
             motorLeft = hardwareMap.get(DcMotor.class, "motor0");
             motorRight = hardwareMap.get(DcMotor.class, "motor1");
             // sweeper = hardwareMap.get(DcMotor.class, "motor2");
-            //   arm = hardwareMap.get(DcMotor.class, "motor3");
-            //  extender = hardwareMap.get(DcMotor.class, "motor5");
+            arm = hardwareMap.get(DcMotor.class, "motor4");
             // vacuum = hardwareMap.get(DcMotor.class, "motor6");
 
             // servoHand = hardwareMap.get(Servo.class, "servo0");
-            flagHolder = hardwareMap.get(Servo.class, "servo1");
-            angleHand = 0.75;
-            flagHolder.setPosition(angleHand);
+            //flagHolder = hardwareMap.get(Servo.class, "servo1");
+            //angleHand = 0.75;
+            //flagHolder.setPosition(angleHand);
 
             //  angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
@@ -150,11 +148,11 @@ public class MonsieurMallahChassis extends OpMode {
         }
     }
 
-    public void dropFlag() {
-        angleHand = 0;
-        flagHolder.setPosition(angleHand);
+  //  public void dropFlag() {
+    //    angleHand = 0;
+      //  flagHolder.setPosition(angleHand);
 
-    }
+    //}
 
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -164,10 +162,11 @@ public class MonsieurMallahChassis extends OpMode {
         if (useMotors) {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = -gamepad1.left_stick_y;
+            double drive = gamepad1.right_stick_x;
+
             if (Math.abs(drive) < 0.1)
                 drive = 0.0; // Prevent the output from saying "-0.0".
-            double turn = gamepad1.right_stick_x;
+            double turn = gamepad1.left_stick_y;;
             double leftPower = Range.clip(drive + turn, -1.0, 1.0);
             double rightPower = Range.clip(drive - turn, -1.0, 1.0);
             motorLeft.setPower(leftPower);
@@ -179,7 +178,7 @@ public class MonsieurMallahChassis extends OpMode {
             telemetry.addData("DropTime", dropTime.seconds());
 
 
-            if (gamepad1.x) {
+          /*  if (gamepad1.x) {
                 dropFlag();
                 dropTime.reset();
             }
@@ -191,14 +190,13 @@ public class MonsieurMallahChassis extends OpMode {
 
 
             // Control the extender.
-
-          /*  boolean extendOut = gamepad1.dpad_up;
+            boolean extendOut = gamepad1.dpad_up;
             boolean extendIn = gamepad1.dpad_down;
             double extendPower = 0.0;
             if (extendOut) {
-                extendPower = -1.0;
-            } else if (extendIn) {
                 extendPower = 1.0;
+            } else if (extendIn) {
+                extendPower = -1.0;
             }
             extender.setPower(extendPower);
 
@@ -212,8 +210,8 @@ public class MonsieurMallahChassis extends OpMode {
                 suckPower = 1.0;
             }
             vacuum.setPower(suckPower);
-
-            //control the arm
+*/
+           // control the arm
             float pullUp = gamepad1.right_trigger;
             float pullDown = gamepad1.left_trigger;
             double pullPower = 0.0;
@@ -223,7 +221,7 @@ public class MonsieurMallahChassis extends OpMode {
                 pullPower = 1.0;
             }
             arm.setPower(pullPower);
-
+/*
 
             // control the hand
             if (gamepad1.dpad_up) {
@@ -253,7 +251,7 @@ public class MonsieurMallahChassis extends OpMode {
 
 
             // telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
-            telemetry.addData("Hand", " angle %5.2f", angleHand);
+           // telemetry.addData("Hand", " angle %5.2f", angleHand);
         }
 
 
