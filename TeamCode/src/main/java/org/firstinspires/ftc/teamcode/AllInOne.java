@@ -326,10 +326,11 @@ public class AllInOne extends OpMode {
             }else {
                 shoulderPower = Range.clip( shoulderPower, -0.8, 0.8);
             }
-            shoulder.setPower(shoulderPower);*/
+            shoulder.setPower(shoulderPower);
 
-          /*  // control the vacuum
-            double suckPower = gamepad1.;
+
+            // control the vacuum
+            double suckPower = gamepad1.y;
             if (gamepad2.left_bumper && gamepad2.right_bumper){
                 shoulderPower = Range.clip( shoulderPower, -0.5, 0.5);
             }else {
