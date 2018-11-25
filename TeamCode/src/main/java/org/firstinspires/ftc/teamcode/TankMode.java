@@ -93,7 +93,7 @@ public class TankMode extends LinearOpMode {
 
         // Initializam motoare cu nume explicite pentru a putea fi selectate eficient la configurare
 
-        FrontRightMotor  = hardwareMap.get(DcMotor.class, " Right_Front");
+        FrontRightMotor  = hardwareMap.get(DcMotor.class, "git Right_Front");
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "Left_Front");
         BackRightMotor = hardwareMap.get (DcMotor.class, "Right_Back");
         BackLeftMotor = hardwareMap.get (DcMotor.class, "Left_Back");
@@ -127,7 +127,6 @@ public class TankMode extends LinearOpMode {
             // Setam puterea pentru triggere
             leftPower  = gamepad1.right_trigger;
             rightPower = gamepad1.left_trigger;
-
             rotatePower=0.5;
 
             // Trimitem valorile initializate la motoare
