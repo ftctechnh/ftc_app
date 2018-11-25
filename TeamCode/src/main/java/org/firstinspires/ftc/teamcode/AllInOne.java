@@ -306,9 +306,9 @@ public class AllInOne extends OpMode {
                 float suckOut = gamepad1.right_trigger;
                 double suckPower = 0.0;
                 if ((suckIn > 0.0) && (suckOut == 0.0)) {
-                    extenderPower = -1.0;
+                    suckPower = -1.0;
                 } else if ((suckOut > 0.0) && (suckIn == 0.0)) {
-                    extenderPower = 1.0;
+                    suckPower = 1.0;
                 }
                 tacVac.setPower(suckPower);
 
@@ -327,6 +327,7 @@ public class AllInOne extends OpMode {
                 shoulderPower = Range.clip( shoulderPower, -0.8, 0.8);
             }
             shoulder.setPower(shoulderPower);
+
 
             // control the vacuum
             double suckPower = gamepad1.y;

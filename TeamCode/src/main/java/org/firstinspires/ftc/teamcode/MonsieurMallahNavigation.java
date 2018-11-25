@@ -142,15 +142,13 @@ public class MonsieurMallahNavigation extends OpMode {
     private DcMotor arm;
 
     // Hand servo.
-    private Servo servoHand;
-    private double angleHand;
+    //private Servo servoHand;
+    //private double angleHand;
 
     // Navigation stuff.
     private OpenGLMatrix lastLocation;
     private double lastLocationTime;
     private LocationSource lastLocationSource;
-
-
     private VuforiaLocalizer vuforia;
     private VuforiaTrackables trackables;
     private List<VuforiaTrackable> allTrackables;
@@ -167,7 +165,7 @@ public class MonsieurMallahNavigation extends OpMode {
 
     // Hack stuff.
     private boolean useGyroscope = true;
-    private boolean useServoHand = false;
+    //private boolean useServoHand = false;
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useNavigation = true;
@@ -205,9 +203,6 @@ public class MonsieurMallahNavigation extends OpMode {
             motorRight = hardwareMap.get(DcMotor.class, "motor1");
             sweeper = hardwareMap.get(DcMotor.class, "motor2");
             arm = hardwareMap.get(DcMotor.class, "motor3");
-
-            servoHand = hardwareMap.get(Servo.class, "servo0");
-            angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -479,7 +474,7 @@ public class MonsieurMallahNavigation extends OpMode {
             //telemetry.addData("Arm", " power %.2f", pullPower);
 
             // control the hand
-            if (useServoHand) {
+           /* if (useServoHand) {
                 if (gamepad1.dpad_up) {
                     // Keep stepping up until we hit the max value.
                     angleHand += INCREMENT;
@@ -490,7 +485,7 @@ public class MonsieurMallahNavigation extends OpMode {
                     angleHand = Math.max(angleHand, MIN_POS);
                 }
             }
-            servoHand.setPosition(angleHand);
+            servoHand.setPosition(angleHand); */
             //telemetry.addData("Hand", " angle %5.2f", angleHand);
 
             boolean testLeft = gamepad1.b;
@@ -805,7 +800,7 @@ public class MonsieurMallahNavigation extends OpMode {
     /******** GYROSCOPE STUFF **********/
 
     private boolean initGyroscope() {
-        bosch = hardwareMap.get(BNO055IMU.class, "imu");
+        bosch = hardwareMap.get(BNO055IMU.class, "imu0");
         telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
