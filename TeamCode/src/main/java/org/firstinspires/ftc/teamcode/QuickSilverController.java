@@ -39,18 +39,18 @@ public class QuickSilverController extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
-    //private DcMotor extender;
+    private DcMotor extender;
     //private DcMotor tacVac;
-    //private DcMotor shoulder;
+    private DcMotor shoulder;
 
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useNavigation = true;
-
+    private boolean useArm = true;
 
     /**
-     * Code to run ONCE when the driver hits INIT
+     * Code to run ONCE when the driver hits INITh6
      */
     @Override
     public void init() {
@@ -61,9 +61,6 @@ public class QuickSilverController extends OpMode {
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
             motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
             motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
-            //extender = hardwareMap.get(DcMotor.class, "motor6");
-            //tacVac = hardwareMap.get(DcMotor.class, "motor4");
-            //shoulder = hardwareMap.get(DcMotor.class, "motor7");
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -81,8 +78,15 @@ public class QuickSilverController extends OpMode {
                 motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
-            motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        if (useArm) {
+            //extender = hardwareMap.get(DcMotor.class, "motor6");
+            //tacVac = hardwareMap.get(DcMotor.class, "motor4");
+            shoulder = hardwareMap.get(DcMotor.class, "motor4");
+            extender = hardwareMap.get(DcMotor.class, "motor5");
         }
     }
 
@@ -117,14 +121,14 @@ public class QuickSilverController extends OpMode {
             // Control the wheel motors.
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double driveNormal = gamepad1.left_stick_y;
-            double driveStrafe = gamepad1.left_stick_x;
+            double driveNormal = -gamepad1.left_stick_y;
+            double driveStrafe = -gamepad1.left_stick_x;
             if (Math.abs(driveNormal) < 0.1)
                 driveNormal = 0.0; // Prevent the output from saying "-0.0".
             if (Math.abs(driveStrafe) < 0.1)
                 driveStrafe = 0.0; // Prevent the output from saying "-0.0".
 
-            double turn = -gamepad1.right_stick_x;
+            double turn = gamepad1.right_stick_x;
 
             double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
             double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
@@ -151,6 +155,28 @@ public class QuickSilverController extends OpMode {
                 motorFrontRight.setPower(rightFrontPower);
             }
 
+            if (useArm) {
+                boolean pullUp = gamepad1.dpad_down;
+                boolean pullOut = gamepad1.dpad_up;
+                double pullPower = 0.0;
+                if (pullUp) {
+                    pullPower = -1.0;
+                } else if (pullOut) {
+                    pullPower = 1.0;
+                }
+                shoulder.setPower(pullPower);
+
+                // Control the extender.
+                boolean extendOut = gamepad1.y;
+                boolean extendIn = gamepad1.a;
+                double extendPower = 0.0;
+                if (extendOut) {
+                    extendPower = -1.0;
+                } else if (extendIn) {
+                    extendPower = 1.0;
+                }
+                extender.setPower(extendPower);
+            }
         }
     }
 }
