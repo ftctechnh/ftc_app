@@ -9,3 +9,15 @@ git fetch upstream
 git checkout master
 git reset --hard upstream/master  
 git push origin master --force 
+
+// To merge changes from another branch into yours
+// checkout out your branch and then merge from the other.
+// The following example will merge master into JorgeTest1 branch.
+// You might get some merge conflicts which you will need to resolve
+// manually using a text editor on each conflicted file.
+git checkout master
+git pull
+git checkout JorgeTest1
+git pull
+git merge master
+git push
