@@ -6,24 +6,17 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.MagneticFlux;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
@@ -36,7 +29,6 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGR
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 
 /**
@@ -96,8 +88,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@TeleOp(name="Monsieur Mallah Vuforia", group="MonsieurMallah")
-public class MonsieurMallahNavigation extends OpMode {
+@TeleOp(name="CameraTesting", group="MonsieurMallah")
+public class CameraTesting extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
 
@@ -142,13 +134,15 @@ public class MonsieurMallahNavigation extends OpMode {
     private DcMotor arm;
 
     // Hand servo.
-    //private Servo servoHand;
-    //private double angleHand;
+    private Servo servoHand;
+    private double angleHand;
 
     // Navigation stuff.
     private OpenGLMatrix lastLocation;
     private double lastLocationTime;
     private LocationSource lastLocationSource;
+
+
     private VuforiaLocalizer vuforia;
     private VuforiaTrackables trackables;
     private List<VuforiaTrackable> allTrackables;
@@ -165,7 +159,7 @@ public class MonsieurMallahNavigation extends OpMode {
 
     // Hack stuff.
     private boolean useGyroscope = true;
-    //private boolean useServoHand = false;
+    private boolean useServoHand = false;
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useNavigation = true;
@@ -203,6 +197,9 @@ public class MonsieurMallahNavigation extends OpMode {
             motorRight = hardwareMap.get(DcMotor.class, "motor1");
             sweeper = hardwareMap.get(DcMotor.class, "motor2");
             arm = hardwareMap.get(DcMotor.class, "motor3");
+
+            servoHand = hardwareMap.get(Servo.class, "servo0");
+            angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -474,7 +471,7 @@ public class MonsieurMallahNavigation extends OpMode {
             //telemetry.addData("Arm", " power %.2f", pullPower);
 
             // control the hand
-           /* if (useServoHand) {
+            if (useServoHand) {
                 if (gamepad1.dpad_up) {
                     // Keep stepping up until we hit the max value.
                     angleHand += INCREMENT;
@@ -485,7 +482,7 @@ public class MonsieurMallahNavigation extends OpMode {
                     angleHand = Math.max(angleHand, MIN_POS);
                 }
             }
-            servoHand.setPosition(angleHand); */
+            servoHand.setPosition(angleHand);
             //telemetry.addData("Hand", " angle %5.2f", angleHand);
 
             boolean testLeft = gamepad1.b;
@@ -800,7 +797,7 @@ public class MonsieurMallahNavigation extends OpMode {
     /******** GYROSCOPE STUFF **********/
 
     private boolean initGyroscope() {
-        bosch = hardwareMap.get(BNO055IMU.class, "imu0");
+        bosch = hardwareMap.get(BNO055IMU.class, "imu");
         telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
