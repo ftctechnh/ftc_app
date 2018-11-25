@@ -166,15 +166,15 @@ public class AutoTestCoachVince extends LinearOpMode {
   */
         // Find the Gold mineral and knock it off the spot
         // Initialize a counter to count our attempts to get a little closer to the mineral
-        double mineralCt = 0;
+/*        double mineralCt = 0;
         boolean bumpSuccess = false;
         // Strafe a little closer to the minerals
-        gyroStrafe(0.5,0);
-        sleep(500);
+        //gyroStrafe(0.5,0);
+        //sleep(500);
         stopBot();
 
-        while (mineralCt <3 && !bumpSuccess) {
-            sleep(500); // Give the detector a second to register the cube
+        while (mineralCt <1 && !bumpSuccess) {
+            sleep(200); // Give the detector a second to register the cube
             if (detector.isFound()) {
                 telemetry.addLine("Found it, going to mineralBump");
                 telemetry.addData("mineralCt = ", mineralCt);
@@ -206,10 +206,13 @@ public class AutoTestCoachVince extends LinearOpMode {
 
             }
         }
-
-/*        // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+*/
+       // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+        gyroStrafe(0.5, 0);
+        sleep(1000);
+        stopBot();
         gyroSpin(0);
-        gyroHold(0.2,45,3);
+        gyroHold(0.4,0,1.5);
         //sleep(3000);
         // Rotate to a heading of 315R
         gyroSpin(315);
@@ -217,23 +220,39 @@ public class AutoTestCoachVince extends LinearOpMode {
 
         // Move towards the wall until 7 inches away while maintaining a heading of 270
         while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
-            gyroStrafe(.2,315);
+            gyroStrafe(.5,315);
        }
-  */     //stopBot();
+       stopBot();
          //Drive backwards maintaining 2-4 inches from the wall until you see the red tape line
-/*        while(sonarDistance() > 12){
+        while(sonarDistance() > 18){
             double wsteer=wallSteer(5);
             moveBot(0.2,0,wsteer,0.5);
         }
- */       stopBot();
+          stopBot();
             detector.disable();
         // Drop the totem
-
+        robot.armRotate.setPower(0.2);
+        sleep(500);
+        robot.armRotate.setPower(0);
+        robot.rightMineral.setPower(0.5);
+        sleep(1000);
+        robot.rightMineral.setPower(0);
         // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
         // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
-
+        while(sonarDistance() < 72){
+            double wsteer=wallSteer(5);
+            moveBot(-0.2,0,wsteer,0.5);
+        }
+        gyroStrafe(-0.5, 315);
+        sleep(250);
+        stopBot();
         //  Turn 180 and deploy the arm
+            gyroSpin(135);
+        while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
+            robot.armExtend.setPower(-0.15);
+        }
+            robot.armExtend.setPower(0);  // Otherwise set the power to zero
 
 }
 
@@ -308,9 +327,9 @@ public class AutoTestCoachVince extends LinearOpMode {
             // Rotate the robot in the correct direction.
             // Don't use more than 0.3 input power or it goes too fast
             if (error < 0 && Math.abs(error) > 5) {
-                moveBot(0, -0.4, 0, 0.4);
+                moveBot(0, -0.3, 0, 0.4);
             } else {
-                moveBot(0, 0.4, 0, 0.4);
+                moveBot(0, 0.3, 0, 0.4);
             }
             //Check the error again for the next loop
             error = getError(heading);
@@ -328,10 +347,10 @@ public class AutoTestCoachVince extends LinearOpMode {
             error = getError(heading);
             if (error < 0 && Math.abs(error) > deadband) {
                 // Nagative error greater than 5 degrees, left of desired heading, input positive rotation
-                moveBot(0, .1, speed, 0.6);
+                moveBot(0, -.25, speed, 0.6);
             } else if (error > 0 && Math.abs(error) > deadband){
                 // Positive Error greater than 5 degrees, right of desired heading, input negative rotation
-                moveBot(0, -0.1, speed, 0.6);
+                moveBot(0, 0.25, speed, 0.6);
             } else {
                 // Robot is on course
                 moveBot(0, 0, speed, 0.6);
@@ -420,8 +439,8 @@ public class AutoTestCoachVince extends LinearOpMode {
 
         // calculate error in -179 to +180 range  (
         robotError = targetAngle - robot.gyro.getIntegratedZValue();
-        while (robotError > 180)  robotError -= 360;
-        while (robotError <= -180) robotError += 360;
+        while (robotError > 180) { robotError -= 360;}
+        while (robotError <= -180) {robotError += 360;}
         return robotError;
     }
 
@@ -465,7 +484,7 @@ public class AutoTestCoachVince extends LinearOpMode {
 
         while( detectorCt <= 30) {
             // Calculate the heading error
-            error = getXError(300,20);
+            error = getXError(300,30);
             // Command the bot to move
             moveBot(0,error,0,0.15);
             // Count up how long it remains aligned.  Could also use gyro heading being stable?
