@@ -19,9 +19,10 @@ public class Auto3imu extends LinearOpMode {
     DriveControl Drive = new DriveControl();
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
-    //LiftControl Lift = new LiftControl(this);
+    LiftControl Lift = new LiftControl();
     private ElapsedTime runtime = new ElapsedTime();
     private double HomeAngle;
+    boolean twoSample = true;
     /* Arrays */
 
     //State changing array
@@ -72,6 +73,16 @@ public class Auto3imu extends LinearOpMode {
         telemetry.update();
     }
 
+    public void doubleSample(){
+        telemetry.addLine("Double?");
+        while(!gamepad1.x && !gamepad1.y){
+        }
+        if (gamepad1.x){
+        twoSample = true;
+        }
+
+    }
+
     public void resetClock() {
         //resets the clock
         lastReset = runtime.seconds();
@@ -103,6 +114,10 @@ public class Auto3imu extends LinearOpMode {
         Center
     }
 
+    private enum doubleSample{
+        //SS Figure this out
+
+    }
     //Enum variables (creates variables of the enum variable types previously created)
     private State mCurrentState;
     private Start orientation;
@@ -130,7 +145,7 @@ public class Auto3imu extends LinearOpMode {
 
         telemetry.update();
         waitForStart();
-//put sample position code here
+        //put sample position code here
         newState(State.STATE_INITIAL);
 
         Drive.imu.IMUinit();
@@ -149,9 +164,11 @@ public class Auto3imu extends LinearOpMode {
             //state switch
             switch (mCurrentState) {
                 case STATE_LAND:
-                    //Lower the robot
+                    //Lift.Unlock();
+                    /*while(!Lift.LifterButtonT.isPressed()) {
+                        Lift.Extend();
+                    }*/
                     sleep(1000);
-                    //detach
                     newState(State.STATE_ADJUST);
                     break;
 
@@ -203,20 +220,24 @@ public class Auto3imu extends LinearOpMode {
                         Drive.turn2angle(-25);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.55, 1.2);
-                        //Turn back towards depot
-                        newState(State.STATE_STOP);
+                        Drive.turn2angle(38);
+                        Drive.moveForward(0.55, 1.0);
+                        newState(State.STATE_CLAIM);
                     }
 
                     else if (sample == PracticeSample.Right){
-                        Drive.turn2angle(25);
+                        Drive.turn2angle(35);
                         Drive.TimeDelay(0.15);
-                        Drive.moveForward(0.5, 1.2);
-                        newState(State.STATE_STOP);
+                        Drive.moveForward(0.5, 1.8);
+                        Drive.turn2angle(-45);
+                        Drive.moveForward(0.55, 1.0);
+                        newState(State.STATE_CLAIM);
                         //Turn back toward depot
                     }
                     //Center
                     else {
-                        Drive.moveForward(0.5, 1.50);
+                        Drive.moveForward(0.5, 1.70);
+                        Drive.moveBackward(0.5, 0.30);
                         newState(State.STATE_CLAIM);
                     }
                     break;
