@@ -17,8 +17,7 @@ This year, we are implementing "Absoloute Positioning"
 This means, we simply give the robot instructions on what coordinates to move to, and the robot will do the rest.
 
 ### Execution
-
-Here is the code that is used to calculate the movements.
+We've build a whole class library around this positioning, but here is the block of code that is used to calculate the movements.
 ```
 fun moveTo(x:Double,y:Double){
         val angle = Math.toDegrees(Math.atan((y-currentY)/(x-currentX)))
