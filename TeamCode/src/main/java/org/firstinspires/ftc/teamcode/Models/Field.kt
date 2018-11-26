@@ -11,6 +11,7 @@ class Field(val dt:DriveTrain){
     val l = Logger("FIELD")
     val fieldX:Double = 288.0
     val fieldY:Double = 288.0
+
     var currentAngle = 0.0
     var currentX = 0.0
     var currentY = 0.0
@@ -27,7 +28,7 @@ class Field(val dt:DriveTrain){
         this.currentAngle = angle
         if(this.currentX != x) l.log("Wrapped X value from $x => $currentX")
         if(this.currentY != y) l.log("Wrapped Y value from $y => $currentY")
-        l.log("Registered position: ($currentX,$currentY)")
+        l.log("Registered position: ($currentX,$currentY,$currentAngle)")
     }
 
     fun moveTo(x:Double,y:Double){

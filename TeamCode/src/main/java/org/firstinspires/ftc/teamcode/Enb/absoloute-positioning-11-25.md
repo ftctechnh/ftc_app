@@ -31,8 +31,7 @@ fun moveTo(x:Double,y:Double){
 ```
 The function takes in an X and Y coordinate in inches, from 0 to 288.
 The function then calculates the angle of movement needed using `arctan`
-and then it calculates the distance needed to move to that position using
-Pythagorean Theorem.
+and then it calculates the distance needed to move to that position using Pythagorean Theorem.
 
 Then, it rotates to the desired angle and moves forward the desired distance.
 Finally, it registers the new position on the field as the target position so that the next move calculates the desired values from the new position.
