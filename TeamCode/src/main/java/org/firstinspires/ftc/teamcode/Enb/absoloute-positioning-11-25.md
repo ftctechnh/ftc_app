@@ -1,4 +1,4 @@
-# Robot & Field Absoloute Positioning
+# Robot & Field Absolute Positioning
 Documented by: Anton
 
 Date: 11/25/18
@@ -12,7 +12,7 @@ ex: `move 10 inches forward, then rotate 90 degrees clockwise`
 
 This is great, but it becomes tricky to tune, messy to work with, and hard to plan for.
 
-This year, we are implementing "Absoloute Positioning"
+This year, we are implementing "Absolute Positioning"
 
 This means, we simply give the robot instructions on what coordinates to move to, and the robot will do the rest.
 
