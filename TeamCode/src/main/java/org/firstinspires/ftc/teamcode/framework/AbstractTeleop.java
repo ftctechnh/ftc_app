@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     //Setup gamepad
     private Emitter emitter = new Emitter();
+    private ElapsedTime emitTime;
+    private long emitTimeOffset = 0;
+    private int emitLoop = 0;
 
     ButtonStateMap states;
     FloatStateMap floatStates;
@@ -59,6 +64,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         Future<Boolean> CurrentFuture;
 
         //sets up emitter
+        emitTime = new ElapsedTime();
         states = new ButtonStateMap();
         floatStates = new FloatStateMap();
 
@@ -68,18 +74,22 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         telemetry.addData("Init");
         telemetry.update();
 
-        int i = 0;
+        int initLoops = 0;
+
+        telemetry.addData("Init Loop");
+        telemetry.update();
 
         while (!isStopRequested() && !isStarted()){
             checkException();
 
             if(CurrentFuture.isDone()) {
-                telemetry.addData("Init Loop: "+i);
-                telemetry.update();
-                i++;
+                initLoops++;
                 CurrentFuture = service.submit(InitLoopThread);
             }
         }
+
+        telemetry.addData(initLoops+" Init Loops");
+        telemetry.update();
 
         while (!isStopRequested() && !CurrentFuture.isDone());
 
@@ -94,6 +104,8 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             CurrentFuture = service.submit(StartThread);
         }
 
+        emitTime.reset();
+
         while (opModeIsActive()) {
             checkException();
 
@@ -105,6 +117,11 @@ public abstract class AbstractTeleop extends AbstractOpMode {
                 CurrentFuture = service.submit(LoopThread);
             }
         }
+
+        telemetry.addData("Stopping");
+        telemetry.update();
+
+        AbstractOpMode.stopRequested();
 
         //TODO remake our shutdown procedure
         CurrentFuture.cancel(true);
@@ -201,6 +218,12 @@ public abstract class AbstractTeleop extends AbstractOpMode {
     }
 
     private void checkEvents() {
+        if(emitTime.milliseconds()-emitTimeOffset<1)return;
+        emitTimeOffset++;
+        if(emitTimeOffset>60000){
+            emitTimeOffset = 0;
+            emitTime.reset();
+        }
         //emitter.refresh(telemetry);
 
         // boolean buttons
@@ -227,13 +250,34 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         checkFloatInput("rsx", gamepad1.right_stick_x);
         checkFloatInput("rsy", gamepad1.right_stick_y);
 
+        //Check user events
         UpdateEvents();
+
+        //Update value for repeat on checkBooleanInput
+        emitLoop++;
+        if(emitLoop>10000){
+            emitLoop=0;
+        }
     }
 
     public void checkBooleanInput(String name, boolean val) {
-        if (states.isChanged(name, val)) {
+        if(name.contains("down")){
+            if(val){
+                emitter.emit(name);
+            }
+        } else if(name.contains("up")){
+            if(!val){
+                emitter.emit(name);
+            }
+        } else if (states.isChanged(name, val)) {
             emitter.emit(val ? name+"_down" : name+"_up");
             states.change(name, val);
+        }
+    }
+
+    public void checkBooleanInput(String name, boolean val, int repeat) {
+        if(emitLoop%repeat==0){
+            checkBooleanInput(name, val);
         }
     }
 

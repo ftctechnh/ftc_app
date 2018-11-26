@@ -57,21 +57,20 @@ public class FrameworkTest extends AbstractTeleop{
     @Override
     public void UpdateEvents() {
         boolean even = (((int)runTime.seconds())%2==0);
-        checkBooleanInput("even",even);
+        //checkBooleanInput("even",even);
         checkBooleanInput("odd",!even);
+        checkBooleanInput("even_down",even,100);
     }
 
     @Override
     public void Init() {
         runTime = new ElapsedTime();
         runTime.reset();
-        robot = new Robot();
+        //robot = new Robot();
     }
 
     @Override
     public void Loop(){
-        telemetry.addData(Dashboard.getInputValueString("Enter string").toUpperCase());
-        telemetry.update();
     }
 
     @Override

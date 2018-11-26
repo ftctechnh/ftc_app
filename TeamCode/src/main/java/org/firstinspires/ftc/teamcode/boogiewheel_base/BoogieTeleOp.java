@@ -38,6 +38,10 @@ public class BoogieTeleOp extends AbstractTeleop {
 
         addEventHandler("lt_down", robot.moveMineralLiftToCollectPositionCallable());
 
+        addEventHandler("x_down", robot.openMineralGateCallable());
+
+        addEventHandler("x_up", robot.closeMineralGateCallable());
+
         /*addEventHandler("lt_change", ()->{
             if(gamepad1.left_trigger>0.5) robot.moveMineralLiftToCollectPosition();
             return true;

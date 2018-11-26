@@ -11,27 +11,27 @@ public class IntakeController extends SubsystemController{
     }
 
     @Override
-    public void init() {
+    public synchronized void init() {
 
        opModeSetup();
 
        intake = new Intake(hardwareMap);
     }
 
-    public void beginIntaking(){
+    public synchronized void beginIntaking(){
         intake.setIntakePower(1);
     }
 
-    public void finishIntaking(){
+    public synchronized void finishIntaking(){
         intake.setIntakePower(0);
     }
 
-    public void reverseIntake(){
+    public synchronized void reverseIntake(){
         intake.setIntakePower(-1);
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         intake.stop();
     }
 }

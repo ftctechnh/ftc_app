@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.framework;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
@@ -48,5 +47,9 @@ public abstract class AbstractOpMode extends LinearOpMode {
 
     public static boolean isOpModeActive(){
         return !linearOpMode.isStopRequested();
+    }
+
+    protected static void stopRequested(){
+        Dashboard.onOpModePreStop();
     }
 }

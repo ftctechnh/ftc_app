@@ -2,6 +2,7 @@ package org.upacreekrobotics.dashboard;
 
 import android.app.Notification;
 import android.content.Context;
+import android.provider.Settings;
 import android.util.Log;
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -38,6 +39,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private Date date;
     private String oldTelemetry = "";
     private String infoText = "";
+    private double opModeInitTime = 0;
+    private double opModeStartTime = 0;
 
     private OpModeManagerImpl opModeManager;
     private RobotStatus.OpModeStatus activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
@@ -87,6 +90,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Constructor called by "start()"////////////////
     private Dashboard() {
 
+        isRunning = true;
+
         ClasspathScanner scanner = new ClasspathScanner(new ClassFilter() {
             @Override
             public boolean shouldProcessClass(String className) {
@@ -116,7 +121,6 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         dashboardThread = new Thread(new DashboardHandler());
         dashboardThread.start();
 
-        isRunning = true;
     }
 
     ////////////////Returns the current "RobotStatus", this may be useful in the future////////////////
@@ -181,9 +185,9 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                         } catch (NullPointerException e){
 
                         }
-                        String[] parts = oldTelemetry.split("`");
+                        String[] parts = oldTelemetry.split("&#%#&");
                         for(String part:parts){
-                            if(data!=null&&!part.equals(""))data.write(new Message(MessageType.TELEMETRY,date.getDateTime()+"`"+part));
+                            if(!part.equals(" "))data.write(new Message(MessageType.TELEMETRY, part));
                         }
                         oldTelemetry = "";
                         if(batteryChecker!=null)batteryChecker.pollBatteryLevel(batteryWatcher);
@@ -196,8 +200,6 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                     }
 
                     case RESTART_ROBOT: {
-                        if(activeOpModeStatus == RobotStatus.OpModeStatus.INIT || activeOpModeStatus == RobotStatus.OpModeStatus.RUNNING)opModeManager.stopActiveOpMode();
-                        activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                         restartRequested = true;
                         break;
                     }
@@ -238,29 +240,29 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             switch (activeOpModeStatus){
                 case INIT:
                     if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
+                        activeOpModeStatus = RobotStatus.OpModeStatus.RUNNING;
                         if (data != null && data.isConnected()) {
-                            activeOpModeStatus = RobotStatus.OpModeStatus.RUNNING;
                             data.write(new Message(MessageType.ROBOT_STATUS, "RUNNING"));
                         }
                     }
                     if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.STOPPED)) {
+                        activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                         if (data != null && data.isConnected()) {
-                            activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                             data.write(new Message(MessageType.ROBOT_STATUS, "STOPPED"));
                         }
                     }
                     break;
                 case RUNNING:
                     if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.STOPPED)) {
+                        activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                         if (data != null && data.isConnected()) {
-                            activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                             data.write(new Message(MessageType.ROBOT_STATUS, "STOPPED"));
                         }
                     }
                     break;
                 case STOPPED:
                     if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-                        if (data != null) if(data.isConnected()){
+                        if (data != null && data.isConnected()){
                             activeOpModeStatus = RobotStatus.OpModeStatus.INIT;
                             data.write(new Message(MessageType.SELECT_OP_MODE, dashboard.opModeManager.getActiveOpModeName()));
                             data.write(new Message(MessageType.ROBOT_STATUS, "INIT"));
@@ -308,6 +310,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             return Double.valueOf(value);
         } catch (NumberFormatException e){
             if(!caption.contains("Please enter a valid double for: "))caption = "Please enter a valid double for: "+caption;
+            if(dashboard.requestedOpModeStatus==RobotStatus.OpModeStatus.STOPPED)return 0.0;
             return getInputValueDouble(caption);
         }
     }
@@ -321,11 +324,12 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     private String internalGetInputValue(String caption){
         if(data!=null)data.write(new Message(MessageType.GET_VALUE,caption));
         lastInputValue = null;
-        requestedOpModeStatus = RobotStatus.OpModeStatus.INIT;
-        while(activeOpModeStatus==RobotStatus.OpModeStatus.STOPPED && requestedOpModeStatus!=RobotStatus.OpModeStatus.STOPPED);
-        while(data!=null && lastInputValue==null && isRunning && connected && activeOpModeStatus!=RobotStatus.OpModeStatus.STOPPED);
+        while(activeOpModeStatus==RobotStatus.OpModeStatus.STOPPED && isRunning && connected &&
+                requestedOpModeStatus!=RobotStatus.OpModeStatus.STOPPED && !Thread.currentThread().isInterrupted());
+        while(data!=null && lastInputValue==null && isRunning && connected &&
+                activeOpModeStatus!=RobotStatus.OpModeStatus.STOPPED && !Thread.currentThread().isInterrupted());
         try{
-            if(lastInputValue!=null)return  lastInputValue;
+            if(lastInputValue!=null)return lastInputValue;
         } catch (NumberFormatException e){}
         return "";
     }
@@ -361,14 +365,29 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Called by "opModeManagerImpl"////////////////
     @Override
     public void onOpModePreInit(OpMode opMode) {
-        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$"))requestedOpModeStatus = RobotStatus.OpModeStatus.INIT;
+        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")){
+            requestedOpModeStatus = RobotStatus.OpModeStatus.INIT;
+            opModeInitTime = System.currentTimeMillis();
+        }
     }
 
     ////////////////Called by "opModeManagerImpl"////////////////
     @Override
     public void onOpModePreStart(OpMode opMode) {
-        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$"))requestedOpModeStatus = RobotStatus.OpModeStatus.RUNNING;
+        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
+            requestedOpModeStatus = RobotStatus.OpModeStatus.RUNNING;
+            opModeStartTime = System.currentTimeMillis();
+        }
     }
+
+    ////////////////Called by "AbstractOpMode"////////////////
+    public static void onOpModePreStop(){
+        dashboard.internalOnOpModePreStop();
+    }
+
+    ////////////////Called by "onOpModePreStop"////////////////
+    public void internalOnOpModePreStop(){
+   }
 
     ////////////////Called by "opModeManagerImpl"////////////////
     @Override
@@ -384,7 +403,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         @Override
         public void run() {
             DashboardTelemtry = new dashboardtelemetry();
-            while (true) {
+            while (isRunning) {
                 receiveMessage();
             }
         }
@@ -401,10 +420,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             while (data==null) {
                data = new Data();
             }
-            while (true){
+            while (isRunning){
                 if(data.isConnected()){
-                    if(data!=null&&loop%2==0&&!restartRequested)data.write(new Message(MessageType.BATTERY,battery()));
-                    if(batteryChecker!=null&&loop==0)batteryChecker.pollBatteryLevel(batteryWatcher);
+                    if(data!=null&&loop==0&&!restartRequested)data.write(new Message(MessageType.BATTERY,battery()));
+                    if(batteryChecker!=null&&loop%2==0)batteryChecker.pollBatteryLevel(batteryWatcher);
                     if(!connected) {
                         connected = true;
                     }
@@ -416,11 +435,11 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                     }
                 }
                 loop++;
-                if(loop>20)loop=0;
+                if(loop>40)loop=0;
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(250);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
         }
@@ -433,10 +452,23 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         public dashboardtelemetry(){}
 
         public void write(String text){
-            if(data!=null&&connected) {
-                data.write(new Message(MessageType.TELEMETRY, date.getDateTime() + "`" + text));
+            String packet = "";
+
+            if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)||
+                    activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
+                double currentTime = (System.currentTimeMillis()-opModeStartTime)/1000;
+                packet = date.getDateTime() + "`Time since start: " + currentTime + "`" + text;
             }
-            else oldTelemetry = oldTelemetry + "`" + text;
+
+            else if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
+                double currentTime = (System.currentTimeMillis()-opModeInitTime)/1000;
+                packet = date.getDateTime() + "`Time since init: " + currentTime + "`" + text;
+            }
+
+            else packet = date.getDateTime() + "`Stopped`" + text;
+
+            if(data!=null&&connected) data.write(new Message(MessageType.TELEMETRY, packet));
+            else oldTelemetry = oldTelemetry + "&#%#&" + packet;
         }
 
         public void write(int text){

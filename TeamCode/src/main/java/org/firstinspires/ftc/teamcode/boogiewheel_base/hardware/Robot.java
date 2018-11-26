@@ -48,6 +48,18 @@ public class Robot extends AbstractRobot{
         hardware.drive.driveTo(distance, speed);
     }
 
+    public void driveTo(double distance, double speed, int angle){
+        hardware.drive.driveTo(distance, speed, angle);
+    }
+
+    public synchronized int[] recordPathWithHeading(int numSamples, int timeInterval) {
+        return hardware.drive.recordPathWithHeading(numSamples, timeInterval);
+    }
+
+    public synchronized void runPathWithHeading(int[] values, int timeInterval, double speed) {
+        hardware.drive.runPathWithHeading(values, timeInterval, speed);
+    }
+
     public void setPosition(int position, double power) {
         hardware.drive.setPosition(position, power);
     }
@@ -89,7 +101,7 @@ public class Robot extends AbstractRobot{
     //Mineral Lift Methods
     public Callable moveMineralLiftToCollectPositionCallable(){
         return ()->{
-            hardware.mineralLift.moveToCollectPosition();
+            moveMineralLiftToCollectPosition();
             return true;
         };
     }
@@ -100,7 +112,7 @@ public class Robot extends AbstractRobot{
 
     public Callable moveMineralLiftToDumpPositionCallable(){
         return ()->{
-            hardware.mineralLift.moveToDumpPosition();
+            moveMineralLiftToDumpPosition();
             return true;
         };
     }
@@ -108,4 +120,27 @@ public class Robot extends AbstractRobot{
     public void moveMineralLiftToDumpPosition(){
         hardware.mineralLift.moveToDumpPosition();
     }
+
+    public Callable openMineralGateCallable() {
+        return ()->{
+            openMineralGate();
+            return true;
+        };
+    }
+
+    public void openMineralGate() {
+        hardware.mineralLift.openGate();
+    }
+
+    public Callable closeMineralGateCallable() {
+        return ()->{
+            closeMineralGate();
+            return true;
+        };
+    }
+
+    public void closeMineralGate() {
+        hardware.mineralLift.closeGate();
+    }
+
 }

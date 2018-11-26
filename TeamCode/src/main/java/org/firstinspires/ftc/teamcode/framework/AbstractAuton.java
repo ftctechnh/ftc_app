@@ -48,6 +48,8 @@ public abstract class AbstractAuton extends AbstractOpMode {
             checkException();
         }
 
+        AbstractOpMode.stopRequested();
+
         if ((isStopRequested() || !opModeIsActive()) && threadRunning) {
             service.shutdownNow();
         }

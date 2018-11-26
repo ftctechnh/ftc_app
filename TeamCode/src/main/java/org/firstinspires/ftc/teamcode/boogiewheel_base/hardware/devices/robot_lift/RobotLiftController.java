@@ -11,14 +11,14 @@ public class RobotLiftController extends SubsystemController{
     }
 
     @Override
-    public void init() {
+    public synchronized void init() {
         opModeSetup();
 
         robotLift = new RobotLift(hardwareMap);
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
         robotLift.stop();
     }
 }
