@@ -75,12 +75,13 @@ abstract public class superAuto extends LinearOpMode {
 
     boolean iAmRed;
     boolean iAmBlue = !iAmRed;
+    boolean quadrantOdd;
+    boolean quadrantEven = !quadrantOdd;
+    RobotLocation location = new RobotLocation();
 
     private ElapsedTime runtime = new ElapsedTime();
 
     void setUp() {
-
-        iAmBlue = !iAmRed;
 
         configureGyro();
 
@@ -194,6 +195,20 @@ abstract public class superAuto extends LinearOpMode {
                     }
                 });
     }
+    void getQuadrant() {
+
+        updateLocation();
+
+        if(( location.getX()*location.getY())>0)
+            quadrantOdd = true;
+        else
+            quadrantOdd = false;
+
+        quadrantEven = ! quadrantOdd;
+        telemetry.addData("quadrantOdd: ", quadrantOdd);
+        telemetry.update();
+    }
+
 
     void configVuforiaRoverRuckus() {
         final String TAG = "Vuforia Navigation Sample";
@@ -265,7 +280,7 @@ abstract public class superAuto extends LinearOpMode {
         targetsRoverRuckus.activate();
     }
 
-    double getLocation(int xOry) {
+    void updateLocation() {
         while (opModeIsActive()) {
 
 
@@ -296,7 +311,7 @@ abstract public class superAuto extends LinearOpMode {
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-                return translation.get(xOry);
+                location.setPositionValues(translation.get(0), translation.get(1), rotation.thirdAngle);
             }
             else {
                 configureGyro();
@@ -329,7 +344,6 @@ abstract public class superAuto extends LinearOpMode {
                 }
                  }
             telemetry.update();
-        return 0;
     }
 
     void goToPoint(double DestinationX, double DestinationY){
@@ -340,8 +354,9 @@ abstract public class superAuto extends LinearOpMode {
 
         // While not at desired location
         while (go) {
-            CurrentX = getLocation(0); //Method to Read current location
-            CurrentY = getLocation(1);
+            updateLocation();
+            CurrentX = location.getX(); //Method to Read current location
+            CurrentY = location.getY();
             X = (DestinationX - CurrentX);
             Y = (DestinationY - CurrentY);
             telemetry.addData("DestinationX ",DestinationX);
