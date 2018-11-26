@@ -33,7 +33,7 @@ android {
     compileSdkVersion 24
 
     packagingOptions {
-        exclude 'org/eclipse/jetty/http/encoding.properties'
+        pickFirst 'org/eclipse/jetty/http/encoding.properties'
         exclude 'META-INF/DEPENDENCIES.txt'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'

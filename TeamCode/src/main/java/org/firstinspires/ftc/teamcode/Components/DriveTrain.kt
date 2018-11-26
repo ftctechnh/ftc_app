@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.Utils.PIDController
 import org.firstinspires.ftc.teamcode.Utils.WSS
 
 
-class DriveTrain(val opMode: LinearOpMode,val wss:WSS?=null){
+class DriveTrain(val opMode: LinearOpMode,val wss:WSS?=null,val rotationPIDConstants:PIDConstants,val drivePIDConstants: PIDConstants){
     val l:Logger = Logger("DRIVETRAIN2")
     val lDrive = Motor(opMode.hardwareMap, "lDrive")
     val rDrive  = Motor(opMode.hardwareMap, "rDrive")
@@ -63,8 +63,8 @@ class DriveTrain(val opMode: LinearOpMode,val wss:WSS?=null){
                 dir.intRepr * Values.TICKS_PER_INCH_FORWARD * dist
         val minError = 50
 
-        val lPID = PIDController(PIDConstants(0.0, 0.0, 0.0), lTarget)
-        val rPID = PIDController(PIDConstants(0.0, 0.0, 0.0), rTarget)
+        val lPID = PIDController(drivePIDConstants, lTarget)
+        val rPID = PIDController(drivePIDConstants, rTarget)
 
         lPID.initController(lDrive.motor.currentPosition.toDouble())
         rPID.initController(rDrive.motor.currentPosition.toDouble())
@@ -80,9 +80,9 @@ class DriveTrain(val opMode: LinearOpMode,val wss:WSS?=null){
         stopAll()
     }
 
-    fun rotate(dir: Direction, angle: Int, timeout: Int = 10,broadcast:Boolean=false,pidConstants: PIDConstants) {
+    fun rotate(dir: Direction, angle: Int, timeout: Int = 10,broadcast:Boolean=false) {
         val targetHeading = fixAngle(imu.angle + dir.intRepr * angle)
-        rotateTo(targetHeading, timeout,broadcast=broadcast,pidConstants = pidConstants)
+        rotateTo(targetHeading, timeout,broadcast=broadcast)
     }
 
     fun fixAngle(angle: Double): Double {
@@ -97,11 +97,11 @@ class DriveTrain(val opMode: LinearOpMode,val wss:WSS?=null){
         return fixedAngle
     }
 
-    fun rotateTo(targetHeading: Double, timeout: Int = 10,broadcast:Boolean=false,pidConstants: PIDConstants) {
+    fun rotateTo(targetHeading: Double, timeout: Int = 10,broadcast:Boolean=false) {
         val minError = 2
         val minPower = 2.0
 
-        val pid = PIDController(pidConstants, targetHeading,broadcast=broadcast,wss=wss)
+        val pid = PIDController(rotationPIDConstants, targetHeading,broadcast=broadcast,wss=wss)
 
         var currentHeading: Double = imu.angle
 
