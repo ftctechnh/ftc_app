@@ -30,6 +30,8 @@ import java.util.List;
 
 public class SamplingOrderDetector extends DogeCVDetector {
 
+    public GoldLocation SamplePos;
+
     // Enum to describe gold location
     public enum GoldLocation {
         UNKNOWN,

@@ -1,14 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
-import org.firstinspires.ftc.teamcode.SamplingOrderExample;
+import org.firstinspires.ftc.teamcode.VucamOrder;
 //import static org.firstinspires.ftc.teamcode.auto.State.STATE_STOP;
 
 @Autonomous(name = "Auto1", group = "Drive")
@@ -19,6 +21,7 @@ public class auto extends LinearOpMode {
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
+    VucamOrder Vucam = new VucamOrder();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
@@ -48,7 +51,7 @@ public class auto extends LinearOpMode {
     }
 
     //Start array
-    public void samplePosition() {
+    /*public void samplePosition() {
         telemetry.addLine("Sample position?");
         telemetry.update();
         while (!gamepad1.dpad_down && !gamepad1.dpad_right && !gamepad1.dpad_left){
@@ -66,7 +69,7 @@ public class auto extends LinearOpMode {
             telemetry.addLine("Left");
             sample = PracticeSample.Left;
         }
-    }
+    }*/
 
     public void resetClock() {
         //resets the clock
@@ -76,7 +79,7 @@ public class auto extends LinearOpMode {
     //Makes the enum stuff work
     private State mCurrentState;
     private Start orientation;
-    private PracticeSample sample;
+    private Sample sample;
 
     /* Variables go here */
 
@@ -94,10 +97,10 @@ public class auto extends LinearOpMode {
         Depot
     }
 
-    private enum PracticeSample {
-        Left,
-        Right,
-        Center
+    private enum Sample {
+        LEFT,
+        RIGHT,
+        CENTER
     }
 
     //time based variables
@@ -109,14 +112,12 @@ public class auto extends LinearOpMode {
 
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
+        Vucam.init();
         //Sample.init();
 
         telemetry.addLine("Autonomous");
 
         startPosition();
-
-        sample = PracticeSample.Center;
-
 
         AutoTransitioner.transitionOnStop(this, "TeleOp");
 
@@ -132,9 +133,7 @@ public class auto extends LinearOpMode {
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
-                    /*Sample.init();
-                    Sample.start();
-                    Sample.loop();*/
+                    Vucam.loop();
 
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
@@ -148,7 +147,7 @@ public class auto extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (sample == PracticeSample.Left){
+                    if (Vucam.detector.SamplePos == Vucam.detector.GoldLocation.RIGHT){
                        if (now < 0.15){
                             Drive.turnLeft(0.4);
                        }

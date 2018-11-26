@@ -252,7 +252,6 @@ public class VucamOrder extends OpMode
     @Override
     public void stop() {
         vuforia.stop();
-
     }
 
 }
