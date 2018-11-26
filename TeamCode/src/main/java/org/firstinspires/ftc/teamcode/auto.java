@@ -21,7 +21,7 @@ public class auto extends LinearOpMode {
     //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
-    VucamOrder Vucam = new VucamOrder();
+    VucamControl Vucam = new VucamControl();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Arrays */
@@ -37,14 +37,13 @@ public class auto extends LinearOpMode {
     public void startPosition() {
         telemetry.addLine("Is the starting position facing the crater?");
         telemetry.update();
-        while (!gamepad1.a && !gamepad1.b){
+        while (!gamepad1.a && !gamepad1.b) {
         }
 
         if (gamepad1.a) {
             telemetry.addLine("Crater");
             orientation = Start.Crater;
-        }
-        else{
+        } else {
             telemetry.addLine("Depot");
             orientation = Start.Depot;
         }
@@ -79,7 +78,7 @@ public class auto extends LinearOpMode {
     //Makes the enum stuff work
     private State mCurrentState;
     private Start orientation;
-    private Sample sample;
+    private SamplingOrderDetector.GoldLocation Sample;
 
     /* Variables go here */
 
@@ -97,12 +96,6 @@ public class auto extends LinearOpMode {
         Depot
     }
 
-    private enum Sample {
-        LEFT,
-        RIGHT,
-        CENTER
-    }
-
     //time based variables
     double lastReset = 0;
     double now = 0;
@@ -112,8 +105,7 @@ public class auto extends LinearOpMode {
 
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
-        Vucam.init();
-        //Sample.init();
+        Vucam.init(hardwareMap);
 
         telemetry.addLine("Autonomous");
 
@@ -126,14 +118,19 @@ public class auto extends LinearOpMode {
 //put sample position code here
         newState(State.STATE_INITIAL);
 
+        Vucam.Scan();
+        Sample = Vucam.detector.getCurrentOrder();
+
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
 
             now = runtime.seconds() - lastReset;
+            telemetry.addData("Sample: ", Sample);
+            telemetry.update();
 
             //state switch
             switch (mCurrentState) {
                 case STATE_INITIAL:
-                    Vucam.loop();
+
 
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
@@ -147,41 +144,34 @@ public class auto extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (Vucam.detector.SamplePos == Vucam.detector.GoldLocation.RIGHT){
-                       if (now < 0.15){
+                    if (Sample == SamplingOrderDetector.GoldLocation.LEFT) {
+                        if (now < 0.15) {
                             Drive.turnLeft(0.4);
-                       }
-                       else if (now < 0.3){
-                           Drive.stop();
-                       }
-                       //Sample left to move forward
-                       else if (now < 1.45) {
-                           Drive.moveForward(0.55);
-                       }
-                       else {
-                           newState(State.STATE_STOP);
-                       }
-                    }
-                    else if (sample == PracticeSample.Right){
-                        if (now < 0.15){
-                            Drive.turnRight(0.4);
+                        } else if (now < 0.3) {
+                            Drive.stop();
                         }
-                        else if (now < 0.25){
+                        //Sample left to move forward
+                        else if (now < 1.45) {
+                            Drive.moveForward(0.55);
+                        } else {
+                            newState(State.STATE_STOP);
+                        }
+                    } else if (Sample == SamplingOrderDetector.GoldLocation.RIGHT) {
+                        if (now < 0.15) {
+                            Drive.turnRight(0.4);
+                        } else if (now < 0.25) {
                             Drive.stop();
                         }
                         //Sample right to move forward
                         else if (now < 1.45) {
                             Drive.moveForward(0.5);
-                        }
-                        else {
+                        } else {
                             newState(State.STATE_STOP);
                         }
-                    }
-                    else {
-                        if (now < 1.25){
+                    } else {
+                        if (now < 1.25) {
                             Drive.moveForward(0.5);
-                        }
-                        else {
+                        } else {
                             newState(State.STATE_STOP);
                         }
                     }
@@ -192,63 +182,51 @@ public class auto extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
-                    if (sample == PracticeSample.Left){
-                        if (now < 0.15){
+                    if (Sample == SamplingOrderDetector.GoldLocation.LEFT) {
+                        if (now < 0.15) {
                             Drive.turnLeft(0.4);
-                        }
-                        else if (now < 0.3){
+                        } else if (now < 0.3) {
                             Drive.stop();
                         }
                         //Sample left to move forward (test before adjusting)
                         else if (now < 1.5) {
 
                             Drive.moveForward(0.55);
-                        }
-                        else if (now < 1.65){
+                        } else if (now < 1.65) {
                             Drive.stop();
-                        }
-                        else if(now < 2.1){
+                        } else if (now < 2.1) {
                             Drive.turnRight(0.4);
-                        }
-                        else {
+                        } else {
                             newState(State.STATE_STOP);
                         }
-                    }
-                    else if (sample == PracticeSample.Right){
-                        if (now < 0.15){
+                    } else if (Sample == SamplingOrderDetector.GoldLocation.RIGHT) {
+                        if (now < 0.15) {
                             Drive.turnRight(0.4);
-                        }
-                        else if (now < 0.25){
+                        } else if (now < 0.25) {
                             Drive.stop();
                         }
                         //Sample right to move forward
                         else if (now < 1.45) {
                             Drive.moveForward(0.5);
-                        }
-                        else {
+                        } else {
                             newState(State.STATE_STOP);
                         }
                     }
                     //Center
                     else {
-                        if (now < 2.3){
+                        if (now < 2.3) {
                             Drive.moveForward(0.5);
-                        }
-                        else if (now < 2.4 ){
+                        } else if (now < 2.4) {
                             Drive.stop();
-                        }
-                        else if (now < 2.8){
+                        } else if (now < 2.8) {
                             Drive.turnLeft(0.4);
-                        }
-                        else if (now < 3.8){
+                        } else if (now < 3.8) {
                             Drive.stop();
                             Claimer.drop();
-                        }
-                        else if(now < 7.5){
+                        } else if (now < 7.5) {
                             Claimer.reset();
                             Drive.moveBackward(0.5);
-                        }
-                        else {
+                        } else {
                             newState(State.STATE_STOP);
                         }
                     }
