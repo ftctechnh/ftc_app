@@ -17,6 +17,10 @@ public class RobotLiftController extends SubsystemController{
         robotLift = new RobotLift(hardwareMap);
     }
 
+    public void robotLiftUp(){robotLift.setLiftPower(0.5);}
+    public void robotLiftStop(){robotLift.setLiftPower(0);}
+    public void robotLiftDown(){robotLift.setLiftPower(-0.5);}
+
     @Override
     public synchronized void stop() {
         robotLift.stop();
