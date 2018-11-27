@@ -180,7 +180,19 @@ public class Robot extends AbstractRobot{
 
     }
 
+    public Callable moveRobotLiftToTopCallable(){
+        return ()->{
+          hardware.robotLift.robotLiftTop();
+          return true;
+        };
+    }
 
+    public Callable moveRobotLiftToBottomCallable(){
+        return ()->{
+            hardware.robotLift.robotLiftBottom();
+            return true;
+        };
+    }
 }
 
 
