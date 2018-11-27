@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -20,6 +21,7 @@ import java.util.concurrent.TimeoutException;
 // Create a new event with 'emit'. Register event handlers with 'on'.
 public class Emitter {
     private ConcurrentHashMap<String, Callable<Boolean>> EventRegistry = new ConcurrentHashMap<>();
+    private ArrayList<String> PausedEvents = new ArrayList<>();
     private ExecutorService service;
 
     private ConcurrentHashMap<String, Future<Boolean>> cache;
@@ -35,13 +37,25 @@ public class Emitter {
         EventRegistry.put(eventName,eventHandler);
     }
 
+    public void pauseEvent(String name){
+        PausedEvents.add(name);
+    }
+
+    public void resumeEvent(String name){
+        PausedEvents.remove(name);
+    }
+
     // Send a named event.
     //
     // This will run all event handlers registered to this event. Each event handler will be
     // executed inside of the executor service, which means events may be handled in parallel.
-    public Future<Boolean> emit(String eventName) throws RuntimeException {
-        Future<Boolean> f = fire(eventName);
-        this.cache.put(eventName, f);
+    public Future<Boolean> emit(String name) throws RuntimeException {
+        for(String pausedName:PausedEvents){
+            if(pausedName.equals(name))return new EmptyResult();
+        }
+
+        Future<Boolean> f = fire(name);
+        this.cache.put(name, f);
         return f;
     }
 

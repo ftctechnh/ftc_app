@@ -217,6 +217,14 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         emitter.on(name, event);
     }
 
+    public void pauseEvent(String name){
+        emitter.pauseEvent(name);
+    }
+
+    public void resumeEvent(String name){
+        emitter.resumeEvent(name);
+    }
+
     private void checkEvents() {
         if(emitTime.milliseconds()-emitTimeOffset<1)return;
         emitTimeOffset++;

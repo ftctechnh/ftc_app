@@ -10,6 +10,7 @@ import java.util.concurrent.Callable;
 public class Robot extends AbstractRobot{
 
     private HardwareDevices hardware;
+    private boolean mineralGateOpen = false;
 
     public Robot(){
         hardware = new HardwareDevices();
@@ -143,4 +144,16 @@ public class Robot extends AbstractRobot{
         hardware.mineralLift.closeGate();
     }
 
+    public Callable toggleMineralGateCallable(){
+        return ()-> {
+            if (mineralGateOpen) {
+                closeMineralGate();
+                mineralGateOpen = false;
+            } else {
+                openMineralGate();
+                mineralGateOpen = true;
+            }
+            return true;
+        };
+    }
 }
