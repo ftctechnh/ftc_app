@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
 {
     Bogg robot;
+    Auto auto;
     Mode action;
-    ElapsedTime timer;
 
     private enum Mode
     {
@@ -22,46 +22,38 @@ public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
-        robot.driveEngine.driveAtAngle(Math.PI);
+        auto = new Auto(robot);
         action = Mode.Stop;
 
         waitForStart();
         action = Mode.Drop;
-        timer = new ElapsedTime();
 
         while (opModeIsActive())
         {
-            double t = timer.seconds();
             switch(action)
             {
                 case Drop:
-                    if (t < 4) //for the first second
-                    {
-                        robot.lift(-0.7); //pull while we
-                        robot.setBrake(false); //disengage the brake
-                    } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
-                    {
-                        robot.lift(.2); //push up, which drops the robot
-                    }
-                    else //if we are touching the ground
+                    if(auto.isDoneDropping())
                         action = Mode.Stop;
+                    else
+                        auto.drop();
                     break;
 
 
-                default: //if action !Drop e.g. Stop
-                    robot.driveEngine.drive(0,0); //Stop driving
-                    robot.lift(0); //Stop Lifting
+                default:
+                    auto.stop();
 
             }
 
             // Display the current values
-            telemetry.addData("time: ", t);
+            telemetry.addData("time: ", auto.getTime());
             telemetry.addData("brake position: ", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
             telemetry.addData("mode", action);
             telemetry.update();
             idle();
         }
+        auto.stop();
     }
 
 

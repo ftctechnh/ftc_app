@@ -8,6 +8,10 @@ public class DriveEngine {
     DcMotor right;
     DcMotor left;
 
+    private static final double ticksPerRev = 1120;
+    private static final double inPerRev = Math.PI * 5;
+    public static final double inPerTicks = inPerRev /ticksPerRev;
+
     double theta;
 
     public DriveEngine(HardwareMap hardwareMap) {

@@ -10,10 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class autonomousDrive_DropSlide extends LinearOpMode
 {
     Bogg robot;
+    Auto auto;
     Mode action;
-    ElapsedTime timer;
-    final double ticksPerRev = 2240;
-    final double inPerRev = Math.PI * 5;
 
     private enum Mode
     {
@@ -27,56 +25,35 @@ public class autonomousDrive_DropSlide extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
-        robot.driveEngine.driveAtAngle(Math.PI);
-        action = Mode.Stop;
+        auto = new Auto(robot);
         robot.sensors.rotateMobileX(0);
 
         waitForStart();
         action = Mode.Drop;
-        timer = new ElapsedTime();
 
         while (opModeIsActive())
         {
-            double t = timer.seconds();
             switch(action)
             {
                 case Drop:
-                    if (t < 4) //for the first second
-                    {
-                        robot.lift(-0.7); //pull while we
-                        robot.setBrake(false); //disengage the brake
-                    } else if (robot.sensors.dMobile.getDistance(DistanceUnit.INCH) > 2.8) //if the robot is still off the ground
-                    {
-                        robot.lift(.2); //push up, which drops the robot
-                    }
-                    else {
-                        timer.reset();
+                    if(auto.isDoneDropping())
                         action = Mode.Slide;
-                    }
+                    else
+                        auto.drop();
                     break;
                 case Slide:
-                    if(t < .3) //for an additional .3 seconds
-                    {
-                        robot.lift(.2); //drop a bit more
-                    }
-                    else if(encoderTest(4)) //the back encoder has moved less than 4 inches
-                    {
-                        robot.lift(0); //stop the lift motor
-                        robot.driveEngine.drive(.4,0); //drive to the side to unhook
-                    }
-                    else //if the robot has unhooked
+                    if(auto.isDoneSliding())
                         action = Mode.Stop;
+                    else
+                        auto.slide();
                     break;
-
-
-                default: //if action !Drop e.g. Stop
-                    robot.driveEngine.drive(0,0); //Stop driving
-                    robot.lift(0); //Stop Lifting
+                default:
+                    auto.stop();
 
             }
 
             // Display the current values
-            telemetry.addData("time: ", t);
+            telemetry.addData("time: ", auto.getTime());
             telemetry.addData("dMobile: ", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
             telemetry.addData("brake position: ", robot.brake.getPosition());
             telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
@@ -87,10 +64,6 @@ public class autonomousDrive_DropSlide extends LinearOpMode
         }
     }
 
-    public boolean encoderTest(double back_distance)
-    {
-        return robot.driveEngine.back.getCurrentPosition() / ticksPerRev * inPerRev < back_distance;
-    }
 
 
 }
