@@ -156,4 +156,32 @@ public class Robot extends AbstractRobot{
             return true;
         };
     }
+
+    public Callable robotLiftUp (){
+        return ()->{
+            hardware.robotLift.robotLiftUp();
+            return true;};
+
+    }
+
+    public Callable robotLiftDown (){
+        return ()->{
+            hardware.robotLift.robotLiftDown();
+            return true;
+        };
+
+    }
+
+    public Callable robotLiftStop () {
+        return () -> {
+            hardware.robotLift.robotLiftStop();
+            return true;
+        };
+
+    }
+
+
 }
+
+
+
