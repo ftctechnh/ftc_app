@@ -130,11 +130,16 @@ public class TensorFlowSystem extends LinearOpMode {
                     if (updatedRecognitions != null) {
 
                         telemetry.addData("# Object Detected", updatedRecognitions.size());
-                        if (updatedRecognitions.size() > 0 && updatedRecognitions.size() <= 3) {
+                        if (updatedRecognitions.size() > 0) {
+                            int currentGoldHeight = 0;
+
                             //Log.i(TAG, "number of thing seen: " + updatedRecognitions.size());
                             for (Recognition recognition : updatedRecognitions) {
+
                                 //Log.i(TAG, "image width: " + recognition.getImageHeight());
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    
+
                                     goldMineralX = (int) recognition.getBottom();
                                     //Log.i(TAG, "goldX: " + goldMineralX);
                                 } else if (silverMineral1X == -1) {
