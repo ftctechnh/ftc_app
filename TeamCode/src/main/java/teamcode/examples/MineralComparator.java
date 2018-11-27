@@ -11,11 +11,11 @@ public class MineralComparator implements Comparator<Mineral> {
 
     @Override
     public int compare(Mineral mineral, Mineral t1) {
-        if (mineral.getLeft() < t1.getLeft()) {
+        if (mineral.getBottom() < t1.getBottom()) {
             return -1;
         }
 
-        if (mineral.getLeft() > t1.getLeft()) {
+        if (mineral.getBottom() > t1.getBottom()) {
             return 1;
         }
 
