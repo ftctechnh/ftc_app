@@ -30,6 +30,7 @@ public class KKL2Auto extends LinearOpMode {
         unlatch();
 
         turn(Math.PI);
+
     }
 
     private void drive(double centimeters, double power) {
