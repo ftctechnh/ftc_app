@@ -16,7 +16,9 @@ public class VisionManager {
     public VisionManager() {
     }
 
-    public VuforiaLocalizer getVuforia() { return vuforia; }
+    public VuforiaLocalizer getVuforia() {
+        return vuforia;
+    }
 
     public void initialize() {
         /*

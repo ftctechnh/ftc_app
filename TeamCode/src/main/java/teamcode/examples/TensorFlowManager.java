@@ -47,8 +47,7 @@ public class TensorFlowManager {
 
             Collections.sort(minerals, new MineralComparator());
             return minerals;
-        }
-        else {
+        } else {
             return null;
         }
     }

@@ -30,10 +30,27 @@ public class Mineral {
         this.isGold = recognition.getLabel().equals(TensorFlowManager.LABEL_GOLD_MINERAL);
     }
 
-    public float getLeft() { return this.left; }
-    public float getRight() { return this.right; }
-    public float getTop() { return this.top; }
-    public float getBottom() { return this.bottom; }
-    public float getConfidence() { return this.confidence; }
-    public boolean isGold() { return this.isGold; }
+    public float getLeft() {
+        return this.left;
+    }
+
+    public float getRight() {
+        return this.right;
+    }
+
+    public float getTop() {
+        return this.top;
+    }
+
+    public float getBottom() {
+        return this.bottom;
+    }
+
+    public float getConfidence() {
+        return this.confidence;
+    }
+
+    public boolean isGold() {
+        return this.isGold;
+    }
 }

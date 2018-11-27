@@ -19,6 +19,7 @@ public class KKL2Auto extends LinearOpMode {
         resetDriveEncoders();
 
         turn(Math.PI);
+
     }
 
     private void drive(double centimeters, double power) {
