@@ -143,7 +143,6 @@ public class Robot extends AbstractRobot{
         hardware.mineralLift.closeGate();
     }
 
-}
 
     public Callable robotLiftUp (){
         return ()->{
