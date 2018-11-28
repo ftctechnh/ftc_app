@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
+import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SamplingOrderExample;
 import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
@@ -15,17 +16,17 @@ import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
 @Autonomous(name = "Auto2", group = "Drive")
 public class auto2 extends LinearOpMode {
 
-    /* Methods */
+    /* Subassembly Constructors */
     DriveControl Drive = new DriveControl();
-    //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
+    VucamControl Vucam = new VucamControl();
     IMUcontrol imu = new IMUcontrol();
     private ElapsedTime runtime = new ElapsedTime();
 
-    /* Arrays */
+    /* Methods */
 
-    //State changing array
+    //State changing method
     private void newState(State newState) {
         mCurrentState = newState;
         Drive.stop();
@@ -33,25 +34,24 @@ public class auto2 extends LinearOpMode {
         resetClock();
     }
 
-    //Start array
+    //Start method
     public void startPosition() {
         telemetry.addLine("Is the starting position facing the crater?");
         telemetry.update();
-        while (!gamepad1.a && !gamepad1.b){
+        while (!gamepad1.a && !gamepad1.b) {
         }
 
         if (gamepad1.a) {
             telemetry.addLine("Crater");
             orientation = Start.Crater;
-        }
-        else{
+        } else {
             telemetry.addLine("Depot");
             orientation = Start.Depot;
         }
     }
 
-    //Sample position testing array
-    public void samplePosition() {
+    //Sample position testing method
+    /*public void samplePosition() {
         telemetry.addLine("Sample position?");
         telemetry.update();
         while (!gamepad1.dpad_down && !gamepad1.dpad_right && !gamepad1.dpad_left){
@@ -59,17 +59,17 @@ public class auto2 extends LinearOpMode {
 
         if (gamepad1.dpad_down) {
             telemetry.addLine("Center");
-            sample = PracticeSample.Center;
+            Vucam.sample = Vucam.sample.Center;
         }
         else if (gamepad1.dpad_right){
             telemetry.addLine("Right");
-            sample = PracticeSample.Right;
+            Vucam.sample = Vucam.sample.Right;
         }
         else {
             telemetry.addLine("Left");
-            sample = PracticeSample.Left;
+            Vucam.sample = Vucam.sample.Left;
         }
-    }
+    }*/
 
     public void resetClock() {
         //resets the clock
@@ -94,16 +94,9 @@ public class auto2 extends LinearOpMode {
         Depot
     }
 
-    private enum PracticeSample {
-        Left,
-        Right,
-        Center
-    }
-
     //Enum variables (creates variables of the enum variable types previously created)
     private State mCurrentState;
     private Start orientation;
-    private PracticeSample sample;
 
     //time based variables
     double lastReset = 0;
@@ -114,6 +107,7 @@ public class auto2 extends LinearOpMode {
 
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
+        Vucam.init(hardwareMap);
         imu.init(hardwareMap);
         //Sample.init();
 
@@ -121,14 +115,11 @@ public class auto2 extends LinearOpMode {
 
         startPosition();
 
-        sample = PracticeSample.Center;
-
-
         AutoTransitioner.transitionOnStop(this, "teleOp");
 
         telemetry.update();
         waitForStart();
-//put sample position code here
+        Vucam.setSamplePos();
         newState(State.STATE_INITIAL);
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
@@ -154,45 +145,42 @@ public class auto2 extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (sample == PracticeSample.Left){
-                       Drive.turnLeft(0.4, 0.15);
-                       Drive.TimeDelay(0.15);
-                       Drive.moveForward(0.55,1.15);
-                       newState(State.STATE_STOP);
-                         }
-                    else if (sample == PracticeSample.Right){
+                    if (Vucam.sample == Vucam.sample.Left) {
+                        Drive.turnLeft(0.4, 0.15);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveForward(0.55, 1.15);
+                        newState(State.STATE_STOP);
+                    } else if (Vucam.sample == Vucam.sample.Right) {
 
-                       Drive.turnRight(0.4, 0.15);
-                       Drive.TimeDelay(0.1);
-                       Drive.moveForward(0.5, 1.20);
-                       newState(State.STATE_STOP);
+                        Drive.turnRight(0.4, 0.15);
+                        Drive.TimeDelay(0.1);
+                        Drive.moveForward(0.5, 1.20);
+                        newState(State.STATE_STOP);
 
-                    }
-                    else {
+                    } else {
                         Drive.moveForward(0.5, 1.25);
                         newState(State.STATE_STOP);
                     }
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
-                    if (sample == PracticeSample.Left){
-                         Drive.turnLeft(0.4, 0.15);
-                         Drive.TimeDelay(0.15);
-                         Drive.moveForward(0.55, 1.2);
-                         Drive.TimeDelay(0.15);
-                         Drive.turnRight(0.4, 0.36);
-                         newState(State.STATE_STOP);
-                    }
-
-                    else if (sample == PracticeSample.Right){
-                            Drive.turnRight(0.4, 0.15);
-                            Drive.moveForward(0.5, 1.2);
-                            newState(State.STATE_STOP);
+                    if (Vucam.sample == Vucam.sample.Left) {
+                        Drive.turnLeft(0.4, 0.15);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveForward(0.55, 1.2);
+                        Drive.TimeDelay(0.15);
+                        Drive.turnRight(0.4, 0.36);
+                        newState(State.STATE_STOP);
                     }
                     //Center
-                    else {
+                    else if (Vucam.sample == Vucam.sample.Center) {
                         Drive.moveForward(0.5, 2.2);
                         newState(State.STATE_CLAIM);
+                    }
+                    else {
+                    Drive.turnRight(0.4, 0.15);
+                    Drive.moveForward(0.5, 1.2);
+                    newState(State.STATE_STOP);
                     }
                     break;
 
