@@ -21,10 +21,11 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         waitForStart();
         compRobot.driveStraight(10,.6f);
         compRobot.pivotenc(90, .6f);
-        while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 24 && compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 24)
+        while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 22 && compRobot.getFrontRightDistSens().getDistance(DistanceUnit.INCH) > 22)
         {
             compRobot.driveMotors(.2f, .2f);
         }
+        compRobot.stopDriveMotors();
         {
             if (vuforiaFunctions.hasSeenTarget())
             {
@@ -36,7 +37,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
                 telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
                 sleep(1000);
                 yawAngle = vuforiaFunctions.getYawDeg();
-                yawAngleTurn = 115 - yawAngle;
+                yawAngleTurn = 105 - yawAngle;
                 compRobot.pivotenc(yawAngleTurn, .6f);
             }
             else
@@ -48,19 +49,14 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
             telemetry.update();
         }
 
-        /*compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 18, true);
+        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 24, true);
         //The hug wall code in the method is a bit different than the one that was in the original auto file
         //make sure that it still runs as intended.
 
         telemetry.addData("Stopped", null);
         sleep(2000); //drop team marker into depot
         telemetry.update();
-
-        compRobot.pivotenc(90, .8f);
-        compRobot.driveStraight(96, .6f);
+        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 36, false);
         compRobot.stopDriveMotors();
-
-
-       // compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 18, false); */
     }
 }
