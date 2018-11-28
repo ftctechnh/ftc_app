@@ -128,7 +128,7 @@ public class VucamControl {
     }
 
     public void setSamplePos() {
-        if (detector.getXPosition() < 250) {
+        if (detector.getXPosition() > 0 && detector.getXPosition() < 250) {
             sample = Sample.Left;
         }
         else if (detector.getXPosition() > 250 && detector.getXPosition() < 450) {
