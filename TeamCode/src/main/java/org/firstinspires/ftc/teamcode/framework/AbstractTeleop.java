@@ -240,31 +240,52 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             emitTimeOffset = 0;
             emitTime.reset();
         }
-        //emitter.refresh(telemetry);
 
         // boolean buttons
-        checkBooleanInput("a", gamepad1.a);
-        checkBooleanInput("b", gamepad1.b);
-        checkBooleanInput("x", gamepad1.x);
-        checkBooleanInput("y", gamepad1.y);
-        checkBooleanInput("lb", gamepad1.left_bumper);
-        checkBooleanInput("rb", gamepad1.right_bumper);
-        checkBooleanInput("dpl", gamepad1.dpad_left);
-        checkBooleanInput("dpr", gamepad1.dpad_right);
-        checkBooleanInput("dpu", gamepad1.dpad_up);
-        checkBooleanInput("dpd", gamepad1.dpad_down);
-        checkBooleanInput("start", gamepad1.start);
-        checkBooleanInput("back", gamepad1.back);
-        checkBooleanInput("lsb", gamepad1.left_stick_button);
-        checkBooleanInput("rsb", gamepad1.right_stick_button);
+        checkBooleanInput("1_a", gamepad1.a);
+        checkBooleanInput("1_b", gamepad1.b);
+        checkBooleanInput("1_x", gamepad1.x);
+        checkBooleanInput("1_y", gamepad1.y);
+        checkBooleanInput("1_lb", gamepad1.left_bumper);
+        checkBooleanInput("1_rb", gamepad1.right_bumper);
+        checkBooleanInput("1_dpl", gamepad1.dpad_left);
+        checkBooleanInput("1_dpr", gamepad1.dpad_right);
+        checkBooleanInput("1_dpu", gamepad1.dpad_up);
+        checkBooleanInput("1_dpd", gamepad1.dpad_down);
+        checkBooleanInput("1_start", gamepad1.start);
+        checkBooleanInput("1_back", gamepad1.back);
+        checkBooleanInput("1_lsb", gamepad1.left_stick_button);
+        checkBooleanInput("1_rsb", gamepad1.right_stick_button);
+
+        checkBooleanInput("2_a", gamepad1.a);
+        checkBooleanInput("2_b", gamepad1.b);
+        checkBooleanInput("2_x", gamepad1.x);
+        checkBooleanInput("2_y", gamepad1.y);
+        checkBooleanInput("2_lb", gamepad1.left_bumper);
+        checkBooleanInput("2_rb", gamepad1.right_bumper);
+        checkBooleanInput("2_dpl", gamepad1.dpad_left);
+        checkBooleanInput("2_dpr", gamepad1.dpad_right);
+        checkBooleanInput("2_dpu", gamepad1.dpad_up);
+        checkBooleanInput("2_dpd", gamepad1.dpad_down);
+        checkBooleanInput("2_start", gamepad1.start);
+        checkBooleanInput("2_back", gamepad1.back);
+        checkBooleanInput("2_lsb", gamepad1.left_stick_button);
+        checkBooleanInput("2_rsb", gamepad1.right_stick_button);
 
         // float buttons
-        checkFloatInput("lt", gamepad1.left_trigger);
-        checkFloatInput("rt", gamepad1.right_trigger);
-        checkFloatInput("lsx", gamepad1.left_stick_x);
-        checkFloatInput("lsy", gamepad1.left_stick_y);
-        checkFloatInput("rsx", gamepad1.right_stick_x);
-        checkFloatInput("rsy", gamepad1.right_stick_y);
+        checkFloatInput("1_lt", gamepad1.left_trigger);
+        checkFloatInput("1_rt", gamepad1.right_trigger);
+        checkFloatInput("1_lsx", gamepad1.left_stick_x);
+        checkFloatInput("1_lsy", gamepad1.left_stick_y);
+        checkFloatInput("1_rsx", gamepad1.right_stick_x);
+        checkFloatInput("1_rsy", gamepad1.right_stick_y);
+
+        checkFloatInput("2_lt", gamepad1.left_trigger);
+        checkFloatInput("2_rt", gamepad1.right_trigger);
+        checkFloatInput("2_lsx", gamepad1.left_stick_x);
+        checkFloatInput("2_lsy", gamepad1.left_stick_y);
+        checkFloatInput("2_rsx", gamepad1.right_stick_x);
+        checkFloatInput("2_rsy", gamepad1.right_stick_y);
 
         //Check user events
         UpdateEvents();

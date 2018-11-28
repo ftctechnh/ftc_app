@@ -6,16 +6,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-public abstract class AbstractAuton extends AbstractOpMode {
-
-    private boolean threadRunning = false;
+public abstract class AbstractAutonNew extends AbstractOpMode {
 
     private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
 
-    public AbstractAuton() {
+    private StateMachine stateMachine = new StateMachine();
+
+    public AbstractAutonNew() {
 
     }
 
@@ -24,35 +26,77 @@ public abstract class AbstractAuton extends AbstractOpMode {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 
-        Thread InitThread = new Thread(new initThread());
-        Thread InitLoopThread = new Thread(new initloopThread());
-        Thread RunThread = new Thread(new runThread());
+        Callable<Boolean> InitThread = () -> {
+            try {
+                Init();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
+        Callable<Boolean> InitLoopThread = () -> {
+            try {
+                InitLoop();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
 
-        threadRunning = true;
-        service.execute(InitThread);
+        Future<Boolean> CurrentFuture;
+
+        RegisterStates();
+
+        try {
+            stateMachine.prepare();
+        } catch (StateConfigurationException e) {
+            exceptions.add(e);
+        }
+
+        checkException();
+
+        //calls user init
+        CurrentFuture = service.submit(InitThread);
+
+        telemetry.addData("Init");
+        telemetry.update();
+
+        int initLoops = 0;
+
+        telemetry.addData("Init Loop");
+        telemetry.update();
 
         while (!isStopRequested() && !isStarted()) {
             checkException();
-            if (!threadRunning) {
-                threadRunning = true;
-                service.execute(InitLoopThread);
+
+            if (CurrentFuture.isDone()) {
+                initLoops++;
+                CurrentFuture = service.submit(InitLoopThread);
             }
         }
 
-        while (!isStopRequested() && opModeIsActive() && threadRunning) ;
+        telemetry.addData(initLoops + " Init Loops");
+        telemetry.update();
 
-        threadRunning = true;
-        if(!isStopRequested() && opModeIsActive())service.execute(RunThread);
+        while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 
-        while (!isStopRequested() && opModeIsActive() && threadRunning) {
+        telemetry.addData("Starting");
+        telemetry.update();
+
+        while (opModeIsActive()) {
             checkException();
+
+            stateMachine.update();
         }
+
+        telemetry.addData("Stopping");
+        telemetry.update();
 
         AbstractOpMode.stopRequested();
 
-        if ((isStopRequested() || !opModeIsActive()) && threadRunning) {
-            service.shutdownNow();
-        }
+        //TODO remake our shutdown procedure
+        CurrentFuture.cancel(true);
+        stateMachine.shutdown();
 
         while (!service.isTerminated()) {
             service.shutdownNow();
@@ -62,16 +106,18 @@ public abstract class AbstractAuton extends AbstractOpMode {
         Stop();
     }
 
+    public abstract void RegisterStates();
+
     public abstract void Init();
 
     public void InitLoop() {
 
     }
 
-    public abstract void Run();
+    public abstract void Stop();
 
-    public void Stop() {
-
+    public void addState(State state) {
+        stateMachine.addState(state);
     }
 
     private void throwException(Exception e) {
@@ -123,46 +169,18 @@ public abstract class AbstractAuton extends AbstractOpMode {
                     VuforiaException exception = (VuforiaException) e;
                     throw exception;
                 }
+                case "StateConfigurationException": {
+                    telemetry.update();
+                    AbstractOpMode.delay(500);
+                    StateConfigurationException exception = (StateConfigurationException) e;
+                    throw exception;
+                }
                 default: {
                     telemetry.addData(e.getClass().getSimpleName());
                     telemetry.update();
                     AbstractOpMode.delay(2000);
                 }
             }
-        }
-    }
-
-    class initThread implements Runnable {
-        public void run() {
-            try {
-                Init();
-            } catch (Exception e) {
-                throwException(e);
-            }
-            threadRunning = false;
-        }
-    }
-
-    class initloopThread implements Runnable {
-        public void run() {
-            try {
-                InitLoop();
-            } catch (Exception e) {
-                throwException(e);
-            }
-
-            threadRunning = false;
-        }
-    }
-
-    class runThread implements Runnable {
-        public void run() {
-            try {
-                Run();
-            } catch (Exception e) {
-                throwException(e);
-            }
-            threadRunning = false;
         }
     }
 }

@@ -14,35 +14,35 @@ public class BoogieTeleOp extends AbstractTeleop {
 
     @Override
     public void RegisterEvents() {
-        addEventHandler("lsy_change", () -> {
+        addEventHandler("1_lsy_change", () -> {
             robot.setDriveY(gamepad1.left_stick_y);
             return true;
         });
 
-        addEventHandler("rsx_change", () -> {
+        addEventHandler("1_rsx_change", () -> {
             robot.setDriveZ(gamepad1.right_stick_x);
             return true;
         });
 
-        addEventHandler("b_down", robot.finishIntakingCallable());
+        addEventHandler("1_b_down", robot.finishIntakingCallable());
 
-        addEventHandler("a_down", robot.beginIntakingCallable());
+        addEventHandler("1_a_down", robot.beginIntakingCallable());
 
-        addEventHandler("y_down", robot.reverseIntakeCallable());
+        addEventHandler("1_y_down", robot.reverseIntakeCallable());
 
-        //addEventHandler("x_down", robot.moveMineralLiftToCollectPositionCallable());
+        //addEventHandler("1_x_down", robot.moveMineralLiftToCollectPositionCallable());
 
-        //addEventHandler("y_down", robot.moveMineralLiftToDumpPositionCallable());
+        //addEventHandler("1_y_down", robot.moveMineralLiftToDumpPositionCallable());
 
-        addEventHandler("rt_down", robot.moveMineralLiftToDumpPositionCallable());
+        addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
 
-        addEventHandler("lt_down", robot.moveMineralLiftToCollectPositionCallable());
+        addEventHandler("1_lt_down", robot.moveMineralLiftToCollectPositionCallable());
 
-        addEventHandler("x_down", robot.toggleMineralGateCallable());
+        addEventHandler("1_x_down", robot.toggleMineralGateCallable());
 
-        addEventHandler("dpu_down", robot.moveRobotLiftToTopCallable());
+        addEventHandler("1_dpu_down", robot.moveRobotLiftToTopCallable());
 
-        addEventHandler("dpd_down", robot.moveRobotLiftToBottomCallable());
+        addEventHandler("1_dpd_down", robot.moveRobotLiftToBottomCallable());
 
         /*addEventHandler("lt_change", ()->{
             if(gamepad1.left_trigger>0.5) robot.moveMineralLiftToCollectPosition();

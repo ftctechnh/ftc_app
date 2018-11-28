@@ -19,13 +19,12 @@ import java.util.concurrent.TimeoutException;
 public class Emitter {
     private ConcurrentHashMap<String, Callable<Boolean>> EventRegistry = new ConcurrentHashMap<>();
     private ArrayList<String> PausedEvents = new ArrayList<>();
-    private ExecutorService service;
+    private ConcurrentHashMap<String, Future<Boolean>> cache = new ConcurrentHashMap<>();
 
-    private ConcurrentHashMap<String, Future<Boolean>> cache;
+    private ExecutorService service;
 
     public Emitter() {
         service = Executors.newCachedThreadPool();
-        cache = new ConcurrentHashMap<String, Future<Boolean>>();
     }
 
     // Register a new event handler.
