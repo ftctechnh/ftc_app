@@ -88,10 +88,16 @@ public class DriveSystem4Wheel extends System
                 motorBackRight.setDirection(DcMotorSimple.Direction.REVERSE);
                 motorBackLeft.setDirection(DcMotorSimple.Direction.REVERSE);
                 break;
+            case ALL_FORWARD:
+                motorBackRight.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorFrontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorBackLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                motorFrontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+                break;
         }
     }
 
     public enum DriveDirection {
-        FORWARD, BACKWARD;
+        FORWARD, BACKWARD, ALL_FORWARD;
     }
 }

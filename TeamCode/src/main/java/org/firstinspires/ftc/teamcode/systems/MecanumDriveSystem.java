@@ -51,6 +51,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
 
     // test
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
+        setDirection(DriveDirection.FORWARD);
         rightX = Range.clip(rightX, -1, 1);
         leftX = Range.clip(leftX, -1, 1);
         leftY = Range.clip(leftY, -1, 1);
@@ -60,10 +61,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         leftY = scaleJoystickValue(leftY);
 
         // write the values to the motors 1
-        double frontRightPower = leftY + leftX + rightX;
+        double frontRightPower = -leftY - leftX - rightX;
         double backRightPower = -leftY + leftX + rightX;
         double frontLeftPower = -leftY + leftX - rightX;
-        double backLeftPower = leftY + leftX - rightX;
+        double backLeftPower = -leftY - leftX + rightX;
 
         this.motorFrontRight.setPower(Range.clip(frontRightPower, -1, 1));
         telemetry.log("Mecanum Drive System","FRpower: {0}", Range.clip(frontRightPower, -1, 1));
