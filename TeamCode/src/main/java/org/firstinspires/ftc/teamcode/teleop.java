@@ -47,7 +47,7 @@ public class teleop extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-            // Ready Player One
+            //Ready Player One
 
             //speed control
             if (egamepad1.right_bumper.pressed) {
@@ -77,8 +77,7 @@ public class teleop extends LinearOpMode {
                 Drive.turnLeft(speed/2);
             }
             else { Drive.stop();}
-
-
+            
             //Ready Player Two
 
             if ((egamepad2.dpad_up.state) && (!Lift.LifterButtonT.isPressed())) {
@@ -89,7 +88,7 @@ public class teleop extends LinearOpMode {
                 Lift.Stop();
             }
 
-            if (egamepad2.x.released) {
+            if (egamepad2.a.released) {
                 Lift.Lock();
             }
             else if (egamepad2.b.released) {
@@ -98,13 +97,11 @@ public class teleop extends LinearOpMode {
 
             telemetry.addLine("Speed: " + speed);
 
-
             //SubAssembly.test();
             telemetry.update();
 
             //let the robot have a little rest, sleep is healthy
             sleep(40);
         }
-
     }
 }
