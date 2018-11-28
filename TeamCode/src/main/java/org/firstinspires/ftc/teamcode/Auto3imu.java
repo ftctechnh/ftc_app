@@ -165,9 +165,9 @@ public class Auto3imu extends LinearOpMode {
             switch (mCurrentState) {
                 case STATE_LAND:
                     //Lift.Unlock();
-                    /*while(!Lift.LifterButtonT.isPressed()) {
+                   while(!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
-                    }*/
+                    }
                     sleep(1000);
                     newState(State.STATE_ADJUST);
                     break;
