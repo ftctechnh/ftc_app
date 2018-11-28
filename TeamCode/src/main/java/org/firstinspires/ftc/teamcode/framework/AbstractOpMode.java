@@ -23,11 +23,11 @@ public abstract class AbstractOpMode extends LinearOpMode {
         return hwMap;
     }
 
-    public static OpMode getOpModeInstance(){
+    public static OpMode getOpModeInstance() {
         return opmode;
     }
 
-    public AbstractOpMode(){
+    public AbstractOpMode() {
         opmode = this;
         linearOpMode = this;
         hwMap = this.hardwareMap;
@@ -37,7 +37,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     @Override
     public abstract void runOpMode();
 
-    public static void delay(int millis){
+    public static void delay(int millis) {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException e) {
@@ -45,11 +45,11 @@ public abstract class AbstractOpMode extends LinearOpMode {
         }
     }
 
-    public static boolean isOpModeActive(){
+    public static boolean isOpModeActive() {
         return !linearOpMode.isStopRequested();
     }
 
-    protected static void stopRequested(){
+    protected static void stopRequested() {
         Dashboard.onOpModePreStop();
     }
 }

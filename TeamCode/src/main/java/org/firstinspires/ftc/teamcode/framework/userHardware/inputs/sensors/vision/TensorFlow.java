@@ -26,7 +26,7 @@ public class TensorFlow {
 
     private CameraOrientation orientation;
 
-    public TensorFlow(){
+    public TensorFlow() {
         this(CameraOrientation.VIRTICAL);
     }
 
@@ -39,7 +39,7 @@ public class TensorFlow {
     }
 
     public TensorFlow(CameraOrientation cameraOrientation, boolean led) {
-        this(cameraOrientation,"BACK", led);
+        this(cameraOrientation, "BACK", led);
     }
 
     public TensorFlow(CameraOrientation cameraOrientation, String camera, boolean led) {
@@ -47,7 +47,7 @@ public class TensorFlow {
 
         do {
             vuforia = new VuforiaImpl(camera, false);
-        } while (vuforia.getVuforia().getCameraCalibration()==null);
+        } while (vuforia.getVuforia().getCameraCalibration() == null);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfodWithViewer();
@@ -62,7 +62,7 @@ public class TensorFlow {
 
         do {
             vuforia = new VuforiaImpl(camera, false);
-        } while (vuforia.getVuforia().getCameraCalibration()==null);
+        } while (vuforia.getVuforia().getCameraCalibration() == null);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfodWithoutViewer();
@@ -86,23 +86,23 @@ public class TensorFlow {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
-    public void start(){
+    public void start() {
         tfod.activate();
     }
-    
-    public void pause(){
+
+    public void pause() {
         tfod.deactivate();
     }
 
-    public void stop(){
+    public void stop() {
         tfod.shutdown();
     }
 
-    public void setLED(boolean on){
+    public void setLED(boolean on) {
         vuforia.setLED(on);
     }
 
-    public SamplePosition getSamplePosition(){
+    public SamplePosition getSamplePosition() {
         SamplePosition position = SamplePosition.UNKNOWN;
 
         if (tfod != null) {
@@ -112,32 +112,34 @@ public class TensorFlow {
             List<Recognition> updatedRecognitions = tfod.getRecognitions();
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
-                for(Recognition recognition:updatedRecognitions){
+                for (Recognition recognition : updatedRecognitions) {
                     minerals.add(new Mineral(recognition));
                 }
-                
-                if(minerals.size()>=3)position = samplePositionFromThreeMinerals(minerals);
-                else if(minerals.size()>0)position = samplePositionFromOneMineral(minerals, updatedRecognitions.get(0).getImageWidth(), updatedRecognitions.get(0).getImageHeight());
+
+                if (minerals.size() >= 3) position = samplePositionFromThreeMinerals(minerals);
+                else if (minerals.size() > 0)
+                    position = samplePositionFromOneMineral(minerals, updatedRecognitions.get(0).getImageWidth(), updatedRecognitions.get(0).getImageHeight());
             }
         }
 
         return position;
     }
 
-    private SamplePosition samplePositionFromThreeMinerals(ArrayList<Mineral> minerals){
+    private SamplePosition samplePositionFromThreeMinerals(ArrayList<Mineral> minerals) {
         SamplePosition position = SamplePosition.UNKNOWN;
 
         Mineral[] samples = getBottomThreeMinerals(minerals);
 
-        if(samples!=null){
+        if (samples != null) {
             Mineral goldMineral = null, silverMineralOne = null, silverMineralTwo = null;
-            for (Mineral mineral:samples){
-                if(mineral.getType()==MineralType.GOLD)goldMineral = mineral;
-                else if(silverMineralOne==null)silverMineralOne = mineral;
+            for (Mineral mineral : samples) {
+                if (mineral.getType() == MineralType.GOLD) goldMineral = mineral;
+                else if (silverMineralOne == null) silverMineralOne = mineral;
                 else silverMineralTwo = mineral;
             }
 
-            if(goldMineral==null||silverMineralOne==null||silverMineralTwo==null) return position;
+            if (goldMineral == null || silverMineralOne == null || silverMineralTwo == null)
+                return position;
 
             if (goldMineral.getX() != -1 && silverMineralOne.getX() != -1 && silverMineralTwo.getX() != -1) {
                 if (goldMineral.getX() < silverMineralOne.getX() && goldMineral.getX() < silverMineralTwo.getX()) {
@@ -153,47 +155,47 @@ public class TensorFlow {
         return position;
     }
 
-    private SamplePosition samplePositionFromOneMineral(ArrayList<Mineral> minerals, int width, int height){
+    private SamplePosition samplePositionFromOneMineral(ArrayList<Mineral> minerals, int width, int height) {
         SamplePosition position = SamplePosition.UNKNOWN;
 
         Mineral mineral = getBottomGoldMineral(minerals);
 
-        if(mineral==null)return position;
+        if (mineral == null) return position;
 
-        if(orientation==CameraOrientation.VIRTICAL){
-            if(mineral.getX()<width/3) position = SamplePosition.LEFT;
-            else if(mineral.getX()<2*(width/3)) position = SamplePosition.CENTER;
+        if (orientation == CameraOrientation.VIRTICAL) {
+            if (mineral.getX() < width / 3) position = SamplePosition.LEFT;
+            else if (mineral.getX() < 2 * (width / 3)) position = SamplePosition.CENTER;
             else position = SamplePosition.RIGHT;
         } else {
-            if(mineral.getX()<height/3) position = SamplePosition.LEFT;
-            else if(mineral.getX()<2*(height/3)) position = SamplePosition.CENTER;
+            if (mineral.getX() < height / 3) position = SamplePosition.LEFT;
+            else if (mineral.getX() < 2 * (height / 3)) position = SamplePosition.CENTER;
             else position = SamplePosition.RIGHT;
         }
 
         return position;
     }
 
-    private Mineral[] getBottomThreeMinerals(ArrayList<Mineral> minerals){
-        if(minerals.size()<3)return null;
+    private Mineral[] getBottomThreeMinerals(ArrayList<Mineral> minerals) {
+        if (minerals.size() < 3) return null;
 
         Mineral[] result = minerals.toArray(new Mineral[minerals.size()]);
 
         Arrays.sort(result, new SortByMineralY());
 
-        Mineral[] last = {result[0],result[1],result[2]};
+        Mineral[] last = {result[0], result[1], result[2]};
 
         return last;
     }
 
-    private Mineral getBottomGoldMineral(ArrayList<Mineral> minerals){
+    private Mineral getBottomGoldMineral(ArrayList<Mineral> minerals) {
 
         ArrayList<Mineral> golds = new ArrayList<>();
 
-        for(Mineral mineral:minerals){
-            if(mineral.getType()==MineralType.GOLD)golds.add(mineral);
+        for (Mineral mineral : minerals) {
+            if (mineral.getType() == MineralType.GOLD) golds.add(mineral);
         }
 
-        if(golds.size()<1)return null;
+        if (golds.size() < 1) return null;
 
         Mineral[] result = golds.toArray(new Mineral[golds.size()]);
 
@@ -202,7 +204,7 @@ public class TensorFlow {
         return result[0];
     }
 
-    private class SortByMineralY implements Comparator<Mineral>{
+    private class SortByMineralY implements Comparator<Mineral> {
         @Override
         public int compare(Mineral lhs, Mineral rhs) {
             return rhs.getY() - lhs.getY();
@@ -210,23 +212,22 @@ public class TensorFlow {
     }
 
     private class Mineral {
-        
-        private int x,y;
-                
+
+        private int x, y;
+
         double confidence;
-        
+
         private MineralType mineralType;
-        
-        public Mineral(Recognition recognition){
-            if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)) mineralType = MineralType.GOLD;
+
+        public Mineral(Recognition recognition) {
+            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) mineralType = MineralType.GOLD;
             else mineralType = MineralType.SILVER;
             if (orientation == CameraOrientation.VIRTICAL) {
-                this.x = (int)((recognition.getLeft()+recognition.getRight())/2);
-                this.y = (int)((recognition.getTop()+recognition.getBottom())/2);
-            }
-            else {
-                this.x = (int)((recognition.getTop()+recognition.getBottom())/2);
-                this.y = recognition.getImageWidth()-(int)((recognition.getLeft()+recognition.getRight())/2);
+                this.x = (int) ((recognition.getLeft() + recognition.getRight()) / 2);
+                this.y = (int) ((recognition.getTop() + recognition.getBottom()) / 2);
+            } else {
+                this.x = (int) ((recognition.getTop() + recognition.getBottom()) / 2);
+                this.y = recognition.getImageWidth() - (int) ((recognition.getLeft() + recognition.getRight()) / 2);
             }
             this.confidence = recognition.getConfidence();
         }
@@ -252,7 +253,7 @@ public class TensorFlow {
         GOLD,
         SILVER
     }
-    
+
     public enum CameraOrientation {
         VIRTICAL,
         HORIZONTAL

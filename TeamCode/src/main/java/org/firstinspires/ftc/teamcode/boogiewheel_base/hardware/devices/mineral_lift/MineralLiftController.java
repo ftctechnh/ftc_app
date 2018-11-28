@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.framework.SubsystemController;
 
-public class MineralLiftController extends SubsystemController{
+public class MineralLiftController extends SubsystemController {
 
     private MineralLift mineralLift;
 
-    public MineralLiftController(){
+    public MineralLiftController() {
         init();
     }
 
@@ -18,11 +18,11 @@ public class MineralLiftController extends SubsystemController{
         mineralLift = new MineralLift(hardwareMap);
     }
 
-    public synchronized void moveToCollectPosition(){
+    public synchronized void moveToCollectPosition() {
         mineralLift.setPosition(Constants.MINERAL_LIFT_COLLECT_POSITION);
     }
 
-    public synchronized void moveToDumpPosition(){
+    public synchronized void moveToDumpPosition() {
         mineralLift.setPosition(Constants.MINERAL_LIFT_DUMP_POSITION);
     }
 

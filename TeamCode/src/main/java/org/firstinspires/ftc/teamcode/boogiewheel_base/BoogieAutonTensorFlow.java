@@ -1,15 +1,12 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
-import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
 @Autonomous(name = "BoogieWheel Auton Tensorflow", group = "New")
 //@Disabled
@@ -44,23 +41,21 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
 
 
         //If the object is not found then it will wait until it finds the object
-        while (   isOpModeActive()
-                   && (tensorFlow.getSamplePosition() == SamplePosition.UNKNOWN)
-                   && (Mineraltimer.milliseconds() < 10000)
-              )
-        {
+        while (isOpModeActive()
+                && (tensorFlow.getSamplePosition() == SamplePosition.UNKNOWN)
+                && (Mineraltimer.milliseconds() < 10000)
+                ) {
             // wait indefinitly until position of object is returned
             //If position == unknown then it waits until it finds it ....
 
         }
         MineraldetectionTime = Mineraltimer.milliseconds();
-        telemetry.addData("Mineral Time = " + MineraldetectionTime  );
+        telemetry.addData("Mineral Time = " + MineraldetectionTime);
         //after it exits the while loop, find out where mineral is
         TensorPosition = (tensorFlow.getSamplePosition());
 
-        if (TensorPosition == SamplePosition.UNKNOWN)
-        {
-           TensorPosition = SamplePosition.LEFT;
+        if (TensorPosition == SamplePosition.UNKNOWN) {
+            TensorPosition = SamplePosition.LEFT;
         }
 
 
@@ -70,7 +65,7 @@ public class BoogieAutonTensorFlow extends AbstractAuton {
                 telemetry.addData("-----LEFT-----");
                 telemetry.update();
                 tensorFlow.stop();
-              //  craterSideLeftMineral();
+                //  craterSideLeftMineral();
                 break;
             }
 

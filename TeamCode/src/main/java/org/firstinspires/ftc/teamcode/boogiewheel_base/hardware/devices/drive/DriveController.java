@@ -24,7 +24,7 @@ public class DriveController extends SubsystemController {
 
     private double motorPosition, baseHeading = 0;
 
-    private double turnY=0, turn_z=0, leftPower=0, rightPower=0, Drive_Power = 1.0;
+    private double turnY = 0, turn_z = 0, leftPower = 0, rightPower = 0, Drive_Power = 1.0;
 
     public ElapsedTime runtime;
 
@@ -33,11 +33,11 @@ public class DriveController extends SubsystemController {
     private Logger logger;
 
     //Utility Methods
-    public DriveController(){
+    public DriveController() {
         init();
     }
 
-    public synchronized void init(){
+    public synchronized void init() {
 
         opModeSetup();
 
@@ -48,21 +48,21 @@ public class DriveController extends SubsystemController {
         //Put general setup here
         drive = new Drive(hardwareMap);
         //anglePID = new PIDController(10,1.6,24, 2);
-        anglePID = new PIDController(8,0.5,10, 1,0);
-        distancePID = new PIDController(0.6,0.1,0,2);
+        anglePID = new PIDController(8, 0.5, 10, 1, 0);
+        distancePID = new PIDController(0.6, 0.1, 0, 2);
         drive.setSlewSpeed(0.1);
 
         logger = new Logger("DriveControllerLog.txt");
     }
 
-    public synchronized void stop(){
+    public synchronized void stop() {
         drive.stop();
 
         logger.stop();
     }
 
     //Autonomous Methods
-    public synchronized void turnTo(double angle, double speed, double error, int period){
+    public synchronized void turnTo(double angle, double speed, double error, int period) {
         AbstractOpMode.delay(100);
 
         baseHeading = angle;
@@ -72,29 +72,30 @@ public class DriveController extends SubsystemController {
         anglePID.setMinimumOutput(0);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
-        while(isOpModeActive()) {
+        while (isOpModeActive()) {
             //While we are not in the error band keep turning
-            while ( !atPosition(angle,drive.getHeading(),error) && isOpModeActive()) {
+            while (!atPosition(angle, drive.getHeading(), error) && isOpModeActive()) {
                 telemetry.addDataDB("--------------------");
                 //Use the PIDController class to calculate power values for the wheels
-                if(angle-getHeading()>180) {
-                    power = anglePID.output(angle, 180+(180+getHeading()));
-                    telemetry.addData("How Far", 180+(180+getHeading()));
-                }
-                else {
+                if (angle - getHeading() > 180) {
+                    power = anglePID.output(angle, 180 + (180 + getHeading()));
+                    telemetry.addData("How Far", 180 + (180 + getHeading()));
+                } else {
                     power = anglePID.output(angle, getHeading());
                     telemetry.addData("How Far", getHeading());
                 }
-                setPower(-power*speed, power*speed);
+                setPower(-power * speed, power * speed);
                 telemetry.addData("Heading", getHeading());
                 telemetry.addData("Power", power);
                 telemetry.update();
             }
             runtime.reset();
-            while (runtime.milliseconds()<period){
-                if((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error) break;
+            while (runtime.milliseconds() < period) {
+                if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
+                    break;
             }
-            if((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error) continue;
+            if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
+                continue;
             telemetry.addData("Final heading", getHeading());
             telemetry.update();
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -103,14 +104,14 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void driveTo(double distance, double speed){
+    public synchronized void driveTo(double distance, double speed) {
         AbstractOpMode.delay(100);
 
         telemetry.addData("starting drive segment---------------------------");
         anglePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
         distancePID.reset();
         anglePID.setMinimumOutput(0);
-        int position = (int)(distance * 38); //
+        int position = (int) (distance * 38); //
         telemetry.addData("Encoder counts: " + position);
         double turn;
         speed = range(speed);
@@ -123,12 +124,12 @@ public class DriveController extends SubsystemController {
         telemetry.update();
         double leftPower, rightPower;
         double power;
-        while ((!atPosition(position, drive.getLeftPosition(), 15 ) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
+        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
             power = range(distancePID.output(position, drive.getRightPosition()));
 
             turn = anglePID.output(startHeading, getHeading());
 
-            if(power>0) {
+            if (power > 0) {
                 leftPower = range(power * (speed - turn));
                 rightPower = range(power * (speed + turn));
             } else {
@@ -148,12 +149,12 @@ public class DriveController extends SubsystemController {
             telemetry.update();
         }
 
-        for (int i=0; i<5; i++) {
-            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition())/2));
+        for (int i = 0; i < 5; i++) {
+            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
 
             turn = anglePID.output(startHeading, getHeading());
 
-            if(power>0) {
+            if (power > 0) {
                 leftPower = range(power * (speed - turn));
                 rightPower = range(power * (speed + turn));
             } else {
@@ -175,14 +176,14 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void driveTo(double distance, double speed, int angle){
+    public synchronized void driveTo(double distance, double speed, int angle) {
         AbstractOpMode.delay(100);
 
         telemetry.addData("starting drive segment---------------------------");
         anglePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
         distancePID.reset();
         anglePID.setMinimumOutput(0);
-        int position = (int)(distance * 38); //
+        int position = (int) (distance * 38); //
         telemetry.addData("Encoder counts: " + position);
         double turn;
         speed = range(speed);
@@ -195,12 +196,12 @@ public class DriveController extends SubsystemController {
         telemetry.update();
         double leftPower, rightPower;
         double power;
-        while ((!atPosition(position, drive.getLeftPosition(), 15 ) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
+        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
             power = range(distancePID.output(position, drive.getRightPosition()));
 
             turn = anglePID.output(startHeading, getHeading());
 
-            if(power>0) {
+            if (power > 0) {
                 leftPower = range(power * (speed - turn));
                 rightPower = range(power * (speed + turn));
             } else {
@@ -220,12 +221,12 @@ public class DriveController extends SubsystemController {
             telemetry.update();
         }
 
-        for (int i=0; i<5; i++) {
-            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition())/2));
+        for (int i = 0; i < 5; i++) {
+            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
 
             turn = anglePID.output(startHeading, getHeading());
 
-            if(power>0) {
+            if (power > 0) {
                 leftPower = range(power * (speed - turn));
                 rightPower = range(power * (speed + turn));
             } else {
@@ -247,15 +248,15 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void setPosition(int position, double power){
+    public synchronized void setPosition(int position, double power) {
         this.motorPosition = position;
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.setPower(range(power),range(power));
+        drive.setPower(range(power), range(power));
         drive.setTargetPosition(position);
     }
 
-    public synchronized double getHeading(){
+    public synchronized double getHeading() {
         return drive.getHeading();
     }
 
@@ -264,22 +265,22 @@ public class DriveController extends SubsystemController {
     }
 
     //TeleOp Methods
-    public synchronized void setPower(double left, double right){
+    public synchronized void setPower(double left, double right) {
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        drive.setPower(range(left),range(right));
+        drive.setPower(range(left), range(right));
     }
 
-    public synchronized void setY(double y){
+    public synchronized void setY(double y) {
         turnY = -y;
         turnY = (float) scaleInput(turnY);
     }
 
-    public synchronized void setZ(double z){
+    public synchronized void setZ(double z) {
         turn_z = z;
         turn_z = (float) scaleInput(turn_z);
     }
 
-    public synchronized void update(){
+    public synchronized void update() {
         leftPower = range((turnY + turn_z) * Drive_Power);
         rightPower = range((turnY - turn_z) * Drive_Power);
 
@@ -297,7 +298,7 @@ public class DriveController extends SubsystemController {
             while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
             values[0][i] = drive.getLeftPosition();
             values[1][i] = drive.getRightPosition();
-            if(!isOpModeActive()) break;
+            if (!isOpModeActive()) break;
             runtime.reset();
         }
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -307,12 +308,12 @@ public class DriveController extends SubsystemController {
     public synchronized void runPath(int[] left, int[] right, int timeInterval) {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.setPower(1,1);
+        drive.setPower(1, 1);
         runtime.reset();
-        for (int i = 0; i < (left.length-right.length<=0 ? right.length : left.length); i++) {
-            while (runtime.milliseconds() < timeInterval && isOpModeActive());
+        for (int i = 0; i < (left.length - right.length <= 0 ? right.length : left.length); i++) {
+            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
             drive.setTargetPosition(left[i], right[i]);
-            if(!isOpModeActive()) break;
+            if (!isOpModeActive()) break;
             runtime.reset();
         }
     }
@@ -321,16 +322,16 @@ public class DriveController extends SubsystemController {
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        int[] values = new int[numSamples*3];
+        int[] values = new int[numSamples * 3];
         runtime.reset();
-        for (int i = 0; i < numSamples*3; i+=3) {
+        for (int i = 0; i < numSamples * 3; i += 3) {
             while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
             telemetry.addData(drive.getHeading());
             telemetry.update();
-            values[i] = (int)drive.getHeading();
-            values[i+1] = drive.getLeftPosition();
-            values[i+2] = drive.getRightPosition();
-            if(!isOpModeActive()) break;
+            values[i] = (int) drive.getHeading();
+            values[i + 1] = drive.getLeftPosition();
+            values[i + 2] = drive.getRightPosition();
+            if (!isOpModeActive()) break;
             runtime.reset();
         }
         drive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -340,26 +341,26 @@ public class DriveController extends SubsystemController {
     public synchronized void runPathWithHeading(int[] values, int timeInterval, double speed) {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         drive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        drive.setPower(1,1);
+        drive.setPower(1, 1);
         runtime.reset();
         double turn;
-        for (int i = 0; i < values.length; i+=3) {
-            while (runtime.milliseconds() < timeInterval && isOpModeActive());
+        for (int i = 0; i < values.length; i += 3) {
+            while (runtime.milliseconds() < timeInterval && isOpModeActive()) ;
             turn = anglePID.output(values[i], getHeading());
-            drive.setPower(speed-turn, speed+turn);
-            drive.setTargetPosition(values[i+1], values[i+2]);
-            if(!isOpModeActive()) break;
+            drive.setPower(speed - turn, speed + turn);
+            drive.setTargetPosition(values[i + 1], values[i + 2]);
+            if (!isOpModeActive()) break;
             runtime.reset();
         }
     }
 
     private synchronized double scaleInput(double val) {
-        return (range(pow(val, 3)))*0.5;
+        return (range(pow(val, 3))) * 0.5;
     }
 
-    private synchronized double range(double val){
-        if(val<-1) val=-1;
-        if(val>1) val=1;
+    private synchronized double range(double val) {
+        if (val < -1) val = -1;
+        if (val > 1) val = 1;
         return val;
     }
 

@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
 
-@TeleOp(name="BoogieWheel Teleop", group="New")
+@TeleOp(name = "BoogieWheel Teleop", group = "New")
 //@Disabled
 
 public class BoogieTeleOp extends AbstractTeleop {
@@ -14,12 +14,12 @@ public class BoogieTeleOp extends AbstractTeleop {
 
     @Override
     public void RegisterEvents() {
-        addEventHandler("lsy_change", ()->{
+        addEventHandler("lsy_change", () -> {
             robot.setDriveY(gamepad1.left_stick_y);
             return true;
         });
 
-        addEventHandler("rsx_change", ()->{
+        addEventHandler("rsx_change", () -> {
             robot.setDriveZ(gamepad1.right_stick_x);
             return true;
         });
@@ -42,11 +42,11 @@ public class BoogieTeleOp extends AbstractTeleop {
 
         addEventHandler("dpu_down", robot.robotLiftUp());
 
-        addEventHandler("dpu_up",robot.robotLiftStop());
+        addEventHandler("dpu_up", robot.robotLiftStop());
 
         addEventHandler("dpd_down", robot.robotLiftUp());
 
-        addEventHandler("dpd_up",robot.robotLiftStop());
+        addEventHandler("dpd_up", robot.robotLiftStop());
 
         /*addEventHandler("lt_change", ()->{
             if(gamepad1.left_trigger>0.5) robot.moveMineralLiftToCollectPosition();
@@ -62,8 +62,8 @@ public class BoogieTeleOp extends AbstractTeleop {
     @Override
     public void UpdateEvents() {
         //NEVER EVER PUT BLOCKING CODE HERE!!!
-        checkBooleanInput("lt",gamepad1.left_trigger>0.5);
-        checkBooleanInput("rt",gamepad1.right_trigger>0.5);
+        checkBooleanInput("lt", gamepad1.left_trigger > 0.5);
+        checkBooleanInput("rt", gamepad1.right_trigger > 0.5);
     }
 
     @Override
@@ -77,7 +77,7 @@ public class BoogieTeleOp extends AbstractTeleop {
     }
 
     @Override
-    public void Stop(){
+    public void Stop() {
         robot.stop();
     }
 }

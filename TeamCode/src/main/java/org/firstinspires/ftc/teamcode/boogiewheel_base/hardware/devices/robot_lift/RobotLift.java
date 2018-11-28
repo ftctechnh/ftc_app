@@ -6,23 +6,19 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor
 
 public class RobotLift {
 
-    SlewDcMotor liftMotor ;
+    SlewDcMotor liftMotor;
 
-    public RobotLift(HardwareMap hardwareMap){
-
-        liftMotor= new SlewDcMotor(hardwareMap.dcMotor.get("robot_lift"));
+    public RobotLift(HardwareMap hardwareMap) {
+        liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("robot_lift"));
         liftMotor.setSlewSpeed(2);
         liftMotor.setPower(0);
     }
 
-    public void setLiftPower(double power){
+    public void setLiftPower(double power) {
         liftMotor.setPower(power);
-
     }
 
-
-    public void stop(){
+    public void stop() {
         liftMotor.stop();
-
     }
 }

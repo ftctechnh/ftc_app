@@ -4,7 +4,8 @@ import java.text.SimpleDateFormat;
 
 public class Date {
     private SimpleDateFormat dtf;
-    public Date(){
+
+    public Date() {
         dtf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
     }
 

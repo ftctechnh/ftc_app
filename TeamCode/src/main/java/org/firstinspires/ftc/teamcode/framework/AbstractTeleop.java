@@ -27,7 +27,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
     ButtonStateMap states;
     FloatStateMap floatStates;
 
-    public AbstractTeleop(){
+    public AbstractTeleop() {
 
     }
 
@@ -36,29 +36,37 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
         ExecutorService service = Executors.newSingleThreadExecutor();
 
-        Callable<Boolean> InitThread = ()->{
+        Callable<Boolean> InitThread = () -> {
             try {
                 Init();
-            } catch (Exception e){ throwException(e); }
+            } catch (Exception e) {
+                throwException(e);
+            }
             return true;
         };
-        Callable<Boolean> InitLoopThread = ()->{
+        Callable<Boolean> InitLoopThread = () -> {
             try {
                 InitLoop();
-            } catch (Exception e){ throwException(e); }
-        return true;
-        };
-        Callable<Boolean> StartThread = ()-> {
-        try{
-            Start();
-        } catch (Exception e){ throwException(e); }
+            } catch (Exception e) {
+                throwException(e);
+            }
             return true;
         };
-        Callable<Boolean> LoopThread = ()->{
+        Callable<Boolean> StartThread = () -> {
+            try {
+                Start();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
+        Callable<Boolean> LoopThread = () -> {
             try {
                 Loop();
-            } catch (Exception e){ throwException(e); }
-        return true;
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
         };
 
         Future<Boolean> CurrentFuture;
@@ -79,26 +87,26 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         telemetry.addData("Init Loop");
         telemetry.update();
 
-        while (!isStopRequested() && !isStarted()){
+        while (!isStopRequested() && !isStarted()) {
             checkException();
 
-            if(CurrentFuture.isDone()) {
+            if (CurrentFuture.isDone()) {
                 initLoops++;
                 CurrentFuture = service.submit(InitLoopThread);
             }
         }
 
-        telemetry.addData(initLoops+" Init Loops");
+        telemetry.addData(initLoops + " Init Loops");
         telemetry.update();
 
-        while (!isStopRequested() && !CurrentFuture.isDone());
+        while (!isStopRequested() && !CurrentFuture.isDone()) ;
 
         telemetry.addData("Starting");
         telemetry.update();
 
         RegisterEvents();
 
-        if(!isStopRequested()) {
+        if (!isStopRequested()) {
             checkException();
 
             CurrentFuture = service.submit(StartThread);
@@ -113,7 +121,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             checkEvents();
 
             //calls user loop
-            if(CurrentFuture.isDone()) {
+            if (CurrentFuture.isDone()) {
                 CurrentFuture = service.submit(LoopThread);
             }
         }
@@ -141,21 +149,21 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     public abstract void Init();
 
-    public void InitLoop(){
+    public void InitLoop() {
 
     }
 
-    public void Start(){
+    public void Start() {
 
     }
 
     public abstract void Loop();
 
-    public void Stop(){
+    public void Stop() {
 
     }
 
-    private void throwException(Exception e){
+    private void throwException(Exception e) {
         exceptions.add(e);
     }
 
@@ -213,22 +221,22 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         }
     }
 
-    public void addEventHandler(String name, Callable event){
+    public void addEventHandler(String name, Callable event) {
         emitter.on(name, event);
     }
 
-    public void pauseEvent(String name){
+    public void pauseEvent(String name) {
         emitter.pauseEvent(name);
     }
 
-    public void resumeEvent(String name){
+    public void resumeEvent(String name) {
         emitter.resumeEvent(name);
     }
 
     private void checkEvents() {
-        if(emitTime.milliseconds()-emitTimeOffset<1)return;
+        if (emitTime.milliseconds() - emitTimeOffset < 1) return;
         emitTimeOffset++;
-        if(emitTimeOffset>60000){
+        if (emitTimeOffset > 60000) {
             emitTimeOffset = 0;
             emitTime.reset();
         }
@@ -263,28 +271,28 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
         //Update value for repeat on checkBooleanInput
         emitLoop++;
-        if(emitLoop>10000){
-            emitLoop=0;
+        if (emitLoop > 10000) {
+            emitLoop = 0;
         }
     }
 
     public void checkBooleanInput(String name, boolean val) {
-        if(name.contains("down")){
-            if(val){
+        if (name.contains("down")) {
+            if (val) {
                 emitter.emit(name);
             }
-        } else if(name.contains("up")){
-            if(!val){
+        } else if (name.contains("up")) {
+            if (!val) {
                 emitter.emit(name);
             }
         } else if (states.isChanged(name, val)) {
-            emitter.emit(val ? name+"_down" : name+"_up");
+            emitter.emit(val ? name + "_down" : name + "_up");
             states.change(name, val);
         }
     }
 
     public void checkBooleanInput(String name, boolean val, int repeat) {
-        if(emitLoop%repeat==0){
+        if (emitLoop % repeat == 0) {
             checkBooleanInput(name, val);
         }
     }
@@ -303,12 +311,12 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         ConcurrentHashMap<String, Boolean> state;
 
         ButtonStateMap() {
-            state = new ConcurrentHashMap<String,Boolean>();
+            state = new ConcurrentHashMap<String, Boolean>();
         }
 
         boolean isChanged(String name, boolean newVal) {
             if (!state.containsKey(name)) {
-                AbstractOpMode.getTelemetry().addData("Adding: "+name);
+                AbstractOpMode.getTelemetry().addData("Adding: " + name);
                 AbstractOpMode.getTelemetry().update();
                 state.put(name, newVal);
                 return newVal;
@@ -328,7 +336,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         ConcurrentHashMap<String, Float> state;
 
         FloatStateMap() {
-            state = new ConcurrentHashMap<String,Float>();
+            state = new ConcurrentHashMap<String, Float>();
         }
 
         boolean isChanged(String name, float newVal) {

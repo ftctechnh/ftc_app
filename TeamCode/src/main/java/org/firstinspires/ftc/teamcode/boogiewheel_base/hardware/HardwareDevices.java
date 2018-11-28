@@ -12,14 +12,14 @@ public class HardwareDevices {
     public MineralLiftController mineralLift;
     public RobotLiftController robotLift;
 
-    public HardwareDevices(){
+    public HardwareDevices() {
         drive = new DriveController();
         intake = new IntakeController();
         mineralLift = new MineralLiftController();
         robotLift = new RobotLiftController();
     }
 
-    public void stop(){
+    public void stop() {
         drive.stop();
         intake.stop();
         mineralLift.stop();

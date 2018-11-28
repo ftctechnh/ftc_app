@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
 
-public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
+public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable {
     //Motor
     private DcMotor motor;
     private DcMotorEx motorEx;
@@ -26,12 +26,12 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     private Thread t;
 
     //Motor
-    public SlewDcMotor(DcMotor motor){
+    public SlewDcMotor(DcMotor motor) {
         this.motor = motor;
         this.motorEx = (DcMotorEx) motor;
 
         //Threading
-        t = new Thread(this,"motor "+motor.getDeviceName());
+        t = new Thread(this, "motor " + motor.getDeviceName());
         t.start();
     }
 
@@ -39,7 +39,7 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     @Override
     public void run() {
         setMotorEnable();
-        while(running && AbstractOpMode.isOpModeActive()){
+        while (running && AbstractOpMode.isOpModeActive()) {
             motorSlew(getSetPower());
             AbstractOpMode.delay(15);
         }
@@ -50,7 +50,7 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
         running = false;
     }
 
-    private void shutDown(){
+    private void shutDown() {
         setMotorDisable();
         setVelocity(0);
         setSlewSpeed(0);
@@ -63,12 +63,12 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     }
 
     //Motor
-    public void setCurrentPosition(int position){
+    public void setCurrentPosition(int position) {
         motor.setMode(RunMode.STOP_AND_RESET_ENCODER);
         encoderOffset = position;
     }
 
-    public void setSlewSpeed(double slewSpeed){
+    public void setSlewSpeed(double slewSpeed) {
         this.slewSpeed = slewSpeed;
     }
 
@@ -83,36 +83,44 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
     }
 
     @Override
-    public void setPower(double SetPower) {this.SetPower = SetPower;}
+    public void setPower(double SetPower) {
+        this.SetPower = SetPower;
+    }
 
     @Override
-    public double getPower() {return motor.getPower();}
+    public double getPower() {
+        return motor.getPower();
+    }
 
-    public double getSetPower() {return SetPower;}
+    public double getSetPower() {
+        return SetPower;
+    }
 
     private void motorSlew(double newSpeed) {
         currentSpeed = lastSpeed;
         lastSpeed = newSpeed;
         //If no speed change stop function
-        if(currentSpeed == newSpeed){return;}
-        if(currentSpeed > newSpeed){
-            //We are slowing down
-            if(currentSpeed-newSpeed<slewSpeed){
-                motor.setPower(newSpeed);
-                return;
-            }
-            motor.setPower(currentSpeed-slewSpeed);
-            lastSpeed = (currentSpeed-slewSpeed);
+        if (currentSpeed == newSpeed) {
             return;
         }
-        if(currentSpeed < newSpeed){
-            //We are speeding up
-            if(newSpeed-currentSpeed<slewSpeed){
+        if (currentSpeed > newSpeed) {
+            //We are slowing down
+            if (currentSpeed - newSpeed < slewSpeed) {
                 motor.setPower(newSpeed);
                 return;
             }
-            motor.setPower(currentSpeed+slewSpeed);
-            lastSpeed = (currentSpeed+slewSpeed);
+            motor.setPower(currentSpeed - slewSpeed);
+            lastSpeed = (currentSpeed - slewSpeed);
+            return;
+        }
+        if (currentSpeed < newSpeed) {
+            //We are speeding up
+            if (newSpeed - currentSpeed < slewSpeed) {
+                motor.setPower(newSpeed);
+                return;
+            }
+            motor.setPower(currentSpeed + slewSpeed);
+            lastSpeed = (currentSpeed + slewSpeed);
             return;
         }
     }
@@ -159,12 +167,12 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
 
     @Override
     public void setTargetPosition(int position) {
-        motor.setTargetPosition(position-encoderOffset);
+        motor.setTargetPosition(position - encoderOffset);
     }
 
     @Override
     public int getTargetPosition() {
-        return motor.getTargetPosition()+encoderOffset;
+        return motor.getTargetPosition() + encoderOffset;
     }
 
     @Override
@@ -174,12 +182,12 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable{
 
     @Override
     public int getCurrentPosition() {
-        return motor.getCurrentPosition()+encoderOffset;
+        return motor.getCurrentPosition() + encoderOffset;
     }
 
     @Override
     public void setMode(RunMode mode) {
-        if(mode == RunMode.STOP_AND_RESET_ENCODER){
+        if (mode == RunMode.STOP_AND_RESET_ENCODER) {
             encoderOffset = 0;
         }
         motor.setMode(mode);

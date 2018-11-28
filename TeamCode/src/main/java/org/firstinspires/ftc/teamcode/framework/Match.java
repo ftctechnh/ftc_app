@@ -10,30 +10,31 @@ public abstract class Match extends LinearOpMode {
 
     //Setup OpMode instance to allow other classes to access hardwareMap and Telemetry
     private static OpMode opmode = null;
-    public static OpMode getOpModeInstance(){
+
+    public static OpMode getOpModeInstance() {
         return opmode;
     }
 
-    public Match(){
+    public Match() {
         //setup telemetry and hardwareMap
         opmode = this;
         runTime = new ElapsedTime();
     }
 
     @Override
-    public void runOpMode(){
+    public void runOpMode() {
         autonInit();
 
-        while(opModeIsActive() && !isStopRequested() && !isStarted()) autonInitLoop();
+        while (opModeIsActive() && !isStopRequested() && !isStarted()) autonInitLoop();
 
         runTime.reset();
-        if(opModeIsActive() && !isStopRequested()) autonRun();
+        if (opModeIsActive() && !isStopRequested()) autonRun();
 
         autonStop();
 
-        if(opModeIsActive() && !isStopRequested()) teleopInit();
+        if (opModeIsActive() && !isStopRequested()) teleopInit();
 
-        while(opModeIsActive() && !isStopRequested()) teleopInitLoop();
+        while (opModeIsActive() && !isStopRequested()) teleopInitLoop();
 
         while (opModeIsActive() && !isStopRequested()) teleopLoop();
 
@@ -42,25 +43,25 @@ public abstract class Match extends LinearOpMode {
 
     public abstract void autonInit();
 
-    public void autonInitLoop(){
+    public void autonInitLoop() {
 
     }
 
     public abstract void autonRun();
 
-    public void autonStop(){
+    public void autonStop() {
 
     }
 
     public abstract void teleopInit();
 
-    public void teleopInitLoop(){
+    public void teleopInitLoop() {
 
     }
 
     public abstract void teleopLoop();
 
-    public void teleopStop(){
+    public void teleopStop() {
 
     }
 }

@@ -5,49 +5,48 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
-import org.upacreekrobotics.dashboard.Dashboard;
 
-@TeleOp(name="Test Teleop", group="New")
+@TeleOp(name = "Test Teleop", group = "New")
 //@Disabled
 
-public class FrameworkTest extends AbstractTeleop{
+public class FrameworkTest extends AbstractTeleop {
 
     ElapsedTime runTime;
     Robot robot;
 
     @Override
     public void RegisterEvents() {
-        addEventHandler("even_down", ()->{
+        addEventHandler("even_down", () -> {
             telemetry.addData("even");
             //telemetry.update();
             return true;
         });
 
-        addEventHandler("odd_down", ()->{
+        addEventHandler("odd_down", () -> {
             telemetry.addData("odd");
             //telemetry.update();
             return true;
         });
 
-        addEventHandler("a_down", ()->{
+        addEventHandler("a_down", () -> {
             telemetry.addData("a_down");
             telemetry.update();
             return true;
         });
 
-        addEventHandler("a_up", ()->{
+        addEventHandler("a_up", () -> {
             telemetry.addData("a_up");
             telemetry.update();
             return true;
         });
 
-        addEventHandler("b_down", ()->{
+        addEventHandler("b_down", () -> {
             telemetry.addData("b_down");
             telemetry.update();
             return true;
         });
 
-        addEventHandler("b_up", ()->{
+        addEventHandler("b_up", () -> {
             telemetry.addData("b_up");
             telemetry.update();
             return true;
@@ -56,10 +55,10 @@ public class FrameworkTest extends AbstractTeleop{
 
     @Override
     public void UpdateEvents() {
-        boolean even = (((int)runTime.seconds())%2==0);
+        boolean even = (((int) runTime.seconds()) % 2 == 0);
         //checkBooleanInput("even",even);
-        checkBooleanInput("odd",!even);
-        checkBooleanInput("even_down",even,100);
+        checkBooleanInput("odd", !even);
+        checkBooleanInput("even_down", even, 100);
     }
 
     @Override
@@ -70,11 +69,11 @@ public class FrameworkTest extends AbstractTeleop{
     }
 
     @Override
-    public void Loop(){
+    public void Loop() {
     }
 
     @Override
-    public void Stop(){
+    public void Stop() {
 
     }
 }

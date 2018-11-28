@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.IMU;
@@ -12,7 +11,7 @@ public class Drive {
     private SlewDcMotor leftMotor, rightMotor;
     private IMU imu;
 
-    public Drive(HardwareMap hardwareMap){
+    public Drive(HardwareMap hardwareMap) {
 
         //Motors
         leftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("left"));
@@ -46,12 +45,12 @@ public class Drive {
         imu = new IMU(hardwareMap);
     }
 
-    public void setSlewSpeed(double ss){
+    public void setSlewSpeed(double ss) {
         leftMotor.setSlewSpeed(ss);
         rightMotor.setSlewSpeed(ss);
     }
 
-    public void setPower(double l, double r){
+    public void setPower(double l, double r) {
         leftMotor.setPower(l);
         rightMotor.setPower(r);
     }
@@ -61,48 +60,48 @@ public class Drive {
 
     }
 
-    public void setTargetPosition(int position){
+    public void setTargetPosition(int position) {
         leftMotor.setTargetPosition(position);
         rightMotor.setTargetPosition(position);
     }
 
-    public void setTargetPosition(int leftPosition, int rightPosition){
+    public void setTargetPosition(int leftPosition, int rightPosition) {
         leftMotor.setTargetPosition(leftPosition);
         rightMotor.setTargetPosition(rightPosition);
     }
 
-    public void setMode(DcMotor.RunMode mode){
+    public void setMode(DcMotor.RunMode mode) {
         leftMotor.setMode(mode);
         rightMotor.setMode(mode);
     }
 
-    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior){
+    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
         leftMotor.setZeroPowerBehavior(behavior);
         rightMotor.setZeroPowerBehavior(behavior);
     }
 
-    public void setPosisionP(double p){
+    public void setPosisionP(double p) {
         //leftMotor.setPositionPIDFCoefficients(p);
         //rightMotor.setPositionPIDFCoefficients(p);
     }
 
-    public int getLeftPosition(){
+    public int getLeftPosition() {
         return leftMotor.getCurrentPosition();
     }
 
-    public int getRightPosition(){
+    public int getRightPosition() {
         return rightMotor.getCurrentPosition();
     }
 
-    public double getHeading(){
+    public double getHeading() {
         return imu.getHeading();
     }
 
-    public boolean isBusy(){
+    public boolean isBusy() {
         return leftMotor.isBusy() || rightMotor.isBusy();
     }
 
-    public void setPositionP(double p){
+    public void setPositionP(double p) {
         leftMotor.setPositionPIDFCoefficients(p);
         rightMotor.setPositionPIDFCoefficients(p);
     }
@@ -111,7 +110,7 @@ public class Drive {
         return imu.isGyroCalibrated();
     }
 
-    public void stop(){
+    public void stop() {
         //Stops Update Threads
         leftMotor.stop();
         rightMotor.stop();

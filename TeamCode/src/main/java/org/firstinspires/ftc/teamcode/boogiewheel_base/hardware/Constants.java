@@ -6,5 +6,5 @@ public class Constants {
     public final static int MINERAL_LIFT_DUMP_POSITION = 3500;
 
     ////////AUTON PATHS////////
-    
+
 }

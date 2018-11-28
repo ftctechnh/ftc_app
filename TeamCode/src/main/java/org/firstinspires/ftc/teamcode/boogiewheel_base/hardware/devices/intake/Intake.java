@@ -10,7 +10,7 @@ public class Intake {
 
     private SlewDcMotor intakeMotor;
 
-    public Intake(HardwareMap hardwareMap){
+    public Intake(HardwareMap hardwareMap) {
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
 
         intakeMotor.setSlewSpeed(2);
@@ -20,11 +20,11 @@ public class Intake {
         intakeMotor.setPower(0);
     }
 
-    public void setIntakePower(double power){
+    public void setIntakePower(double power) {
         intakeMotor.setPower(power);
     }
 
-    public void stop(){
+    public void stop() {
         intakeMotor.stop();
     }
 }

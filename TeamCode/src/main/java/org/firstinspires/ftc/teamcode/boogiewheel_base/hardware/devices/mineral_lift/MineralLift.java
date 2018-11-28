@@ -13,7 +13,7 @@ public class MineralLift {
 
     Servo gateServo;
 
-    public MineralLift(HardwareMap hardwareMap){
+    public MineralLift(HardwareMap hardwareMap) {
         liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("mineral_lift"));
         liftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -27,7 +27,7 @@ public class MineralLift {
 
     }
 
-    public void setPosition(int position){
+    public void setPosition(int position) {
         liftMotor.setPower(1);
         liftMotor.setTargetPosition(position);
     }
@@ -36,7 +36,7 @@ public class MineralLift {
         gateServo.setPosition(position);
     }
 
-    public void stop(){
+    public void stop() {
         liftMotor.stop();
     }
 }

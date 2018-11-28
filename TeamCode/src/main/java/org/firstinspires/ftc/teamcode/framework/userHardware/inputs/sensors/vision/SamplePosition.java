@@ -6,12 +6,12 @@ public enum SamplePosition {
     RIGHT,
     UNKNOWN;
 
-    public static SamplePosition getPositionFromValue(double value){
-        if(value>0 && value<100){
+    public static SamplePosition getPositionFromValue(double value) {
+        if (value > 0 && value < 100) {
             return LEFT;
-        } else if(value<210){
+        } else if (value < 210) {
             return CENTER;
-        } else if(value<300){
+        } else if (value < 300) {
             return RIGHT;
         } else {
             return UNKNOWN;

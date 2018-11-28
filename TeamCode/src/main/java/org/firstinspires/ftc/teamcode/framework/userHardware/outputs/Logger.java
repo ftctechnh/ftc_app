@@ -19,21 +19,20 @@ public class Logger {
     private FileOutputStream fOut;
     private OutputStreamWriter myOutWriter;
 
-    public Logger(String flieName){
+    public Logger(String flieName) {
         file = new File(path, flieName);
-        try{
-            if ( file.exists() ) {
+        try {
+            if (file.exists()) {
                 //Don't create file
                 RobotLog.i("ABCD Existing File");
-            }
-            else {
+            } else {
                 //Create file
-                RobotLog.i("ABCD Creating New File" );
+                RobotLog.i("ABCD Creating New File");
                 file.createNewFile();
             }
             fOut = new FileOutputStream(file);
             myOutWriter = new OutputStreamWriter(fOut);
-        } catch (IOException e){
+        } catch (IOException e) {
             Log.e("Exception", "File init failed " + e.toString());
         }
     }
@@ -41,16 +40,16 @@ public class Logger {
     public void log(String text) {
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
 
-        try{
-            myOutWriter.append( timeStamp + " : " + text + (char) Character.LINE_SEPARATOR );
+        try {
+            myOutWriter.append(timeStamp + " : " + text + (char) Character.LINE_SEPARATOR);
             myOutWriter.flush();
         } catch (IOException e) {
             Log.e("Exception", "File append failed: " + e.toString());
         }
     }
 
-    public void stop(){
-        try{
+    public void stop() {
+        try {
             myOutWriter.close();
             fOut.close();
         } catch (IOException e) {

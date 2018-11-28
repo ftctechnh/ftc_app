@@ -10,16 +10,16 @@ public class Speech {
 
     private TextToSpeech mTTS;
 
-    public Speech(HardwareMap hwMap){
-        mTTS = new TextToSpeech(hwMap.appContext,null);
+    public Speech(HardwareMap hwMap) {
+        mTTS = new TextToSpeech(hwMap.appContext, null);
         mTTS.setLanguage(Locale.ENGLISH);
     }
 
-    public void speak(String text){
-        mTTS.speak(text,TextToSpeech.QUEUE_FLUSH,null);
+    public void speak(String text) {
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    public boolean isSpeaking(){
+    public boolean isSpeaking() {
         return mTTS.isSpeaking();
     }
 }
