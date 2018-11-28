@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -15,13 +16,14 @@ import com.qualcomm.robotcore.util.BatteryChecker;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 import org.firstinspires.ftc.robotcore.internal.opmode.OpModeMeta;
 import org.firstinspires.ftc.robotcore.internal.opmode.RegisteredOpModes;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecker.BatteryWatcher{
+public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecker.BatteryWatcher {
     public static final String TAG = "RobotDashboard";
     private Thread dataThread;
     private Thread dashboardThread;
@@ -70,7 +72,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////and phone battery level polling////////////////
     ////////////////called by "requestRobotSetup()" in "FtcRobotControllerActivity"////////////////
     public static void attachEventLoop(EventLoop eventLoop, Context context) {
-        dashboard.internalAttachEventLoop(eventLoop,context);
+        dashboard.internalAttachEventLoop(eventLoop, context);
     }
 
     ////////////////Stops the dashboard and socket connection////////////////
@@ -163,10 +165,10 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
 
     ////////////////This is the main loop, called by the "dashboardThread"////////////////
     synchronized void receiveMessage() {
-        if(data!=null) {
+        if (data != null) {
             ////////////////Receiving Message////////////////
             Message message = data.read();
-            if(message!=null) {
+            if (message != null) {
                 switch (message.getType()) {
                     case GET_OP_MODES: {
                         for (String mode : opModeList) {
@@ -182,15 +184,16 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                                     data.write(new Message(MessageType.ROBOT_STATUS, "RUNNING"));
                                 }
                             }
-                        } catch (NullPointerException e){
+                        } catch (NullPointerException e) {
 
                         }
                         String[] parts = oldTelemetry.split("&#%#&");
-                        for(String part:parts){
-                            if(!part.equals(" "))data.write(new Message(MessageType.TELEMETRY, part));
+                        for (String part : parts) {
+                            if (!part.equals(" "))
+                                data.write(new Message(MessageType.TELEMETRY, part));
                         }
                         oldTelemetry = "";
-                        if(batteryChecker!=null)batteryChecker.pollBatteryLevel(batteryWatcher);
+                        if (batteryChecker != null) batteryChecker.pollBatteryLevel(batteryWatcher);
                         break;
                     }
 
@@ -237,15 +240,15 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             }
 
             ////////////////Keeping track of the state of the active opMode////////////////
-            switch (activeOpModeStatus){
+            switch (activeOpModeStatus) {
                 case INIT:
-                    if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
+                    if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
                         activeOpModeStatus = RobotStatus.OpModeStatus.RUNNING;
                         if (data != null && data.isConnected()) {
                             data.write(new Message(MessageType.ROBOT_STATUS, "RUNNING"));
                         }
                     }
-                    if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.STOPPED)) {
+                    if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.STOPPED)) {
                         activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                         if (data != null && data.isConnected()) {
                             data.write(new Message(MessageType.ROBOT_STATUS, "STOPPED"));
@@ -253,7 +256,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                     }
                     break;
                 case RUNNING:
-                    if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.STOPPED)) {
+                    if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.STOPPED)) {
                         activeOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
                         if (data != null && data.isConnected()) {
                             data.write(new Message(MessageType.ROBOT_STATUS, "STOPPED"));
@@ -261,8 +264,8 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                     }
                     break;
                 case STOPPED:
-                    if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-                        if (data != null && data.isConnected()){
+                    if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
+                        if (data != null && data.isConnected()) {
                             activeOpModeStatus = RobotStatus.OpModeStatus.INIT;
                             data.write(new Message(MessageType.SELECT_OP_MODE, dashboard.opModeManager.getActiveOpModeName()));
                             data.write(new Message(MessageType.ROBOT_STATUS, "INIT"));
@@ -274,75 +277,79 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     }
 
     ////////////////Code to poll the robot battery voltage////////////////
-    public String battery(){
+    public String battery() {
         double sensors = 0;
         double voltage = 0;
-        if(voltageSensors==null){
-            if(opModeManager==null)return "0";
+        if (voltageSensors == null) {
+            if (opModeManager == null) return "0";
             voltageSensors = opModeManager.getHardwareMap().getAll(VoltageSensor.class);
         }
-        if(voltageSensors.size()>0){
-            for(VoltageSensor voltageSensor:voltageSensors){
+        if (voltageSensors.size() > 0) {
+            for (VoltageSensor voltageSensor : voltageSensors) {
                 try {
                     if (voltageSensor.getVoltage() != 0) {
                         sensors++;
                         voltage += voltageSensor.getVoltage();
                     }
-                } catch (Exception e){
+                } catch (Exception e) {
                     DashboardTelemtry.write("Robot Battery Voltage Read Error");
                 }
             }
         }
-        if(sensors!=0) return String.format("%.2f",voltage/sensors);
+        if (sensors != 0) return String.format("%.2f", voltage / sensors);
         return "0";
     }
 
     ////////////////Returns an instance of dashboardtelemetry to be used in the user code////////////////
-    public dashboardtelemetry getTelemetry(){
+    public dashboardtelemetry getTelemetry() {
         return DashboardTelemtry;
     }
 
     ////////////////Called by the user code to request an input value from the dashboard, calls "internalGetInputValue()"////////////////
-    public static double getInputValueDouble(String caption){
+    public static double getInputValueDouble(String caption) {
         String value = dashboard.internalGetInputValue(caption);
-        try{
-            if(value.equals("")) return 0;
+        try {
+            if (value.equals("")) return 0;
             return Double.valueOf(value);
-        } catch (NumberFormatException e){
-            if(!caption.contains("Please enter a valid double for: "))caption = "Please enter a valid double for: "+caption;
-            if(dashboard.requestedOpModeStatus==RobotStatus.OpModeStatus.STOPPED)return 0.0;
+        } catch (NumberFormatException e) {
+            if (!caption.contains("Please enter a valid double for: "))
+                caption = "Please enter a valid double for: " + caption;
+            if (dashboard.requestedOpModeStatus == RobotStatus.OpModeStatus.STOPPED) return 0.0;
             return getInputValueDouble(caption);
         }
     }
 
-    public static String getInputValueString(String caption){
+    public static String getInputValueString(String caption) {
         return dashboard.internalGetInputValue(caption);
     }
 
     ////////////////The code to ask the dashboard to input a value and wait for a response////////////////
     ////////////////This can also be used to block the user opMode to do autonomous step by step////////////////
-    private String internalGetInputValue(String caption){
-        if(data!=null)data.write(new Message(MessageType.GET_VALUE,caption));
+    private String internalGetInputValue(String caption) {
+        if (data != null) data.write(new Message(MessageType.GET_VALUE, caption));
         lastInputValue = null;
-        while(activeOpModeStatus==RobotStatus.OpModeStatus.STOPPED && isRunning && connected &&
-                requestedOpModeStatus!=RobotStatus.OpModeStatus.STOPPED && !Thread.currentThread().isInterrupted());
-        while(data!=null && lastInputValue==null && isRunning && connected &&
-                activeOpModeStatus!=RobotStatus.OpModeStatus.STOPPED && !Thread.currentThread().isInterrupted());
-        try{
-            if(lastInputValue!=null)return lastInputValue;
-        } catch (NumberFormatException e){}
+        while (activeOpModeStatus == RobotStatus.OpModeStatus.STOPPED && isRunning && connected &&
+                requestedOpModeStatus != RobotStatus.OpModeStatus.STOPPED && !Thread.currentThread().isInterrupted())
+            ;
+        while (data != null && lastInputValue == null && isRunning && connected &&
+                activeOpModeStatus != RobotStatus.OpModeStatus.STOPPED && !Thread.currentThread().isInterrupted())
+            ;
+        try {
+            if (lastInputValue != null) return lastInputValue;
+        } catch (NumberFormatException e) {
+        }
         return "";
     }
 
     ////////////////Called by the "RobotRestartChecker" thread in "FtcRobotControllerActivity" to see if the////////////////
     ////////////////restart button on the dashboard has been pressed, calls "internalRobotRestartRequested()"////////////////
-    public static boolean robotRestartRequested(){
+    public static boolean robotRestartRequested() {
         return dashboard.internalRobotRestartRequested();
     }
 
     ////////////////The actual code to check if the restart button has been pressed////////////////
-    private boolean internalRobotRestartRequested(){
-        if(restartRequested) {
+    private boolean internalRobotRestartRequested() {
+        if (restartRequested) {
             restartRequested = false;
             return true;
         }
@@ -350,14 +357,14 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     }
 
     ////////////////Called by "FtcRobotControllerActivity" when a restart has completed, calls "internalRestartComplete()"////////////////
-    public static void restartComplete(){
+    public static void restartComplete() {
         dashboard.internalRestartComplete();
     }
 
     ////////////////Code to refresh the dashboard when a restart is completed////////////////
-    private void internalRestartComplete(){
-        if(data!=null){
-            data.write(new Message(MessageType.RESTART_ROBOT,"HI"));
+    private void internalRestartComplete() {
+        if (data != null) {
+            data.write(new Message(MessageType.RESTART_ROBOT, "HI"));
             voltageSensors = null;
         }
     }
@@ -365,7 +372,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Called by "opModeManagerImpl"////////////////
     @Override
     public void onOpModePreInit(OpMode opMode) {
-        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")){
+        if (!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
             requestedOpModeStatus = RobotStatus.OpModeStatus.INIT;
             opModeInitTime = System.currentTimeMillis();
         }
@@ -374,31 +381,33 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Called by "opModeManagerImpl"////////////////
     @Override
     public void onOpModePreStart(OpMode opMode) {
-        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
+        if (!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
             requestedOpModeStatus = RobotStatus.OpModeStatus.RUNNING;
             opModeStartTime = System.currentTimeMillis();
         }
     }
 
     ////////////////Called by "AbstractOpMode"////////////////
-    public static void onOpModePreStop(){
+    public static void onOpModePreStop() {
         dashboard.internalOnOpModePreStop();
     }
 
     ////////////////Called by "onOpModePreStop"////////////////
-    public void internalOnOpModePreStop(){
-   }
+    public void internalOnOpModePreStop() {
+    }
 
     ////////////////Called by "opModeManagerImpl"////////////////
     @Override
     public void onOpModePostStop(OpMode opMode) {
-        if(!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
+        if (!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$"))
+            requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     }
 
     ////////////////Thread to start up dashboardtelemetry and then call "receiveMessage()" in a loop////////////////
-    private class DashboardHandler implements Runnable{
+    private class DashboardHandler implements Runnable {
 
-        public DashboardHandler(){}
+        public DashboardHandler() {
+        }
 
         @Override
         public void run() {
@@ -410,32 +419,35 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     }
 
     ////////////////Starts a connection and continuously monitor it////////////////
-    private class DataHandler implements Runnable{
+    private class DataHandler implements Runnable {
 
-        public DataHandler(){}
+        public DataHandler() {
+        }
+
         int loop = 0;
 
         @Override
         public void run() {
-            while (data==null) {
-               data = new Data();
+            while (data == null) {
+                data = new Data();
             }
-            while (isRunning){
-                if(data.isConnected()){
-                    if(data!=null&&loop==0&&!restartRequested)data.write(new Message(MessageType.BATTERY,battery()));
-                    if(batteryChecker!=null&&loop%2==0)batteryChecker.pollBatteryLevel(batteryWatcher);
-                    if(!connected) {
+            while (isRunning) {
+                if (data.isConnected()) {
+                    if (data != null && loop == 0 && !restartRequested)
+                        data.write(new Message(MessageType.BATTERY, battery()));
+                    if (batteryChecker != null && loop % 2 == 0)
+                        batteryChecker.pollBatteryLevel(batteryWatcher);
+                    if (!connected) {
                         connected = true;
                     }
-                }
-                else{
-                    if(connected) {
+                } else {
+                    if (connected) {
                         connected = false;
                         data = new Data();
                     }
                 }
                 loop++;
-                if(loop>40)loop=0;
+                if (loop > 40) loop = 0;
                 try {
                     Thread.sleep(250);
                 } catch (InterruptedException e) {
@@ -447,54 +459,51 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     }
 
     ////////////////Used by user OpMode to display telemetry on the dashboard////////////////
-    public class dashboardtelemetry{
+    public class dashboardtelemetry {
 
-        public dashboardtelemetry(){}
+        public dashboardtelemetry() {
+        }
 
-        public void write(String text){
+        public void write(String text) {
             String packet = "";
 
-            if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)||
+            if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
                     activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
-                double currentTime = (System.currentTimeMillis()-opModeStartTime)/1000;
+                double currentTime = (System.currentTimeMillis() - opModeStartTime) / 1000;
                 packet = date.getDateTime() + "`Time since start: " + currentTime + "`" + text;
-            }
-
-            else if(requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-                double currentTime = (System.currentTimeMillis()-opModeInitTime)/1000;
+            } else if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
+                double currentTime = (System.currentTimeMillis() - opModeInitTime) / 1000;
                 packet = date.getDateTime() + "`Time since init: " + currentTime + "`" + text;
-            }
+            } else packet = date.getDateTime() + "`Stopped`" + text;
 
-            else packet = date.getDateTime() + "`Stopped`" + text;
-
-            if(data!=null&&connected) data.write(new Message(MessageType.TELEMETRY, packet));
+            if (data != null && connected) data.write(new Message(MessageType.TELEMETRY, packet));
             else oldTelemetry = oldTelemetry + "&#%#&" + packet;
         }
 
-        public void write(int text){
+        public void write(int text) {
             write(String.valueOf(text));
         }
 
-        public void write(double text){
+        public void write(double text) {
             write(String.valueOf(text));
         }
 
-        public void updateInfo(){
-            if(data!=null&&connected) {
+        public void updateInfo() {
+            if (data != null && connected) {
                 data.write(new Message(MessageType.INFO, infoText));
             }
             infoText = "";
         }
 
-        public void info(String text){
+        public void info(String text) {
             infoText = infoText + text + "!#@$";
         }
 
-        public void info(int text){
+        public void info(int text) {
             info(String.valueOf(text));
         }
 
-        public void info(double text){
+        public void info(double text) {
             info(String.valueOf(text));
         }
     }
@@ -503,7 +512,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Called automatically by the driver station battery level code////////////////
     @Override
     public void updateBatteryStatus(BatteryChecker.BatteryStatus status) {
-        if(data!=null&&status!=null) {
+        if (data != null && status != null) {
             data.write(new Message(MessageType.PHONE_BATTERY, String.valueOf(status.percent)));
         }
     }

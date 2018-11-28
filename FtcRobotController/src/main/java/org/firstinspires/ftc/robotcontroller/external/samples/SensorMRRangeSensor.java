@@ -39,9 +39,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * {@link SensorMRRangeSensor} illustrates how to use the Modern Robotics
  * Range Sensor.
- *
+ * <p>
  * The op mode assumes that the range sensor is configured with a name of "sensor_range".
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
@@ -53,7 +53,8 @@ public class SensorMRRangeSensor extends LinearOpMode {
 
     ModernRoboticsI2cRangeSensor rangeSensor;
 
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
 
         // get a reference to our compass
         rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "sensor_range");

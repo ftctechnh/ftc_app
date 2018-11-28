@@ -43,9 +43,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 /**
  * {@link SensorREV2mDistance} illustrates how to use the REV Robotics
  * Time-of-Flight Range Sensor.
- *
+ * <p>
  * The op mode assumes that the range sensor is configured with a name of "sensor_range".
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  *
@@ -64,15 +64,15 @@ public class SensorREV2mDistance extends LinearOpMode {
 
         // you can also cast this to a Rev2mDistanceSensor if you want to use added
         // methods associated with the Rev2mDistanceSensor class.
-        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor) sensorRange;
 
         telemetry.addData(">>", "Press start to continue");
         telemetry.update();
 
         waitForStart();
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             // generic DistanceSensor methods.
-            telemetry.addData("deviceName",sensorRange.getDeviceName() );
+            telemetry.addData("deviceName", sensorRange.getDeviceName());
             telemetry.addData("range", String.format("%.01f mm", sensorRange.getDistance(DistanceUnit.MM)));
             telemetry.addData("range", String.format("%.01f cm", sensorRange.getDistance(DistanceUnit.CM)));
             telemetry.addData("range", String.format("%.01f m", sensorRange.getDistance(DistanceUnit.METER)));

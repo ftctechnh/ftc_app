@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.I2cDeviceSynchDevice;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
 import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 
-import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 
 @I2cDeviceType()
 @DeviceProperties(xmlTag = "PIXYCAMERA", name = "PixyCam", description = "Camera with fast on board vision processing")

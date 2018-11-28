@@ -24,7 +24,7 @@ public enum MessageType {
     TELEMETRY,
     LOG;
 
-    public String getMessage(MessageType type){
+    public String getMessage(MessageType type) {
         return type.toString();
     }
 }

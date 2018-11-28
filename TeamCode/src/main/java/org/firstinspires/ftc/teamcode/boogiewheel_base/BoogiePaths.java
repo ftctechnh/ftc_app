@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name = "BoogieWheel Paths", group = "New")

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 
 public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable {
     //Motor

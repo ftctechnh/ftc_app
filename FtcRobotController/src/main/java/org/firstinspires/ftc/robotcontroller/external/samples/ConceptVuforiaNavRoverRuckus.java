@@ -57,41 +57,41 @@ import java.util.List;
  * This 2018-2019 OpMode illustrates the basics of using the Vuforia localizer to determine
  * positioning and orientation of robot on the FTC field.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * Vuforia uses the phone's camera to inspect it's surroundings, and attempt to locate target images.
- *
+ * <p>
  * When images are located, Vuforia is able to determine the position and orientation of the
  * image relative to the camera.  This sample code than combines that information with a
  * knowledge of where the target images are on the field, to determine the location of the camera.
- *
+ * <p>
  * This example assumes a "square" field configuration where the red and blue alliance stations
  * are on opposite walls of each other.
- *
+ * <p>
  * From the Audience perspective, the Red Alliance station is on the right and the
  * Blue Alliance Station is on the left.
-
+ * <p>
  * The four vision targets are located in the center of each of the perimeter walls with
  * the images facing inwards towards the robots:
- *     - BlueRover is the Mars Rover image target on the wall closest to the blue alliance
- *     - RedFootprint is the Lunar Footprint target on the wall closest to the red alliance
- *     - FrontCraters is the Lunar Craters image target on the wall closest to the audience
- *     - BackSpace is the Deep Space image target on the wall farthest from the audience
- *
+ * - BlueRover is the Mars Rover image target on the wall closest to the blue alliance
+ * - RedFootprint is the Lunar Footprint target on the wall closest to the red alliance
+ * - FrontCraters is the Lunar Craters image target on the wall closest to the audience
+ * - BackSpace is the Deep Space image target on the wall farthest from the audience
+ * <p>
  * A final calculation then uses the location of the camera on the robot to determine the
  * robot's location and orientation on the field.
  *
  * @see VuforiaLocalizer
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
+ * <p>
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
 
-@TeleOp(name="Concept: Vuforia Rover Nav", group ="Concept")
+@TeleOp(name = "Concept: Vuforia Rover Nav", group = "Concept")
 @Disabled
 public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
@@ -111,9 +111,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
     // Since ImageTarget trackables use mm to specifiy their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
-    private static final float mmPerInch        = 25.4f;
-    private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-    private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+    private static final float mmPerInch = 25.4f;
+    private static final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+    private static final float mmTargetHeight = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
     // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
     // Valid choices are:  BACK or FRONT
@@ -128,7 +128,8 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
      */
     VuforiaLocalizer vuforia;
 
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);
@@ -139,8 +140,8 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
         // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = VUFORIA_KEY ;
-        parameters.cameraDirection   = CAMERA_CHOICE;
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = CAMERA_CHOICE;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -212,7 +213,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
          */
         OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
                 .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 90));
         frontCraters.setLocation(frontCratersLocationOnField);
 
         /**
@@ -250,9 +251,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 110;   // eg: Camera is 110 mm in front of robot center
+        final int CAMERA_FORWARD_DISPLACEMENT = 110;   // eg: Camera is 110 mm in front of robot center
         final int CAMERA_VERTICAL_DISPLACEMENT = 200;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -260,9 +261,8 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
                         CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
 
         /**  Let all the trackable listeners know where the phone is.  */
-        for (VuforiaTrackable trackable : allTrackables)
-        {
-            ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
 
         /** Wait for the game to begin */
@@ -277,13 +277,13 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             // check all the trackable target to see which one (if any) is visible.
             targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
-                if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
+                if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
                     telemetry.addData("Visible Target", trackable.getName());
                     targetVisible = true;
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
                     // the last time that call was made, or if the trackable is not currently visible.
-                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                    OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                     if (robotLocationTransform != null) {
                         lastLocation = robotLocationTransform;
                     }
@@ -301,8 +301,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
-            }
-            else {
+            } else {
                 telemetry.addData("Visible Target", "none");
             }
             telemetry.update();

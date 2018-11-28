@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation that specifies configuration classes.
- *
+ * <p>
  * All public, static, non-final fields of the class will be automatically added as configuration
  * variables in the dashboard. When the user saves new values, these fields are correspondingly
  * updated. Classes annotated with {@link com.qualcomm.robotcore.eventloop.opmode.Disabled} are

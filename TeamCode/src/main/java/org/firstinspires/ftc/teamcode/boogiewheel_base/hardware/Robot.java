@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
-import org.firstinspires.ftc.teamcode.framework.AbstractRobot;
+import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
 import java.util.concurrent.Callable;
 
@@ -178,15 +178,15 @@ public class Robot extends AbstractRobot {
 
     }
 
-    public Callable moveRobotLiftToTopCallable(){
-        return ()->{
-          hardware.robotLift.robotLiftTop();
-          return true;
+    public Callable moveRobotLiftToTopCallable() {
+        return () -> {
+            hardware.robotLift.robotLiftTop();
+            return true;
         };
     }
 
-    public Callable moveRobotLiftToBottomCallable(){
-        return ()->{
+    public Callable moveRobotLiftToBottomCallable() {
+        return () -> {
             hardware.robotLift.robotLiftBottom();
             return true;
         };

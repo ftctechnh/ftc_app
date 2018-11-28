@@ -39,31 +39,31 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * This file illustrates the concept of calibrating a MR Compass
  * It uses the common Pushbot hardware class to define the drive on the robot.
  * The code is structured as a LinearOpMode
- *
- *   This code assumes there is a compass configured with the name "compass"
- *
- *   This code will put the compass into calibration mode, wait three seconds and then attempt
- *   to rotate two full turns clockwise.  This will allow the compass to do a magnetic calibration.
- *
- *   Once compete, the program will put the compass back into measurement mode and check to see if the
- *   calibration was successful.
- *
+ * <p>
+ * This code assumes there is a compass configured with the name "compass"
+ * <p>
+ * This code will put the compass into calibration mode, wait three seconds and then attempt
+ * to rotate two full turns clockwise.  This will allow the compass to do a magnetic calibration.
+ * <p>
+ * Once compete, the program will put the compass back into measurement mode and check to see if the
+ * calibration was successful.
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Concept: Compass Calibration", group="Concept")
+@TeleOp(name = "Concept: Compass Calibration", group = "Concept")
 @Disabled
 public class ConceptCompassCalibration extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot     robot   = new HardwarePushbot();   // Use a Pushbot's hardware
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
     private ElapsedTime runtime = new ElapsedTime();
-    CompassSensor       compass;
+    CompassSensor compass;
 
-    final static double     MOTOR_POWER   = 0.2; // scale from 0 to 1
-    static final long       HOLD_TIME_MS  = 3000;
-    static final double     CAL_TIME_SEC  = 20;
+    final static double MOTOR_POWER = 0.2; // scale from 0 to 1
+    static final long HOLD_TIME_MS = 3000;
+    static final double CAL_TIME_SEC = 20;
 
     @Override
     public void runOpMode() {

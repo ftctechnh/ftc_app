@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vis
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia.VuforiaImpl;
 

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vis
 import android.graphics.Bitmap;
 import android.graphics.Color;
 
-import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 
 public class VuforiaTest {
     Vuforia vuforia;

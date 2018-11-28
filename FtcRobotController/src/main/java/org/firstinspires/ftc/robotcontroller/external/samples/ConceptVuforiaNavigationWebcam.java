@@ -65,34 +65,34 @@ import java.util.Locale;
  * This 2016-2017 OpMode illustrates the basics of using the Vuforia localizer to determine
  * positioning and orientation of robot on the FTC field.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * Vuforia uses the phone's camera to inspect it's surroundings, and attempt to locate target images.
- *
+ * <p>
  * When images are located, Vuforia is able to determine the position and orientation of the
  * image relative to the camera.  This sample code than combines that information with a
  * knowledge of where the target images are on the field, to determine the location of the camera.
- *
+ * <p>
  * This example assumes a "diamond" field configuration where the red and blue alliance stations
  * are adjacent on the corner of the field furthest from the audience.
  * From the Audience perspective, the Red driver station is on the right.
  * The two vision target are located on the two walls closest to the audience, facing in.
  * The Stones are on the RED side of the field, and the Chips are on the Blue side.
- *
+ * <p>
  * A final calculation then uses the location of the camera on the robot to determine the
  * robot's location and orientation on the field.
  *
  * @see VuforiaLocalizer
  * @see VuforiaTrackableDefaultListener
  * see  ftc_app/doc/tutorial/FTC_FieldCoordinateSystemDefinition.pdf
- *
+ * <p>
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
+ * <p>
  * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
  * is explained below.
  */
 
-@TeleOp(name="Concept: Vuforia Nav Webcam", group ="Concept")
+@TeleOp(name = "Concept: Vuforia Nav Webcam", group = "Concept")
 @Disabled
 public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
 
@@ -118,7 +118,8 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
      */
     WebcamName webcamName;
 
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
 
         /*
          * Retrieve the camera we are to use.
@@ -182,7 +183,7 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
         VuforiaTrackable redTarget = stonesAndChips.get(0);
         redTarget.setName("RedTarget");  // Stones
 
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
+        VuforiaTrackable blueTarget = stonesAndChips.get(1);
         blueTarget.setName("BlueTarget");  // Chips
 
         /** For convenience, gather together all the trackable objects in one easily-iterable collection */
@@ -196,9 +197,9 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
          * You don't *have to* use mm here, but the units here and the units used in the XML
          * target configuration files *must* correspond for the math to work out correctly.
          */
-        float mmPerInch        = 25.4f;
-        float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
-        float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
+        float mmPerInch = 25.4f;
+        float mmBotWidth = 18 * mmPerInch;            // ... or whatever is right for your robot
+        float mmFTCFieldWidth = (12 * 12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
 
         /**
          * In order for localization to work, we need to tell the system where each target we
@@ -260,7 +261,7 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
         OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the RED WALL. Our translation here
                 is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth/2, 0, 0)
+                .translation(-mmFTCFieldWidth / 2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -268,15 +269,15 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
         redTarget.setLocationFtcFieldFromTarget(redTargetLocationOnField);
         RobotLog.ii(TAG, "Red Target=%s", format(redTargetLocationOnField));
 
-       /*
-        * To place the Stones Target on the Blue Audience wall:
-        * - First we rotate it 90 around the field's X axis to flip it upright
-        * - Finally, we translate it along the Y axis towards the blue audience wall.
-        */
+        /*
+         * To place the Stones Target on the Blue Audience wall:
+         * - First we rotate it 90 around the field's X axis to flip it upright
+         * - Finally, we translate it along the Y axis towards the blue audience wall.
+         */
         OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
                 /* Then we translate the target off to the Blue Audience wall.
                 Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
+                .translation(0, mmFTCFieldWidth / 2, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
                         AxesReference.EXTRINSIC, AxesOrder.XZX,
@@ -344,7 +345,7 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
          */
 
         OpenGLMatrix robotFromCamera = OpenGLMatrix
-                .translation(mmBotWidth/2,0,0)
+                .translation(mmBotWidth / 2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.XZY,
                         AngleUnit.DEGREES, 90, 90, 0));
@@ -355,8 +356,8 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
          * listener is a {@link VuforiaTrackableDefaultListener} and can so safely cast because
          * we have not ourselves installed a listener of a different type.
          */
-        ((VuforiaTrackableDefaultListener)redTarget.getListener()).setCameraLocationOnRobot(parameters.cameraName, robotFromCamera);
-        ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setCameraLocationOnRobot(parameters.cameraName, robotFromCamera);
+        ((VuforiaTrackableDefaultListener) redTarget.getListener()).setCameraLocationOnRobot(parameters.cameraName, robotFromCamera);
+        ((VuforiaTrackableDefaultListener) blueTarget.getListener()).setCameraLocationOnRobot(parameters.cameraName, robotFromCamera);
 
         /**
          * A brief tutorial: here's how all the math is going to work:
@@ -390,7 +391,7 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
 
             if (gamepad1.a && !buttonPressed) {
                 captureFrameToFile();
-                }
+            }
             buttonPressed = gamepad1.a;
 
             for (VuforiaTrackable trackable : allTrackables) {
@@ -399,9 +400,9 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
                  * the last time that call was made, or if the trackable is not currently visible.
                  * getRobotLocation() will return null if the trackable is not currently visible.
                  */
-                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
+                telemetry.addData(trackable.getName(), ((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible() ? "Visible" : "Not Visible");    //
 
-                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
                 if (robotLocationTransform != null) {
                     lastLocation = robotLocationTransform;
                 }
@@ -436,10 +437,9 @@ public class ConceptVuforiaNavigationWebcam extends LinearOpMode {
      * aiming and alignment.
      */
     void captureFrameToFile() {
-        vuforia.getFrameOnce(Continuation.create(ThreadPool.getDefault(), new Consumer<Frame>()
-            {
-            @Override public void accept(Frame frame)
-                {
+        vuforia.getFrameOnce(Continuation.create(ThreadPool.getDefault(), new Consumer<Frame>() {
+            @Override
+            public void accept(Frame frame) {
                 Bitmap bitmap = vuforia.convertFrameToBitmap(frame);
                 if (bitmap != null) {
                     File file = new File(captureDirectory, String.format(Locale.getDefault(), "VuforiaFrame-%d.png", captureCounter++));

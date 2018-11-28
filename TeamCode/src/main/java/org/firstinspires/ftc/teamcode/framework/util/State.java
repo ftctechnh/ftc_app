@@ -1,15 +1,15 @@
-package org.firstinspires.ftc.teamcode.framework;
+package org.firstinspires.ftc.teamcode.framework.util;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public class State{
+public class State {
 
     private final String name, previousState;
     private final Callable<Boolean> run;
     private Future<Boolean> future = null;
 
-    public State(String name, String previousState, Callable<Boolean> run){
+    public State(String name, String previousState, Callable<Boolean> run) {
         this.name = name;
         this.previousState = previousState;
         this.run = run;
@@ -19,7 +19,7 @@ public class State{
         return name;
     }
 
-    public Callable<Boolean> getRun(){
+    public Callable<Boolean> getRun() {
         return run;
     }
 
@@ -27,18 +27,18 @@ public class State{
         return previousState;
     }
 
-    public void setFuture(Future<Boolean> future){
+    public void setFuture(Future<Boolean> future) {
         this.future = future;
     }
 
-    public boolean isDone(){
-        if(future!=null){
+    public boolean isDone() {
+        if (future != null) {
             return future.isDone();
         }
         return true;
     }
 
-    public void cancel(){
+    public void cancel() {
         future.cancel(true);
     }
 }

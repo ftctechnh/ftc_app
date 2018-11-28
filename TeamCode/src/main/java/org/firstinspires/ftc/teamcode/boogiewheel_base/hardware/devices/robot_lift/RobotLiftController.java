@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.robot_lift;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
-import org.firstinspires.ftc.teamcode.framework.SubsystemController;
+import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 public class RobotLiftController extends SubsystemController {
 

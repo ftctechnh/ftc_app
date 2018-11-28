@@ -38,17 +38,16 @@ import com.qualcomm.robotcore.util.Range;
 
 
 /**
- *
  * This OpMode executes a basic Tank Drive Teleop for a two wheeled robot using two REV SPARK Minis.
  * To use this example, connect two REV SPARK Minis into servo ports on the Expansion Hub. On the
  * robot configuration, use the drop down list under 'Servos' to select 'REV SPARK Mini Controller'
  * and name them 'left_drive' and 'right_drive'.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="REV SPARK Mini Simple Drive Example", group="Concept")
+@TeleOp(name = "REV SPARK Mini Simple Drive Example", group = "Concept")
 @Disabled
 public class ConceptRevSPARKMini extends LinearOpMode {
 
@@ -65,7 +64,7 @@ public class ConceptRevSPARKMini extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
-        leftDrive  = hardwareMap.get(DcMotorSimple.class, "left_drive");
+        leftDrive = hardwareMap.get(DcMotorSimple.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotorSimple.class, "right_drive");
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -90,9 +89,9 @@ public class ConceptRevSPARKMini extends LinearOpMode {
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.left_stick_y;
-            double turn  =  gamepad1.right_stick_x;
-            leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
-            rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            double turn = gamepad1.right_stick_x;
+            leftPower = Range.clip(drive + turn, -1.0, 1.0);
+            rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.

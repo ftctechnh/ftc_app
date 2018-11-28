@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.framework.AbstractAuton;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
 @Autonomous(name = "BoogieWheel Auton", group = "New")

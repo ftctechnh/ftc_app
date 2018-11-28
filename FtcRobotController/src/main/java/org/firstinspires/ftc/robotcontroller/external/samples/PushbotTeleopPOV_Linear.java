@@ -38,24 +38,24 @@ import com.qualcomm.robotcore.util.Range;
  * This OpMode uses the common Pushbot hardware class to define the devices on the robot.
  * All device access is managed through the HardwarePushbot class.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * This particular OpMode executes a POV Game style Teleop for a PushBot
  * In this mode the left stick moves the robot FWD and back, the Right stick turns left and right.
  * It raises and lowers the claw using the Gampad Y and A buttons respectively.
  * It also opens and closes the claws slowly using the left and right Bumper buttons.
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Pushbot: Teleop POV", group="Pushbot")
+@TeleOp(name = "Pushbot: Teleop POV", group = "Pushbot")
 @Disabled
 public class PushbotTeleopPOV_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot robot           = new HardwarePushbot();   // Use a Pushbot's hardware
-    double          clawOffset      = 0;                       // Servo mid position
-    final double    CLAW_SPEED      = 0.02 ;                   // sets rate to move servo
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    double clawOffset = 0;                       // Servo mid position
+    final double CLAW_SPEED = 0.02;                   // sets rate to move servo
 
     @Override
     public void runOpMode() {
@@ -84,16 +84,15 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
             // In this mode the Left stick moves the robot fwd and back, the Right stick turns left and right.
             // This way it's also easy to just drive straight, or just turn.
             drive = -gamepad1.left_stick_y;
-            turn  =  gamepad1.right_stick_x;
+            turn = gamepad1.right_stick_x;
 
             // Combine drive and turn for blended motion.
-            left  = drive + turn;
+            left = drive + turn;
             right = drive - turn;
 
             // Normalize the values so neither exceed +/- 1.0
             max = Math.max(Math.abs(left), Math.abs(right));
-            if (max > 1.0)
-            {
+            if (max > 1.0) {
                 left /= max;
                 right /= max;
             }
@@ -122,8 +121,8 @@ public class PushbotTeleopPOV_Linear extends LinearOpMode {
                 robot.leftArm.setPower(0.0);
 
             // Send telemetry message to signify robot running;
-            telemetry.addData("claw",  "Offset = %.2f", clawOffset);
-            telemetry.addData("left",  "%.2f", left);
+            telemetry.addData("claw", "Offset = %.2f", clawOffset);
+            telemetry.addData("left", "%.2f", left);
             telemetry.addData("right", "%.2f", right);
             telemetry.update();
 

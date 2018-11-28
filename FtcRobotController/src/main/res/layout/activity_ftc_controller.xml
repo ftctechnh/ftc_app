@@ -32,172 +32,173 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:style="http://schemas.android.com/apk/res-auto"
-              tools:context="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
-              android:focusable="true"
-              android:id="@+id/entire_screen"
-              android:orientation="vertical">
-
-  <!-- black bar on top -->
-  <RelativeLayout
-    android:id="@+id/top_bar"
-    android:layout_width="fill_parent"
-    android:layout_height="80dp"
-    android:background="@color/background_black">
-
-    <ImageView
-      android:id="@+id/robotIcon"
-      android:src="@drawable/icon_robotcontroller"
-      android:layout_width="wrap_content"
-      android:layout_height="fill_parent"
-      android:adjustViewBounds="true"
-      android:layout_margin="1dp"/>
-
-    <TextView
-      android:id="@+id/textDeviceName"
-      android:layout_toEndOf="@id/robotIcon"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:textColor="?attr/textWhite"
-      android:textAppearance="?android:attr/textAppearanceMedium"
-      android:padding="8dp"
-      android:textStyle="bold"/>
-
-    <ImageButton
-      android:id="@+id/menu_buttons"
-      android:scaleType="fitXY"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:src="@drawable/icon_menu"
-      android:background="@android:color/transparent"
-      android:padding="15dp"
-      android:adjustViewBounds="true"
-      android:layout_alignParentEnd="true"
-      android:layout_centerInParent="true"
-      android:layout_centerHorizontal="true"
-      android:layout_margin="10dp"/>
-
-  </RelativeLayout>
-  <!-- end of black bar -->
-
-  <include layout="@layout/header"
-           android:id="@+id/included_header"/>
-
-  <RelativeLayout
-    android:id="@+id/RelativeLayout"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin" >
+    xmlns:style="http://schemas.android.com/apk/res-auto"
+    tools:context="org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity"
+    android:focusable="true"
+    android:id="@+id/entire_screen"
+    android:orientation="vertical">
 
-    <TextView
-      android:id="@+id/textNetworkConnectionStatus"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:visibility="invisible"
-      android:text="" />
+    <!-- black bar on top -->
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="80dp"
+        android:background="@color/background_black">
 
-    <TextView
-      android:id="@+id/textRobotStatus"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/textNetworkConnectionStatus"
-      android:visibility="invisible"
-      android:text="" />
+        <ImageView
+            android:id="@+id/robotIcon"
+            android:src="@drawable/icon_robotcontroller"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:adjustViewBounds="true"
+            android:layout_margin="1dp" />
 
-    <TextView
-      android:id="@+id/textOpMode"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/textRobotStatus"
-      android:visibility="invisible"
-      android:text="" />
+        <TextView
+            android:id="@+id/textDeviceName"
+            android:layout_toEndOf="@id/robotIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/textWhite"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:padding="8dp"
+            android:textStyle="bold" />
 
-    <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_below="@+id/textOpMode"
-      android:layout_above="@+id/textGamepad1">
+        <ImageButton
+            android:id="@+id/menu_buttons"
+            android:scaleType="fitXY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon_menu"
+            android:background="@android:color/transparent"
+            android:padding="15dp"
+            android:adjustViewBounds="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp" />
 
-      <LinearLayout
-          android:id="@+id/monitorContainer"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent"
-          android:orientation="vertical">
+    </RelativeLayout>
+    <!-- end of black bar -->
 
-        <LinearLayout
-            android:id="@+id/cameraMonitorViewId"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            />
-        <FrameLayout
-            android:id="@+id/tfodMonitorViewId"
-            android:visibility="gone"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            />
+    <include
+        layout="@layout/header"
+        android:id="@+id/included_header" />
 
-        </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/RelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:keepScreenOn="true"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-      <!-- When visible, the error message will overlay and thus partially
-           obscure part of the camera monitor. We make this trade off so as to
-           allow for a bigger camera monitor view in the common case when the
-           error is not in fact present
-        -->
-        <TextView style="@style/FtcTextViewStyleBold"
-            android:id="@+id/textErrorMessage"
+        <TextView
+            android:id="@+id/textNetworkConnectionStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text=""
             android:visibility="invisible"
-            android:textColor="?attr/textMediumDark" />
+            android:text="" />
 
-    </FrameLayout>
+        <TextView
+            android:id="@+id/textRobotStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textNetworkConnectionStatus"
+            android:visibility="invisible"
+            android:text="" />
 
-    <TextView
-      android:id="@+id/textGamepad1"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_above="@+id/textGamepad2"
-      android:visibility="invisible"
-      android:text="" />
+        <TextView
+            android:id="@+id/textOpMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textRobotStatus"
+            android:visibility="invisible"
+            android:text="" />
 
-    <TextView
-      android:id="@+id/textGamepad2"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:visibility="invisible"
-      android:text="" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textOpMode"
+            android:layout_above="@+id/textGamepad1">
 
-    <!-- invisible except when programming mode is activated from the DS -->
-    <TextView
-      android:id="@+id/textRemoteProgrammingMode"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="?attr/backgroundLight"
-      android:gravity="center"
-      android:textColor="?attr/textWhite"
-      android:textSize="40sp"
-      android:textStyle="bold"
-      android:visibility="invisible"
-      android:text="" />
+            <LinearLayout
+                android:id="@+id/monitorContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-  </RelativeLayout>
+                <LinearLayout
+                    android:id="@+id/cameraMonitorViewId"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
 
-  <WebView
-    android:id="@+id/webViewBlocksRuntime"
-    android:layout_width="1dp"
-    android:layout_height="1dp" />
+                <FrameLayout
+                    android:id="@+id/tfodMonitorViewId"
+                    android:visibility="gone"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+            <!-- When visible, the error message will overlay and thus partially
+                 obscure part of the camera monitor. We make this trade off so as to
+                 allow for a bigger camera monitor view in the common case when the
+                 error is not in fact present
+              -->
+            <TextView
+                style="@style/FtcTextViewStyleBold"
+                android:id="@+id/textErrorMessage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:visibility="invisible"
+                android:textColor="?attr/textMediumDark" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/textGamepad1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/textGamepad2"
+            android:visibility="invisible"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/textGamepad2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="invisible"
+            android:text="" />
+
+        <!-- invisible except when programming mode is activated from the DS -->
+        <TextView
+            android:id="@+id/textRemoteProgrammingMode"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/backgroundLight"
+            android:gravity="center"
+            android:textColor="?attr/textWhite"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            android:visibility="invisible"
+            android:text="" />
+
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/webViewBlocksRuntime"
+        android:layout_width="1dp"
+        android:layout_height="1dp" />
 
 </LinearLayout>

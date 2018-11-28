@@ -7,16 +7,16 @@ public class Date {
     private SimpleDateFormat df;
     private SimpleDateFormat dtf;
 
-    public Date(){
+    public Date() {
         df = new SimpleDateFormat("MM/dd/yyyy");
         dtf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss.SSS");
     }
 
-    public String getDate(){
+    public String getDate() {
         return df.format(new java.util.Date());
     }
 
-    public String getDateTime(){
+    public String getDateTime() {
         return dtf.format(new java.util.Date());
     }
 }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework;
+package org.firstinspires.ftc.teamcode.framework.opModes;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 
@@ -42,13 +42,13 @@ public abstract class AbstractAuton extends AbstractOpMode {
         while (!isStopRequested() && opModeIsActive() && threadRunning) ;
 
         threadRunning = true;
-        if(!isStopRequested() && opModeIsActive())service.execute(RunThread);
+        if (!isStopRequested() && opModeIsActive()) service.execute(RunThread);
 
         while (!isStopRequested() && opModeIsActive() && threadRunning) {
             checkException();
         }
 
-        AbstractOpMode.stopRequested();
+        //AbstractOpMode.stopRequested();
 
         if ((isStopRequested() || !opModeIsActive()) && threadRunning) {
             service.shutdownNow();

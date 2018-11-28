@@ -1,8 +1,9 @@
-package org.firstinspires.ftc.teamcode.framework;
+package org.firstinspires.ftc.teamcode.framework.opModes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
+import org.firstinspires.ftc.teamcode.framework.util.Emitter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,7 +17,7 @@ import java.util.concurrent.Future;
 
 public abstract class AbstractTeleop extends AbstractOpMode {
 
-    private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<Exception>());
+    private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
 
     //Setup gamepad
     private Emitter emitter = new Emitter();
@@ -129,7 +130,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         telemetry.addData("Stopping");
         telemetry.update();
 
-        AbstractOpMode.stopRequested();
+        //AbstractOpMode.stopRequested();
 
         //TODO remake our shutdown procedure
         CurrentFuture.cancel(true);

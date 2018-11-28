@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.intake;
 
-import org.firstinspires.ftc.teamcode.framework.SubsystemController;
+import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 public class IntakeController extends SubsystemController {
 

@@ -1,4 +1,6 @@
-package org.firstinspires.ftc.teamcode.framework;
+package org.firstinspires.ftc.teamcode.framework.util;
+
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 
 public abstract class AbstractRobot {
 

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.framework.AbstractTeleop;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
 
 @TeleOp(name = "BoogieWheel Teleop", group = "New")
 //@Disabled

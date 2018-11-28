@@ -59,11 +59,11 @@ public class OurEventLoop extends FtcEventLoopBase {
     // State
     //------------------------------------------------------------------------------------------------
 
-    protected final  Utility                 utility;
-    protected final  OpModeManagerImpl       opModeManager;
+    protected final Utility utility;
+    protected final OpModeManagerImpl opModeManager;
     protected UsbModuleAttachmentHandler usbModuleAttachmentHandler;
-    protected final  Map<String,Long>        recentlyAttachedUsbDevices;  // serialNumber -> when to attach
-    protected final  AtomicReference<OpMode> opModeStopRequested;
+    protected final Map<String, Long> recentlyAttachedUsbDevices;  // serialNumber -> when to attach
+    protected final AtomicReference<OpMode> opModeStopRequested;
 
     //------------------------------------------------------------------------------------------------
     // Construction
@@ -71,11 +71,11 @@ public class OurEventLoop extends FtcEventLoopBase {
 
     public OurEventLoop(HardwareFactory hardwareFactory, OpModeRegister userOpmodeRegister, UpdateUI.Callback callback, Activity activityContext, ProgrammingModeController programmingModeController) {
         super(hardwareFactory, userOpmodeRegister, callback, activityContext, programmingModeController);
-        this.opModeManager              = createOpModeManager(activityContext);
+        this.opModeManager = createOpModeManager(activityContext);
         this.usbModuleAttachmentHandler = new DefaultUsbModuleAttachmentHandler();
-        this.recentlyAttachedUsbDevices = new ConcurrentHashMap<String,Long>();
-        this.opModeStopRequested        = new AtomicReference<OpMode>();
-        this.utility                    = new Utility(activityContext);
+        this.recentlyAttachedUsbDevices = new ConcurrentHashMap<String, Long>();
+        this.opModeStopRequested = new AtomicReference<OpMode>();
+        this.utility = new Utility(activityContext);
     }
 
     protected static OpModeManagerImpl createOpModeManager(Activity activityContext) {
@@ -135,6 +135,7 @@ public class OurEventLoop extends FtcEventLoopBase {
     /**
      * Loop method, this will be called repeatedly while the robot is running.
      * <p>
+     *
      * @see com.qualcomm.robotcore.eventloop.EventLoop#loop()
      * <p>
      * Caller synchronizes: called on EventLoopRunnable.run() thread.
@@ -170,6 +171,7 @@ public class OurEventLoop extends FtcEventLoopBase {
      * If an exception is thrown, then the event loop manager will attempt to shut down the robot
      * without the benefit of this method.
      * <p>
+     *
      * @see com.qualcomm.robotcore.eventloop.EventLoop#teardown()
      * <p>
      * Caller synchronizes: called on EventLoopRunnable.run() thread.
@@ -218,7 +220,7 @@ public class OurEventLoop extends FtcEventLoopBase {
             } else {
                 localResult = CallbackResult.NOT_HANDLED;
             }
-            if (localResult==CallbackResult.HANDLED) {
+            if (localResult == CallbackResult.HANDLED) {
                 result = localResult;
             }
         }
@@ -239,10 +241,11 @@ public class OurEventLoop extends FtcEventLoopBase {
         // Actually carry out the scan in a worker thread so that we don't hold up the receive loop for
         // half-second or so that carrying out the scan will take.
         ThreadPool.getDefault().execute(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 try {
                     ScannedDevices scannedDevices = future.await();
-                    if (scannedDevices==null) scannedDevices = new ScannedDevices();
+                    if (scannedDevices == null) scannedDevices = new ScannedDevices();
 
                     // Package up the raw scanned device info and send that back to the DS
                     String data = usbScanManager.packageCommandResponse(scannedDevices);
@@ -268,10 +271,11 @@ public class OurEventLoop extends FtcEventLoopBase {
         // Actually carry out the scan in a worker thread so that we don't hold up the receive loop for
         // full second or more that carrying out the discovery will take.
         ThreadPool.getDefault().execute(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 try {
                     LynxModuleMetaList lynxModules = future.await();
-                    if (lynxModules==null) lynxModules = new LynxModuleMetaList(serialNumber);
+                    if (lynxModules == null) lynxModules = new LynxModuleMetaList(serialNumber);
 
                     // Package up the raw module list and send that back to the DS
                     String data = usbScanManager.packageCommandResponse(lynxModules);
@@ -297,7 +301,8 @@ public class OurEventLoop extends FtcEventLoopBase {
         super.sendUIState();
 
         EventLoopManager manager = ftcEventLoopHandler.getEventLoopManager();
-        if (manager != null) manager.refreshSystemTelemetryNow(); // null check is paranoia, need isn't verified
+        if (manager != null)
+            manager.refreshSystemTelemetryNow(); // null check is paranoia, need isn't verified
     }
 
     /*
@@ -353,17 +358,18 @@ public class OurEventLoop extends FtcEventLoopBase {
 
     /**
      * Deal with the fact that a UsbDevice has recently attached to the system
+     *
      * @param usbDevice
      */
-    @Override public void onUsbDeviceAttached(UsbDevice usbDevice) {
+    @Override
+    public void onUsbDeviceAttached(UsbDevice usbDevice) {
         // Find out who it is.
         SerialNumber serialNumber = getSerialNumberOfUsbDevice(usbDevice);
 
         // Remember whoever it was for later
         if (serialNumber != null) {
             pendUsbDeviceAttachment(serialNumber, 0, TimeUnit.MILLISECONDS);
-        }
-        else {
+        } else {
             // We don't actually understand under what conditions we'll be unable to open an
             // FT_Device for which we're actually receiving a change notification: who else
             // would have it open (for example)? We'd like to do something more, but don't
@@ -383,7 +389,7 @@ public class OurEventLoop extends FtcEventLoopBase {
             serialNumber = SerialNumber.fromStringOrNull(usbDevice.getSerialNumber());
         }
 
-        if (serialNumber==null) {
+        if (serialNumber == null) {
             // Don't need this branch any more, but left in for now to preserve code paths. Remove after further testing.
             FtDevice ftDevice = null;
             try {
@@ -392,7 +398,7 @@ public class OurEventLoop extends FtcEventLoopBase {
                 if (ftDevice != null) {
                     serialNumber = SerialNumber.fromStringOrNull(ftDevice.getDeviceInfo().serialNumber);
                 }
-            } catch (RuntimeException|FtDeviceIOException e) {  // RuntimeException is paranoia
+            } catch (RuntimeException | FtDeviceIOException e) {  // RuntimeException is paranoia
                 // ignored
             } finally {
                 if (ftDevice != null)
@@ -400,7 +406,7 @@ public class OurEventLoop extends FtcEventLoopBase {
             }
         }
 
-        if (serialNumber==null) { // non FTDI devices on KitKat, or devices that simply lack a serial number
+        if (serialNumber == null) { // non FTDI devices on KitKat, or devices that simply lack a serial number
             try {
                 CameraManagerInternal cameraManagerInternal = (CameraManagerInternal) ClassFactory.getInstance().getCameraManager();
                 serialNumber = cameraManagerInternal.getRealOrVendorProductSerialNumber(usbDevice);
@@ -412,8 +418,9 @@ public class OurEventLoop extends FtcEventLoopBase {
         return serialNumber;
     }
 
-    @Override public void pendUsbDeviceAttachment(SerialNumber serialNumber, long time, TimeUnit unit) {
-        long nsDeadline = time==0L ? 0L : System.nanoTime() + unit.toNanos(time);
+    @Override
+    public void pendUsbDeviceAttachment(SerialNumber serialNumber, long time, TimeUnit unit) {
+        long nsDeadline = time == 0L ? 0L : System.nanoTime() + unit.toNanos(time);
         this.recentlyAttachedUsbDevices.put(serialNumber.getString(), nsDeadline);
     }
 
@@ -421,13 +428,14 @@ public class OurEventLoop extends FtcEventLoopBase {
      * Process any usb devices that might have recently attached.
      * Called on the event loop thread.
      */
-    @Override public void processedRecentlyAttachedUsbDevices() throws RobotCoreException, InterruptedException {
+    @Override
+    public void processedRecentlyAttachedUsbDevices() throws RobotCoreException, InterruptedException {
 
         // Snarf a copy of the set of serial numbers
         Set<String> serialNumbersToProcess = new HashSet<String>();
         long now = System.nanoTime();
 
-        for (Map.Entry<String,Long> pair : this.recentlyAttachedUsbDevices.entrySet()) {
+        for (Map.Entry<String, Long> pair : this.recentlyAttachedUsbDevices.entrySet()) {
             if (pair.getValue() <= now) {
                 serialNumbersToProcess.add(pair.getKey());
                 this.recentlyAttachedUsbDevices.remove(pair.getKey());

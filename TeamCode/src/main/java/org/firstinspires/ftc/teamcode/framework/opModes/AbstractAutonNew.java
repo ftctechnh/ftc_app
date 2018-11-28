@@ -1,6 +1,9 @@
-package org.firstinspires.ftc.teamcode.framework;
+package org.firstinspires.ftc.teamcode.framework.opModes;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
+import org.firstinspires.ftc.teamcode.framework.util.State;
+import org.firstinspires.ftc.teamcode.framework.util.StateConfigurationException;
+import org.firstinspires.ftc.teamcode.framework.util.StateMachine;
 
 import java.util.ArrayList;
 import java.util.Collections;

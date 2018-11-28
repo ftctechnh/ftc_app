@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.SubsystemController;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
 
@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
-import static org.firstinspires.ftc.teamcode.framework.AbstractOpMode.isOpModeActive;
+import static org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode.isOpModeActive;
 
 public class DriveController extends SubsystemController {
 

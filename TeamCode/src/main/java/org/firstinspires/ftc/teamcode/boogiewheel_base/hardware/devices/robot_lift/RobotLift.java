@@ -22,7 +22,8 @@ public class RobotLift {
     public void setLiftPower(double power) {
         liftMotor.setPower(power);
     }
-    public void setPosition(int position){
+
+    public void setPosition(int position) {
         liftMotor.setPower(0.5);
         liftMotor.setTargetPosition(position);
     }

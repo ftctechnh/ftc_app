@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware;
 
-import org.firstinspires.ftc.teamcode.framework.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 
 public class PIDController {
     private double p, i, d, iVal, lastError = 0, ilimit = 1, minimumOutput = 0;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework;
+package org.firstinspires.ftc.teamcode.framework.util;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
@@ -10,26 +10,27 @@ public class StateMachine {
 
     private ExecutorService service;
 
-    protected StateMachine() {
+    public StateMachine() {
         service = Executors.newCachedThreadPool();
-        activeStates.add(new State("start", "", ()-> true));
+        activeStates.add(new State("start", "", () -> true));
     }
 
-    protected void prepare() throws StateConfigurationException {
-        for(State state:states) {
+    public void prepare() throws StateConfigurationException {
+        for (State state : states) {
             boolean noPrevious = true;
 
-            for (State checkState:states) {
-                if(state.getPreviousState().equals(checkState.getName()))noPrevious = false;
+            for (State checkState : states) {
+                if (state.getPreviousState().equals(checkState.getName())) noPrevious = false;
             }
 
-            if(state.getPreviousState().equals("start"))noPrevious = false;
+            if (state.getPreviousState().equals("start")) noPrevious = false;
 
-            if(noPrevious) throw new StateConfigurationException(state.getName(), state.getPreviousState());
+            if (noPrevious)
+                throw new StateConfigurationException(state.getName(), state.getPreviousState());
         }
     }
 
-    protected void update() {
+    public void update() {
         finishedStates = new ArrayList<>();
         startingStates = new ArrayList<>();
 
@@ -53,11 +54,11 @@ public class StateMachine {
         }
     }
 
-    protected void addState(State state) {
+    public void addState(State state) {
         states.add(state);
     }
 
-    protected void shutdown() {
+    public void shutdown() {
         for (State activeState : activeStates) {
             activeState.cancel();
         }

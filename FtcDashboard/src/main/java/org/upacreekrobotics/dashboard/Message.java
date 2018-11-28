@@ -1,11 +1,11 @@
 package org.upacreekrobotics.dashboard;
 
-public class Message{
+public class Message {
 
     private MessageType type;
     private String text;
 
-    public Message(MessageType type, String message){
+    public Message(MessageType type, String message) {
         text = message;
         this.type = type;
     }
@@ -18,7 +18,7 @@ public class Message{
         return text;
     }
 
-    public String getMessage(){
-        return (type.getMessage(type)+"~"+text);
+    public String getMessage() {
+        return (type.getMessage(type) + "~" + text);
     }
 }

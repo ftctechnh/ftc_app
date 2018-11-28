@@ -643,7 +643,7 @@ public class FtcRobotControllerActivity extends Activity {
         passReceivedUsbAttachmentsToEventLoop();
 
         //Our code
-        Dashboard.attachEventLoop(eventLoop,context);
+        Dashboard.attachEventLoop(eventLoop, context);
     }
 
     protected OpModeRegister createOpModeRegister() {
@@ -732,11 +732,11 @@ public class FtcRobotControllerActivity extends Activity {
     }
 
     //BELOW HERE IS OUR CODE
-    protected class RobotRestartChecker implements Runnable{
+    protected class RobotRestartChecker implements Runnable {
 
         private boolean running;
 
-        public RobotRestartChecker(){
+        public RobotRestartChecker() {
 
         }
 
@@ -744,8 +744,8 @@ public class FtcRobotControllerActivity extends Activity {
         public void run() {
             Looper.prepare();
             running = true;
-            while (running){
-                if(Dashboard.robotRestartRequested()){
+            while (running) {
+                if (Dashboard.robotRestartRequested()) {
                     requestRobotRestart();
                     Dashboard.restartComplete();
                 }
@@ -757,7 +757,7 @@ public class FtcRobotControllerActivity extends Activity {
             }
         }
 
-        public void end(){
+        public void end() {
             running = false;
         }
     }
