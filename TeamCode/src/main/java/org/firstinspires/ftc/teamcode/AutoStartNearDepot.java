@@ -41,7 +41,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous (name = "AutoTestCoachVince", group = "Vince")
+@Autonomous (name = "AutoStartNearDepot", group = "Neha")
 public class AutoStartNearDepot extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
@@ -217,33 +217,38 @@ public class AutoStartNearDepot extends LinearOpMode {
         // Rotate to a heading of 315R
         gyroSpin(315);
 
-
+        // Move towards the wall
+        while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
+            gyroStrafe(.4,315);
+        }
         stopBot();
-        //Drive forwards towards depot
-        while(sonarDistance() > 18){
+        // Back into the depot based on time
+        ElapsedTime holdTimer = new ElapsedTime();
+        while ((holdTimer.time() < 3.5)) {
+            moveBot(-0.25, 0, wallSteer(7), 0.3);
+        }
+        stopBot();
+
+        // Drop the totem
+        robot.armRotate.setPower(0.2);
+        sleep(3000);
+        robot.armRotate.setPower(0);
+        sleep(500);
+        robot.rightMineral.setPower(0.5);
+        sleep(1000);
+        robot.rightMineral.setPower(0);
+        robot.armRotate.setPower(-0.2);
+        sleep(2400);
+        robot.armRotate.setPower(0);
+
+        //Drive forwards towards crater
+        while(sonarDistance() > 8){
             double wsteer=wallSteer(5);
             moveBot(0.2,0,wsteer,0.5);
         }
         stopBot();
         detector.disable();
-        // Drop the totem
-        robot.armRotate.setPower(0.2);
-        sleep(500);
-        robot.armRotate.setPower(0);
-        robot.rightMineral.setPower(0.5);
-        sleep(1000);
-        robot.rightMineral.setPower(0);
-        // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
-        // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
-        while(sonarDistance() < 72){
-            double wsteer=wallSteer(5);
-            moveBot(-0.2,0,wsteer,0.5);
-        }
-        gyroStrafe(-0.5, 315);
-        sleep(250);
-        stopBot();
-        //  Turn 180 and deploy the arm
-        gyroSpin(135);
+
         while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
             robot.armExtend.setPower(-0.15);
