@@ -4,16 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import java.util.List;
-
-import teamcode.examples.Mineral;
 import teamcode.examples.TensorFlowManager;
 
 @Autonomous(name = "TTL2Auto", group = "Linear OpMode")
 public class TTL2Auto extends LinearOpMode {
 
-    private static final double DRIVE_TICKS_PER_CENTIMETER_COVERED = -100.0;
-    private static final double TURN_TICKS_PER_RADIAN_COVERED = 1066.15135303;
+    private static final double DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_VERTICAL = -36.3;
+    private static final double DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_LATERAL = -45.4;
+    private static final double DRIVE_MOTOR_TICKS_PER_RADIAN_COVERED = -1370.8;
     private static final double TURN_POWER = 0.5;
     private static final int DRIVE_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 25;
 
@@ -27,7 +25,7 @@ public class TTL2Auto extends LinearOpMode {
         waitForStart();
         resetDriveEncoders();
 
-        driveVertical(25.0, 1.0);
+        turn(2 * Math.PI);
 
         while (opModeIsActive()) {
 //            List<Mineral> minerals = this.tfManager.getRecognizedMinerals();
@@ -46,28 +44,33 @@ public class TTL2Auto extends LinearOpMode {
 //
 //            }
         }
-
     }
 
 
     private void driveVertical(double centimeters, double power) {
         zeroDriveMotorPower();
+        int ticks = (int) (centimeters * DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_VERTICAL);
 
-        TTL2HardwareManager.frontLeftDrive.setTargetPosition((int) (centimeters * DRIVE_TICKS_PER_CENTIMETER_COVERED));
-        TTL2HardwareManager.frontRightDrive.setTargetPosition((int) (centimeters * DRIVE_TICKS_PER_CENTIMETER_COVERED));
-        TTL2HardwareManager.backLeftDrive.setTargetPosition((int) (centimeters * DRIVE_TICKS_PER_CENTIMETER_COVERED));
-        TTL2HardwareManager.backRightDrive.setTargetPosition((int) (-centimeters * DRIVE_TICKS_PER_CENTIMETER_COVERED));
+        TTL2HardwareManager.frontLeftDrive.setTargetPosition(ticks);
+        TTL2HardwareManager.frontRightDrive.setTargetPosition(ticks);
+        TTL2HardwareManager.backLeftDrive.setTargetPosition(ticks);
+        TTL2HardwareManager.backRightDrive.setTargetPosition(ticks);
 
         TTL2HardwareManager.frontLeftDrive.setPower(power);
         TTL2HardwareManager.frontRightDrive.setPower(power);
         TTL2HardwareManager.backLeftDrive.setPower(power);
-        TTL2HardwareManager.backRightDrive.setPower(-power);
+        TTL2HardwareManager.backRightDrive.setPower(power);
 
         while (!motorsNearTarget() && opModeIsActive()) {
-            telemetry.addData("frontLeft", TTL2HardwareManager.frontLeftDrive.getCurrentPosition());
-            telemetry.addData("frontRight", TTL2HardwareManager.frontRightDrive.getCurrentPosition());
-            telemetry.addData("backLeft", TTL2HardwareManager.backLeftDrive.getCurrentPosition());
-            telemetry.addData("backRight", TTL2HardwareManager.backRightDrive.getCurrentPosition());
+            telemetry.addData("ticks", ticks);
+            telemetry.addData("frontLeft", "%s %s", TTL2HardwareManager.frontLeftDrive.getCurrentPosition(),
+                    TTL2HardwareManager.frontLeftDrive.getDirection());
+            telemetry.addData("backLeft", "%s %s", TTL2HardwareManager.backLeftDrive.getCurrentPosition(),
+                    TTL2HardwareManager.backLeftDrive.getDirection());
+            telemetry.addData("frontRight", "%s %s", TTL2HardwareManager.frontRightDrive.getCurrentPosition(),
+                    TTL2HardwareManager.frontRightDrive.getDirection());
+            telemetry.addData("backRight", "%s %s", TTL2HardwareManager.backRightDrive.getCurrentPosition(),
+                    TTL2HardwareManager.backRightDrive.getDirection());
             telemetry.update();
         }
         zeroDriveMotorPower();
@@ -76,11 +79,12 @@ public class TTL2Auto extends LinearOpMode {
 
     private void driveLateral(double centimeters, double power) {
         zeroDriveMotorPower();
+        int ticks = (int) (centimeters * DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_LATERAL);
 
-        TTL2HardwareManager.frontLeftDrive.setTargetPosition((int) (centimeters * DRIVE_TICKS_PER_CENTIMETER_COVERED));
-        TTL2HardwareManager.frontRightDrive.setTargetPosition((int) (centimeters * -DRIVE_TICKS_PER_CENTIMETER_COVERED));
-        TTL2HardwareManager.backLeftDrive.setTargetPosition((int) (centimeters * -DRIVE_TICKS_PER_CENTIMETER_COVERED));
-        TTL2HardwareManager.backRightDrive.setTargetPosition((int) (centimeters * DRIVE_TICKS_PER_CENTIMETER_COVERED));
+        TTL2HardwareManager.frontLeftDrive.setTargetPosition(ticks);
+        TTL2HardwareManager.frontRightDrive.setTargetPosition(-ticks);
+        TTL2HardwareManager.backLeftDrive.setTargetPosition(-ticks);
+        TTL2HardwareManager.backRightDrive.setTargetPosition(ticks);
 
         TTL2HardwareManager.frontLeftDrive.setPower(power);
         TTL2HardwareManager.frontRightDrive.setPower(power);
@@ -94,6 +98,17 @@ public class TTL2Auto extends LinearOpMode {
 
     private void turn(double radians) {
         zeroDriveMotorPower();
+        int ticks = (int) (radians * DRIVE_MOTOR_TICKS_PER_RADIAN_COVERED);
+
+        TTL2HardwareManager.frontLeftDrive.setTargetPosition(-ticks);
+        TTL2HardwareManager.frontRightDrive.setTargetPosition(ticks);
+        TTL2HardwareManager.backLeftDrive.setTargetPosition(-ticks);
+        TTL2HardwareManager.backRightDrive.setTargetPosition(ticks);
+
+        TTL2HardwareManager.frontLeftDrive.setPower(TURN_POWER);
+        TTL2HardwareManager.frontRightDrive.setPower(TURN_POWER);
+        TTL2HardwareManager.backLeftDrive.setPower(TURN_POWER);
+        TTL2HardwareManager.backRightDrive.setPower(TURN_POWER);
 
         while (opModeIsActive() && !motorsNearTarget()) ;
         resetDriveEncoders();

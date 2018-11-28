@@ -37,7 +37,7 @@ public class KKL2TeleOp extends LinearOpMode {
         double intakeBaseServoPower;
         if (gamepad1.left_trigger > 0) {
             intakeBaseServoPower = -INTAKE_BASE_SERVO_SPEED;
-        } else if (gamepad2.right_trigger > 0) {
+        } else if (gamepad1.right_trigger > 0) {
             intakeBaseServoPower = INTAKE_BASE_SERVO_SPEED;
         } else {
             intakeBaseServoPower = 0.0;
