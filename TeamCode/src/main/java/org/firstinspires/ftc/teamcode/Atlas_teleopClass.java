@@ -2,13 +2,13 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="AtlasTeleop", group="Opmode")
+@TeleOp(name="Teleop", group="Opmode")
 
-public class AtlasTeleop extends LinearOpMode {
+public class Atlas_teleopClass extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         //Inset config file
-        AtlasBase base = new AtlasBase(hardwareMap);
+        AtlasClass base = new AtlasClass(hardwareMap);
         //Declare controller buttons
 
 

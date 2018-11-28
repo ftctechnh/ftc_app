@@ -9,11 +9,11 @@ import com.qualcomm.robotcore.util.Range;
 //import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
-public class AtlasBase {
+public class AtlasClass {
     DcMotor flipM, lbDrive, rfDrive, lfDrive, rbDrive, liftM, extendM, collectM;
     Servo deliveryS;
 
-    AtlasBase(HardwareMap hardwareMap) throws InterruptedException {
+    AtlasClass(HardwareMap hardwareMap) throws InterruptedException {
         rbDrive = hardwareMap.dcMotor.get("rbDriveM");
         rbDrive.setPower(0);
         rbDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
