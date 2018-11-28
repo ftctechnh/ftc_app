@@ -95,7 +95,7 @@ public class CompRobot extends BasicBot
             }
             else
             {
-                linearOpMode.telemetry.addData("Going forawrd 11", null);
+                linearOpMode.telemetry.addData("Going forward 11", null);
                 driveStraight(stepDistance, .8f);
             }
             linearOpMode.telemetry.addData("front Dist: ", straightDist);
@@ -120,10 +120,10 @@ public class CompRobot extends BasicBot
                     driveStraight(stepDistance , .8f);
                     pivotenc(-stepPivotAmtDeg, .5f);
                 }
-               /* else
+                else //need this null zone for logic, this is where it goes straight, do not comment out
                 {
                     driveStraight(stepDistance * .69f , .8f);
-                }*/
+                }
                linearOpMode.telemetry.update();
             }
         }
