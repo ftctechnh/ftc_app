@@ -21,10 +21,10 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public static double MAX_EXTEND_POWER = 0.8;
 
     public ControlMapping controller;
+    public boolean fieldCentric;
 
     SparkyTheRobot robot;
     FeedbackController feedback;
-    Intake intake;
     ElapsedTime loopTime;
     HoldingPIDMotor winch;
 
@@ -32,16 +32,13 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public void runOpMode() {
 
         robot = new SparkyTheRobot(this);
-        robot.init(false);
+        robot.init(fieldCentric); // Only calibrate gyro if we're going to use it
         loopTime = new ElapsedTime();
 
         feedback = new FeedbackController(robot.leftHub, robot.rightHub);
-        intake = new Intake(robot.leftIntakeFlipper, robot.rightIntakeFlipper,
-                robot.leftIntakeRoller, robot.rightIntakeRoller);
         winch = new HoldingPIDMotor(robot.winch, 1);
 
         // Enable PID control on these motors
-        // TODO maybe tune these?
         robot.leftFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.linearSlide.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -53,6 +50,14 @@ public abstract class BaseTeleOp extends LinearOpMode {
             else {robot.motorArr[i].setDirection(DcMotor.Direction.REVERSE);}
         }
 
+        // Display setup readouts
+        telemetry.log().clear();
+        telemetry.log().add("Running RR2 TeleOp");
+        telemetry.log().add("Control mapping: [[" + controller.getClass().getSimpleName() + "]]");
+        telemetry.log().add("Relativity     : [[" + (fieldCentric ? "Field" : "Robot") + " centric]]");
+        telemetry.log().add("Stick divisions: [[" + (int) ((2*Math.PI) / HEADING_INTERVAL) + " divisions]]");
+        telemetry.update();
+
 
         // Intake flipper servos are disabled by default
         waitForStart();
@@ -60,19 +65,18 @@ public abstract class BaseTeleOp extends LinearOpMode {
         loopTime.reset();
 
         while (opModeIsActive()) {
-            //feedback.update();
             controller.update();
 
             robot.leftFlipper.setPower(controller.armSpeed());
             robot.rightFlipper.setPower(controller.armSpeed());
 
-            intake.setIntakeSpeed(controller.getSpinSpeed());
+            robot.intake.setIntakeSpeed(controller.getSpinSpeed());
 
             winch.setPower(controller.getHangDir());
             robot.linearSlide.setPower(controller.getExtendSpeed() * MAX_EXTEND_POWER);
 
-            if (controller.flipOut()) {intake.collect();}
-            else if (controller.flipBack()) {intake.deposit();}
+            if (controller.flipOut()) {robot.intake.collect();}
+            else if (controller.flipBack()) {robot.intake.deposit();}
 
             // Get base mecanum values
             double turnSpeed = -controller.turnSpeed(); // Negated because of heading
@@ -98,7 +102,6 @@ public abstract class BaseTeleOp extends LinearOpMode {
                 robot.motorArr[i].setPower(clamp(unscaledPowers[i] * factor));
             }
 
-
             // Telemetry
             //feedback.updateTelemetry(telemetry);
             int pos = (robot.leftFlipper.getCurrentPosition() + robot.rightFlipper.getCurrentPosition()) / 2;
@@ -113,7 +116,14 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
     public double getControllerDir() {
         double controllerAngle = Math.atan2(controller.driveStickY(), controller.driveStickX()) + Math.PI / 2;
-        return Math.round(controllerAngle / HEADING_INTERVAL) * HEADING_INTERVAL;
+        controllerAngle = Math.round(controllerAngle / HEADING_INTERVAL) * HEADING_INTERVAL;
+
+        if (fieldCentric) {
+            robot.updateReadings();
+            controllerAngle -= robot.getGyroHeading();
+        }
+
+        return controllerAngle;
     }
 
     public double getDist() {

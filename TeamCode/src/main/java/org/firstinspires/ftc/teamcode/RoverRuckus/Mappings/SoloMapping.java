@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 @Config
 public class SoloMapping extends ControlMapping {
-    public static double INTAKE_SPEED = 0.5;
+    public static double INTAKE_SPEED = 0.85;
     public static double INTAKE_SLOW_SPEED = 0.2;
 
     public int spinDir;

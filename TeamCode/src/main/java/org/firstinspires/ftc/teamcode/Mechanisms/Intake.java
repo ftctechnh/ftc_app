@@ -31,12 +31,16 @@ public class Intake {
 
         this.leftIntakeRoller = leftIntakeRoller;
         this.rightIntakeRoller = rightIntakeRoller;
-        leftIntakeFlipper.setPwmDisable();
-        rightIntakeFlipper.setPwmDisable();
 
-        rightIntakeRoller.setDirection(CRServoImplEx.Direction.REVERSE);
-        leftIntakeFlipper.setDirection(ServoImplEx.Direction.FORWARD);
-        rightIntakeFlipper.setDirection(ServoImplEx.Direction.REVERSE);
+        // In case we are mocking this
+        try {
+            leftIntakeFlipper.setPwmDisable();
+            rightIntakeFlipper.setPwmDisable();
+
+            rightIntakeRoller.setDirection(CRServoImplEx.Direction.REVERSE);
+            leftIntakeFlipper.setDirection(ServoImplEx.Direction.FORWARD);
+            rightIntakeFlipper.setDirection(ServoImplEx.Direction.REVERSE);
+        } catch (NullPointerException e) {}
     }
 
     public void setIntakeSpeed(double s) {
@@ -45,18 +49,20 @@ public class Intake {
     }
 
     public void deposit() {
-        leftIntakeFlipper.setPosition(DEPOSIT_DIST);
-        rightIntakeFlipper.setPosition(DEPOSIT_DIST);
+        setPos(DEPOSIT_DIST);
     }
 
     public void collect() {
-        leftIntakeFlipper.setPosition(COLLECT_DIST);
-        rightIntakeFlipper.setPosition(COLLECT_DIST);
+        setPos(COLLECT_DIST);
     }
 
     public void goToMin() {
-        leftIntakeFlipper.setPosition(1);
-        rightIntakeFlipper.setPosition(1);
+        setPos(1);
+    }
+
+    public void setPos(double pos) {
+        leftIntakeFlipper.setPosition(pos);
+        rightIntakeFlipper.setPosition(pos);
     }
 
     public void enableFlippers() {

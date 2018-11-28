@@ -1,19 +1,15 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.ParkingLocation;
-import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.SingleSampling;
-import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.StartingPosition;
+import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.SophisticatedSampling;
 
-@Autonomous(name="Crater - Same color - Single")
-@Disabled
-public class CraterToSameCrater extends SingleSampling {
+@Autonomous(name="Crater to same crater")
+public class CraterToSameCrater extends SophisticatedSampling {
     @Override
     public void runOpMode() throws InterruptedException {
-        startingPosition = StartingPosition.CRATER;
-        parkingLocation = ParkingLocation.SAME_COLOR_CRATER;
+        this.goal = EndGoal.BLUE_CRATER;
+        this.startingPosition = StartingPosition.CRATER;
         super.runOpMode();
     }
 }
