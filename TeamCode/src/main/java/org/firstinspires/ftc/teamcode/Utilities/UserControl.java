@@ -21,7 +21,10 @@ public class UserControl {
     }
 
     /* Constructor */
-    public UserControl(LinearOpMode opMode) {
+    public UserControl() {
+    }
+
+    public void init(LinearOpMode opMode) {
         /* Set local copies from opmode class */
         telemetry = opMode.telemetry;
 
@@ -38,6 +41,7 @@ public class UserControl {
         telemetry.addLine(prompt);
         telemetry.addLine("[X = blue, B = red]");
         telemetry.update();
+        egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
         } while (!egamepad1.x.pressed && !egamepad1.b.pressed);
@@ -53,6 +57,7 @@ public class UserControl {
         telemetry.addLine(prompt);
         telemetry.addLine("[A = yes, B = no]");
         telemetry.update();
+        egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
         } while (!egamepad1.a.pressed && !egamepad1.b.pressed);
@@ -68,6 +73,7 @@ public class UserControl {
         telemetry.addLine(prompt);
         telemetry.addLine("[X = left, B = right]");
         telemetry.update();
+        egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
         } while (!egamepad1.x.pressed && !egamepad1.b.pressed);
@@ -83,6 +89,7 @@ public class UserControl {
         telemetry.addLine(prompt);
         telemetry.addLine("[dpad]");
         telemetry.update();
+        egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
             if (egamepad1.dpad_up.pressed) dpad = DPAD.UP;

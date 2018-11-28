@@ -123,9 +123,6 @@ public class DriveControl {
     }
 
     public void turn2angle (double angle){
-
-
-
         do{
             imu.IMUupdate();
 
@@ -151,28 +148,10 @@ public class DriveControl {
     }
 
     public void turnAngle (int angle) {
-        imu.angle2turn = (angle + imu.trueAngle);
-
-        do{
-            if (imu.angle2turn > 180){
-                imu.angle2turn -= 360;
-            }
-            if (imu.angle2turn < -180){
-                imu.angle2turn += 360;
-            }
-
-            if (imu.angle2turn > 15) {
-                turnRight(imu.turnSpeed);
-            }
-            else if (imu.angle2turn < -15) {
-                turnLeft(imu.turnSpeed);
-            }
-            else {
-                stop();
-                imu.startTrueAngle = 180;
-            }
-        } while (imu.angle2turn > 15 || imu.angle2turn < -15);
+        imu.IMUupdate();
+        turn2angle(angle + imu.trueAngle);
     }
+
     //setting power to 0
     public void stop() {
         FrontRightM.setPower(0);
