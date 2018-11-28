@@ -51,13 +51,13 @@ public class LiftControl {
     }
 
     public void Extend() {
-        LifterLeftM.setPower(0.50);
-        LifterRightM.setPower(0.50);
+        LifterLeftM.setPower(0.75);
+        LifterRightM.setPower(0.75);
     }
 
     public void Retract() {
-        LifterLeftM.setPower(-0.50);
-        LifterRightM.setPower(-0.50);
+        LifterLeftM.setPower(-0.75);
+        LifterRightM.setPower(-0.75);
     }
 
     public void Stop() {
