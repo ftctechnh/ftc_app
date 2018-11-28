@@ -26,9 +26,9 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-
-public abstract class VuforiaCVUtil extends LinearOpMode
-{
+//class contains vision code - identifying gold particles, images, etc.
+//note: depends on having the correct webcam. particle finding cropped according to sparky specs
+public abstract class VuforiaCVUtil extends LinearOpMode {
 
     private ElapsedTime runtime = new ElapsedTime();
     private static final float mmPerInch        = 25.4f;

@@ -10,6 +10,8 @@ import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
 import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 import org.opencv.core.Rect;
 
+//class contains navigation code - controlling robot, moving from position to position, unhooking hook
+//note: again, depends on sparky specs -- needs hang motor.
 public abstract class AutoUtils extends VuforiaCVUtil {
     public ParkingLocation parkingLocation;
     public StartingPosition startingPosition;
