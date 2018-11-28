@@ -92,6 +92,7 @@ public class VucamOrder extends OpMode
     WebcamName webcamName;
     List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
+
     SamplingOrderDetector detector;
 
     @Override
