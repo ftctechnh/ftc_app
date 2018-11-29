@@ -65,12 +65,20 @@ public class OurEventLoop extends FtcEventLoopBase {
     protected final Map<String, Long> recentlyAttachedUsbDevices;  // serialNumber -> when to attach
     protected final AtomicReference<OpMode> opModeStopRequested;
 
+    //OUR CODE
+    private static Activity activity;
+    private static EventLoopManager eventLoopManager;
+
     //------------------------------------------------------------------------------------------------
     // Construction
     //------------------------------------------------------------------------------------------------
 
     public OurEventLoop(HardwareFactory hardwareFactory, OpModeRegister userOpmodeRegister, UpdateUI.Callback callback, Activity activityContext, ProgrammingModeController programmingModeController) {
         super(hardwareFactory, userOpmodeRegister, callback, activityContext, programmingModeController);
+
+        //OUR CODE
+        activity = activityContext;
+
         this.opModeManager = createOpModeManager(activityContext);
         this.usbModuleAttachmentHandler = new DefaultUsbModuleAttachmentHandler();
         this.recentlyAttachedUsbDevices = new ConcurrentHashMap<String, Long>();
@@ -80,6 +88,13 @@ public class OurEventLoop extends FtcEventLoopBase {
 
     protected static OpModeManagerImpl createOpModeManager(Activity activityContext) {
         return new OpModeManagerImpl(activityContext, new HardwareMap(activityContext));
+    }
+
+    //OUR CODE
+    public static OpModeManagerImpl createUserOpModeManager(){
+        OpModeManagerImpl tempManager = new OpModeManagerImpl(activity, new HardwareMap(activity));
+        tempManager.init(eventLoopManager);
+        return tempManager;
     }
 
     //------------------------------------------------------------------------------------------------
@@ -119,6 +134,10 @@ public class OurEventLoop extends FtcEventLoopBase {
     public void init(EventLoopManager eventLoopManager) throws RobotCoreException, InterruptedException {
         RobotLog.ii(TAG, "======= INIT START =======");
         super.init(eventLoopManager);
+
+        //OUR CODE
+        this.eventLoopManager = eventLoopManager;
+
         opModeManager.init(eventLoopManager);
         registeredOpModes.registerAllOpModes(userOpmodeRegister);
         sendUIState();

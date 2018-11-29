@@ -2,10 +2,14 @@ package org.firstinspires.ftc.teamcode.framework.opModes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.internal.opmode.OpModeManagerImpl;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.framework.util.StateConfigurationException;
+import org.upacreekrobotics.dashboard.Dashboard;
+import org.upacreekrobotics.eventloop.OurEventLoop;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,23 +24,35 @@ public abstract class AbstractMatch extends AbstractOpMode {
 
     private List<Exception> exceptions = Collections.synchronizedList(new ArrayList<>());
 
-    private AbstractAutonNew auton;
-    private AbstractTeleop teleop;
+    private String auton, teleop;
 
     public ElapsedTime runTime;
 
+    private OpModeManagerImpl manager;
+
     public AbstractMatch() {
-        runTime = new ElapsedTime();
     }
 
     @Override
     public void runOpMode() {
+        runTime = new ElapsedTime();
+        manager = OurEventLoop.createUserOpModeManager();
+
         InitMatch();
-        //auton.start();
-        auton.runOpMode();
-        //auton.stop();
-        auton.opModeIsActive();
-        teleop.runOpMode();
+        telemetry.addData("Init");
+        telemetry.update();
+        manager.initActiveOpMode(auton);
+        waitForStart();
+        telemetry.addData("Start");
+        telemetry.update();
+        manager.startActiveOpMode();
+        delay(30000);
+        manager.stopActiveOpMode();
+
+        manager.initActiveOpMode(teleop);
+        manager.startActiveOpMode();
+        delay(150000);
+        manager.stopActiveOpMode();
         StopMatch();
     }
 
@@ -44,7 +60,7 @@ public abstract class AbstractMatch extends AbstractOpMode {
 
     public abstract void StopMatch();
 
-    public void SetupMatch(AbstractAutonNew abstractAuton, AbstractTeleop abstractTeleop) {
+    public void SetupMatch(String abstractAuton, String abstractTeleop) {
         auton = abstractAuton;
 
         teleop = abstractTeleop;

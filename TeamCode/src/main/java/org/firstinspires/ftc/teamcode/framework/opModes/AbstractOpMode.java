@@ -12,7 +12,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     //Setup OpMode instance to allow other classes to access hardwareMap and Telemetry
     private static OpMode opmode;
     private static LinearOpMode linearOpMode;
-    private static HardwareMap hwMap;
+    public static HardwareMap hardwareMap;
     public static DoubleTelemetry telemetry;
 
     public static DoubleTelemetry getTelemetry() {
@@ -20,7 +20,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     }
 
     public static HardwareMap getHardwareMap() {
-        return hwMap;
+        return hardwareMap;
     }
 
     public static OpMode getOpModeInstance() {
@@ -30,7 +30,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
     public AbstractOpMode() {
         opmode = this;
         linearOpMode = this;
-        hwMap = this.hardwareMap;
+        hardwareMap = super.hardwareMap;
         telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry());
     }
 

@@ -1,5 +1,6 @@
 package org.upacreekrobotics.dashboard;
 
+import android.app.Activity;
 import android.app.Notification;
 import android.content.Context;
 import android.provider.Settings;

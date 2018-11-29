@@ -8,12 +8,13 @@ import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
 @TeleOp(name = "BoogieWheel Teleop", group = "New")
 //@Disabled
 
-public class BoogieTeleOp extends AbstractTeleop {
+public class BoogieTeleop extends AbstractTeleop {
 
     private Robot robot;
 
     @Override
     public void RegisterEvents() {
+        ////////Drive////////
         addEventHandler("1_lsy_change", () -> {
             robot.setDriveY(gamepad1.left_stick_y);
             return true;
@@ -24,42 +25,35 @@ public class BoogieTeleOp extends AbstractTeleop {
             return true;
         });
 
+        ////////Intake////////
         addEventHandler("1_b_down", robot.finishIntakingCallable());
 
         addEventHandler("1_a_down", robot.beginIntakingCallable());
 
         addEventHandler("1_y_down", robot.reverseIntakeCallable());
 
-        //addEventHandler("1_x_down", robot.moveMineralLiftToCollectPositionCallable());
-
-        //addEventHandler("1_y_down", robot.moveMineralLiftToDumpPositionCallable());
-
+        ///////Mineral Lift////////
         addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
 
         addEventHandler("1_lt_down", robot.moveMineralLiftToCollectPositionCallable());
 
         addEventHandler("1_x_down", robot.toggleMineralGateCallable());
 
-        addEventHandler("1_dpu_down", robot.moveRobotLiftToTopCallable());
+        ////////Robot Lift////////
+        addEventHandler("1_dpu_down", robot.robotLiftUpCallable());
 
-        addEventHandler("1_dpd_down", robot.moveRobotLiftToBottomCallable());
+        addEventHandler("1_dpd_down", robot.robotLiftDownCallable());
 
-        /*addEventHandler("lt_change", ()->{
-            if(gamepad1.left_trigger>0.5) robot.moveMineralLiftToCollectPosition();
-            return true;
-        });
+        addEventHandler("1_dpu_up", robot.robotLiftStopCallable());
 
-        addEventHandler("rt_change", ()->{
-            if(gamepad1.right_trigger>0.5) robot.moveMineralLiftToDumpPosition();
-            return true;
-        });*/
+        addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
     }
 
     @Override
     public void UpdateEvents() {
         //NEVER EVER PUT BLOCKING CODE HERE!!!
-        checkBooleanInput("lt", gamepad1.left_trigger > 0.5);
-        checkBooleanInput("rt", gamepad1.right_trigger > 0.5);
+        checkBooleanInput("1_lt", gamepad1.left_trigger > 0.5);
+        checkBooleanInput("1_rt", gamepad1.right_trigger > 0.5);
     }
 
     @Override

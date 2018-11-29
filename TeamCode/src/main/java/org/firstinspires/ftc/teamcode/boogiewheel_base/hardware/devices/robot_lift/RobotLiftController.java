@@ -19,7 +19,7 @@ public class RobotLiftController extends SubsystemController {
     }
 
     public synchronized void robotLiftUp() {
-        robotLift.setLiftPower(0.5);
+        robotLift.setLiftPower(1);
     }
 
     public synchronized void robotLiftStop() {

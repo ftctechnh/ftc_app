@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.framework.util.State;
 public class TestAuton extends AbstractAutonNew {
     @Override
     public void RegisterStates() {
+
         //Previous State is the name of the state which should call this one when it is finished
         addState(new State("first", "start", () -> {
             telemetry.addData("Running state: first");

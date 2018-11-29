@@ -7,22 +7,22 @@ import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.robot_li
 
 public class HardwareDevices {
 
-    public DriveController drive;
-    public IntakeController intake;
-    public MineralLiftController mineralLift;
-    public RobotLiftController robotLift;
+    public DriveController drive = null;
+    public IntakeController intake = null;
+    public MineralLiftController mineralLift = null;
+    public RobotLiftController robotLift = null;
 
     public HardwareDevices() {
         drive = new DriveController();
         intake = new IntakeController();
-        mineralLift = new MineralLiftController();
+        //mineralLift = new MineralLiftController();
         robotLift = new RobotLiftController();
     }
 
     public void stop() {
-        drive.stop();
-        intake.stop();
-        mineralLift.stop();
-        robotLift.stop();
+        if(drive!=null)drive.stop();
+        if(intake!=null)intake.stop();
+        if(mineralLift!=null)mineralLift.stop();
+        if(robotLift!=null)robotLift.stop();
     }
 }

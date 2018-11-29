@@ -105,78 +105,12 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void driveTo(double distance, double speed) {
-        AbstractOpMode.delay(100);
-
-        telemetry.addData("starting drive segment---------------------------");
-        anglePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
-        distancePID.reset();
-        anglePID.setMinimumOutput(0);
-        int position = (int) (distance * 38); //
-        telemetry.addData("Encoder counts: " + position);
-        double turn;
-        speed = range(speed);
-        telemetry.addData("Speed: " + speed);
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        drive.setPosisionP(5);
-        double startHeading = baseHeading;
-        telemetry.addData("Start Heading: " + startHeading);
-        telemetry.update();
-        double leftPower, rightPower;
-        double power;
-        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
-            power = range(distancePID.output(position, drive.getRightPosition()));
-
-            turn = anglePID.output(startHeading, getHeading());
-
-            if (power > 0) {
-                leftPower = range(power * (speed - turn));
-                rightPower = range(power * (speed + turn));
-            } else {
-                leftPower = range(power * (speed + turn));
-                rightPower = range(power * (speed - turn));
-            }
-
-            drive.setPower(leftPower, rightPower);
-
-            telemetry.addData("Encoder counts: " + position);
-            telemetry.addData("Left Position: " + drive.getLeftPosition());
-            telemetry.addData("Right Position: " + drive.getRightPosition());
-            telemetry.addData("Left Power: " + leftPower);
-            telemetry.addData("Right Power: " + rightPower);
-            telemetry.addData("Heading: " + getHeading());
-            telemetry.addData("PID Output: " + turn);
-            telemetry.update();
-        }
-
-        for (int i = 0; i < 5; i++) {
-            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
-
-            turn = anglePID.output(startHeading, getHeading());
-
-            if (power > 0) {
-                leftPower = range(power * (speed - turn));
-                rightPower = range(power * (speed + turn));
-            } else {
-                leftPower = range(power * (speed + turn));
-                rightPower = range(power * (speed - turn));
-            }
-
-            drive.setPower(leftPower, rightPower);
-
-            telemetry.addData("Encoder counts: " + position);
-            telemetry.addData("Left Position: " + drive.getLeftPosition());
-            telemetry.addData("Right Position: " + drive.getRightPosition());
-            telemetry.addData("Left Power: " + leftPower);
-            telemetry.addData("Right Power: " + rightPower);
-            telemetry.addData("Heading: " + getHeading());
-            telemetry.update();
-        }
-
-        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        driveTo(distance, speed, (int)baseHeading);
     }
 
     public synchronized void driveTo(double distance, double speed, int angle) {
+        baseHeading = angle;
+
         AbstractOpMode.delay(100);
 
         telemetry.addData("starting drive segment---------------------------");
