@@ -20,14 +20,10 @@ public class prepAutonomous extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
-        action = Mode.Stop;
-        robot.sensors.rotateMobileX(0);
-        robot.sensors.rotateMobileZ(-90);
+        robot = new Bogg(hardwareMap, gamepad1);
         waitForStart();
         action = Mode.Drop;
         timer = new ElapsedTime();
-        timer.startTime();
 
         while (opModeIsActive())
         {
@@ -35,10 +31,11 @@ public class prepAutonomous extends LinearOpMode
             switch(action)
             {
                 case Drop:
+                    robot.push(false);
                     if(t < 5) //for the two seconds
                     {
                         robot.lift(-.3); //pull up
-                        //robot.sensors.dServoX.setPosition(0);
+                        robot.sensors.dServo.setPosition(0);
                     }
                     else if (t < 7)
                     {
@@ -47,7 +44,7 @@ public class prepAutonomous extends LinearOpMode
                     else if(t < 9)
                     {
                         robot.setBrake(true);
-                        //robot.sensors.dServoZ.setPosition(-1);
+                        robot.push(false);
                     }
                     else if(t < 11) //wait for brake to engage
                     {

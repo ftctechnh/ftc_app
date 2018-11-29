@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="autonomousDrive_DropSlide", group = "Testing")
+@Autonomous(name="2: Drop and slide", group = "Testing")
 public class autonomousDrive_DropSlide extends LinearOpMode
 {
     Bogg robot;
@@ -24,9 +24,8 @@ public class autonomousDrive_DropSlide extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
-        auto = new Auto(robot);
-        robot.sensors.rotateMobileX(0);
+        robot = new Bogg(hardwareMap, gamepad1);
+        auto = new Auto(robot, telemetry);
 
         waitForStart();
         action = Mode.Drop;
@@ -53,12 +52,11 @@ public class autonomousDrive_DropSlide extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("time: ", auto.getTime());
-            telemetry.addData("dMobile: ", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
-            telemetry.addData("brake position: ", robot.brake.getPosition());
-            telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
-            telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
+            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
             telemetry.addData("mode", action);
+            telemetry.addData("doneSliding", auto.isDoneSliding());
+            telemetry.addData("time: ", auto.getTime());
+            telemetry.addData("touch top", robot.sensors.touchTop.isPressed());
             telemetry.update();
             idle();
         }

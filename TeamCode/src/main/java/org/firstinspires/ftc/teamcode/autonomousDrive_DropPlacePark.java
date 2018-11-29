@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="autonomousDrive_DropPlacePark", group = "Testing")
+@Autonomous(name="4: Competition", group = "Testing")
 public class autonomousDrive_DropPlacePark extends LinearOpMode
 {
     Bogg robot;
@@ -39,7 +39,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, gamepad1);
         robot.driveEngine.driveAtAngle(Math.PI);
         action = Mode.Stop;
 
@@ -82,6 +82,11 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                     else
                         auto.moveToDepot();
                     break;
+                case DropMarker:
+                    if(auto.isDoneDroppingMarker())
+                        action = Mode.MoveToCrater;
+                    else
+                        auto.dropMarker();
                 case MoveToCrater:
                     if(auto.isDoneMovingToCrater())
                         action = Mode.Stop;
@@ -96,11 +101,10 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
             // Display the current values
             telemetry.addData("time: ", auto.getTime());
             telemetry.addData("mobile distance: ", mobileDistance);
-            telemetry.addData("fixed distance", fixedDistance);
-            telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
-            telemetry.addData("brake position", robot.brake.getPosition());
-            telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
-            telemetry.addData("mode", action);
+            telemetry.addData("fixed distance:", fixedDistance);
+            telemetry.addData("Drive x:", robot.driveEngine.xOut);
+            telemetry.addData("Drive y:", robot.driveEngine.yOut);
+            telemetry.addData("mode:", action);
             telemetry.update();
             idle();
         }

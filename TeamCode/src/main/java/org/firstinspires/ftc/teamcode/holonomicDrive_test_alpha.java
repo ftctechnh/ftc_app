@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="holonomicDrive_test_alpha", group="Testing")
+@TeleOp(name="  test alpha values", group="Testing")
 public class holonomicDrive_test_alpha extends LinearOpMode
 {
     Bogg robot;

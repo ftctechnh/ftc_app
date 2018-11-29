@@ -13,6 +13,7 @@ public class DriveEngine {
     public static final double inPerTicks = inPerRev /ticksPerRev;
 
     double theta;
+    double xOut, yOut;
 
     public DriveEngine(HardwareMap hardwareMap) {
         back  = hardwareMap.dcMotor.get("back");
@@ -38,8 +39,8 @@ public class DriveEngine {
         double xprime = x * Math.cos(theta) - y * Math.sin(theta);
         double yprime = x * Math.sin(theta) + y * Math.cos(theta);
 
-        x = xprime;
-        y = yprime;
+        xOut = x = xprime;
+        yOut = y = yprime;
 
         back.setPower(x);
         right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );
@@ -66,6 +67,9 @@ public class DriveEngine {
             leftPower  *= 1 / max;
         }
 
+        xOut = backPower;
+        yOut = (rightPower - leftPower)/2;
+
         back.setPower(backPower);
         right.setPower(rightPower);
         left.setPower (leftPower);
@@ -80,6 +84,5 @@ public class DriveEngine {
         back.setPower(y);
         right.setPower(y);
         left.setPower(y);
-
     }
 }

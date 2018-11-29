@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="autonomousDrive_DropMoveToWall", group = "Testing")
+@Autonomous(name="3: Drop and move to wall", group = "Testing")
 public class autonomousDrive_DropMoveToWall extends LinearOpMode
 {
     Bogg robot;
@@ -19,25 +19,15 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
         Drop,
         Slide,
         Spin,
-        MoveToWall,
-        MoveToDepot
+        MoveToWall
     }
-
-    private enum StartPosition
-    {
-        FrontBlue,
-        BackBlue,
-        FrontRed,
-        BackRed
-    }
-    public StartPosition startPosition;
 
 
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
-        auto = new Auto(robot);
+        robot = new Bogg(hardwareMap, gamepad1);
+        auto = new Auto(robot, telemetry);
 
         waitForStart();
         action = Mode.Drop;
@@ -75,11 +65,12 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("time: ", auto.getTime());
-            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-            telemetry.addData("brake position: ", robot.brake.getPosition());
-            telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
-            telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
+            if(robot.camera != null) {
+                telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
+                telemetry.addData("startPosition", auto.startPosition);
+                telemetry.addData("location", robot.camera.getLocation());
+            }
+            telemetry.addData("time", auto.getTime());
             telemetry.addData("mode", action);
             telemetry.update();
             idle();

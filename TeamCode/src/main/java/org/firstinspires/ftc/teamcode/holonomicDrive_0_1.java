@@ -10,8 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class holonomicDrive_0_1 extends LinearOpMode
 {
     Bogg robot;
-    double lastTime;
-    double time;
+    private double pushIn;
+    private double pushOut;
 
     @Override
     public void runOpMode()
@@ -33,41 +33,53 @@ public class holonomicDrive_0_1 extends LinearOpMode
             }
             if(gamepad1.dpad_up && x < .6)
             {
-                x+=.01;
+                x+=.02;
             }
 
             if(gamepad1.dpad_down && x > .5)
             {
-                x-=.01;
+                x-=.02;
             }
             robot.setBrake(x);
 
-            if(gamepad1.left_bumper)
+
+            if(gamepad1.right_trigger > .2)
             {
-                robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                if (gamepad1.left_bumper && pushOut < 1)
+                    pushOut += .02;
+                else if (gamepad1.right_bumper && pushOut > -1)
+                    pushOut -= .02;
             }
-            if(gamepad1.right_bumper)
+            else if(gamepad1.left_trigger > .2)
             {
-                robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.driveEngine.back.setTargetPosition(2000);
+                if (gamepad1.left_bumper && pushIn < 1)
+                    pushIn += .02;
+                else if (gamepad1.right_bumper && pushIn > -1)
+                    pushIn -= .02;
             }
+            else if(gamepad1.left_bumper)
+            {
+                robot.push.setPosition(pushIn);
+            }
+            else if(gamepad1.right_bumper)
+            {
+                robot.push.setPosition(pushOut);
+            }
+
 
             robot.manualLift();
 
             // Display the current value
-            double ticksPerRev = 2240.0;
-            double inPerRev = Math.PI * 5.0;
-            double inPerTicks = inPerRev / ticksPerRev;
-            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * inPerTicks);
-            telemetry.addData("back encoder ticks", robot.driveEngine.back.getCurrentPosition());
-            telemetry.addData("Servo x", x);
-            telemetry.addData("touch", robot.sensors.touchBottom.isPressed());
+            telemetry.addLine("'Pressing A must move the arm down.'");
+            telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
+            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
+            telemetry.addData("Brake x", x);
+            telemetry.addData("Push in", pushIn);
+            telemetry.addData("Push out", pushOut);
+            telemetry.addData("touchBottom", robot.sensors.touchBottom.isPressed());
+            telemetry.addData("touchTop", robot.sensors.touchTop.isPressed());
             telemetry.addData("fixed distance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
             telemetry.addData("mobile distance", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
-            telemetry.addData("camera x, y", robot.camera.getLocation() == null ? "N/A" : robot.camera.getLocation());
-            telemetry.addData("camera orientation", robot.camera.getHeading() == null ? "N/A" : robot.camera.getHeading());
 
             telemetry.update();
             idle();

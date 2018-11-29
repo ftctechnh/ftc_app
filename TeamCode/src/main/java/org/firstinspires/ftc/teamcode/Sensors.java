@@ -1,14 +1,22 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Sensors {
     HardwareMap hardwareMap;
 
-    //Servo dServoX;
-    //Servo dServoZ;
+    Servo dServo;
 
     public TouchSensor touchTop;
     public TouchSensor touchBottom;
@@ -16,18 +24,24 @@ public class Sensors {
     DistanceSensor dFixed;
     DistanceSensor dMobile;
 
+    BNO055IMU imu;
+
+    // State used for updating telemetry
+    Orientation angles;
+    Acceleration gravity;
+
     public Sensors(HardwareMap hardwareMap)
     {
         this.hardwareMap = hardwareMap;
-        //dServoX = hardwareMap.get(Servo.class, "dServoX");
-        //dServoZ = hardwareMap.get(Servo.class, "dServoZ");
+        dServo = hardwareMap.get(Servo.class, "dServo");
         dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
         dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
+
     }
 
-    public void rotateMobileX(double rightOfCenter) //in degrees for clarity
+    public void rotateMobile(double rightOfCenter) //in degrees for clarity
     {
         //angle    should go from -90   to 90
         //position should go from min to max
@@ -35,24 +49,28 @@ public class Sensors {
         double right = 1;
         double position = (right - center) * rightOfCenter / 90 ;
 
-        //dServoX.setPosition(position);
+        dServo.setPosition(position);
     }
-
-    public void rotateMobileZ(double upwardsOfHorizontal) //in degrees for clarity
+    boolean isTilted()
     {
-        //angle    should go from -90   to 90
-        //position should go from min to max
-        double center = 0;
-        double down = -1;
-        double position = (center - down) * upwardsOfHorizontal / 90 ;
+        if(imu == null)
+        {
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.loggingEnabled      = true;
+            parameters.loggingTag          = "IMU";
+            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        //dServoZ.setPosition(position);
+            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+            // and named "imu".
+            imu = hardwareMap.get(BNO055IMU.class, "imu");
+            imu.initialize(parameters);
+        }
+
+        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return Math.hypot(orientation.secondAngle, orientation.thirdAngle) > 5;
     }
-
-//    public double getMobileAngle()
-//    {
-//        double position = dServoX.getPosition();
-//        return position  * Math.PI;
-//    }
-
 }

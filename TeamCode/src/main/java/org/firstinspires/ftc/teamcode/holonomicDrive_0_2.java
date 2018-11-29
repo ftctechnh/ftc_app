@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
+@Disabled
 @TeleOp(name="holonomicDrive_0_2", group="Testing")
 public class holonomicDrive_0_2 extends LinearOpMode
 {
@@ -79,18 +81,21 @@ public class holonomicDrive_0_2 extends LinearOpMode
             telemetry.addData("touch", robot.sensors.touchBottom.isPressed());
             telemetry.addData("fixed distance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
             telemetry.addData("mobile distance", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
-            telemetry.addData("camera x, y", robot.camera.getLocation() == null ? "N/A" : robot.camera.getLocation());
-            telemetry.addData("camera orientation", robot.camera.getHeading() == null ? "N/A" : robot.camera.getHeading());
+            if(robot.camera != null)
+            {
+                telemetry.addData("camera x, y", robot.camera.getLocation() == null ? "N/A" : robot.camera.getLocation());
+                telemetry.addData("camera orientation", robot.camera.getHeading() == null ? "N/A" : robot.camera.getHeading());
+            }
 
             telemetry.update();
             idle();
         }
     }
 
-    double ticksPerRev = 2240;
+    double ticksPerRev = 1120;
     void setHexAngle(double angle)
     {
-        double revs = angle/ (2* Math.PI);
+        double revs = angle/ (2* Math.PI) + 0;
         hex.setTargetPosition((int) (revs * ticksPerRev));
     }
 }

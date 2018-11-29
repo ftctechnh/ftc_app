@@ -2,27 +2,29 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Auto {
     Bogg robot;
     ElapsedTime timer;
     StartPosition startPosition;
+    Telemetry telemetry;
     double iSP; //initialSlopePositivity
-    //double t;
 
-    Auto(Bogg robot)
+    Auto(Bogg robot, Telemetry telemetry)
     {
         this.robot = robot;
         robot.driveEngine.driveAtAngle(Math.PI);
+        this.telemetry = telemetry;
     }
 
     private enum StartPosition
     {
-        FrontBlue,
-        BackBlue,
-        FrontRed,
-        BackRed
+        HighBlue,
+        LowBlue,
+        HighRed,
+        LowRed
     }
 
     private boolean doneDropping = false;
@@ -68,8 +70,12 @@ public class Auto {
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(.4,0); //drive to the side to unhook
         }
-        else //if the robot has unhooked
+        else  //if the robot has unhooked
+        {
+            robot.driveEngine.drive(0,0); //initializing camera interrupts code, so we have to stop the robot.
             doneSliding = true;
+            timer.reset(); //Needed for DropPark
+        }
     }
 
     boolean isDoneSliding(){return doneSliding;}
@@ -77,13 +83,15 @@ public class Auto {
 
     void spin()
     {
+        if (robot.camera == null)
+            robot.camera = new Camera(robot.hardwareMap, telemetry);
+
         double t = timer.seconds();
         if(t/1.5 - Math.floor(t)/1.5 < .60)  //rotates for 60% of 1.5 seconds
-            robot.driveEngine.rotate(.1);
+            robot.driveEngine.rotate(.2);
         else
             robot.driveEngine.rotate(0);  //and stops so we can see the target
 
-        //robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .1 : 0);
 
         if(robot.camera.targetVisible() != null) //if we see a camera (null = nothing)
         {
@@ -92,13 +100,14 @@ public class Auto {
             double angle = Math.atan2(location[0], location[1]); //get the angle looking down on the field, lander to robot
 
             if(angle < -Math.PI/2)                          //Quadrant 3
-                startPosition = StartPosition.BackBlue;
+                startPosition = StartPosition.LowBlue;
             else if(angle < 0)                              //Quadrant 4
-                startPosition = StartPosition.BackRed;
+                startPosition = StartPosition.LowRed;
             else if(angle < Math.PI/2)                      //Quadrant 1
-                startPosition = StartPosition.FrontRed;
+                startPosition = StartPosition.HighRed;
             else // angle between pi/2 and pi               //Quadrant 2
-                startPosition = StartPosition.FrontBlue;
+                startPosition = StartPosition.HighBlue;
+
             doneSpinning = true;
         }
     }
@@ -108,7 +117,8 @@ public class Auto {
     void moveToWall()
     {
         if(robot.camera.targetVisible() == null){
-            //robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .1 : 0);
+            double t = timer.seconds();
+            robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .2 : 0);
         }
 
         double[] midTarget;
@@ -117,25 +127,25 @@ public class Auto {
 
         switch(startPosition)
         {
-            case FrontRed:
+            case HighRed:
                 midTarget = new double[]{0,3};
                 wallTarget = new double[]{0,5.5};
                 targetAngle = 90;
                 iSP = 1;
                 break;
-            case FrontBlue:
+            case HighBlue:
                 midTarget = new double[]{-3,0};
                 wallTarget = new double[]{-5.5,0};
                 targetAngle = 180;
                 iSP = -1;
                 break;
-            case BackBlue:
+            case LowBlue:
                 midTarget = new double[]{0,-3};
                 wallTarget = new double[]{0,-5.5};
                 targetAngle = 270;
                 iSP = 1;
                 break;
-            default: //case BackRed:
+            default: //case LowRed:
                 midTarget = new double[]{3,0};
                 wallTarget = new double[]{5.5,0};
                 targetAngle = 0;
@@ -163,9 +173,9 @@ public class Auto {
 
         robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
 
-        if(mobileDistance < 6) { //TODO: need new sensor somewhere or new servo
+        if(mobileDistance < 6) {
             doneMovingToDepot = true;
-            robot.sensors.rotateMobileX(-90);
+            robot.sensors.rotateMobile(-90);
             timer.reset();
         }
     }
@@ -175,7 +185,8 @@ public class Auto {
     void dropMarker()
     {
         robot.driveEngine.drive(0,0);
-        if(timer.seconds() > 4)
+        robot.push(true);
+        if(timer.seconds() > 3)
             doneDroppingMarker = true;
     }
 
@@ -184,9 +195,12 @@ public class Auto {
     void moveToCrater()
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
-
+        robot.push(false);
         robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
-
+        if(robot.sensors.isTilted())
+        {
+            doneMovingToCrater = true;
+        }
     }
 
     boolean isDoneMovingToCrater(){return doneMovingToCrater;}

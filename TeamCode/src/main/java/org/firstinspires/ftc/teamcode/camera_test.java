@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import java.util.ArrayList;
 @Disabled
-@TeleOp(name="camera_test", group="Testing")
+@TeleOp(name="  camera_test", group="Testing")
 public class camera_test extends LinearOpMode
 {
     Camera camera;

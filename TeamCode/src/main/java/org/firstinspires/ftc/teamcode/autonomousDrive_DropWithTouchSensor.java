@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="autonomousDrive_DropWithTouchSensor", group = "Testing")
+@Autonomous(name="1: Drop with touch sensor", group = "Testing")
 public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
 {
     Bogg robot;
@@ -21,9 +21,8 @@ public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
-        auto = new Auto(robot);
-        action = Mode.Stop;
+        robot = new Bogg(hardwareMap, gamepad1);
+        auto = new Auto(robot, telemetry);
 
         waitForStart();
         action = Mode.Drop;
@@ -46,16 +45,16 @@ public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("time: ", auto.getTime());
+            telemetry.addData("touch top", robot.sensors.touchTop.isPressed());
             telemetry.addData("brake position: ", robot.brake.getPosition());
-            telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
+            telemetry.addData("touch bottom", robot.sensors.touchBottom.isPressed());
+            telemetry.addData("lift power", robot.liftAve);
+            telemetry.addData("time: ", auto.getTime());
             telemetry.addData("mode", action);
             telemetry.update();
             idle();
         }
         auto.stop();
     }
-
-
 }
 

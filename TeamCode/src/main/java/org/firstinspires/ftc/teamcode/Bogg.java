@@ -17,6 +17,7 @@ public class Bogg
     Camera camera;
     Sensors sensors;
     Servo brake;
+    Servo push;
 
     double alpha = 0.039;
     double alphaInc = 0.000001;
@@ -24,7 +25,6 @@ public class Bogg
     double yAve = 0;
     double spinAve = 0;
     double liftAve = 0;
-    boolean goingUp;
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad)
     {
@@ -34,18 +34,9 @@ public class Bogg
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
+        push = hardwareMap.servo.get("push");
     }
 
-    public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
-    {
-        this.gamepad = gamepad;
-        this.hardwareMap = hardwareMap;
-        camera = new Camera(hardwareMap, telemetry);
-        driveEngine = new DriveEngine(hardwareMap);
-        lift  = hardwareMap.dcMotor.get("lift");
-        sensors = new Sensors(hardwareMap);
-        brake = hardwareMap.servo.get("brake");
-    }
 
     public double smoothX(double x)
     {
@@ -89,23 +80,12 @@ public class Bogg
 
     public void manualLift()
     {
-        if(gamepad.y)
-        {
-            goingUp = true;
-        }
-
-        if(gamepad.a)
-        {
-            goingUp = false;
-        }
-
-        if(gamepad.y ) //!sensors.touchTop.isPressed() && goingUp)
+        if(gamepad.y && !sensors.touchTop.isPressed())
         {
             lift.setPower(smoothLift(1));
         }
-        else if(gamepad.a  && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8)
+        else if(gamepad.a)
         {
-            goingUp = false;
             if (sensors.touchBottom.isPressed())
             {
                 lift.setPower(smoothLift(-.02));
@@ -121,7 +101,7 @@ public class Bogg
     {
         if(power > 0  && !sensors.touchTop.isPressed())
             lift.setPower(smoothLift(power));
-        else if(power < 0 && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8 && !sensors.touchBottom.isPressed())
+        else if(power < 0 && !sensors.touchBottom.isPressed())
             lift.setPower(smoothLift(power));
         else
             lift.setPower(smoothLift(0));
@@ -138,6 +118,14 @@ public class Bogg
     public void setBrake(double position)
     {
         brake.setPosition(position);
+    }
+
+    public void push(boolean out)
+    {
+        if(out)
+            push.setPosition(.6);
+        else
+            push.setPosition(0);
     }
 
     public void manualDrive()
@@ -182,7 +170,7 @@ public class Bogg
             return true;
     }
 
-    public boolean rotateToTargetAngle(double targetHeading, double accuracy_angle)
+    boolean rotateToTargetAngle(double targetHeading, double accuracy_angle)
     {
         double[] location = camera.getLocation();
         if(location != null)
@@ -203,7 +191,7 @@ public class Bogg
         }
         return true;
     }
-    public boolean rotateToTarget(double accuracy_angle)
+    boolean rotateToTarget(double accuracy_angle)
     {
         double[] location = camera.getLocation();
         double targetHeading;
