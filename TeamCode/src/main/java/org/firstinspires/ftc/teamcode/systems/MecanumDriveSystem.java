@@ -34,6 +34,8 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
 
     private double initialHeading;
 
+    private boolean slowDrive;
+
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
 
@@ -75,12 +77,16 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         this.motorBackLeft.setPower(Range.clip(backLeftPower, -1, 1));
         telemetry.log("Mecanum Drive System", "BLPower: {0}", Range.clip(backLeftPower, -1, 1));
         telemetry.write();
+
+        this.slowDrive = slowDrive;
     }
 
     private float scaleJoystickValue(float joystickValue) {
+        float slowDriveCoefficient = .3f;
+        if (!slowDrive) slowDriveCoefficient = 1;
         return joystickValue > 0
-                ? (float)JOYSTICK_SCALE.scaleX(joystickValue * joystickValue)
-                : (float)-JOYSTICK_SCALE.scaleX(joystickValue * joystickValue);
+                ? (float)  JOYSTICK_SCALE.scaleX(joystickValue * joystickValue) * slowDriveCoefficient
+                : (float) -JOYSTICK_SCALE.scaleX(joystickValue * joystickValue) * slowDriveCoefficient;
     }
 
     public void driveGodMode(float rightX, float rightY, float leftX, float leftY) {

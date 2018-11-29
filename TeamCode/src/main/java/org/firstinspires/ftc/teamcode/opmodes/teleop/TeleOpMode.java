@@ -26,6 +26,8 @@ public class TeleOpMode extends TeleOpModeDebugger {
     private SlideSystem slideSystem;
     private Flail flail;
 
+    private boolean slowDrive;
+
     public TeleOpMode() {
         msStuckDetectLoop = 1000000000;
     }
@@ -39,6 +41,8 @@ public class TeleOpMode extends TeleOpModeDebugger {
         this.driveSystem = new MecanumDriveSystem(this);
         this.flail = new Flail(this);
         initButton();
+
+        slowDrive = false;
     }
 
 
@@ -145,6 +149,21 @@ public class TeleOpMode extends TeleOpModeDebugger {
         };
     }
 
+    private void addSlowDriveButton() {
+        controller1.leftStickButton.pressedHandler = new Handler() {
+            @Override
+            public void invoke() throws Exception {
+                slowDrive = true;
+            }
+        };
+        controller1.leftStickButton.releasedHandler = new Handler() {
+            @Override
+            public void invoke() throws Exception {
+                slowDrive = false;
+            }
+        };
+    }
+
     @Override
     public void run(){
         controller1.handle();
@@ -156,6 +175,6 @@ public class TeleOpMode extends TeleOpModeDebugger {
         float lx = controller1.gamepad.left_stick_x;
         float ly = controller1.gamepad.left_stick_y;
 
-        driveSystem.mecanumDrive(rx, ry, lx, ly, false);
+        driveSystem.mecanumDrive(rx, ry, lx, ly, slowDrive);
     }
 }
