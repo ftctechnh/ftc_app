@@ -22,7 +22,7 @@ public class teleop extends LinearOpMode {
         telemetry.addLine("Ready Player One");
         telemetry.addLine("Ready Player Two");
 
-        double speed = 1.0;
+        double speed = 0.75;
 
         /* initialize sub-assemblies
          */
