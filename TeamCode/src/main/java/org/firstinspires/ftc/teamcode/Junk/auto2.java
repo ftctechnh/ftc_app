@@ -1,17 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Junk;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
-import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
-import org.firstinspires.ftc.teamcode.SamplingOrderExample;
-import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
-//import static org.firstinspires.ftc.teamcode.auto2.State.STATE_STOP;
+import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.IMUcontrol;
 
 @Autonomous(name = "Auto2", group = "Drive")
 public class auto2 extends LinearOpMode {
@@ -21,7 +18,6 @@ public class auto2 extends LinearOpMode {
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
     VucamControl Vucam = new VucamControl();
-    IMUcontrol imu = new IMUcontrol();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Methods */
@@ -105,10 +101,9 @@ public class auto2 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Drive.init(hardwareMap);
-        Claimer.init(hardwareMap);
+        Drive.init(this);
+        Claimer.init(this);
         Vucam.init(hardwareMap);
-        imu.init(hardwareMap);
         //Sample.init();
 
         telemetry.addLine("Autonomous");

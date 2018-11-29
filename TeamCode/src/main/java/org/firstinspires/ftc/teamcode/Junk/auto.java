@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Junk;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
-//import static org.firstinspires.ftc.teamcode.auto.State.STATE_STOP;
 
 @Autonomous(name = "Auto1", group = "Drive")
 public class auto extends LinearOpMode {
@@ -101,8 +100,8 @@ public class auto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Drive.init(hardwareMap);
-        Claimer.init(hardwareMap);
+        Drive.init(this);
+        Claimer.init(this);
         Vucam.init(hardwareMap);
 
         telemetry.addLine("Autonomous");

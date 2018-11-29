@@ -33,8 +33,8 @@ public class teleop extends LinearOpMode {
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
 
-        Drive.init(hardwareMap);
-        Lift.init(hardwareMap);
+        Drive.init(this);
+        Lift.init(this);
         telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC

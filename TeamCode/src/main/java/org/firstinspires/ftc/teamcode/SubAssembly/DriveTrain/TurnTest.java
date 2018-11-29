@@ -24,7 +24,7 @@ public class TurnTest extends LinearOpMode {
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
-        Drive.init(hardwareMap);
+        Drive.init(this);
 
         telemetry.update();
 
@@ -49,17 +49,17 @@ public class TurnTest extends LinearOpMode {
             }
 
             if (egamepad1.dpad_left.state) {
-                Drive.turn2angle(-90);
+                Drive.turn2Angle(speed, -90);
             } else if (egamepad1.dpad_right.state) {
-                Drive.turn2angle(90);
+                Drive.turn2Angle(speed, 90);
             } else if (egamepad1.dpad_up.state) {
-                Drive.turn2angle(0);
+                Drive.turn2Angle(speed, 0);
             } else if (egamepad1.dpad_down.state) {
-                Drive.turn2angle(180);
+                Drive.turn2Angle(speed, 180);
             } else if (egamepad1.a.state) {
-                Drive.turnAngle(30);
+                Drive.turnAngle(speed, 30);
             } else if (egamepad1.b.state) {
-                Drive.turnAngle(-30);
+                Drive.turnAngle(speed, -30);
             } else {
                 Drive.stop();
             }

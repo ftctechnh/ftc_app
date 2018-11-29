@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.SubAssembly.Lift;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -13,9 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  */
 public class LiftControl {
     /* Declare private class object */
-    //private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
-    HardwareMap hwMap;     /* local copy of HardwareMap object from opmode class */
-
+    private LinearOpMode opmode = null;     /* local copy of opmode class */
 
     //initializing motors, servos, and sensors
     private DcMotor LifterRightM;
@@ -29,13 +26,14 @@ public class LiftControl {
     public LiftControl() {
     }
 
-    public void init(HardwareMap ahwMap) {
-        /* Set local copies from opmode class */
-        hwMap = ahwMap;
+    public void init(LinearOpMode opMode) {
+        HardwareMap hwMap;
 
+        /* Set local copies from opmode class */
+        opmode = opMode;
+        hwMap = opMode.hardwareMap;
 
         /* Map hardware devices */
-
         LifterRightM = hwMap.dcMotor.get("LifterRightM");
         LifterLeftM = hwMap.dcMotor.get("LifterLeftM");
         LockRightS = hwMap.servo.get("LockRightS");
