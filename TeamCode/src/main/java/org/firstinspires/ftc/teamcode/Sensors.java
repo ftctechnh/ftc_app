@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public class Sensors {
@@ -51,9 +52,12 @@ public class Sensors {
 
         dServo.setPosition(position);
     }
+
+    private boolean usingImu = true;
+    private boolean gotMobile = false;
     boolean isTilted()
     {
-        if(imu == null)
+        if(usingImu && imu == null)
         {
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
             parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
@@ -66,11 +70,31 @@ public class Sensors {
             // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
             // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
             // and named "imu".
-            imu = hardwareMap.get(BNO055IMU.class, "imu");
-            imu.initialize(parameters);
+            try
+            {
+                imu = hardwareMap.get(BNO055IMU.class, "imu");
+                imu.initialize(parameters);
+            }catch (IllegalArgumentException i)
+            {
+                usingImu = false;
+            }
         }
 
-        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return Math.hypot(orientation.secondAngle, orientation.thirdAngle) > 5;
+        if(usingImu)
+        {
+            Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            return Math.hypot(orientation.secondAngle, orientation.thirdAngle) > 5;
+        }
+        else
+        {
+            if(gotMobile)
+                return dMobile.getDistance(DistanceUnit.INCH) > 12 * 5; //Tilted up so far that it sees air
+            else
+            {
+                if(dMobile.getDistance(DistanceUnit.INCH) < 12.0 * 4.5)
+                    gotMobile = true;
+                return false;
+            }
+        }
     }
 }
