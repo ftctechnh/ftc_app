@@ -66,9 +66,12 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
 
             // Display the current values
             if(robot.camera != null) {
-                telemetry.addData("target seen", (robot.camera.targetVisible() == null) ? "N/A" : robot.camera.targetVisible().getName());
-                telemetry.addData("startPosition", auto.startPosition);
-                telemetry.addData("location", robot.camera.getLocation());
+                if(robot.camera.targetVisible())
+                {
+                    //telemetry.addData("target seen", (robot.camera.targetVisible()) ? "N/A" : robot.camera.targetVisible().getName());
+                    telemetry.addData("startPosition", auto.startPosition != null ? auto.startPosition : "N/A");
+                    telemetry.addData("location", robot.camera.getLocation() == null ? "N/A" : robot.camera.getLocation());
+                }
             }
             telemetry.addData("time", auto.getTime());
             telemetry.addData("mode", action);

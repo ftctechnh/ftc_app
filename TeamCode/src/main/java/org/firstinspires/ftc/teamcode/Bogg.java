@@ -10,11 +10,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Bogg
 {
-    Gamepad gamepad;
-    HardwareMap hardwareMap;
-    DriveEngine driveEngine;
-    DcMotor lift;
-    Camera camera;
+    Gamepad gamepad = null;
+    HardwareMap hardwareMap = null;
+    DriveEngine driveEngine = null;
+    DcMotor lift = null;
+    Camera camera = null;
     Sensors sensors;
     Servo brake;
     Servo push;
@@ -191,48 +191,48 @@ public class Bogg
         }
         return true;
     }
-    boolean rotateToTarget(double accuracy_angle)
-    {
-        double[] location = camera.getLocation();
-        double targetHeading;
-        if(location != null)
-        {
-            String name = camera.targetVisible().getName();
-
-            switch(name)
-            {
-                case "Blue-Rover":
-                    targetHeading = 180;
-                    break;
-                case "Red-Footprint":
-                    targetHeading = 0;
-                    break;
-                case "Front-Craters":
-                    targetHeading = 270;
-                    break;
-                default: //"Back-Space"
-                    targetHeading = 90;
-            }
-
-            //the direction a compass would tell us
-            double currentHeading = camera.getHeading() * 180 / Math.PI;
-
-            double headingDifference = targetHeading - currentHeading;
-
-            if(Math.abs(headingDifference) < accuracy_angle)
-                return true;
-            else
-            {
-                if(headingDifference < 0)
-                    driveEngine.rotate(.2);
-                else
-                    driveEngine.rotate(-.2);
-            }
-
-            return false;
-        }
-        return true;
-    }
+//    boolean rotateToTarget(double accuracy_angle)
+//    {
+//        double[] location = camera.getLocation();
+//        double targetHeading;
+//        if(location != null)
+//        {
+//            String name = camera.targetVisible().getName();
+//
+//            switch(name)
+//            {
+//                case "Blue-Rover":
+//                    targetHeading = 180;
+//                    break;
+//                case "Red-Footprint":
+//                    targetHeading = 0;
+//                    break;
+//                case "Front-Craters":
+//                    targetHeading = 270;
+//                    break;
+//                default: //"Back-Space"
+//                    targetHeading = 90;
+//            }
+//
+//            //the direction a compass would tell us
+//            double currentHeading = camera.getHeading() * 180 / Math.PI;
+//
+//            double headingDifference = targetHeading - currentHeading;
+//
+//            if(Math.abs(headingDifference) < accuracy_angle)
+//                return true;
+//            else
+//            {
+//                if(headingDifference < 0)
+//                    driveEngine.rotate(.2);
+//                else
+//                    driveEngine.rotate(-.2);
+//            }
+//
+//            return false;
+//        }
+//        return true;
+//    }
 
     public void incAlpha()
     {

@@ -6,10 +6,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Auto {
-    Bogg robot;
-    ElapsedTime timer;
-    StartPosition startPosition;
-    Telemetry telemetry;
+    Bogg robot = null;
+    ElapsedTime timer = null;
+    StartPosition startPosition = null;
+    Telemetry telemetry = null;
     double iSP; //initialSlopePositivity
 
     Auto(Bogg robot, Telemetry telemetry)
@@ -17,6 +17,9 @@ public class Auto {
         this.robot = robot;
         robot.driveEngine.driveAtAngle(Math.PI);
         this.telemetry = telemetry;
+        robot.camera = new Camera(robot.hardwareMap, telemetry);
+        telemetry.addLine("Made it to Point X");
+        telemetry.update();
     }
 
     private enum StartPosition
@@ -60,15 +63,20 @@ public class Auto {
 
     void slide()
     {
-        double inchesMoved = robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks;
+        double inchesMoved = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
         if(timer.seconds() < .3) //for an additional .3 seconds
         {
             robot.lift(.2); //drop a bit more
         }
-        else if(inchesMoved < 4) //the back encoder has moved less than 4 inches
+        else if(inchesMoved < 4.5) //the back encoder has moved less than 4 inches
         {
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(.4,0); //drive to the side to unhook
+        }
+        else if(inchesMoved < 6) //the back encoder has moved less than 4 inches
+        {
+            robot.lift(0); //stop the lift motor
+            robot.driveEngine.drive(.4,.4); //drive to the side to unhook
         }
         else  //if the robot has unhooked
         {
@@ -80,11 +88,12 @@ public class Auto {
 
     boolean isDoneSliding(){return doneSliding;}
 
-
+    int count = 0;
     void spin()
     {
-        if (robot.camera == null)
-            robot.camera = new Camera(robot.hardwareMap, telemetry);
+        count += 1;
+        telemetry.addLine("Made it to point A");
+        telemetry.update();
 
         double t = timer.seconds();
         if(t/1.5 - Math.floor(t)/1.5 < .60)  //rotates for 60% of 1.5 seconds
@@ -92,31 +101,42 @@ public class Auto {
         else
             robot.driveEngine.rotate(0);  //and stops so we can see the target
 
+        telemetry.addLine("Made it to point B");
+        telemetry.update();
 
-        if(robot.camera.targetVisible() != null) //if we see a camera (null = nothing)
-        {
-            double[] location = robot.camera.getLocation(); //get a location, looks like [5.65,-2.54]
+        double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
+        if(!(null == location)) {
+            telemetry.addLine("Made it to point Q");
+            telemetry.update();
 
             double angle = Math.atan2(location[0], location[1]); //get the angle looking down on the field, lander to robot
+            telemetry.addLine("Made it to point 2");
+            telemetry.update();
 
-            if(angle < -Math.PI/2)                          //Quadrant 3
+            if (angle < -Math.PI / 2)                          //Quadrant 3
                 startPosition = StartPosition.LowBlue;
-            else if(angle < 0)                              //Quadrant 4
+            else if (angle < 0)                              //Quadrant 4
                 startPosition = StartPosition.LowRed;
-            else if(angle < Math.PI/2)                      //Quadrant 1
+            else if (angle < Math.PI / 2)                      //Quadrant 1
                 startPosition = StartPosition.HighRed;
             else // angle between pi/2 and pi               //Quadrant 2
                 startPosition = StartPosition.HighBlue;
 
             doneSpinning = true;
+            telemetry.addLine("Made it to point 3");
+            telemetry.update();
         }
+
+        telemetry.addLine("Made it to point C");
+        telemetry.update();
     }
 
     boolean isDoneSpinning(){return doneSpinning;}
 
     void moveToWall()
     {
-        if(robot.camera.targetVisible() == null){
+        telemetry.addLine("Made it to point 4");
+        if(robot.camera.targetVisible()){
             double t = timer.seconds();
             robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .2 : 0);
         }
