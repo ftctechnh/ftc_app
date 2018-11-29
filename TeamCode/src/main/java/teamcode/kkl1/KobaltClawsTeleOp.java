@@ -17,7 +17,7 @@ public class KobaltClawsTeleOp extends LinearOpMode {
     public void runOpMode() {
         waitForStart();
         instance = this; // assigns a static variable to this instance
-        HardwareManager.init(this);
+        KKL1HardwareManager.init(this);
         GamePadInput.init();
         telemetry.addData("Status", "Online");
         telemetry.update();

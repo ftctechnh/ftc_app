@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Provides hardware-related variables and methods.
  */
-public final class HardwareManager {
+final class KKL1HardwareManager {
 
     public static final boolean DRIVE_ENABLED = true;
     public static final boolean ARM_ENABLED = true;
@@ -27,7 +27,7 @@ public final class HardwareManager {
     private static final String INNER_COLOR_SENSOR_NAME = "InnerColorSensor";
     private static final String OUTER_COLOR_SENSOR_NAME = "OuterColorSensor";
 
-    private static HardwareManager instance;
+    private static KKL1HardwareManager instance;
 
     public static DcMotor lDriveMotor;
     public static DcMotor rDriveMotor;
@@ -40,10 +40,10 @@ public final class HardwareManager {
     public static ColorSensor outerColorSensor;
 
     public static void init(LinearOpMode opMode) {
-        instance = new HardwareManager(opMode);
+        instance = new KKL1HardwareManager(opMode);
     }
 
-    private HardwareManager(LinearOpMode opMode) {
+    private KKL1HardwareManager(LinearOpMode opMode) {
         HardwareMap hardwareMap = opMode.hardwareMap;
         if (DRIVE_ENABLED) {
             lDriveMotor = hardwareMap.get(DcMotor.class, L_DRIVE_MOTOR_NAME);
