@@ -19,6 +19,7 @@ public class KKL2TeleOp extends LinearOpMode {
             driveUpdate();
             // intakeUpdate();
             liftUpdate();
+            liftServo();
         }
     }
 
@@ -31,32 +32,16 @@ public class KKL2TeleOp extends LinearOpMode {
         KKL2HardwareManager.driveRMotor.setPower(powerR);
     }
 
-    private double intakeWristServoPos = 0.0;
-
-    private void intakeUpdate() {
-        double intakeBaseServoPower;
-        if (gamepad1.left_trigger > 0) {
-            intakeBaseServoPower = -INTAKE_BASE_SERVO_SPEED;
-        } else if (gamepad1.right_trigger > 0) {
-            intakeBaseServoPower = INTAKE_BASE_SERVO_SPEED;
-        } else {
-            intakeBaseServoPower = 0.0;
+    private void liftServo() {
+        if (gamepad1.right_bumper) {
+            KKL2HardwareManager.liftLockServo.setPosition(0.0);
         }
-        KKL2HardwareManager.intakeBaseServo.setPower(intakeBaseServoPower);
-
-        intakeWristServoPos += gamepad1.right_stick_y;
-        intakeWristServoPos = clamp(intakeWristServoPos, -1.0, 1.0);
-        KKL2HardwareManager.intakeWristServo.setPosition(intakeWristServoPos);
-
-        double intakeSwallowPower;
-        if (gamepad1.left_bumper) {
-            intakeSwallowPower = -INTAKE_SWALLOW_POWER;
-        } else if (gamepad1.right_bumper) {
-            intakeSwallowPower = INTAKE_SWALLOW_POWER;
-        } else {
-            intakeSwallowPower = 0.0;
+        else if (gamepad1.left_bumper) {
+            KKL2HardwareManager.liftLockServo.setPosition(1.0);
         }
-        KKL2HardwareManager.intakeSwallow.setPower(intakeSwallowPower);
+        else {
+            KKL2HardwareManager.liftLockServo.setPosition(0.5);
+        }
     }
 
     private void liftUpdate() {

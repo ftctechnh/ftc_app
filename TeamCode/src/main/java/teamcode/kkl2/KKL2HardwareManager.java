@@ -13,6 +13,7 @@ public class KKL2HardwareManager {
     private static final String DRIVE_RIGHT_MOTOR_NAME = "DriveRMotor";
     private static final String LIFT_BASE_MOTOR_NAME = "LiftBaseMotor";
     private static final String LIFT_LATCH_SERVO_NAME = "LiftLatchServo";
+    private static final String LIFT_LOCK_SERVO_NAME = "LiftLockServo";
     private static final String INTAKE_BASE_SERVO_NAME = "IntakeBaseServo";
     private static final String INTAKE_WRIST_SERVO_NAME = "IntakeWristServo";
     private static final String INTAKE_SWALLOW_NAME = "IntakeSwallow";
@@ -24,11 +25,10 @@ public class KKL2HardwareManager {
     // lift
     public static DcMotor liftBaseMotor;
     public static Servo liftLatchServo;
+    public static Servo liftLockServo;
 
     // intake
-    public static CRServo intakeBaseServo;
     public static Servo intakeWristServo;
-    public static CRServo intakeSwallow;
 
     public static void initialize(LinearOpMode mainClassInstance) {
         HardwareMap hardwareMap = mainClassInstance.hardwareMap;
@@ -37,9 +37,8 @@ public class KKL2HardwareManager {
         driveRMotor = hardwareMap.get(DcMotor.class, DRIVE_LEFT_MOTOR_NAME);
         liftBaseMotor = hardwareMap.get(DcMotor.class, LIFT_BASE_MOTOR_NAME);
         liftLatchServo = hardwareMap.get(Servo.class, LIFT_LATCH_SERVO_NAME);
-        intakeBaseServo = hardwareMap.get(CRServo.class, INTAKE_BASE_SERVO_NAME);
-        intakeWristServo = hardwareMap.get(Servo.class, INTAKE_WRIST_SERVO_NAME);
-        intakeSwallow = hardwareMap.get(CRServo.class, INTAKE_SWALLOW_NAME);
+        liftLockServo = hardwareMap.get(Servo.class, LIFT_LOCK_SERVO_NAME);
+        //intakeWristServo = hardwareMap.get(Servo.class, INTAKE_WRIST_SERVO_NAME);
 
         driveLMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     }

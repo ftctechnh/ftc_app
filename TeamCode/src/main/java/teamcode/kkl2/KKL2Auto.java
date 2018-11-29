@@ -29,9 +29,11 @@ public class KKL2Auto extends LinearOpMode {
         waitForStart();
         resetDriveEncoders();
 
-        unlatch();
+        //unlatch();
 
-        approachGold();
+        approach();
+
+        while (opModeIsActive());
     }
 
     private void drive(double centimeters, double power) {
@@ -46,6 +48,11 @@ public class KKL2Auto extends LinearOpMode {
         while (opModeIsActive() && !driveNearTarget()) ;
         zeroDriveMotorPower();
         resetDriveEncoders();
+    }
+
+    private void turn(int degrees) {
+        double radians = (degrees / 180.0) * Math.PI;
+        turn(radians);
     }
 
     private void turn(double radians) {
@@ -87,14 +94,14 @@ public class KKL2Auto extends LinearOpMode {
         boolean nearTarget = Math.abs(currentDriveLMotorPos - targetDriveLMotorPos) < DRIVE_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD
                 && Math.abs(currentDriveRMotorPos - targetDriveRMotorPos) < DRIVE_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD;
 
-
+/*
         telemetry.addData("rightTarget", targetDriveRMotorPos);
         telemetry.addData("rightCurrent", currentDriveRMotorPos);
         telemetry.addData("leftTarget", targetDriveLMotorPos);
         telemetry.addData("leftCurrent", currentDriveLMotorPos);
 
         telemetry.update();
-
+*/
         return nearTarget;
     }
 
@@ -125,22 +132,107 @@ public class KKL2Auto extends LinearOpMode {
     }
 
     private void unlatch() {
-        zeroLiftMotorPower();
-
-        // lower the robot using the lift arm
-        double liftBaseMotorPower = 1.0;
-        double ticksPerDegree = Helper.REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION / 360.0 * 7.0;
-        int ticks = (int)(ticksPerDegree * 70);
-        KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
-        KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
-
-        while (opModeIsActive() && !liftNearTarget()) ;
-        zeroLiftMotorPower();
-        resetLiftEncoders();
+/*
+        // lower the robot using the servo
+        KKL2HardwareManager.liftLockServo.setPosition(1.0);
+        sleep(9500);
+        KKL2HardwareManager.liftLockServo.setPosition(0.5);
 
         // unlatch the lift arm
         KKL2HardwareManager.liftLatchServo.setPosition(0);
         sleep(2000);
+*/
+        // push arm backwards
+        double liftBaseMotorPower = 1.0;
+        double ticksPerDegree = Helper.REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION / 360.0 * 7.0;
+        int ticks = (int)(ticksPerDegree * 5);
+        KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
+        KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
+        while (opModeIsActive() && !liftNearTarget()) ;
+        zeroLiftMotorPower();
+        resetLiftEncoders();
+    }
+
+    private void approach() {
+        float height = 0;
+        double power = 1.0;
+        List<Mineral> minerals = null;
+
+        /*
+        while(1) {
+        error = desired_value – actual_value
+        integral = integral + (error*iteration_time)
+        derivative = (error – error_prior)/iteration_time
+        output = KP*error + KI*integral + KD*derivative + bias
+        error_prior = error
+        sleep(iteration_time)
+        }
+        */
+
+        float error_prev = 1000;
+        float error = 0;
+        float integral = 0;
+        float derivative = 0;
+        float target_x = 640;
+        double object_distance = 1000;
+        double ratio = 30.48 / 200; // centimeters / pixels (num pixel when the object is 1 ft away)
+
+        while (opModeIsActive()) {
+            if (object_distance < 30.48) {
+                // we are 1 ft away to gold
+                telemetry.addData("Driving", "To Victory!!!");
+                telemetry.update();
+                drive(35, power);
+            }
+            else {
+                minerals = this.tfManager.getRecognizedMinerals();
+
+                if (minerals != null) {
+                    for (Mineral mineral : minerals) {
+                        if (mineral.isGold()) {
+                            float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
+                            float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
+                            height = mineral.getRight() - mineral.getLeft();
+                            telemetry.addData("Gold Height", height);
+                            telemetry.addData("Gold Center X", center_x);
+                            telemetry.addData("Gold Center Y", center_y);
+
+                            object_distance = getCentimetersFromPixels(height); // centimeters
+                            error = target_x - center_x; // adjacent side
+                            double error_centimeters = getCentimetersFromPixels(error);
+                            double v = error_centimeters / object_distance;
+                            double radians = Math.acos(v);
+                            double degrees = radians * 180.0 / Math.PI;
+
+                            telemetry.addData("error", error);
+                            telemetry.addData("inches away", object_distance / 2.54);
+                            telemetry.addData("degrees away", degrees);
+
+                            if (degrees > 10 || degrees < -10) {
+                                // turn towards the gold
+                                turn(radians);
+                            } else {
+                                telemetry.addData("Facing Gold", "No Turn, Move Forward");
+                                // Move robot closer
+                                //drive(object_distance, power);
+                                drive(2.54, power);
+                            }
+
+                            telemetry.update();
+                        }
+                    }
+                }
+                else {
+                    // drive 1 inch to try and detect objects
+                    drive(2.54, power);
+                }
+            }
+            sleep(2000);
+        }
+    }
+
+    private double getCentimetersFromPixels(double pixels) {
+        return ((pixels - 300) / -100) * 30.48; // centimeters
     }
 
     private void approachGold() {
