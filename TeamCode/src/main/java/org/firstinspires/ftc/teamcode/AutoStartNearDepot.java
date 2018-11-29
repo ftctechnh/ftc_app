@@ -11,6 +11,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
@@ -209,7 +210,7 @@ public class AutoStartNearDepot extends LinearOpMode {
 */
         // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
         gyroStrafe(0.5, 0);
-        sleep(1000);
+        sleep(1500);
         stopBot();
         gyroSpin(0);
         gyroHold(0.4,0,1.5);
@@ -218,7 +219,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         gyroSpin(315);
 
         // Move towards the wall
-        while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
+        while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10){
             gyroStrafe(.4,315);
         }
         stopBot();
@@ -230,17 +231,40 @@ public class AutoStartNearDepot extends LinearOpMode {
         stopBot();
 
         // Drop the totem
-        robot.armRotate.setPower(0.2);
-        sleep(3000);
+        //robot.armRotate.setPower(0.2);
+        //sleep(2500);
+        //robot.armRotate.setPower(0);
+        int dropTarget = 3000;  // Target for dropping totem
+        int levelTarget = 500;  // Target for holding arm forward and level
+        double rotatePower;
+        //Reset the Encoder
+        robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        while (robot.armRotate.getCurrentPosition()< dropTarget){
+            robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rotatePower = 0.2;
+            robot.armRotate.setPower(rotatePower);
+        }
         robot.armRotate.setPower(0);
+        //robot.armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.armRotate.setTargetPosition(dropTarget);
+        //robot.armRotate.setPower(0.2);
+
         sleep(500);
         robot.rightMineral.setPower(0.5);
         sleep(1000);
         robot.rightMineral.setPower(0);
-        robot.armRotate.setPower(-0.2);
-        sleep(2400);
+        //robot.armRotate.setPower(-0.2);
+        //sleep(2000);
+        //robot.armRotate.setPower(0);
+        while (robot.armRotate.getCurrentPosition()> levelTarget){
+            robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rotatePower = -0.2;
+            robot.armRotate.setPower(rotatePower);
+        }
         robot.armRotate.setPower(0);
-
+        //robot.armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //robot.armRotate.setTargetPosition(levelTarget);
+        //robot.armRotate.setPower(-0.2);
         //Drive forwards towards crater
         while(sonarDistance() > 8){
             double wsteer=wallSteer(5);

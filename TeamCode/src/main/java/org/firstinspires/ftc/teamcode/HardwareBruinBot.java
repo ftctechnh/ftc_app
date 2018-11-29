@@ -116,7 +116,7 @@ public class HardwareBruinBot
         extendArmFrontStop.setMode(DigitalChannel.Mode.INPUT);
 
         // Initialize I2C Sensors
-        colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
+        //colorSensor = hwMap.get(ColorSensor.class, "colorSensor");
         rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         gyro = hwMap.get(ModernRoboticsI2cGyro.class, "gyro");
 
@@ -161,7 +161,7 @@ public class HardwareBruinBot
 
 
         // Set the LED on
-        colorSensor.enableLed(true);
+        //colorSensor.enableLed(true);
 
     }
 }
