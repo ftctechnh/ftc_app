@@ -18,7 +18,7 @@ public class DriveDiagnosticsTest extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
-        HardwareManager.init(this);
+        KKL1HardwareManager.init(this);
         this.initialize();
         telemetry.addData("Status", "Now driving straight 4 feet at 50% power");
         telemetry.update();
@@ -30,22 +30,22 @@ public class DriveDiagnosticsTest extends LinearOpMode {
 
 
     private void initialize() {
-        HardwareManager.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 
     private void drive(double inches, double power) {
-        HardwareManager.lDriveMotor.setPower(0.0);
-        HardwareManager.rDriveMotor.setPower(0.0);
-        HardwareManager.lDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
-        HardwareManager.rDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
-        HardwareManager.lDriveMotor.setPower(power);
-        HardwareManager.rDriveMotor.setPower(power);
+        KKL1HardwareManager.lDriveMotor.setPower(0.0);
+        KKL1HardwareManager.rDriveMotor.setPower(0.0);
+        KKL1HardwareManager.lDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
+        KKL1HardwareManager.rDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
+        KKL1HardwareManager.lDriveMotor.setPower(power);
+        KKL1HardwareManager.rDriveMotor.setPower(power);
         while (!motorsNearTarget()) ;
         resetEncoders();
     }
@@ -63,21 +63,21 @@ public class DriveDiagnosticsTest extends LinearOpMode {
             posL = 0;
             posR = 0;
         }
-        HardwareManager.lDriveMotor.setPower(0.0);
-        HardwareManager.rDriveMotor.setPower(0.0);
-        HardwareManager.lDriveMotor.setTargetPosition(posL);
-        HardwareManager.rDriveMotor.setTargetPosition(posR);
-        HardwareManager.lDriveMotor.setPower(TURN_POWER);
-        HardwareManager.rDriveMotor.setPower(TURN_POWER);
+        KKL1HardwareManager.lDriveMotor.setPower(0.0);
+        KKL1HardwareManager.rDriveMotor.setPower(0.0);
+        KKL1HardwareManager.lDriveMotor.setTargetPosition(posL);
+        KKL1HardwareManager.rDriveMotor.setTargetPosition(posR);
+        KKL1HardwareManager.lDriveMotor.setPower(TURN_POWER);
+        KKL1HardwareManager.rDriveMotor.setPower(TURN_POWER);
         while (!motorsNearTarget()) ;
         resetEncoders();
     }
 
     private boolean motorsNearTarget() {
-        int targetLDriveMotorPos = HardwareManager.lDriveMotor.getTargetPosition();
-        int currentLDriveMotorPos = HardwareManager.lDriveMotor.getCurrentPosition();
-        int targetRDriveMotorPos = HardwareManager.rDriveMotor.getTargetPosition();
-        int currentRDriveMotorPos = HardwareManager.rDriveMotor.getCurrentPosition();
+        int targetLDriveMotorPos = KKL1HardwareManager.lDriveMotor.getTargetPosition();
+        int currentLDriveMotorPos = KKL1HardwareManager.lDriveMotor.getCurrentPosition();
+        int targetRDriveMotorPos = KKL1HardwareManager.rDriveMotor.getTargetPosition();
+        int currentRDriveMotorPos = KKL1HardwareManager.rDriveMotor.getCurrentPosition();
         telemetry.addData("targetL", targetLDriveMotorPos);
         telemetry.addData("currentL", currentLDriveMotorPos);
         telemetry.addData("targetR", targetRDriveMotorPos);
@@ -87,10 +87,10 @@ public class DriveDiagnosticsTest extends LinearOpMode {
     }
 
     private void resetEncoders() {
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
 

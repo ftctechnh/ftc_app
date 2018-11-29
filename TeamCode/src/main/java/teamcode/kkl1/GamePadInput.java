@@ -39,16 +39,16 @@ public class GamePadInput {
      * A method to be called from a LinearOpMode repeatedly to handle input from the game pad
      */
     public static void update() {
-        if (HardwareManager.DRIVE_ENABLED) {
+        if (KKL1HardwareManager.DRIVE_ENABLED) {
             driveUpdate();
         }
-        if (HardwareManager.ARM_ENABLED) {
+        if (KKL1HardwareManager.ARM_ENABLED) {
             armUpdate();
         }
-        if (HardwareManager.INTAKE_ENABLED) {
+        if (KKL1HardwareManager.INTAKE_ENABLED) {
             intakeUpdate();
         }
-        if (HardwareManager.LIFT_ENABLED) {
+        if (KKL1HardwareManager.LIFT_ENABLED) {
             liftUpdate();
         }
     }
@@ -78,7 +78,7 @@ public class GamePadInput {
         } else if (powerR < -1.0) {
             powerR = -1.0;
         }
-        HardwareManager.setDrivePower(powerL, powerR);
+        KKL1HardwareManager.setDrivePower(powerL, powerR);
     }
 
     private static void armUpdate() {
@@ -97,8 +97,8 @@ public class GamePadInput {
         } else if (instance.armWristServoPos < 0.0) {
             instance.armWristServoPos = 0.0;
         }
-        HardwareManager.setArmBaseServoPower(armBaseServoPower);
-        HardwareManager.setArmWristServoPosition(instance.armWristServoPos);
+        KKL1HardwareManager.setArmBaseServoPower(armBaseServoPower);
+        KKL1HardwareManager.setArmWristServoPosition(instance.armWristServoPos);
     }
 
     private static void intakeUpdate() {
@@ -110,7 +110,7 @@ public class GamePadInput {
         } else {
             intakePos = 0.5;
         }
-        HardwareManager.setIntakeServoPosition(intakePos);
+        KKL1HardwareManager.setIntakeServoPosition(intakePos);
     }
 
     private static void liftUpdate() {
@@ -132,7 +132,7 @@ public class GamePadInput {
                 liftPower = 0.0;
             }
         }
-        HardwareManager.setLiftMotorPower(liftPower);
+        KKL1HardwareManager.setLiftMotorPower(liftPower);
     }
 
 }

@@ -18,95 +18,95 @@ public class KobaltKlawsAutonomousDepotSide extends LinearOpMode {
     @Override
     public void runOpMode() {
         waitForStart();
-        HardwareManager.init(this);
+        KKL1HardwareManager.init(this);
         this.initialize();
-        HardwareManager.liftMotor.setTargetPosition(-500);
-        HardwareManager.liftMotor.setPower(1.0);
+        KKL1HardwareManager.liftMotor.setTargetPosition(-500);
+        KKL1HardwareManager.liftMotor.setPower(1.0);
         sleep(800);
-        HardwareManager.liftMotor.setPower(0.0);
+        KKL1HardwareManager.liftMotor.setPower(0.0);
         sleep(1000);
         drive(65, 0.5);
-        HardwareManager.intakeServo.setPosition(1.0); // opens right claw
+        KKL1HardwareManager.intakeServo.setPosition(1.0); // opens right claw
         sleep(3000);
     }
 
     private void initialize() {
-        HardwareManager.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     private void drive(double inches, double power) {
-        HardwareManager.lDriveMotor.setPower(0.0);
-        HardwareManager.rDriveMotor.setPower(0.0);
-        HardwareManager.lDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
-        HardwareManager.rDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
-        HardwareManager.lDriveMotor.setPower(power);
-        HardwareManager.rDriveMotor.setPower(power);
+        KKL1HardwareManager.lDriveMotor.setPower(0.0);
+        KKL1HardwareManager.rDriveMotor.setPower(0.0);
+        KKL1HardwareManager.lDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
+        KKL1HardwareManager.rDriveMotor.setTargetPosition((int) (inches * TICKS_PER_INCH_COVERED));
+        KKL1HardwareManager.lDriveMotor.setPower(power);
+        KKL1HardwareManager.rDriveMotor.setPower(power);
         while (!motorsNearTarget()) ;
-        HardwareManager.lDriveMotor.setPower(0.0);
-        HardwareManager.rDriveMotor.setPower(0.0);
+        KKL1HardwareManager.lDriveMotor.setPower(0.0);
+        KKL1HardwareManager.rDriveMotor.setPower(0.0);
         resetEncoders();
     }
 
     private void turn(double radians) {
         int posL = (int) (2 * radians * STEER_TICKS_PER_RADIAN);
         int posR = (int) (-2 * radians * STEER_TICKS_PER_RADIAN);
-        HardwareManager.lDriveMotor.setPower(0.0);
-        HardwareManager.rDriveMotor.setPower(0.0);
-        HardwareManager.lDriveMotor.setTargetPosition(posL);
-        HardwareManager.rDriveMotor.setTargetPosition(posR);
-        HardwareManager.lDriveMotor.setPower(TURN_POWER);
-        HardwareManager.rDriveMotor.setPower(TURN_POWER);
+        KKL1HardwareManager.lDriveMotor.setPower(0.0);
+        KKL1HardwareManager.rDriveMotor.setPower(0.0);
+        KKL1HardwareManager.lDriveMotor.setTargetPosition(posL);
+        KKL1HardwareManager.rDriveMotor.setTargetPosition(posR);
+        KKL1HardwareManager.lDriveMotor.setPower(TURN_POWER);
+        KKL1HardwareManager.rDriveMotor.setPower(TURN_POWER);
         while (!motorsNearTarget()) ;
-        HardwareManager.lDriveMotor.setPower(0.0);
-        HardwareManager.rDriveMotor.setPower(0.0);
+        KKL1HardwareManager.lDriveMotor.setPower(0.0);
+        KKL1HardwareManager.rDriveMotor.setPower(0.0);
         resetEncoders();
     }
 
     private boolean motorsNearTarget() {
-        int targetLDriveMotorPos = HardwareManager.lDriveMotor.getTargetPosition();
-        int currentLDriveMotorPos = HardwareManager.lDriveMotor.getCurrentPosition();
-        int targetRDriveMotorPos = HardwareManager.rDriveMotor.getTargetPosition();
-        int currentRDriveMotorPos = HardwareManager.rDriveMotor.getCurrentPosition();
+        int targetLDriveMotorPos = KKL1HardwareManager.lDriveMotor.getTargetPosition();
+        int currentLDriveMotorPos = KKL1HardwareManager.lDriveMotor.getCurrentPosition();
+        int targetRDriveMotorPos = KKL1HardwareManager.rDriveMotor.getTargetPosition();
+        int currentRDriveMotorPos = KKL1HardwareManager.rDriveMotor.getCurrentPosition();
         return Math.abs(currentLDriveMotorPos - targetLDriveMotorPos) < 10.0 && Math.abs(currentRDriveMotorPos - targetRDriveMotorPos) < 10.0;
     }
 
     private void resetEncoders() {
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL1HardwareManager.lDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL1HardwareManager.rDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     private boolean targetIsGold() {
         int minRed = 40;
         double minDifference = 1.5;
-        if (HardwareManager.innerColorSensor.red() > minRed &&
-                (HardwareManager.innerColorSensor.red() / HardwareManager.innerColorSensor.blue()) >= minDifference) {
+        if (KKL1HardwareManager.innerColorSensor.red() > minRed &&
+                (KKL1HardwareManager.innerColorSensor.red() / KKL1HardwareManager.innerColorSensor.blue()) >= minDifference) {
             return true;
         }
-        if (HardwareManager.outerColorSensor.red() > minRed &&
-                (HardwareManager.outerColorSensor.red() / HardwareManager.outerColorSensor.blue()) >= minDifference) {
+        if (KKL1HardwareManager.outerColorSensor.red() > minRed &&
+                (KKL1HardwareManager.outerColorSensor.red() / KKL1HardwareManager.outerColorSensor.blue()) >= minDifference) {
             return true;
         }
         return false;
     }
 
     private void extendArm() {
-        HardwareManager.setArmBaseServoPower(0.6);
+        KKL1HardwareManager.setArmBaseServoPower(0.6);
         sleep(1500);
-        HardwareManager.armWristServo.setPosition(0.5);
+        KKL1HardwareManager.armWristServo.setPosition(0.5);
         sleep(1000);
     }
 
     private void retractArm() {
-        HardwareManager.setArmBaseServoPower(0.4);
+        KKL1HardwareManager.setArmBaseServoPower(0.4);
         sleep(1000);
-        HardwareManager.armWristServo.setPosition(0.0);
+        KKL1HardwareManager.armWristServo.setPosition(0.0);
         sleep(1000);
     }
 }

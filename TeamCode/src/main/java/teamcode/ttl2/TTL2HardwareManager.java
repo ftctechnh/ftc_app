@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.Queue;
 
-public class TTL2HardwareManager {
+class TTL2HardwareManager {
 
     private static final String FRONT_LEFT_DRIVE_NAME = "FrontLeftDrive";
     private static final String FRONT_RIGHT_DRIVE_NAME = "FrontRightDrive";
