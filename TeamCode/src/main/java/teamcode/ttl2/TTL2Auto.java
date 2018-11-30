@@ -1,18 +1,21 @@
 package teamcode.ttl2;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import java.util.List;
+
+import teamcode.examples.Mineral;
 
 import teamcode.examples.TensorFlowManager;
 
-@Autonomous(name = "TTL2Auto", group = "Linear OpMode")
-public class TTL2Auto extends LinearOpMode {
+public abstract class TTL2Auto extends LinearOpMode {
 
     private static final double DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_VERTICAL = -36.3;
     private static final double DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_LATERAL = -45.4;
     private static final double DRIVE_MOTOR_TICKS_PER_RADIAN_COVERED = -1370.8;
+    private static final int LIFT_MOTOR_TICKS_TO_LOWER = 625;
+    private static final double LIFT_POWER = 0.5;
     private static final double TURN_POWER = 0.5;
     private static final int DRIVE_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 25;
     private static final int LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 25;
@@ -28,28 +31,12 @@ public class TTL2Auto extends LinearOpMode {
         resetDriveEncoders();
 
         lowerRobot();
-        driveLateral(250, 0.5);
+        driveLateral(25, 0.25);
 
-        while (opModeIsActive()) {
-//            List<Mineral> minerals = this.tfManager.getRecognizedMinerals();
-//            Mineral gold = null;
-//            if (minerals != null) {
-//                for (Mineral mineral : minerals) {
-//                    if (mineral.isGold()) {
-//                        // update the gold mineral data
-//                        gold = mineral;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (gold != null) {
-//                // drive towards the gold
-//
-//            }
-        }
+        this.run();
     }
 
-    private void lowerRobot() {
+    protected void lowerRobot() {
 //        TTL2HardwareManager.liftMotorL.setDirection(DcMotorSimple.Direction.REVERSE);
 //        TTL2HardwareManager.liftMotorR.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -59,22 +46,23 @@ public class TTL2Auto extends LinearOpMode {
         TTL2HardwareManager.liftMotorL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         TTL2HardwareManager.liftMotorR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        int liftMotorPos = 250;
-        TTL2HardwareManager.liftMotorL.setTargetPosition(liftMotorPos);
-        TTL2HardwareManager.liftMotorR.setTargetPosition(liftMotorPos);
+        TTL2HardwareManager.liftMotorL.setTargetPosition(LIFT_MOTOR_TICKS_TO_LOWER);
+        TTL2HardwareManager.liftMotorR.setTargetPosition(LIFT_MOTOR_TICKS_TO_LOWER);
 
-        double liftPower = 1.0;
-        TTL2HardwareManager.liftMotorL.setPower(liftPower);
-        TTL2HardwareManager.liftMotorR.setPower(liftPower);
+        TTL2HardwareManager.liftMotorL.setPower(LIFT_POWER);
+        TTL2HardwareManager.liftMotorR.setPower(LIFT_POWER);
 
-        while (opModeIsActive() && liftMotorsNearTarget()) ;
+        while (opModeIsActive() && !liftMotorsNearTarget()) ;
+
+        telemetry.addData("status", "arm lowered");
+        telemetry.update();
 
         TTL2HardwareManager.liftMotorL.setPower(0.0);
         TTL2HardwareManager.liftMotorR.setPower(0.0);
     }
 
 
-    private void driveVertical(double centimeters, double power) {
+    protected void driveVertical(double centimeters, double power) {
         zeroDriveMotorPower();
         int ticks = (int) (centimeters * DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_VERTICAL);
 
@@ -104,7 +92,7 @@ public class TTL2Auto extends LinearOpMode {
         resetDriveEncoders();
     }
 
-    private void driveLateral(double centimeters, double power) {
+    protected void driveLateral(double centimeters, double power) {
         zeroDriveMotorPower();
         int ticks = (int) (centimeters * DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_LATERAL);
 
@@ -123,7 +111,7 @@ public class TTL2Auto extends LinearOpMode {
         resetDriveEncoders();
     }
 
-    private void turn(double radians) {
+    protected void turn(double radians) {
         zeroDriveMotorPower();
         int ticks = (int) (radians * DRIVE_MOTOR_TICKS_PER_RADIAN_COVERED);
 
@@ -180,14 +168,48 @@ public class TTL2Auto extends LinearOpMode {
     }
 
     private boolean liftMotorsNearTarget() {
-        int targetLeftLiftMotorPos = TTL2HardwareManager.frontLeftDrive.getTargetPosition();
-        int targetRightLiftMotorPos = TTL2HardwareManager.frontRightDrive.getTargetPosition();
+        int targetLeftLiftMotorPos = TTL2HardwareManager.liftMotorL.getTargetPosition();
+        int targetRightLiftMotorPos = TTL2HardwareManager.liftMotorR.getTargetPosition();
 
-        int currentLeftLiftMotorPos = TTL2HardwareManager.frontLeftDrive.getCurrentPosition();
-        int currentRightLiftMotorPos = TTL2HardwareManager.frontRightDrive.getCurrentPosition();
+        int currentLeftLiftMotorPos = TTL2HardwareManager.liftMotorL.getCurrentPosition();
+        int currentRightLiftMotorPos = TTL2HardwareManager.liftMotorR.getCurrentPosition();
 
         return Math.abs(currentLeftLiftMotorPos - targetLeftLiftMotorPos) < LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD
                 && Math.abs(currentRightLiftMotorPos - targetRightLiftMotorPos) < LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD;
     }
+
+    protected void positionRobotInFrontOfGold() {
+//        double power = 0.5;
+//        TTL2HardwareManager.frontLeftDrive.setPower(power);
+//        TTL2HardwareManager.frontRightDrive.setPower(power);
+//        TTL2HardwareManager.backLeftDrive.setPower(power);
+//        TTL2HardwareManager.backRightDrive.setPower(power);
+//
+//        int mineralIndex = 1;
+//
+//        while (opModeIsActive()) {
+//            List<Mineral> minerals = this.tfManager.getRecognizedMinerals();
+//            Mineral gold = null;
+//            if (minerals != null) {
+//                for (Mineral mineral : minerals) {
+//                    if (mineral.isGold()) {
+//                        // update the gold mineral data
+//                        gold = mineral;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (gold != null) {
+//                driveVertical(50, 0.5);
+//                // drive towards the gold
+//
+//            }
+//        }
+    }
+
+    /**
+     * Invoked after the robot lowers to the ground.
+     */
+    protected abstract void run();
 
 }
