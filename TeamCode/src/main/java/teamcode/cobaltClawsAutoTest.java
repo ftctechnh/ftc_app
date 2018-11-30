@@ -36,11 +36,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private ColorSensor colorSensorOuter;
     private ColorSensor colorSensorInner;
 
-    //1000 ticks is about 26 inches
-    private final double inchConversionRatio = 34.46;
 
-    //100 ticks is about  degrees
-    private final double degreeConversionRatio = 1;
+    private static final double INCH_CONVERSION_RATIO = 55.0;
+    private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
 
     public enum Direction {Forward, Backward, Left, Right}
 
@@ -311,7 +309,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     public void move(Direction direction, int inches, double speed) {
 
         //Changes inches to work with ticks
-        inches *= inchConversionRatio;
+        inches *= INCH_CONVERSION_RATIO;
 
         //Resets encoder and moves the inputted ticks
         RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -348,10 +346,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    public void turn(Direction direction, int degrees, double speed) {
+    public void turn(Direction direction, int radians, double speed) {
 
         //Changes degrees to work with ticks
-        degrees *= degreeConversionRatio;
+        radians *= RADIAN_CONVERSION_RATIO;
 
         //Resets the encoders and does a left point turn for the inputted degrees
         RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -362,15 +360,15 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         if (direction == Direction.Left) {
 
-            RightDriveMotor.setTargetPosition(degrees);
-            LeftDriveMotor.setTargetPosition(-degrees);
+            RightDriveMotor.setTargetPosition(radians);
+            LeftDriveMotor.setTargetPosition(-radians);
 
         }
 
         if (direction == Direction.Right) {
 
-            RightDriveMotor.setTargetPosition(-degrees);
-            LeftDriveMotor.setTargetPosition(degrees);
+            RightDriveMotor.setTargetPosition(-radians);
+            LeftDriveMotor.setTargetPosition(radians);
 
         }
 
