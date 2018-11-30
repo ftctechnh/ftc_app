@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name = "cobaltClawsDistanceTest", group = "Linear OpMode")
+@Autonomous(name = "cobaltClawsDegreeTest", group = "Linear OpMode")
 
 public class cobaltClawsDegreeTest extends LinearOpMode {
 

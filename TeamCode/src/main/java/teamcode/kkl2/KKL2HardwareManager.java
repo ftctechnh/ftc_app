@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-class KKL2HardwareManager {
+public class KKL2HardwareManager {
 
     private static final String DRIVE_LEFT_MOTOR_NAME = "DriveLMotor";
     private static final String DRIVE_RIGHT_MOTOR_NAME = "DriveRMotor";

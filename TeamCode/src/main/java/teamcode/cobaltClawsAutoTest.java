@@ -7,29 +7,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import teamcode.examples.TensorFlowManager;
+import teamcode.kkl2.KKL2HardwareManager;
+
 @Autonomous(name = "cobaltClawsAutoTest", group = "Linear OpMode")
 
 public class cobaltClawsAutoTest extends LinearOpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor LeftDriveMotor;  //motor 0
-    private DcMotor RightDriveMotor; //motor 1
 
-    //private DcMotor ArmMotor; //motor 2
-    private DcMotor HangMotor; //motor 3
-
-    private Servo ArmServoBase;  //servo
-    private Servo ArmServoWrist; //servo
-    private Servo GrabberServo;  //servo
-    private Servo SensorServo;   // servo
-
-    //establishes and sets starting motor positions
-    //int armInitialPosition = 0; //guessed limit
-    //double armMaximumPosition = 600; //guessed limit
-
-    //int armPosition;
-
-    boolean hangArmUp;
 
     double driveSpeed = 0.25;
 
@@ -41,6 +26,8 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
     private static final double DEGREES_TO_RADIANS = Math.PI / 180;
 
+    private TensorFlowManager tfManager;
+
     public enum Direction {Forward, Backward, Left, Right}
 
     @Override
@@ -48,20 +35,28 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
 
         //run the initialize block
+        KKL2HardwareManager.initialize(this);
         this.initialize();
 
         waitForStart();
-        runtime.reset();
 
         while (opModeIsActive()) {
 
             //HANG RELEASE
 
-            ArmServoBase.setPosition(ArmServoBase.getPosition() + 0.05);
+            KKL2HardwareManager.liftLockServo.setPosition(0);
 
-            ArmServoWrist.setPosition(1.0);
+            sleep(10500);
+
+            KKL2HardwareManager.liftLockServo.setPosition(0.5);
+
+            KKL2HardwareManager.liftLatchServo.setPosition(1.0);
+
+            sleep(2000);
 
             move(Direction.Forward, 5, driveSpeed);
+
+            requestOpModeStop();
 
 
             /*//GOLD TEST
@@ -226,68 +221,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     }
 
     private void initialize() {
-
-        //giving internal hardware an external name for the app config
-        this.LeftDriveMotor = hardwareMap.get(DcMotor.class, "LeftDriveMotor");
-        this.RightDriveMotor = hardwareMap.get(DcMotor.class, "RightDriveMotor");
-        //this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
-        this.HangMotor = hardwareMap.get(DcMotor.class, "HangMotor");
-        this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
-        this.ArmServoBase = hardwareMap.get (Servo.class, "ArmServoBase");
-        this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
-        this.SensorServo = hardwareMap.get(Servo.class, "SensorServo");
-
-        this.colorSensorOuter = hardwareMap.get(ColorSensor.class, "colorSensorOuter");
-        this.colorSensorInner = hardwareMap.get(ColorSensor.class, "colorSensorInner");
-
-
-        //Sets correct directions for motors and servos
-        LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        RightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        //ArmMotor.setDirection(DcMotor.Direction.FORWARD);
-        HangMotor.setDirection(DcMotor.Direction.FORWARD);
-
-
-        ArmServoBase.setDirection(Servo.Direction.FORWARD);
-        ArmServoWrist.setDirection(Servo.Direction.FORWARD);
-
-        GrabberServo.setDirection(Servo.Direction.FORWARD);
-
-        SensorServo.setDirection(Servo.Direction.FORWARD);
-
-        //Sets motors to work with position
-        //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-
-        hangArmUp = true;
-
-        //Sets grabber servo to closed
-        //this.GrabberServo.setPosition(0);
-
-        //Sets arm servos to hang position
-        //this.ArmServoWrist.setPosition(0);
-        //this.ArmServoBase.setPosition(0);
-
-        //Gives power to the arm motor
-        //this.ArmMotor.setPower(1.0);
-
-        //Gets the current arm motor positions so driver can make sure motors are properly
-        // calibrated.
-        //armPosition = this.ArmMotor.getCurrentPosition();
-
-        //Tells the driver station that the robot is ready.
-        telemetry.addData("Status", "Online");
-        telemetry.addData("Servo Position: ", SensorServo.getPosition());
-        telemetry.update();
+        KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.tfManager = new TensorFlowManager(this.hardwareMap);
+        this.tfManager.initialize();
     }
+
 
     public void move(Direction direction, int inches, double speed) {
 
@@ -295,27 +234,27 @@ public class cobaltClawsAutoTest extends LinearOpMode {
         inches *= INCH_CONVERSION_RATIO;
 
         //Resets encoder and moves the inputted ticks
-        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
         if (direction == Direction.Forward) {
 
-            LeftDriveMotor.setTargetPosition(inches);
-            RightDriveMotor.setTargetPosition(inches);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(inches);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(inches);
 
         } else if (direction == Direction.Backward) {
 
-            LeftDriveMotor.setTargetPosition(-inches);
-            RightDriveMotor.setTargetPosition(-inches);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(-inches);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(-inches);
 
         }
 
-        LeftDriveMotor.setPower(speed);
-        RightDriveMotor.setPower(speed);
+        KKL2HardwareManager.driveLMotor.setPower(speed);
+        KKL2HardwareManager.driveRMotor.setPower(speed);
 
         while (!motorsWithinTarget()) {
 
@@ -324,8 +263,8 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         }
 
-        LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
+        KKL2HardwareManager.driveLMotor.setPower(0);
+        KKL2HardwareManager.driveRMotor.setPower(0);
 
     }
 
@@ -336,28 +275,28 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
 
         //Resets the encoders and does a left point turn for the inputted degrees
-        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         if (direction == Direction.Left) {
 
-            RightDriveMotor.setTargetPosition(radians);
-            LeftDriveMotor.setTargetPosition(-radians);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(radians);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(-radians);
 
         }
 
         if (direction == Direction.Right) {
 
-            RightDriveMotor.setTargetPosition(-radians);
-            LeftDriveMotor.setTargetPosition(radians);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(-radians);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(radians);
 
         }
 
-        LeftDriveMotor.setPower(speed);
-        RightDriveMotor.setPower(speed);
+        KKL2HardwareManager.driveLMotor.setPower(speed);
+        KKL2HardwareManager.driveRMotor.setPower(speed);
 
         while (!motorsWithinTarget()) {
 
@@ -366,64 +305,25 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         }
 
-        LeftDriveMotor.setPower(0);
-        RightDriveMotor.setPower(0);
+        KKL2HardwareManager.driveLMotor.setPower(0);
+        KKL2HardwareManager.driveRMotor.setPower(0);
 
     }
 
     public boolean motorsBusy() {
 
-        return (RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive();
+        return (KKL2HardwareManager.driveRMotor.isBusy() || KKL2HardwareManager.driveLMotor.isBusy()) && opModeIsActive();
 
     }
 
     public boolean motorsWithinTarget() {
 
-        int lDif = (LeftDriveMotor.getTargetPosition() - LeftDriveMotor.getCurrentPosition());
-        int rDif = (RightDriveMotor.getTargetPosition() - RightDriveMotor.getCurrentPosition());
+        int lDif = (KKL2HardwareManager.driveLMotor.getTargetPosition()
+                - KKL2HardwareManager.driveLMotor.getCurrentPosition());
+        int rDif = (KKL2HardwareManager.driveRMotor.getTargetPosition()
+                - KKL2HardwareManager.driveRMotor.getCurrentPosition());
 
         return ((Math.abs(lDif) <= 10) & (Math.abs(rDif) <= 10));
-
-    }
-
-    /*public boolean isGold() {
-
-        if ((((colorSensorOuter.red() >= (2 * colorSensorOuter.blue()))
-                && (colorSensorOuter.green() >= (2 * colorSensorOuter.blue()))) ||
-                ((colorSensorInner.red() >= (2 * colorSensorInner.blue()))
-                && (colorSensorInner.green() >= (2 * colorSensorInner.blue()))))) {
-            return true;
-
-        }
-
-        return false;
-
-    }*/
-
-    public boolean isGold() {
-        int minRed = 40;
-        double minDifference = 1.5;
-
-        if (colorSensorInner.red() > minRed &&
-                (colorSensorInner.red() / colorSensorInner.blue()) >= minDifference) {
-            return true;
-        }
-
-        if (colorSensorOuter.red() > minRed &&
-                (colorSensorOuter.red() / colorSensorOuter.blue()) >= minDifference) {
-            return true;
-        }
-
-        return false;
-    }
-
-    //Moves arm servos to indicated positions
-    //For GrabberPosition, 0.5 is Left Open, -0.5 is Right Open, 0 is Closed
-    public void setArm(double BasePosition, double WristPosition, double GrabberPosition){
-
-        ArmServoBase.setPosition(BasePosition);
-        ArmServoWrist.setPosition(WristPosition);
-        GrabberServo.setPosition(GrabberPosition);
 
     }
 
