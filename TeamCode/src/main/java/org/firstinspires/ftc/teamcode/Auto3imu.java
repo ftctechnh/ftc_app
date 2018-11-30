@@ -146,26 +146,16 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_LAND:
                     telemetry.addLine("Land");
                     telemetry.update();
-                    Lift.Unlock();
-                   while(!Lift.LifterButtonT.isPressed()) {
+                    /*Lift.Unlock();
+                    while(!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
-                    }
+                    }*/
                     sleep(1000);
                     newState(State.STATE_ADJUST);
                     break;
 
                 case STATE_ADJUST:
                     Drive.turn2angle(0);
-                    newState(State.STATE_INITIAL);
-                    break;
-
-                case STATE_INITIAL:
-                    telemetry.addLine("Initial");
-                    telemetry.update();
-                    /*Sample.init();
-                    Sample.start();
-                    Sample.loop();*/
-
                     if (orientation == Start.Crater) {
                         telemetry.addLine("Moving to crater");
                         telemetry.update();
@@ -175,6 +165,15 @@ public class Auto3imu extends LinearOpMode {
                         telemetry.update();
                         newState(State.STATE_MOVE_TO_DEPOT);
                     }
+                    break;
+
+                case STATE_INITIAL:
+                    telemetry.addLine("Initial");
+                    telemetry.update();
+                    newState(State.STATE_LAND);
+                    /*Sample.init();
+                    Sample.start();
+                    Sample.loop();*/
                     break;
 
                 case STATE_MOVE_TO_CRATER:
@@ -227,9 +226,9 @@ public class Auto3imu extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2angle(-45.0);
                     Claimer.drop();
-                    while (!Lift.LifterButtonB.isPressed()){
+                    /*while (!Lift.LifterButtonB.isPressed()){
                         Lift.Retract();
-                }
+                }*/
                     Drive.TimeDelay(2.0);
                     Claimer.reset();
                     if (twoSample == true) {

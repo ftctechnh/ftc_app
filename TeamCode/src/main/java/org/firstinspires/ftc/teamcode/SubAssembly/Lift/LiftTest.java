@@ -49,7 +49,7 @@ public class LiftTest extends LinearOpMode {
             else if (egamepad2.b.released) {
                 Lift.Unlock();
             }
-
+            
             telemetry.update();
 
             //let the robot have a little rest, sleep is healthy
