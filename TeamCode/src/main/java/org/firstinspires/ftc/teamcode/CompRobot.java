@@ -94,7 +94,6 @@ public class CompRobot extends BasicBot
             straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
             if(straightDist < distAwayFromFrontWall - Math.abs(stepDistance)/2)
             {
-
                 super.stopDriveMotors();
                 break;
             }
