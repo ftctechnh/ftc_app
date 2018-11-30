@@ -95,10 +95,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir rootProject.file('libs')
+    sourceSets {
+        test { java.srcDirs = ['src/test/java'] }
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDir rootProject.file('libs')
+        }
     }
+
 }
 
 repositories {
