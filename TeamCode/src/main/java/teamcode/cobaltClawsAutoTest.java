@@ -57,29 +57,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             //HANG RELEASE
 
-            //Moves the grabber wrist out of the way, then rotates the arm motor until the robot is
-            //on the ground. Then moves right wheel forward to get out of hook, and positions for
-            //route.
+            ArmServoBase.setPosition(ArmServoBase.getPosition() + 5);
 
-            HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            HangMotor.setTargetPosition(-2000);
-            HangMotor.setPower(0.8);
-
-            while (HangMotor.isBusy()) {
-
-            }
-
-
-            turn(Direction.Right, 295, driveSpeed);
-
-            move(Direction.Forward, 1175, driveSpeed);
-
-            turn(Direction.Right, 320, driveSpeed);
-
-            SensorServo.setPosition(0.5);
-            sleep(1000);
+            move(Direction.Forward, 5, driveSpeed);
 
 
             //GOLD TEST
@@ -349,11 +329,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     public void turn(Direction direction, int degrees, double speed) {
 
-        //Converts degrees to radians
-        double radians = degrees * DEGREES_TO_RADIANS;
+        //Converts degrees to radians, then changes to work with ticks
+        int radians = (int)(degrees * DEGREES_TO_RADIANS * RADIAN_CONVERSION_RATIO);
 
-        //Changes radians to work with ticks
-        radians *= RADIAN_CONVERSION_RATIO;
 
         //Resets the encoders and does a left point turn for the inputted degrees
         RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
