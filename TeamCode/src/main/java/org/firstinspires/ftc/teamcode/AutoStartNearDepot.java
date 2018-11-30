@@ -128,6 +128,17 @@ public class AutoStartNearDepot extends LinearOpMode {
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.update();
         }
+        //start landing here
+        int landingLevel = -2090;  // Target level to land
+        double latchPower;
+        //Reset the Encoder
+        robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        while (robot.landerLatchLift.getCurrentPosition()> landingLevel){
+            robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            latchPower = -0.2;
+            robot.landerLatchLift.setPower(latchPower);
+        }
+        robot.landerLatchLift.setPower(0);
 
 
  /*       // Stressing Drive Test Sequence
@@ -209,8 +220,9 @@ public class AutoStartNearDepot extends LinearOpMode {
         }
 */
         // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+        gyroHold(-0.5,0,0.15);
         gyroStrafe(0.5, 0);
-        sleep(1500);
+        sleep(1400);
         stopBot();
         gyroSpin(0);
         gyroHold(0.4,0,1.5);
@@ -220,13 +232,13 @@ public class AutoStartNearDepot extends LinearOpMode {
 
         // Move towards the wall
         while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10){
-            gyroStrafe(.4,315);
+            gyroStrafe(.5,315);
         }
         stopBot();
         // Back into the depot based on time
         ElapsedTime holdTimer = new ElapsedTime();
-        while ((holdTimer.time() < 3.5)) {
-            moveBot(-0.25, 0, wallSteer(7), 0.3);
+        while ((holdTimer.time() < 2.7)) {
+            moveBot(-0.3, 0, wallSteer(7), 0.3);
         }
         stopBot();
 
@@ -241,24 +253,22 @@ public class AutoStartNearDepot extends LinearOpMode {
         robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         while (robot.armRotate.getCurrentPosition()< dropTarget){
             robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rotatePower = 0.2;
+            rotatePower = 0.25;
             robot.armRotate.setPower(rotatePower);
         }
         robot.armRotate.setPower(0);
         //robot.armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //robot.armRotate.setTargetPosition(dropTarget);
         //robot.armRotate.setPower(0.2);
-
-        sleep(500);
-        robot.rightMineral.setPower(0.5);
-        sleep(1000);
+        robot.rightMineral.setPower(0.6);
+        sleep(800);
         robot.rightMineral.setPower(0);
         //robot.armRotate.setPower(-0.2);
         //sleep(2000);
         //robot.armRotate.setPower(0);
         while (robot.armRotate.getCurrentPosition()> levelTarget){
             robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rotatePower = -0.2;
+            rotatePower = -0.25;
             robot.armRotate.setPower(rotatePower);
         }
         robot.armRotate.setPower(0);
@@ -266,16 +276,24 @@ public class AutoStartNearDepot extends LinearOpMode {
         //robot.armRotate.setTargetPosition(levelTarget);
         //robot.armRotate.setPower(-0.2);
         //Drive forwards towards crater
-        while(sonarDistance() > 8){
+
+/*        while(elapsedTime < 1000){
             double wsteer=wallSteer(5);
-            moveBot(0.2,0,wsteer,0.5);
+            moveBot(0.3,0,wsteer,0.5);
+        }
+*/
+
+
+        while(sonarDistance() > 50){
+            double wsteer=wallSteer(5);
+            moveBot(0.3,0,wsteer,0.5);
         }
         stopBot();
         detector.disable();
 
         while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
-            robot.armExtend.setPower(-0.15);
+            robot.armExtend.setPower(-0.2);
         }
         robot.armExtend.setPower(0);  // Otherwise set the power to zero
 

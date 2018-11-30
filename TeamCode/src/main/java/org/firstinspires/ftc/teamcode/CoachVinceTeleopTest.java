@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.HardwareBruinBot;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "Coach Vince Teleop Test", group = "Vince")
 public class CoachVinceTeleopTest extends LinearOpMode {
@@ -31,7 +32,9 @@ public class CoachVinceTeleopTest extends LinearOpMode {
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
+
         waitForStart();
+        robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -48,7 +51,7 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             // Read the driving gamepad triggers for the lifting arm
             liftingArmUp = gamepad1.right_trigger;
             liftingArmDown = gamepad1.left_trigger;
-
+            robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             if (liftingArmUp > liftingArmDown) {
                 robot.landerLatchLift.setPower(liftingArmUp);
             }
@@ -56,6 +59,9 @@ public class CoachVinceTeleopTest extends LinearOpMode {
             {
                 robot.landerLatchLift.setPower(-liftingArmDown);
             }
+            //Shows current position of the latch arm using encoder
+            telemetry.addData("Arm Encoder:", robot.landerLatchLift.getCurrentPosition());
+            telemetry.update();
 
             // EXTENDING ARM SECTION! --------------------------------------------------------
 
