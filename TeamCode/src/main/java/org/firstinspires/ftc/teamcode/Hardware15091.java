@@ -67,6 +67,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Servo channel:  Servo to open right claw: "right_hand"
  */
 public class Hardware15091 {
+
     /* Public OpMode members. */
     public DcMotor leftDrive = null;
     public DcMotor rightDrive = null;
@@ -80,18 +81,26 @@ public class Hardware15091 {
     public ColorSensor sensorColor = null;
     public DistanceSensor sensorDistance = null;
 
-    public static final double ARM_POWER = 0.6d;
     public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
     public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
 
-    public boolean setArmTarget(double targetToSet) {
+    public ARM_STATUS setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double voltageDelta = armAngle.getVoltage() - targetToSet;
         int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
         int newTarget = armDrive.getCurrentPosition() + targetDelta;
         armDrive.setTargetPosition(newTarget);
         int howManyTurnsLeft = Math.abs(armDrive.getCurrentPosition() - newTarget);
-        return howManyTurnsLeft < 100;
+
+        if (howManyTurnsLeft < 100d) {
+            return ARM_STATUS.DONE;
+        } else if (howManyTurnsLeft < 600d) {
+            return ARM_STATUS.ALMOST;
+        } else if (howManyTurnsLeft < 1100d) {
+            return ARM_STATUS.CLOSE;
+        } else {
+            return ARM_STATUS.NOT_YET;
+        }
     }
 
     public void setArmPower(double powerToSet) {
@@ -133,7 +142,7 @@ public class Hardware15091 {
         pickupServo = hwMap.servo.get("servo_2");
         handServo = hwMap.servo.get("servo_3");
         //sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
-        //sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
+        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_distance");
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);

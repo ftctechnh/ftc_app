@@ -29,6 +29,9 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -74,19 +77,17 @@ public class RoverRuckus15091 extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double DRIVE_GEAR_REDUCTION = 26d / 10d;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
-    static final double ARM_SPEED = 0.3;
+    static final double DRIVE_SPEED = 1d;
 
     static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
 
-    private int armSequence = 0;
+    private GoldAlignDetector detector;
 
     @Override
     public void runOpMode() {
@@ -96,6 +97,7 @@ public class RoverRuckus15091 extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
+        initDetecctor();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -126,17 +128,57 @@ public class RoverRuckus15091 extends LinearOpMode {
 
             // turn robot 180 degree to the right
             //encoderDrive(TURN_SPEED, -40d, 40d, 5d);
-            //gyroTurn(TURN_SPEED, -90d);
-            //gyroTurn(TURN_SPEED, -180d);
+            gyroTurn(0.7d, -111d);
+
+            //scan gold mineral for position 1,2,3
+            int goldMineralLocation = -1;
+            double targetHeading = robot.getHeading();
+            for (int i = 0; i < 20; i++) {
+                if (!detector.getAligned()) {
+                    targetHeading -= 6d;
+                    gyroTurn(1d, targetHeading);
+                } else {
+                    if (i < 6) {
+                        goldMineralLocation = 1;
+                    } else if (i < 12) {
+                        goldMineralLocation = 2;
+                    } else {
+                        goldMineralLocation = 3;
+                    }
+                }
+            }
+
+            robot.tts.speak("Gold on " + goldMineralLocation);
+
+            //base on gold mineral position, continue path for 1,2,3
+            switch (goldMineralLocation) {
+                case 1:
+                    gyroDrive(DRIVE_SPEED, -24d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -9d, -175);
+                    gyroDrive(DRIVE_SPEED, -9d, -180);
+                    break;
+                case 2:
+                    gyroDrive(DRIVE_SPEED, -30d, targetHeading);
+                    gyroTurn(0.7d, -135);
+                    break;
+                case 3:
+                    gyroDrive(DRIVE_SPEED, -24d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -18d, -135);
+                    break;
+            }
+
 
             //drive forward
             //encoderDrive(DRIVE_SPEED, -12d, -12d, 5d);
-            gyroDrive(DRIVE_SPEED, -24d, 0d);
+            //gyroDrive(DRIVE_SPEED, -24d, 0d);
 
             //turn 90 degrees to the left
             //encoderDrive(TURN_SPEED, 10d, -10d, 5d);
             //Drive forward
             //encoderDrive(DRIVE_SPEED, -24d, -24d, 5d);
+
+            detector.disable();
+
             telemetry.addData("Path", "Complete");
             telemetry.update();
         }
@@ -144,9 +186,38 @@ public class RoverRuckus15091 extends LinearOpMode {
 
     }
 
+
+    public void initDetecctor() {
+        // Set up detector
+        detector = new GoldAlignDetector(); // Create detector
+        detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+        detector.useDefaults(); // Set detector to use default settings
+
+        // Optional tuning
+        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignPosOffset = 143; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.4; // How much to downscale the input frames
+
+        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+        detector.maxAreaScorer.weight = 0.005; //
+
+        detector.ratioScorer.weight = 5; //
+        detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
+
+        detector.enable(); // Start the detector!
+    }
+
     public void landing() {
+        //stage 1 full speed
+        robot.setArmTarget(1d);
+        robot.armDrive.setPower(1d);
+        while (robot.armDrive.isBusy()) {
+            //wait for motor to finish
+        }
+        //stage 2 0.3 speed
         robot.setArmTarget(1.2470d);
-        robot.armDrive.setPower(ARM_SPEED);
+        robot.armDrive.setPower(0.3d);
         while (robot.armDrive.isBusy()) {
             //wait for motor to finish
         }
@@ -216,7 +287,7 @@ public class RoverRuckus15091 extends LinearOpMode {
         }
     }
 
-    public void gyroHold( double speed, double angle, double holdTime) {
+    public void gyroHold(double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
 

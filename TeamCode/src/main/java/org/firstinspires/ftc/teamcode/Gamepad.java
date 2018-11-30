@@ -45,6 +45,9 @@ import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 
 /**
@@ -72,7 +75,10 @@ public class Gamepad extends LinearOpMode {
     private final double SERVO_CYCLE = 50d;
     private final double SERVO_INCREMENT_MIN = 0.005d;
     private final double SERVO_INCREMENT_MAX = 0.01d;
-    private final double DRIVE_SPEED_MAX = 0.75d;
+    private final double DRIVE_SPEED_MAX = 1d;
+    private final double ARM_POWER_MAX = 1d;
+    private final double ARM_POWER_MID = 0.6d;
+    private final double ARM_POWER_MIN = 0.3d;
 
     // Setup a variable for each drive wheel to save power level for telemetry
     double leftPower;
@@ -102,9 +108,9 @@ public class Gamepad extends LinearOpMode {
             }
 
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
-                turn = 1d;
+                turn = 0.7d;
             } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
-                turn = -1d;
+                turn = -0.7d;
             }
 
             ArmControl();
@@ -125,7 +131,22 @@ public class Gamepad extends LinearOpMode {
             telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",
                     robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
             telemetry.addData("Heading", "%.4f", robot.getHeading());
+            telemetry.addData("Distance (cm)",
+                    String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
             telemetry.update();
+        }
+    }
+
+    double getArmPower(ARM_STATUS armStatus) {
+        switch (armStatus) {
+            case ALMOST:
+                return ARM_POWER_MIN;
+            case CLOSE:
+                return ARM_POWER_MID;
+            case DONE:
+                return 0d;
+            default:
+                return ARM_POWER_MAX;
         }
     }
 
@@ -146,13 +167,12 @@ public class Gamepad extends LinearOpMode {
 
         if (gamepad2.left_bumper || gamepad1.left_bumper || gamepad2.y || gamepad1.y) { //set arm to drop mineral
             if (armSequence == 0) {
-                boolean isDone = robot.setArmTarget(1.3050d);
-
-                armPower = robot.ARM_POWER;
-                if (isDone) {
+                ARM_STATUS status = robot.setArmTarget(1.3050d);
+                armPower = getArmPower(status);
+                if (status == ARM_STATUS.DONE) {
                     if (gamepad2.left_bumper || gamepad1.left_bumper) {
-                        armPosition = 0.2922d;
-                        handPosition = 0.3661d;
+                        armPosition = 0.3489d;
+                        handPosition = 0.3728d;
                     } else {
                         handPosition = 0d;
                         armPosition = 1d;
@@ -162,28 +182,40 @@ public class Gamepad extends LinearOpMode {
             }
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
             if (armSequence == 0) {
-                boolean isDone = robot.setArmTarget(1.9250d);
-                armPower = robot.ARM_POWER;
-                if (isDone) {
-                    armPosition = 0.0739d;
-                    handPosition = 0.7986d;
+                ARM_STATUS status = robot.setArmTarget(2.2600d);
+                armPower = getArmPower(status);
+                armPosition = 0.1528d;
+                handPosition = 0.8261d;
+                if (status == ARM_STATUS.DONE) {
+                    armSequence = 3;
+                }
+            }
+
+            /*if (armSequence == 0) {
+                ARM_STATUS status = robot.setArmTarget(1.6760d);
+                armPower = getArmPower(status);
+
+                if (status == ARM_STATUS.DONE) {
+                    armPosition = 0.1528d;
+                    handPosition = 0.8261d;
                     armSequence = 3;
                 }
             }
 
             if (armSequence == 3) {
-                boolean isDone = robot.setArmTarget(2.1060d);
-                if (isDone) {
-                    armPower = 0.2d;
-                } else {
-                    armPower = robot.ARM_POWER;
+                ARM_STATUS status = robot.setArmTarget(2.2600d);
+                armPower = getArmPower(status);
+                if (status == ARM_STATUS.DONE) {
+                    armSequence = 4;
                 }
-            }
-        } else if (gamepad2.x || gamepad1.x) { //retract arm
+            }*/
+        } else if (gamepad2.x || gamepad1.x)
+
+        { //retract arm
             if (armSequence == 0) {
-                boolean isDone = robot.setArmTarget(0.9800d);
-                armPower = robot.ARM_POWER;
-                if (isDone) {
+                ARM_STATUS status = robot.setArmTarget(0.9800d);
+                armPower = ARM_POWER_MAX;
+                if (status == ARM_STATUS.DONE) {
                     handPosition = 0d;
                     armPosition = 1d;
                     armSequence = 1;
@@ -192,33 +224,49 @@ public class Gamepad extends LinearOpMode {
 
             if (armSequence == 1) {
                 robot.setArmTarget(0.7450d);
-                armPower = robot.ARM_POWER;
+                armPower = ARM_POWER_MAX;
             }
-        } else {
+        } else
+
+        {
             armSequence = 0;
             robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
-        if (gamepad2.a || gamepad1.a) {
+        if (gamepad2.a || gamepad1.a)
+
+        {
             robot.pickupServo.setPosition(0.9d);
-        } else if (gamepad2.b || gamepad1.b) {
+        } else if (gamepad2.b || gamepad1.b)
+
+        {
             robot.pickupServo.setPosition(0.1d);
-        } else {
+        } else
+
+        {
             robot.pickupServo.setPosition(0.5d);
         }
 
-        if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
+        if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE)
+
+        {
             armTime.reset();
             armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-        } else if (gamepad2.left_stick_y > 0d && armTime.milliseconds() > SERVO_CYCLE) {
+        } else if (gamepad2.left_stick_y > 0d && armTime.milliseconds() > SERVO_CYCLE)
+
+        {
             armTime.reset();
             armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
         }
 
-        if (gamepad2.right_stick_y < 0d && handTime.milliseconds() > SERVO_CYCLE) {
+        if (gamepad2.right_stick_y < 0d && handTime.milliseconds() > SERVO_CYCLE)
+
+        {
             handTime.reset();
             handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-        } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE) {
+        } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE)
+
+        {
             handTime.reset();
             handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
         }
