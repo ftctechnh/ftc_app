@@ -102,7 +102,7 @@ public class CompRobot extends BasicBot
 
             if (straightDist > distAwayFromFrontWall)
             {
-                rightDist = frontRightDistSens.getDistance(DistanceUnit.INCH);
+                rightDist = getRightDistance_IN();
 
                 linearOpMode.telemetry.addData("front Dist>18", null);
                 linearOpMode.telemetry.addData("right Dist ", rightDist);
@@ -176,8 +176,17 @@ public class CompRobot extends BasicBot
         return frontRightDistSens;
     }
 
-    public DistanceSensor getFrontDistSens()
+    public double getRightDistance_IN()
     {
-        return frontDistSens;
+        return frontRightDistSens.getDistance(DistanceUnit.INCH);
+    }
+
+    public DistanceSensor getFrontDistSens()
+{
+    return frontDistSens;
+}
+    public double getFrontDistance_IN()
+    {
+        return frontDistSens.getDistance(DistanceUnit.INCH);
     }
 }
