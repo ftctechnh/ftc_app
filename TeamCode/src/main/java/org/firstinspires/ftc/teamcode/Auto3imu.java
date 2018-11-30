@@ -146,10 +146,10 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_LAND:
                     telemetry.addLine("Land");
                     telemetry.update();
-                    Lift.Unlock();
-                   do {
+                    /*Lift.Unlock();
+                    while(!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
-                    } while (!Lift.LifterButtonT.isPressed());
+                    }*/
                     sleep(1000);
                     newState(State.STATE_ADJUST);
                     break;
