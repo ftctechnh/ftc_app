@@ -4,8 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+    
 import org.firstinspires.ftc.teamcode.components.configs.ConfigParser;
 import org.firstinspires.ftc.teamcode.components.scale.ExponentialRamp;
 import org.firstinspires.ftc.teamcode.components.scale.IScale;
@@ -14,10 +13,6 @@ import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
 import org.firstinspires.ftc.teamcode.systems.base.DriveSystem4Wheel;
 import org.firstinspires.ftc.teamcode.systems.imu.IMUSystem;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel
 {
@@ -107,32 +102,15 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         double x = coeff * speed * Math.cos(angle);
         double y = coeff * speed * Math.sin(angle);
 
-        double frontLeft = y - changeOfDirectionSpeed + x;
-        double frontRight = y + changeOfDirectionSpeed - x;
-        double backLeft = y - changeOfDirectionSpeed - x;
-        double backRight = y + changeOfDirectionSpeed + x;
+        double frontLeft = Range.clip(y - changeOfDirectionSpeed + x, -1, 1);
+        double frontRight = Range.clip(y + changeOfDirectionSpeed - x, -1, 1);
+        double backLeft = Range.clip(y - changeOfDirectionSpeed - x, -1, 1);
+        double backRight = Range.clip(y + changeOfDirectionSpeed + x, -1, 1);
 
-        List<Double> powers = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
-        clampPowers(powers);
-
-        motorFrontLeft.setPower(powers.get(0));
-        motorFrontRight.setPower(powers.get(1));
-        motorBackLeft.setPower(powers.get(2));
-        motorBackRight.setPower(powers.get(3));
-    }
-
-    private void clampPowers(List<Double> powers) {
-        double minPower = Collections.min(powers);
-        double maxPower = Collections.max(powers);
-        double maxMag = Math.max(Math.abs(minPower), Math.abs(maxPower));
-
-        if (maxMag > 1.0)
-        {
-            for (int i = 0; i < powers.size(); i++)
-            {
-                powers.set(i, powers.get(i) / maxMag);
-            }
-        }
+        motorFrontLeft.setPower(frontLeft);
+        motorFrontRight.setPower(frontRight);
+        motorBackLeft.setPower(backLeft);
+        motorBackRight.setPower(backRight);
     }
 
     public void mecanumDriveXY(double x, double y) {
