@@ -160,9 +160,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
     public abstract void Loop();
 
-    public void Stop() {
-
-    }
+    public abstract void Stop();
 
     private void throwException(Exception e) {
         exceptions.add(e);

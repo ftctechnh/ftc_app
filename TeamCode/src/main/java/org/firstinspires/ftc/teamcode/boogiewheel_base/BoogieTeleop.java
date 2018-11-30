@@ -14,6 +14,10 @@ public class BoogieTeleop extends AbstractTeleop {
 
     @Override
     public void RegisterEvents() {
+        singleGamepad();
+    }
+
+    private void singleGamepad(){
         ////////Drive////////
         addEventHandler("1_lsy_change", () -> {
             robot.setDriveY(gamepad1.left_stick_y);
@@ -47,6 +51,172 @@ public class BoogieTeleop extends AbstractTeleop {
         addEventHandler("1_dpu_up", robot.robotLiftStopCallable());
 
         addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
+    }
+
+    private void twoGamepads(){
+        ////////////////Gamepad 1////////////////
+        ////////Drive////////
+        addEventHandler("1_lsy_change", () -> {
+            robot.setDriveY(gamepad1.left_stick_y);
+            return true;
+        });
+
+        addEventHandler("1_rsx_change", () -> {
+            robot.setDriveZ(gamepad1.right_stick_x);
+            return true;
+        });
+
+        ////////Intake////////
+        addEventHandler("1_b_down", robot.finishIntakingCallable());
+
+        addEventHandler("1_a_down", robot.beginIntakingCallable());
+
+        addEventHandler("1_y_down", robot.reverseIntakeCallable());
+
+        ////////////////Gamepad 2////////////////
+        ///////Mineral Lift////////
+        addEventHandler("2_rt_down", robot.moveMineralLiftToDumpPositionCallable());
+
+        addEventHandler("2_lt_down", robot.moveMineralLiftToCollectPositionCallable());
+
+        addEventHandler("2_x_down", robot.toggleMineralGateCallable());
+
+        ////////Robot Lift////////
+        addEventHandler("2_dpu_down", robot.robotLiftUpCallable());
+
+        addEventHandler("2_dpd_down", robot.robotLiftDownCallable());
+
+        addEventHandler("2_dpu_up", robot.robotLiftStopCallable());
+
+        addEventHandler("2_dpd_up", robot.robotLiftStopCallable());
+    }
+
+    private void twoDrivers(){
+        ////////////////Gamepad 1////////////////
+        ////////Drive////////
+        addEventHandler("1_lsy_change", () -> {
+            robot.setDriveY(gamepad1.left_stick_y);
+            return true;
+        });
+
+        addEventHandler("1_rsx_change", () -> {
+            robot.setDriveZ(gamepad1.right_stick_x);
+            return true;
+        });
+
+        ////////Intake////////
+        addEventHandler("1_b_down", robot.finishIntakingCallable());
+
+        addEventHandler("1_a_down", robot.beginIntakingCallable());
+
+        addEventHandler("1_y_down", robot.reverseIntakeCallable());
+
+        ////////Robot Lift////////
+        addEventHandler("1_dpu_down", robot.robotLiftUpCallable());
+
+        addEventHandler("1_dpd_down", robot.robotLiftDownCallable());
+
+        addEventHandler("1_dpu_up", robot.robotLiftStopCallable());
+
+        addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
+
+        ////////Util////////
+        addEventHandler("1_y_down", ()->{
+            ////Gamepad 1////
+            //Drive
+            pauseEvent("1_lsy_change");
+            pauseEvent("1_rsx_change");
+
+            //Intake
+            pauseEvent("1_b_down");
+            pauseEvent("1_a_down");
+            pauseEvent("1_y_down");
+
+            //Robot Lift
+            pauseEvent("1_dpu_down");
+            pauseEvent("1_dpd_down");
+            pauseEvent("1_dpu_up");
+            pauseEvent("1_dpd_up");
+
+            //Util
+            pauseEvent("1_y_down");
+
+            ////Gamepad 2////
+            //Drive
+            resumeEvent("2_lsy_change");
+            resumeEvent("2_rsx_change");
+
+            //Mineral Lift
+            resumeEvent("2_rt_down");
+            resumeEvent("2_lt_down");
+            resumeEvent("2_x_down");
+
+            //Util
+            resumeEvent("2_y_down");
+
+            return true;
+        });
+
+        ////////////////Gamepad 2////////////////
+        ////////Drive////////
+        addEventHandler("2_lsy_change", () -> {
+            robot.setDriveY(-gamepad1.left_stick_y);
+            return true;
+        });
+        pauseEvent("2_lsy_change");
+
+        addEventHandler("2_rsx_change", () -> {
+            robot.setDriveZ(gamepad1.right_stick_x);
+            return true;
+        });
+        pauseEvent("2_rsx_change");
+
+        ///////Mineral Lift////////
+        addEventHandler("2_rt_down", robot.moveMineralLiftToDumpPositionCallable());
+        pauseEvent("2_rt_down");
+
+        addEventHandler("2_lt_down", robot.moveMineralLiftToCollectPositionCallable());
+        pauseEvent("2_lt_down");
+
+        addEventHandler("2_x_down", robot.toggleMineralGateCallable());
+        pauseEvent("2_x_down");
+
+        ////////Util////////
+        addEventHandler("2_y_down", ()->{
+            ////Gamepad 1////
+            //Drive
+            resumeEvent("1_lsy_change");
+            resumeEvent("1_rsx_change");
+
+            //Intake
+            resumeEvent("1_b_down");
+            resumeEvent("1_a_down");
+            resumeEvent("1_y_down");
+
+            //Robot Lift
+            resumeEvent("1_dpu_down");
+            resumeEvent("1_dpd_down");
+            resumeEvent("1_dpu_up");
+            resumeEvent("1_dpd_up");
+
+            //Util
+            resumeEvent("1_y_down");
+
+            ////Gamepad 2////
+            //Drive
+            pauseEvent("2_lsy_change");
+            pauseEvent("2_rsx_change");
+
+            //Mineral Lift
+            pauseEvent("2_rt_down");
+            pauseEvent("2_lt_down");
+            pauseEvent("2_x_down");
+
+            //Util
+            pauseEvent("2_y_down");
+
+            return true;
+        });
     }
 
     @Override
