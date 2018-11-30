@@ -49,7 +49,7 @@ public class LiftTest extends LinearOpMode {
             else if (egamepad2.b.released) {
                 Lift.Unlock();
             }
-            
+
             if (egamepad2.a.released) {
                 if (!Lift.LifterButtonT.isPressed()) {
                     Lift.Extend();
