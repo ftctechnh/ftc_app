@@ -16,14 +16,21 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         compRobot = new CompRobot(hardwareMap,this);
         vuforiaFunctions = new VuforiaFunctions(this, hardwareMap);
         float yawAngle = 90;
-        float sensorDepth = 5;
+        float frontSensorDepth = 2;
+        float rightSensorDepth = 2;
+        float leftSensorDepth = 2;
+        float backSensorDepth = 2;
         float  yawAngleTurn;
         waitForStart();
         compRobot.driveStraight(10,.6f);
         compRobot.pivotenc(90, .6f);
-        while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 22 && compRobot.getFrontRightDistSens().getDistance(DistanceUnit.INCH) > 22)
+        while (compRobot.getFrontDistance_IN() > 36+ frontSensorDepth && compRobot.getRightDistance_IN() > 36+ rightSensorDepth)
         {
             compRobot.driveMotors(.2f, .2f);
+            telemetry.addData("Front dist= ", compRobot.getFrontDistance_IN());
+            sleep(2000);
+            telemetry.update();
+
         }
         compRobot.stopDriveMotors();
         {
@@ -37,26 +44,26 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
                 telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
                 sleep(1000);
                 yawAngle = vuforiaFunctions.getYawDeg();
-                yawAngleTurn = 105 - yawAngle;
+                yawAngleTurn = 95 - yawAngle;
                 compRobot.pivotenc(yawAngleTurn, .6f);
             }
             else
             {
                 telemetry.addData("Such target is not in my sight!", null);
-                compRobot.pivotenc(45, .8f);
+                compRobot.pivotenc(45, .5f);
             }
 
             telemetry.update();
         }
 
-        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 24, true);
+        compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 24, true);
         //The hug wall code in the method is a bit different than the one that was in the original auto file
         //make sure that it still runs as intended.
 
         telemetry.addData("Stopped", null);
         sleep(2000); //drop team marker into depot
         telemetry.update();
-        compRobot.hugWall(6 + sensorDepth, 9 + sensorDepth, 36, false);
-        compRobot.stopDriveMotors();
+        /*compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 36, false);
+        compRobot.stopDriveMotors();*/
     }
 }
