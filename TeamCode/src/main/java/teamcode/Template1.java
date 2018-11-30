@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 // The name is the how will program will show up on the phone.
 // It should be the same as your class name for clarity.
-@TeleOp(name="Template", group="Linear Opmode")
-public class Template extends LinearOpMode {
+@TeleOp(name="Template1", group="Linear Opmode")
+public class Template1 extends LinearOpMode {
     // Your variables should go here.
     private DcMotor leftMotor;
     private DcMotor rightMotor;
