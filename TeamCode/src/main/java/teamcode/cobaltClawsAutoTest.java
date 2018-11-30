@@ -39,6 +39,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     private static final double INCH_CONVERSION_RATIO = 55.0;
     private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
+    private static final double DEGREES_TO_RADIANS = Math.PI / 180;
 
     public enum Direction {Forward, Backward, Left, Right}
 
@@ -346,9 +347,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     }
 
-    public void turn(Direction direction, int radians, double speed) {
+    public void turn(Direction direction, int degrees, double speed) {
 
-        //Changes degrees to work with ticks
+        //Converts degrees to radians
+        double radians = degrees * DEGREES_TO_RADIANS;
+
+        //Changes radians to work with ticks
         radians *= RADIAN_CONVERSION_RATIO;
 
         //Resets the encoders and does a left point turn for the inputted degrees
