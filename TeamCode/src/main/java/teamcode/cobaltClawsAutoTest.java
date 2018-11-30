@@ -57,12 +57,14 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             //HANG RELEASE
 
-            ArmServoBase.setPosition(ArmServoBase.getPosition() + 5);
+            ArmServoBase.setPosition(ArmServoBase.getPosition() + 0.05);
+
+            ArmServoWrist.setPosition(1.0);
 
             move(Direction.Forward, 5, driveSpeed);
 
 
-            //GOLD TEST
+            /*//GOLD TEST
 
             move(Direction.Backward, 400, driveSpeed);
             //Looks at the right mineral. If the right mineral is gold, turns and knocks over the
@@ -142,7 +144,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                 }
 
-            }
+            }*/
             requestOpModeStop();
 
 
