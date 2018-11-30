@@ -60,8 +60,8 @@ public class Auto3imu extends LinearOpMode {
     //D = Double / R = Right / L = Left / C = Center /
     //Start position variable options
     private enum Start {
-        Crater,
-        Depot
+        CRATOR,
+        DEPOT
     }
 
     //Enum variables (creates variables of the enum variable types previously created)
@@ -76,7 +76,7 @@ public class Auto3imu extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         User.init(this);
-        Vucam.init(hardwareMap);
+        Vucam.init(this);
         Drive.init(this);
         Claimer.init(this);
 
@@ -84,16 +84,16 @@ public class Auto3imu extends LinearOpMode {
 
         /* Get user information */
         if (User.getYesNo("Facing the crater?")) {
-            orientation = Start.Crater;
+            orientation = Start.CRATOR;
         } else {
-            orientation = Start.Depot;
+            orientation = Start.DEPOT;
         }
         twoSample = User.getYesNo("Double sample?");
 
         /* Display user configuration */
-        if (orientation == Start.Crater)
+        if (orientation == Start.CRATOR)
             telemetry.addLine("Facing crater");
-        if (orientation == Start.Depot)
+        if (orientation == Start.DEPOT)
             telemetry.addLine("Facing depot");
         if (twoSample)
             telemetry.addLine("Double sample");
@@ -107,7 +107,7 @@ public class Auto3imu extends LinearOpMode {
 
         Vucam.setSamplePos();
         newState(State.STATE_INITIAL);
-        Drive.imu.setStarteAngle();
+        Drive.imu.setStartAngle();
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
 
@@ -145,11 +145,11 @@ public class Auto3imu extends LinearOpMode {
                     Sample.start();
                     Sample.loop();*/
 
-                    if (orientation == Start.Crater) {
+                    if (orientation == Start.CRATOR) {
                         telemetry.addLine("Moving to crater");
                         telemetry.update();
                         newState(State.STATE_MOVE_TO_CRATER);
-                    } else if (orientation == Start.Depot) {
+                    } else if (orientation == Start.DEPOT) {
                         telemetry.addLine("Moving to depot");
                         telemetry.update();
                         newState(State.STATE_MOVE_TO_DEPOT);
@@ -159,12 +159,12 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_MOVE_TO_CRATER:
                     telemetry.addLine("Move to crater");
                     telemetry.update();
-                    if (Vucam.sample == Vucam.sample.Left) {
+                    if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turn2Angle(TURN_SPEED, -25);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.55, 1.15);
                         newState(State.STATE_STOP);
-                    } else if (Vucam.sample == Vucam.sample.Center) {
+                    } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.moveForward(0.5, 1.25);
                         newState(State.STATE_STOP);
                     } else {
@@ -178,14 +178,14 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_MOVE_TO_DEPOT:
                     telemetry.addLine("Move to depot");
                     telemetry.update();
-                    if (Vucam.sample == Vucam.sample.Left) {
+                    if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turn2Angle(TURN_SPEED, -35);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.0);
                         Drive.turn2Angle(TURN_SPEED, 38);
                         Drive.moveForward(0.55, 1.0);
                         newState(State.STATE_CLAIM);
-                    } else if (Vucam.sample == Vucam.sample.Center) {
+                    } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.moveForward(0.5, 1.8);
                         Drive.moveBackward(0.5, 0.15);
                         newState(State.STATE_CLAIM);

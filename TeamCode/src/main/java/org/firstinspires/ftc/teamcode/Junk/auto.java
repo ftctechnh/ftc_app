@@ -102,7 +102,7 @@ public class auto extends LinearOpMode {
 
         Drive.init(this);
         Claimer.init(this);
-        Vucam.init(hardwareMap);
+        Vucam.init(this);
 
         telemetry.addLine("Autonomous");
 

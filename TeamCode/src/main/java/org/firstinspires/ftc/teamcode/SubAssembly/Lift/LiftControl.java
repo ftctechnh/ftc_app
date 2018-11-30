@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 /* Sub Assembly Class
  */
@@ -14,11 +13,12 @@ public class LiftControl {
     /* Declare private class object */
     private LinearOpMode opmode = null;     /* local copy of opmode class */
 
-    //initializing motors, servos, and sensors
     private DcMotor LifterRightM;
     private DcMotor LifterLeftM;
     private Servo LockRightS;
     private Servo LockLeftS;
+
+    /* Declare public class object */
     public TouchSensor LifterButtonT;
     public TouchSensor LifterButtonB;
 

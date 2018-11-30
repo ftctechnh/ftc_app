@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.SubAssembly.Sensors;
 
-import org.firstinspires.ftc.teamcode.Auto3imu;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -29,7 +27,7 @@ public class ImuTest extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (runTimes < 1) {
-                imu.setStarteAngle();
+                imu.setStartAngle();
                 telemetry.addData("Start Position", imu.startAngle);
                 telemetry.update();
                 runTimes++;

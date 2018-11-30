@@ -103,7 +103,7 @@ public class auto2 extends LinearOpMode {
 
         Drive.init(this);
         Claimer.init(this);
-        Vucam.init(hardwareMap);
+        Vucam.init(this);
         //Sample.init();
 
         telemetry.addLine("Autonomous");
@@ -140,12 +140,12 @@ public class auto2 extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (Vucam.sample == Vucam.sample.Left) {
+                    if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turnLeft(0.4, 0.15);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.55, 1.15);
                         newState(State.STATE_STOP);
-                    } else if (Vucam.sample == Vucam.sample.Right) {
+                    } else if (Vucam.sample == Vucam.sample.RIGHT) {
 
                         Drive.turnRight(0.4, 0.15);
                         Drive.TimeDelay(0.1);
@@ -159,7 +159,7 @@ public class auto2 extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
-                    if (Vucam.sample == Vucam.sample.Left) {
+                    if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turnLeft(0.4, 0.15);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.55, 1.2);
@@ -168,7 +168,7 @@ public class auto2 extends LinearOpMode {
                         newState(State.STATE_STOP);
                     }
                     //Center
-                    else if (Vucam.sample == Vucam.sample.Center) {
+                    else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.moveForward(0.5, 2.2);
                         newState(State.STATE_CLAIM);
                     }

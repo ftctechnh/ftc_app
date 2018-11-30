@@ -13,8 +13,8 @@ public class UserControl {
     private String name = "User Control";
 
     /* Declare extended gamepad */
-    GamepadWrapper egamepad1 = null;
-    GamepadWrapper egamepad2 = null;
+    private GamepadWrapper egamepad1 = null;
+    private GamepadWrapper egamepad2 = null;
 
     /* Declare public class objects
      */

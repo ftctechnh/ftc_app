@@ -14,9 +14,10 @@ public class IMUcontrol {
     /* Declare private class object */
     private LinearOpMode opmode = null;     /* local copy of opmode class */
 
-    BNO055IMU imu;
-    Orientation angles;
+    private BNO055IMU imu;
+    private Orientation angles;
 
+    /* Declare public class object */
     public double startAngle;
     public double currentAngle;
     public double trueAngle;
@@ -45,10 +46,10 @@ public class IMUcontrol {
         imu.initialize(imu_parameters);
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        setStarteAngle();
+        setStartAngle();
     }
 
-    public void setStarteAngle() {
+    public void setStartAngle() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         startAngle = angles.firstAngle;
         update();
