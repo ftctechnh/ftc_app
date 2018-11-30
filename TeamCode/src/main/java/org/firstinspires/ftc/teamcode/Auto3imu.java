@@ -103,6 +103,7 @@ public class Auto3imu extends LinearOpMode {
         Vucam.init(hardwareMap);
         Drive.init(hardwareMap);
         Claimer.init(hardwareMap);
+        Lift.init(hardwareMap);
         //Sample.init();
 
         telemetry.addLine("Autonomous");
@@ -145,10 +146,10 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_LAND:
                     telemetry.addLine("Land");
                     telemetry.update();
-                    //Lift.Unlock();
-                   /*while(!Lift.LifterButtonT.isPressed()) {
+                    Lift.Unlock();
+                   while(!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
-                    }*/
+                    }
                     sleep(1000);
                     newState(State.STATE_ADJUST);
                     break;
@@ -226,9 +227,9 @@ public class Auto3imu extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2angle(-45.0);
                     Claimer.drop();
-                    /*while (!Lift.LifterButtonB.isPressed()){
+                    while (!Lift.LifterButtonB.isPressed()){
                         Lift.Retract();
-                }*/
+                }
                     Drive.TimeDelay(2.0);
                     Claimer.reset();
                     if (twoSample == true) {
