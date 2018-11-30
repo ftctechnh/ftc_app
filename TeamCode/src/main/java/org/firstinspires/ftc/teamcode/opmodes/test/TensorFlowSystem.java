@@ -69,10 +69,9 @@ public class TensorFlowSystem extends LinearOpMode {
 
     private static final String VUFORIA_KEY = "AfIW5rj/////AAAAGaDrYjvjtkibrSYzQTjEFjJb+NGdODG1LJE2IVqxl0wdLW+9JZ3nIyQF2Hef7GlSLQxR/6SQ3pkFudWmzU48zdcBEYJ+HCwOH3vKFK8gJjuzrcc7nis7JrU+IMTONPctq+JTavtRk+LBhM5bxiFJhEO7CFnDqDDEFc5f720179XJOvZZA0nuCvIqwSslb+ybEVo/G8BDwH1FjGOaH/CxWaXGxVmGd4zISFBsMyrwopDI2T0pHdqvRBQ795QCuJFQjGQUtk9UU3hw/E8Z+oSC36CSWZPdpH3XkKtvSb9teM5xgomeEJ17MdV+XwTYL0iB/aRXZiXRczAtjrcederMUrNqqS0o7XvYS3eW1ViHfynl";
 
-    private LinearOpMode opMode;
     private MecanumDriveSystem driveSystem;
-    
-    
+    private boolean hasDriven;
+
     /**
      * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
      * localization engine.
@@ -84,14 +83,8 @@ public class TensorFlowSystem extends LinearOpMode {
      * Detection engine.
      */
     private TFObjectDetector tfod;
-    /*
-    public TensorFlowSystem (LinearOpMode oMode) {
-        super(oMode, "TensorFlowSystem");
-        opMode = oMode;
-        //driveSystem = new MecanumDriveSystem(opMode);
-                
-    }
-*/
+
+
     @Override
     public void runOpMode() {
         // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
@@ -119,13 +112,11 @@ public class TensorFlowSystem extends LinearOpMode {
                 tfod.activate();
             }
 
-            while (opModeIsActive()) {
+            while (!hasDriven) {
                 if (tfod != null) {
                     goldMineralX = -1;
                     silverMineral1X = -1;
                     silverMineral2X = -1;
-                    // getUpdatedRecognitions() will return null if no new information is available since
-                    // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                     if (updatedRecognitions != null) {
 
@@ -138,8 +129,6 @@ public class TensorFlowSystem extends LinearOpMode {
 
                                 //Log.i(TAG, "image width: " + recognition.getImageHeight());
                                 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                                    
-
                                     goldMineralX = (int) recognition.getBottom();
                                     //Log.i(TAG, "goldX: " + goldMineralX);
                                 } else if (silverMineral1X == -1) {
@@ -162,35 +151,13 @@ public class TensorFlowSystem extends LinearOpMode {
                                 // find the gold block
                                 if (silverMineral2X < SCREEN_WIDTH * 2 / 3) {
                                     Log.i(TAG, "can't find gold -- strafing right");
-
                                 } else if (silverMineral1X > SCREEN_WIDTH / 3) {
                                     Log.i(TAG, "can't find gold -- strafing left");
+                                } else {
+
                                 }
                             } else {
-                                // drive code
-                                if (goldMineralX < SCREEN_CENTER - OFFSET) {
-                                    // strafe right to center gold
-                                    Log.i(TAG, "strafing right to center gold");
-
-                                    driveSystem.mecanumDriveXY(0, -0.2);
-                                    sleep(75);
-                                    driveSystem.mecanumDriveXY(0, 0);
-
-                                } else if (goldMineralX > SCREEN_CENTER + OFFSET) {
-                                    Log.i(TAG, "strafing left to center gold");
-
-                                    driveSystem.mecanumDriveXY(0, 0.2);
-                                    sleep(75);
-                                    driveSystem.mecanumDriveXY(0, 0);
-
-                                } else {
-                                    Log.i(TAG, "driving forward to hit gold -- gold seen");
-                                    driveSystem.turn(-90, 0.5);
-                                    driveSystem.mecanumDriveXY(0, 0.5);
-                                    sleep(1500);
-                                    driveSystem.mecanumDriveXY(0, 0);
-
-                                }
+                                handleGoldMineralWhenFound(goldMineralX);
                             }
                             telemetry.update();
                         }
@@ -204,14 +171,34 @@ public class TensorFlowSystem extends LinearOpMode {
         }
     }
 
+    private void handleGoldMineralWhenFound(int goldMineralX) {
+        if (goldMineralX < SCREEN_CENTER - OFFSET) {
+            // strafe right to center gold
+            Log.i(TAG, "strafing right to center gold");
+            drive(0, -0.2, 75);
+        } else if (goldMineralX > SCREEN_CENTER + OFFSET) {
+            // strafe left to center gold
+            Log.i(TAG, "strafing left to center gold");
+            drive(0, 0.2, 75);
+        } else {
+            Log.i(TAG, "driving forward to hit gold -- gold seen");
+            driveSystem.turn(-90, 0.5);
+            drive(0, 0.5, 1500);
+            hasDriven = true;
+        }
+    }
+
+    private void drive(double x, double y, int miliseconds) {
+        driveSystem.mecanumDriveXY(x, y);
+        sleep(miliseconds);
+        driveSystem.mecanumDriveXY(0, 0);
+    }
+
 
     /**
      * Initialize the Vuforia localization engine.
      */
     private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
@@ -219,8 +206,6 @@ public class TensorFlowSystem extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
     }
 
     /**
@@ -230,6 +215,7 @@ public class TensorFlowSystem extends LinearOpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.95;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }

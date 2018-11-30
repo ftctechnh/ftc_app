@@ -21,7 +21,6 @@ import java.util.List;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel
 {
-
     private ConfigParser config;
 
     public double TICKS_IN_INCH;
