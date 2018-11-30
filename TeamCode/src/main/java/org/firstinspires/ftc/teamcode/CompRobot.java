@@ -92,7 +92,7 @@ public class CompRobot extends BasicBot
         while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
         {
             straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
-            if(straightDist < distAwayFromFrontWall - Math.abs(stepDistance)/2)
+            if(straightDist < distAwayFromFrontWall - Math.abs(stepDistance))
             {
                 super.stopDriveMotors();
                 break;
@@ -126,7 +126,7 @@ public class CompRobot extends BasicBot
                 }
                 else //need this null zone for logic, this is where it goes straight, do not comment out
                 {
-                    driveStraight(stepDistance * .69f , .8f);
+                    driveStraight(stepDistance, .8f);
                 }
                linearOpMode.telemetry.update();
             }

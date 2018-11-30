@@ -44,7 +44,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
                 telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
                 sleep(1000);
                 yawAngle = vuforiaFunctions.getYawDeg();
-                yawAngleTurn = 95 - yawAngle;
+                yawAngleTurn = 105 - yawAngle;
                 compRobot.pivotenc(yawAngleTurn, .6f);
             }
             else
