@@ -59,7 +59,12 @@ public class CompRobot extends BasicBot
             super.driveMotors(pow, -pow);
 
         degrees = Math.abs(degrees);
-        float encTarget = 2.36578f * degrees + 2.5f;
+        float encTarget;
+
+        if (Math.abs(degrees) < 45)
+            encTarget = 2.715f * degrees + .10386f;
+        else
+            encTarget = 2.3313f * degrees - 2.11769f;
 
         while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
         {
