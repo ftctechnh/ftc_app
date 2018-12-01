@@ -95,7 +95,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@Autonomous(name="Bull Runnnnn!!!!!!", group="MonsieurMallah")
+@Autonomous(name="Bull Runnnnn!!!!!!", group="zzz")
 public class BullRun extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
