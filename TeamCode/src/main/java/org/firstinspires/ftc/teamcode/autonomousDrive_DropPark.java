@@ -11,15 +11,7 @@ public class autonomousDrive_DropPark extends LinearOpMode
 {
     Bogg robot;
     Auto auto;
-    Mode action;
-
-    private enum Mode
-    {
-        Stop,
-        Drop,
-        Slide,
-        Park
-    }
+    Auto.Mode action;
 
 
     @Override
@@ -29,29 +21,24 @@ public class autonomousDrive_DropPark extends LinearOpMode
         auto = new Auto(robot, telemetry);
 
         waitForStart();
-        action = Mode.Drop;
+        action = Auto.Mode.Drop;
 
         while (opModeIsActive())
         {
             switch(action)
             {
                 case Drop:
-                    if(auto.isDoneDropping())
-                        action = Mode.Slide;
-                    else
-                        auto.drop();
+                    action = auto.drop();
                     break;
                 case Slide:
-                    if(auto.isDoneSliding())
-                        action = Mode.Park;
-                    else
-                        auto.slide();
+                    action = auto.slide();
                     break;
-                case Park:
+                case Spin: // ==Park
                     if(auto.getTime() > 3)
-                        action = Mode.Stop;
+                        action = Auto.Mode.Stop;
                     else
                         robot.driveEngine.drive(0, .7);
+                    break;
                 default:
                     auto.stop();
 
@@ -59,11 +46,12 @@ public class autonomousDrive_DropPark extends LinearOpMode
 
             // Display the current values
             telemetry.addData("time: ", auto.getTime());
-            telemetry.addData("dMobile: ", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
+            telemetry.addData("mode", action);
+            telemetry.addData("Drive x:", robot.driveEngine.xOut);
+            telemetry.addData("Drive y:", robot.driveEngine.yOut);
             telemetry.addData("brake position: ", robot.brake.getPosition());
             telemetry.addData("touch bottom", robot.sensors.touchBottom.isPressed());
             telemetry.addData("touch top", robot.sensors.touchTop.isPressed());
-            telemetry.addData("mode", action);
             telemetry.update();
             idle();
         }

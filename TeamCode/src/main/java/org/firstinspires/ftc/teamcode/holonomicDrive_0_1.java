@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@TeleOp(name="holonomicDrive_0_1", group="Testing")
+@TeleOp(name="holonomicDrive Normal", group="Testing")
 public class holonomicDrive_0_1 extends LinearOpMode
 {
     Bogg robot;

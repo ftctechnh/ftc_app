@@ -7,10 +7,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Auto {
     Bogg robot = null;
-    ElapsedTime timer = null;
-    StartPosition startPosition = null;
+    StartPosition startPosition = StartPosition.HighRed;
     Telemetry telemetry = null;
-    double iSP; //initialSlopePositivity
+    private ElapsedTime timer = null;
+    private double iSP; //initialSlopePositivity
 
     Auto(Bogg robot, Telemetry telemetry)
     {
@@ -22,6 +22,18 @@ public class Auto {
         telemetry.update();
     }
 
+    public enum Mode
+    {
+        Stop,
+        Drop,
+        Slide,
+        Spin,
+        MoveToWall,
+        MoveToDepot,
+        DropMarker,
+        MoveToCrater
+    }
+
     private enum StartPosition
     {
         HighBlue,
@@ -29,23 +41,15 @@ public class Auto {
         HighRed,
         LowRed
     }
-
-    private boolean doneDropping = false;
-    private boolean doneSliding = false;
-    private boolean doneSpinning = false;
     private boolean midTargetAchieved = false;
-    private boolean doneMovingToWall = false;
-    private boolean doneMovingToDepot = false;
-    private boolean doneDroppingMarker = false;
-    private boolean doneMovingToCrater = false;
 
-    void drop()
+    Mode drop()
     {
-        if(timer == null)
+        if(timer == null) //TODO: Don't fix what's not broken
         {
             timer = new ElapsedTime();
         }
-        if (timer.seconds() < 4) //for the first 4 seconds
+        if (timer.seconds() < 2) //for the first 2 seconds
         {
             robot.lift(-1); //pull while we
             robot.setBrake(false); //disengage the brake
@@ -55,16 +59,17 @@ public class Auto {
         }
         else {
             timer.reset();
-            doneDropping = true;
+            return Mode.Slide;
         }
+        return Mode.Drop;
     }
 
-    boolean isDoneDropping(){return doneDropping;}
 
-    void slide()
+
+    Mode slide()
     {
         double inchesMoved = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-        if(timer.seconds() < .3) //for an additional .3 seconds
+        if(timer.seconds() < .2) //for an additional .2 seconds
         {
             robot.lift(.2); //drop a bit more
         }
@@ -73,44 +78,45 @@ public class Auto {
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(.4,0); //drive to the side to unhook
         }
-        else if(inchesMoved < 6) //the back encoder has moved less than 4 inches
+        else if(inchesMoved < 6) //the back encoder has moved less than 6 inches
         {
             robot.lift(0); //stop the lift motor
-            robot.driveEngine.drive(.4,.4); //drive to the side to unhook
+            robot.driveEngine.drive(.4,.6); //drive diagonally
         }
         else  //if the robot has unhooked
         {
-            robot.driveEngine.drive(0,0); //initializing camera interrupts code, so we have to stop the robot.
-            doneSliding = true;
+            robot.driveEngine.drive(0,0);
             timer.reset(); //Needed for DropPark
+            return Mode.Spin;
         }
+        return Mode.Slide;
     }
 
-    boolean isDoneSliding(){return doneSliding;}
+
 
     int count = 0;
-    void spin()
+    Mode spin()
     {
         count += 1;
-        telemetry.addLine("Made it to point A");
+        telemetry.addLine("Made it to point A" + count);
         telemetry.update();
 
         double t = timer.seconds();
-        if(t/1.5 - Math.floor(t)/1.5 < .60)  //rotates for 60% of 1.5 seconds
+        if(t/1.5 - Math.floor(t)/1.5 < .60)  //rotates for 60% of 1.5 seconds = .9 and .6
             robot.driveEngine.rotate(.2);
         else
             robot.driveEngine.rotate(0);  //and stops so we can see the target
 
-        telemetry.addLine("Made it to point B");
+        telemetry.addLine("Made it to point B" + count);
         telemetry.update();
 
         double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
         if(!(null == location)) {
-            telemetry.addLine("Made it to point Q");
+            telemetry.addLine("Made it to point Quilt");
             telemetry.update();
 
             double angle = Math.atan2(location[0], location[1]); //get the angle looking down on the field, lander to robot
-            telemetry.addLine("Made it to point 2");
+            telemetry.addLine("Made it to point Needle");
             telemetry.update();
 
             if (angle < -Math.PI / 2)                          //Quadrant 3
@@ -122,20 +128,20 @@ public class Auto {
             else // angle between pi/2 and pi               //Quadrant 2
                 startPosition = StartPosition.HighBlue;
 
-            doneSpinning = true;
-            telemetry.addLine("Made it to point 3");
+            telemetry.addLine("Made it to point 33");
             telemetry.update();
+            return Mode.Spin;
         }
 
-        telemetry.addLine("Made it to point C");
+        telemetry.addLine("Made it to point Gingerbread");
         telemetry.update();
+        return Mode.MoveToWall;
     }
 
-    boolean isDoneSpinning(){return doneSpinning;}
 
-    void moveToWall()
+    Mode moveToWall()
     {
-        telemetry.addLine("Made it to point 4");
+        telemetry.addLine("Made it to point Harpoon");
         if(robot.camera.targetVisible()){
             double t = timer.seconds();
             robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .2 : 0);
@@ -176,17 +182,16 @@ public class Auto {
             if(robot.driveToTarget(midTarget[0], midTarget[0], .6, 4))  //keep driving to the midtarget, also returns if we have, if so
                 midTargetAchieved = true; //say that we have acheived the midtarget
         }
-        else
-        if(robot.driveToTarget(wallTarget[0], wallTarget[1], .6, 4)) //drive to the wall
+        else if(robot.driveToTarget(wallTarget[0], wallTarget[1], .6, 4)) //drive to the wall
         {
             if(robot.rotateToTargetAngle(targetAngle, 5)) //align to the wall; if we're good then
-                doneMovingToWall = true;                           //move to the depot
+                return Mode.MoveToDepot;                           //move to the depot
         }
+        return Mode.MoveToWall;
     }
 
-    boolean isDoneMovingToWall(){return doneMovingToWall;}
 
-    void moveToDepot()
+    Mode moveToDepot()
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
@@ -194,36 +199,36 @@ public class Auto {
         robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
 
         if(mobileDistance < 6) {
-            doneMovingToDepot = true;
             robot.sensors.rotateMobile(-90);
             timer.reset();
+            return Mode.DropMarker;
         }
+        return Mode.MoveToDepot;
     }
 
-    boolean isDoneMovingToDepot(){return doneMovingToDepot;}
 
-    void dropMarker()
+    Mode dropMarker()
     {
         robot.driveEngine.drive(0,0);
         robot.push(true);
         if(timer.seconds() > 3)
-            doneDroppingMarker = true;
+            return Mode.MoveToCrater;
+        return Mode.DropMarker;
     }
 
-    boolean isDoneDroppingMarker(){return doneDroppingMarker;}
 
-    void moveToCrater()
+    Mode moveToCrater()
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         robot.push(false);
         robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
         if(robot.sensors.isTilted())
         {
-            doneMovingToCrater = true;
+            return Mode.Stop;
         }
+        return Mode.MoveToCrater;
     }
 
-    boolean isDoneMovingToCrater(){return doneMovingToCrater;}
 
     void stop()
     {

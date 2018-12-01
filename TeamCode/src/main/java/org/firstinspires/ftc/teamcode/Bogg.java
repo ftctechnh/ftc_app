@@ -38,7 +38,7 @@ public class Bogg
     }
 
 
-    public double smoothX(double x)
+    private double smoothX(double x)
     {
         if(x * xAve < 0 || x == 0)
             xAve = 0;
@@ -47,7 +47,7 @@ public class Bogg
         return xAve;
     }
 
-    public double smoothY(double y)
+    private double smoothY(double y)
     {
         if(y * yAve < 0 || y == 0)
             yAve = 0;
@@ -56,7 +56,7 @@ public class Bogg
         return yAve;
     }
 
-    public double smoothLift(double l)
+    private double smoothLift(double l)
     {
         if(l* liftAve < 0 || l == 0)
             liftAve = 0;
@@ -69,7 +69,7 @@ public class Bogg
         return liftAve;
     }
 
-    public double smoothSpin(double spin)
+    private double smoothSpin(double spin)
     {
         if(spin * spinAve < 0 || spin == 0)
             spinAve = 0;
@@ -78,7 +78,7 @@ public class Bogg
         return spinAve;
     }
 
-    public void manualLift()
+    private void manualLift()
     {
         if(gamepad.y && !sensors.touchTop.isPressed())
         {
@@ -97,7 +97,7 @@ public class Bogg
             lift.setPower(smoothLift(0));
     }
 
-    public void lift(double power)
+    void lift(double power)
     {
         if(power > 0  && !sensors.touchTop.isPressed())
             lift.setPower(smoothLift(power));
@@ -107,7 +107,7 @@ public class Bogg
             lift.setPower(smoothLift(0));
     }
 
-    public void setBrake(boolean on)
+    void setBrake(boolean on)
     {
         if(on)
             brake.setPosition(.5);
@@ -115,20 +115,20 @@ public class Bogg
             brake.setPosition(.6);
     }
 
-    public void setBrake(double position)
+    void setBrake(double position)
     {
         brake.setPosition(position);
     }
 
-    public void push(boolean out)
+    void push(boolean out)
     {
         if(out)
             push.setPosition(.6);
         else
-            push.setPosition(0);
+            push.setPosition(-.4);
     }
 
-    public void manualDrive()
+    void manualDrive()
     {
         if(gamepad.left_stick_button)
             driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y,true);
@@ -136,7 +136,7 @@ public class Bogg
             driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
     }
 
-    public boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
+    boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
     {
         double[] location = camera.getLocation();
         if(location != null)
@@ -161,9 +161,8 @@ public class Bogg
             double heading_of_target_from_robot_location = Math.atan2(delta_y,delta_x);
 
             //where compass would say the mountain is located considering our compass isn't pointed north
-            double heading_of_target_from_robot_perspective = heading_of_target_from_robot_location - heading_of_robot_on_field;
+            double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
 
-            double target_heading = heading_of_target_from_robot_perspective;
             driveEngine.drive(Math.cos(target_heading) * speed, Math.sin(target_heading) * speed);
 
         }
@@ -234,24 +233,24 @@ public class Bogg
 //        return true;
 //    }
 
-    public void incAlpha()
+    void incAlpha()
     {
         if(alpha + alphaInc<1)
             alpha += alphaInc;
     }
 
-    public void decAlpha()
+    void decAlpha()
     {
         if(alpha - alphaInc>0)
             alpha -= alphaInc;
     }
 
-    public double getAlpha()
+    double getAlpha()
     {
         return alpha;
     }
 
-    public void manualRotate()
+    void manualRotate()
     {
         if(gamepad.right_stick_button)
             driveEngine.rotate(gamepad.right_stick_x);

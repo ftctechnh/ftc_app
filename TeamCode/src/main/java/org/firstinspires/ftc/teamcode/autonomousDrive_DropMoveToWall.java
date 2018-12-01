@@ -10,17 +10,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class autonomousDrive_DropMoveToWall extends LinearOpMode
 {
     Bogg robot;
-    Auto auto;
-    Mode action;
-
-    private enum Mode
-    {
-        Stop,
-        Drop,
-        Slide,
-        Spin,
-        MoveToWall
-    }
+    private Auto auto;
+    private Auto.Mode action;
 
 
     @Override
@@ -30,51 +21,36 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
         auto = new Auto(robot, telemetry);
 
         waitForStart();
-        action = Mode.Drop;
+        action = Auto.Mode.Drop;
 
         while (opModeIsActive())
         {
             switch(action)
             {
                 case Drop:
-                    if(auto.isDoneDropping())
-                        action = Mode.Slide;
-                    else
-                        auto.drop();
+                    action = auto.drop();
                     break;
                 case Slide:
-                    if(auto.isDoneSliding())
-                        action = Mode.Spin;
-                    else
-                        auto.slide();
+                    action = auto.slide();
                     break;
                 case Spin:
-                    if(auto.isDoneSpinning())
-                        action = Mode.MoveToWall;
-                    else
-                        auto.spin();
+                    action = auto.spin();
+                    break;
                 case MoveToWall:
-                    if(auto.isDoneMovingToWall())
-                        action = Mode.Stop;
-                    else
-                        auto.moveToWall();
-
+                    action = auto.moveToWall();
+                    break;
                 default:
                     auto.stop();
-
             }
 
             // Display the current values
-            if(robot.camera != null) {
-                if(robot.camera.targetVisible())
-                {
-                    //telemetry.addData("target seen", (robot.camera.targetVisible()) ? "N/A" : robot.camera.targetVisible().getName());
-                    telemetry.addData("startPosition", auto.startPosition != null ? auto.startPosition : "N/A");
-                    telemetry.addData("location", robot.camera.getLocation() == null ? "N/A" : robot.camera.getLocation());
-                }
-            }
+            // Removes the null checks by setting initial values; these checks sometimes caused NullPointerExceptions.
+
             telemetry.addData("time", auto.getTime());
-            telemetry.addData("mode", action);
+            telemetry.addData("mode", action);         //put this before the things that break
+            telemetry.addData("count through spin", auto.count);
+            //telemetry.addData("startPosition", auto.startPosition);
+            //telemetry.addData("location", robot.camera.getLocation() != null ? robot.camera.getLocation(): "N/A");
             telemetry.update();
             idle();
         }

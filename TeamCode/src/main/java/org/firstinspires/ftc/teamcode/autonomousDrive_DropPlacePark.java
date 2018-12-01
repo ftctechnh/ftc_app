@@ -11,40 +11,16 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
 {
     Bogg robot;
     Auto auto;
-    Mode action;
-    double x;
-
-    private enum Mode
-    {
-        Stop,
-        Drop,
-        Slide,
-        Spin,
-        MoveToWall,
-        MoveToDepot,
-        DropMarker,
-        MoveToCrater
-    }
-
-    private enum StartPosition
-    {
-        FrontBlue,
-        BackBlue,
-        FrontRed,
-        BackRed
-    }
-    public StartPosition startPosition;
+    Auto.Mode action;
 
 
     @Override
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1);
-        robot.driveEngine.driveAtAngle(Math.PI);
-        action = Mode.Stop;
-
+        auto = new Auto(robot, telemetry);
+        action = Auto.Mode.Drop;
         waitForStart();
-        action = Mode.Drop;
 
         while (opModeIsActive())
         {
@@ -53,50 +29,27 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    if(auto.isDoneDropping())
-                        action = Mode.Slide;
-                    else
-                        auto.drop();
+                    action = auto.drop();
                     break;
                 case Slide:
-                    if(auto.isDoneSliding())
-                        action = Mode.Spin;
-                    else
-                        auto.slide();
+                    action = auto.slide();
                     break;
                 case Spin:
-                    if(auto.isDoneSpinning())
-                        action = Mode.MoveToWall;
-                    else
-                        auto.spin();
+                    action = auto.spin();
                     break;
                 case MoveToWall:
-                    if(auto.isDoneMovingToWall())
-                        action = Mode.MoveToDepot;
-                    else
-                        auto.moveToWall();
+                    action = auto.moveToWall();
                     break;
                 case MoveToDepot:
-                    if(auto.isDoneMovingToDepot())
-                        action = Mode.DropMarker;
-                    else
-                        auto.moveToDepot();
+                    action = auto.moveToDepot();
                     break;
                 case DropMarker:
-                    if(auto.isDoneDroppingMarker())
-                        action = Mode.MoveToCrater;
-                    else
-                        auto.dropMarker();
+                    action = auto.dropMarker();
                 case MoveToCrater:
-                    if(auto.isDoneMovingToCrater())
-                        action = Mode.Stop;
-                    else
-                        auto.moveToCrater();
+                    action = auto.moveToCrater();
                 default:
                     auto.stop();
-
             }
-
 
             // Display the current values
             telemetry.addData("time: ", auto.getTime());

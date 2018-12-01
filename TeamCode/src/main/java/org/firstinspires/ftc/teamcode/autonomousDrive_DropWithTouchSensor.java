@@ -9,13 +9,7 @@ public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
 {
     Bogg robot;
     Auto auto;
-    Mode action;
-
-    private enum Mode
-    {
-        Stop,
-        Drop
-    }
+    Auto.Mode action;
 
 
     @Override
@@ -23,25 +17,20 @@ public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
     {
         robot = new Bogg(hardwareMap, gamepad1);
         auto = new Auto(robot, telemetry);
+        action = Auto.Mode.Drop;
 
         waitForStart();
-        action = Mode.Drop;
 
         while (opModeIsActive())
         {
             switch(action)
             {
                 case Drop:
-                    if(auto.isDoneDropping())
-                        action = Mode.Stop;
-                    else
-                        auto.drop();
+                    action = auto.drop();
                     break;
-
 
                 default:
                     auto.stop();
-
             }
 
             // Display the current values

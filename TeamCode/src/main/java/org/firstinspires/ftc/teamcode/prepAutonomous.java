@@ -32,23 +32,24 @@ public class prepAutonomous extends LinearOpMode
             {
                 case Drop:
                     robot.push(false);
-                    if(t < 5) //for the two seconds
+                    if(t < 3) //for the three seconds
                     {
                         robot.lift(-.3); //pull up
                         robot.sensors.dServo.setPosition(0);
                     }
-                    else if (t < 7)
+                    else if (t < 5)
                     {
                         robot.lift(-.5);
                     }
-                    else if(t < 9)
+                    else if(t < 7)
                     {
                         robot.setBrake(true);
                         robot.push(false);
                     }
-                    else if(t < 11) //wait for brake to engage
+                    else if(t < 9) //wait for brake to engage
                     {
                         robot.lift(0); //relax, which drops the robot
+                        robot.push(true);
                     }
                     else //if t > 9
                         action = Mode.Stop;
@@ -62,6 +63,9 @@ public class prepAutonomous extends LinearOpMode
             }
 
             // Display the current values
+            telemetry.addLine("Push down on lift to ensure the brake catches");
+            telemetry.addLine("Position block so the servo will hold it (9s)");
+            telemetry.addLine("Don't let it catch your fingers!");
             telemetry.addData("time: ", t);
             telemetry.addData("brake position: ", robot.brake.getPosition());
             telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
