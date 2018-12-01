@@ -47,7 +47,7 @@ public class QuickSilverController extends OpMode {
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useNavigation = true;
-    private boolean useArm = true;
+    private boolean useArm = false;
 
     /**
      * Code to run ONCE when the driver hits INITh6
@@ -64,10 +64,10 @@ public class QuickSilverController extends OpMode {
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-            motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+            motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+            motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
 
             if (useEncoders) {
                 motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
