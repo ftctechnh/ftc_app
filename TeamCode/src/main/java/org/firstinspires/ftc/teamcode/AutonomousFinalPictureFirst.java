@@ -44,7 +44,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
                 telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
                 sleep(1000);
                 yawAngle = vuforiaFunctions.getYawDeg();
-                yawAngleTurn = 105 - yawAngle;
+                yawAngleTurn = 90 - yawAngle;
                 compRobot.pivotenc(yawAngleTurn, .6f);
             }
             else
@@ -63,7 +63,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         telemetry.addData("Stopped", null);
         sleep(2000); //drop team marker into depot
         telemetry.update();
-        /*compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 36, false);
-        compRobot.stopDriveMotors();*/
+        compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 36, false);
+        compRobot.stopDriveMotors();
     }
 }
