@@ -18,8 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipeController", group="User")
-public class BigSwingController extends OpMode {
+@TeleOp(name="PhatSwipeController", group="MonsieurMallah")
+public class PhatSwipeController extends OpMode {
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
     static final int CYCLE_MS = 50;     // period of each cycle
@@ -44,8 +44,12 @@ public class BigSwingController extends OpMode {
     private BNO055IMU bosch;
 
     // Motors connected to the hub.
-    private DcMotor motorLeft;
-    private DcMotor motorRight;
+    private DcMotor motorBackLeft;
+    private DcMotor motorBackRight;
+    private DcMotor motorFrontLeft;
+    private DcMotor motorFrontRight;
+    //  private DcMotor motorLeft;
+    //private DcMotor motorRight;
     // private DcMotor sweeper;
     private DcMotor arm;
     // private DcMotor vacuum;
@@ -78,8 +82,16 @@ public class BigSwingController extends OpMode {
 
         // Initialize the motors.
         if (useMotors) {
-            motorLeft = hardwareMap.get(DcMotor.class, "motor0");
-            motorRight = hardwareMap.get(DcMotor.class, "motor1");
+
+            motorBackLeft = hardwareMap.get(DcMotor.class, "motor0");
+            motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
+            motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
+            motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
+
+
+
+           // motorLeft = hardwareMap.get(DcMotor.class, "motor0");
+            //motorRight = hardwareMap.get(DcMotor.class, "motor1");
             // sweeper = hardwareMap.get(DcMotor.class, "motor2");
             arm = hardwareMap.get(DcMotor.class, "motor4");
             // vacuum = hardwareMap.get(DcMotor.class, "motor6");
@@ -93,21 +105,21 @@ public class BigSwingController extends OpMode {
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorRight.setDirection(DcMotor.Direction.FORWARD);
+            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
+            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+            motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
+            motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
 
             if (useEncoders) {
-                motorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-                // NOTE: only use RUN_IUSING_ENCODER when you want to run a certain amount of spins;
-                // running it like this made the right motor run slower than the left one when using
-                // a power that is less than max.
-                /*motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER); */
-
-                motorRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                motorLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
 
@@ -160,22 +172,44 @@ public class BigSwingController extends OpMode {
     @Override
     public void loop() {
         if (useMotors) {
+            // Control the wheel motors.
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double drive = gamepad1.right_stick_x;
+            double driveNormal = -gamepad1.left_stick_y;
+            double driveStrafe = 0.0;//  -gamepad1.left_stick_x;
+            if (Math.abs(driveNormal) < 0.1)
+                driveNormal = 0.0; // Prevent the output from saying "-0.0".
+            if (Math.abs(driveStrafe) < 0.1)
+                driveStrafe = 0.0; // Prevent the output from saying "-0.0".
 
-            if (Math.abs(drive) < 0.1)
-                drive = 0.0; // Prevent the output from saying "-0.0".
-            double turn = gamepad1.left_stick_y;;
-            double leftPower = Range.clip(drive + turn, -1.0, 1.0);
-            double rightPower = Range.clip(drive - turn, -1.0, 1.0);
-            motorLeft.setPower(leftPower);
-            motorRight.setPower(rightPower);
-            telemetry.addData("Motors", "left:%.2f, right:%.2f, lpos:%d, rpos=%d",
-                    leftPower, rightPower, motorLeft.getCurrentPosition(), motorRight.getCurrentPosition());
-            telemetry.addData("Motors", "drive (%.2f), turn (%.2f)", drive, turn);
+            double turn = gamepad1.right_stick_x;
 
-            telemetry.addData("DropTime", dropTime.seconds());
+            double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
+            double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
+            double leftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.8, 0.8);
+            double rightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.8, 0.8);
+
+            double halfLeftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.25, 0.25);
+            double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
+            double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
+            double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
+
+            boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
+
+
+            if (halfSpeed) {
+                motorBackLeft.setPower(halfLeftBackPower);
+                motorBackRight.setPower(halfRightBackPower);
+                motorFrontLeft.setPower(halfLeftFrontPower);
+                motorFrontRight.setPower(halfRightFrontPower);
+            } else {
+                motorBackLeft.setPower(leftBackPower);
+                motorBackRight.setPower(rightBackPower);
+                motorFrontLeft.setPower(leftFrontPower);
+                motorFrontRight.setPower(rightFrontPower);
+            }
+
+
 
 
           /*  if (gamepad1.x) {
@@ -220,7 +254,7 @@ public class BigSwingController extends OpMode {
             } else if ((pullDown > 0.0) && (pullUp == 0.0)) {
                 pullPower = 1.0;
             }
-            arm.setPower(pullPower);
+            arm.setPower(pullPower * 0.75);
 /*
 
             // control the hand
@@ -236,15 +270,6 @@ public class BigSwingController extends OpMode {
             servoHand.setPosition(angleHand);
 */
 
-            // HACK: If driver presses the secret 'y' key, go forward 12 inches, to test encoder.
-            if (useEncoders) {
-                boolean encodertest = false;
-
-                if (encodertest) {
-                    double speed = 1;
-                    encoderDrive(speed, 24, 24);
-                }
-            }
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "time: " + runtime.toString());
@@ -323,7 +348,7 @@ public class BigSwingController extends OpMode {
      *  1) Move gets to the desired position
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
-     */
+
     public void encoderDrive (double speed, double leftInches, double rightInches) {
         int newLeftTarget;
         int newRightTarget;
@@ -378,5 +403,5 @@ public class BigSwingController extends OpMode {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-    }
+   */
 }

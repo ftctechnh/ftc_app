@@ -19,12 +19,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 @TeleOp(name="QuickSilverController", group="MonsieurMallah")
 public class QuickSilverController extends OpMode {
 
-    public static final String TAG = "Vuforia Navigation Sample";
-
-    static final double MAX_POS = 1.0;     // Maximum rotational position
-    static final double MIN_POS = 0.0;     // Minimum rotational position
-
-    //constants from encoder sample
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
     static final double WHEEL_DIAMETER_INCHES = 4.9375;     // For figuring circumference
@@ -46,7 +40,6 @@ public class QuickSilverController extends OpMode {
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
-    private boolean useNavigation = true;
     private boolean useArm = true;
 
     /**
@@ -64,10 +57,10 @@ public class QuickSilverController extends OpMode {
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
-            motorFrontLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorFrontRight.setDirection(DcMotor.Direction.FORWARD);
+            motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorBackRight.setDirection(DcMotor.Direction.REVERSE);
+            motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
+            motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
 
             if (useEncoders) {
                 motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -83,8 +76,6 @@ public class QuickSilverController extends OpMode {
         }
 
         if (useArm) {
-            //extender = hardwareMap.get(DcMotor.class, "motor6");
-            //tacVac = hardwareMap.get(DcMotor.class, "motor4");
             shoulder = hardwareMap.get(DcMotor.class, "motor4");
             extender = hardwareMap.get(DcMotor.class, "motor5");
         }
@@ -154,30 +145,31 @@ public class QuickSilverController extends OpMode {
                 motorFrontLeft.setPower(leftFrontPower);
                 motorFrontRight.setPower(rightFrontPower);
             }
+        }
 
-            if (useArm) {
-                boolean pullUp = gamepad1.dpad_down;
-                boolean pullOut = gamepad1.dpad_up;
-                double pullPower = 0.0;
-                if (pullUp) {
-                    pullPower = -1.0;
-                } else if (pullOut) {
-                    pullPower = 1.0;
-                }
-                shoulder.setPower(pullPower);
-
-                // Control the extender.
-                boolean extendOut = gamepad1.y;
-                boolean extendIn = gamepad1.a;
-                double extendPower = 0.0;
-                if (extendOut) {
-                    extendPower = -1.0;
-                } else if (extendIn) {
-                    extendPower = 1.0;
-                }
-                extender.setPower(extendPower);
+        if (useArm) {
+            boolean pullUp = gamepad1.dpad_down;
+            boolean pullOut = gamepad1.dpad_up;
+            double pullPower = 0.0;
+            if (pullUp) {
+                pullPower = 1.0;
+            } else if (pullOut) {
+                pullPower = -1.0;
             }
+            shoulder.setPower(pullPower);
+
+            // Control the extender.
+            boolean extendOut = gamepad1.y;
+            boolean extendIn = gamepad1.a;
+            double extendPower = 0.0;
+            if (extendOut) {
+                extendPower = 1.0;
+            } else if (extendIn) {
+                extendPower = -1.0;
+            }
+            extender.setPower(extendPower);
         }
     }
+
 }
 
