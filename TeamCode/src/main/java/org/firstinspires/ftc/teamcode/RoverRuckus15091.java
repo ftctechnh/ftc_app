@@ -40,6 +40,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -148,34 +151,22 @@ public class RoverRuckus15091 extends LinearOpMode {
                 }
             }
 
-            robot.tts.speak("Gold on " + goldMineralLocation);
+            double goldMineralDistance = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+            robot.tts.speak("Gold on position " + goldMineralLocation +
+                    String.format(Locale.US, " and %.2f inches away", goldMineralDistance));
 
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -24d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -9d, -175);
-                    gyroDrive(DRIVE_SPEED, -9d, -180);
+                    gyroDrive(DRIVE_SPEED, -goldMineralDistance, targetHeading);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -30d, targetHeading);
-                    gyroTurn(0.7d, -135);
+                    gyroDrive(DRIVE_SPEED, -goldMineralDistance, targetHeading);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -24d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -18d, -135);
+                    gyroDrive(DRIVE_SPEED, -goldMineralDistance, targetHeading);
                     break;
             }
-
-
-            //drive forward
-            //encoderDrive(DRIVE_SPEED, -12d, -12d, 5d);
-            //gyroDrive(DRIVE_SPEED, -24d, 0d);
-
-            //turn 90 degrees to the left
-            //encoderDrive(TURN_SPEED, 10d, -10d, 5d);
-            //Drive forward
-            //encoderDrive(DRIVE_SPEED, -24d, -24d, 5d);
 
             detector.disable();
 
@@ -209,17 +200,15 @@ public class RoverRuckus15091 extends LinearOpMode {
     }
 
     public void landing() {
-        //stage 1 full speed
-        robot.setArmTarget(1d);
-        robot.armDrive.setPower(1d);
+        robot.armServo.setPosition(1d);
+        robot.handServo.setPosition(0d);
+
+        robot.setArmTarget(1.2950d);
+        robot.armDrive.setPower(robot.ARM_POWER_MAX);
         while (robot.armDrive.isBusy()) {
-            //wait for motor to finish
-        }
-        //stage 2 0.3 speed
-        robot.setArmTarget(1.2470d);
-        robot.armDrive.setPower(0.3d);
-        while (robot.armDrive.isBusy()) {
-            //wait for motor to finish
+            ARM_STATUS armStatus = robot.setArmTarget(1.2950d);
+            double armPower = robot.getArmPower(armStatus);
+            robot.armDrive.setPower(armPower);
         }
         robot.armDrive.setPower(0d);
         robot.tts.speak("Landing complete");

@@ -76,9 +76,6 @@ public class Gamepad extends LinearOpMode {
     private final double SERVO_INCREMENT_MIN = 0.005d;
     private final double SERVO_INCREMENT_MAX = 0.01d;
     private final double DRIVE_SPEED_MAX = 1d;
-    private final double ARM_POWER_MAX = 1d;
-    private final double ARM_POWER_MID = 0.6d;
-    private final double ARM_POWER_MIN = 0.3d;
 
     // Setup a variable for each drive wheel to save power level for telemetry
     double leftPower;
@@ -131,22 +128,9 @@ public class Gamepad extends LinearOpMode {
             telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",
                     robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
             telemetry.addData("Heading", "%.4f", robot.getHeading());
-            telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Distance (inch)",
+                    String.format(Locale.US, "%.2f", robot.sensorDistance.getDistance(DistanceUnit.INCH)));
             telemetry.update();
-        }
-    }
-
-    double getArmPower(ARM_STATUS armStatus) {
-        switch (armStatus) {
-            case ALMOST:
-                return ARM_POWER_MIN;
-            case CLOSE:
-                return ARM_POWER_MID;
-            case DONE:
-                return 0d;
-            default:
-                return ARM_POWER_MAX;
         }
     }
 
@@ -168,7 +152,7 @@ public class Gamepad extends LinearOpMode {
         if (gamepad2.left_bumper || gamepad1.left_bumper || gamepad2.y || gamepad1.y) { //set arm to drop mineral
             if (armSequence == 0) {
                 ARM_STATUS status = robot.setArmTarget(1.3050d);
-                armPower = getArmPower(status);
+                armPower = robot.getArmPower(status);
                 if (status == ARM_STATUS.DONE) {
                     if (gamepad2.left_bumper || gamepad1.left_bumper) {
                         armPosition = 0.3489d;
@@ -183,7 +167,7 @@ public class Gamepad extends LinearOpMode {
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
             if (armSequence == 0) {
                 ARM_STATUS status = robot.setArmTarget(2.2600d);
-                armPower = getArmPower(status);
+                armPower = robot.getArmPower(status);
                 armPosition = 0.1528d;
                 handPosition = 0.8261d;
                 if (status == ARM_STATUS.DONE) {
@@ -214,7 +198,7 @@ public class Gamepad extends LinearOpMode {
         { //retract arm
             if (armSequence == 0) {
                 ARM_STATUS status = robot.setArmTarget(0.9800d);
-                armPower = ARM_POWER_MAX;
+                armPower = robot.ARM_POWER_MAX;
                 if (status == ARM_STATUS.DONE) {
                     handPosition = 0d;
                     armPosition = 1d;
@@ -224,7 +208,7 @@ public class Gamepad extends LinearOpMode {
 
             if (armSequence == 1) {
                 robot.setArmTarget(0.7450d);
-                armPower = ARM_POWER_MAX;
+                armPower = robot.ARM_POWER_MAX;
             }
         } else
 

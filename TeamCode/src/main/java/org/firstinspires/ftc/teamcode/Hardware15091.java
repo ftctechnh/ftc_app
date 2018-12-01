@@ -83,6 +83,9 @@ public class Hardware15091 {
 
     public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
     public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
+    public static final double ARM_POWER_MID = 0.6d;
+    public static final double ARM_POWER_MIN = 0.3d;
+    public static final double ARM_POWER_MAX = 1d;
 
     public ARM_STATUS setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -186,6 +189,19 @@ public class Hardware15091 {
         imu.initialize(parameters);
 
         tts.speak("Hello aztec, good luck.");
+    }
+
+    public double getArmPower(ARM_STATUS armStatus) {
+        switch (armStatus) {
+            case ALMOST:
+                return ARM_POWER_MIN;
+            case CLOSE:
+                return ARM_POWER_MID;
+            case DONE:
+                return 0d;
+            default:
+                return ARM_POWER_MAX;
+        }
     }
 }
 
