@@ -196,7 +196,7 @@ public class Auto3imu extends LinearOpMode {
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.3);
                         Drive.turn2Angle(TURN_SPEED, -48);
-                        Drive.moveForward(0.55, 1.0);
+                        Drive.moveForward(0.5, 1.0);
                         newState(State.STATE_CLAIM);
                         //Turn back toward depot
                     }
@@ -227,11 +227,11 @@ public class Auto3imu extends LinearOpMode {
                         Drive.moveBackward(0.5, 3.2);
                     }
                     else {
-                        Drive.moveBackward(0.5, 2.0);
+                        Drive.moveBackward(0.5, 1.7);
                         Drive.turn2Angle(TURN_SPEED, -20);
-                        Drive.moveBackward(.4, 0.5);
+                        Drive.moveBackward(0.4, 0.6);
                         Drive.turn2Angle(TURN_SPEED, -50);
-                        Drive.moveBackward(0.5, 1.2);
+                        Drive.moveBackward(0.5, 0.9);
                     }
                     newState(State.STATE_STOP);
                     break;
