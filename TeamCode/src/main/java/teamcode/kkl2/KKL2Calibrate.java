@@ -144,9 +144,9 @@ public class KKL2Calibrate extends LinearOpMode {
     private void unlatch() {
 /*
         // lower the robot using the servo
-        KKL2HardwareManager.liftLockServo.setPosition(1.0);
+        KKL2HardwareManager.liftSupportServo.setPosition(1.0);
         sleep(9500);
-        KKL2HardwareManager.liftLockServo.setPosition(0.5);
+        KKL2HardwareManager.liftSupportServo.setPosition(0.5);
 
         // unlatch the lift arm
         KKL2HardwareManager.liftLatchServo.setPosition(0);

@@ -30,13 +30,13 @@ public class KKL2TeleOp extends LinearOpMode {
 
     private void liftServo() {
         if (gamepad1.right_bumper) {
-            KKL2HardwareManager.liftLockServo.setPosition(0.0);
+            KKL2HardwareManager.liftSupportServo.setPosition(0.0);
         }
         else if (gamepad1.left_bumper) {
-            KKL2HardwareManager.liftLockServo.setPosition(1.0);
+            KKL2HardwareManager.liftSupportServo.setPosition(1.0);
         }
         else {
-            KKL2HardwareManager.liftLockServo.setPosition(0.5);
+            KKL2HardwareManager.liftSupportServo.setPosition(0.5);
         }
     }
 
@@ -57,19 +57,6 @@ public class KKL2TeleOp extends LinearOpMode {
         if (gamepad1.x) {
             KKL2HardwareManager.liftLatchServo.setPosition(-1.0);
         }
-        liftSupportUpdate();
-    }
-
-    private void liftSupportUpdate(){
-        double power;
-        if (gamepad1.right_bumper) {
-            power = 1.0;
-        } else if (gamepad1.left_bumper) {
-            power = 0.0;
-        } else {
-            power = 0.5;
-        }
-        KKL2HardwareManager.liftSupportServo.setPosition(power);
     }
 
 }

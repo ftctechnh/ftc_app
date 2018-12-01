@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import teamcode.examples.TensorFlowManager;
 import teamcode.kkl2.KKL2HardwareManager;
@@ -44,11 +42,11 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             //HANG RELEASE
 
-            KKL2HardwareManager.liftLockServo.setPosition(0);
+            KKL2HardwareManager.liftSupportServo.setPosition(0);
 
             sleep(10500);
 
-            KKL2HardwareManager.liftLockServo.setPosition(0.5);
+            KKL2HardwareManager.liftSupportServo.setPosition(0.5);
 
             KKL2HardwareManager.liftLatchServo.setPosition(1.0);
 
