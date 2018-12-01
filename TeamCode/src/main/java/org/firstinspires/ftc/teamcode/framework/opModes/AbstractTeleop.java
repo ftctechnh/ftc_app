@@ -232,6 +232,10 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         emitter.resumeEvent(name);
     }
 
+    public void removeEvent(String name) {
+        emitter.removeEvent(name);
+    }
+
     private void checkEvents() {
         if (emitTime.milliseconds() - emitTimeOffset < 1) return;
         emitTimeOffset++;

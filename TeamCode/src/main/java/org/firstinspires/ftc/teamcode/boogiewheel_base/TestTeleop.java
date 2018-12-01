@@ -27,4 +27,9 @@ public class TestTeleop extends AbstractTeleop {
     public void Loop() {
 
     }
+
+    @Override
+    public void Stop() {
+
+    }
 }

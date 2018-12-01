@@ -41,6 +41,10 @@ public class Emitter {
         PausedEvents.remove(name);
     }
 
+    public void removeEvent(String name) {
+        EventRegistry.remove(name);
+    }
+
     // Send a named event.
     //
     // This will run all event handlers registered to this event. Each event handler will be

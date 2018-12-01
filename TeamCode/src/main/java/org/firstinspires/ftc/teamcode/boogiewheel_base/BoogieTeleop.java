@@ -29,19 +29,21 @@ public class BoogieTeleop extends AbstractTeleop {
             return true;
         });
 
+        addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
+
         ////////Intake////////
-        addEventHandler("1_b_down", robot.finishIntakingCallable());
+        addEventHandler("1_a_down", robot.finishIntakingCallable());
 
-        addEventHandler("1_a_down", robot.beginIntakingCallable());
+        addEventHandler("1_b_down", robot.beginIntakingCallable());
 
-        addEventHandler("1_y_down", robot.reverseIntakeCallable());
+        addEventHandler("1_x_down", robot.reverseIntakeCallable());
 
         ///////Mineral Lift////////
         addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
 
         addEventHandler("1_lt_down", robot.moveMineralLiftToCollectPositionCallable());
 
-        addEventHandler("1_x_down", robot.toggleMineralGateCallable());
+        addEventHandler("1_y_down", robot.toggleMineralGateCallable());
 
         ////////Robot Lift////////
         addEventHandler("1_dpu_down", robot.robotLiftUpCallable());
@@ -67,11 +69,11 @@ public class BoogieTeleop extends AbstractTeleop {
         });
 
         ////////Intake////////
-        addEventHandler("1_b_down", robot.finishIntakingCallable());
+        addEventHandler("1_a_down", robot.finishIntakingCallable());
 
-        addEventHandler("1_a_down", robot.beginIntakingCallable());
+        addEventHandler("1_b_down", robot.beginIntakingCallable());
 
-        addEventHandler("1_y_down", robot.reverseIntakeCallable());
+        addEventHandler("1_x_down", robot.reverseIntakeCallable());
 
         ////////////////Gamepad 2////////////////
         ///////Mineral Lift////////
@@ -105,11 +107,11 @@ public class BoogieTeleop extends AbstractTeleop {
         });
 
         ////////Intake////////
-        addEventHandler("1_b_down", robot.finishIntakingCallable());
+        addEventHandler("1_a_down", robot.finishIntakingCallable());
 
-        addEventHandler("1_a_down", robot.beginIntakingCallable());
+        addEventHandler("1_b_down", robot.beginIntakingCallable());
 
-        addEventHandler("1_y_down", robot.reverseIntakeCallable());
+        addEventHandler("1_x_down", robot.reverseIntakeCallable());
 
         ////////Robot Lift////////
         addEventHandler("1_dpu_down", robot.robotLiftUpCallable());

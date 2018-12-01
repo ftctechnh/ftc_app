@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 public class Robot extends AbstractRobot {
 
     private HardwareDevices hardware;
-    private boolean mineralGateOpen = false;
+    private boolean mineralGateOpen = false, driveInverted = false;
 
     public Robot() {
         hardware = new HardwareDevices();
@@ -15,7 +15,8 @@ public class Robot extends AbstractRobot {
 
     //Drive Methods
     public void setDriveY(double y) {
-        hardware.drive.setY(y);
+        if(driveInverted) hardware.drive.setY(-y);
+        else hardware.drive.setY(y);
     }
 
     public void setDriveZ(double z) {
@@ -28,6 +29,14 @@ public class Robot extends AbstractRobot {
 
     public void updateDrive() {
         hardware.drive.update();
+    }
+
+    public Callable toggleDriveInvertedCallable(){
+        return ()-> {
+            driveInverted = !driveInverted;
+            hardware.drive.setInverted(driveInverted);
+            return true;
+        };
     }
 
     public void turnTo(double angle, double speed, double error, int period) {
@@ -50,11 +59,11 @@ public class Robot extends AbstractRobot {
         hardware.drive.driveTo(distance, speed, angle);
     }
 
-    public synchronized int[] recordPathWithHeading(int numSamples, int timeInterval) {
+    public int[] recordPathWithHeading(int numSamples, int timeInterval) {
         return hardware.drive.recordPathWithHeading(numSamples, timeInterval);
     }
 
-    public synchronized void runPathWithHeading(int[] values, int timeInterval, double speed) {
+    public void runPathWithHeading(int[] values, int timeInterval, double speed) {
         hardware.drive.runPathWithHeading(values, timeInterval, speed);
     }
 
@@ -85,6 +94,8 @@ public class Robot extends AbstractRobot {
     public Callable finishIntakingCallable() {
         return () -> {
             hardware.intake.finishIntaking();
+            driveInverted = true;
+            hardware.drive.setInverted(driveInverted);
             return true;
         };
     }
@@ -106,6 +117,9 @@ public class Robot extends AbstractRobot {
 
     public void moveMineralLiftToCollectPosition() {
         hardware.mineralLift.moveToCollectPosition();
+        hardware.mineralLift.closeGate();
+        driveInverted = false;
+        hardware.drive.setInverted(driveInverted);
     }
 
     public Callable moveMineralLiftToDumpPositionCallable() {

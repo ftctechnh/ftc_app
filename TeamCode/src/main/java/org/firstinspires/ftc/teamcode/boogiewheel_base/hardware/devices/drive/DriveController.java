@@ -26,6 +26,8 @@ public class DriveController extends SubsystemController {
 
     private double turnY = 0, turn_z = 0, leftPower = 0, rightPower = 0, Drive_Power = 1.0;
 
+    private boolean inverted = false;
+
     public ElapsedTime runtime;
 
     private DecimalFormat DF;
@@ -219,6 +221,10 @@ public class DriveController extends SubsystemController {
         rightPower = range((turnY - turn_z) * Drive_Power);
 
         drive.setPower(leftPower, rightPower);
+    }
+
+    public synchronized void setInverted(boolean inverted){
+        this.inverted = inverted;
     }
 
     //Util Methods

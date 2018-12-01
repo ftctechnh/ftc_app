@@ -14,7 +14,7 @@ public class Intake {
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
 
         intakeMotor.setSlewSpeed(2);
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setPower(0);
