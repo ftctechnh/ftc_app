@@ -189,7 +189,7 @@ public class Auto3imu extends LinearOpMode {
                         newState(State.STATE_CLAIM);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.moveForward(0.5, 2.2);
-                        Drive.moveBackward(0.5, .10);
+                        Drive.moveBackward(0.5, 0.05);
                         newState(State.STATE_CLAIM);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 35);
