@@ -140,7 +140,7 @@ public class KKL2Auto extends LinearOpMode {
         // push arm backwards
 
         double liftBaseMotorPower = 1.0;
-        double ticksPerDegree = Helper.REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION / 360.0 * 7.0;
+        double ticksPerDegree = Helper.REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION / 360.0 * 5.0;
         int ticks = (int)(ticksPerDegree * 5);
         /*
         KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
@@ -244,89 +244,6 @@ public class KKL2Auto extends LinearOpMode {
                 // drive back to try and detect objects
                 drive(-3, power);
             }
-        }
-    }
-
-    private void approachGold() {
-        boolean approachComplete = false;
-        double power = 1.0;
-        int goldIndex = 0;
-        List<Mineral> minerals = null;
-
-        // Get close to view the minerals
-        //while (!approachComplete){
-        while (opModeIsActive()) {
-            minerals = this.tfManager.getRecognizedMinerals();
-            Mineral gold = null;
-            int index = 0;
-            if (minerals != null) {
-                // Update trajectory
-                int i = 0;
-                for (Mineral mineral : minerals) {
-                    if (mineral.isGold()) {
-                        gold = mineral;
-                        index++;
-                    }
-                    addTelemetry(mineral, ++i);
-                }
-                telemetry.update();
-            }
-
-            sleep(2000);
-
-            // Check if we are within approach limit
-            // 1280 x 720
-            // center of the screen is y = 360 and x = 640
-            if (gold != null) {
-                float center_y = (gold.getLeft() + gold.getRight()) / 2;
-                float center_x = (gold.getBottom() + gold.getTop()) / 2;
-                float height = gold.getRight() - gold.getLeft();
-                telemetry.addData("Gold Height", height);
-                telemetry.addData("Gold Center Y", center_y);
-                telemetry.addData("Gold Center X", center_x);
-                telemetry.update();
-                /*
-                if (center_y >= 350 && center_y <= 370) {
-                    goldIndex = index;
-                    break;
-                }*/
-                if (height >= 20) {
-                    //break;
-                }
-            }
-            else {
-                // Move robot 1 inch closer
-                //drive(2.54, power);
-            }
-        }
-
-        // Turn to face the gold
-        double ninetyDegreesInRadians = Math.PI / 2;
-        double distanceBetweenMinerals = 30;
-        if (goldIndex == 1) {
-            // gold is on the left
-            // turn left 90
-            turn(-ninetyDegreesInRadians);
-            drive(distanceBetweenMinerals, power);
-            turn(ninetyDegreesInRadians);
-        }
-        else if (goldIndex == 3) {
-            // gold is on the right
-            // turn right 90
-            turn(ninetyDegreesInRadians);
-            drive(distanceBetweenMinerals, power);
-            turn(-ninetyDegreesInRadians);
-        }
-
-        // Knock the gold off
-        drive(30, power);
-        minerals = this.tfManager.getRecognizedMinerals();
-        if (minerals != null) {
-            int i = 0;
-            for (Mineral mineral : minerals) {
-                addTelemetry(mineral, ++i);
-            }
-            telemetry.update();
         }
     }
 
