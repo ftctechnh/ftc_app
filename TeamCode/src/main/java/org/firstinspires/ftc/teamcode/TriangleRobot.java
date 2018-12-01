@@ -121,6 +121,7 @@ public class TriangleRobot extends LinearOpMode{
             telemetry.addData("path2","Integrated Z:" + String.valueOf(MRI2CGyro.getIntegratedZValue()) + " Desiredθ: " + String.valueOf(Desiredθ));
             telemetry.addData("path3","Time: "+ toString().valueOf(time));
             telemetry.update();// prints above stuff to phone
+
         }
     }
 }
