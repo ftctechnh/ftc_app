@@ -14,6 +14,12 @@ public class StepButton<T> extends Button
     private Func<Boolean> isPressedIncrement;
     private Func<Boolean> isPressedDecrement;
 
+    /**
+     * Steps the button
+     * @param incrementButton the button to increment
+     * @param decrementButton the button to decrement
+     * @param states the states of the button
+     */
     public StepButton(Button incrementButton, Button decrementButton, T... states) {
         this.states = states;
         this.incrementButton = incrementButton;
@@ -23,12 +29,19 @@ public class StepButton<T> extends Button
         initButtons();
     }
 
+    /**
+     * Set the offset
+     * @param offset the offset to be set
+     */
     public void setOffset(int offset) {
         if (offset >= 0 && offset < states.length) {
             this.offset = offset;
         }
     }
 
+    /**
+     * Initialize the buttons
+     */
     private void initButtons() {
         incrementButton.pressedHandler = new Handler()
         {
@@ -56,18 +69,28 @@ public class StepButton<T> extends Button
         decrementButton.isPressed = this.isPressedDecrement;
     }
 
+    /**
+     * Increment the offset
+     */
     private void incrementStep() {
         if (offset <= states.length - 1) {
             offset++;
         }
     }
 
+    /**
+     * Decrement the offset
+     */
     private void decrementStep() {
         if (offset > 0) {
             offset --;
         }
     }
 
+    /**
+     * Gets the current state
+     * @return the current state
+     */
     public T getCurrentState() {
         return states[offset];
     }
