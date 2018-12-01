@@ -146,6 +146,7 @@ public class KKL2Auto extends LinearOpMode {
         KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
         KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
         while (opModeIsActive() && !liftNearTarget()) ;
+
         zeroLiftMotorPower();
         resetLiftEncoders();
         */

@@ -6,10 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "KKL2TeleOp", group = "Linear OpMode")
 public class KKL2TeleOp extends LinearOpMode {
 
-    private static final double INTAKE_BASE_SERVO_SPEED = 0.5;
-    private static final double INTAKE_SWALLOW_POWER = 0.5;
-
-    private static final double LIFT_BASE_MOTOR_SPEED = 1.0;
+    private static final double LIFT_BASE_MOTOR_POWER = 1.0;
 
     @Override
     public void runOpMode() {
@@ -17,7 +14,6 @@ public class KKL2TeleOp extends LinearOpMode {
         waitForStart();
         while (opModeIsActive()) {
             driveUpdate();
-            // intakeUpdate();
             liftUpdate();
             liftServo();
         }
@@ -47,30 +43,33 @@ public class KKL2TeleOp extends LinearOpMode {
     private void liftUpdate() {
         double liftBaseMotorPower;
         if (gamepad1.a) {
-            liftBaseMotorPower = -LIFT_BASE_MOTOR_SPEED;
+            liftBaseMotorPower = LIFT_BASE_MOTOR_POWER;
         } else if (gamepad1.y) {
-            liftBaseMotorPower = LIFT_BASE_MOTOR_SPEED;
+            liftBaseMotorPower = -LIFT_BASE_MOTOR_POWER;
         } else {
             liftBaseMotorPower = 0.0;
         }
         KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
 
-        if (gamepad1.x) {
+        if (gamepad1.b) {
             KKL2HardwareManager.liftLatchServo.setPosition(1.0);
         }
-        if (gamepad1.b) {
+        if (gamepad1.x) {
             KKL2HardwareManager.liftLatchServo.setPosition(-1.0);
         }
+        liftSupportUpdate();
     }
 
-    private double clamp(double toClamp, double min, double max) {
-        if (toClamp < min) {
-            return min;
+    private void liftSupportUpdate(){
+        double power;
+        if (gamepad1.right_bumper) {
+            power = 1.0;
+        } else if (gamepad1.left_bumper) {
+            power = 0.0;
+        } else {
+            power = 0.5;
         }
-        if (toClamp > max) {
-            return max;
-        }
-        return toClamp;
+        KKL2HardwareManager.liftSupportServo.setPosition(power);
     }
 
 }
