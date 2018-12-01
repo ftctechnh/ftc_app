@@ -113,16 +113,16 @@ public class CompRobot extends BasicBot
                 if (rightDist < lowerDistFromSideWall)
                 {
                     linearOpMode.telemetry.addData("rightdist < 4", null);
-                    pivotenc(-stepPivotAmtDeg, .5f);
-                    driveStraight(stepDistance , .8f);
                     pivotenc(stepPivotAmtDeg, .5f);
+                    driveStraight(stepDistance , .8f);
+                    pivotenc(-stepPivotAmtDeg, .5f);
                 }
                 else if (rightDist > upperDistFromSideWall)
                 {
                     linearOpMode.telemetry.addData("right dist > 7", null);
-                    pivotenc(stepPivotAmtDeg, .5f);
-                    driveStraight(stepDistance , .8f);
                     pivotenc(-stepPivotAmtDeg, .5f);
+                    driveStraight(stepDistance , .8f);
+                    pivotenc(stepPivotAmtDeg, .5f);
                 }
                 else //need this null zone for logic, this is where it goes straight, do not comment out
                 {
