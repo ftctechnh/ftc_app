@@ -14,6 +14,9 @@ import org.firstinspires.ftc.teamcode.systems.base.System;
 
 import java.util.Locale;
 
+/**
+ * Creates an IMU system that handles the angle and movement of the robot through a gyroscope.
+ */
 public class IMUSystem extends System {
     public BNO055IMU imu;
     public BNO055IMU.Parameters parameters;
@@ -22,6 +25,10 @@ public class IMUSystem extends System {
     private Orientation angles;
     private Acceleration gravity;
 
+    /**
+     * Creates a new IMU System
+     * @param opMode the opmode the system is running in
+     */
     public IMUSystem(OpMode opMode)
     {
         super(opMode, "IMUSystem");
@@ -39,35 +46,68 @@ public class IMUSystem extends System {
         imu.startAccelerationIntegration(new Position(), new Velocity(), 500);
     }
 
+    /**
+     * Gets the yaw of the IMU
+     * @return Returns the yaw in degrees
+     */
     public double getHeading() {
         Orientation orientation = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
         return orientation.firstAngle;
     }
 
+    /**
+     * Gets the roll of the IMU
+     * @return Returns the roll in degrees
+     */
     public double getRoll() {
         Orientation orientation = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
         return orientation.secondAngle;
     }
 
-    public double getpitch() {
+    /**
+     * Gets the pitch of the IMU
+     * @return Returns the pitch in degrees
+     */
+    public double getPitch() {
         Orientation orientation = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
         return orientation.thirdAngle;
     }
 
+    /**
+     * Gets the acceleration of the IMU
+     * @return Returns the linear acceleration object
+     * @see Acceleration
+     */
     public Acceleration getAcceleration()
     {
         return imu.getLinearAcceleration();
     }
 
+    /**
+     * Gets the velocity of the IMU
+     * @return Returns the velocity of the IMU
+     * @see Velocity
+     */
     public Velocity getVelocity()
     {
         return imu.getVelocity();
     }
 
+    /**
+     * Formats the angle as a string
+     * @param angleUnit unit of the angle
+     * @param angle value of the angle
+     * @return Returns the formatted value of the angle
+     */
     String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
+    /**
+     * Formats the degrees of the IMU
+     * @param degrees default type of the degrees
+     * @return Returns the formatted value of the degrees
+     */
     String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }

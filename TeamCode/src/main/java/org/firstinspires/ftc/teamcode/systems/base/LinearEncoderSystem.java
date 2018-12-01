@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.components.motors.DriveMotor;
 import org.firstinspires.ftc.teamcode.components.scale.ExponentialRamp;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
-import org.firstinspires.ftc.teamcode.systems.LimitSwitch;
+import org.firstinspires.ftc.teamcode.components.limitswitch.LimitSwitch;
 
 /**
  * Created by Michael on 3/15/2018.
@@ -37,6 +37,8 @@ public abstract class LinearEncoderSystem extends LinearSystem {
 
         this.maxEncoderTicks = maxTicks;
         this.dcMotor = new DriveMotor(dcMotor);
+        this.maxLimitSensor = maxLimitSensor;
+        this.minLimitSensor = minLimitSensor;
 
         initializeMotor();
         initializeTelemetry();

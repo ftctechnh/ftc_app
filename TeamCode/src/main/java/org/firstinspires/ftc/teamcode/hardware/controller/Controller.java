@@ -53,6 +53,10 @@ public class Controller
     public Button rightStickButtonShifted;
     public Button rightTriggerShifted;
 
+    /**
+     * Creates a new controller
+     * @param gamepad the game pad that will be used
+     */
     public Controller(final Gamepad gamepad)
     {
         this.gamepad = gamepad;
@@ -361,6 +365,12 @@ public class Controller
         };
     }
 
+    /**
+     * Sets the trigger value
+     * @param type the trigger type
+     * @param value the value
+     * @see TriggerType
+     */
     public void setTriggerValue(TriggerType type, float value)
     {
         switch (type)
@@ -376,10 +386,17 @@ public class Controller
         }
     }
 
+    /**
+     * Adds a unique button to be handled by the controller
+     * @param button the button to add
+     */
     public void addButton(Button button) {
         this.uniqueButtons.add(button);
     }
 
+    /**
+     * Handles the buttons
+     */
     public void handle()
     {
         if (gamepad == null) {
