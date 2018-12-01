@@ -190,4 +190,7 @@ public class TTL2Auto extends LinearOpMode {
                 && Math.abs(currentRightLiftMotorPos - targetRightLiftMotorPos) < LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD;
     }
 
+    private double getCentimetersFromPixel(float height) {
+        return ((-0.25 * height) + 52.5) * 2.54;
+    }
 }

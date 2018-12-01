@@ -17,8 +17,4 @@ public class Helper {
 
     // distance from 537.6494 x 930.5470
     public static final double CAMERA_DISTANCE = 930.55;
-
-    public static double getCentimetersFromPixels(double pixels) {
-        return ((pixels - 300) / -100) * 30.48; // centimeters
-    }
 }
