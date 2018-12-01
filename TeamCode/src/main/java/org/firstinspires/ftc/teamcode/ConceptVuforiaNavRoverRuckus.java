@@ -29,6 +29,10 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -293,6 +297,9 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             if (targetVisible) {
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
+
+                playSound(translation.get(1),translation.get(2),100);
+
                 telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
                         translation.get(0) / mmPerInch, translation.get(1) / mmPerInch, translation.get(2) / mmPerInch);
 
@@ -305,5 +312,29 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
             }
             telemetry.update();
         }
+    }
+
+    private void playSound(double Lfreq, double Rfreq, int durationMs)
+    {
+        int count = (int)(44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
+        short[] samples = new short[count];
+        for(int i = 0; i < count; i += 2){
+            short Lsample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / Lfreq)) * 0x7FFF);
+            short Rsample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / Rfreq)) * 0x7FFF);
+            samples[i + 0] = Lsample;
+            samples[i + 1] = Rsample;
+        }
+        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
+        track.write(samples, 0, count);
+
+        try {
+            track.play();
+        }catch (Exception err) {
+            telemetry.addData("CaughtError",err.getMessage());
+        }
+        track.play();
+        track.release();
     }
 }

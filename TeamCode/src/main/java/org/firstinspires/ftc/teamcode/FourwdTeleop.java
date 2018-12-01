@@ -7,6 +7,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.Range;
 
+
+/** DRIVETRAIN CONFIGURATION
+ *      front
+ *      B   A
+ * left       right
+ *      C   D
+ *      back
+ */
+
+
+
 @TeleOp(name = "FourwdTeleop", group = "Joystick Opmode")
 public class FourwdTeleop extends OpMode {
 
@@ -22,6 +33,11 @@ public class FourwdTeleop extends OpMode {
     private double forward = 0;
     private double turn = 0;
 
+    //make sure to match these names when getting values
+    private String[] titles = new String[] {"forward", "title1", "title2", "title3", "title4", "title5", "title6", "title7", "title8"};
+    private double[] values = new double[] {    0.4,        0,        0,        0,        0,        0,        0,        0,        0   };
+
+    Tuner tuner = new Tuner(titles, values, gamepad1, telemetry);
 
     @Override
     public void init() {
@@ -48,7 +64,6 @@ public class FourwdTeleop extends OpMode {
     public void init_loop() {
     }
 
-
     @Override
     public void start() {
     }
@@ -56,8 +71,12 @@ public class FourwdTeleop extends OpMode {
     @Override
     public void loop() {
 
+        tuner.tune();
+        telemetry.addData("get(forward)", tuner.get("forward"));
+
+
         if (gamepad1.dpad_up){
-            forward = 0.9;
+            forward = tuner.get("forward");
             turn = 0;
         }else if (gamepad1.dpad_down){
             forward = -0.9;
@@ -69,8 +88,8 @@ public class FourwdTeleop extends OpMode {
             forward = 0;
             turn = -0.9;
         }else{
-            forward = gamepad1.left_stick_y;
-            turn = gamepad1.right_stick_x;
+            forward = Calculate.sensCurve(gamepad1.left_stick_y, 2);
+            turn = Calculate.sensCurve(gamepad1.right_stick_x, 2);
         }
 
         aDrive.setPower(Range.clip(forward+turn,-1,1));
@@ -96,5 +115,7 @@ public class FourwdTeleop extends OpMode {
         telemetry.update();
 
     }
+
+
 
 }

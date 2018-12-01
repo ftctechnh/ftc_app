@@ -39,6 +39,11 @@ public class Calculate {
 
 
 //COORDINATE PLANE
+
+    public static double sensCurve(double joystickVal, double power){
+        return Math.copySign( Math.pow( Math.abs( joystickVal), power), joystickVal);
+    }
+
     public static double[] polarToCartesian(double magnitude, double angle, boolean angleInRadians) {
         //converts a power and angle to x and y coordinates
         //output: x, y

@@ -29,6 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
+import android.media.ToneGenerator;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -106,19 +111,30 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                 tfod.activate();
             }
 
+            ToneGenerator tone = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+            tone.startTone(ToneGenerator.TONE_CDMA_KEYPAD_VOLUME_KEY_LITE);
+
+
             while (opModeIsActive()) {
                 if (tfod != null) {
                     // getUpdatedRecognitions() will return null if no new information is available since
                     // the last time that call was made.
                     List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+
                     if (updatedRecognitions != null) {
-                      telemetry.addData("# Object Detected", updatedRecognitions.size());
-                      if (updatedRecognitions.size() == 3) {
+                          telemetry.addData("# Object Detected", updatedRecognitions.size());
                         int goldMineralX = -1;
                         int silverMineral1X = -1;
                         int silverMineral2X = -1;
+                        int getRight = -1;
+                        int getTop = -1;
+
                         for (Recognition recognition : updatedRecognitions) {
-                          if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+
+                            getRight = (int) recognition.getRight();
+                            getTop = (int) recognition.getTop();
+
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                             goldMineralX = (int) recognition.getLeft();
                           } else if (silverMineral1X == -1) {
                             silverMineral1X = (int) recognition.getLeft();
@@ -126,6 +142,14 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                             silverMineral2X = (int) recognition.getLeft();
                           }
                         }
+
+                        telemetry.addData("getLeft",goldMineralX);
+                        telemetry.addData("getRight",getRight);
+                        telemetry.addData("getTop",getTop);
+                        if(goldMineralX != -1){
+                            playSound(goldMineralX*4,getTop*2,10);
+                        }
+
                         if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
                           if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Left");
@@ -135,8 +159,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
                             telemetry.addData("Gold Mineral Position", "Center");
                           }
                         }
-                      }
-                      telemetry.update();
+
+                        telemetry.update();
+                        //end if object detected
                     }
                 }
             }
@@ -146,6 +171,34 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
             tfod.shutdown();
         }
     }
+
+
+
+    private void playSound(double Lfreq, double Rfreq, int durationMs)
+    {
+        int count = (int)(44100.0 * 2.0 * (durationMs / 1000.0)) & ~1;
+        short[] samples = new short[count];
+        for(int i = 0; i < count; i += 2){
+            short Lsample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / Lfreq)) * 0x7FFF);
+            short Rsample = (short)(Math.sin(2 * Math.PI * i / (44100.0 / Rfreq)) * 0x7FFF);
+            samples[i + 0] = Lsample;
+            samples[i + 1] = Rsample;
+        }
+        AudioTrack track = new AudioTrack(AudioManager.STREAM_MUSIC, 44100,
+                AudioFormat.CHANNEL_OUT_STEREO, AudioFormat.ENCODING_PCM_16BIT,
+                count * (Short.SIZE / 8), AudioTrack.MODE_STATIC);
+        track.write(samples, 0, count);
+
+        try {
+            track.play();
+        }catch (Exception err) {
+            telemetry.addData("CaughtError",err.getMessage());
+        }
+        track.play();
+        track.release();
+    }
+
+
 
     /**
      * Initialize the Vuforia localization engine.
