@@ -117,7 +117,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
-        detector.enable();
+        //detector.enable();
 
 
 
@@ -260,6 +260,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         //robot.armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //robot.armRotate.setTargetPosition(dropTarget);
         //robot.armRotate.setPower(0.2);
+        // Drop the Minerals
         robot.rightMineral.setPower(0.6);
         sleep(800);
         robot.rightMineral.setPower(0);
@@ -285,11 +286,11 @@ public class AutoStartNearDepot extends LinearOpMode {
 
 
         while(sonarDistance() > 50){
-            double wsteer=wallSteer(5);
-            moveBot(0.3,0,wsteer,0.5);
+            double wsteer=wallSteer(7);
+            moveBot(0.25,0,wsteer,0.5);
         }
         stopBot();
-        detector.disable();
+        //detector.disable();
 
         while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
@@ -356,7 +357,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         // distance is in inches
         double steer = 0;
         steer = robot.rangeSensor.getDistance(DistanceUnit.INCH) - distance;
-        steer = (double)Range.clip(steer, -0.2, 0.2);
+        steer = (double)Range.clip(steer, -0.25, 0.25);
         return steer;
     }
 

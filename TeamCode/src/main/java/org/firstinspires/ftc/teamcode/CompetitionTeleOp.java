@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.HardwareBruinBot;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name = "Coach Vince Teleop Test", group = "Vince")
-public class CoachVinceTeleopTest extends LinearOpMode {
+@TeleOp(name = "Competition TeleOp", group = "Rohan")
+public class CompetitionTeleOp extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
     public void runOpMode() {

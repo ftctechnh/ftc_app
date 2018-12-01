@@ -11,6 +11,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import com.vuforia.CameraDevice;
@@ -41,8 +42,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 
-@Autonomous (name = "AutoTestCoachVince", group = "Vince")
-public class AutoTestCoachVince extends LinearOpMode {
+@Autonomous (name = "Auto Start Near Crater", group = "Rohan")
+public class AutoStartNearCrater extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
 
@@ -116,7 +117,7 @@ public class AutoTestCoachVince extends LinearOpMode {
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
-        detector.enable();
+        //detector.enable();
 
 
 
@@ -128,23 +129,18 @@ public class AutoTestCoachVince extends LinearOpMode {
             telemetry.update();
         }
 
+        int landingLevel = -2090;  // Target level to land
+        double latchPower;
+        //Reset the Encoder
+        robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        while (robot.landerLatchLift.getCurrentPosition()> landingLevel){
+            robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            latchPower = -0.2;
+            robot.landerLatchLift.setPower(latchPower);
+        }
+        robot.landerLatchLift.setPower(0);
 
- /*       // Stressing Drive Test Sequence
-        moveBot(1,0,0,1);
-        sleep(300);
-        moveBot(0,0,1,1);
-        sleep(300);
-        moveBot(-1,0,0,1);
-        sleep(300);
-        moveBot(0,0,-1,1);
-        sleep(300);
-        gyroSpin(179);
-        gyroSpin(0);
-        sleep(300);
-        moveBot(1,1,1,1);
-        sleep(300);
-        stopBot();
-*/
+
 
         // Lower the Robot from the lander
         //robot.landerLatchLift.setPower(0.3);
@@ -208,8 +204,9 @@ public class AutoTestCoachVince extends LinearOpMode {
         }
 */
        // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+        gyroHold(-0.5,0,0.15);
         gyroStrafe(0.5, 0);
-        sleep(1000);
+        sleep(1400);
         stopBot();
         gyroSpin(0);
         gyroHold(0.4,0,1.5);
@@ -223,7 +220,7 @@ public class AutoTestCoachVince extends LinearOpMode {
             gyroStrafe(.5,315);
        }
        stopBot();
-         //Drive backwards maintaining 2-4 inches from the wall until you see the red tape line
+         //Drive backwards maintaining 2-4 inches from the wall
         while(sonarDistance() > 18){
             double wsteer=wallSteer(5);
             moveBot(0.2,0,wsteer,0.5);
@@ -231,23 +228,46 @@ public class AutoTestCoachVince extends LinearOpMode {
           stopBot();
             detector.disable();
         // Drop the totem
-        robot.armRotate.setPower(0.2);
+        /*robot.armRotate.setPower(0.2);
         sleep(500);
         robot.armRotate.setPower(0);
         robot.rightMineral.setPower(0.5);
         sleep(1000);
         robot.rightMineral.setPower(0);
         // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
-        // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
-        while(sonarDistance() < 72){
-            double wsteer=wallSteer(5);
-            moveBot(-0.2,0,wsteer,0.5);
+        */
+
+        int dropTarget = 3000;  // Target for dropping totem
+        int levelTarget = 500;  // Target for holding arm forward and level
+        double rotatePower;
+        //Reset the Encoder
+        robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        while (robot.armRotate.getCurrentPosition()< levelTarget){
+            robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rotatePower = 0.25;
+            robot.armRotate.setPower(rotatePower);
         }
-        gyroStrafe(-0.5, 315);
-        sleep(250);
+        robot.armRotate.setPower(0);
+
+        robot.rightMineral.setPower(0.5);
+        sleep(1000);
+        robot.rightMineral.setPower(0);
+
+
+
+        // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
+        while(sonarDistance() < 72) {
+            double wsteer = wallSteer(7);
+            moveBot(-0.25, 0, wsteer, 0.5);
+        }
         stopBot();
+        while (robot.armRotate.getCurrentPosition()< dropTarget){
+            robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            rotatePower = 0.25;
+            robot.armRotate.setPower(rotatePower);
+        }
+        robot.armRotate.setPower(0);
         //  Turn 180 and deploy the arm
-            gyroSpin(135);
         while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
             robot.armExtend.setPower(-0.15);
@@ -313,7 +333,7 @@ public class AutoTestCoachVince extends LinearOpMode {
         // distance is in inches
         double steer = 0;
         steer = robot.rangeSensor.getDistance(DistanceUnit.INCH) - distance;
-        steer = (double)Range.clip(steer, -0.2, 0.2);
+        steer = (double)Range.clip(steer, -0.25, 0.25);
     return steer;
     }
 

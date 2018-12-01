@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous (name = "RohanTestCode", group = "Rohan")
+@Disabled
 public class RohanTestCode extends LinearOpMode {
     HardwareBruinBot hwMap = new HardwareBruinBot();
 public void runOpMode () {

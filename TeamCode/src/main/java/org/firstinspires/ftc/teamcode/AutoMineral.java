@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.HardwareBruinBot;
+
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,6 +12,7 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 
 @Autonomous (name = "AutoMineral", group = "Rohan")
+@Disabled
 public class AutoMineral extends LinearOpMode {
 
     HardwareBruinBot hwMap = new HardwareBruinBot();
@@ -57,6 +60,14 @@ public class AutoMineral extends LinearOpMode {
         //Need to change this to "while not detected" like in the GoldAlignExample program;
         double detectorCt = 0;  // Used to make sure the robot has settled on a heading
         double error = 0;
+        /*while(!detector.isFound())
+        {
+            moveBot(0, rotate, 0, 0.2);
+            telemetry.addData("Is found?", detector.isFound());
+            telemetry.update();
+        }
+        telemetry.addData("Ended loop?", detector.isFound());
+        telemetry.update();*/
         while (detector.isFound()) {
         //boolean isAligned = false;
         //!! This is where we need to poll the detector
@@ -77,7 +88,7 @@ public class AutoMineral extends LinearOpMode {
                // Calculate the heading error
                error = getXError(300,30);
                // Command the bot to move
-               moveBot(0,error,0,0.15);
+               moveBot(0,error,0,0.2);
                // Count up how long it remains aligned.  Could also use gyro heading being stable?
                 if (error == 0) {
                     detectorCt = detectorCt + 1;
