@@ -24,13 +24,16 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         waitForStart();
         compRobot.driveStraight(10,.6f);
         compRobot.pivotenc(90, .6f);
-        while (compRobot.getFrontDistance_IN() > 36+ frontSensorDepth && compRobot.getRightDistance_IN() > 36+ rightSensorDepth)
-        {
-            compRobot.driveMotors(.2f, .2f);
-            telemetry.addData("Front dist= ", compRobot.getFrontDistance_IN());
-            sleep(2000);
-            telemetry.update();
 
+        while (true)
+        {
+            double frontDist = compRobot.getFrontDistance_IN();
+            telemetry.addData("Front dist= ", frontDist);
+            telemetry.update();
+ //           sleep(2000);
+            if (frontDist <= 36 + frontSensorDepth)
+                break;
+            compRobot.driveMotors(0.2, 0.2f);
         }
         compRobot.stopDriveMotors();
         {
