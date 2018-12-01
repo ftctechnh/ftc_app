@@ -15,6 +15,7 @@ public class KKL2TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             driveUpdate();
             liftUpdate();
+            liftServo();
         }
     }
 
@@ -25,6 +26,18 @@ public class KKL2TeleOp extends LinearOpMode {
         double powerR = drive - steer;
         KKL2HardwareManager.driveLMotor.setPower(powerL);
         KKL2HardwareManager.driveRMotor.setPower(powerR);
+    }
+
+    private void liftServo() {
+        if (gamepad1.right_bumper) {
+            KKL2HardwareManager.liftLockServo.setPosition(0.0);
+        }
+        else if (gamepad1.left_bumper) {
+            KKL2HardwareManager.liftLockServo.setPosition(1.0);
+        }
+        else {
+            KKL2HardwareManager.liftLockServo.setPosition(0.5);
+        }
     }
 
     private void liftUpdate() {

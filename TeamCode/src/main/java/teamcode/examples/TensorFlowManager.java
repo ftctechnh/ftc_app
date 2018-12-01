@@ -38,11 +38,25 @@ public class TensorFlowManager {
     }
 
     public List<Mineral> getRecognizedMinerals() {
+        float target_x = 640;
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
             List<Mineral> minerals = new ArrayList<Mineral>();
             for (Recognition recognition : updatedRecognitions) {
-                minerals.add(new Mineral(recognition));
+                Mineral mineral = new Mineral(recognition);
+                float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
+                float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
+                float height = mineral.getRight() - mineral.getLeft();
+
+                double c = Helper.getCentimetersFromPixels(height); // centimeters
+                float error = target_x - center_x; // adjacent side in pixels
+                double a = c * error / Helper.CAMERA_DISTANCE; // centimeters
+                double b = Math.sqrt((c*c) - (a*a)); // centimeters
+                double radians = Math.asin(a / c);
+                double degrees = radians * 180.0 / Math.PI;
+
+                mineral.setAngle(degrees);
+                minerals.add(mineral);
             }
 
             Collections.sort(minerals, new MineralComparator());

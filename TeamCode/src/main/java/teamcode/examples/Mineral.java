@@ -16,6 +16,7 @@ public class Mineral {
     private float bottom;
     private float confidence;
     private boolean isGold;
+    private double angle; //degrees
 
     public Mineral(Recognition recognition) throws IllegalArgumentException {
         if (recognition == null) {
@@ -53,4 +54,10 @@ public class Mineral {
     public boolean isGold() {
         return this.isGold;
     }
+
+    // degrees
+    public double getAngle() { return angle; }
+
+    // degrees
+    public void setAngle(double newAngle) { angle = newAngle; }
 }
