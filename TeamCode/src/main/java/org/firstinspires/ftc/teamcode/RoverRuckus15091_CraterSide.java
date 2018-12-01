@@ -33,16 +33,12 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -71,9 +67,9 @@ import java.util.Locale;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Rover Ruckus", group = "Pushbot")
+@Autonomous(name = "Rover Ruckus (Crater)", group = "Pushbot")
 //@Disabled
-public class RoverRuckus15091 extends LinearOpMode {
+public class RoverRuckus15091_CraterSide extends LinearOpMode {
 
     /* Declare OpMode members. */
     Hardware15091 robot = new Hardware15091();   // Use a Pushbot's hardware
@@ -160,17 +156,13 @@ public class RoverRuckus15091 extends LinearOpMode {
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -24d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -36d, 135);
+                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -6d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -33d, 180);
-                    gyroTurn(DRIVE_SPEED, -135);
+                    gyroDrive(DRIVE_SPEED, -9d, targetHeading);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -22d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -26d, -135);
+                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
                     break;
             }
 
