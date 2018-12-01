@@ -66,7 +66,7 @@ public abstract class SophisticatedSampling extends AutoUtils {
             robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             robot.winch.setPower(0);
 
-            robot.sleep(2000); // Wait a little longer for lifter arm to come down
+            robot.sleep(500); // Wait a little longer for lifter arm to come down
             // Eventually, this should be removed
             refoldMechanisms();
         }

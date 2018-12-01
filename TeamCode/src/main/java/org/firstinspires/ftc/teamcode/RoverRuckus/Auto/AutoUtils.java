@@ -17,6 +17,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
     public static double MARKER_DEPLOYER_DEPLOY = 0;
     public static double MARKER_DEPLOYER_RETRACTED = 0.85;
+    public static double HANG_HOLD_POWER = -0.1;
 
     double TURN_MAX_SPEED = 0.6;
     double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45;
@@ -228,21 +229,33 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         }
     }*/
 
+    public static double increment = 0.0005;
     public GoldPosition waitAndWatchMinerals() {
         // This sometimes might count the same frame twice
         // but we're OK with that - we'll just run this for
         // a set time, not a set frame count
+        robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.winch.setPower(HANG_HOLD_POWER);
         GoldPosition result = GoldPosition.CENTER;
 
+        // Positions:
+
+        // Left: 517
+        // Center: 297
+        // Right: 80
+
         while (!isStarted() && !isStopRequested()) {
-            if (getMiddlePosition(detector.getFoundRect()) < 50) {
+            int middleLine = getMiddlePosition(detector.getFoundRect());
+
+            if (middleLine < 200) {
                 result = GoldPosition.RIGHT;
-            } else if (getMiddlePosition(detector.getFoundRect()) < 400) {
+            } else if (middleLine < 400) {
                 result = GoldPosition.CENTER;
             } else {
                 result = GoldPosition.LEFT;
             }
 
+            telemetry.addData("Vision line", middleLine);
             telemetry.addData("Vision", result.toString());
             telemetry.update();
         }

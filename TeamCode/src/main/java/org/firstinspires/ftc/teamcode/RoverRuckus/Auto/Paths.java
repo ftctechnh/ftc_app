@@ -42,28 +42,28 @@ public class Paths {
             .lineTo(new Vector2d(-75, 15), new ConstantInterpolator(0))
             .build();
 
-    static Pose2d DEPOT = new Pose2d(-63, 63, 0);
+    static Pose2d DEPOT = new Pose2d(-63, 63, Math.PI);
 
     static Trajectory DEPOT_TO_CRATER_CENTER = new TrajectoryBuilder(DEPOT, DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(-40, 63, 0))
-            .splineTo(new Pose2d(28, 28, -45))
+            .splineTo(new Pose2d(-40, 63, Math.PI))
+            .splineTo(new Pose2d(28, 28, 3*Math.PI/4))
             .strafeRight(15)
             .closeComposite()
             .build();
 
     static Trajectory DEPOT_TO_CRATER_LEFT = new TrajectoryBuilder(DEPOT, DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(-40, 63, 0))
-            .splineTo(new Pose2d(16, 40, -45))
+            .splineTo(new Pose2d(-40, 63, Math.PI))
+            .splineTo(new Pose2d(16, 40, 3*Math.PI/4))
             .strafeRight(15)
             .closeComposite()
             .build();
 
     static Trajectory DEPOT_TO_CRATER_RIGHT = new TrajectoryBuilder(DEPOT, DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(-40, 63, 0))
-            .splineTo(new Pose2d(40, 16, -45))
+            .splineTo(new Pose2d(-40, 63, Math.PI))
+            .splineTo(new Pose2d(40, 16, 3*Math.PI/4))
             .strafeRight(15)
             .closeComposite()
             .build();
