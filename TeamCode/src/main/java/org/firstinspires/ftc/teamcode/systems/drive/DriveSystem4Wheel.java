@@ -1,8 +1,10 @@
-package org.firstinspires.ftc.teamcode.systems.base;
+package org.firstinspires.ftc.teamcode.systems.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+import org.firstinspires.ftc.teamcode.systems.base.System;
 
 public class DriveSystem4Wheel extends System
 {

@@ -11,7 +11,6 @@ public class MarkerTestOpMode extends LinearOpMode
 {
     Marker marker;
 
-
     @Override
     public void runOpMode() throws InterruptedException
     {

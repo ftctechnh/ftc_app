@@ -388,8 +388,8 @@ public class Controller
     }
 
     /**
-     * Adds a button
-     * @param button the butotn to add
+     * Adds a unique button to be handled by the controller
+     * @param button the button to add
      */
     public void addButton(Button button) {
         this.uniqueButtons.add(button);

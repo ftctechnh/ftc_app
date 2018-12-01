@@ -95,7 +95,7 @@ public class DcMotorServo
     }
 
     /**
-     * Loop
+     * runs the loop that handles the servo
      */
     public void loop()
     {
@@ -117,7 +117,7 @@ public class DcMotorServo
     }
 
     /**
-     * Gets the adjusted power from teh current position
+     * Gets the adjusted power from the current position
      * @param maxPower the max power
      * @return the adjusted power
      */

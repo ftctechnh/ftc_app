@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.systems;
+package org.firstinspires.ftc.teamcode.systems.drive;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.components.scale.IScale;
 import org.firstinspires.ftc.teamcode.components.scale.LinearScale;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
-import org.firstinspires.ftc.teamcode.systems.base.DriveSystem4Wheel;
+import org.firstinspires.ftc.teamcode.systems.drive.DriveSystem4Wheel;
 import org.firstinspires.ftc.teamcode.systems.imu.IMUSystem;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel
