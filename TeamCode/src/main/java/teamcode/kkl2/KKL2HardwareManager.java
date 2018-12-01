@@ -47,7 +47,6 @@ class KKL2HardwareManager {
 
         liftBaseMotor = hardwareMap.get(DcMotor.class, LIFT_BASE_MOTOR_NAME);
         liftLatchServo = hardwareMap.get(Servo.class, LIFT_LATCH_SERVO_NAME);
-        liftSupportServo = hardwareMap.get(Servo.class, LIFT_SUPPORT_SERVO_NAME);
     }
 
 }
