@@ -6,23 +6,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "KKL2LiftSupportServoWinder", group = "Linear OpMode")
 public class KKL2LiftSupportServoWinder extends LinearOpMode {
 
-    private static final int WIND_SPEED = 10;
-
-    private int liftSupportServoPos;
+    private static final double WIND_SPEED = 0.01;
 
     @Override
     public void runOpMode() {
         KKL2HardwareManager.initialize(this);
         waitForStart();
         while (opModeIsActive()) {
-            float lt = gamepad1.left_trigger;
-            float rt = gamepad1.right_trigger;
-            if (lt > 0) {
-                liftSupportServoPos += lt * WIND_SPEED;
-            } else if (rt > 0) {
-                liftSupportServoPos -= rt * WIND_SPEED;
+            double power;
+            if (gamepad1.right_bumper) {
+                power = 1.0;
+            } else if (gamepad1.left_bumper) {
+                power = 0.0;
+            } else {
+                power = 0.5;
             }
-            KKL2HardwareManager.liftSupportServo.setPosition(liftSupportServoPos);
+            KKL2HardwareManager.liftSupportServo.setPosition(power);
         }
     }
 

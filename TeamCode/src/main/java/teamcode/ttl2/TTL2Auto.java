@@ -3,10 +3,6 @@ package teamcode.ttl2;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import java.util.List;
-
-import teamcode.examples.Mineral;
-
 import teamcode.examples.TensorFlowManager;
 
 public abstract class TTL2Auto extends LinearOpMode {
@@ -14,8 +10,8 @@ public abstract class TTL2Auto extends LinearOpMode {
     private static final double DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_VERTICAL = -36.3;
     private static final double DRIVE_MOTOR_TICKS_PER_CENTIMETER_COVERED_LATERAL = -45.4;
     private static final double DRIVE_MOTOR_TICKS_PER_RADIAN_COVERED = -1370.8;
-    private static final int LIFT_MOTOR_TICKS_TO_LOWER = 625;
-    private static final double LIFT_POWER = 0.5;
+    private static final int LIFT_MOTOR_TICKS_TO_LOWER = 575;
+    private static final double LOWER_POWER = 0.25;
     private static final double TURN_POWER = 0.5;
     private static final int DRIVE_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 25;
     private static final int LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 25;
@@ -31,7 +27,12 @@ public abstract class TTL2Auto extends LinearOpMode {
         resetDriveEncoders();
 
         lowerRobot();
-        driveLateral(25, 0.25);
+        driveLateral(10, 0.25);
+        driveVertical(50, 0.5);
+        turn(0.5 * Math.PI);
+        driveVertical(100,1.0);
+        turn(0.25 * Math.PI);
+        driveVertical(300,1.0);
 
         this.run();
     }
@@ -49,8 +50,8 @@ public abstract class TTL2Auto extends LinearOpMode {
         TTL2HardwareManager.liftMotorL.setTargetPosition(LIFT_MOTOR_TICKS_TO_LOWER);
         TTL2HardwareManager.liftMotorR.setTargetPosition(LIFT_MOTOR_TICKS_TO_LOWER);
 
-        TTL2HardwareManager.liftMotorL.setPower(LIFT_POWER);
-        TTL2HardwareManager.liftMotorR.setPower(LIFT_POWER);
+        TTL2HardwareManager.liftMotorL.setPower(LOWER_POWER);
+        TTL2HardwareManager.liftMotorR.setPower(LOWER_POWER);
 
         while (opModeIsActive() && !liftMotorsNearTarget()) ;
 

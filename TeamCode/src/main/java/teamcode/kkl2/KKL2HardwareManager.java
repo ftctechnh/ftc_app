@@ -12,7 +12,7 @@ class KKL2HardwareManager {
     private static final String DRIVE_LEFT_MOTOR_NAME = "DriveLMotor";
     private static final String DRIVE_RIGHT_MOTOR_NAME = "DriveRMotor";
     private static final String LIFT_BASE_MOTOR_NAME = "LiftBaseMotor";
-    private static final String LIFT_LATCH_SERVO_NAME = "LiftLatchServo";
+    private static final String LIFT_LATCH_SERVO_NAME = "LiftLockServo";
     private static final String LIFT_SUPPORT_SERVO_NAME = "LiftSupportServo";
 
     // drive
