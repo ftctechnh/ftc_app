@@ -66,7 +66,7 @@ abstract public class superAuto extends LinearOpMode {
     Orientation angles;
     Acceleration gravity;
 
-    ModernRoboticsI2cRangeSensor rangeSensor;
+    //ModernRoboticsI2cRangeSensor rangeSensor;
 
     VuforiaTrackables targetsRoverRuckus;
     List<VuforiaTrackable> allTrackables;
@@ -106,7 +106,7 @@ abstract public class superAuto extends LinearOpMode {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-        rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
+        //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
 
         motorFL = hardwareMap.dcMotor.get("motorFL");
@@ -605,6 +605,7 @@ abstract public class superAuto extends LinearOpMode {
         motorBR.setPower(0);
     }
 
+/* Commented out until we bring the rangeSensor back
     void distCorrector(double trgDistance) {
 
         double curDistance = rangeSensor.getDistance(DistanceUnit.CM);
@@ -656,4 +657,5 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
+*/
 }
