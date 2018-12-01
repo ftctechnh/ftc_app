@@ -31,6 +31,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
 
     private boolean slowDrive;
 
+    /**
+     * Constructs a new MecanumDriveSystem object.
+     * @param opMode
+     */
     public MecanumDriveSystem(OpMode opMode) {
         super(opMode, "MecanumDrive");
 
@@ -46,8 +50,16 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         telemetry.log("MecanumDriveSystem","distance: {0}", 0);
     }
 
-    // test
+    /**
+     * Clips joystick values and drives the motors.
+     * @param rightX Right X joystick value
+     * @param rightY Right Y joystick value
+     * @param leftX Left X joystick value
+     * @param leftY Left Y joystick value in case you couldn't tell from the others
+     * @param slowDrive Set to true for 30 % motor power.
+     */
     public void mecanumDrive(float rightX, float rightY, float leftX, float leftY, boolean slowDrive) {
+        this.slowDrive = slowDrive;
         setDirection(DriveDirection.FORWARD);
         rightX = Range.clip(rightX, -1, 1);
         leftX = Range.clip(leftX, -1, 1);
@@ -73,9 +85,14 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         telemetry.log("Mecanum Drive System", "BLPower: {0}", Range.clip(backLeftPower, -1, 1));
         telemetry.write();
 
-        this.slowDrive = slowDrive;
+
     }
 
+    /**
+     * Scales the joystick value while keeping in mind slow mode.
+     * @param joystickValue
+     * @return a value from 0 - 1 based on the given value
+     */
     private float scaleJoystickValue(float joystickValue) {
         float slowDriveCoefficient = .3f;
         if (!slowDrive) slowDriveCoefficient = 1;
@@ -84,10 +101,25 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
                 : (float) -JOYSTICK_SCALE.scaleX(joystickValue * joystickValue) * slowDriveCoefficient;
     }
 
+    /**
+     * Drives in God Mode (keeping angles consistent with the heading so it doesn't turn unexpectedly)
+     * @param rightX Right X value of the joystick
+     * @param rightY Right Y value of the joystick
+     * @param leftX Left X value of the joystick
+     * @param leftY Left Y value of the joystick in case that wasn't clear
+     */
     public void driveGodMode(float rightX, float rightY, float leftX, float leftY) {
         driveGodMode(rightX, rightY, leftX, leftY, 1);
     }
 
+    /**
+     * Drives in God Mode (keeping angles consistent with the heading so it doesn't turn unexpectedly)
+     * @param rightX Right X value of the joystick
+     * @param rightY Right Y value of the joystick
+     * @param leftX Left X value of the joystick
+     * @param leftY Left Y value of the joys
+     * @param coeff Used to set speed
+     */
     public void driveGodMode(float rightX, float rightY, float leftX, float leftY, float coeff) {
         double currentHeading = Math.toRadians(imuSystem.getHeading());
         double headingDiff = initialHeading - currentHeading;
@@ -113,6 +145,11 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         motorBackRight.setPower(backRight);
     }
 
+    /**
+     * Sets motor values based on the joystick x and y values.
+     * @param x X value of the joystick
+     * @param y Y value of the joystick
+     */
     public void mecanumDriveXY(double x, double y) {
         this.motorFrontRight.setPower(Range.clip(y + x, -1, 1));
         this.motorBackRight.setPower(Range.clip(y - x, -1, 1));
@@ -120,30 +157,55 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         this.motorBackLeft.setPower(Range.clip(y + x, -1, 1));
     }
 
+    /**
+     * Drives using a polar coordinate system
+     * @param radians the radians value
+     * @param power The power of the motors
+     */
     public void mecanumDrivePolar(double radians, double power) {
         double x = Math.cos(radians) * power;
         double y = Math.sin(radians) * power;
         mecanumDriveXY(x, y);
     }
 
+    /**
+     * Drives the given amount of inches forward.
+     * @param inches Amount of inches to drive
+     * @param power Power of the motors
+     */
     public void driveToPositionInches(int inches, double power) {
         int ticks = (int) inchesToTicks(inches);
         setDirection(DriveDirection.FORWARD);
         driveToPositionTicks(ticks, power);
     }
 
+    /**
+     * Strafes left for the given amount of inches
+     * @param inches Amount of inches to strafe
+     * @param power Power of the motors
+     */
     public void strafeLeftToPositionInches(int inches, double power) {
         setDirection(MecanumDriveDirection.STRAFE_LEFT);
         int ticks = (int) inchesToTicksStrafe(inches);
         driveToPositionTicks(ticks, power);
     }
 
+    /**
+     * Strafes right for the given amount of inches
+     * @param inches Amount of inches to strafe
+     * @param power Power of the motors
+     */
     public void strafeRightToPositionInches(int inches, double power) {
         setDirection(MecanumDriveDirection.STRAFE_RIGHT);
         int ticks = (int) inchesToTicksStrafe(inches);
         driveToPositionTicks(ticks, power);
     }
 
+    /**
+     * Drives the given amount of ticks forward.
+     * @param ticks Amount of ticks to drive
+     * @param power Power of the motors
+     */
     private void driveToPositionTicks(int ticks, double power) {
         motorBackRight.setPower(0);
         motorBackLeft.setPower(0);
@@ -208,38 +270,60 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         motorFrontLeft.setPower(0);
     }
 
+    /**
+     * Gets the minimum distance from the target
+     * @return
+     */
     public int  getMinDistanceFromTarget() {
         int d = this.motorFrontLeft.getTargetPosition() - this.motorFrontLeft.getCurrentPosition();
-        d = min(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
-        d = min(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
-        d = min(d, this.motorBackRight.getTargetPosition() - this.motorBackRight.getCurrentPosition());
+        d = Math.min(d, this.motorFrontRight.getTargetPosition() - this.motorFrontRight.getCurrentPosition());
+        d = Math.min(d, this.motorBackLeft.getTargetPosition() - this.motorBackLeft.getCurrentPosition());
+        d = Math.min(d, this.motorBackRight.getTargetPosition() - this.motorBackRight.getCurrentPosition());
         return d;
     }
 
+    /**
+     * Converts inches to ticks
+     * @param inches Inches to convert to ticks
+     * @return
+     */
     public double inchesToTicks(int inches) {
         return inches * TICKS_IN_INCH;
     }
 
+    /**
+     * Converts inches to ticks but for strafing
+     * @param inches Inches to convert to ticks
+     * @return
+     */
     public double inchesToTicksStrafe(int inches) {
         return inches * TICKS_IN_INCH_STRAFE;
     }
 
-    private int min(int d1, int d2) {
-        if (d1 < d2) {
-            return d1;
-        } else {
-            return d2;
-        }
-    }
-
+    /**
+     * Turns relative the heading upon construction
+     * @param degrees The degrees to turn the robot by
+     * @param maxPower The maximum power of the motors
+     */
     public void turnAbsolute(double degrees, double maxPower) {
         turn(degrees, maxPower, initialHeading);
     }
 
+    /**
+     * Turns the robot by a given amount of degrees using the current heading
+     * @param degrees The degrees to turn the robot by
+     * @param maxPower The maximum power of the motors
+     */
     public void turn(double degrees, double maxPower) {
         turn(degrees, maxPower, imuSystem.getHeading());
     }
 
+    /**
+     * Turns the robot by a given amount of degrees
+     * @param degrees The degrees to turn the robot by
+     * @param maxPower The maximum power of the motors
+     * @param initialHeading The initial starting point
+     */
     private void turn(double degrees, double maxPower, double initialHeading) {
 
         double heading = -initialHeading;
@@ -257,12 +341,12 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         // we want to slow down from maxPower to 0.1
         ExponentialRamp ramp = new ExponentialRamp(new Point(2.0, TURN_RAMP_POWER_CUTOFF), new Point(90, maxPower));
 
-        while (Math.abs(computeDegreesDiff(targetHeading, heading)) > 1) {
+        while (Math.abs(targetHeading - heading) > 1) {
             double power = getTurnPower(ramp, targetHeading, heading);
             telemetry.log("MecanumDriveSystem","heading: " + heading);
             telemetry.log("MecanumDriveSystem","target heading: " + targetHeading);
             telemetry.log("MecanumDriveSystem","power: " + power);
-            telemetry.log("MecanumDriveSystem","distance left: " + Math.abs(computeDegreesDiff(targetHeading, heading)));
+            telemetry.log("MecanumDriveSystem","distance left: " + Math.abs(targetHeading - heading));
             telemetry.write();
 
             tankDrive(power, -power);
@@ -271,20 +355,23 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         this.setPower(0);
     }
 
+    /**
+     * Gets the turn power needed
+     * @param ramp the ramp
+     * @param targetHeading the target heading
+     * @param heading the heading
+     * @return
+     */
     private double getTurnPower(Ramp ramp, double targetHeading, double heading) {
-        double diff = computeDegreesDiff(targetHeading, heading);
-
-        if (diff < 0) {
-            return -ramp.scaleX(Math.abs(diff));
-        } else {
-            return ramp.scaleX(Math.abs(diff));
-        }
+        return targetHeading - heading < 0 ?
+                -ramp.scaleX(Math.abs(targetHeading - heading)) :
+                ramp.scaleX(targetHeading - heading);
     }
 
-    private double computeDegreesDiff(double targetHeading, double heading) {
-        return targetHeading - heading;
-    }
-
+    /**
+     * Parks on the crater.
+     * @param maxPower Maximum power
+     */
     public void parkOnCrater(double maxPower) {
         double initPitch = imuSystem.getpitch();
         double initRoll = imuSystem.getRoll();
@@ -300,6 +387,10 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         setPower(0);
     }
 
+    /**
+     * Sets the direction of each motor.
+     * @param direction Direction to set the motors - use the values STRAFE_RIGHT and STRAFE_LEFT.
+     */
     public void setDirection(MecanumDriveDirection direction) {
         switch (direction){
             case STRAFE_LEFT:
@@ -317,6 +408,9 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
         }
     }
 
+    /**
+     * Use STRAFE_RIGHT and STRAFE_LEFT for the setDirection() method
+     */
     public enum MecanumDriveDirection {
         STRAFE_RIGHT, STRAFE_LEFT;
     }
