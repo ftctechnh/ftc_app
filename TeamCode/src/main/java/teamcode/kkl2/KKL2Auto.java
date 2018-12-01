@@ -348,4 +348,7 @@ public class KKL2Auto extends LinearOpMode {
         }
     }
 
+    public double getCentimetersFromPixels(double pixels) {
+        return ((pixels - 300) / -100) * 30.48; // centimeters
+    }
 }

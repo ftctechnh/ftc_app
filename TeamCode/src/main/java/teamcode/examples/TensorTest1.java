@@ -79,7 +79,24 @@ public class TensorTest1 extends LinearOpMode {
                     float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
                     float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
                     float height = mineral.getRight() - mineral.getLeft();
-                    float error = target_x - center_x;
+                    float x = target_x - center_x;
+
+                    // tan(30@) = x / y;
+                    double theta = Math.toRadians(30);
+                    double y = x / Math.tan(theta);
+                    telemetry.addData("x pixels", x);
+                    telemetry.addData("y pixels", y);
+
+
+
+                    telemetry.addData(
+                            "Mineral Gold,Height,center_X,center_Y",
+                            "%s,%f,%f,%f",
+                            mineral.isGold(),
+                            height,
+                            center_x,
+                            center_y);
+                    /*
                     double c = Helper.getCentimetersFromPixels(height); // centimeters
                     double a = c * error / Helper.CAMERA_DISTANCE; // centimeters
                     double b = Math.sqrt((c*c) - (a*a)); // centimeters
@@ -91,6 +108,7 @@ public class TensorTest1 extends LinearOpMode {
                     telemetry.addData("Gold Center X", center_x);
                     telemetry.addData("Gold Center Y", center_y);
                     telemetry.addData("Error (pixels)", error);
+                    */
                 }
 
                 telemetry.update();
@@ -100,13 +118,13 @@ public class TensorTest1 extends LinearOpMode {
         }
     }
 
-    private void addTelemetry(Mineral mineral, int num) {
+    private void addTelemetry(Mineral mineral) {
         if (mineral != null) {
             float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
             float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
             float height = mineral.getRight() - mineral.getLeft();
             telemetry.addData(
-                    "Mineral" + num + " Gold,Height,X,Y",
+                    "Mineral" + " Gold,Height,X,Y",
                     "%s,%f,%f,%f",
                     mineral.isGold(),
                     height,

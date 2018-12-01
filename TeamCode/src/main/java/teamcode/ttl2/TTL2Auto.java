@@ -179,38 +179,7 @@ public abstract class TTL2Auto extends LinearOpMode {
                 && Math.abs(currentRightLiftMotorPos - targetRightLiftMotorPos) < LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD;
     }
 
-    protected void positionRobotInFrontOfGold() {
-//        double power = 0.5;
-//        TTL2HardwareManager.frontLeftDrive.setPower(power);
-//        TTL2HardwareManager.frontRightDrive.setPower(power);
-//        TTL2HardwareManager.backLeftDrive.setPower(power);
-//        TTL2HardwareManager.backRightDrive.setPower(power);
-//
-//        int mineralIndex = 1;
-//
-//        while (opModeIsActive()) {
-//            List<Mineral> minerals = this.tfManager.getRecognizedMinerals();
-//            Mineral gold = null;
-//            if (minerals != null) {
-//                for (Mineral mineral : minerals) {
-//                    if (mineral.isGold()) {
-//                        // update the gold mineral data
-//                        gold = mineral;
-//                        break;
-//                    }
-//                }
-//            }
-//            if (gold != null) {
-//                driveVertical(50, 0.5);
-//                // drive towards the gold
-//
-//            }
-//        }
+    private double getCentimetersFromPixel(float height) {
+        return ((-0.25 * height) + 52.5) * 2.54;
     }
-
-    /**
-     * Invoked after the robot lowers to the ground.
-     */
-    protected abstract void run();
-
 }
