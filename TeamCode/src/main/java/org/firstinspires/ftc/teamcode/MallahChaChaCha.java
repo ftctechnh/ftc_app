@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="MallahBullRun", group="MonsieurMallah")
-public class MallahBullRun extends BullRun {
-    public MallahBullRun() {
+@Autonomous(name="MallahChaChaCHa", group="MonsieurMallah")
+public class MallahChaChaCha extends BullRunChaChaCha {
+    public MallahChaChaCha() {
         super(ChassisConfig.forMonsieurMallah());
     }
 }
