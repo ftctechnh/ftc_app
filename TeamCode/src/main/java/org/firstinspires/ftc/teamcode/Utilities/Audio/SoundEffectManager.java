@@ -24,10 +24,12 @@ public class SoundEffectManager {
 
     Context context;
     Map<String, Integer> audioFiles;
+    boolean playing;
 
     public SoundEffectManager (Context context, Map<String, Integer> audioFiles) {
         this.context = context;
         this.audioFiles = audioFiles;
+        this.playing = false;
         SoundPlayer.getInstance().setMasterVolume(1.0F);
 
         for (Map.Entry<String, Integer> entry : audioFiles.entrySet()) {
@@ -37,5 +39,13 @@ public class SoundEffectManager {
 
     public void playEffect(String effect) {
         SoundPlayer.getInstance().startPlaying(context, audioFiles.get(effect));
+        this.playing = true;
+    }
+
+    public void stopAll() {
+        if (this.playing) {
+            this.playing = false;
+            SoundPlayer.getInstance().stopPlayingAll();
+        }
     }
 }

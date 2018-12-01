@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
@@ -24,7 +23,7 @@ public class VisionSampling extends AutoUtils {
         // Set up road runner
         SampleMecanumDriveREV drive = new SampleMecanumDriveREV(hardwareMap);
         robot = new SparkyTheRobot(this);
-        robot.init(true);
+        //robot.calibrate();
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
         initVuforia();
 

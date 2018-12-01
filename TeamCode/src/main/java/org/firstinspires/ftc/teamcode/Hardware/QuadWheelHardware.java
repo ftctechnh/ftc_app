@@ -12,13 +12,6 @@ public class QuadWheelHardware extends BaseHardware {
 
     public QuadWheelHardware(LinearOpMode opMode) {
         super(opMode);
-    }
-
-    @Override
-    public void init(boolean calibrate) {
-
-        super.init(calibrate);
-
         frontLeft = hwMap.dcMotor.get("frontLeft");
         frontRight = hwMap.dcMotor.get("frontRight");
         backLeft = hwMap.dcMotor.get("backLeft");
@@ -32,11 +25,25 @@ public class QuadWheelHardware extends BaseHardware {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
-        resetMotorEncoders();
-
         for (DcMotor m : motorArr) {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        }
+    }
+
+    @Override
+    public void calibrate() {
+        resetMotorEncoders();
+        super.calibrate();
+    }
+
+    public void resetMotorEncoders() {
+        for (DcMotor motor : motorArr) {
+            motor.setPower(0);
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+        sleep(100);
+        for (DcMotor motor : motorArr) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 /**
  * Created by Victo on 9/10/2018.
  */
-@Config
 public class GoldDetector extends DogeCVDetector {
 
     // Defining Mats to be used.

@@ -18,17 +18,17 @@ public class SoloMapping extends ControlMapping {
 
     @Override
     public double driveStickX() {
-        return gamepad1.right_stick_x;
+        return gamepad1.left_stick_x;
     }
 
     @Override
     public double driveStickY() {
-        return gamepad1.right_stick_y;
+        return gamepad1.left_stick_y;
     }
 
     @Override
     public double turnSpeed() {
-        return removeLowVals(gamepad1.left_stick_x, 0.2);
+        return removeLowVals(gamepad1.right_stick_x, 0.2);
     }
 
     final static double MIN_SLOW_MOVE_SPEED = 0.3;
@@ -51,6 +51,11 @@ public class SoloMapping extends ControlMapping {
     @Override
     public boolean flipBack() {
         return gamepad1.dpad_right;
+    }
+
+    @Override
+    public boolean shakeCamera() {
+        return gamepad1.a;
     }
 
     @Override
@@ -79,12 +84,17 @@ public class SoloMapping extends ControlMapping {
     }
 
     @Override
+    public boolean override() {
+        return gamepad1.start;
+    }
+
+    @Override
     public double getExtendSpeed() {
         return boolsToDir(gamepad1.dpad_down, gamepad1.dpad_up);
     }
 
     @Override
     public int getHangDir() {
-        return boolsToDir(gamepad1.right_bumper, gamepad1.left_bumper);
+        return boolsToDir(gamepad1.left_bumper, gamepad1.right_bumper);
     }
 }

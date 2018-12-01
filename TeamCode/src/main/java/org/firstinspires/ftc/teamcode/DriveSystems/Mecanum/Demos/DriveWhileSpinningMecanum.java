@@ -17,7 +17,7 @@ public class DriveWhileSpinningMecanum extends TeleOpMecanum {
 
     @Override
     public void runOpMode() {
-        robot.init(true);
+        robot.calibrate();
 
         // Enables hardware-controlled PID wheel speeds
         robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);

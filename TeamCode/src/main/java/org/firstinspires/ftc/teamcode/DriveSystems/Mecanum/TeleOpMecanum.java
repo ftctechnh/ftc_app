@@ -58,7 +58,7 @@ public class TeleOpMecanum extends LinearOpMode {
         telemetry.update();
 
         robot = new MecanumHardware(this);
-        robot.init(false);
+        robot.calibrate();
 
         waitForStart();
         rampController = new RampingController(robot.motorArr, accelTime);

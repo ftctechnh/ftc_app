@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
@@ -10,11 +9,6 @@ import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.StartingPositio
 import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
 import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 import org.opencv.core.Rect;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 public abstract class AutoUtils extends VuforiaCVUtil {
     public StartingPosition startingPosition;
@@ -29,7 +23,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
     public void setWinchHoldPosition() {
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.winch.setPower(0.5);
+        robot.winch.setPower(1);
         robot.winch.setTargetPosition(0);
     }
 
@@ -40,47 +34,47 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
     public void unhookFromLander(SampleMecanumDriveREV drive, SparkyTheRobot robot, DetachMethod method) {
 
-        // Lower robot
+        // Lower robot in two phases
+        // In the first phase, we will lower the robot "manually"
+        // In the second phase, we will just freefall to be faster
+
         robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        robot.winch.setPower(-1);
+        robot.winch.setPower(1);
         while (opModeIsActive()) {
             robot.updateReadings();
-            if (robot.imu.getGravity().zAccel >= 9.7) {
+            if (robot.primaryIMU.getGravity().zAccel >= 9.6) {
                 break;
             }
         }
-        robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.winch.setMotorEnable();
+        robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.winch.setPower(0);
 
         if (method == DetachMethod.STRAFE) {
             followPath(drive, Paths.UNHOOK);
         } else if (method == DetachMethod.TURN) {
-            // Make sure we turn correct direction
-            turnToPos(Math.PI, -1);
+            // Flip around, making sure we turn the correct direction
+            turnToPos(robot.normAngle(Math.PI + robot.getGyroHeading()), -1);
         }
 
         // Now, lower the hang arm
-        robot.linearSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.linearSlide.setPower(0.4);
-        robot.linearSlide.setTargetPosition(500);
-        robot.intake.setPos(0.8);
+        robot.intake.collect();
 
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setPower(1);
-        robot.winch.setTargetPosition(1500);
-
-        // Sleep a little bit to let things move
-        // a little
-        sleep(500);
+        robot.winch.setTargetPosition(-1500);
 
         if (method == DetachMethod.STRAFE) {
+            // Sleep a little bit to let things move
+            // a little
+            sleep(500);
             followPath(drive, Paths.UNDO_UNHOOK);
         }
     }
 
     public void refoldMechanisms() {
         robot.winch.setMotorDisable();
-        robot.linearSlide.setTargetPosition(0);
         robot.intake.goToMin();
     }
 
@@ -88,10 +82,52 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         return boundingBox.x + (boundingBox.width / 2);
     }
 
+    abstract class FollowPathLambda {
+        private boolean isTerminated;
+        public boolean runAtTermination;
+        public SparkyTheRobot robot;
+
+        public FollowPathLambda(SparkyTheRobot robot) {
+            this.robot = robot;
+        }
+
+        public abstract void run();
+        public void terminate() {
+            isTerminated = true;
+        }
+        public boolean isTerminated() {
+            return isTerminated;
+        }
+    }
+
+    class NullLambda extends FollowPathLambda {
+        public NullLambda(SparkyTheRobot robot) {
+            super(robot);
+        }
+        @Override
+        public void run() {
+            terminate();
+        }
+        @Override
+        public void terminate() {
+            super.terminate();
+        }
+    }
+
     public void followPath(SampleMecanumDriveREV drive, Trajectory trajectory) {
+        followPath(drive, trajectory, new NullLambda(robot));
+    }
+
+    public void followPath(SampleMecanumDriveREV drive, Trajectory trajectory, FollowPathLambda lambda) {
         drive.followTrajectory(trajectory);
         while (!isStopRequested() && drive.isFollowingTrajectory()) {
             drive.update();
+            if (!lambda.isTerminated) {
+                lambda.run();
+            }
+        }
+        if (!lambda.isTerminated && lambda.runAtTermination) {
+            lambda.terminate();
         }
     }
 
@@ -113,7 +149,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
             // Optionally force turn direction
             // But allow for minor changes in direction the other way
-            if (forcedDir != 0 && difference >= Math.PI / 2) {
+            if (forcedDir != 0 && Math.abs(difference) >= Math.PI / 2) {
                 turnSpeed = Math.copySign(turnSpeed, forcedDir);
             }
 
@@ -145,7 +181,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
      */
 
     public static int MIN_ANALYZE_TIME_MS = 1000;
-    public GoldPosition waitAndWatchMinerals() {
+    /*public GoldPosition waitAndWatchMinerals() {
         // This sometimes might count the same frame twice
         // but we're OK with that - we'll just run this for
         // a set time, not a set frame count
@@ -160,6 +196,9 @@ public abstract class AutoUtils extends VuforiaCVUtil {
             } else {
                 visionResults.add(GoldPosition.LEFT);
             }
+
+            telemetry.addData("Vision", visionResults.peek().toString());
+            telemetry.update();
 
             if (timer.milliseconds() > MIN_ANALYZE_TIME_MS) {
                 // We need to start overwriting old data
@@ -187,5 +226,26 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         } else {
             return GoldPosition.CENTER;
         }
+    }*/
+
+    public GoldPosition waitAndWatchMinerals() {
+        // This sometimes might count the same frame twice
+        // but we're OK with that - we'll just run this for
+        // a set time, not a set frame count
+        GoldPosition result = GoldPosition.CENTER;
+
+        while (!isStarted() && !isStopRequested()) {
+            if (getMiddlePosition(detector.getFoundRect()) < 50) {
+                result = GoldPosition.RIGHT;
+            } else if (getMiddlePosition(detector.getFoundRect()) < 400) {
+                result = GoldPosition.CENTER;
+            } else {
+                result = GoldPosition.LEFT;
+            }
+
+            telemetry.addData("Vision", result.toString());
+            telemetry.update();
+        }
+        return result;
     }
 }

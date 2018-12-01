@@ -20,14 +20,17 @@ import org.firstinspires.ftc.teamcode.Utilities.Startup.Alliance;
 
 import java.io.IOException;
 
-
-// This is NOT an opmode
-
 public class BaseHardware {
+
+    public static final BNO055IMU.Parameters metricParameters = new BNO055IMU.Parameters();
+    static {
+        metricParameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        metricParameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+    }
 
     // Sensors
     public LynxModule leftHub;
-    public BNO055IMU imu;
+    public BNO055IMU primaryIMU;
     public Orientation angles; // Used to read IMU
     public LynxGetBulkInputDataResponse bulkDataResponse;
 
@@ -41,7 +44,6 @@ public class BaseHardware {
     public HardwareMap hwMap;
     public Alliance color;
     ElapsedTime period = new ElapsedTime();
-    boolean initialized = false;
     LogQueue logger;
 
 
@@ -58,38 +60,20 @@ public class BaseHardware {
         } catch (NoSuchFieldException e) {
             tel.log().add("Recieved 'NoSuchFieldException'");
         }
-    }
 
-    public void init(boolean calibrate) {
         leftHub = hwMap.get(LynxModule.class, "leftHub");
-        imu = opMode.hardwareMap.get(BNO055IMU.class, "primaryIMU");
-        if (calibrate) {calibrateGyro();}
+        primaryIMU = hwMap.get(BNO055IMU.class, "primaryIMU");
 
-        initialized = true;
     }
 
-    private void calibrateGyro() {
+    public void calibrate() {
         // Calibration
         tel.log().add("Gyro Calibrating. Do Not Move!!");
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.RADIANS;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        imu.initialize(parameters);
+        primaryIMU.initialize(metricParameters);
         sleep(100);
         updateReadings();
         tel.log().add("Gyro Calibration Complete.");
-    }
-
-    public void resetMotorEncoders() {
-        for (DcMotor motor : motorArr) {
-            motor.setPower(0);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        }
-        sleep(100);
-        for (DcMotor motor : motorArr) {
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        }
     }
 
     public void updateREVHubReadings() {
@@ -176,7 +160,7 @@ public class BaseHardware {
     }
 
     public void updateReadings() {
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+        angles = primaryIMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
     }
 
     /**

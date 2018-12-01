@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode.RoverRuckus;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Mechanisms.Intake;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
-import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.SoloMapping;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.ControlMapping;
 import org.firstinspires.ftc.teamcode.Utilities.Control.FeedbackController;
 import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
@@ -19,6 +17,7 @@ import java.util.Arrays;
 public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
     public static double MAX_EXTEND_POWER = 0.8;
+    public static double MAX_FLIP_POWER = 0.6;
 
     public ControlMapping controller;
     public boolean fieldCentric;
@@ -32,7 +31,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public void runOpMode() {
 
         robot = new SparkyTheRobot(this);
-        robot.init(fieldCentric); // Only calibrate gyro if we're going to use it
+        robot.calibrate(fieldCentric);
+
         loopTime = new ElapsedTime();
 
         feedback = new FeedbackController(robot.leftHub, robot.rightHub);
@@ -67,12 +67,25 @@ public abstract class BaseTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             controller.update();
 
-            robot.leftFlipper.setPower(controller.armSpeed());
-            robot.rightFlipper.setPower(controller.armSpeed());
+            robot.leftFlipper.setPower(controller.armSpeed() * MAX_FLIP_POWER);
+            robot.rightFlipper.setPower(controller.armSpeed() * MAX_FLIP_POWER);
 
             robot.intake.setIntakeSpeed(controller.getSpinSpeed());
 
-            winch.setPower(controller.getHangDir());
+            if (controller.shakeCamera()) {
+                robot.cameraPositioner.flipUp();
+            } else {
+                robot.cameraPositioner.flipDown();
+            }
+
+            // Check to make sure
+            int winchPower = controller.getHangDir();
+            if (!robot.hangSwitch.getState() && !controller.override()) {
+                // If the switch is pressed (if it's not open)
+                winchPower = Math.max(winchPower, 0);
+            }
+
+            winch.setPower(winchPower);
             robot.linearSlide.setPower(controller.getExtendSpeed() * MAX_EXTEND_POWER);
 
             if (controller.flipOut()) {robot.intake.collect();}
@@ -108,6 +121,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
             telemetry.addData("Arm position", pos);
             telemetry.addData("Left flipper velo", robot.leftFlipper.getVelocity());
             telemetry.addData("Right flipper velo", robot.rightFlipper.getVelocity());
+            telemetry.addData("Winch pos", robot.winch.getCurrentPosition());
             telemetry.addData("Loop time", loopTime.milliseconds());
             loopTime.reset();
             telemetry.update();
@@ -120,7 +134,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         if (fieldCentric) {
             robot.updateReadings();
-            controllerAngle -= robot.getGyroHeading();
+            controllerAngle += robot.getGyroHeading();
         }
 
         return controllerAngle;

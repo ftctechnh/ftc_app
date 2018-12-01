@@ -24,7 +24,7 @@ public class TestWheelFriction extends LinearOpMode {
     @Override
     public void runOpMode() {
         robot = new QuadWheelHardware(this);
-        robot.init(false);
+        robot.calibrate();
         telemetry.log().add("Finished initialization");
 
         for (DcMotor m : robot.motorArr) {

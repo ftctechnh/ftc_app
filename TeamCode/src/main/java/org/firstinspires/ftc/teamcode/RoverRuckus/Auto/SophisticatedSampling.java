@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.EndGoal;
@@ -8,41 +10,71 @@ import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.StartingPositio
 public abstract class SophisticatedSampling extends AutoUtils {
 
     public EndGoal goal;
-    public StartingPosition start;
+
+    class CheckWinchLambda extends FollowPathLambda {
+        public CheckWinchLambda(SparkyTheRobot robot) { super(robot); runAtTermination = true;}
+
+        @Override
+        public void run() {
+            if (!robot.hangSwitch.getState()) {
+                terminate();
+            }
+        }
+
+        @Override
+        public void terminate() {
+            robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.winch.setPower(0);
+            robot.winch.setMotorDisable();
+            robot.intake.goToMin();
+            super.terminate();
+        }
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
         // Set up road runner
         SampleMecanumDriveREV drive = new SampleMecanumDriveREV(hardwareMap);
         robot = new SparkyTheRobot(this);
-        robot.init(true);
+        robot.calibrate(false);
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
         initVuforia();
         setWinchHoldPosition();
 
         // Display telemetry feedback
         telemetry.log().add("Running sophisticated sampling op-mode");
-        telemetry.log().add("Starting from: [[" + start.name() + "]]");
+        telemetry.log().add("Starting from: [[" + startingPosition.name() + "]]");
         telemetry.log().add("Final actions: [[" + goal.name() + "]]");
         telemetry.update();
 
         GoldPosition goldLoc = waitAndWatchMinerals();
 
         // Use appropriate method for dehooking
-        if (start == StartingPosition.DEPOT) {
+        if (startingPosition == StartingPosition.DEPOT) {
             unhookFromLander(drive, robot, DetachMethod.STRAFE);
         } else {
             unhookFromLander(drive, robot, DetachMethod.TURN);
         }
 
-        robot.sleep(2000); // Wait a little longer for lifter arm to come down
-        // Eventually, this should be removed
-        refoldMechanisms();
+        if (startingPosition == StartingPosition.DEPOT) {
+            // Wait until we either reach the correct position or trigger the microswitch
+            while (robot.hangSwitch.getState() &&
+                    Math.abs(robot.winch.getCurrentPosition() - robot.winch.getTargetPosition()) > 20
+                    && !isStopRequested()) {
+                // While not pressed
+            }
+            robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.winch.setPower(0);
 
-        if (start == StartingPosition.DEPOT) {
+            robot.sleep(2000); // Wait a little longer for lifter arm to come down
+            // Eventually, this should be removed
+            refoldMechanisms();
+        }
+
+        if (startingPosition == StartingPosition.DEPOT) {
             followPath(drive, Paths.DEPO_SAME_SELECTOR[goldLoc.index]);
         } else {
-            followPath(drive, Paths.CRATER_SAME_SELECTOR[goldLoc.index]);
+            followPath(drive, Paths.CRATER_SAME_SELECTOR[goldLoc.index], new CheckWinchLambda(robot));
         }
 
         // Initialize with it facing the depo along whichever wall it should strafe
@@ -52,9 +84,9 @@ public abstract class SophisticatedSampling extends AutoUtils {
         if (goal == EndGoal.BLUE_DOUBLE_SAMPLE) {
             followPath(drive, Paths.FORWARD_RIGHT);
         } else if (goal == EndGoal.BLUE_CRATER) {
-            followPath(drive, Paths.UNDO_UNHOOK);
-        } else { // goal == RED_CRATER
             followPath(drive, Paths.UNHOOK);
+        } else { // goal == RED_CRATER
+            followPath(drive, Paths.UNDO_UNHOOK);
         }
 
         // Deploy the team marker

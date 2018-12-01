@@ -16,23 +16,15 @@ public class Paths {
     public static int START_DIST = 14;
 
     static Trajectory UNHOOK = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(0, 15), new ConstantInterpolator(0))
+            .lineTo(new Vector2d(0, -15), new ConstantInterpolator(0))
             .build();
 
-    static Trajectory UNDO_UNHOOK = new TrajectoryBuilder(new Pose2d(0, 15, 0), DriveConstants.BASE_CONSTRAINTS)
+    static Trajectory UNDO_UNHOOK = new TrajectoryBuilder(new Pose2d(0, -15, 0), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(0, 0), new ConstantInterpolator(0))
             .build();
 
     static Trajectory FORWARD_A_LITTLE = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(3, 0), new ConstantInterpolator(0))
-            .build();
-
-    static Trajectory BACKUP = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-15, 0), new ConstantInterpolator(0))
-            .build();
-
-    static Trajectory FORWARD = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(10, 0), new ConstantInterpolator(0))
             .build();
 
     static Trajectory FORWARD_RIGHT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
@@ -43,11 +35,11 @@ public class Paths {
 
     public static Pose2d CRATER_START = new Pose2d(START_DIST, START_DIST, Math.PI*1.25);
     static Trajectory DEPOT_TO_SAME_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-100, -20), new ConstantInterpolator(0))
+            .lineTo(new Vector2d(-75, -15), new ConstantInterpolator(0))
             .build();
 
     static Trajectory DEPOT_TO_OTHER_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-100, 20), new ConstantInterpolator(0))
+            .lineTo(new Vector2d(-75, 15), new ConstantInterpolator(0))
             .build();
 
     static Pose2d DEPOT = new Pose2d(-63, 63, 0);

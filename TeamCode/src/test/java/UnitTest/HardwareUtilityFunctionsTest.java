@@ -32,8 +32,8 @@ public class HardwareUtilityFunctionsTest {
         final int ACCURACY_THRESHOLD = 15;
 
         // Mock
-        robot.imu = mock(BNO055IMU.class);
-        when(robot.imu.getAngularOrientation(
+        robot.primaryIMU = mock(BNO055IMU.class);
+        when(robot.primaryIMU.getAngularOrientation(
                 AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS)).thenReturn(new Orientation());
 
         robot.waitForTick(0);
