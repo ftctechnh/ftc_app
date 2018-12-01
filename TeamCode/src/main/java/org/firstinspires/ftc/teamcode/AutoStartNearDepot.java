@@ -85,21 +85,7 @@ public class AutoStartNearDepot extends LinearOpMode {
             idle();
         }
 
-        //flashlight.turnOnFlash();
-
- /*       // Try turning on the flashlight
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = VUFORIA_KEY ;
-        parameters.cameraDirection   = CAMERA_CHOICE;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        CameraDevice.getInstance().init(CameraDevice.CAMERA_DIRECTION.CAMERA_DIRECTION_BACK);
-
-        CameraDevice.getInstance().start();
-        CameraDevice.getInstance().setFlashTorchMode(true);
-*/
+/*
         //Variable setting rotation angle;
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
@@ -119,7 +105,7 @@ public class AutoStartNearDepot extends LinearOpMode {
 
         //detector.enable();
 
-
+*/
 
 
         // Wait for the Start button to be pushed ----------------------------START----------------------------------------------
@@ -133,6 +119,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         double latchPower;
         //Reset the Encoder
         robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Lower the robot
         while (robot.landerLatchLift.getCurrentPosition()> landingLevel){
             robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             latchPower = -0.2;
@@ -141,41 +128,6 @@ public class AutoStartNearDepot extends LinearOpMode {
         robot.landerLatchLift.setPower(0);
 
 
- /*       // Stressing Drive Test Sequence
-        moveBot(1,0,0,1);
-        sleep(300);
-        moveBot(0,0,1,1);
-        sleep(300);
-        moveBot(-1,0,0,1);
-        sleep(300);
-        moveBot(0,0,-1,1);
-        sleep(300);
-        gyroSpin(179);
-        gyroSpin(0);
-        sleep(300);
-        moveBot(1,1,1,1);
-        sleep(300);
-        stopBot();
-*/
-
-        // Lower the Robot from the lander
-        //robot.landerLatchLift.setPower(0.3);
-        //moveBot(-0.05,0,0,0.1);
-        //sleep(2000);
-        //robot.landerLatchLift.setPower(0);
-
-        // Move the robot a little bit backwards to unhook
-/*        moveBot(-fwdSpeed,0,0,0.3);
-        sleep(200);
-        stopBot();
-        //sleep(3000);
-        // Move the robot forward until it sees the Red line with the color sensor
-        while (robot.colorSensor.red() < 2 && robot.colorSensor.green() > 0 && robot.colorSensor.blue() < 0) {
-            moveBot(0,0,strafe,0.3);
-        }
-        stopBot();
-        sleep(3000);
-  */
         // Find the Gold mineral and knock it off the spot
         // Initialize a counter to count our attempts to get a little closer to the mineral
 /*        double mineralCt = 0;
@@ -219,15 +171,18 @@ public class AutoStartNearDepot extends LinearOpMode {
             }
         }
 */
-        // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+        // Move  back to unhook the robot
         gyroHold(-0.5,0,0.15);
+        // Move away from the robot
         gyroStrafe(0.5, 0);
         sleep(1400);
         stopBot();
+
         gyroSpin(0);
+        // Move towards the center of the field
         gyroHold(0.4,0,1.5);
         //sleep(3000);
-        // Rotate to a heading of 315R
+        // Spin to put the distance sensor towards the wall
         gyroSpin(315);
 
         // Move towards the wall
@@ -242,56 +197,42 @@ public class AutoStartNearDepot extends LinearOpMode {
         }
         stopBot();
 
-        // Drop the totem
-        //robot.armRotate.setPower(0.2);
-        //sleep(2500);
-        //robot.armRotate.setPower(0);
+
+
         int dropTarget = 3000;  // Target for dropping totem
         int levelTarget = 500;  // Target for holding arm forward and level
         double rotatePower;
         //Reset the Encoder
         robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         while (robot.armRotate.getCurrentPosition()< dropTarget){
             robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rotatePower = 0.25;
             robot.armRotate.setPower(rotatePower);
         }
         robot.armRotate.setPower(0);
-        //robot.armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.armRotate.setTargetPosition(dropTarget);
-        //robot.armRotate.setPower(0.2);
-        // Drop the Minerals
+        // Drop the totem
         robot.rightMineral.setPower(0.6);
         sleep(800);
         robot.rightMineral.setPower(0);
-        //robot.armRotate.setPower(-0.2);
-        //sleep(2000);
-        //robot.armRotate.setPower(0);
+
+        // Rotate the arm to level facing forward
         while (robot.armRotate.getCurrentPosition()> levelTarget){
             robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rotatePower = -0.25;
             robot.armRotate.setPower(rotatePower);
         }
         robot.armRotate.setPower(0);
-        //robot.armRotate.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //robot.armRotate.setTargetPosition(levelTarget);
-        //robot.armRotate.setPower(-0.2);
-        //Drive forwards towards crater
-
-/*        while(elapsedTime < 1000){
-            double wsteer=wallSteer(5);
-            moveBot(0.3,0,wsteer,0.5);
-        }
-*/
 
 
+        // Drive towards the crater, stop 50 inches from wall
         while(sonarDistance() > 50){
             double wsteer=wallSteer(7);
             moveBot(0.25,0,wsteer,0.5);
         }
         stopBot();
-        //detector.disable();
 
+        // Extend the arm over the crater
         while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
             robot.armExtend.setPower(-0.2);

@@ -85,22 +85,8 @@ public class AutoStartNearCrater extends LinearOpMode {
             idle();
         }
 
-        //flashlight.turnOnFlash();
 
- /*       // Try turning on the flashlight
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = VUFORIA_KEY ;
-        parameters.cameraDirection   = CAMERA_CHOICE;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        CameraDevice.getInstance().init(CameraDevice.CAMERA_DIRECTION.CAMERA_DIRECTION_BACK);
-
-        CameraDevice.getInstance().start();
-        CameraDevice.getInstance().setFlashTorchMode(true);
-*/
-        //Variable setting rotation angle;
+/*        //Variable setting rotation angle;
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
@@ -119,7 +105,7 @@ public class AutoStartNearCrater extends LinearOpMode {
 
         //detector.enable();
 
-
+*/
 
 
         // Wait for the Start button to be pushed ----------------------------START----------------------------------------------
@@ -133,6 +119,7 @@ public class AutoStartNearCrater extends LinearOpMode {
         double latchPower;
         //Reset the Encoder
         robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Lower the Robot from the lander
         while (robot.landerLatchLift.getCurrentPosition()> landingLevel){
             robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             latchPower = -0.2;
@@ -141,25 +128,6 @@ public class AutoStartNearCrater extends LinearOpMode {
         robot.landerLatchLift.setPower(0);
 
 
-
-        // Lower the Robot from the lander
-        //robot.landerLatchLift.setPower(0.3);
-        //moveBot(-0.05,0,0,0.1);
-        //sleep(2000);
-        //robot.landerLatchLift.setPower(0);
-
-        // Move the robot a little bit backwards to unhook
-/*        moveBot(-fwdSpeed,0,0,0.3);
-        sleep(200);
-        stopBot();
-        //sleep(3000);
-        // Move the robot forward until it sees the Red line with the color sensor
-        while (robot.colorSensor.red() < 2 && robot.colorSensor.green() > 0 && robot.colorSensor.blue() < 0) {
-            moveBot(0,0,strafe,0.3);
-        }
-        stopBot();
-        sleep(3000);
-  */
         // Find the Gold mineral and knock it off the spot
         // Initialize a counter to count our attempts to get a little closer to the mineral
 /*        double mineralCt = 0;
@@ -203,14 +171,17 @@ public class AutoStartNearCrater extends LinearOpMode {
             }
         }
 */
-       // Move at a heading of 315 until directly in front of the North vuforia mark or until XX distance from the wall
+       //Clear the hook
         gyroHold(-0.5,0,0.15);
+        // Move away from the lander
         gyroStrafe(0.5, 0);
         sleep(1400);
         stopBot();
         gyroSpin(0);
+
+        // Move closer to the wall
         gyroHold(0.4,0,1.5);
-        //sleep(3000);
+
         // Rotate to a heading of 315R
         gyroSpin(315);
 
@@ -227,28 +198,20 @@ public class AutoStartNearCrater extends LinearOpMode {
         }
           stopBot();
             detector.disable();
-        // Drop the totem
-        /*robot.armRotate.setPower(0.2);
-        sleep(500);
-        robot.armRotate.setPower(0);
-        robot.rightMineral.setPower(0.5);
-        sleep(1000);
-        robot.rightMineral.setPower(0);
-        // Drive forwards maintaining 2-4 inches from the wall until...You get to the crater?
-        */
 
         int dropTarget = 3000;  // Target for dropping totem
         int levelTarget = 500;  // Target for holding arm forward and level
         double rotatePower;
         //Reset the Encoder
         robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //Rotate the arm to level position
         while (robot.armRotate.getCurrentPosition()< levelTarget){
             robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rotatePower = 0.25;
             robot.armRotate.setPower(rotatePower);
         }
         robot.armRotate.setPower(0);
-
+        //Drop the Totem
         robot.rightMineral.setPower(0.5);
         sleep(1000);
         robot.rightMineral.setPower(0);
@@ -261,13 +224,14 @@ public class AutoStartNearCrater extends LinearOpMode {
             moveBot(-0.25, 0, wsteer, 0.5);
         }
         stopBot();
+        //Rotate the arm over the crater
         while (robot.armRotate.getCurrentPosition()< dropTarget){
             robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             rotatePower = 0.25;
             robot.armRotate.setPower(rotatePower);
         }
         robot.armRotate.setPower(0);
-        //  Turn 180 and deploy the arm
+        //  Extend the arm
         while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
             robot.armExtend.setPower(-0.15);

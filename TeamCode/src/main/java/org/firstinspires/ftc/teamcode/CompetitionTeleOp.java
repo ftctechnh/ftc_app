@@ -28,7 +28,7 @@ public class CompetitionTeleOp extends LinearOpMode {
 
 
         // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Coach Vince Rocks!");    //
+        telemetry.addData("Say", "BruinBots Rock!");    //
         telemetry.update();
 
         // Wait for the game to start (driver presses PLAY)
