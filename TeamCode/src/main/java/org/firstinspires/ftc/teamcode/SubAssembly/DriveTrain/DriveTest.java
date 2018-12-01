@@ -24,8 +24,8 @@ public class DriveTest extends LinearOpMode {
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
-        Drive.init(hardwareMap);
 
+        Drive.init(this);
         telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC

@@ -34,6 +34,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,7 +51,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.auto2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,17 +65,16 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class VucamControl {
     /* Declare private class object */
-    //private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
-    HardwareMap hwMap;     /* local copy of HardwareMap object from opmode class */
+    private LinearOpMode opmode = null;     /* local copy of opmode class */
 
     private GoldAlignDetector detector;
-    Dogeforia vuforia;
-    WebcamName webcamName;
+    private Dogeforia vuforia;
+    private WebcamName webcamName;
 
     public enum Sample {
-        Left,
-        Right,
-        Center
+        LEFT,
+        RIGHT,
+        CENTER
     }
 
     public Sample sample;
@@ -84,13 +83,16 @@ public class VucamControl {
     public VucamControl() {
     }
 
-    public void init(HardwareMap ahwMap) {
-        //telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+    public void init(LinearOpMode opMode) {
+        HardwareMap hwMap;
 
+        /* Set local copies from opmode class */
+        opmode = opMode;
+        hwMap = opMode.hardwareMap;
 
-        webcamName = ahwMap.get(WebcamName.class, "Webcam 1");
+        webcamName = hwMap.get(WebcamName.class, "Webcam 1");
 
-        int cameraMonitorViewId = ahwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", ahwMap.appContext.getPackageName());
+        int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = "AWbfTmn/////AAABmY0xuIe3C0RHvL3XuzRxyEmOT2OekXBSbqN2jot1si3OGBObwWadfitJR/D6Vk8VEBiW0HG2Q8UAEd0//OliF9aWCRmyDJ1mMqKCJZxpZemfT5ELFuWnJIZWUkKyjQfDNe2RIaAh0ermSxF4Bq77IDFirgggdYJoRIyi2Ys7Gl9lD/tSonV8OnldIN/Ove4/MtEBJTKHqjUEjC5U2khV+26AqkeqbxhFTNiIMl0LcmSSfugGhmWFGFtuPtp/+flPBRGoBO+tSl9P2sV4mSUBE/WrpHqB0Jd/tAmeNvbtgQXtZEGYc/9NszwRLVNl9k13vrBcgsiNxs2UY5xAvA4Wb6LN7Yu+tChwc+qBiVKAQe09\n";
@@ -104,7 +106,7 @@ public class VucamControl {
         detector = new GoldAlignDetector();
         //detector.setAdjustedSize(new Size(480, 270));
         //detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        detector.init(ahwMap.appContext, CameraViewDisplay.getInstance(), 0, true);
+        detector.init(hwMap.appContext, CameraViewDisplay.getInstance(), 0, true);
         detector.useDefaults();
 
         // Optional Tuning
@@ -129,13 +131,11 @@ public class VucamControl {
 
     public void setSamplePos() {
         if (detector.getXPosition() > 0 && detector.getXPosition() < 250) {
-            sample = Sample.Left;
-        }
-        else if (detector.getXPosition() > 250 && detector.getXPosition() < 450) {
-            sample = Sample.Center;
-        }
-        else {
-            sample = Sample.Right;
+            sample = Sample.LEFT;
+        } else if (detector.getXPosition() > 250 && detector.getXPosition() < 450) {
+            sample = Sample.CENTER;
+        } else {
+            sample = Sample.RIGHT;
         }
     }
 

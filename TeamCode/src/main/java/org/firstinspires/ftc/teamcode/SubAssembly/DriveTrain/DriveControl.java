@@ -1,60 +1,47 @@
 package org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
-import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.IMUcontrol;
 
 
 /* Sub Assembly Class
  */
 public class DriveControl {
     /* Declare private class object */
-    //private Telemetry telemetry;         /* local copy of telemetry object from opmode class */
-    HardwareMap hwMap = null;     /* local copy of HardwareMap object from opmode class */
-    //private String name = "Drive Train";
+    private LinearOpMode opmode = null;     /* local copy of opmode class */
     private ElapsedTime runtime = new ElapsedTime();
-    public IMUcontrol imu = new IMUcontrol();
 
     //initializing motors
-       private DcMotor FrontRightM = null;
+    private DcMotor FrontRightM = null;
     private DcMotor FrontLeftM = null;
     private DcMotor BackRightM = null;
     private DcMotor BackLeftM = null;
 
     /* Declare public class object */
+    public IMUcontrol imu = new IMUcontrol();
 
     /* Subassembly constructor */
     public DriveControl() {
     }
 
-    public void init(HardwareMap ahwMap) {
+    public void init(LinearOpMode opMode) {
+        HardwareMap hwMap;
+
         /* Set local copies from opmode class */
-        hwMap = ahwMap;
+        opmode = opMode;
+        hwMap = opMode.hardwareMap;
 
-        imu.init(ahwMap);
-
-        //telemetry.addLine(name + " initialize");
+        imu.init(opMode);
 
         /* Map hardware devices */
-
         FrontRightM = hwMap.dcMotor.get("FrontRightM");
         FrontLeftM = hwMap.dcMotor.get("FrontLeftM");
         BackRightM = hwMap.dcMotor.get("BackRightM");
         BackLeftM = hwMap.dcMotor.get("BackLeftM");
-
 
         //reverses some motors
         BackLeftM.setDirection(DcMotor.Direction.REVERSE);
@@ -74,7 +61,7 @@ public class DriveControl {
         BackLeftM.setPower(speed);
     }
 
-    public void moveForward(double speed,double time){
+    public void moveForward(double speed, double time) {
         moveForward(speed);
         TimeDelay(time);
         stop();
@@ -88,7 +75,7 @@ public class DriveControl {
         BackLeftM.setPower(-speed);
     }
 
-    public void moveBackward(double speed,double time){
+    public void moveBackward(double speed, double time) {
         moveBackward(speed);
         TimeDelay(time);
         stop();
@@ -102,7 +89,7 @@ public class DriveControl {
         BackLeftM.setPower(-speed);
     }
 
-    public void turnLeft(double speed,double time){
+    public void turnLeft(double speed, double time) {
         turnLeft(speed);
         TimeDelay(time);
         stop();
@@ -116,40 +103,40 @@ public class DriveControl {
         BackLeftM.setPower(speed);
     }
 
-    public void turnRight(double speed,double time){
+    public void turnRight(double speed, double time) {
         turnRight(speed);
         TimeDelay(time);
         stop();
     }
 
-    public void turn2angle (double angle){
-        do{
-            imu.IMUupdate();
+    public void turn2Angle(double speed, double angle) {
+        double angle2turn;
 
-            imu.angle2turn = (angle - imu.trueAngle);
+        do {
+            imu.update();
 
-            if (imu.angle2turn > 180){
-                imu.angle2turn -= 360;
+            angle2turn = (angle - imu.trueAngle);
+
+            if (angle2turn > 180) {
+                angle2turn -= 360;
             }
-            if (imu.angle2turn < -180){
-                imu.angle2turn += 360;
+            if (angle2turn < -180) {
+                angle2turn += 360;
             }
 
-            if (imu.angle2turn > 15) {
-                turnRight(imu.turnSpeed);
-            }
-            else if (imu.angle2turn < -15) {
-                turnLeft(imu.turnSpeed);
-            }
-            else {
+            if (angle2turn > 15) {
+                turnRight(speed);
+            } else if (angle2turn < -15) {
+                turnLeft(speed);
+            } else {
                 stop();
             }
-        } while (imu.angle2turn > 15 || imu.angle2turn < -15);
+        } while ( (angle2turn > 15 || angle2turn < -15) && opmode.opModeIsActive() );
     }
 
-    public void turnAngle (int angle) {
-        imu.IMUupdate();
-        turn2angle(angle + imu.trueAngle);
+    public void turnAngle(double speed, double angle) {
+        imu.update();
+        turn2Angle(speed, angle + imu.trueAngle);
     }
 
     //setting power to 0
@@ -160,7 +147,7 @@ public class DriveControl {
         BackLeftM.setPower(0);
     }
 
-    public void tankDrive (double leftSpeed, double rightSpeed, double time){
+    public void tankDrive(double leftSpeed, double rightSpeed, double time) {
         tankLeftForward(leftSpeed);
         tankRightForward(rightSpeed);
         TimeDelay(time);
@@ -187,12 +174,12 @@ public class DriveControl {
         BackLeftM.setPower(-speed);
     }
 
-    public void TimeDelay(double time){
+    public void TimeDelay(double time) {
         double start = 0;
         double now = 0;
         start = runtime.seconds();
         do {
             now = runtime.seconds() - start;
-        }while (now<time);
+        } while ((now < time) && opmode.opModeIsActive() );
     }
 }

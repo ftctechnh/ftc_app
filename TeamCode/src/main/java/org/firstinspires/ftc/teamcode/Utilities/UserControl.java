@@ -4,15 +4,17 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+/* Sub Assembly Class
+ */
 public class UserControl {
-    /* Declare private class objects
-     */
-    private Telemetry telemetry;            /* local copy of telemetry object from opmode class */
+    /* Declare private class objects */
+    private LinearOpMode opmode = null;     /* local copy of opmode class */
+    private Telemetry telemetry = null;     /* local copy of telemetry object from opmode class */
     private String name = "User Control";
 
     /* Declare extended gamepad */
-    GamepadWrapper egamepad1 = null;
-    GamepadWrapper egamepad2 = null;
+    private GamepadWrapper egamepad1 = null;
+    private GamepadWrapper egamepad2 = null;
 
     /* Declare public class objects
      */
@@ -25,7 +27,9 @@ public class UserControl {
     }
 
     public void init(LinearOpMode opMode) {
+
         /* Set local copies from opmode class */
+        opmode = opMode;
         telemetry = opMode.telemetry;
 
         telemetry.addLine(name + " initialize");
@@ -44,7 +48,7 @@ public class UserControl {
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.x.pressed && !egamepad1.b.pressed);
+        } while (!egamepad1.x.pressed && !egamepad1.b.pressed && opmode.opModeIsActive());
         if (egamepad1.b.pressed)
             isRed = true;
         egamepad1.updateEdge();
@@ -60,7 +64,7 @@ public class UserControl {
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.a.pressed && !egamepad1.b.pressed);
+        } while (!egamepad1.a.pressed && !egamepad1.b.pressed /*&& opmode.opModeIsActive()*/);
         if (egamepad1.a.pressed)
             isYes = true;
         egamepad1.updateEdge();
@@ -76,7 +80,7 @@ public class UserControl {
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.x.pressed && !egamepad1.b.pressed);
+        } while (!egamepad1.x.pressed && !egamepad1.b.pressed && opmode.opModeIsActive());
         if (egamepad1.x.pressed)
             isLeft = true;
         egamepad1.updateEdge();
@@ -97,7 +101,7 @@ public class UserControl {
             if (egamepad1.dpad_down.pressed) dpad = DPAD.DOWN;
             if (egamepad1.dpad_left.pressed) dpad = DPAD.LEFT;
         }
-        while (dpad == null);
+        while ((dpad == null) && opmode.opModeIsActive());
         return dpad;
     }
 }

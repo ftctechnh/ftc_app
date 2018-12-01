@@ -1,17 +1,14 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Junk;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
-import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
-import org.firstinspires.ftc.teamcode.SamplingOrderExample;
-import org.firstinspires.ftc.teamcode.Sensors.IMUcontrol;
-//import static org.firstinspires.ftc.teamcode.auto2.State.STATE_STOP;
+import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.IMUcontrol;
 
 @Autonomous(name = "Auto2", group = "Drive")
 public class auto2 extends LinearOpMode {
@@ -21,7 +18,6 @@ public class auto2 extends LinearOpMode {
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
     VucamControl Vucam = new VucamControl();
-    IMUcontrol imu = new IMUcontrol();
     private ElapsedTime runtime = new ElapsedTime();
 
     /* Methods */
@@ -105,10 +101,9 @@ public class auto2 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Drive.init(hardwareMap);
-        Claimer.init(hardwareMap);
-        Vucam.init(hardwareMap);
-        imu.init(hardwareMap);
+        Drive.init(this);
+        Claimer.init(this);
+        Vucam.init(this);
         //Sample.init();
 
         telemetry.addLine("Autonomous");
@@ -145,12 +140,12 @@ public class auto2 extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
-                    if (Vucam.sample == Vucam.sample.Left) {
+                    if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turnLeft(0.4, 0.15);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.55, 1.15);
                         newState(State.STATE_STOP);
-                    } else if (Vucam.sample == Vucam.sample.Right) {
+                    } else if (Vucam.sample == Vucam.sample.RIGHT) {
 
                         Drive.turnRight(0.4, 0.15);
                         Drive.TimeDelay(0.1);
@@ -164,7 +159,7 @@ public class auto2 extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
-                    if (Vucam.sample == Vucam.sample.Left) {
+                    if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turnLeft(0.4, 0.15);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.55, 1.2);
@@ -173,7 +168,7 @@ public class auto2 extends LinearOpMode {
                         newState(State.STATE_STOP);
                     }
                     //Center
-                    else if (Vucam.sample == Vucam.sample.Center) {
+                    else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.moveForward(0.5, 2.2);
                         newState(State.STATE_CLAIM);
                     }
