@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -11,6 +13,8 @@ public class CompRobot extends BasicBot
     LinearOpMode linearOpMode;
 
     private DistanceSensor frontDistSens, frontRightDistSens, backDistSens;
+    private DcMotorImplEx collectorPivoterMotor, collectorLifterMotor, climberMotor;
+    private Servo wristCollectorServo, rightGrabServo, leftGrabServo;
 
     public CompRobot(HardwareMap hardwareMap)
     {
@@ -189,8 +193,11 @@ public class CompRobot extends BasicBot
 {
     return frontDistSens;
 }
+
     public double getFrontDistance_IN()
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
+
+
 }
