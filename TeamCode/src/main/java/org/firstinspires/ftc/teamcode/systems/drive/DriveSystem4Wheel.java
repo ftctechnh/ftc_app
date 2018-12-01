@@ -6,7 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.systems.base.System;
 
-public class DriveSystem4Wheel extends System
+/**
+ * A class to handle our four motor Drive Systems
+ */
+
+public abstract class DriveSystem4Wheel extends System
 {
 
     public DcMotor motorFrontLeft;
@@ -14,7 +18,11 @@ public class DriveSystem4Wheel extends System
     public DcMotor motorBackLeft;
     public DcMotor motorBackRight;
 
-    public DriveSystem4Wheel(OpMode opMode, String systemName) {
+    /**
+     * Handles the data for the abstract creation of a drive system with four wheels
+     * @param opMode opmode this system runs in
+     */
+    public DriveSystem4Wheel(OpMode opMode) {
         super(opMode, "DriveSystem4Wheel");
 
         this.motorFrontLeft = hardwareMap.dcMotor.get("motorFL");
@@ -37,6 +45,10 @@ public class DriveSystem4Wheel extends System
         setPower(0);
     }
 
+    /**
+     * Set the power of the drive system
+     * @param power power of the system
+     */
     public void setPower(double power) {
         this.motorFrontLeft.setPower(power);
         this.motorFrontRight.setPower(power);
@@ -44,6 +56,10 @@ public class DriveSystem4Wheel extends System
         this.motorBackRight.setPower(power);
     }
 
+    /**
+     * Checks if any of the motors are currently running
+     * @return Returns true if any motors are busy
+     */
     public boolean anyMotorsBusy()
     {
         return motorFrontLeft.isBusy() ||
@@ -52,6 +68,10 @@ public class DriveSystem4Wheel extends System
                 motorBackRight.isBusy();
     }
 
+    /**
+     * Sets the target position of all the motors
+     * @param ticks the amount of ticks to increase the target position
+     */
     public void setTargetPosition(int ticks)
     {
         motorBackLeft.setTargetPosition(motorBackLeft.getCurrentPosition() + ticks);
@@ -60,6 +80,10 @@ public class DriveSystem4Wheel extends System
         motorFrontRight.setTargetPosition(motorFrontRight.getCurrentPosition() + ticks);
     }
 
+    /**
+     * Sets the run mode of all the motors
+     * @param runMode the new run mode of the motors
+     */
     public void setRunMode(DcMotor.RunMode runMode)
     {
         // lick left kneecap daddy pimple
@@ -69,6 +93,11 @@ public class DriveSystem4Wheel extends System
         motorBackRight.setMode(runMode);
     }
 
+    /**
+     * Causes the system to tank drive
+     * @param leftPower sets the left side power of the robot
+     * @param rightPower sets the right side power of the robot
+     */
     public void tankDrive(double leftPower, double rightPower) {
         this.motorFrontLeft.setPower(-leftPower);
         this.motorBackLeft.setPower(leftPower);
@@ -76,6 +105,10 @@ public class DriveSystem4Wheel extends System
         this.motorBackRight.setPower(-rightPower);
     }
 
+    /**
+     * Sets the direction of all the motors
+     * @param direction The new direction of the motors
+     */
     public void setDirection(DriveDirection direction) {
         switch (direction){
             case FORWARD:

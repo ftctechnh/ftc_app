@@ -11,7 +11,6 @@ import org.firstinspires.ftc.teamcode.components.scale.IScale;
 import org.firstinspires.ftc.teamcode.components.scale.LinearScale;
 import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
-import org.firstinspires.ftc.teamcode.systems.drive.DriveSystem4Wheel;
 import org.firstinspires.ftc.teamcode.systems.imu.IMUSystem;
 
 public class MecanumDriveSystem extends DriveSystem4Wheel
@@ -36,7 +35,7 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
      * @param opMode
      */
     public MecanumDriveSystem(OpMode opMode) {
-        super(opMode, "MecanumDrive");
+        super(opMode);
 
         //this.config = new ConfigParser("Testy.omc");
         TICKS_IN_INCH = 69;
@@ -373,14 +372,14 @@ public class MecanumDriveSystem extends DriveSystem4Wheel
      * @param maxPower Maximum power
      */
     public void parkOnCrater(double maxPower) {
-        double initPitch = imuSystem.getpitch();
+        double initPitch = imuSystem.getPitch();
         double initRoll = imuSystem.getRoll();
         double criticalAngle = 1.5;
 
         setDirection(DriveDirection.FORWARD);
         setPower(maxPower);
 
-        while ((Math.abs(imuSystem.getpitch() - initPitch) < criticalAngle) &&
+        while ((Math.abs(imuSystem.getPitch() - initPitch) < criticalAngle) &&
                 (Math.abs(imuSystem.getRoll() - initRoll) < criticalAngle)) {
             setPower(maxPower);
         }

@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.components.scale.Point;
 import org.firstinspires.ftc.teamcode.components.scale.Ramp;
 import org.firstinspires.ftc.teamcode.systems.base.System;
 
+/**
+ * Runs a linear slide system on the robot
+ */
 public class SlideSystem extends System
 {
     private final double WinchPower = -0.2;
@@ -24,6 +27,10 @@ public class SlideSystem extends System
 
     private double winchOrigin;
 
+    /**
+     * Creates a new linear slide system in the current opmode
+     * @param opMode current opmode being executed
+     */
     public SlideSystem(OpMode opMode)
     {
         super(opMode, "SlideSystem");
@@ -37,10 +44,17 @@ public class SlideSystem extends System
         limitMiddle.setMode(DigitalChannel.Mode.INPUT);
     }
 
+    /**
+     * Sets the state of the slide
+     * @param state new state of the slide
+     */
     public void setState(SlideState state) {
         this.state = state;
     }
 
+    /**
+     * Runs the slide system
+     */
     public void run() {
         switch (state) {
             case WINCHING_TO_TOP:
@@ -55,6 +69,9 @@ public class SlideSystem extends System
         }
     }
 
+    /**
+     * Slides up to the top
+     */
     public void slideUp()
     {
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -68,10 +85,17 @@ public class SlideSystem extends System
         }
     }
 
+    /**
+     * Checks if the slide is at the top
+     * @return Returns true if the slide is at the top
+     */
     private boolean isAtTop() {
         return !limitTop.getState() && !limitMiddle.getState();
     }
 
+    /**
+     * Slides down to the bottom
+     */
     public void slideDown()
     {
         winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -85,10 +109,17 @@ public class SlideSystem extends System
         }
     }
 
+    /**
+     * Checks if the slide is at the bottom
+     * @return Returns true if the slide is at the bottom
+     */
     private boolean isAtBottom() {
         return winch.getCurrentPosition() >= winchOrigin;
     }
 
+    /**
+     * Stops the slide
+     */
     public void stop() {
         setState(SlideState.IDLE);
         winch.setPower(0);

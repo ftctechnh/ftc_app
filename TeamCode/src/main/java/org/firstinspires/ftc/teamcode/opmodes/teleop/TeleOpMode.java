@@ -98,7 +98,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.setState(ArmState.ROTATING_PICKUP);
+                armSystem.setState(ArmState.ROTATING_BOTTOM);
             }
         };
         controller1.dPadDown.releasedHandler = new Handler()
@@ -114,7 +114,7 @@ public class TeleOpMode extends TeleOpModeDebugger {
             @Override
             public void invoke() throws Exception
             {
-                armSystem.setState(ArmState.ROTATING_DROP);
+                armSystem.setState(ArmState.ROTATING_TOP);
             }
         };
         controller1.dPadUp.releasedHandler = new Handler()
