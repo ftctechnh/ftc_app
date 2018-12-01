@@ -78,7 +78,7 @@ public class Bogg
         return spinAve;
     }
 
-    private void manualLift()
+    void manualLift()
     {
         if(gamepad.y && !sensors.touchTop.isPressed())
         {

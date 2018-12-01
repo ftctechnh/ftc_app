@@ -63,7 +63,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
             robot.manualLift();
 
             // Display the current value
-            telemetry.addLine("'Pressing A must move the arm down.'");
+            telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
             telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
             telemetry.addData("Brake x", x);

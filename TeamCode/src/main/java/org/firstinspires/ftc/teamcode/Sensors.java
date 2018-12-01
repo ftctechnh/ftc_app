@@ -25,7 +25,7 @@ public class Sensors {
     DistanceSensor dFixed;
     DistanceSensor dMobile;
 
-    BNO055IMU imu;
+    BNO055IMU imu = null;
 
     // State used for updating telemetry
     Orientation angles;

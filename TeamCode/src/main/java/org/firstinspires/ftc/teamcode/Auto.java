@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -45,6 +46,7 @@ public class Auto {
 
     Mode drop()
     {
+        robot.push(true);
         if(timer == null) //TODO: Don't fix what's not broken
         {
             timer = new ElapsedTime();
@@ -130,12 +132,12 @@ public class Auto {
 
             telemetry.addLine("Made it to point 33");
             telemetry.update();
-            return Mode.Spin;
+            return Mode.MoveToWall;
         }
 
         telemetry.addLine("Made it to point Gingerbread");
         telemetry.update();
-        return Mode.MoveToWall;
+        return Mode.Spin;
     }
 
 
@@ -178,6 +180,8 @@ public class Auto {
                 iSP = -1;
                 break;
         }
+        robot.sensors.rotateMobile(iSP * 90);
+
         if(!midTargetAchieved) { //if we haven't achieved the midtarget
             if(robot.driveToTarget(midTarget[0], midTarget[0], .6, 4))  //keep driving to the midtarget, also returns if we have, if so
                 midTargetAchieved = true; //say that we have acheived the midtarget
@@ -199,8 +203,10 @@ public class Auto {
         robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
 
         if(mobileDistance < 6) {
-            robot.sensors.rotateMobile(-90);
+            robot.sensors.rotateMobile(-iSP * 90);
             timer.reset();
+            robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             return Mode.DropMarker;
         }
         return Mode.MoveToDepot;
@@ -209,11 +215,29 @@ public class Auto {
 
     Mode dropMarker()
     {
+        double inchesMoved = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
+        if(iSP == 1 && inchesMoved < Math.PI * 9.0) //half a rotation
+        {
+            robot.driveEngine.rotate(.5);
+            timer.reset();
+            return Mode.DropMarker;
+        }
+
         robot.driveEngine.drive(0,0);
-        robot.push(true);
+        robot.push(false);
+        if(iSP != 1) {
+            if (timer.seconds() > 3)
+                return Mode.MoveToCrater;
+            return Mode.DropMarker;
+        }
+
         if(timer.seconds() > 3)
-            return Mode.MoveToCrater;
-        return Mode.DropMarker;
+        {
+            if (inchesMoved < 2 * Math.PI * 9.0) //full rotation
+                robot.driveEngine.rotate(.5);
+            return Mode.DropMarker;
+        }
+        return Mode.MoveToCrater;
     }
 
 
@@ -221,7 +245,7 @@ public class Auto {
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         robot.push(false);
-        robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
+        robot.driveEngine.drive(-iSP * .7,(6 - fixedDistance)/6.0);
         if(robot.sensors.isTilted())
         {
             return Mode.Stop;
