@@ -22,7 +22,9 @@ public class teleop extends LinearOpMode {
         telemetry.addLine("Ready Player One");
         telemetry.addLine("Ready Player Two");
 
-        double speed = 0.75;
+        double DriveSpeed = 0.75;
+        double TurnSpeed = DriveSpeed/2;
+        int reverse = 1;
 
         /* initialize sub-assemblies
          */
@@ -49,32 +51,39 @@ public class teleop extends LinearOpMode {
 
             //Ready Player One
 
+            //reverse control
+            if (egamepad1.b.released) {
+                reverse = reverse * -1;
+            }
+
             //speed control
             if (egamepad1.right_bumper.pressed) {
-                speed += 0.25;
-                if (speed > 3) speed = 3;
+                DriveSpeed += 0.25;
+                if (DriveSpeed > 3) DriveSpeed = 3;
+                TurnSpeed = DriveSpeed/2;
             }
             if (egamepad1.left_bumper.pressed) {
-                speed -= 0.25;
-                if (speed < 0) speed = 0;
+                DriveSpeed -= 0.25;
+                if (DriveSpeed < 0) DriveSpeed = 0;
+                TurnSpeed = DriveSpeed/2;
             }
 
             if (egamepad1.dpad_left.state) {
-                Drive.tankRightForward(speed);
+                Drive.tankRightForward(reverse * DriveSpeed);
             } else if (egamepad1.dpad_right.state) {
-                Drive.tankLeftForward(speed);
+                Drive.tankLeftForward(reverse * DriveSpeed);
             }
 
             else if (-gamepad1.left_stick_y < -0.4) {
-                Drive.moveBackward(speed);
+                Drive.moveBackward(reverse * DriveSpeed);
             } else if (-gamepad1.left_stick_y > 0.4) {
-                Drive.moveForward(speed);
+                Drive.moveForward(reverse * DriveSpeed);
             }
 
             else if (gamepad1.left_stick_x > 0.4) {
-                Drive.turnRight(speed/2);
+                Drive.turnRight(TurnSpeed);
             } else if (gamepad1.left_stick_x < -0.4) {
-                Drive.turnLeft(speed/2);
+                Drive.turnLeft(TurnSpeed);
             }
             else { Drive.stop();}
             
@@ -95,7 +104,7 @@ public class teleop extends LinearOpMode {
                 Lift.Unlock();
             }
 
-            telemetry.addLine("Speed: " + speed);
+            telemetry.addLine("Speed: " + DriveSpeed);
 
             //SubAssembly.test();
             telemetry.update();

@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 
-@Autonomous(name = "Auto3imu", group = "Drive")
+@Autonomous(name = "Auto3imu", group = "Auto")
 public class Auto3imu extends LinearOpMode {
 
     /* Sub assemblies */
@@ -79,6 +79,8 @@ public class Auto3imu extends LinearOpMode {
         Vucam.init(this);
         Drive.init(this);
         Claimer.init(this);
+        Lift.init(this);
+
 
         telemetry.addLine("Autonomous");
 
@@ -106,7 +108,7 @@ public class Auto3imu extends LinearOpMode {
         waitForStart();
 
         Vucam.setSamplePos();
-        newState(State.STATE_INITIAL);
+        newState(State.STATE_LAND);
         Drive.imu.setStartAngle();
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
@@ -125,10 +127,10 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_LAND:
                     telemetry.addLine("Land");
                     telemetry.update();
-                    //Lift.Unlock();
-                   /*while(!Lift.LifterButtonT.isPressed()) {
+                  /* while(!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
-                    }*/
+                    }
+                    Lift.Stop();*/
                     sleep(1000);
                     newState(State.STATE_ADJUST);
                     break;
@@ -186,15 +188,15 @@ public class Auto3imu extends LinearOpMode {
                         Drive.moveForward(0.55, 1.0);
                         newState(State.STATE_CLAIM);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 1.8);
-                        Drive.moveBackward(0.5, 0.15);
+                        Drive.moveForward(0.5, 2.2);
+                        Drive.moveBackward(0.5, .10);
                         newState(State.STATE_CLAIM);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 35);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.3);
                         Drive.turn2Angle(TURN_SPEED, -48);
-                        Drive.moveForward(0.55, 1.5);
+                        Drive.moveForward(0.55, 1.0);
                         newState(State.STATE_CLAIM);
                         //Turn back toward depot
                     }
@@ -205,9 +207,10 @@ public class Auto3imu extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -45.0);
                     Claimer.drop();
-                    /*while (!Lift.LifterButtonB.isPressed()){
+                  /* while (!Lift.LifterButtonB.isPressed()){
                         Lift.Retract();
-                }*/
+                    }
+                    Lift.Stop();*/
                     Drive.TimeDelay(2.0);
                     Claimer.reset();
                     if (twoSample == true) {
@@ -220,7 +223,16 @@ public class Auto3imu extends LinearOpMode {
                 case STATE_DEPOT_TO_CRATER:
                     telemetry.addLine("Depot to crater");
                     telemetry.update();
-                    Drive.moveBackward(0.5, 3.2);
+                    if (Vucam.sample != Vucam.sample.LEFT) {
+                        Drive.moveBackward(0.5, 3.2);
+                    }
+                    else {
+                        Drive.moveBackward(0.5, 2.0);
+                        Drive.turn2Angle(TURN_SPEED, -20);
+                        Drive.moveBackward(.4, 0.5);
+                        Drive.turn2Angle(TURN_SPEED, -50);
+                        Drive.moveBackward(0.5, 1.2);
+                    }
                     newState(State.STATE_STOP);
                     break;
 

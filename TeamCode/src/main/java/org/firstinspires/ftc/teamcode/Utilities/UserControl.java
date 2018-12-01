@@ -64,7 +64,7 @@ public class UserControl {
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.a.pressed && !egamepad1.b.pressed && opmode.opModeIsActive());
+        } while (!egamepad1.a.pressed && !egamepad1.b.pressed /*&& opmode.opModeIsActive()*/);
         if (egamepad1.a.pressed)
             isYes = true;
         egamepad1.updateEdge();
