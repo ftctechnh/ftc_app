@@ -67,7 +67,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the int stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a float
      */
@@ -77,7 +77,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the float stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a double
      */
@@ -87,7 +87,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the double stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a char
      */
@@ -97,7 +97,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the char stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a byte
      */
@@ -107,7 +107,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the long stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a long
      */
@@ -117,7 +117,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the short stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a short
      */
@@ -127,7 +127,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the boolean stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a boolean
      */
@@ -154,7 +154,7 @@ public class ConfigParser implements IConfig
     }
 
     /**
-     * Returns the value stored at a key in the configuration
+     * Returns the string stored at a key in the configuration
      * @param key Configuration key
      * @return Returns the value stored at a key in the configuration as a string
      */

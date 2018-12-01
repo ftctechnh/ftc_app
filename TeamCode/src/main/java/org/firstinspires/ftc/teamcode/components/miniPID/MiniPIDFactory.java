@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.components.miniPID;
 
 import org.firstinspires.ftc.teamcode.components.configs.IConfig;
 
+/**
+ *
+ */
+
 public class MiniPIDFactory {
     /**
      * Returns a new Miniature PID controller given a configuration file

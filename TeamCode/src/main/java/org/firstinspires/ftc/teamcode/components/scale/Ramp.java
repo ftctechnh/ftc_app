@@ -1,10 +1,22 @@
 package org.firstinspires.ftc.teamcode.components.scale;
 
+/**
+ * This ramp is built from two points and creates a ramp function that takes an x value
+ * as an input and gives a y value as output. The ramp also can take in a y value and give the
+ * inverse.
+ */
 abstract public class Ramp implements IScale
 {
     private Point point1;
     private Point point2;
 
+    /**
+     * This ramp's function -- f(x) -- is built using the two points passed into the constructor.
+     * From these points it builds a logarithmic function
+     * @param point1 The first point the exponential ramp run through.
+     * @param point2 The second point the exponential ramp runs through.
+     * @see Point
+     */
     public Ramp(Point point1, Point point2)
     {
         this.point1 = point1;
@@ -15,6 +27,7 @@ abstract public class Ramp implements IScale
     public Point getPoint2() {
         return point2;
     }
+
 
     public double scaleX(double x)
     {
