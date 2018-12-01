@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -11,6 +15,9 @@ public class CompRobot extends BasicBot
     LinearOpMode linearOpMode;
 
     private DistanceSensor frontDistSens, frontRightDistSens, backDistSens;
+    private DcMotorImplEx collectorPivoterMotor, collectorLifterMotor, climberMotor;
+    private Servo wristCollectorServo;
+    private CRServo rightGrabServo, leftGrabServo;
 
     public CompRobot(HardwareMap hardwareMap)
     {
@@ -28,6 +35,15 @@ public class CompRobot extends BasicBot
     {
         frontRightDistSens = hardwareMap.get(DistanceSensor.class, "rightDistSens");
         frontDistSens = hardwareMap.get(DistanceSensor.class, "frontDistSens");
+    }
+
+    public void initMotorsAndMechParts(HardwareMap hardwareMap)
+    {
+        wristCollectorServo = hardwareMap.get(Servo.class, "wristCollectorServo");
+        rightGrabServo = hardwareMap.get(CRServo.class, "rightGrabServo");
+        rightGrabServo.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftGrabServo = hardwareMap.get(CRServo.class, "leftGrabServo");
+        leftGrabServo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     public void driveStraight(float dist_In, float pow)
@@ -189,8 +205,29 @@ public class CompRobot extends BasicBot
 {
     return frontDistSens;
 }
+
     public double getFrontDistance_IN()
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
+
+    public void lowerCollectorWristAndExpel()
+    {
+
+
+        //Okay dood time for pseudocode
+
+        //So the wrist-pivot inits in its very back position
+        //wristpivot servo to low position
+        //then set the two CR servos to rotate
+        //After x amount of seconds, the two servos stop rotating
+
+        //Some notes taken
+        //left for going in 0 - .5
+        // right .5 to 1 
+
+
+    }
+
+
 }
