@@ -42,7 +42,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import java.util.List;
 
 import teamcode.examples.TensorFlowManager;
-import teamcode.kkl2.KKL2HardwareManager;
+//import teamcode.kkl2.KKL2HardwareManager;
 
 /**
  * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
@@ -67,6 +67,7 @@ public class TensorTest1 extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
+        float target_x = 640;
         double power = 1.0;
         List<Mineral> minerals = null;
         while (opModeIsActive()) {
@@ -75,14 +76,23 @@ public class TensorTest1 extends LinearOpMode {
             if (minerals != null) {
                 int i = 0;
                 for (Mineral mineral : minerals) {
-                    if (mineral.isGold()) {
-                        gold = mineral;
-                    }
-                    addTelemetry(mineral, ++i);
+                    float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
+                    float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
+                    float height = mineral.getRight() - mineral.getLeft();
+                    float error = target_x - center_x;
+                    double c = Helper.getCentimetersFromPixels(height); // centimeters
+                    double a = c * error / Helper.CAMERA_DISTANCE; // centimeters
+                    double b = Math.sqrt((c*c) - (a*a)); // centimeters
+                    double radians = Math.asin(a / c);
+                    double degrees = radians * 180.0 / Math.PI;
+                    telemetry.addData("a b c", "%s %s %s", a, b, c);
+                    telemetry.addData("Degrees away", degrees);
+                    telemetry.addData("Gold Height", height);
+                    telemetry.addData("Gold Center X", center_x);
+                    telemetry.addData("Gold Center Y", center_y);
+                    telemetry.addData("Error (pixels)", error);
                 }
 
-                double d = Math.atan(3);
-                telemetry.addData("atan(3) 71.565", d);
                 telemetry.update();
             }
 

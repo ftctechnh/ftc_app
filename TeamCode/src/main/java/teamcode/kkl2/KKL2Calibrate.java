@@ -2,6 +2,7 @@ package teamcode.kkl2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import java.util.List;
@@ -10,8 +11,8 @@ import teamcode.examples.Helper;
 import teamcode.examples.Mineral;
 import teamcode.examples.TensorFlowManager;
 
-@Autonomous(name = "KKL2Auto", group = "Linear OpMode")
-public class KKL2Auto extends LinearOpMode {
+@TeleOp(name = "KKL2Calibrate", group = "Linear OpMode")
+public class KKL2Calibrate extends LinearOpMode {
     private static final double DRIVE_TICKS_PER_CENTIMETER_COVERED = -55.0;
     private static final double TURN_TICKS_PER_RADIAN_COVERED = 1066.15135303;
     private static final int DRIVE_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 10;
@@ -28,11 +29,21 @@ public class KKL2Auto extends LinearOpMode {
         waitForStart();
         resetDriveEncoders();
 
-        unlatch();
-
-        approach();
-
-        while (opModeIsActive());
+        while (opModeIsActive()) {
+            if (gamepad1.dpad_up) {
+                drive(30.48, 1);
+            }
+            else if (gamepad1.dpad_down) {
+                drive(-30.48, 1);
+            }
+            else if (gamepad1.dpad_right) {
+                turn(90);
+            }
+            else if (gamepad1.dpad_left) {
+                turn(-90);
+            }
+            else {zeroDriveMotorPower();}
+        }
     }
 
     private void drive(double centimeters, double power) {
@@ -131,38 +142,20 @@ public class KKL2Auto extends LinearOpMode {
     }
 
     private void unlatch() {
-
+/*
         // lower the robot using the servo
         KKL2HardwareManager.liftLockServo.setPosition(1.0);
         sleep(9500);
         KKL2HardwareManager.liftLockServo.setPosition(0.5);
 
+        // unlatch the lift arm
+        KKL2HardwareManager.liftLatchServo.setPosition(0);
+        sleep(2000);
+*/
         // push arm backwards
-
         double liftBaseMotorPower = 1.0;
         double ticksPerDegree = Helper.REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION / 360.0 * 7.0;
         int ticks = (int)(ticksPerDegree * 5);
-        /*
-        KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
-        KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
-        while (opModeIsActive() && !liftNearTarget()) ;
-        zeroLiftMotorPower();
-        resetLiftEncoders();
-        */
-
-        // unlatch the lift arm
-        KKL2HardwareManager.liftLatchServo.setPosition(0);
-        sleep(500);
-        KKL2HardwareManager.liftLatchServo.setPosition(1);
-        sleep(500);
-        KKL2HardwareManager.liftLatchServo.setPosition(0);
-        sleep(2000);
-
-        turn(7);
-
-        // move arm back down
-        resetLiftEncoders();
-        ticks = (int)(ticksPerDegree * -70);
         KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
         KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
         while (opModeIsActive() && !liftNearTarget()) ;
@@ -191,59 +184,67 @@ public class KKL2Auto extends LinearOpMode {
         float integral = 0;
         float derivative = 0;
         float target_x = 640;
-        double c = 1000;
+        double object_distance = 1000;
         double ratio = 30.48 / 200; // centimeters / pixels (num pixel when the object is 1 ft away)
         double forward_distance = 25.4;
-        boolean completed = false;
 
-        while (opModeIsActive() && !completed) {
-            minerals = this.tfManager.getRecognizedMinerals();
-
-            if (minerals != null) {
-                for (Mineral mineral : minerals) {
-                    if (mineral.isGold()) {
-                        /*
-                        float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
-                        float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
-                        height = mineral.getRight() - mineral.getLeft();
-                        telemetry.addData("Gold Height", height);
-                        telemetry.addData("Gold Center X", center_x);
-                        telemetry.addData("Gold Center Y", center_y);
-
-                        c = Helper.getCentimetersFromPixels(height); // centimeters
-                        error = target_x - center_x; // adjacent side in pixels
-                        double a = c * error / Helper.CAMERA_DISTANCE; // centimeters
-                        double b = Math.sqrt((c*c) - (a*a)); // centimeters
-                        double radians = Math.asin(a / c);
-                        double degrees = radians * 180.0 / Math.PI;
-
-                        telemetry.addData("error", error);
-                        telemetry.addData("inches away", c / 2.54);
-                        telemetry.addData("degrees away", degrees);
-                        */
-
-                        double degrees = mineral.getAngle();
-                        if (degrees > 10 || degrees < -10) {
-                            // turn towards the gold
-                            turn(degrees * Math.PI / 180);
-                        } else {
-                            telemetry.addData("Facing Gold", "No Turn, Move Forward");
-                            // Move to knock the gold
-                            drive(c + 45, power);
-                            completed = true;
-                        }
-
-                        telemetry.update();
-                    }
-                }
+        while (opModeIsActive()) {
+            if (object_distance < 30.48) {
+                // we are 1 ft away to gold
+                telemetry.addData("Driving", "To Victory!!!");
+                telemetry.update();
+                drive(35, power);
             }
             else {
-                telemetry.addData("Can't find minerals", "Move back");
-                telemetry.update();
-                // drive back to try and detect objects
-                drive(-3, power);
+                minerals = this.tfManager.getRecognizedMinerals();
+
+                if (minerals != null) {
+                    for (Mineral mineral : minerals) {
+                        if (mineral.isGold()) {
+                            float center_y = (mineral.getLeft() + mineral.getRight()) / 2;
+                            float center_x = (mineral.getBottom() + mineral.getTop()) / 2;
+                            height = mineral.getRight() - mineral.getLeft();
+                            telemetry.addData("Gold Height", height);
+                            telemetry.addData("Gold Center X", center_x);
+                            telemetry.addData("Gold Center Y", center_y);
+
+                            object_distance = getCentimetersFromPixels(height); // centimeters
+                            error = target_x - center_x; // adjacent side in pixels
+                            double x = object_distance * error / Helper.CAMERA_DISTANCE; // centimeters
+                            double v = x / object_distance;
+                            double radians = Math.asin(v);
+                            double degrees = radians * 180.0 / Math.PI;
+
+                            telemetry.addData("error", error);
+                            telemetry.addData("inches away", object_distance / 2.54);
+                            telemetry.addData("degrees away", degrees);
+
+                            if (degrees > 10 || degrees < -10) {
+                                // turn towards the gold
+                                turn(radians);
+                            } else {
+                                telemetry.addData("Facing Gold", "No Turn, Move Forward");
+                                // Move robot closer
+                                //drive(object_distance, power);
+                                drive(forward_distance, power);
+                            }
+
+                            telemetry.update();
+                        }
+                    }
+                }
+                else {
+                    telemetry.addData("Can't find minerals", "Move back an inch");
+                    telemetry.update();
+                    // drive 1 inch to try and detect objects
+                    drive(-2.54, power);
+                }
             }
         }
+    }
+
+    private double getCentimetersFromPixels(double pixels) {
+        return ((pixels - 300) / -100) * 30.48; // centimeters
     }
 
     private void approachGold() {
