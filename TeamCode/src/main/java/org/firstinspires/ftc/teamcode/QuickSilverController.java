@@ -42,11 +42,20 @@ public class QuickSilverController extends OpMode {
     private boolean useEncoders = true;
     private boolean useArm = true;
 
+    //Movement State
+    int armState;
+    int extenderTarget;
+    int shoulderTarget;
     /**
      * Code to run ONCE when the driver hits INITh6
      */
     @Override
     public void init() {
+
+        //Init Movement state
+        armState = 0;
+        extenderTarget = 0;
+        shoulderTarget = 0;
 
         // Initialize the motors.
         if (useMotors) {
@@ -79,7 +88,9 @@ public class QuickSilverController extends OpMode {
             shoulder = hardwareMap.get(DcMotor.class, "motor4");
             extender = hardwareMap.get(DcMotor.class, "motor5");
         }
+
     }
+
 
     /**
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -108,6 +119,8 @@ public class QuickSilverController extends OpMode {
      */
     @Override
     public void loop() {
+
+
         if (useMotors) {
             // Control the wheel motors.
             // POV Mode uses left stick to go forward, and right stick to turn.
@@ -159,7 +172,7 @@ public class QuickSilverController extends OpMode {
             shoulder.setPower(pullPower);
 
             // Control the extender.
-            boolean extendOut = gamepad1.y;
+         /*   boolean extendOut =  gamepad1.y;
             boolean extendIn = gamepad1.a;
             double extendPower = 0.0;
             if (extendOut) {
@@ -168,8 +181,68 @@ public class QuickSilverController extends OpMode {
                 extendPower = -1.0;
             }
             extender.setPower(extendPower);
+            */
+
+         //Setting certain postions for arm & extender
+            boolean jewelPickUp = gamepad1.a;
+            boolean moving = gamepad1.b;
+            boolean deposit = gamepad1.x;
+            boolean landerAttach = gamepad1.y;
+            if (jewelPickUp){
+                startArmMoving(-3127, 16714);
+            }else if (moving){
+                startArmMoving(-2691, 9103);
+            }else if (deposit){
+                startArmMoving(1587, -7522);
+            }else if (landerAttach){
+                startArmMoving(3185, -8695);
+            }
+        }
+
+        //Time to Move!
+
+        if(armState == 1 && !extender.isBusy()){
+            armState = 2;
+            shoulder.setTargetPosition(shoulderTarget);
+            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            shoulder.setPower(0.75);
+        }
+        if(armState == 2 && !shoulder.isBusy()){
+            armState = 0;
+            telemetry.addLine("Position Moved!");
+        }
+
+
+    }
+
+    protected void startArmMoving(int eTarget, int sTarget){
+        // save the g;obal movement state
+
+        // Get the current position.
+        int extenderStart = extender.getCurrentPosition();
+        telemetry.addData("StartingPos.", "Starting %7d", extenderStart);
+
+        // Turn On RUN_TO_POSITION
+        extender.setTargetPosition(eTarget);
+        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extender.setPower(0.75);
+
+        //Set global Movement State
+        armState = 1;
+        extenderTarget = eTarget;
+        shoulderTarget = sTarget;
+
+    }
+
+    protected void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+
         }
     }
+
 
 }
 
