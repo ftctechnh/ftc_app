@@ -128,11 +128,11 @@ public class Camera{
      * localization engine.
      */
     private VuforiaLocalizer vuforia;
-    private VuforiaTrackable blueRover;
-    private VuforiaTrackable redFootprint;
-    private VuforiaTrackable frontCraters;
-    private VuforiaTrackable backSpace;
-    private List<VuforiaTrackable> allTrackables;
+    VuforiaTrackable blueRover;
+    VuforiaTrackable redFootprint;
+    VuforiaTrackable frontCraters;
+    VuforiaTrackable backSpace;
+    List<VuforiaTrackable> allTrackables;
 
     public Camera(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;

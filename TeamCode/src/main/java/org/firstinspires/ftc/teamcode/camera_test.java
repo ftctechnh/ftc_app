@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.drawable.GradientDrawable;
+
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 import java.util.ArrayList;
-@Disabled
 @TeleOp(name="  camera_test", group="Testing")
 public class camera_test extends LinearOpMode
 {
@@ -19,9 +22,15 @@ public class camera_test extends LinearOpMode
 
         while (opModeIsActive())
         {
-            Double dist = camera.alignToTarget(0);
-            telemetry.addData("found:", dist != null);
-            telemetry.addData("distance:", dist);
+            double[] location = camera.getLocation();
+            double heading =  camera.getHeading();
+            if(location != null) {
+                telemetry.addData("x", location[0]);
+                telemetry.addData("y", location[1]);
+                telemetry.addData("z", location[2]);
+                telemetry.addData("heading", heading);
+            }
+
             telemetry.update();
             idle();
         }

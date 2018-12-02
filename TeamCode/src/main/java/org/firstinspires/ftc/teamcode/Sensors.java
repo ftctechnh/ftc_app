@@ -47,7 +47,7 @@ public class Sensors {
         //angle    should go from -90   to 90
         //position should go from min to max
         double center = 0;
-        double right = 1;
+        double right = .8;
         double position = (right - center) * rightOfCenter / 90 ;
 
         dServo.setPosition(position);

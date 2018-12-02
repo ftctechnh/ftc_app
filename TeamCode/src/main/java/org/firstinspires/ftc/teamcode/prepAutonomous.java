@@ -23,6 +23,8 @@ public class prepAutonomous extends LinearOpMode
         robot = new Bogg(hardwareMap, gamepad1);
         waitForStart();
         action = Mode.Drop;
+
+        robot.push(false);
         timer = new ElapsedTime();
 
         while (opModeIsActive())
@@ -31,7 +33,6 @@ public class prepAutonomous extends LinearOpMode
             switch(action)
             {
                 case Drop:
-                    robot.push(false);
                     if(t < 3) //for the three seconds
                     {
                         robot.lift(-.3); //pull up

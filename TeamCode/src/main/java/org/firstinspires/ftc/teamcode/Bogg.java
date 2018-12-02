@@ -38,6 +38,7 @@ public class Bogg
     }
 
 
+
     private double smoothX(double x)
     {
         if(x * xAve < 0 || x == 0)
@@ -131,9 +132,9 @@ public class Bogg
     void manualDrive()
     {
         if(gamepad.left_stick_button)
-            driveEngine.drive(gamepad.left_stick_x, gamepad.left_stick_y,true);
+            driveEngine.drive(gamepad.left_stick_x, -gamepad.left_stick_y,true);
         else
-            driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(gamepad.left_stick_y));
+            driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(-gamepad.left_stick_y));
     }
 
     boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
@@ -163,32 +164,41 @@ public class Bogg
             //where compass would say the mountain is located considering our compass isn't pointed north
             double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
 
-            driveEngine.drive(Math.cos(target_heading) * speed, Math.sin(target_heading) * speed);
+            driveEngine.drive(Math.cos((target_heading + 90)*Math.PI/180) * speed, Math.sin((target_heading+90)*Math.PI/180) * speed);
 
         }
-            return true;
+         return false;
     }
 
-    boolean rotateToTargetAngle(double targetHeading, double accuracy_angle)
+    boolean rotateToTarget(double target_x, double target_y, double accuracy_angle)
     {
         double[] location = camera.getLocation();
-        if(location != null)
-        {
+        if(location != null) {
+
+            double robot_x = location[0];
+            double robot_y = location[1];
+
+            double delta_x = target_x - robot_x;
+            double delta_y = target_y - robot_y;
+
 
             //the direction a compass would tell us
-            double currentHeading = camera.getHeading() * 180 / Math.PI;
+            double heading_of_robot_on_field = camera.getHeading();
 
-            double headingDifference = currentHeading - targetHeading;
+            //where a map would tell us a mountain is, relative to us
+            double heading_of_target_from_robot_location = Math.atan2(delta_y, delta_x);
 
-            if(Math.abs(headingDifference) < accuracy_angle)
+            //where compass would say the mountain is located considering our compass isn't pointed north
+            double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
+
+            if (Math.abs(target_heading) < accuracy_angle) {
+                driveEngine.rotate(0);
                 return true;
-            if(headingDifference > 1)
-                driveEngine.rotate(.2);
-            else
-                driveEngine.rotate(-.2);
-            return false;
+            }
+
+            driveEngine.rotate(.2 * Math.signum(target_heading)); //if target is more counterclockwise, we want to move counterclockwise.
         }
-        return true;
+        return false;
     }
 //    boolean rotateToTarget(double accuracy_angle)
 //    {

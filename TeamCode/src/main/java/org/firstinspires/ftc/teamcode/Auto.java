@@ -4,11 +4,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 public class Auto {
     Bogg robot = null;
-    StartPosition startPosition = StartPosition.HighRed;
     Telemetry telemetry = null;
     private ElapsedTime timer = null;
     private double iSP; //initialSlopePositivity
@@ -16,7 +17,6 @@ public class Auto {
     Auto(Bogg robot, Telemetry telemetry)
     {
         this.robot = robot;
-        robot.driveEngine.driveAtAngle(Math.PI);
         this.telemetry = telemetry;
         robot.camera = new Camera(robot.hardwareMap, telemetry);
         telemetry.addLine("Made it to Point X");
@@ -35,14 +35,7 @@ public class Auto {
         MoveToCrater
     }
 
-    private enum StartPosition
-    {
-        HighBlue,
-        LowBlue,
-        HighRed,
-        LowRed
-    }
-    private boolean midTargetAchieved = false;
+    boolean midTargetAchieved = false;
 
     Mode drop()
     {
@@ -70,31 +63,36 @@ public class Auto {
 
     Mode slide()
     {
-        double inchesMoved = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
+        double inchesMovedX = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
+        double inchesMovedY = Math.abs(robot.driveEngine.right.getCurrentPosition() * DriveEngine.inPerTicks) - inchesMovedX/2;
         if(timer.seconds() < .2) //for an additional .2 seconds
         {
             robot.lift(.2); //drop a bit more
         }
-        else if(inchesMoved < 4.5) //the back encoder has moved less than 4 inches
+        else if(inchesMovedX < 6) //the back encoder has moved less than 4 inches
         {
             robot.lift(0); //stop the lift motor
-            robot.driveEngine.drive(.4,0); //drive to the side to unhook
+            robot.driveEngine.drive(-.3,0); //drive to the side to unhook
         }
-        else if(inchesMoved < 6) //the back encoder has moved less than 6 inches
+        else if(inchesMovedY < 8) //the back encoder has moved less than 6 inches
         {
             robot.lift(0); //stop the lift motor
-            robot.driveEngine.drive(.4,.6); //drive diagonally
+            robot.driveEngine.drive(0,.4); //drive diagonally
         }
         else  //if the robot has unhooked
         {
             robot.driveEngine.drive(0,0);
+            robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             timer.reset(); //Needed for DropPark
             return Mode.Spin;
         }
         return Mode.Slide;
     }
 
-
+    VuforiaTrackable target = null;
+    double[] targetLocation = new double[2];
+    double[] unitTargetLocation = new double[2];
 
     int count = 0;
     Mode spin()
@@ -104,8 +102,9 @@ public class Auto {
         telemetry.update();
 
         double t = timer.seconds();
-        if(t/1.5 - Math.floor(t)/1.5 < .60)  //rotates for 60% of 1.5 seconds = .9 and .6
-            robot.driveEngine.rotate(.2);
+
+        if(Math.abs(robot.driveEngine.back.getCurrentPosition()) < Math.PI * 2/3 * 9)  //rotates 60 degrees
+            robot.driveEngine.rotate(.15);
         else
             robot.driveEngine.rotate(0);  //and stops so we can see the target
 
@@ -114,23 +113,27 @@ public class Auto {
 
         double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
         if(!(null == location)) {
-            telemetry.addLine("Made it to point Quilt");
-            telemetry.update();
 
-            double angle = Math.atan2(location[0], location[1]); //get the angle looking down on the field, lander to robot
-            telemetry.addLine("Made it to point Needle");
-            telemetry.update();
+            if(robot.camera.targetVisible(0))
+                target = robot.camera.allTrackables.get(0);
+            else if(robot.camera.targetVisible(1))
+                target = robot.camera.allTrackables.get(1);
+            else if(robot.camera.targetVisible(2))
+                target = robot.camera.allTrackables.get(2);
+            else if(robot.camera.targetVisible(3))
+                target = robot.camera.allTrackables.get(3);
 
-            if (angle < -Math.PI / 2)                          //Quadrant 3
-                startPosition = StartPosition.LowBlue;
-            else if (angle < 0)                              //Quadrant 4
-                startPosition = StartPosition.LowRed;
-            else if (angle < Math.PI / 2)                      //Quadrant 1
-                startPosition = StartPosition.HighRed;
-            else // angle between pi/2 and pi               //Quadrant 2
-                startPosition = StartPosition.HighBlue;
+            targetLocation[0] = target.getLocation().getTranslation().get(0);
+            unitTargetLocation[0] = targetLocation[0] / Math.abs(targetLocation[0]);
 
-            telemetry.addLine("Made it to point 33");
+            targetLocation[1] = target.getLocation().getTranslation().get(1);
+            unitTargetLocation[1] = targetLocation[1] / Math.abs(targetLocation[1]);
+
+            double x = location[0];
+            double y = location[1];
+
+            iSP = Math.signum(x * y);
+
             telemetry.update();
             return Mode.MoveToWall;
         }
@@ -140,57 +143,44 @@ public class Auto {
         return Mode.Spin;
     }
 
+    boolean wallTargetAchieved = false;
 
+//    If you are standing in the Red Alliance Station looking towards the center of the field,
+//    The X axis runs from your left to the right. (positive from the center to the right)
+//    The Y axis runs from the Red Alliance Station towards the other side of the field
+//    where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
+//    The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
     Mode moveToWall()
     {
+        double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
         telemetry.addLine("Made it to point Harpoon");
-        if(robot.camera.targetVisible()){
+        if((null == location)){
             double t = timer.seconds();
             robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .2 : 0);
+            return Mode.MoveToWall;
         }
 
-        double[] midTarget;
+
         double[] wallTarget;
         double targetAngle;
 
-        switch(startPosition)
-        {
-            case HighRed:
-                midTarget = new double[]{0,3};
-                wallTarget = new double[]{0,5.5};
-                targetAngle = 90;
-                iSP = 1;
-                break;
-            case HighBlue:
-                midTarget = new double[]{-3,0};
-                wallTarget = new double[]{-5.5,0};
-                targetAngle = 180;
-                iSP = -1;
-                break;
-            case LowBlue:
-                midTarget = new double[]{0,-3};
-                wallTarget = new double[]{0,-5.5};
-                targetAngle = 270;
-                iSP = 1;
-                break;
-            default: //case LowRed:
-                midTarget = new double[]{3,0};
-                wallTarget = new double[]{5.5,0};
-                targetAngle = 0;
-                iSP = -1;
-                break;
-        }
+        wallTarget = new double[]{5 * unitTargetLocation[0], 5 * unitTargetLocation[1]};
+        targetAngle = Math.atan2(wallTarget[1], wallTarget[0]) * 180 / Math.PI;
+
         robot.sensors.rotateMobile(iSP * 90);
 
-        if(!midTargetAchieved) { //if we haven't achieved the midtarget
-            if(robot.driveToTarget(midTarget[0], midTarget[0], .6, 4))  //keep driving to the midtarget, also returns if we have, if so
-                midTargetAchieved = true; //say that we have acheived the midtarget
-        }
-        else if(robot.driveToTarget(wallTarget[0], wallTarget[1], .6, 4)) //drive to the wall
+        //TODO: it would be cool to combine moving to the right place and spinning like Josh did right here.
+        //Use an and statement with the two conditions to move to Depot.
+        if(!wallTargetAchieved)
         {
-            if(robot.rotateToTargetAngle(targetAngle, 5)) //align to the wall; if we're good then
+            wallTargetAchieved = robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 4); //drive to the wall
+        }
+        else
+        {
+            if(robot.rotateToTarget(targetLocation[0], targetLocation[1], 5)) //align to the wall; if we're good then
                 return Mode.MoveToDepot;                           //move to the depot
         }
+
         return Mode.MoveToWall;
     }
 

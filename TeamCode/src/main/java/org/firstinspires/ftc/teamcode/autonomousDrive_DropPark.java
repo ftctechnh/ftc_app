@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -34,10 +35,20 @@ public class autonomousDrive_DropPark extends LinearOpMode
                     action = auto.slide();
                     break;
                 case Spin: // ==Park
-                    if(auto.getTime() > 3)
-                        action = Auto.Mode.Stop;
-                    else
+                    double inchesMovedX = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
+                    double inchesMovedY = Math.abs(robot.driveEngine.right.getCurrentPosition() * DriveEngine.inPerTicks) - inchesMovedX/2;
+                    if(inchesMovedY < 4 * 12) {
+                        robot.driveEngine.drive(0, .4);
+                        robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                        robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                    }
+                    else if(inchesMovedX < Math.PI * 9 /2){
+                        robot.driveEngine.rotate(.2);
+                    }
+                    else{
+                        robot.push(false);
                         robot.driveEngine.drive(0, .7);
+                    }
                     break;
                 default:
                     auto.stop();

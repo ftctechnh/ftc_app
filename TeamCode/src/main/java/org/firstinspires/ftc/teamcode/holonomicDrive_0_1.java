@@ -10,13 +10,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class holonomicDrive_0_1 extends LinearOpMode
 {
     Bogg robot;
-    private double pushIn;
-    private double pushOut;
+    private double pushIn = -.4;
+    private double pushOut = .6;
 
     @Override
     public void runOpMode()
     {
+
         robot = new Bogg(hardwareMap, gamepad1);
+        robot.driveEngine.driveAtAngle(Math.PI);
         waitForStart();
         double x = .6;
 
@@ -72,6 +74,10 @@ public class holonomicDrive_0_1 extends LinearOpMode
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
+            telemetry.addData("Gamepad x:", robot.gamepad.left_stick_x);
+            telemetry.addData("Gamepad y:", robot.gamepad.left_stick_y);
+            telemetry.addData("Drive x:", robot.driveEngine.xOut);
+            telemetry.addData("Drive y:", robot.driveEngine.yOut);
             telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
             telemetry.addData("Brake x", x);
             telemetry.addData("Push in", pushIn);
