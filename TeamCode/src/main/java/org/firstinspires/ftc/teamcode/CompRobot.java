@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
+/
 public class CompRobot extends BasicBot
 {
     LinearOpMode linearOpMode;
@@ -81,6 +81,7 @@ public class CompRobot extends BasicBot
         float stepPivotAmtDeg = 15;
 
         DistanceSensor usingDistSensor = frontDistSens;
+
 
         if (!isGoingForward)
         {

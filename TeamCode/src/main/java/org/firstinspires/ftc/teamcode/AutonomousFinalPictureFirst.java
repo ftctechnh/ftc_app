@@ -28,10 +28,10 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         while (true)
         {
             double frontDist = compRobot.getFrontDistance_IN();
-            telemetry.addData("Front dist= ", frontDist);
-            telemetry.update();
+ //           telemetry.addData("Front dist= ", frontDist);
+ //           telemetry.update();
  //           sleep(2000);
-            if (frontDist <= 36 + frontSensorDepth)
+            if (frontDist <= 24 + frontSensorDepth)
                 break;
             compRobot.driveMotors(0.2, 0.2f);
         }
