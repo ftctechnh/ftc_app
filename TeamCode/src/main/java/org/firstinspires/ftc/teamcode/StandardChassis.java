@@ -146,8 +146,7 @@ public abstract class StandardChassis extends OpMode {
     }
 
 
-    protected void encoderDrive(double speed,
-                             double leftInches, double rightInches) {
+    protected void encoderDrive(double speed, double leftInches, double rightInches) {
 
         double countsPerInch = config.getRearWheelSpeed() / (config.getRearWheelDiameter() * Math.PI);
 
@@ -163,8 +162,7 @@ public abstract class StandardChassis extends OpMode {
 
         motorBackLeft.setTargetPosition(leftBackTarget);
         motorBackRight.setTargetPosition(rightBackTarget);
-        telemetry.addData("encoderDrive", "Target %7d, %7d",
-                leftBackTarget, rightBackTarget);
+        telemetry.addData("encoderDrive", "Target %7d, %7d", leftBackTarget, rightBackTarget);
 
         // Turn On RUN_TO_POSITION
         motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);

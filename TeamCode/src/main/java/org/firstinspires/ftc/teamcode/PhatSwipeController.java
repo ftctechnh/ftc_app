@@ -48,11 +48,8 @@ public class PhatSwipeController extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
-    //  private DcMotor motorLeft;
-    //private DcMotor motorRight;
-    // private DcMotor sweeper;
-    private DcMotor arm;
-    // private DcMotor vacuum;
+    private DcMotor shoulder;
+    private DcMotor vacuum;
     private DcMotor extender;
 
 
@@ -65,6 +62,7 @@ public class PhatSwipeController extends OpMode {
     private boolean useGyroscope = false;
     private boolean useMotors = true;
     private boolean useEncoders = true;
+    private boolean useArms = true;
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -90,11 +88,7 @@ public class PhatSwipeController extends OpMode {
 
 
 
-           // motorLeft = hardwareMap.get(DcMotor.class, "motor0");
-            //motorRight = hardwareMap.get(DcMotor.class, "motor1");
-            // sweeper = hardwareMap.get(DcMotor.class, "motor2");
-            arm = hardwareMap.get(DcMotor.class, "motor4");
-            // vacuum = hardwareMap.get(DcMotor.class, "motor6");
+
 
             // servoHand = hardwareMap.get(Servo.class, "servo0");
             //flagHolder = hardwareMap.get(Servo.class, "servo1");
@@ -122,6 +116,13 @@ public class PhatSwipeController extends OpMode {
                 motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
+
+        if (useArms) {
+            shoulder = hardwareMap.get(DcMotor.class, "motor4");
+            vacuum = hardwareMap.get(DcMotor.class, "motor6");
+            extender = hardwareMap.get(DcMotor.class, "motor5");
+        }
+
 
 
         // Tell the driver that initialization is complete.
@@ -171,43 +172,43 @@ public class PhatSwipeController extends OpMode {
      */
     @Override
     public void loop() {
-        if (useMotors) {
-            // Control the wheel motors.
-            // POV Mode uses left stick to go forward, and right stick to turn.
-            // - This uses basic math to combine motions and is easier to drive straight.
-            double driveNormal = -gamepad1.left_stick_y;
-            double driveStrafe = 0.0;//  -gamepad1.left_stick_x;
-            if (Math.abs(driveNormal) < 0.1)
-                driveNormal = 0.0; // Prevent the output from saying "-0.0".
-            if (Math.abs(driveStrafe) < 0.1)
-                driveStrafe = 0.0; // Prevent the output from saying "-0.0".
+                   if (useMotors) {
+                // Control the wheel motors.
+                // POV Mode uses left stick to go forward, and right stick to turn.
+                // - This uses basic math to combine motions and is easier to drive straight.
+                double driveNormal = -gamepad1.left_stick_y;
+                double driveStrafe = -gamepad1.left_stick_x;
+                if (Math.abs(driveNormal) < 0.1)
+                    driveNormal = 0.0; // Prevent the output from saying "-0.0".
+                if (Math.abs(driveStrafe) < 0.1)
+                    driveStrafe = 0.0; // Prevent the output from saying "-0.0".
 
-            double turn = gamepad1.right_stick_x;
+                double turn = gamepad1.right_stick_x;
 
-            double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
-            double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
-            double leftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.8, 0.8);
-            double rightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.8, 0.8);
+                double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
+                double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
+                double leftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.8, 0.8);
+                double rightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.8, 0.8);
 
-            double halfLeftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.25, 0.25);
-            double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
-            double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
-            double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
+                double halfLeftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.25, 0.25);
+                double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
+                double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
+                double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
 
-            boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
+                boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
 
 
-            if (halfSpeed) {
-                motorBackLeft.setPower(halfLeftBackPower);
-                motorBackRight.setPower(halfRightBackPower);
-                motorFrontLeft.setPower(halfLeftFrontPower);
-                motorFrontRight.setPower(halfRightFrontPower);
-            } else {
-                motorBackLeft.setPower(leftBackPower);
-                motorBackRight.setPower(rightBackPower);
-                motorFrontLeft.setPower(leftFrontPower);
-                motorFrontRight.setPower(rightFrontPower);
-            }
+                if (halfSpeed) {
+                    motorBackLeft.setPower(halfLeftBackPower);
+                    motorBackRight.setPower(halfRightBackPower);
+                    motorFrontLeft.setPower(halfLeftFrontPower);
+                    motorFrontRight.setPower(halfRightFrontPower);
+                } else {
+                    motorBackLeft.setPower(leftBackPower);
+                    motorBackRight.setPower(rightBackPower);
+                    motorFrontLeft.setPower(leftFrontPower);
+                    motorFrontRight.setPower(rightFrontPower);
+                }
 
 
 
@@ -220,7 +221,7 @@ public class PhatSwipeController extends OpMode {
             if (dropTime.seconds() > 3.0) {
                 angleHand = 0.75;
                 flagHolder.setPosition(angleHand);
-            }
+            }*/
 
 
             // Control the extender.
@@ -235,8 +236,8 @@ public class PhatSwipeController extends OpMode {
             extender.setPower(extendPower);
 
             // Control the vacuum.
-            boolean suckIn = gamepad1.right_bumper;
-            boolean suckOut = gamepad1.left_bumper;
+            boolean suckIn = gamepad1.x;
+            boolean suckOut = gamepad1.b;
             double suckPower = 0.0;
             if (suckIn) {
                 suckPower = -1.0;
@@ -244,7 +245,7 @@ public class PhatSwipeController extends OpMode {
                 suckPower = 1.0;
             }
             vacuum.setPower(suckPower);
-*/
+
            // control the arm
             float pullUp = gamepad1.right_trigger;
             float pullDown = gamepad1.left_trigger;
@@ -254,7 +255,7 @@ public class PhatSwipeController extends OpMode {
             } else if ((pullDown > 0.0) && (pullUp == 0.0)) {
                 pullPower = 1.0;
             }
-            arm.setPower(pullPower * 0.75);
+            shoulder.setPower(pullPower * 0.75);
 /*
 
             // control the hand
