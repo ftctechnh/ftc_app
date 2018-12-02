@@ -49,6 +49,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
                 break;
             }
         }
+        robot.sleep(250);
         robot.winch.setMotorEnable();
         robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

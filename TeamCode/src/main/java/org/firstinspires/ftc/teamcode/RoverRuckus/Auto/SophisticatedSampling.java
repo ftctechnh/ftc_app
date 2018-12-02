@@ -51,6 +51,8 @@ public abstract class SophisticatedSampling extends AutoUtils {
             unhookFromLander(drive, robot, DetachMethod.TURN);
         }
 
+        robot.cameraPositioner.flipDown();
+
         if (startingPosition == StartingPosition.DEPOT) {
             switchAppendagePositions();
             followPath(drive, Paths.DEPO_SAME_SELECTOR[goldLoc.index]);
