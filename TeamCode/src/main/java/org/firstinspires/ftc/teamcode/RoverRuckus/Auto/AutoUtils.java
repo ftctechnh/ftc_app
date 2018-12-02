@@ -15,7 +15,6 @@ import org.opencv.core.Rect;
 public abstract class AutoUtils extends VuforiaCVUtil {
     public StartingPosition startingPosition;
     public SparkyTheRobot robot;
-    public HoldingPIDMotor hangMotor;
 
     public static double MARKER_DEPLOYER_DEPLOY = 0;
     public static double MARKER_DEPLOYER_RETRACTED = 0.85;
@@ -87,53 +86,10 @@ public abstract class AutoUtils extends VuforiaCVUtil {
     public static int getMiddlePosition(Rect boundingBox) {
         return boundingBox.x + (boundingBox.width / 2);
     }
-
-    abstract class FollowPathLambda {
-        private boolean isTerminated;
-        public boolean runAtTermination;
-        public SparkyTheRobot robot;
-
-        public FollowPathLambda(SparkyTheRobot robot) {
-            this.robot = robot;
-        }
-
-        public abstract void run();
-        public void terminate() {
-            isTerminated = true;
-        }
-        public boolean isTerminated() {
-            return isTerminated;
-        }
-    }
-
-    class NullLambda extends FollowPathLambda {
-        public NullLambda(SparkyTheRobot robot) {
-            super(robot);
-        }
-        @Override
-        public void run() {
-            terminate();
-        }
-        @Override
-        public void terminate() {
-            super.terminate();
-        }
-    }
-
     public void followPath(SampleMecanumDriveREV drive, Trajectory trajectory) {
-        followPath(drive, trajectory, new NullLambda(robot));
-    }
-
-    public void followPath(SampleMecanumDriveREV drive, Trajectory trajectory, FollowPathLambda lambda) {
         drive.followTrajectory(trajectory);
         while (!isStopRequested() && drive.isFollowingTrajectory()) {
             drive.update();
-            if (!lambda.isTerminated) {
-                lambda.run();
-            }
-        }
-        if (!lambda.isTerminated && lambda.runAtTermination) {
-            lambda.terminate();
         }
     }
 
@@ -181,60 +137,6 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         }
     }
 
-    /* This is really complicated and probably doesn't provide a
-    whole lot of benefit. You should really think about whether
-    this is worth the additional complexity
-     */
-
-    public static int MIN_ANALYZE_TIME_MS = 1000;
-    /*public GoldPosition waitAndWatchMinerals() {
-        // This sometimes might count the same frame twice
-        // but we're OK with that - we'll just run this for
-        // a set time, not a set frame count
-        Queue<GoldPosition> visionResults = new PriorityQueue<>();
-        ElapsedTime timer = new ElapsedTime();
-
-        while ((!isStarted() || timer.milliseconds() < MIN_ANALYZE_TIME_MS) && !isStopRequested()) {
-            if (getMiddlePosition(detector.getFoundRect()) < 50) {
-                visionResults.add(GoldPosition.RIGHT);
-            } else if (getMiddlePosition(detector.getFoundRect()) < 400) {
-                visionResults.add(GoldPosition.CENTER);
-            } else {
-                visionResults.add(GoldPosition.LEFT);
-            }
-
-            telemetry.addData("Vision", visionResults.peek().toString());
-            telemetry.update();
-
-            if (timer.milliseconds() > MIN_ANALYZE_TIME_MS) {
-                // We need to start overwriting old data
-                visionResults.remove();
-            }
-        }
-
-        // Now, find the mode of our data
-        Map<GoldPosition, Integer> histogram = new HashMap<>();
-        histogram.put(GoldPosition.LEFT, 0);
-        histogram.put(GoldPosition.CENTER, 0);
-        histogram.put(GoldPosition.RIGHT, 0);
-
-        while (!visionResults.isEmpty()) {
-            GoldPosition result = visionResults.remove();
-            histogram.put(result, histogram.get(result) + 1);
-        }
-
-        // Default to center (cause it's fastest)
-        if (histogram.get(GoldPosition.LEFT) > histogram.get(GoldPosition.CENTER) &&
-                histogram.get(GoldPosition.LEFT) > histogram.get(GoldPosition.RIGHT)) {
-            return GoldPosition.LEFT;
-        } else if (histogram.get(GoldPosition.RIGHT) > histogram.get(GoldPosition.CENTER)) {
-            return GoldPosition.RIGHT;
-        } else {
-            return GoldPosition.CENTER;
-        }
-    }*/
-
-    public static double increment = 0.0005;
     public GoldPosition waitAndWatchMinerals() {
         // This sometimes might count the same frame twice
         // but we're OK with that - we'll just run this for

@@ -28,19 +28,18 @@ public class VisionSampling extends AutoUtils {
         initVuforia();
 
         while (!isStopRequested()) {
-            int trajectoryIndex = -1;
+            int middleLine = getMiddlePosition(detector.getFoundRect());
+            GoldPosition result;
 
-            if (trajectoryIndex == -1) {
-                if (getMiddlePosition(detector.getFoundRect()) < 50) {
-                    trajectoryIndex = 2;
-                } else if (getMiddlePosition(detector.getFoundRect()) < 400) {
-                    trajectoryIndex = 1;
-                } else {
-                    trajectoryIndex = 0;
-                }
+            if (middleLine < 200) {
+                result = GoldPosition.RIGHT;
+            } else if (middleLine < 400) {
+                result = GoldPosition.CENTER;
+            } else {
+                result = GoldPosition.LEFT;
             }
 
-            telemetry.addData("Trajectory index", trajectoryIndex);
+            telemetry.addData("Position", result.toString());
             telemetry.update();
         }
     }
