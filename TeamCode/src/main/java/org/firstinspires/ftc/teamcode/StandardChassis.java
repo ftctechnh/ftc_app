@@ -112,8 +112,8 @@ public abstract class StandardChassis extends OpMode {
     }
 
 
-    protected void encoderDrive(double leftInches, double rightInches) {
 
+    protected void encoderDrive(double leftInches, double rightInches) {
         double speed = config.getMoveSpeed();
         double countsPerInch = config.getRearWheelSpeed() / (config.getRearWheelDiameter() * Math.PI);
 
