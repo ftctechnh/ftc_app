@@ -17,6 +17,7 @@ public abstract class TeamMarkerRun extends StandardChassis {
     @Override
     public void init() {
         initMotors();
+        //initArm();
         initGyroscope();
         initTimeouts();
     }
@@ -51,6 +52,8 @@ public abstract class TeamMarkerRun extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
+
+            //descendFromLander();
 
             encoderDrive(42, 42);
 

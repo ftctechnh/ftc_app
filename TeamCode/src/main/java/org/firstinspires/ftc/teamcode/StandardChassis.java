@@ -24,6 +24,8 @@ public abstract class StandardChassis extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
+    private DcMotor extender;
+    private DcMotor shoulder;
 
     // Team Marker Servo
     protected Servo flagHolder;
@@ -35,6 +37,7 @@ public abstract class StandardChassis extends OpMode {
     // Hack stuff.
     private boolean useMotors = true;
     private boolean hackTimeouts = true;
+    private boolean useArm = true;
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
@@ -86,6 +89,13 @@ public abstract class StandardChassis extends OpMode {
             this.msStuckDetectStart = 30000;
             this.msStuckDetectLoop = 30000;
             this.msStuckDetectStop = 30000;
+        }
+    }
+
+    protected void initArm() {
+        if (useArm) {
+            shoulder = hardwareMap.get(DcMotor.class, "motor4");
+            extender = hardwareMap.get(DcMotor.class, "motor5");
         }
     }
 
@@ -373,5 +383,115 @@ public abstract class StandardChassis extends OpMode {
             motorFrontLeft.setPower(0);
             motorFrontRight.setPower(0);
         }
+    }
+
+    protected void pointToZero() {
+
+        float currentAngle = getGyroscopeAngle();
+        float destinationAngle = 0;
+        boolean keepGoing = true;
+        while (keepGoing) {
+            float oldAngle = currentAngle;
+            nudgeRight();
+            currentAngle = getGyroscopeAngle();
+
+            float justMoved = currentAngle - oldAngle;
+            float stillNeed = 360.0f - currentAngle;
+            telemetry.addData("turRight1", "current=%.0f, old=%.0f, dst=%.0f, moved=%.0f, need=%.0f", currentAngle, oldAngle, destinationAngle, justMoved, stillNeed);
+            telemetry.update();
+
+            keepGoing = (justMoved > -50.0);
+        }
+    }
+
+    protected void slideUpExtender(int extenderCounts) {
+        double speed = 0.5;
+
+        // Get the current position.
+        int extenderStart = extender.getCurrentPosition();
+        telemetry.addData("encoderDrive", "Starting %7d", extenderStart);
+
+        // Determine new target position, and pass to motor controller
+        int extenderTarget = extenderStart + extenderCounts;
+        extender.setTargetPosition(extenderTarget);
+        telemetry.addData("encoderDrive", "Target %7d", extenderTarget);
+
+        // Turn On RUN_TO_POSITION
+        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extender.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && extender.isBusy()) {
+            telemetry.addData("slideUpExtender", "Running at %7d to %7d", extender.getCurrentPosition(), extenderTarget);
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extender.setPower(0);
+    }
+
+    protected void shiftShoulderDown(int shoulderCounts) {
+        double speed = 0.5;
+
+        // Get the current position.
+        int shoulderStart = shoulder.getCurrentPosition();
+        telemetry.addData("shoulderShifting", "Starting %7d", shoulderStart);
+
+        // Determine new target position, and pass to motor controller
+        int shoulderTarget = shoulderStart + shoulderCounts;
+        shoulder.setTargetPosition(shoulderTarget);
+        telemetry.addData("shoulderShifting", "Target %7d", shoulderTarget);
+
+        // Turn On RUN_TO_POSITION
+        shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        shoulder.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && shoulder.isBusy()) {
+            telemetry.addData("shiftShoulderDown", "Running at %7d to %7d", shoulder.getCurrentPosition(), shoulderTarget);
+            telemetry.update();
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shoulder.setPower(0);
+    }
+
+    protected void strafeLeft(int numberOfMillis) {
+        float power = config.getTurnSpeed();
+
+        motorBackLeft.setPower(power);
+        motorBackRight.setPower(-power);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(-power);
+            motorFrontRight.setPower(power);
+        }
+        sleep(numberOfMillis);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+    }
+
+    protected void descendFromLander() {
+        //slide up the extender
+        //TODO: this isn't really a todo, but always start the robot at -604 counts
+        slideUpExtender(5103);
+
+        //PullOut the shoulder
+        shiftShoulderDown(100);
+
+        //slide extender up
+        slideUpExtender(100);
+
+        //Strafe left (to remove self from lander attachment)
+        strafeLeft(1000);
     }
 }
