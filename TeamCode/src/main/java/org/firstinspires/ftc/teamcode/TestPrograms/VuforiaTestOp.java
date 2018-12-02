@@ -1,18 +1,22 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.TestPrograms;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.VuforiaFunctions;
 
 /**
  * Created by Jeremy on 9/23/2018.
  */
 @TeleOp(name = "VuforiaTestOp", group = "Test")
+@Disabled
 public class VuforiaTestOp extends OpMode
 {
     VuforiaFunctions vuforiaFunctions;
     public void init()
     {
-        vuforiaFunctions = new VuforiaFunctions(this);
+        vuforiaFunctions = new VuforiaFunctions(this, hardwareMap);
     }
 
     public void start()

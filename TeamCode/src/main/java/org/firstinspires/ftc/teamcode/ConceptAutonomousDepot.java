@@ -11,7 +11,6 @@ public class ConceptAutonomousDepot extends LinearOpMode
 
     public void runOpMode()
     {
-
         walle = new ParadeBot(hardwareMap, this);
         waitForStart();
 
@@ -33,6 +32,7 @@ public class ConceptAutonomousDepot extends LinearOpMode
 
         //drop marker into depot
         walle.pivot(120); */
+       /*
 
         float thetaDeg;
         double initialD, finalD;
@@ -44,54 +44,58 @@ public class ConceptAutonomousDepot extends LinearOpMode
         finalD = walle.getDistFromRight_In();
         thetaDeg = (float) ((Math.asin((finalD - initialD)/distToTravel)) * 180/Math.PI);
 
-        walle.pivot_IMU(-thetaDeg);
+        walle.pivot(-thetaDeg);
+        */
+        double frontDist, rightDist;
+
+
         while (walle.getDistFromFront_In() > 18)
         {
-            while (!gamepad1.a){}
-            sleep(336);
-            initialD = walle.getDistFromRight_In();
-
-            telemetry.addData("Distance = ", initialD);
-            if (initialD < 4)
+            sleep(400);
+            frontDist = walle.getDistFromFront_In();
+            if(frontDist < 12)
             {
-                telemetry.addData("I'm in the <4 Case!", null);
-                walle.pivot_IMU(14);
-                walle.driveMotorsAuto(.16f,.16f);
-                while (walle.getDistFromRight_In() > 5) //flipped the signs since the anything less than 4 is also less than 5
-                {
-
-                }
                 walle.stopAllMotors();
-                walle.pivot_IMU(-14);
-            }
-            else if (initialD > 7)
-            {
-                telemetry.addData("I'm in the >7 Case!", null);
-                walle.pivot_IMU(-14);
-                //walle.driveStraight_In(4);
-
-                walle.driveMotorsAuto(.16f,.16f);
-                while (walle.getDistFromRight_In() < 7) //flipped signs since anything greater than 7 is going to be greater than 5
-                {
-
-                }
-                walle.stopAllMotors();
-
-                walle.pivot_IMU(14);
+                break;
             }
             else
             {
-                telemetry.addData("I'm in the default Case!", null);
-                walle.driveStraight_In(distToTravel);
+                telemetry.addData("Going forawrd 9", null);
+                walle.driveStraight_In(11);
+            }
+
+            telemetry.addData("front Dist: ", frontDist);
+
+            if (frontDist > 18)
+            {
+                rightDist = walle.getDistFromRight_In();
+                telemetry.addData("frontDist>18", null);
+                telemetry.addData("leftDist ", rightDist);
+                if (rightDist < 4)
+                {
+                    telemetry.addData("leftdist < 4", null);
+                    walle.pivot(-15);
+                    walle.driveStraight_In(11);
+                    walle.pivot(15);
+                }
+                else if (rightDist > 7)
+                {
+                    telemetry.addData("leftdist > 7", null);
+                    walle.pivot(15);
+                    walle.driveStraight_In(11);
+                    walle.pivot(-15);
+                }
             }
             telemetry.update();
+            while(!gamepad1.a)
+            {}
         }
 
         telemetry.addData("Stopped", null);
         telemetry.update();
         while (!isStopRequested())
         {
-
+            walle.stopAllMotors();
         }
     }
 }

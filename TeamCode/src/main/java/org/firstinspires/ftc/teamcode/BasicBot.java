@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class BasicBot
@@ -13,15 +14,16 @@ public class BasicBot
         driveLeftOne = hardwareMap.get(DcMotorImplEx.class, "driveLeftOne");
         driveRightOne = hardwareMap.get(DcMotorImplEx.class, "driveRightOne");
 
-        driveRightOne.setDirection(DcMotorImplEx.Direction.FORWARD);
-        driveLeftOne.setDirection(DcMotorImplEx.Direction.REVERSE);
+        driveRightOne.setDirection(DcMotorImplEx.Direction.REVERSE);
+        driveLeftOne.setDirection(DcMotorImplEx.Direction.FORWARD);
         driveRightOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         driveLeftOne.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         resetEncoders();
         driveMotors(0,0);
     }
 
-    public void driveMotors(float lPow, float rPow)
+    public void driveMotors(double lPow, double rPow)
     {
          driveRightOne.setPower(rPow);
          driveLeftOne.setPower(lPow);
@@ -42,7 +44,7 @@ public class BasicBot
         driveMotors(0,0);
     }
 
-    private void resetEncoders()
+    public void resetEncoders()
     {
         driveRightOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         driveLeftOne.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
