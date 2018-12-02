@@ -8,6 +8,11 @@ public class SoloMapping extends ControlMapping {
     public static double INTAKE_SPEED = 0.85;
     public static double INTAKE_SLOW_SPEED = 0.2;
 
+    public static double FLIP_LEFT_FACTOR = 0.65;
+    public static double FLIP_RIGHT_FACTOR = 0.6;
+
+    public static boolean EXPERIMENTAL_FEATURES = false;
+
     public int spinDir;
     private boolean x_down, b_down;
 
@@ -40,7 +45,7 @@ public class SoloMapping extends ControlMapping {
     final static double MIN_ARM_MOVE_SPEED = 0.15;
     @Override
     public double armSpeed() {
-        return removeLowVals(gamepad1.right_trigger - gamepad1.left_trigger, 0.05);
+        return removeLowVals(gamepad1.right_trigger * FLIP_RIGHT_FACTOR - gamepad1.left_trigger * FLIP_LEFT_FACTOR, 0.05);
     }
 
     @Override

@@ -131,19 +131,18 @@ public class Paths {
             .closeComposite()
             .build();
 
-    public static int CRATER_SAME_LEFT_DIR_SPL_X = 80;
-    public static int CRATER_SAME_LEFT_DIR_SPL_Y = 61;
-
     static Trajectory CRATER_SAME_LEFT_DIR = new TrajectoryBuilder(new Pose2d(24, 48, -Math.PI*0.25), DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(CRATER_SAME_LEFT_DIR_SPL_X, CRATER_SAME_LEFT_DIR_SPL_Y, 0))
-            .splineTo(new Pose2d(120, CRATER_SAME_LEFT_DIR_SPL_Y, 0))
+            .splineTo(new Pose2d(39, 45, Math.PI * 0.25))
+            .splineTo(new Pose2d(96, 58, 0))
+            .splineTo(new Pose2d(120, 56, 0))
             .closeComposite()
             .build();
 
     static Trajectory CRATER_SAME_CENTER_DIR = new TrajectoryBuilder(new Pose2d(36, 36, -Math.PI*0.25), DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(100, 56, 0))
+            .splineTo(new Pose2d(63, 45, Math.PI * 0.25))
+            .splineTo(new Pose2d(120, 56, 0))
             .splineTo(new Pose2d(140, 56, 0))
             .closeComposite()
             .build();

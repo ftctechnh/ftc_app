@@ -73,7 +73,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
             robot.winch.setPower(1);
             robot.winch.setTargetPosition(-1500);
 
-            sleep(500);
+            sleep(2500);
             followPath(drive, Paths.UNDO_UNHOOK);
         }
     }

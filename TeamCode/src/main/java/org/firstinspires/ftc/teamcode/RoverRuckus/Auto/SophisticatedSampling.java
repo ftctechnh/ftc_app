@@ -15,16 +15,11 @@ public abstract class SophisticatedSampling extends AutoUtils {
     public void switchAppendagePositions() {
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.winch.setPower(1);
-        robot.winch.setTargetPosition(1500);
+        robot.winch.setTargetPosition(-1500);
 
-        robot.intake.prepWinchLower();
+        robot.intake.collect();
 
-        // Wait until we either reach the correct position or trigger the microswitch
-        while (robot.hangSwitch.getState() &&
-                Math.abs(robot.winch.getCurrentPosition() - robot.winch.getTargetPosition()) > 20
-                && !isStopRequested()) {
-            // While not pressed
-        }
+        robot.sleep(2500);
 
         robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.winch.setPower(0);

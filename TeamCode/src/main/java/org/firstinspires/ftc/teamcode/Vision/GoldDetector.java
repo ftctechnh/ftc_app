@@ -57,13 +57,13 @@ public class GoldDetector extends DogeCVDetector {
     @Override
     public Mat process(Mat input) {
 
-        Rect boundingBox = new Rect(0, input.cols(), input.rows(), input.cols()/2);
+        Rect boundingBox = new Rect(0, 0, input.cols(), input.rows()/2);
         // Copy the input mat to our working mats, then release it for memory
         displayMat = new Mat(input, boundingBox);
         workingMat = new Mat(input, boundingBox);
 
-        displayMat = input.clone();
-        workingMat = input.clone();
+        /*displayMat = input.clone();
+        workingMat = input.clone();*/
 
         input.release();
 

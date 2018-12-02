@@ -18,13 +18,20 @@ import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.StartingPositio
 @Config
 public class JustPathsSampling extends AutoUtils {
 
-    public static int startX = 48;
-    public static int startY = 24;
+    public static int startX = 36;
+    public static int startY = 36;
     public static double startA = Math.PI * 0.25;
 
-    public static int endX = -63;
-    public static int endY = 63;
-    public static double endA = 0;
+    public static int midX = -20;
+    public static int midY = 63;
+    public static double midA = 0;
+
+    //public static int endX = -63;
+    //public static int endY = 63;
+    //public static double endA = 0;
+
+    public static int reverseSel = 0;
+    //public static int reversePlace = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,16 +39,21 @@ public class JustPathsSampling extends AutoUtils {
         SampleMecanumDriveREV drive = new SampleMecanumDriveREV(hardwareMap);
         robot = new SparkyTheRobot(this);
         robot.calibrate(false);
-        //robot.setFrontDir(QuadWheelHardware.FrontDir.HOOK);
+        robot.setFrontDir(QuadWheelHardware.FrontDir.HOOK);
         waitForStart();
-        //followPath(drive, Paths.CRATER_SAME_SELECTOR[goldLoc]);
-        //robot.sleep(2000);
-        //robot.setFrontDir(QuadWheelHardware.FrontDir.CAMERA);
 
-        Trajectory trajectory = new TrajectoryBuilder(new Pose2d(startX, startY, startA), DriveConstants.BASE_CONSTRAINTS)
-                .splineTo(new Pose2d(endX, endY, endA))
+        if (reverseSel != 0) {
+            robot.setFrontDir(QuadWheelHardware.FrontDir.HOOK);
+        } else {
+            robot.setFrontDir(QuadWheelHardware.FrontDir.CAMERA);
+        }
+
+        Trajectory sel = new TrajectoryBuilder(new Pose2d(startX, startY, startA), DriveConstants.BASE_CONSTRAINTS)
+                .beginComposite()
+                .splineTo(new Pose2d(midX, midY, midA))
+                .closeComposite()
                 .build();
 
-        followPath(drive, trajectory);
+        followPath(drive, sel);
     }
 }

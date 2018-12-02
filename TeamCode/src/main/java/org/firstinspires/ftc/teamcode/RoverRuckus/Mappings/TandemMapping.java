@@ -8,7 +8,8 @@ public class TandemMapping extends SoloMapping {
 
     @Override
     public double armSpeed() {
-        return removeLowVals(gamepad2.left_trigger - gamepad2.right_trigger, 0.05);
+        return removeLowVals(gamepad2.left_trigger * FLIP_LEFT_FACTOR
+                - gamepad2.right_trigger * FLIP_RIGHT_FACTOR, 0.05);
     }
 
     public double getExtendSpeed() {
@@ -22,7 +23,11 @@ public class TandemMapping extends SoloMapping {
 
     @Override
     public boolean flipBack() {
+        if (gamepad2.dpad_right && EXPERIMENTAL_FEATURES) {
+            spinDir = -1;
+        }
         return gamepad2.dpad_right;
+
     }
 
     @Override

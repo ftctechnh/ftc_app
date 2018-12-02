@@ -17,7 +17,6 @@ import java.util.Arrays;
 public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
     public static double MAX_EXTEND_POWER = 0.8;
-    public static double MAX_FLIP_POWER = 0.6;
 
     public ControlMapping controller;
     public boolean fieldCentric;
@@ -67,8 +66,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             controller.update();
 
-            robot.leftFlipper.setPower(controller.armSpeed() * MAX_FLIP_POWER);
-            robot.rightFlipper.setPower(controller.armSpeed() * MAX_FLIP_POWER);
+            robot.leftFlipper.setPower(controller.armSpeed());
+            robot.rightFlipper.setPower(controller.armSpeed());
 
             robot.intake.setIntakeSpeed(controller.getSpinSpeed());
 
