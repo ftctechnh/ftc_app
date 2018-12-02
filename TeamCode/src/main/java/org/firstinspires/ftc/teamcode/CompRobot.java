@@ -106,6 +106,7 @@ public class CompRobot extends BasicBot
 
         DistanceSensor usingDistSensor = frontDistSens;
 
+
         if (!isGoingForward)
         {
             usingDistSensor = backDistSens;
@@ -138,14 +139,14 @@ public class CompRobot extends BasicBot
                 {
                     linearOpMode.telemetry.addData("rightdist < 4", null);
                     pivotenc(stepPivotAmtDeg, .5f);
-                    driveStraight(stepDistance , .8f);
+                    driveStraight(stepDistance , .5f);
                     pivotenc(-stepPivotAmtDeg, .5f);
                 }
                 else if (rightDist > upperDistFromSideWall)
                 {
                     linearOpMode.telemetry.addData("right dist > 7", null);
                     pivotenc(-stepPivotAmtDeg, .5f);
-                    driveStraight(stepDistance , .8f);
+                    driveStraight(stepDistance , .5f);
                     pivotenc(stepPivotAmtDeg, .5f);
                 }
                 else //need this null zone for logic, this is where it goes straight, do not comment out

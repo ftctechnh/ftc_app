@@ -21,19 +21,23 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         float leftSensorDepth = 2;
         float backSensorDepth = 2;
         float  yawAngleTurn;
+        float distanceTraveled = 0;
         waitForStart();
         compRobot.driveStraight(10,.6f);
-        compRobot.pivotenc(90, .6f);
+        compRobot.pivotenc(100, .6f);
 
         while (true)
         {
             double frontDist = compRobot.getFrontDistance_IN();
-            telemetry.addData("Front dist= ", frontDist);
-            telemetry.update();
- //           sleep(2000);
-            if (frontDist <= 36 + frontSensorDepth)
+            if (frontDist <= 18 + frontSensorDepth)
                 break;
-            compRobot.driveMotors(0.2, 0.2f);
+            else
+                compRobot.driveStraight(8, .5f);
+                distanceTraveled = distanceTraveled + 8;
+                if (distanceTraveled == 32)
+                {
+                    break;
+                }
         }
         compRobot.stopDriveMotors();
         {
@@ -53,7 +57,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
             else
             {
                 telemetry.addData("Such target is not in my sight!", null);
-                compRobot.pivotenc(45, .5f);
+                compRobot.pivotenc(90, .5f);
             }
 
             telemetry.update();
@@ -66,7 +70,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         telemetry.addData("Stopped", null);
         sleep(2000); //drop team marker into depot
         telemetry.update();
-        compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 36, false);
+        compRobot.driveStraight(-100, .5f);
         compRobot.stopDriveMotors();
     }
 }
