@@ -28,12 +28,15 @@ public class AutonomousFinalDepot extends LinearOpMode
         }
 
         compRobot.stopDriveMotors();
-        //drop marker into depot
-        compRobot.pivotenc(150, .5f);// pivot should be at 135 degrees if we ever choose to callibrate
+        compRobot.deployMarker();
+        //compRobot.pivotenc(150, .5f); we can use this turn if we want to go to the other crater
+        compRobot.pivotenc(-150, .5f);
 
-        compRobot.hugWall(4,7, 18, true);
+        //compRobot.hugWall(4,7, 18, true); un comment if you want to go to the other crater
+        //compRobot.driveStraight(-100, 1);
 
-        compRobot.driveStraight(10,1);
+        //compRobot.driveStraight(10,1);
+        //compRobot.driveStraight(-10,1);
 
         telemetry.addData("Stopped", null);
         telemetry.update();
