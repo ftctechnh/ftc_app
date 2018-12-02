@@ -1,48 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.MagneticFlux;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
-
 /**
- *
+ * This is from the position farthest from the team depot
  */
 public abstract class TeamMarkerRun2 extends StandardChassis {
 
-    // Hack stuff.
     private boolean madeTheRun = false;
 
     protected TeamMarkerRun2(ChassisConfig config) {
@@ -54,12 +16,8 @@ public abstract class TeamMarkerRun2 extends StandardChassis {
      */
     @Override
     public void init() {
-
         initMotors();
-
-        //init internal gyroscope of hub
         initGyroscope();
-
         initTimeouts();
     }
 
@@ -93,14 +51,13 @@ public abstract class TeamMarkerRun2 extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-            double speed = 0.5;
 
             // forward 35 inches, turn 90degrees, forward 40 inches
-            encoderDrive(speed, 15, 15);
+            encoderDrive(15, 15);
             turnLeft(68);
-            encoderDrive(speed, 30, 30);
-            turnLeft(55);
-            encoderDrive(speed, 45, 45);
+            encoderDrive(24, 24);
+            turnLeft(62);
+            encoderDrive(64, 64);
 
             dropFlag();
             sleep(3000);
@@ -108,15 +65,13 @@ public abstract class TeamMarkerRun2 extends StandardChassis {
             flagHolder.setPosition(angleHand);
 
             turnRight(165);
-            encoderDrive(speed, 76, 76);
+            encoderDrive(103 , 110);
 
             madeTheRun = true;
-
         }
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());
         telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
-
     }
 }

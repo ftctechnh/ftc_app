@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 /**
  */
-@TeleOp(name="2 Contollers", group="MonsieurMallah")
+@TeleOp(name="2 Contollers", group="User")
 public class FourWheelsTwoControllers extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";

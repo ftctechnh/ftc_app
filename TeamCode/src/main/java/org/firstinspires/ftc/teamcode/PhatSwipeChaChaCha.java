@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="PhatSwipeBullRun", group="PhatSwipe")
-public class PhatSwipeBullRun extends BullRun {
-    public PhatSwipeBullRun() {
+@Autonomous(name="PhatSwipeCha", group="PhatSwipe")
+public class PhatSwipeChaChaCha extends BullRunChaChaCha {
+    public PhatSwipeChaChaCha() {
         super(ChassisConfig.forPhatSwipe());
     }
 }
