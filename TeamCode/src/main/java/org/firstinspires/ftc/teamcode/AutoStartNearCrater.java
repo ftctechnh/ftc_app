@@ -80,9 +80,11 @@ public class AutoStartNearCrater extends LinearOpMode {
         robot.init(hardwareMap);
         robot.gyro.calibrate();
         // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && robot.gyro.isCalibrating())  {
+        while (!isStopRequested() && robot.gyro.isCalibrating()) {
             sleep(50);
             idle();
+            if (isStopRequested()) stop();
+
         }
 
 
@@ -113,23 +115,26 @@ public class AutoStartNearCrater extends LinearOpMode {
             // Put things to do prior to start in here
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.update();
+            if (isStopRequested()) stop();
+
         }
+        while (opModeIsActive()) {
+            int landingLevel = -2090;  // Target level to land
+            double latchPower;
+            //Reset the Encoder
+            robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //Lower the Robot from the lander
+            while (robot.landerLatchLift.getCurrentPosition() > landingLevel) {
+                robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                latchPower = -0.2;
+                robot.landerLatchLift.setPower(latchPower);
 
-        int landingLevel = -2090;  // Target level to land
-        double latchPower;
-        //Reset the Encoder
-        robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //Lower the Robot from the lander
-        while (robot.landerLatchLift.getCurrentPosition()> landingLevel){
-            robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            latchPower = -0.2;
-            robot.landerLatchLift.setPower(latchPower);
-        }
-        robot.landerLatchLift.setPower(0);
+            }
+            robot.landerLatchLift.setPower(0);
 
 
-        // Find the Gold mineral and knock it off the spot
-        // Initialize a counter to count our attempts to get a little closer to the mineral
+            // Find the Gold mineral and knock it off the spot
+            // Initialize a counter to count our attempts to get a little closer to the mineral
 /*        double mineralCt = 0;
         boolean bumpSuccess = false;
         // Strafe a little closer to the minerals
@@ -171,75 +176,77 @@ public class AutoStartNearCrater extends LinearOpMode {
             }
         }
 */
-       //Clear the hook
-        gyroHold(-0.5,0,0.15);
-        // Move away from the lander
-        gyroStrafe(0.5, 0);
-        sleep(1400);
-        stopBot();
-        gyroSpin(0);
+            //Clear the hook
+            gyroHold(-0.5, 0, 0.2);
+            // Move away from the lander
+            gyroStrafe(0.5, 0);
+            sleep(1000);
+            stopBot();
+            gyroSpin(0);
 
-        // Move closer to the wall
-        gyroHold(0.4,0,1.5);
+            // Move closer to the wall
+            gyroHold(0.4, 0, 1.5);
 
-        // Rotate to a heading of 315R
-        gyroSpin(315);
-
-
-        // Move towards the wall until 7 inches away while maintaining a heading of 270
-        while(robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7){
-            gyroStrafe(.5,315);
-       }
-       stopBot();
-         //Drive backwards maintaining 2-4 inches from the wall
-        while(sonarDistance() > 18){
-            double wsteer=wallSteer(5);
-            moveBot(0.2,0,wsteer,0.5);
-        }
-          stopBot();
-            detector.disable();
-
-        int dropTarget = 3000;  // Target for dropping totem
-        int levelTarget = 500;  // Target for holding arm forward and level
-        double rotatePower;
-        //Reset the Encoder
-        robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //Rotate the arm to level position
-        while (robot.armRotate.getCurrentPosition()< levelTarget){
-            robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rotatePower = 0.25;
-            robot.armRotate.setPower(rotatePower);
-        }
-        robot.armRotate.setPower(0);
-        //Drop the Totem
-        robot.rightMineral.setPower(0.5);
-        sleep(1000);
-        robot.rightMineral.setPower(0);
+            // Rotate to a heading of 315R
+            gyroSpin(315);
 
 
+            // Move towards the wall until 7 inches away while maintaining a heading of 270
+            while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7) {
+                gyroStrafe(.5, 315);
+            }
+            stopBot();
+            //Drive backwards maintaining 2-4 inches from the wall
+            while (sonarDistance() > 18) {
+                double wsteer = wallSteer(5);
+                moveBot(0.2, 0, wsteer, 0.5);
+            }
+            stopBot();
+            //detector.disable();
 
-        // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
-        while(sonarDistance() < 72) {
-            double wsteer = wallSteer(7);
-            moveBot(-0.25, 0, wsteer, 0.5);
-        }
-        stopBot();
-        //Rotate the arm over the crater
-        while (robot.armRotate.getCurrentPosition()< dropTarget){
-            robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rotatePower = 0.25;
-            robot.armRotate.setPower(rotatePower);
-        }
-        robot.armRotate.setPower(0);
-        //  Extend the arm
-        while(robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
+            int dropTarget = 3200;  // Target for dropping totem
+            int levelTarget = 500;  // Target for holding arm forward and level
+            double rotatePower;
+            //Reset the Encoder
+            robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //Rotate the arm to level position
+            while (robot.armRotate.getCurrentPosition() < levelTarget) {
+                robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rotatePower = 0.25;
+                robot.armRotate.setPower(rotatePower);
+            }
+            robot.armRotate.setPower(0);
+            //Drop the Totem
+            robot.rightMineral.setPower(0.7);
+            sleep(1000);
+            robot.rightMineral.setPower(0);
 
-            robot.armExtend.setPower(-0.15);
-        }
+
+            // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
+            while (sonarDistance() < 72) {
+                double wsteer = wallSteer(7);
+                moveBot(-0.25, 0, wsteer, 0.5);
+            }
+            stopBot();
+            //Rotate the arm over the crater
+            while (robot.armRotate.getCurrentPosition() < dropTarget) {
+                robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                rotatePower = 0.25;
+                robot.armRotate.setPower(rotatePower);
+            }
+            robot.armRotate.setPower(0);
+            //  Extend the arm
+            while (robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
+
+                robot.armExtend.setPower(-0.15);
+            }
             robot.armExtend.setPower(0);  // Otherwise set the power to zero
 
-}
+        break;
+        }
 
+        stop();
+    }
 
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
     {

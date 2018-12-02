@@ -1,65 +1,32 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.vuforia.CameraDevice;
-import com.vuforia.Vuforia;
-import com.vuforia.CameraDevice;
-import com.vuforia.DataSet;
-import com.vuforia.Frame;
-import com.vuforia.HINT;
-import com.vuforia.Image;
-import com.vuforia.Matrix34F;
-import com.vuforia.ObjectTracker;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.STORAGE_TYPE;
-import com.vuforia.State;
-import com.vuforia.Tool;
-import com.vuforia.Trackable;
-import com.vuforia.TrackableResult;
-import com.vuforia.Tracker;
-import com.vuforia.TrackerManager;
-import com.vuforia.Vec2F;
-import com.vuforia.Vec3F;
-import com.vuforia.Vuforia;
 
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
-
-@Autonomous(name = "AutoStartNearDepot", group = "Neha")
-public class AutoStartNearDepot extends LinearOpMode {
+@Autonomous (name = "AutoJustLand", group = "Rohan")
+public class AutoJustLand extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double DRIVE_SPEED = 0.4;     // Nominal speed for better accuracy.
-    static final double TURN_SPEED = 0.2;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.2;     // Nominal half speed for better accuracy.
 
-    static final double HEADING_THRESHOLD = 5;      // As tight as we can make it with an integer gyro
-    static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
-    static final double P_DRIVE_COEFF = 0.1;     // Larger is more responsive, but also less stable
+    static final double     HEADING_THRESHOLD       = 5 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 0.1;     // Larger is more responsive, but also less stable
 
-    static final short STARTING_HEADING = 315;      // Used to set the gyro offset
-    static final double fwdSpeed = 0.5;  // Forward Speed, Normally 0.1
-    static final double rotate = 0.5; // Rotation Speed
-    static final double strafe = 0.5;  // Strafe Speed
+    static final short     STARTING_HEADING        = 315;      // Used to set the gyro offset
+    static final double     fwdSpeed                = 0.5;  // Forward Speed, Normally 0.1
+    static final double     rotate                  = 0.5; // Rotation Speed
+    static final double     strafe                  = 0.5;  // Strafe Speed
 
     private GoldAlignDetector detector;
 
@@ -69,23 +36,20 @@ public class AutoStartNearDepot extends LinearOpMode {
       private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
   */
     private ElapsedTime runtime = new ElapsedTime();
-
     //public boolean found() { return GoldAlignExample.isFound(); }
     //public boolean isAligned() { return detector.getAligned(); }
     //public double getX() { return detector.getXPosition(); }
     //----------------------------------runOpMode-------------------------------------------------------
-    public void runOpMode() {
+    public void runOpMode () {
 
 
         // Initialize the Robot
         robot.init(hardwareMap);
         robot.gyro.calibrate();
         // make sure the gyro is calibrated before continuing
-        while (!isStopRequested() && robot.gyro.isCalibrating()) {
+        while (!isStopRequested() && robot.gyro.isCalibrating())  {
             sleep(50);
             idle();
-            if (isStopRequested()) stop();
-
         }
 
 /*
@@ -112,31 +76,27 @@ public class AutoStartNearDepot extends LinearOpMode {
 
 
         // Wait for the Start button to be pushed ----------------------------START----------------------------------------------
-
         while (!isStarted()) {
             // Put things to do prior to start in here
             telemetry.addData(">", "Robot Heading = %d", robot.gyro.getIntegratedZValue());
             telemetry.update();
-            if (isStopRequested()) stop();
         }
-        while (opModeIsActive()) {
-            //start landing here
-            int landingLevel = -2090;  // Target level to land
-            double latchPower;
-            //Reset the Encoder
-            robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            // Lower the robot
-            while (robot.landerLatchLift.getCurrentPosition() > landingLevel) {
-                robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                latchPower = -0.2;
-                robot.landerLatchLift.setPower(latchPower);
-            }
-            robot.landerLatchLift.setPower(0);
-            if (isStopRequested()) stop();
+        //start landing here
+        int landingLevel = -2090;  // Target level to land
+        double latchPower;
+        //Reset the Encoder
+        robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        // Lower the robot
+        while (robot.landerLatchLift.getCurrentPosition()> landingLevel){
+            robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            latchPower = -0.2;
+            robot.landerLatchLift.setPower(latchPower);
+        }
+        robot.landerLatchLift.setPower(0);
 
 
-            // Find the Gold mineral and knock it off the spot
-            // Initialize a counter to count our attempts to get a little closer to the mineral
+        // Find the Gold mineral and knock it off the spot
+        // Initialize a counter to count our attempts to get a little closer to the mineral
 /*        double mineralCt = 0;
         boolean bumpSuccess = false;
         // Strafe a little closer to the minerals
@@ -178,87 +138,14 @@ public class AutoStartNearDepot extends LinearOpMode {
             }
         }
 */
-            // Move  back to unhook the robot
-            gyroHold(-0.5, 0, 0.2);
-            // Move away from the robot
-            gyroStrafe(0.5, 0);
-            sleep(1000);
-            stopBot();
-            if (isStopRequested()) stop();
+        // Move  back to unhook the robot
+        gyroHold(-0.5,0,0.15);
 
-            gyroSpin(0);
-            // Move towards the center of the field
-            gyroHold(0.4, 0, 1.5);
-            //sleep(3000);
-            // Spin to put the distance sensor towards the wall
-            gyroSpin(315);
-            if (isStopRequested()) stop();
-
-            // Move towards the wall
-            while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10) {
-                gyroStrafe(.5, 315);
-            }
-            stopBot();
-            if (isStopRequested()) stop();
-
-            // Back into the depot based on time
-            ElapsedTime holdTimer = new ElapsedTime();
-            while ((holdTimer.time() < 2.7)) {
-                moveBot(-0.3, 0, wallSteer(7), 0.3);
-            }
-            stopBot();
-            if (isStopRequested()) stop();
-
-
-            int dropTarget = 3200;  // Target for dropping totem
-            int levelTarget = 500;  // Target for holding arm forward and level
-            double rotatePower;
-            //Reset the Encoder
-            robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            while (robot.armRotate.getCurrentPosition() < dropTarget) {
-                robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rotatePower = 0.25;
-                robot.armRotate.setPower(rotatePower);
-            }
-            robot.armRotate.setPower(0);
-            // Drop the totem
-            robot.rightMineral.setPower(0.7);
-            sleep(800);
-            robot.rightMineral.setPower(0);
-
-            // Rotate the arm to level facing forward
-            while (robot.armRotate.getCurrentPosition() > levelTarget) {
-                robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                rotatePower = -0.25;
-                robot.armRotate.setPower(rotatePower);
-            }
-            robot.armRotate.setPower(0);
-            if (isStopRequested()) stop();
-
-
-            // Drive towards the crater, stop 50 inches from wall
-            while (sonarDistance() > 36) {
-                double wsteer = wallSteer(7);
-                moveBot(0.25, 0, wsteer, 0.5);
-                if (isStopRequested()) stop();
-
-            }
-            stopBot();
-
-            // Extend the arm over the crater
-            while (robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
-
-                robot.armExtend.setPower(-0.2);
-            }
-            robot.armExtend.setPower(0);  // Otherwise set the power to zero
-            break;
-        }
-        stop();
     }
 
 
-    public void moveBot(double drive, double rotate, double strafe, double scaleFactor) {
+    public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
+    {
         // This module takes inputs, normalizes them, applies a scaleFactor, and drives the motors
         double wheelSpeeds[] = new double[4];
         wheelSpeeds[0] = drive + strafe - rotate;
@@ -269,15 +156,19 @@ public class AutoStartNearDepot extends LinearOpMode {
         double maxMagnitude = Math.abs(wheelSpeeds[0]);
 
         // Check the WheelSpeeds to find the maximum value
-        for (int i = 1; i < wheelSpeeds.length; i++) {
+        for (int i = 1; i < wheelSpeeds.length; i++)
+        {
             double magnitude = Math.abs(wheelSpeeds[i]);
-            if (magnitude > maxMagnitude) {
+            if (magnitude > maxMagnitude)
+            {
                 maxMagnitude = magnitude;
             }
         }
         // Normalize the WheelSpeeds against the max value
-        if (maxMagnitude > 1.0) {
-            for (int i = 0; i < wheelSpeeds.length; i++) {
+        if (maxMagnitude > 1.0)
+        {
+            for (int i = 0; i < wheelSpeeds.length; i++)
+            {
                 wheelSpeeds[i] /= maxMagnitude;
             }
         }
@@ -293,8 +184,8 @@ public class AutoStartNearDepot extends LinearOpMode {
         //telemetry.addData("scaleFactor",scaleFactor);
         //telemetry.update();
     }
-
-    public void stopBot() {
+    public void stopBot()
+    {
         // This function stops the robot
         robot.leftFrontDrive.setPower(0);
         robot.leftRearDrive.setPower(0);
@@ -302,14 +193,14 @@ public class AutoStartNearDepot extends LinearOpMode {
         robot.rightRearDrive.setPower(0);
     }
 
-    public double wallSteer(double distance) {
+    public double wallSteer( double distance) {
         // This function uses the side mounted ultrasonic sensor to return a
         // steering signal based on a desired distance from the wall
         // Tested to work as a strafe input to moveBot()
         // distance is in inches
         double steer = 0;
         steer = robot.rangeSensor.getDistance(DistanceUnit.INCH) - distance;
-        steer = (double) Range.clip(steer, -0.25, 0.25);
+        steer = (double)Range.clip(steer, -0.25, 0.25);
         return steer;
     }
 
@@ -329,13 +220,13 @@ public class AutoStartNearDepot extends LinearOpMode {
             }
             //Check the error again for the next loop
             error = getError(heading);
-            telemetry.addData("Heading", robot.gyro.getIntegratedZValue());
+            telemetry.addData("Heading",robot.gyro.getIntegratedZValue());
             telemetry.update();
         }
         stopBot();
     }
 
-    public void gyroStrafe(double speed, double heading) {
+    public void gyroStrafe ( double speed, double heading){
         // This function will strafe the robot at a given speed while holding a heading
 
         double error = getError(heading);
@@ -344,7 +235,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         if (error < 0 && Math.abs(error) > deadband) {
             // Nagative error greater than 5 degrees, left of desired heading, input positive rotation
             moveBot(0, -.25, speed, 0.6);
-        } else if (error > 0 && Math.abs(error) > deadband) {
+        } else if (error > 0 && Math.abs(error) > deadband){
             // Positive Error greater than 5 degrees, right of desired heading, input negative rotation
             moveBot(0, 0.25, speed, 0.6);
         } else {
@@ -353,19 +244,18 @@ public class AutoStartNearDepot extends LinearOpMode {
         }
 
     }
-
     /**
-     * Method to obtain & hold a heading for a finite amount of time
-     * Move will stop once the requested time has elapsed
+     *  Method to obtain & hold a heading for a finite amount of time
+     *  Move will stop once the requested time has elapsed
      *
-     * @param speed    Desired speed of turn.
-     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
-     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                 If a relative angle is required, add/subtract from current heading.
-     * @param holdTime Length of time (in seconds) to hold the specified heading.
+     * @param speed      Desired speed of turn.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     * @param holdTime   Length of time (in seconds) to hold the specified heading.
      */
 
-    public void gyroHold(double speed, double angle, double holdTime) {
+    public void gyroHold( double speed, double angle, double holdTime) {
         // This function drives on a specified heading for a given time
         // Time is in seconds!!!!!
         ElapsedTime holdTimer = new ElapsedTime();
@@ -377,7 +267,7 @@ public class AutoStartNearDepot extends LinearOpMode {
             // Update telemetry & Allow time for other processes to run.
             //error = Range.clip(getError(angle),-0.3,0.3);
             error = PCoeff * getError(angle);
-            moveBot(speed, error, 0, 0.3);
+            moveBot(speed,error,0,0.3);
         }
 
         // Stop all motion;
@@ -387,17 +277,17 @@ public class AutoStartNearDepot extends LinearOpMode {
     /**
      * Perform one cycle of closed loop heading control.
      *
-     * @param speed  Desired speed of turn.
-     * @param angle  Absolute Angle (in Degrees) relative to last gyro reset.
-     *               0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *               If a relative angle is required, add/subtract from current heading.
-     * @param PCoeff Proportional Gain coefficient
+     * @param speed     Desired speed of turn.
+     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
+     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                  If a relative angle is required, add/subtract from current heading.
+     * @param PCoeff    Proportional Gain coefficient
      * @return
      */
     boolean onHeading(double speed, double angle, double PCoeff) {
-        double error;
-        double steer;
-        boolean onTarget = false;
+        double   error ;
+        double   steer ;
+        boolean  onTarget = false ;
         //double leftSpeed;
         //double rightSpeed;
 
@@ -409,17 +299,19 @@ public class AutoStartNearDepot extends LinearOpMode {
             //leftSpeed  = 0.0;
             //rightSpeed = 0.0;
             onTarget = true;
-        } else {
+        }
+        else {
             steer = getSteer(error, PCoeff);
             //rightSpeed  = speed * steer;
             //leftSpeed   = -rightSpeed;
         }
 
         // Send desired speeds to motors.
-        moveBot(speed, steer, 0, speed);
+        moveBot(speed,steer,0, speed);
 
         return onTarget;
     }
+
 
 
     /*
@@ -434,12 +326,8 @@ public class AutoStartNearDepot extends LinearOpMode {
 
         // calculate error in -179 to +180 range  (
         robotError = targetAngle - robot.gyro.getIntegratedZValue();
-        while (robotError > 180) {
-            robotError -= 360;
-        }
-        while (robotError <= -180) {
-            robotError += 360;
-        }
+        while (robotError > 180) { robotError -= 360;}
+        while (robotError <= -180) {robotError += 360;}
         return robotError;
     }
 
@@ -447,7 +335,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    public double sonarDistance() {
+    public double sonarDistance (){
         // Returns distance from the sonar sensor over an average of 4 values
         // Trying to get around noise in the sensor
         // 110 is the scaling factor between voltage and distance in INCHES
@@ -460,17 +348,17 @@ public class AutoStartNearDepot extends LinearOpMode {
         average = average + robot.sonarSensor.getVoltage();
         sleep(1);
         average = average + robot.sonarSensor.getVoltage();
-        return (average * 110) / 4;
+        return (average*110)/4;
 
     }
 
-    public boolean mineralBump(double time) {
+    public boolean mineralBump(double time){
         // This function will rotate to center on the mineral, drive to bump it, and
         // return to its original position
         // Set left and right boundaries for alignment
 
         // Set our initial getAligned limits
-        detector.setAlignSettings(0, 30);
+        detector.setAlignSettings(0,30);
         double leftLimit = 290;
         double rightLimit = 310;
         double gyroTemp;
@@ -481,34 +369,34 @@ public class AutoStartNearDepot extends LinearOpMode {
         telemetry.update();
         sleep(2000);
 
-        while (detectorCt <= 30) {
+        while( detectorCt <= 30) {
             // Calculate the heading error
-            error = getXError(300, 30);
+            error = getXError(300,30);
             // Command the bot to move
-            moveBot(0, error, 0, 0.15);
+            moveBot(0,error,0,0.15);
             // Count up how long it remains aligned.  Could also use gyro heading being stable?
             if (error == 0) {
                 detectorCt = detectorCt + 1;
             } else {
                 detectorCt = 0;
             }
-            telemetry.addData("IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos", detector.getXPosition()); // Gold X pos.
+            telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
             telemetry.addData("error", error);
-            telemetry.addData("detectorCt", detectorCt);
+            telemetry.addData("detectorCt",detectorCt);
             telemetry.update();
         }
         // Save the aligned heading
         gyroTemp = robot.gyro.getIntegratedZValue();
         // Strafe on the heading for the appropriate time
-        gyroStrafe(0.5, gyroTemp);
-        sleep((long) time * 1000);
+        gyroStrafe(0.5,gyroTemp);
+        sleep((long)time*1000);
         //gyroSpin(gyroTemp+90);
         //gyroHold(0.4,gyroTemp+90, 2);
         stopBot();
         // Return to somewhere near the starting position
-        gyroStrafe(-0.5, gyroTemp);
-        sleep((long) time * 1000);
+        gyroStrafe(-0.5,gyroTemp);
+        sleep((long)time*1000);
         //gyroHold(-0.4,gyroTemp+90,2);
         stopBot();
         // return to the starting heading
@@ -517,17 +405,18 @@ public class AutoStartNearDepot extends LinearOpMode {
     }
 
 
-    public double getXError(double centerPixel, double deadBand) {
+    public double  getXError (double centerPixel, double deadBand) {
         // This function accepts a center pixel location (usually 300)
         // and a dead band around that pixel and provides a
         // proportional steering signal back
         double responseSignal = 0;
         double error = detector.getXPosition() - centerPixel;
         double slope = 0.01;  // Proportional multipler
-        if (Math.abs(error) <= deadBand) {
+        if ( Math.abs(error) <= deadBand ){
             // Error is inside deadband
             responseSignal = 0;
-        } else {
+        } else
+        {
             responseSignal = slope * error;
         }
         return responseSignal;
