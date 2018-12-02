@@ -68,7 +68,8 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         //make sure that it still runs as intended.
 
         telemetry.addData("Stopped", null);
-        sleep(2000); //drop team marker into depot
+        sleep(2000);
+        compRobot.deployMarker();
         telemetry.update();
         compRobot.driveStraight(-100, .5f);
         compRobot.stopDriveMotors();
