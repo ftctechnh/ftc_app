@@ -17,11 +17,12 @@ public class CompRobot extends BasicBot
     private DistanceSensor frontDistSens, frontRightDistSens, backDistSens;
     private DcMotorImplEx collectorPivoterMotor, collectorLifterMotor, climberMotor;
     private Servo wristCollectorServo;
-    private CRServo rightGrabServo, leftGrabServo;
+    private CRServo rightGrabCRServo, leftGrabCRServo;
 
     public CompRobot(HardwareMap hardwareMap)
     {
         super(hardwareMap);
+        initMotorsAndMechParts(hardwareMap);
     }
 
     public CompRobot(HardwareMap hardwareMap, LinearOpMode linearOpMode_In)
@@ -29,6 +30,7 @@ public class CompRobot extends BasicBot
         super(hardwareMap);
         initSensors(hardwareMap);
         linearOpMode = linearOpMode_In;
+        initMotorsAndMechParts(hardwareMap);
     }
 
     public void initSensors(HardwareMap hardwareMap)
@@ -39,11 +41,17 @@ public class CompRobot extends BasicBot
 
     public void initMotorsAndMechParts(HardwareMap hardwareMap)
     {
-        wristCollectorServo = hardwareMap.get(Servo.class, "wristCollectorServo");
-        rightGrabServo = hardwareMap.get(CRServo.class, "rightGrabServo");
-        rightGrabServo.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftGrabServo = hardwareMap.get(CRServo.class, "leftGrabServo");
-        leftGrabServo.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        wristCollectorServo = hardwareMap.servo.get("wristCollectorServo");
+        wristCollectorServo.setPosition(0);
+
+        rightGrabCRServo = hardwareMap.crservo.get("rightGrabCRServo");
+        rightGrabCRServo.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        leftGrabCRServo = hardwareMap.crservo.get("leftGrabCRServo");
+        leftGrabCRServo.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        initCRServoAndServoPos();
     }
 
     public void driveStraight(float dist_In, float pow)
@@ -149,48 +157,6 @@ public class CompRobot extends BasicBot
         }
     }
 
-    /* Old hugwall code,
-    public void hugWallForward(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall)
-    {
-        double frontDist, rightDist;
-
-        while (frontDistSens.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
-        {
-            linearOpMode.sleep(400);
-            frontDist = frontDistSens.getDistance(DistanceUnit.INCH);
-            if(frontDist < distAwayFromFrontWall - 6)
-            {
-                super.stopDriveMotors();
-                break;
-            }
-            else
-                driveStraight(11);
-
-            if (frontDist > distAwayFromFrontWall)
-            {
-                rightDist = frontRightDistSens.getDistance(DistanceUnit.INCH);
-
-                if (rightDist < lowerDistFromSideWall)
-                {
-                    pivotenc(-15);
-                    driveStraight(11);
-                    pivotenc(15);
-                }
-                else if (rightDist > upperDistFromSideWall)
-                {
-                    pivotenc(15);
-                    driveStraight(11);
-                    pivotenc(-15);
-                }
-                else if (lowerDistFromSideWall < rightDist & rightDist < upperDistFromSideWall) //To note in the future, maybe replace with else
-                {
-                    driveStraight(8);
-                }
-            }
-        }
-    }
-    */
-
     public DistanceSensor getFrontRightDistSens()
     {
         return frontRightDistSens;
@@ -211,23 +177,28 @@ public class CompRobot extends BasicBot
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
 
-    public void lowerCollectorWristAndExpel()
+    public void deployMarker()
     {
+        wristCollectorServo.setPosition(.49);
+        linearOpMode.sleep(1000);
+        leftGrabCRServo.setPower(1);
+        rightGrabCRServo.setPower(1);
+        linearOpMode.sleep(2069);
 
-
-        //Okay dood time for pseudocode
-
-        //So the wrist-pivot inits in its very back position
-        //wristpivot servo to low position
-        //then set the two CR servos to rotate
-        //After x amount of seconds, the two servos stop rotating
-
-        //Some notes taken
-        //left for going in 0 - .5
-        // right .5 to 1 
-
-
+        initCRServoAndServoPos();
     }
 
+    public void initCRServoAndServoPos()
+    {
+        wristCollectorServo.setPosition(0);
+        rightGrabCRServo.setPower(0);
+        leftGrabCRServo.setPower(0);
+    }
+
+    public void setGrabberWheelPower(double pow)
+    {
+        rightGrabCRServo.setPower(pow);
+        leftGrabCRServo.setPower(pow);
+    }
 
 }
