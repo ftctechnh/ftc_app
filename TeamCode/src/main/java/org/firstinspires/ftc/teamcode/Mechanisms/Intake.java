@@ -10,7 +10,8 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 @Config
 public class Intake {
     public static double DEPOSIT_DIST = 0.13;
-    public static double COLLECT_DIST = 0.36;
+    public static double COLLECT_DIST = 0.38;
+    public static double LOWER_ARM_DIST = 0.6;
 
     public static double MAX_INTAKE_SPEED = 0.8;
 
@@ -52,6 +53,8 @@ public class Intake {
     public void collect() {
         setPos(COLLECT_DIST);
     }
+
+    public void prepWinchLower() { setPos(LOWER_ARM_DIST); }
 
     public void goToMin() {
         setPos(1);

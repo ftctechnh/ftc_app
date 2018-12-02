@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
 import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 import org.opencv.core.Rect;
 
+@Config
 public abstract class AutoUtils extends VuforiaCVUtil {
     public StartingPosition startingPosition;
     public SparkyTheRobot robot;
@@ -17,7 +19,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
     public static double MARKER_DEPLOYER_DEPLOY = 0;
     public static double MARKER_DEPLOYER_RETRACTED = 0.85;
-    public static double HANG_HOLD_POWER = -0.1;
+    public static double HANG_HOLD_POWER = -0.15;
 
     double TURN_MAX_SPEED = 0.6;
     double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45;
@@ -39,6 +41,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         // In the first phase, we will lower the robot "manually"
         // In the second phase, we will just freefall to be faster
 
+        robot.updateReadings();
         robot.winch.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.winch.setPower(1);
         while (opModeIsActive()) {
@@ -52,6 +55,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         robot.winch.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         robot.winch.setPower(0);
 
+        robot.updateReadings();
         if (method == DetachMethod.STRAFE) {
             followPath(drive, Paths.UNHOOK);
         } else if (method == DetachMethod.TURN) {
@@ -60,15 +64,16 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         }
 
         // Now, lower the hang arm
-        robot.intake.collect();
-
-        robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.winch.setPower(1);
-        robot.winch.setTargetPosition(-1500);
 
         if (method == DetachMethod.STRAFE) {
             // Sleep a little bit to let things move
             // a little
+            robot.intake.collect();
+
+            robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.winch.setPower(1);
+            robot.winch.setTargetPosition(-1500);
+
             sleep(500);
             followPath(drive, Paths.UNDO_UNHOOK);
         }

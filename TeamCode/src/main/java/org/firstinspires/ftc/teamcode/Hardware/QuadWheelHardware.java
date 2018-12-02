@@ -46,4 +46,23 @@ public class QuadWheelHardware extends BaseHardware {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
     }
+
+    // Camera is default
+    public enum FrontDir {
+        CAMERA, HOOK
+    }
+
+    public void setFrontDir(FrontDir dir) {
+        if (dir == FrontDir.CAMERA) {
+            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+            frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+            backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        } else {
+            frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        }
+    }
 }
