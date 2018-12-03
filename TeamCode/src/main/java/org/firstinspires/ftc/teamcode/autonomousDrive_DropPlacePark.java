@@ -24,8 +24,6 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
 
         while (opModeIsActive())
         {
-            double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
-            double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
             switch(action)
             {
                 case Drop:
@@ -53,8 +51,8 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
 
             // Display the current values
             telemetry.addData("time: ", auto.getTime());
-            telemetry.addData("mobile distance: ", mobileDistance);
-            telemetry.addData("fixed distance:", fixedDistance);
+            telemetry.addData("mobile distance: ", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
+            telemetry.addData("fixed distance:", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
             telemetry.addData("Drive x:", robot.driveEngine.xOut);
             telemetry.addData("Drive y:", robot.driveEngine.yOut);
             telemetry.addData("mode:", action);

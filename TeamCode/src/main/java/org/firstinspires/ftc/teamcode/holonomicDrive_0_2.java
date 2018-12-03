@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class holonomicDrive_0_2 extends LinearOpMode
 {
     Bogg robot;
-    private double pushIn;
-    private double pushOut;
+    private double pushIn = -.4;
+    private double pushOut = .6;
 
     @Override
     public void runOpMode()
@@ -21,8 +21,8 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            robot.manualRotate();
             robot.manualDrive();
+            robot.manualRotate();
 
             if(gamepad1.dpad_up && x < .6)
             {
