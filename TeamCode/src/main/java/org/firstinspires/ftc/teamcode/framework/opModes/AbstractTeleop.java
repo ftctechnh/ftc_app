@@ -97,21 +97,23 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             }
         }
 
-        telemetry.addData(initLoops + " Init Loops");
+        telemetry.addData(initLoops + "Init Loops");
         telemetry.update();
 
-        while (!isStopRequested() && !CurrentFuture.isDone()) ;
+        while (!isStopRequested() && !CurrentFuture.isDone());
 
         telemetry.addData("Starting");
         telemetry.update();
-
-        RegisterEvents();
 
         if (!isStopRequested()) {
             checkException();
 
             CurrentFuture = service.submit(StartThread);
         }
+
+        while (!isStopRequested() && !CurrentFuture.isDone());
+
+        RegisterEvents();
 
         emitTime.reset();
 

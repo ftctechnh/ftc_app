@@ -31,7 +31,7 @@ public class IMU {
         GyroTimeOut = new ElapsedTime();
         GyroTimeOut.reset();
 
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 2000) ;
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) ;
     }
 
     public double getHeading() {
@@ -42,7 +42,7 @@ public class IMU {
     public void resetAngleToZero() {
         imu.initialize(parameters);
 
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 2000) ;
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) ;
     }
 
     public boolean isGyroCalibrated() {

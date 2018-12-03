@@ -27,9 +27,19 @@ public class MineralLift {
 
     }
 
-    public void setPosition(int position) {
+    public void setCurrentPosition(int position) {
         liftMotor.setPower(1);
         liftMotor.setTargetPosition(position);
+    }
+
+    public int getCurrentPosition() {
+        return liftMotor.getCurrentPosition();
+    }
+
+    public void resetPosition(){
+        liftMotor.setPower(0);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public void setGateServoPosition(double position) {

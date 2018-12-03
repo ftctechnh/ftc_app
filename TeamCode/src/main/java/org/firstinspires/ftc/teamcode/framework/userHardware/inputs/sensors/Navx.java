@@ -72,7 +72,7 @@ public class Navx {
 
         navx_device.zeroYaw();
         try {
-            sleep(500);  // wait a small time for Yaw to update.
+            sleep(500);  // wait a small time for Yaw to updateAll.
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

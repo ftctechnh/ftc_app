@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
 
-@TeleOp(name = "BoogieWheel Teleop", group = "New")
+@TeleOp(name = "OneDriver BoogieWheel Teleop", group = "New")
 //@Disabled
 
-public class BoogieTeleop extends AbstractTeleop {
+public class OneDriverBoogieTeleop extends AbstractTeleop {
 
     private Robot robot;
 
@@ -17,15 +17,27 @@ public class BoogieTeleop extends AbstractTeleop {
         singleGamepad();
     }
 
-    private void singleGamepad(){
+    private void singleGamepad() {
+
         ////////Drive////////
-        addEventHandler("1_lsy_change", () -> {
+        // For these to work uncomment drive.update in robot.updateAll
+        /* addEventHandler("1_lsy_change", () -> {
             robot.setDriveY(gamepad1.left_stick_y);
             return true;
         });
 
         addEventHandler("1_rsx_change", () -> {
             robot.setDriveZ(gamepad1.right_stick_x);
+            return true;
+        });*/
+
+        addEventHandler("1_lsy_change", () -> {
+            robot.setDriveY(-gamepad1.left_stick_y);
+            return true;
+        });
+
+        addEventHandler("1_rsy_change", () -> {
+            robot.setDriveZ(-gamepad1.right_stick_x);
             return true;
         });
 
@@ -37,6 +49,10 @@ public class BoogieTeleop extends AbstractTeleop {
         addEventHandler("1_b_down", robot.beginIntakingCallable());
 
         addEventHandler("1_x_down", robot.reverseIntakeCallable());
+
+        addEventHandler("1_dpr_down", robot.liftIntakeCallable());
+
+        addEventHandler("1_dpl_down", robot.lowerIntakeCallable());
 
         ///////Mineral Lift////////
         addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
@@ -55,7 +71,7 @@ public class BoogieTeleop extends AbstractTeleop {
         addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
     }
 
-    private void twoGamepads(){
+    private void twoGamepads() {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
         addEventHandler("1_lsy_change", () -> {
@@ -93,7 +109,7 @@ public class BoogieTeleop extends AbstractTeleop {
         addEventHandler("2_dpd_up", robot.robotLiftStopCallable());
     }
 
-    private void twoDrivers(){
+    private void twoDrivers() {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
         addEventHandler("1_lsy_change", () -> {
@@ -123,7 +139,7 @@ public class BoogieTeleop extends AbstractTeleop {
         addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
 
         ////////Util////////
-        addEventHandler("1_y_down", ()->{
+        addEventHandler("1_y_down", () -> {
             ////Gamepad 1////
             //Drive
             pauseEvent("1_lsy_change");
@@ -184,7 +200,7 @@ public class BoogieTeleop extends AbstractTeleop {
         pauseEvent("2_x_down");
 
         ////////Util////////
-        addEventHandler("2_y_down", ()->{
+        addEventHandler("2_y_down", () -> {
             ////Gamepad 1////
             //Drive
             resumeEvent("1_lsy_change");
@@ -235,11 +251,12 @@ public class BoogieTeleop extends AbstractTeleop {
 
     @Override
     public void Loop() {
-        robot.updateDrive();
+        robot.updateAll();
     }
 
     @Override
     public void Stop() {
         robot.stop();
     }
+
 }

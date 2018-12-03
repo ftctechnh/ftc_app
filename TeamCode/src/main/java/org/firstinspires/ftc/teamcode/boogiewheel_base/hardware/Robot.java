@@ -4,13 +4,21 @@ import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
 import java.util.concurrent.Callable;
 
+import static java.util.logging.Logger.global;
+
 public class Robot extends AbstractRobot {
 
     private HardwareDevices hardware;
     private boolean mineralGateOpen = false, driveInverted = false;
 
+    //Robot Methods
     public Robot() {
         hardware = new HardwareDevices();
+    }
+
+    public void updateAll(){
+   //     hardware.drive.update();
+        hardware.mineralLift.update();
     }
 
     //Drive Methods
@@ -25,10 +33,6 @@ public class Robot extends AbstractRobot {
 
     public void setDrivePower(double l, double r) {
         hardware.drive.setPower(l, r);
-    }
-
-    public void updateDrive() {
-        hardware.drive.update();
     }
 
     public Callable toggleDriveInvertedCallable(){
@@ -86,25 +90,59 @@ public class Robot extends AbstractRobot {
     //Intake Methods
     public Callable beginIntakingCallable() {
         return () -> {
-            hardware.intake.beginIntaking();
+            beginIntaking();
             return true;
         };
+    }
+
+    public void beginIntaking(){
+        hardware.intake.beginIntaking();
     }
 
     public Callable finishIntakingCallable() {
         return () -> {
-            hardware.intake.finishIntaking();
-            driveInverted = true;
-            hardware.drive.setInverted(driveInverted);
+            finishIntaking();
             return true;
         };
     }
 
+    public void finishIntaking(){
+        hardware.intake.finishIntaking();
+        driveInverted = true;
+        hardware.drive.setInverted(driveInverted);
+    }
+
     public Callable reverseIntakeCallable() {
         return () -> {
-            hardware.intake.reverseIntake();
+            reverseIntake();
             return true;
         };
+    }
+
+    public void reverseIntake(){
+        hardware.intake.reverseIntake();
+    }
+
+    public Callable liftIntakeCallable(){
+        return ()-> {
+            liftIntake();
+            return true;
+        };
+    }
+
+    public void liftIntake(){
+        hardware.intake.liftIntake();
+    }
+
+    public Callable lowerIntakeCallable(){
+        return ()-> {
+            lowerIntake();
+            return true;
+        };
+    }
+
+    public void lowerIntake(){
+        hardware.intake.lowerIntake();
     }
 
     //Mineral Lift Methods

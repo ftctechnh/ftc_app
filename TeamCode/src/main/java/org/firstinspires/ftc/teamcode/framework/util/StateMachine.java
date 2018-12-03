@@ -30,7 +30,7 @@ public class StateMachine {
         }
     }
 
-    public void update() {
+    public boolean update() {
         finishedStates = new ArrayList<>();
         startingStates = new ArrayList<>();
 
@@ -45,6 +45,8 @@ public class StateMachine {
 
         activeStates.removeAll(finishedStates);
         activeStates.addAll(startingStates);
+        if(activeStates.size()<=0)return false;
+        return true;
     }
 
     private void fire(State state) throws RuntimeException {

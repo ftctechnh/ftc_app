@@ -90,10 +90,12 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         telemetry.addData("Starting");
         telemetry.update();
 
-        while (opModeIsActive()) {
+        boolean stateMachineActive = true;
+
+        while (opModeIsActive() && stateMachineActive) {
             checkException();
 
-            stateMachine.update();
+            stateMachineActive = stateMachine.update();
         }
 
         telemetry.addData("Stopping");

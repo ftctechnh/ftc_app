@@ -304,7 +304,7 @@ public class DriveController extends SubsystemController {
         return val;
     }
 
-    private synchronized boolean atPosition(double x, double y, double error) {
+    private boolean atPosition(double x, double y, double error) {
         double upperRange = x + error;
         double lowerRange = x - error;
 

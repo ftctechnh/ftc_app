@@ -76,12 +76,14 @@ public class TensorFlow {
         int tfodMonitorViewId = AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", AbstractOpMode.getOpModeInstance().hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minimumConfidence = 0.70;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
     private void initTfodWithoutViewer() {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters();
+        tfodParameters.minimumConfidence = 0.70;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia.getVuforia());
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
@@ -113,6 +115,7 @@ public class TensorFlow {
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
+                    if(recognition.getConfidence()<0.5) continue;
                     minerals.add(new Mineral(recognition));
                 }
 
@@ -128,7 +131,7 @@ public class TensorFlow {
     private SamplePosition samplePositionFromThreeMinerals(ArrayList<Mineral> minerals) {
         SamplePosition position = SamplePosition.UNKNOWN;
 
-        Mineral[] samples = getBottomThreeMinerals(minerals);
+        Mineral[] samples = getBottomTwoSilverOneGold(minerals);
 
         if (samples != null) {
             Mineral goldMineral = null, silverMineralOne = null, silverMineralTwo = null;
@@ -183,6 +186,27 @@ public class TensorFlow {
         Arrays.sort(result, new SortByMineralY());
 
         Mineral[] last = {result[0], result[1], result[2]};
+
+        return last;
+    }
+
+    private Mineral[] getBottomTwoSilverOneGold(ArrayList<Mineral> minerals) {
+
+        ArrayList<Mineral> silverMinerals = new ArrayList<>();
+        for (Mineral mineral:minerals){
+            if(mineral.getType()==MineralType.SILVER)silverMinerals.add(mineral);
+        }
+
+        if(silverMinerals.size()<2)return null;
+
+        Mineral goldMineral = getBottomGoldMineral(minerals);
+        if(goldMineral==null) return null;
+
+        Mineral[] silverResult = silverMinerals.toArray(new Mineral[silverMinerals.size()]);
+
+        Arrays.sort(silverResult, new SortByMineralY());
+
+        Mineral[] last = {goldMineral, silverResult[0], silverResult[1]};
 
         return last;
     }

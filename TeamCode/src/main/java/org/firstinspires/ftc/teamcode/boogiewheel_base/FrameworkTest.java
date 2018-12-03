@@ -18,13 +18,13 @@ public class FrameworkTest extends AbstractTeleop {
     public void RegisterEvents() {
         addEventHandler("even_down", () -> {
             telemetry.addData("even");
-            //telemetry.update();
+            //telemetry.updateAll();
             return true;
         });
 
         addEventHandler("odd_down", () -> {
             telemetry.addData("odd");
-            //telemetry.update();
+            //telemetry.updateAll();
             return true;
         });
 
