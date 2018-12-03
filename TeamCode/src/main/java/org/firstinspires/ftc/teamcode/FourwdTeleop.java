@@ -10,9 +10,9 @@ import com.qualcomm.robotcore.util.Range;
 
 /** DRIVETRAIN CONFIGURATION
  *      front
- *      B   A
- * left       right
  *      C   D
+ * left       right
+ *      B   A
  *      back
  */
 
@@ -37,7 +37,7 @@ public class FourwdTeleop extends OpMode {
     private String[] titles = new String[] {"forward", "title1", "title2", "title3", "title4", "title5", "title6", "title7", "title8"};
     private double[] values = new double[] {    0.4,        0,        0,        0,        0,        0,        0,        0,        0   };
 
-    Tuner tuner = new Tuner(titles, values, gamepad1, telemetry);
+//    Tuner tuner = new Tuner(titles, values, gamepad1, telemetry);
 
     @Override
     public void init() {
@@ -48,9 +48,9 @@ public class FourwdTeleop extends OpMode {
         bDrive = hardwareMap.get(DcMotor.class, "1-1");
         bDrive.setDirection(DcMotorSimple.Direction.REVERSE);
         cDrive = hardwareMap.get(DcMotor.class, "1-2");
-        cDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        cDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         dDrive = hardwareMap.get(DcMotor.class, "1-3");
-        dDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        dDrive.setDirection(DcMotorSimple.Direction.REVERSE);
 
         aMech = hardwareMap.get(DcMotor.class, "2-0");
         bMech = hardwareMap.get(DcMotor.class, "2-1");
@@ -71,12 +71,13 @@ public class FourwdTeleop extends OpMode {
     @Override
     public void loop() {
 
-        tuner.tune();
-        telemetry.addData("get(forward)", tuner.get("forward"));
+        //        tuner.tune();
+        //        telemetry.addData("get(forward)", tuner.get("forward"));
 
 
         if (gamepad1.dpad_up){
-            forward = tuner.get("forward");
+//            forward = tuner.get("forward");
+            forward = 0.9;
             turn = 0;
         }else if (gamepad1.dpad_down){
             forward = -0.9;
@@ -88,27 +89,32 @@ public class FourwdTeleop extends OpMode {
             forward = 0;
             turn = -0.9;
         }else{
-            forward = Calculate.sensCurve(gamepad1.left_stick_y, 2);
-            turn = Calculate.sensCurve(gamepad1.right_stick_x, 2);
+            forward = Calculate.sensCurve(-gamepad1.left_stick_y, 2);
+            turn = Calculate.sensCurve(-gamepad1.right_stick_x, 2);
         }
 
-        aDrive.setPower(Range.clip(forward+turn,-1,1));
-        bDrive.setPower(Range.clip(forward-turn,-1,1));
-        cDrive.setPower(Range.clip(forward-turn,-1,1));
-        dDrive.setPower(Range.clip(forward+turn,-1,1));
+        aDrive.setPower(forward+turn);
+        bDrive.setPower(forward-turn);
+        cDrive.setPower(forward-turn);
+        dDrive.setPower(forward+turn);
 
 
         if(gamepad2.dpad_up){ aMech.setPower(0.9); }
         else if(gamepad2.dpad_down){ aMech.setPower(-0.9); }
+        else{ aMech.setPower(0); }
 
         if(gamepad2.dpad_right){ bMech.setPower(0.9); }
         else if(gamepad2.dpad_left){ bMech.setPower(-0.9); }
+        else{ bMech.setPower(0); }
+
 
         if(gamepad2.y){ cMech.setPower(0.9); }
         else if(gamepad2.a){ cMech.setPower(-0.9); }
+        else{ cMech.setPower(0); }
 
         if(gamepad2.b){ dMech.setPower(0.9); }
         else if(gamepad2.x){ dMech.setPower(-0.9); }
+        else{ dMech.setPower(0); }
 
         telemetry.addData("forward",forward);
         telemetry.addData("turn",turn);

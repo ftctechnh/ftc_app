@@ -40,8 +40,8 @@ public class Calculate {
 
 //COORDINATE PLANE
 
-    public static double sensCurve(double joystickVal, double power){
-        return Math.copySign( Math.pow( Math.abs( joystickVal), power), joystickVal);
+    public static double sensCurve(double joystickVal, double exponent){
+        return Math.copySign( Math.pow( Math.abs( joystickVal), exponent), joystickVal);
     }
 
     public static double[] polarToCartesian(double magnitude, double angle, boolean angleInRadians) {

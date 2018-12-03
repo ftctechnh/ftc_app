@@ -11,12 +11,16 @@ public class Tuner{
 
 
     private Gamepad gamepad;
+    private Gamepad previousGamepad;
     private Telemetry telemetry;
 
     private int index = 0;
 
     private String[] titles;
     private double[] values;
+
+    ButtonPress leftBumper = new ButtonPress();
+    ButtonPress rightBumper = new ButtonPress();
 
 
     Tuner(String[] titles, double[] values, Gamepad gamepad, Telemetry telemetry){
@@ -28,35 +32,48 @@ public class Tuner{
 
     public void tune(){ //should run continuously
 
-        if (gamepad.left_bumper){ //maybe add release condition if going too fast
-            if(index < 2){
-                index = 8;
+
+
+
+        if(leftBumper.status(gamepad.left_bumper) == ButtonPress.Status.COMPLETE){
+            if(index == 0){
+                index = titles.length-1;
             }else{
                 index--;
             }
         }
-        if (gamepad.right_bumper){
-            if(index > 7){
-                index = 1;
+
+        if (rightBumper.status(gamepad.right_bumper) == ButtonPress.Status.COMPLETE){
+            if(index > titles.length-2){
+                index = 0;
             }else{
                 index++;
             }
         }
 
         if (gamepad.left_trigger > 0.05){
-            values[index] -= gamepad.left_trigger;
+            values[index] -= gamepad.left_trigger*0.01;
         }
         if (gamepad.right_trigger > 0.05){
-            values[index] += gamepad.left_trigger;
+            values[index] += gamepad.right_trigger*0.01;
         }
 
         telemetry.addData(titles[index], values[index]);
+        telemetry.addData("index", index);
+
+        previousGamepad = gamepad;
 
     }
 
     public double get(String title){
         int keyIndex = find(titles, title);
-        return values[keyIndex];
+        if(keyIndex == -1){
+            telemetry.addData("ERROR", "DIDN'T FIND "+title);
+            return 0;
+        }else{
+            return values[keyIndex];
+
+        }
     }
 
 
