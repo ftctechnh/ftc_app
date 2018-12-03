@@ -1,17 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.sun.tools.javac.util.ArrayUtils;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.util.Map;
 
 public class Tuner{
 
 
     private Gamepad gamepad;
-    private Gamepad previousGamepad;
     private Telemetry telemetry;
 
     private int index = 0;
@@ -19,8 +14,8 @@ public class Tuner{
     private String[] titles;
     private double[] values;
 
-    ButtonPress leftBumper = new ButtonPress();
-    ButtonPress rightBumper = new ButtonPress();
+    private ButtonPress leftBumper = new ButtonPress();
+    private ButtonPress rightBumper = new ButtonPress();
 
 
     Tuner(String[] titles, double[] values, Gamepad gamepad, Telemetry telemetry){
@@ -31,9 +26,6 @@ public class Tuner{
     }
 
     public void tune(){ //should run continuously
-
-
-
 
         if(leftBumper.status(gamepad.left_bumper) == ButtonPress.Status.COMPLETE){
             if(index == 0){
@@ -60,8 +52,6 @@ public class Tuner{
 
         telemetry.addData(titles[index], values[index]);
         telemetry.addData("index", index);
-
-        previousGamepad = gamepad;
 
     }
 
