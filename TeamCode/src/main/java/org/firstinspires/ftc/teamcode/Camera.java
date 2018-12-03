@@ -271,7 +271,7 @@ public class Camera{
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
                 .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        CAMERA_CHOICE == FRONT ? 90 : -90, 0, 0));
+                        CAMERA_CHOICE == FRONT ? 90 : -90, 0, 90));
 
         /**  Let all the trackable listeners know where the phone is.  */
         for (VuforiaTrackable trackable : allTrackables)
@@ -313,7 +313,6 @@ public class Camera{
     public Double getHeading()
     {
         // check all the trackable target to see which one (if any) is visible.
-        targetVisible = false;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 targetVisible = true;
@@ -323,14 +322,10 @@ public class Camera{
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, RADIANS);
                 if (rotation != null) {
                     lastOrientation = rotation;
+                    return (double)lastOrientation.thirdAngle;
                 }
                 break;
             }
-        }
-
-        if(lastOrientation != null) {
-            // get the heading (not roll or pitch)
-            return (double)lastOrientation.thirdAngle;
         }
         return null;
     }
@@ -341,7 +336,7 @@ public class Camera{
     }
 
     public boolean targetVisible() {
-        return false; //targetVisible(0) || targetVisible(1) ||targetVisible(2) ||targetVisible(3);
+        return targetVisible(0) || targetVisible(1) ||targetVisible(2) ||targetVisible(3);
 
     }
 

@@ -17,6 +17,7 @@ public class Auto {
     Auto(Bogg robot, Telemetry telemetry)
     {
         this.robot = robot;
+        robot.push(true);
         this.telemetry = telemetry;
         robot.camera = new Camera(robot.hardwareMap, telemetry);
         telemetry.addLine("Made it to Point X");
@@ -160,14 +161,9 @@ public class Auto {
             return Mode.MoveToWall;
         }
 
+        double[] wallTarget = new double[]{5 * unitTargetLocation[0], 5 * unitTargetLocation[1]};
 
-        double[] wallTarget;
-        double targetAngle;
-
-        wallTarget = new double[]{5 * unitTargetLocation[0], 5 * unitTargetLocation[1]};
-        targetAngle = Math.atan2(wallTarget[1], wallTarget[0]) * 180 / Math.PI;
-
-        robot.sensors.rotateMobile(iSP * 90);
+        robot.sensors.rotateMobile(-iSP * 90);
 
         //TODO: it would be cool to combine moving to the right place and spinning like Josh did right here.
         //Use an and statement with the two conditions to move to Depot.
@@ -190,10 +186,10 @@ public class Auto {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
 
-        robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
+        robot.driveEngine.drive(-iSP * .7,(6 - fixedDistance)/6.0);
 
         if(mobileDistance < 6) {
-            robot.sensors.rotateMobile(-iSP * 90);
+            robot.sensors.rotateMobile(iSP * 90);
             timer.reset();
             robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -206,28 +202,31 @@ public class Auto {
     Mode dropMarker()
     {
         double inchesMoved = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-        if(iSP == 1 && inchesMoved < Math.PI * 9.0) //half a rotation
+        if(iSP == -1 && inchesMoved < Math.PI * 9.0) //half a rotation
         {
             robot.driveEngine.rotate(.5);
             timer.reset();
             return Mode.DropMarker;
         }
 
-        robot.driveEngine.drive(0,0);
-        robot.push(false);
-        if(iSP != 1) {
-            if (timer.seconds() > 3)
-                return Mode.MoveToCrater;
-            return Mode.DropMarker;
-        }
-
-        if(timer.seconds() > 3)
+        if(timer.seconds() < 3)
         {
-            if (inchesMoved < 2 * Math.PI * 9.0) //full rotation
-                robot.driveEngine.rotate(.5);
+            robot.driveEngine.drive(0, 0);
+            robot.push(false);
             return Mode.DropMarker;
         }
-        return Mode.MoveToCrater;
+        else
+        {
+            if(iSP == 1)
+                return Mode.MoveToCrater;
+            else if (inchesMoved < 2 * Math.PI * 9.0) //full rotation
+            {
+                robot.driveEngine.rotate(.5);
+                return Mode.DropMarker;
+            }
+            else
+                return Mode.MoveToCrater;
+        }
     }
 
 
@@ -235,12 +234,13 @@ public class Auto {
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         robot.push(false);
-        robot.driveEngine.drive(-iSP * .7,(6 - fixedDistance)/6.0);
+        robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
         if(robot.sensors.isTilted())
         {
             return Mode.Stop;
         }
-        return Mode.MoveToCrater;
+        else
+            return Mode.MoveToCrater;
     }
 
 

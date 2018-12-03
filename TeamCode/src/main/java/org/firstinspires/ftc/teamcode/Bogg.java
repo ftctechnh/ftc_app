@@ -164,7 +164,7 @@ public class Bogg
             //where compass would say the mountain is located considering our compass isn't pointed north
             double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
 
-            driveEngine.drive(Math.cos((target_heading + 90)*Math.PI/180) * speed, Math.sin((target_heading+90)*Math.PI/180) * speed);
+            driveEngine.drive(Math.cos(target_heading + Math.PI/2) * speed, Math.sin(target_heading+ Math.PI/2) * speed);
 
         }
          return false;
@@ -191,7 +191,7 @@ public class Bogg
             //where compass would say the mountain is located considering our compass isn't pointed north
             double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
 
-            if (Math.abs(target_heading) < accuracy_angle) {
+            if (Math.abs(target_heading) < accuracy_angle * Math.PI/180) {
                 driveEngine.rotate(0);
                 return true;
             }
