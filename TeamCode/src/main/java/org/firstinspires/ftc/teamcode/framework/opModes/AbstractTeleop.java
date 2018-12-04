@@ -80,13 +80,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         //calls user init
         CurrentFuture = service.submit(InitThread);
 
-        telemetry.addData("Init");
-        telemetry.update();
-
         int initLoops = 0;
-
-        telemetry.addData("Init Loop");
-        telemetry.update();
 
         while (!isStopRequested() && !isStarted()) {
             checkException();
@@ -97,13 +91,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             }
         }
 
-        telemetry.addData(initLoops + "Init Loops");
-        telemetry.update();
-
         while (!isStopRequested() && !CurrentFuture.isDone());
-
-        telemetry.addData("Starting");
-        telemetry.update();
 
         if (!isStopRequested()) {
             checkException();
@@ -128,9 +116,6 @@ public abstract class AbstractTeleop extends AbstractOpMode {
                 CurrentFuture = service.submit(LoopThread);
             }
         }
-
-        telemetry.addData("Stopping");
-        telemetry.update();
 
         //AbstractOpMode.stopRequested();
 
@@ -342,8 +327,6 @@ public abstract class AbstractTeleop extends AbstractOpMode {
 
         boolean isChanged(String name, boolean newVal) {
             if (!state.containsKey(name)) {
-                AbstractOpMode.getTelemetry().addData("Adding: " + name);
-                AbstractOpMode.getTelemetry().update();
                 state.put(name, newVal);
                 return newVal;
             }

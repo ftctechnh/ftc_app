@@ -36,7 +36,11 @@ public class MineralLift {
         return liftMotor.getCurrentPosition();
     }
 
-    public void resetPosition(){
+    public boolean isLiftInProgress() {
+        return liftMotor.isBusy();
+    }
+
+    public void resetPosition() {
         liftMotor.setPower(0);
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);

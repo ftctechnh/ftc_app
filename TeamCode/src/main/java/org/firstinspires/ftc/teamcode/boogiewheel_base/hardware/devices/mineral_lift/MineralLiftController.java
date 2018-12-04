@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 public class MineralLiftController extends SubsystemController {
@@ -8,7 +9,7 @@ public class MineralLiftController extends SubsystemController {
     private MineralLift mineralLift;
     private boolean isMovingDown = false;
     private int[] liftValues = {-1, -1, -1};
-    public int mineralLiftUp = 0;
+
 
     public MineralLiftController() {
         init();
@@ -22,14 +23,19 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void moveToCollectPosition() {
+        RobotState.mineralLiftState = RobotState.MineralLiftState.IN_MOTION;
         mineralLift.setCurrentPosition(Constants.MINERAL_LIFT_COLLECT_POSITION);
         isMovingDown = true;
-        mineralLiftUp = 0;
+        while (mineralLift.isLiftInProgress());
+        RobotState.mineralLiftState = RobotState.MineralLiftState.COLLECT_POSITION;
+
     }
 
     public synchronized void moveToDumpPosition() {
+        RobotState.mineralLiftState = RobotState.MineralLiftState.IN_MOTION;
         mineralLift.setCurrentPosition(Constants.MINERAL_LIFT_DUMP_POSITION);
-        mineralLiftUp = 1;
+        while (mineralLift.isLiftInProgress());
+        RobotState.mineralLiftState = RobotState.MineralLiftState.DUMP_POSITION;
     }
 
     public synchronized void update() {

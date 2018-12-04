@@ -20,24 +20,13 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
     private void singleGamepad() {
 
         ////////Drive////////
-        // For these to work uncomment drive.update in robot.updateAll
-        /* addEventHandler("1_lsy_change", () -> {
+        addEventHandler("1_lsy_change", () -> {
             robot.setDriveY(gamepad1.left_stick_y);
             return true;
         });
 
         addEventHandler("1_rsx_change", () -> {
             robot.setDriveZ(gamepad1.right_stick_x);
-            return true;
-        });*/
-
-        addEventHandler("1_lsy_change", () -> {
-            robot.setDriveY(-gamepad1.left_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsy_change", () -> {
-            robot.setDriveZ(-gamepad1.right_stick_x);
             return true;
         });
 
@@ -252,6 +241,7 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
     @Override
     public void Loop() {
         robot.updateAll();
+        robot.driveUpdate();//updates Y and Z
     }
 
     @Override

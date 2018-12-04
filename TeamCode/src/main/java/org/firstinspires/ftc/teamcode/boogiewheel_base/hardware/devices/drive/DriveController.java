@@ -3,10 +3,11 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
+import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import java.text.DecimalFormat;
 
@@ -107,7 +108,7 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void driveTo(double distance, double speed) {
-        driveTo(distance, speed, (int)baseHeading);
+        driveTo(distance, speed, (int) baseHeading);
     }
 
     public synchronized void driveTo(double distance, double speed, int angle) {
@@ -217,13 +218,20 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void update() {
-        leftPower = range((turnY + turn_z) * Drive_Power);
-        rightPower = range((turnY - turn_z) * Drive_Power);
+        if (RobotState.mineralLiftState == RobotState.MineralLiftState.IN_MOTION || RobotState.mineralLiftState == RobotState.MineralLiftState.DUMP_POSITION) {
+            leftPower = range((turnY + turn_z) * (Drive_Power/2));
+            rightPower = range((turnY - turn_z) * (Drive_Power/2));
+        }
+        else {
+            leftPower = range((turnY + turn_z) * Drive_Power);
+            rightPower = range((turnY - turn_z) * Drive_Power);
+        }
 
         drive.setPower(leftPower, rightPower);
+
     }
 
-    public synchronized void setInverted(boolean inverted){
+    public synchronized void setInverted(boolean inverted) {
         this.inverted = inverted;
     }
 

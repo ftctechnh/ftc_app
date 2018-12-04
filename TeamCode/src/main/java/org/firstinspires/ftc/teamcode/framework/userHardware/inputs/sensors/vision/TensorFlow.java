@@ -27,7 +27,7 @@ public class TensorFlow {
     private CameraOrientation orientation;
 
     public TensorFlow() {
-        this(CameraOrientation.VIRTICAL);
+        this(CameraOrientation.VERTICAL);
     }
 
     public TensorFlow(CameraOrientation cameraOrientation) {
@@ -165,7 +165,7 @@ public class TensorFlow {
 
         if (mineral == null) return position;
 
-        if (orientation == CameraOrientation.VIRTICAL) {
+        if (orientation == CameraOrientation.VERTICAL) {
             if (mineral.getX() < width / 3) position = SamplePosition.LEFT;
             else if (mineral.getX() < 2 * (width / 3)) position = SamplePosition.CENTER;
             else position = SamplePosition.RIGHT;
@@ -246,7 +246,7 @@ public class TensorFlow {
         public Mineral(Recognition recognition) {
             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) mineralType = MineralType.GOLD;
             else mineralType = MineralType.SILVER;
-            if (orientation == CameraOrientation.VIRTICAL) {
+            if (orientation == CameraOrientation.VERTICAL) {
                 this.x = (int) ((recognition.getLeft() + recognition.getRight()) / 2);
                 this.y = (int) ((recognition.getTop() + recognition.getBottom()) / 2);
             } else {
@@ -279,7 +279,7 @@ public class TensorFlow {
     }
 
     public enum CameraOrientation {
-        VIRTICAL,
+        VERTICAL,
         HORIZONTAL
     }
 }

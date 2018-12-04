@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAutonNew;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
@@ -29,7 +28,7 @@ public class TensorFlowTest extends AbstractAutonNew {
 
     @Override
     public void Init() {
-        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VIRTICAL, "Webcam 1",false);
+        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1",false);
         //tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
     }
 

@@ -17,7 +17,6 @@ public class Robot extends AbstractRobot {
     }
 
     public void updateAll(){
-   //     hardware.drive.update();
         hardware.mineralLift.update();
     }
 
@@ -30,6 +29,8 @@ public class Robot extends AbstractRobot {
     public void setDriveZ(double z) {
         hardware.drive.setZ(z);
     }
+
+    public void driveUpdate(){ hardware.drive.update();}
 
     public void setDrivePower(double l, double r) {
         hardware.drive.setPower(l, r);

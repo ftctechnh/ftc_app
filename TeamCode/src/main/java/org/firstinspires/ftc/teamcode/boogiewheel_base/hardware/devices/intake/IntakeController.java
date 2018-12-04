@@ -24,6 +24,8 @@ public class IntakeController extends SubsystemController {
     }
 
     public synchronized void finishIntaking() {
+        intake.setIntakePower(-1);
+        AbstractOpMode.delay(1000);
         intake.setIntakePower(0);
     }
 
@@ -39,7 +41,7 @@ public class IntakeController extends SubsystemController {
     }
 
     public synchronized void lowerIntake() {
-        intake.setLiftServoPosition(1);
+        intake.setLiftServoPosition(-1);
         intake.setIntakePower(-0.5);
         AbstractOpMode.delay(1000);
         intake.setIntakePower(1);

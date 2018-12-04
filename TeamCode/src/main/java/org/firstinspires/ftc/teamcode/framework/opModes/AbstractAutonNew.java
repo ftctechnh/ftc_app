@@ -65,13 +65,7 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         //calls user init
         CurrentFuture = service.submit(InitThread);
 
-        telemetry.addData("Init");
-        telemetry.update();
-
         int initLoops = 0;
-
-        telemetry.addData("Init Loop");
-        telemetry.update();
 
         while (!isStopRequested() && !isStarted()) {
             checkException();
@@ -82,13 +76,7 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
             }
         }
 
-        telemetry.addData(initLoops + " Init Loops");
-        telemetry.update();
-
         while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
-
-        telemetry.addData("Starting");
-        telemetry.update();
 
         boolean stateMachineActive = true;
 
@@ -97,9 +85,6 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
             stateMachineActive = stateMachine.update();
         }
-
-        telemetry.addData("Stopping");
-        telemetry.update();
 
         AbstractOpMode.stopRequested();
 
