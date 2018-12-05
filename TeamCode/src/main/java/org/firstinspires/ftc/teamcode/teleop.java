@@ -18,6 +18,7 @@ public class teleop extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
+        telemetry.setAutoClear(false);
         telemetry.addLine("Drive Test: ");
         telemetry.addLine("Ready Player One");
         telemetry.addLine("Ready Player Two");
@@ -34,12 +35,13 @@ public class teleop extends LinearOpMode {
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
-
         Drive.init(this);
         Lift.init(this);
-        telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC
+        telemetry.addLine(">> Press PLAY to start");
+        telemetry.update();
+        telemetry.setAutoClear(true);
         waitForStart();
 
         //telling the code to run until you press that giant STOP button on RC

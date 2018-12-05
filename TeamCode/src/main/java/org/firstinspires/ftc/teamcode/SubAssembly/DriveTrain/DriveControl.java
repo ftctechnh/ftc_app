@@ -31,6 +31,9 @@ public class DriveControl {
     public void init(LinearOpMode opMode) {
         HardwareMap hwMap;
 
+        opMode.telemetry.addLine("Drive Control" + " initialize");
+        opMode.telemetry.update();
+
         /* Set local copies from opmode class */
         opmode = opMode;
         hwMap = opMode.hardwareMap;

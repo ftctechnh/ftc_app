@@ -74,40 +74,48 @@ public class Auto3imu extends LinearOpMode {
     double lastReset = 0;
     double now = 0;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-
-        User.init(this);
-        Vucam.init(this);
-        Drive.init(this);
-        Claimer.init(this);
-        Lift.init(this);
-        Led.init(this);
-
-
-        telemetry.addLine("Autonomous");
-
+    public void getUserInput() {
         /* Get user information */
         if (User.getYesNo("Facing the crater?")) {
-            orientation = Start.CRATER;
+            orientation = Start.CRATOR;
+            telemetry.addLine("Facing crater");
         } else {
             orientation = Start.DEPOT;
-        }
-        twoSample = User.getYesNo("Double sample?");
-
-        /* Display user configuration */
-        if (orientation == Start.CRATER)
-            telemetry.addLine("Facing crater");
-        if (orientation == Start.DEPOT)
             telemetry.addLine("Facing depot");
+        }
+        telemetry.update();
+
+        twoSample = User.getYesNo("Double sample?");
         if (twoSample)
             telemetry.addLine("Double sample");
         else
             telemetry.addLine("Single sample");
         telemetry.update();
+    }
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        telemetry.setAutoClear(false);
+        telemetry.addLine("Autonomous");
+        telemetry.update();
+
+        /* initialize sub-assemblies
+         */
+        User.init(this);
+        Vucam.init(this);
+        Drive.init(this);
+        Claimer.init(this);
+        Lift.init(this);
+
+        getUserInput();
 
         AutoTransitioner.transitionOnStop(this, "teleOp");
 
+        //waits for that giant PLAY button to be pressed on RC
+        telemetry.addLine(">> Press PLAY to start");
+        telemetry.update();
+        telemetry.setAutoClear(true);
         waitForStart();
 
         Vucam.setSamplePos();
