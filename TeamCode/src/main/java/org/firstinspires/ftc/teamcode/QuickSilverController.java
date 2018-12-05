@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -37,15 +38,19 @@ public class QuickSilverController extends OpMode {
     //private DcMotor tacVac;
     private DcMotor shoulder;
 
+    private Servo rightGate;
+    private Servo leftGate;
+
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useArm = true;
 
     //Movement State
-    int armState;
-    int extenderTarget;
-    int shoulderTarget;
+    // int armState;
+    //int extenderTarget;
+    //int shoulderTarget;
+
     /**
      * Code to run ONCE when the driver hits INITh6
      */
@@ -53,9 +58,9 @@ public class QuickSilverController extends OpMode {
     public void init() {
 
         //Init Movement state
-        armState = 0;
-        extenderTarget = 0;
-        shoulderTarget = 0;
+        // armState = 0;
+        //extenderTarget = 0;
+        //shoulderTarget = 0;
 
         // Initialize the motors.
         if (useMotors) {
@@ -172,7 +177,7 @@ public class QuickSilverController extends OpMode {
             shoulder.setPower(pullPower);
 
             // Control the extender.
-         /*   boolean extendOut =  gamepad1.y;
+            boolean extendOut = gamepad1.y;
             boolean extendIn = gamepad1.a;
             double extendPower = 0.0;
             if (extendOut) {
@@ -181,8 +186,8 @@ public class QuickSilverController extends OpMode {
                 extendPower = -1.0;
             }
             extender.setPower(extendPower);
-            */
 
+/*
          //Setting certain postions for arm & extender
             boolean jewelPickUp = gamepad1.a;
             boolean moving = gamepad1.b;
@@ -193,9 +198,9 @@ public class QuickSilverController extends OpMode {
             }else if (moving){
                 startArmMoving(-2691, 9103);
             }else if (deposit){
-                startArmMoving(1587, -7522);
-            }else if (landerAttach){
                 startArmMoving(3185, -8695);
+            }else if (landerAttach){
+                startArmMoving(1587, -7522);
             }
         }
 
@@ -234,15 +239,17 @@ public class QuickSilverController extends OpMode {
 
     }
 
-    protected void sleep(long milliseconds) {
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            protected void sleep ( long milliseconds){
+                try {
+                    Thread.sleep(milliseconds);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
 
+                }
+            }
+
+*/
         }
+
     }
-
-
 }
-
