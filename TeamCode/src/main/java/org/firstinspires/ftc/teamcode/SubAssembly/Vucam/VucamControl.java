@@ -86,6 +86,9 @@ public class VucamControl {
     public void init(LinearOpMode opMode) {
         HardwareMap hwMap;
 
+        opMode.telemetry.addLine("Vucam Control" + " initialize");
+        opMode.telemetry.update();
+
         /* Set local copies from opmode class */
         opmode = opMode;
         hwMap = opMode.hardwareMap;

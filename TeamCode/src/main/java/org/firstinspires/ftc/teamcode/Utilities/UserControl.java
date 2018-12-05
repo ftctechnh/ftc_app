@@ -10,7 +10,6 @@ public class UserControl {
     /* Declare private class objects */
     private LinearOpMode opmode = null;     /* local copy of opmode class */
     private Telemetry telemetry = null;     /* local copy of telemetry object from opmode class */
-    private String name = "User Control";
 
     /* Declare extended gamepad */
     private GamepadWrapper egamepad1 = null;
@@ -32,7 +31,8 @@ public class UserControl {
         opmode = opMode;
         telemetry = opMode.telemetry;
 
-        telemetry.addLine(name + " initialize");
+        telemetry.addLine("User Control" + " initialize");
+        telemetry.update();
 
         /* Instantiate extended gamepad */
         egamepad1 = new GamepadWrapper(opMode.gamepad1);

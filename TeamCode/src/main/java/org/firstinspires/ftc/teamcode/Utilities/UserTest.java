@@ -68,11 +68,9 @@ public class UserTest extends LinearOpMode {
         /* initialize sub-assemblies
          */
         User.init(this);
-        telemetry.update();
 
         /* Get user information */
         getUserInput();
-
 
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");

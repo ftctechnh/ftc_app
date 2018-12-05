@@ -29,6 +29,9 @@ public class LiftControl {
     public void init(LinearOpMode opMode) {
         HardwareMap hwMap;
 
+        opMode.telemetry.addLine("Lift Control" + " initialize");
+        opMode.telemetry.update();
+
         /* Set local copies from opmode class */
         opmode = opMode;
         hwMap = opMode.hardwareMap;
