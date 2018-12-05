@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
+import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 
 @Autonomous(name = "Auto3imu", group = "Auto")
 public class Auto3imu extends LinearOpMode {
@@ -20,6 +21,7 @@ public class Auto3imu extends LinearOpMode {
     DriveControl Drive = new DriveControl();
     ClaimerControl Claimer = new ClaimerControl();
     LiftControl Lift = new LiftControl();
+    LedControl Led = new LedControl();
     private ElapsedTime runtime = new ElapsedTime();
     boolean twoSample = false;
 
@@ -60,7 +62,7 @@ public class Auto3imu extends LinearOpMode {
     //D = Double / R = Right / L = Left / C = Center /
     //Start position variable options
     private enum Start {
-        CRATOR,
+        CRATER,
         DEPOT
     }
 
@@ -117,7 +119,7 @@ public class Auto3imu extends LinearOpMode {
         waitForStart();
 
         Vucam.setSamplePos();
-        newState(State.STATE_LAND);
+        newState(State.STATE_INITIAL);
         Drive.imu.setStartAngle();
 
         while (opModeIsActive() && mCurrentState != State.STATE_STOP) {
@@ -132,8 +134,20 @@ public class Auto3imu extends LinearOpMode {
             telemetry.update();
 
             //state switch
+            //needs rearranged so that initial is starting state, not land
             switch (mCurrentState) {
+                case STATE_INITIAL:
+                    Led.white();
+                    telemetry.addLine("Initial");
+                    telemetry.update();
+                    /*Sample.init();
+                    Sample.start();
+                    Sample.loop();*/
+                    newState(State.STATE_LAND);
+                    break;
+
                 case STATE_LAND:
+                    Led.red();
                     telemetry.addLine("Land");
                     telemetry.update();
                   /* while(!Lift.LifterButtonT.isPressed()) {
@@ -145,18 +159,9 @@ public class Auto3imu extends LinearOpMode {
                     break;
 
                 case STATE_ADJUST:
+                    Led.orange();
                     Drive.turn2Angle(TURN_SPEED, 0);
-                    newState(State.STATE_INITIAL);
-                    break;
-
-                case STATE_INITIAL:
-                    telemetry.addLine("Initial");
-                    telemetry.update();
-                    /*Sample.init();
-                    Sample.start();
-                    Sample.loop();*/
-
-                    if (orientation == Start.CRATOR) {
+                    if (orientation == Start.CRATER) {
                         telemetry.addLine("Moving to crater");
                         telemetry.update();
                         newState(State.STATE_MOVE_TO_CRATER);
@@ -168,6 +173,7 @@ public class Auto3imu extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_CRATER:
+                    Led.yellow();
                     telemetry.addLine("Move to crater");
                     telemetry.update();
                     if (Vucam.sample == Vucam.sample.LEFT) {
@@ -187,6 +193,7 @@ public class Auto3imu extends LinearOpMode {
                     break;
 
                 case STATE_MOVE_TO_DEPOT:
+                    Led.yellow();
                     telemetry.addLine("Move to depot");
                     telemetry.update();
                     if (Vucam.sample == Vucam.sample.LEFT) {
@@ -212,6 +219,7 @@ public class Auto3imu extends LinearOpMode {
                     break;
 
                 case STATE_CLAIM:
+                    Led.lawnGreen();
                     telemetry.addLine("Claim");
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -45.0);
@@ -230,6 +238,7 @@ public class Auto3imu extends LinearOpMode {
                     break;
 
                 case STATE_DEPOT_TO_CRATER:
+                    Led.darkBlue();
                     telemetry.addLine("Depot to crater");
                     telemetry.update();
                     if (Vucam.sample != Vucam.sample.LEFT) {
