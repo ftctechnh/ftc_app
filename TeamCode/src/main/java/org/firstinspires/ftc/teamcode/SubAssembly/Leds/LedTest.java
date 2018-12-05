@@ -22,7 +22,7 @@ public class LedTest extends LinearOpMode {
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
-        Led.init(hardwareMap);
+        Led.init(this);
 
         telemetry.update();
 
