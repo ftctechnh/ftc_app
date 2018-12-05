@@ -107,6 +107,7 @@ public class Auto3imu extends LinearOpMode {
         Drive.init(this);
         Claimer.init(this);
         Lift.init(this);
+        Led.init(this);
 
         getUserInput();
 
