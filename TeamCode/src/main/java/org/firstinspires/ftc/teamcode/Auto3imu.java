@@ -77,7 +77,7 @@ public class Auto3imu extends LinearOpMode {
     public void getUserInput() {
         /* Get user information */
         if (User.getYesNo("Facing the crater?")) {
-            orientation = Start.CRATOR;
+            orientation = Start.CRATER;
             telemetry.addLine("Facing crater");
         } else {
             orientation = Start.DEPOT;
