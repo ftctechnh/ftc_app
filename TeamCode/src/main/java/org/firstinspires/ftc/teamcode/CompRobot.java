@@ -97,11 +97,11 @@ public class CompRobot extends BasicBot
         super.stopDriveMotors();
     }
 
-    public void hugWall(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, boolean isGoingForward)
+    public void hugWall(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, boolean isGoingForward, float maximumDistance)
     {
         double straightDist, rightDist;
-
-        float stepDistance = 11;
+        double straightDistanceTraveled = 0;
+        float stepDistance = 8;
         float stepPivotAmtDeg = 15;
 
         DistanceSensor usingDistSensor = frontDistSens;
@@ -126,6 +126,7 @@ public class CompRobot extends BasicBot
             {
                 linearOpMode.telemetry.addData("Going forward 11", null);
                 driveStraight(stepDistance, .8f);
+                straightDistanceTraveled = straightDistanceTraveled + stepDistance;
             }
             linearOpMode.telemetry.addData("front Dist: ", straightDist);
 
@@ -140,6 +141,7 @@ public class CompRobot extends BasicBot
                     linearOpMode.telemetry.addData("rightdist < 4", null);
                     pivotenc(stepPivotAmtDeg, .5f);
                     driveStraight(stepDistance , .5f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                     pivotenc(-stepPivotAmtDeg, .5f);
                 }
                 else if (rightDist > upperDistFromSideWall)
@@ -147,13 +149,19 @@ public class CompRobot extends BasicBot
                     linearOpMode.telemetry.addData("right dist > 7", null);
                     pivotenc(-stepPivotAmtDeg, .5f);
                     driveStraight(stepDistance , .5f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                     pivotenc(stepPivotAmtDeg, .5f);
                 }
                 else //need this null zone for logic, this is where it goes straight, do not comment out
                 {
                     driveStraight(stepDistance, .8f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                 }
                linearOpMode.telemetry.update();
+                if (straightDistanceTraveled >= maximumDistance)
+                {
+                    stopDriveMotors();
+                }
             }
         }
     }

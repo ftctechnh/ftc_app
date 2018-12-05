@@ -23,13 +23,13 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         float  yawAngleTurn;
         float distanceTraveled = 0;
         waitForStart();
-        compRobot.driveStraight(10,.6f);
-        compRobot.pivotenc(100, .6f);
+        compRobot.driveStraight(10,.8f);
+        compRobot.pivotenc(95, .8f); //100 worked about 2/3 of the time
 
         while (true)
         {
             double frontDist = compRobot.getFrontDistance_IN();
-            if (frontDist <= 18 + frontSensorDepth)
+            if (frontDist <= 7 + frontSensorDepth)
                 break;
             else
                 compRobot.driveStraight(8, .5f);
@@ -51,19 +51,19 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
                 telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
                 sleep(1000);
                 yawAngle = vuforiaFunctions.getYawDeg();
-                yawAngleTurn = 90 - yawAngle;
-                compRobot.pivotenc(yawAngleTurn, .6f);
+                yawAngleTurn = 100 - yawAngle;
+                compRobot.pivotenc(yawAngleTurn, .8f);
             }
             else
             {
                 telemetry.addData("Such target is not in my sight!", null);
-                compRobot.pivotenc(90, .5f);
+                compRobot.pivotenc(60, .8f);
             }
 
             telemetry.update();
         }
 
-        compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 24, true);
+        compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 26, true, 48);
         //The hug wall code in the method is a bit different than the one that was in the original auto file
         //make sure that it still runs as intended.
 
@@ -71,7 +71,9 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         sleep(2000);
         compRobot.deployMarker();
         telemetry.update();
-        compRobot.driveStraight(-100, .5f);
+        compRobot.driveStraight(-35, .5f);
+        compRobot.pivotenc(-215, .8f);
+        compRobot.driveStraight(60, .8f);
         compRobot.stopDriveMotors();
     }
 }
