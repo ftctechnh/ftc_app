@@ -42,13 +42,12 @@ public class UserControl {
     public boolean getRedBlue(String prompt) {
         boolean isRed = false;
 
-        telemetry.addLine(prompt);
-        telemetry.addLine("[X = blue, B = red]");
+        telemetry.addData("[X = blue, B = red] ",prompt);
         telemetry.update();
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.x.pressed && !egamepad1.b.pressed && opmode.opModeIsActive());
+        } while (!egamepad1.x.pressed && !egamepad1.b.pressed && !opmode.isStopRequested());
         if (egamepad1.b.pressed)
             isRed = true;
         egamepad1.updateEdge();
@@ -58,13 +57,12 @@ public class UserControl {
     public boolean getYesNo(String prompt) {
         boolean isYes = false;
 
-        telemetry.addLine(prompt);
-        telemetry.addLine("[A = yes, B = no]");
+        telemetry.addData("[A = yes, B = no] ",prompt);
         telemetry.update();
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.a.pressed && !egamepad1.b.pressed /*&& opmode.opModeIsActive()*/);
+        } while (!egamepad1.a.pressed && !egamepad1.b.pressed && !opmode.isStopRequested());
         if (egamepad1.a.pressed)
             isYes = true;
         egamepad1.updateEdge();
@@ -74,13 +72,12 @@ public class UserControl {
     public boolean getLeftRight(String prompt) {
         boolean isLeft = false;
 
-        telemetry.addLine(prompt);
-        telemetry.addLine("[X = left, B = right]");
+        telemetry.addData("[X = left, B = right] ", prompt);
         telemetry.update();
         egamepad1.updateEdge();
         do {
             egamepad1.updateEdge();
-        } while (!egamepad1.x.pressed && !egamepad1.b.pressed && opmode.opModeIsActive());
+        } while (!egamepad1.x.pressed && !egamepad1.b.pressed && !opmode.isStopRequested());
         if (egamepad1.x.pressed)
             isLeft = true;
         egamepad1.updateEdge();
@@ -90,8 +87,7 @@ public class UserControl {
     public DPAD getDPad(String prompt) {
         DPAD dpad = null;
 
-        telemetry.addLine(prompt);
-        telemetry.addLine("[dpad]");
+        telemetry.addData("[dpad] ",prompt);
         telemetry.update();
         egamepad1.updateEdge();
         do {
@@ -101,7 +97,7 @@ public class UserControl {
             if (egamepad1.dpad_down.pressed) dpad = DPAD.DOWN;
             if (egamepad1.dpad_left.pressed) dpad = DPAD.LEFT;
         }
-        while ((dpad == null) && opmode.opModeIsActive());
+        while ((dpad == null) && !opmode.isStopRequested());
         return dpad;
     }
 }
