@@ -22,9 +22,9 @@ public class teleop extends LinearOpMode {
         telemetry.addLine("Ready Player One");
         telemetry.addLine("Ready Player Two");
 
-        double DriveSpeed = 0.75;
-        double TurnSpeed = DriveSpeed/2;
-        int reverse = 1;
+        double DriveSpeed = 1;
+        double TurnSpeed = DriveSpeed / 2;
+        int reverse = -1;
 
         /* initialize sub-assemblies
          */
@@ -56,39 +56,53 @@ public class teleop extends LinearOpMode {
                 reverse = reverse * -1;
             }
 
-            //speed control
+            //latch speed setting
+            if (egamepad1.a.released) {
+                if (DriveSpeed == 2 * TurnSpeed) {
+                    DriveSpeed = 0.25;
+                    TurnSpeed = 0.25;
+                } else {
+                    DriveSpeed = 1;
+                    TurnSpeed = 0.5;
+                }
+            }
+
+            //drive speed control
             if (egamepad1.right_bumper.pressed) {
                 DriveSpeed += 0.25;
                 if (DriveSpeed > 3) DriveSpeed = 3;
-                TurnSpeed = DriveSpeed/2;
             }
-            if (egamepad1.left_bumper.pressed) {
+            if (egamepad1.right_trigger.pressed) {
                 DriveSpeed -= 0.25;
-                if (DriveSpeed < 0) DriveSpeed = 0;
-                TurnSpeed = DriveSpeed/2;
+                if (DriveSpeed <= 0) DriveSpeed = 0.25;
             }
 
-            if (egamepad1.dpad_left.state) {
-                Drive.tankRightForward(reverse * DriveSpeed);
-            } else if (egamepad1.dpad_right.state) {
-                Drive.tankLeftForward(reverse * DriveSpeed);
+            //turning speed control
+            if (egamepad1.left_bumper.pressed) {
+                TurnSpeed += 0.25;
+                if (TurnSpeed > 3) TurnSpeed = 3;
+            }
+            if (egamepad1.left_trigger.pressed) {
+                TurnSpeed -= 0.25;
+                if (TurnSpeed <= 0) TurnSpeed = 0.25;
             }
 
-            else if (-gamepad1.left_stick_y < -0.4) {
+            //drive controls
+            if (-gamepad1.left_stick_y < -0.4) {
                 Drive.moveBackward(reverse * DriveSpeed);
             } else if (-gamepad1.left_stick_y > 0.4) {
                 Drive.moveForward(reverse * DriveSpeed);
-            }
-
-            else if (gamepad1.left_stick_x > 0.4) {
+            } else if (gamepad1.left_stick_x > 0.4) {
                 Drive.turnRight(TurnSpeed);
             } else if (gamepad1.left_stick_x < -0.4) {
                 Drive.turnLeft(TurnSpeed);
+            } else {
+                Drive.stop();
             }
-            else { Drive.stop();}
-            
+
             //Ready Player Two
 
+            //lift control
             if ((egamepad2.dpad_up.state) && (!Lift.LifterButtonT.isPressed())) {
                 Lift.Extend();
             } else if ((egamepad2.dpad_down.state) && (!Lift.LifterButtonB.isPressed())) {
@@ -97,14 +111,15 @@ public class teleop extends LinearOpMode {
                 Lift.Stop();
             }
 
+            //lift lock controls
             if (egamepad2.a.released) {
                 Lift.Lock();
-            }
-            else if (egamepad2.b.released) {
+            } else if (egamepad2.b.released) {
                 Lift.Unlock();
             }
 
-            telemetry.addLine("Speed: " + DriveSpeed);
+            telemetry.addLine("DriveSpeed: " + DriveSpeed);
+            telemetry.addLine("TurnSpeed: " + TurnSpeed);
 
             //SubAssembly.test();
             telemetry.update();
