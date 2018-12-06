@@ -33,8 +33,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwarePushbotdemo;
+import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
@@ -59,12 +61,12 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Pushbot: Auto Drive By Time", group="Pushbot")
+@Autonomous(name="Pushbot: Auto Facing Crater", group="Pushbot")
 //@Disabled
-public class Auto extends LinearOpMode {
+public class Auto_Facing_Crater extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbotdemo         robot   = new HardwarePushbotdemo();   // Use a Pushbot's hardware
+    DriveBaseHardwareMap robot       = new DriveBaseHardwareMap();
     private ElapsedTime     runtime = new ElapsedTime();
 
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
@@ -72,7 +74,7 @@ public class Auto extends LinearOpMode {
     static final double     WHEEL_DIAMETER_INCHES   = 4.5 ;     // For figuring circumference
     static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED = 1.0;
+    static final double     DRIVE_SPEED = 0.5;
     static final double     TURN_SPEED    = 0.5;
 
     @Override
@@ -92,43 +94,90 @@ public class Auto extends LinearOpMode {
         telemetry.addData("Status", "Resetting Encoders");    //
         telemetry.update();
 
-        robot.oof.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.oof.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.top_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bot_left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.top_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.bot_right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.top_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bot_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.top_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.bot_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         // Send telemetry message to indicate successful Encoder reset
         telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.oof.getCurrentPosition(),
+                robot.top_left.getCurrentPosition(),
+                robot.top_right.getCurrentPosition(),
+                robot.bot_left.getCurrentPosition(),
+                robot.bot_right.getCurrentPosition(),
+
                 telemetry.update());
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        encoderDrive(DRIVE_SPEED, 20, 20, 5.0);
+        encoderDrive(DRIVE_SPEED, -8.75, 8.75, 5.0);
+        encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
+        encoderDrive(DRIVE_SPEED, -16,16,5.0 );
+        encoderDrive(DRIVE_SPEED, 60,60,5.0 );
+        robot.intake_left.setPosition(0.0);
+        sleep(1000);
+        robot.intake_left.setPosition(0.70);
+        sleep(500);
+        encoderDrive(DRIVE_SPEED, -87, -87, 5.0);
+
+
     }
 
 
-        //robot.oof.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    //robot.oof.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     public void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
-        //int newLeftTarget;
-        int newRightTarget;
+        int newBotLeftTarget;
+        int newBotRightTarget;
+        int newTopRightTarget;
+        int newTopLeftTarget;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            //newLeftTarget = robot.leftDrive.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = robot.oof.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-            //robot.leftDrive.setTargetPosition(newLeftTarget);
-            robot.oof.setTargetPosition(newRightTarget);
+            newBotLeftTarget = robot.bot_left.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newBotRightTarget = robot.bot_right.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
+            newTopLeftTarget = robot.top_left.getCurrentPosition() - (int)(leftInches * COUNTS_PER_INCH);
+            newTopRightTarget = robot.top_right.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+            robot.top_left.setTargetPosition(newTopLeftTarget);
+            robot.bot_left.setTargetPosition(newBotLeftTarget);
+            robot.top_right.setTargetPosition(newTopRightTarget);
+            robot.bot_right.setTargetPosition(newBotRightTarget);
+
+            telemetry.addData( "Start encoderDrive leftInches:", leftInches );
+            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+
+            //robot.leftDrive.getCurrentPosition(),
+            telemetry.update();
 
             // Turn On RUN_TO_POSITION
-            //robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.oof.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.bot_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.bot_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.top_left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            robot.top_right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
             runtime.reset();
-            // robot.leftDrive.setPower(Math.abs(speed));
-            robot.oof.setPower(Math.abs(speed));
+            robot.bot_left.setPower(Math.abs(speed));
+            robot.bot_right.setPower(Math.abs(speed));
+            robot.top_left.setPower(Math.abs(speed));
+            robot.top_right.setPower(Math.abs(speed));
+
+
 
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
@@ -136,29 +185,46 @@ public class Auto extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
-                    (robot.oof.isBusy())) {
+                    (robot.bot_left.isBusy()) && (robot.top_left.isBusy() ) && (robot.top_right.isBusy() ) && (robot.bot_right.isBusy())) {
 
                 // Display it for the driver.
                 //telemetry.addData("Path1", "Running ", newRightTarget);
-               // telemetry.addData("Path2", "Running ",
-                        //robot.leftDrive.getCurrentPosition(),
-                        //robot.oof.getCurrentPosition());
-                //telemetry.update();
-            }
+                //telemetry.addData("Path2", "Running ");
 
+            }
+            telemetry.addData( "After while leftInches:", leftInches );
+            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+
+            //robot.leftDrive.getCurrentPosition(),
+            telemetry.update();
             // Stop all motion;
             //robot.leftDrive.setPower(0);
-            robot.oof.setPower(0);
+            robot.bot_left.setPower(0);
+            robot.bot_right.setPower(0);
+            robot.top_left.setPower(0);
+            robot.top_right.setPower(0);
 
             // Turn off RUN_TO_POSITION
             //robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            robot.oof.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bot_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.top_left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.bot_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            robot.top_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //  sleep(250);   // optional pause after each move
+
+
+            sleep(500);   // optional pause after each move
         }
     }
+
 }
-
-

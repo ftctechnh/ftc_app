@@ -60,7 +60,7 @@ public class PushbotTeleopTankTest extends OpMode{
 
     /* Declare OpMode members. */
     DriveBaseHardwareMap robot       = new DriveBaseHardwareMap(); // use the class created to define a Pushbot's hardware
-                                                         // could also use HardwarePushbotMatrix class.
+    // could also use HardwarePushbotMatrix class.
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
@@ -76,7 +76,7 @@ public class PushbotTeleopTankTest extends OpMode{
 
         // Send telemetry message to signify robot waiting;
         //telemetry.addData("Say", "Did you ever hear the tragedy of Darth Plagueis the Wise?\n" +
-          //      "I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life... He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. It's ironic he could save others from death, but not himself.");    //
+        //      "I thought not. It's not a story the Jedi would tell you. It's a Sith legend. Darth Plagueis was a Dark Lord of the Sith, so powerful and so wise he could use the Force to influence the midichlorians to create life... He had such a knowledge of the dark side that he could even keep the ones he cared about from dying. The dark side of the Force is a pathway to many abilities some consider to be unnatural. He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did. Unfortunately, he taught his apprentice everything he knew, then his apprentice killed him in his sleep. It's ironic he could save others from death, but not himself.");    //
     }
 
     /*
@@ -114,13 +114,17 @@ public class PushbotTeleopTankTest extends OpMode{
         // Use gamepad left & right Bumpers to open and close the claw
 
         // Move both servos to new position.  Assume servos are mirror image of each other.
-       
+
         // Use gamepad buttons to move the arm up (Y) and down (A)
-        /*
-        if (gamepad1.y)
-            robot.leftArm.setPower(robot.ARM_UP_POWER);
+
+        if (gamepad1.y) {
+            telemetry.addData("set", "set");
+            robot.intake_left.setPosition(0.70);
+        }
+
         else if (gamepad1.a)
-            robot.leftArm.setPower(robot.ARM_DOWN_POWER);
+            robot.intake_left.setPosition(0.0);
+        /*
         else
             robot.leftArm.setPower(0.0);
         if (gamepad1.x)

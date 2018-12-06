@@ -11,7 +11,7 @@ public class DriveBaseHardwareMap {
     public DcMotor  bot_left   = null;
     public DcMotor  top_right  = null;
     public DcMotor  bot_right    = null;
-    //public Servo    intake_left    = null;
+    public Servo    intake_left    = null;
     //public Servo    intake_right   = null;
 
     //public static final double MID_SERVO       =  0.5 ;
@@ -58,9 +58,9 @@ public class DriveBaseHardwareMap {
         //leftArm.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-       //intake_left  = hwMap.get(Servo.class, "intake_left");
+        intake_left  = hwMap.get(Servo.class, "intake_left");
         //intake_right = hwMap.get(Servo.class, "intake_right");
-        //intake_left.setPosition(0);
+        intake_left.setPosition(0.70);
         //intake_right.setPosition(0);
     }
 }
