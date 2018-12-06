@@ -115,9 +115,9 @@ public class Auto_Facing_Depot extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        encoderDrive(DRIVE_SPEED, 8.75, -8.75, 5.0);
-        encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
-        encoderDrive(DRIVE_SPEED, -16,16,5.0 );
+          encoderDrive(DRIVE_SPEED, 8.75, -8.75, 5.0);
+          encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
+          encoderDrive(DRIVE_SPEED, -16,16,5.0 );
         encoderDrive(DRIVE_SPEED, 40,40,5.0 );
         robot.intake_left.setPosition(0.0);
         sleep(1000);
