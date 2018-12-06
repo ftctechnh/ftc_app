@@ -16,28 +16,17 @@ public class AutonomousFinalDepot extends LinearOpMode
         compRobot = new CompRobot(hardwareMap, this);
         waitForStart();
         compRobot.driveStraight(36, 1);
-
-        // have servos move robot down to the ground
-
-
         sleep(500);
-
-        while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 24 && compRobot.getFrontRightDistSens().getDistance(DistanceUnit.INCH) > 24)
+        while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 28 && compRobot.getFrontRightDistSens().getDistance(DistanceUnit.INCH) > 28)
         {
             compRobot.driveMotors(.4f, .4f);
         }
-
         compRobot.stopDriveMotors();
         compRobot.deployMarker();
-        //compRobot.pivotenc(150, .5f); we can use this turn if we want to go to the other crater
         compRobot.pivotenc(-150, .5f);
 
-        //compRobot.hugWall(4,7, 18, true); un comment if you want to go to the other crater
-        //compRobot.driveStraight(-100, 1);
-
-        //compRobot.driveStraight(10,1);
-        //compRobot.driveStraight(-10,1);
-
+        compRobot.hugWall(4,7, 18, false, 84);
+        compRobot.driveStraight(6, .8f);
         telemetry.addData("Stopped", null);
         telemetry.update();
 
