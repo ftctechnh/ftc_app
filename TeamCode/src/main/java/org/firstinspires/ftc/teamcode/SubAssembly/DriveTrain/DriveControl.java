@@ -131,10 +131,9 @@ public class DriveControl {
                 turnRight(speed);
             } else if (angle2turn < -15) {
                 turnLeft(speed);
-            } else {
-                stop();
             }
-        } while ( (angle2turn > 15 || angle2turn < -15) && opmode.opModeIsActive() );
+        } while ( (angle2turn > 15 || angle2turn < -15) && !opmode.isStopRequested() );
+        stop();
     }
 
     public void turnAngle(double speed, double angle) {
@@ -183,6 +182,6 @@ public class DriveControl {
         start = runtime.seconds();
         do {
             now = runtime.seconds() - start;
-        } while ((now < time) && opmode.opModeIsActive() );
+        } while ((now < time) && !opmode.isStopRequested() );
     }
 }

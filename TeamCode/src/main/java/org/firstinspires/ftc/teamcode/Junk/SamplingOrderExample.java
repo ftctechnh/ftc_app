@@ -27,41 +27,42 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.SubAssembly.Sample;
+package org.firstinspires.ftc.teamcode.Junk;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
 import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
+import com.disnodeteam.dogecv.filters.HSVColorFilter;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-@TeleOp(name="GoldAlign Example", group="DogeCV")
-
-public class GoldAlignExample extends OpMode
+@TeleOp(name="Sampling Order Example", group="DogeCV")
+@Disabled
+public class SamplingOrderExample extends OpMode
 {
-    private GoldAlignDetector detector;
+    private SamplingOrderDetector detector;
 
 
     @Override
     public void init() {
-        telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+        telemetry.addData("Status", "DogeCV 2018.0 - Sampling Order Example");
 
-        detector = new GoldAlignDetector();
+        detector = new SamplingOrderDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
 
-        // Optional Tuning
-        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-        detector.alignPosOffset = 0; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
+        // Optional Tuning
         detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
         //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-        detector.maxAreaScorer.weight = 0.005;
+        detector.maxAreaScorer.weight = 0.001;
 
-        detector.ratioScorer.weight = 5;
+        detector.ratioScorer.weight = 15;
         detector.ratioScorer.perfectRatio = 1.0;
 
         detector.enable();
@@ -82,10 +83,10 @@ public class GoldAlignExample extends OpMode
     }
 
 
-    @Override
+
     public void loop() {
-        telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
-        telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
+        telemetry.addData("Current Order" , detector.getCurrentOrder().toString()); // The current result for the frame
+        telemetry.addData("Last Order" , detector.getLastOrder().toString()); // The last known result
     }
 
     /*

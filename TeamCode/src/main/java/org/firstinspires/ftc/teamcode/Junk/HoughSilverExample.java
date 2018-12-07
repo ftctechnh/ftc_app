@@ -27,43 +27,39 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.SubAssembly.Sample;
+package org.firstinspires.ftc.teamcode.Junk;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.SilverDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.HoughSilverDetector;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.opencv.core.Size;
 
 
-@TeleOp(name="Silver Example", group="DogeCV")
-
-public class SilverExample extends OpMode
+@TeleOp(name="Hough Silver Example", group="DogeCV")
+@Disabled
+public class HoughSilverExample extends OpMode
 {
-    private SilverDetector detector;
+    private HoughSilverDetector detector;
 
 
     @Override
     public void init() {
         telemetry.addData("Status", "DogeCV 2018.0 - Gold SilverDetector Example");
 
-        detector = new SilverDetector();
-        detector.setAdjustedSize(new Size(480, 270));
+        detector = new HoughSilverDetector();
+        detector.downscale = 1; //Increase detector sensitivity with smaller size. Make sure to preserve aspect ratio.
+        detector.useFixedDownscale = false;
+        detector.sensitivity = 1.6; //Play with this based on your camera
+        detector.minDistance = 60; //Minimum distance between silver mineral centers in pixels
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
         // Optional Tuning
 
         detector.downscale = 0.4; // How much to downscale the input frames
 
-        detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
-        //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-        detector.maxAreaScorer.weight = 0.005;
-
-        detector.ratioScorer.weight = 5;
-        detector.ratioScorer.perfectRatio = 1.0;
         detector.enable();
 
 

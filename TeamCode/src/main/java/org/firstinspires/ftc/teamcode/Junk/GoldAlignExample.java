@@ -34,6 +34,7 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.Dogeforia;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.disnodeteam.dogecv.detectors.roverrukus.SilverDetector;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -44,7 +45,7 @@ import org.opencv.core.Size;
 
 
 @TeleOp(name = "Gold Align Example", group = "DogeCV")
-
+@Disabled
 public class GoldAlignExample extends OpMode {
     private GoldAlignDetector detector;
     Dogeforia vuforia;
