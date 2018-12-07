@@ -34,7 +34,7 @@ public abstract class TTL2Auto extends LinearOpMode {
         turn(0.25 * Math.PI);
         driveVertical(300,1.0);
 
-        this.run();
+        //this.run();
     }
 
     protected void lowerRobot() {

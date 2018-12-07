@@ -1,7 +1,5 @@
 package teamcode.examples;
 
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-
 public class Helper {
     // http://www.revrobotics.com/content/docs/Encoder-Guide.pdf
     public static final int REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION = 288;

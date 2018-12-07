@@ -1,4 +1,4 @@
-package teamcode.ttl2;
+/*package teamcode.ttl2;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -10,4 +10,4 @@ public class TTL2AutoCraterSide extends TTL2Auto {
         driveVertical(25, 1.0);
     }
 
-}
+}*/
