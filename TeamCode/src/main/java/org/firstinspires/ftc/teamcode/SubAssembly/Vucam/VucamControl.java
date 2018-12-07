@@ -132,6 +132,7 @@ public class VucamControl {
         vuforia.start();
     }
 
+    /* Only works once and must wait a while after init before calling */
     public void setSamplePos() {
         if (detector.getXPosition() > 0 && detector.getXPosition() < 250) {
             sample = Sample.LEFT;
