@@ -28,7 +28,7 @@ public class LedControl {
         hwMap = opMode.hardwareMap;
 
         /* Map hardware devices */
-//AJB        LedDriver = hwMap.get(RevBlinkinLedDriver.class, "LedDriver");
+        LedDriver = hwMap.get(RevBlinkinLedDriver.class, "LedDriver");
 
     }
 
