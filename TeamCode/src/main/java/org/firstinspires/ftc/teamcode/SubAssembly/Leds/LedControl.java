@@ -11,7 +11,7 @@ public class LedControl {
     private LinearOpMode opmode = null; /* local copy of HardwareMap object from opmode class */
 
     //initializing motors
-    private RevBlinkinLedDriver LedDriver;
+    private RevBlinkinLedDriver LedDriver = null;
 
     /* Subassembly constructor */
     public LedControl() {
@@ -28,51 +28,57 @@ public class LedControl {
         hwMap = opMode.hardwareMap;
 
         /* Map hardware devices */
-        LedDriver = hwMap.get(RevBlinkinLedDriver.class, "LedDriver");
+//AJB        LedDriver = hwMap.get(RevBlinkinLedDriver.class, "LedDriver");
 
     }
 
     public void orange() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE);
     }
 
     public void darkRed() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_RED);
     }
 
     public void red() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RED);
     }
 
     public void white() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.WHITE);
     }
 
     public void darkBlue() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_BLUE);
     }
 
     public void skyBlue() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.SKY_BLUE);
     }
 
     public void darkGreen() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.DARK_GREEN);
     }
 
     public void lawnGreen() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.LAWN_GREEN);
     }
 
     public void rainbowRainbowPalette() {
+        if (LedDriver == null) return;
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
     }
 
     public void yellow() {
-        LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.ORANGE);
+        if (LedDriver == null) return;
+        LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
     }
-
-
 }
-
-
