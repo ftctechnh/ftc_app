@@ -50,6 +50,16 @@ public class Emitter {
     // This will run all event handlers registered to this event. Each event handler will be
     // executed inside of the executor service, which means events may be handled in parallel.
     public Future<Boolean> emit(String name) throws RuntimeException {
+
+        /*// Clears the cache of finished futures
+        ArrayList<String> finishedFutures = new ArrayList<>();
+        for(Map.Entry<String, Future<Boolean>> entry:cache.entrySet()){
+            if(entry.getValue().isDone())finishedFutures.add(entry.getKey());
+        }
+        for(String finishedFuture:finishedFutures){
+            cache.remove(finishedFuture);
+        }*/
+
         for (String pausedName : PausedEvents) {
             if (pausedName.equals(name)) return new EmptyResult();
         }
@@ -73,7 +83,7 @@ public class Emitter {
         if (eventHandler != null) {
             return service.submit(eventHandler);
         }
-        // Bye default, we return a future that returns false.
+        // By default, we return a future that returns false.
         return new EmptyResult();
     }
 

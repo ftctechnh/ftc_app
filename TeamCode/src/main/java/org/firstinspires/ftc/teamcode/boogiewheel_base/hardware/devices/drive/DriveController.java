@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
@@ -26,8 +27,6 @@ public class DriveController extends SubsystemController {
     private double motorPosition, baseHeading = 0;
 
     private double turnY = 0, turn_z = 0, leftPower = 0, rightPower = 0, Drive_Power = 1.0;
-
-    private boolean inverted = false;
 
     public ElapsedTime runtime;
 
@@ -54,8 +53,6 @@ public class DriveController extends SubsystemController {
         anglePID = new PIDController(8, 0.5, 10, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2);
         drive.setSlewSpeed(0.1);
-
-        logger = new Logger("DriveControllerLog.txt");
     }
 
     public synchronized void stop() {
@@ -203,12 +200,22 @@ public class DriveController extends SubsystemController {
 
     //TeleOp Methods
     public synchronized void setPower(double left, double right) {
+
+        if ((RobotState.currentMineralLiftState == RobotState.MineralLiftState.IN_MOTION ||
+                RobotState.currentMineralLiftState == RobotState.MineralLiftState.DUMP_POSITION) &&
+                RobotState.currentMatchState == RobotState.MatchState.TELEOP){
+            left /= 2;
+            right /= 2;
+        }
+
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         drive.setPower(range(left), range(right));
     }
 
     public synchronized void setY(double y) {
-        turnY = -y;
+        if(RobotState.currentDriveDirection == RobotState.DriveDirection.REVERSED)turnY = y;
+        else turnY = -y;
         turnY = (float) scaleInput(turnY);
     }
 
@@ -218,7 +225,9 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void update() {
-        if (RobotState.mineralLiftState == RobotState.MineralLiftState.IN_MOTION || RobotState.mineralLiftState == RobotState.MineralLiftState.DUMP_POSITION) {
+        if ((RobotState.currentMineralLiftState == RobotState.MineralLiftState.IN_MOTION ||
+                RobotState.currentMineralLiftState == RobotState.MineralLiftState.DUMP_POSITION) &&
+                RobotState.currentMatchState == RobotState.MatchState.TELEOP){
             leftPower = range((turnY + turn_z) * (Drive_Power/2));
             rightPower = range((turnY - turn_z) * (Drive_Power/2));
         }
@@ -227,12 +236,18 @@ public class DriveController extends SubsystemController {
             rightPower = range((turnY - turn_z) * Drive_Power);
         }
 
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         drive.setPower(leftPower, rightPower);
-
     }
 
     public synchronized void setInverted(boolean inverted) {
-        this.inverted = inverted;
+        if(inverted) RobotState.currentDriveDirection = RobotState.DriveDirection.REVERSED;
+        else RobotState.currentDriveDirection = RobotState.DriveDirection.FORWARD;
+    }
+
+    public synchronized void toggleInverted(){
+        if(RobotState.currentDriveDirection == RobotState.DriveDirection.FORWARD) RobotState.currentDriveDirection = RobotState.DriveDirection.REVERSED;
+        else RobotState.currentDriveDirection = RobotState.DriveDirection.FORWARD;
     }
 
     //Util Methods

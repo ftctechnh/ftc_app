@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
 import org.upacreekrobotics.dashboard.Dashboard;
 
 public abstract class AbstractOpMode extends LinearOpMode {
@@ -31,7 +32,7 @@ public abstract class AbstractOpMode extends LinearOpMode {
         opmode = this;
         linearOpMode = this;
         hardwareMap = super.hardwareMap;
-        telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry());
+        telemetry = new DoubleTelemetry(super.telemetry, Dashboard.getInstance().getTelemetry(), new Logger(Dashboard.getCurrentOpMode()));
     }
 
     @Override

@@ -25,7 +25,7 @@ public abstract class AbstractAuton extends AbstractOpMode {
         ExecutorService service = Executors.newSingleThreadExecutor();
 
         Thread InitThread = new Thread(new initThread());
-        Thread InitLoopThread = new Thread(new initloopThread());
+        Thread InitLoopThread = new Thread(new initLoopThread());
         Thread RunThread = new Thread(new runThread());
 
         threadRunning = true;
@@ -143,7 +143,7 @@ public abstract class AbstractAuton extends AbstractOpMode {
         }
     }
 
-    class initloopThread implements Runnable {
+    class initLoopThread implements Runnable {
         public void run() {
             try {
                 InitLoop();

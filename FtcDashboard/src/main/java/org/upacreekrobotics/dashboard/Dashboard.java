@@ -1,16 +1,11 @@
 package org.upacreekrobotics.dashboard;
 
-import android.app.Activity;
-import android.app.Notification;
 import android.content.Context;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.qualcomm.robotcore.eventloop.EventLoop;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerNotifier;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.BatteryChecker;
 
@@ -304,6 +299,14 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
     ////////////////Returns an instance of dashboardtelemetry to be used in the user code////////////////
     public dashboardtelemetry getTelemetry() {
         return DashboardTelemtry;
+    }
+
+    public static String getCurrentOpMode() {
+        return dashboard.internalGetCurrentOpMode();
+    }
+
+    public String internalGetCurrentOpMode(){
+        return opModeManager.getActiveOpModeName();
     }
 
     ////////////////Called by the user code to request an input value from the dashboard, calls "internalGetInputValue()"////////////////

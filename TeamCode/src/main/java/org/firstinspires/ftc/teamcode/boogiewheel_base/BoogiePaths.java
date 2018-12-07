@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
 import org.upacreekrobotics.dashboard.Dashboard;
 
@@ -14,6 +15,7 @@ public class BoogiePaths extends AbstractAuton {
 
     @Override
     public void Init() {
+
         robot = new Robot();
     }
 

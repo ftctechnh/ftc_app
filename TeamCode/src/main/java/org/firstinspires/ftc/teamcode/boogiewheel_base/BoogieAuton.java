@@ -5,8 +5,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
+import org.upacreekrobotics.dashboard.RobotStatus;
 
 @Autonomous(name = "BoogieWheel Auton", group = "New")
 //@Disabled
@@ -21,6 +23,7 @@ public class BoogieAuton extends AbstractAuton {
 
     @Override
     public void Init() {
+
         robot = new Robot();
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

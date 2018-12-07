@@ -4,8 +4,6 @@ import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
 import java.util.concurrent.Callable;
 
-import static java.util.logging.Logger.global;
-
 public class Robot extends AbstractRobot {
 
     private HardwareDevices hardware;
@@ -16,30 +14,30 @@ public class Robot extends AbstractRobot {
         hardware = new HardwareDevices();
     }
 
-    public void updateAll(){
+    public void updateAll() {
         hardware.mineralLift.update();
     }
 
     //Drive Methods
     public void setDriveY(double y) {
-        if(driveInverted) hardware.drive.setY(-y);
-        else hardware.drive.setY(y);
+        hardware.drive.setY(y);
     }
 
     public void setDriveZ(double z) {
         hardware.drive.setZ(z);
     }
 
-    public void driveUpdate(){ hardware.drive.update();}
+    public void driveUpdate() {
+        hardware.drive.update();
+    }
 
     public void setDrivePower(double l, double r) {
         hardware.drive.setPower(l, r);
     }
 
-    public Callable toggleDriveInvertedCallable(){
+    public Callable toggleDriveInvertedCallable() {
         return ()-> {
-            driveInverted = !driveInverted;
-            hardware.drive.setInverted(driveInverted);
+            hardware.drive.toggleInverted();
             return true;
         };
     }
@@ -96,7 +94,7 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void beginIntaking(){
+    public void beginIntaking() {
         hardware.intake.beginIntaking();
     }
 
@@ -107,7 +105,7 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void finishIntaking(){
+    public void finishIntaking() {
         hardware.intake.finishIntaking();
         driveInverted = true;
         hardware.drive.setInverted(driveInverted);
@@ -120,29 +118,29 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void reverseIntake(){
+    public void reverseIntake() {
         hardware.intake.reverseIntake();
     }
 
-    public Callable liftIntakeCallable(){
-        return ()-> {
+    public Callable liftIntakeCallable() {
+        return () -> {
             liftIntake();
             return true;
         };
     }
 
-    public void liftIntake(){
+    public void liftIntake() {
         hardware.intake.liftIntake();
     }
 
-    public Callable lowerIntakeCallable(){
-        return ()-> {
+    public Callable lowerIntakeCallable() {
+        return () -> {
             lowerIntake();
             return true;
         };
     }
 
-    public void lowerIntake(){
+    public void lowerIntake() {
         hardware.intake.lowerIntake();
     }
 
@@ -155,8 +153,8 @@ public class Robot extends AbstractRobot {
     }
 
     public void moveMineralLiftToCollectPosition() {
-        hardware.mineralLift.moveToCollectPosition();
         hardware.mineralLift.closeGate();
+        hardware.mineralLift.moveToCollectPosition();
         driveInverted = false;
         hardware.drive.setInverted(driveInverted);
     }
@@ -231,18 +229,15 @@ public class Robot extends AbstractRobot {
 
     public Callable moveRobotLiftToTopCallable() {
         return () -> {
-            hardware.robotLift.robotLiftTop();
+            hardware.robotLift.raiseLift();
             return true;
         };
     }
 
     public Callable moveRobotLiftToBottomCallable() {
         return () -> {
-            hardware.robotLift.robotLiftBottom();
+            hardware.robotLift.lowerLift();
             return true;
         };
     }
 }
-
-
-

@@ -1,16 +1,21 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
 
-@Autonomous(name = "Test Teleop", group = "New")
+@TeleOp(name = "Test Teleop", group = "New")
 //@Disabled
 
 public class TestTeleop extends AbstractTeleop {
     @Override
     public void RegisterEvents() {
-
+        addEventHandler("a_down",()->{
+            telemetry.addData("a down");
+            telemetry.update();
+            return true;
+        });
     }
 
     @Override

@@ -10,7 +10,6 @@ public class MineralLiftController extends SubsystemController {
     private boolean isMovingDown = false;
     private int[] liftValues = {-1, -1, -1};
 
-
     public MineralLiftController() {
         init();
     }
@@ -23,19 +22,18 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void moveToCollectPosition() {
-        RobotState.mineralLiftState = RobotState.MineralLiftState.IN_MOTION;
+        RobotState.currentMineralLiftState = RobotState.MineralLiftState.IN_MOTION;
         mineralLift.setCurrentPosition(Constants.MINERAL_LIFT_COLLECT_POSITION);
         isMovingDown = true;
-        while (mineralLift.isLiftInProgress());
-        RobotState.mineralLiftState = RobotState.MineralLiftState.COLLECT_POSITION;
-
+        //while (mineralLift.isLiftInProgress());
+        RobotState.currentMineralLiftState = RobotState.MineralLiftState.COLLECT_POSITION;
     }
 
     public synchronized void moveToDumpPosition() {
-        RobotState.mineralLiftState = RobotState.MineralLiftState.IN_MOTION;
+        RobotState.currentMineralLiftState = RobotState.MineralLiftState.IN_MOTION;
         mineralLift.setCurrentPosition(Constants.MINERAL_LIFT_DUMP_POSITION);
-        while (mineralLift.isLiftInProgress());
-        RobotState.mineralLiftState = RobotState.MineralLiftState.DUMP_POSITION;
+        //while (mineralLift.isLiftInProgress());
+        RobotState.currentMineralLiftState = RobotState.MineralLiftState.DUMP_POSITION;
     }
 
     public synchronized void update() {
@@ -62,11 +60,13 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void openGate() {
-        mineralLift.setGateServoPosition(0.7);
+        mineralLift.setGateServoPosition(Constants.MINERAL_GATE_OPEN_POSITION);
+        RobotState.currentMineralGatePosition = RobotState.MineralGatePosition.OPEN;
     }
 
     public synchronized void closeGate() {
-        mineralLift.setGateServoPosition(0);
+        mineralLift.setGateServoPosition(Constants.MINERAL_GATE_CLOSED_POSITION);
+        RobotState.currentMineralGatePosition = RobotState.MineralGatePosition.CLOSED;
     }
 
     @Override

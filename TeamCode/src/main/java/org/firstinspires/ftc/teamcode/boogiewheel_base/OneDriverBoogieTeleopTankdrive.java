@@ -21,19 +21,7 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
     private void singleGamepad() {
 
-        ////////Drive////////
-        // For these to work uncomment drive.update in robot.updateAll
-        /* addEventHandler("1_lsy_change", () -> {
-            robot.setDriveY(gamepad1.left_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsx_change", () -> {
-            robot.setDriveZ(gamepad1.right_stick_x);
-            return true;
-        });*/
-
-        addEventHandler("1_lsy_change", () -> {
+        /*addEventHandler("1_lsy_change", () -> {
             robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
             return true;
         });
@@ -41,7 +29,7 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
         addEventHandler("1_rsy_change", () -> {
             robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
             return true;
-        });
+        });*/
 
         addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
 
@@ -258,6 +246,7 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
     @Override
     public void Loop() {
+        robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         robot.updateAll();
     }
 

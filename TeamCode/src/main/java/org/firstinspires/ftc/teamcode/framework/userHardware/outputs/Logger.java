@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.outputs;
 
+import android.graphics.Path;
 import android.os.Environment;
 import android.util.Log;
 
@@ -14,22 +15,20 @@ import java.util.Date;
 
 public class Logger {
     private final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
-    private final File file;
+    private File file;
 
     private FileOutputStream fOut;
     private OutputStreamWriter myOutWriter;
 
-    public Logger(String flieName) {
-        file = new File(path, flieName);
+    public Logger(String fileName) {
         try {
-            if (file.exists()) {
-                //Don't create file
-                RobotLog.i("ABCD Existing File");
-            } else {
-                //Create file
-                RobotLog.i("ABCD Creating New File");
-                file.createNewFile();
+            file = new File(path, "FTC RobotController Phone Log "+ fileName +" ["+new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date())+"].txt");
+            int n = 0;
+            while (file.exists()){
+                file = new File(path, "FTC RobotController Phone Log "+ fileName +" ["+new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date())+"]("+n+").txt");
             }
+            RobotLog.i("ABCD Creating New File: "+file.getName());
+            file.createNewFile();
             fOut = new FileOutputStream(file);
             myOutWriter = new OutputStreamWriter(fOut);
         } catch (IOException e) {
