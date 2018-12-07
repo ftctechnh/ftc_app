@@ -14,7 +14,7 @@ public class CompRobot extends BasicBot
 {
     LinearOpMode linearOpMode;
 
-    private DistanceSensor frontDistSens, frontRightDistSens, backDistSens;
+    private DistanceSensor frontDistSens, frontRightDistSens, leftDistSens;
     private DcMotorImplEx collectorPivoterMotor, collectorLifterMotor, climberMotor;
     private Servo wristCollectorServo;
     private CRServo rightGrabCRServo, leftGrabCRServo;
@@ -37,6 +37,7 @@ public class CompRobot extends BasicBot
     {
         frontRightDistSens = hardwareMap.get(DistanceSensor.class, "rightDistSens");
         frontDistSens = hardwareMap.get(DistanceSensor.class, "frontDistSens");
+        leftDistSens = hardwareMap.get(DistanceSensor.class, "leftDistSens");
     }
 
     public void initMotorsAndMechParts(HardwareMap hardwareMap)
@@ -97,67 +98,6 @@ public class CompRobot extends BasicBot
         super.stopDriveMotors();
     }
 
-    public void hugWall(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, boolean isGoingForward)
-    {
-        double straightDist, rightDist;
-
-        float stepDistance = 11;
-        float stepPivotAmtDeg = 15;
-
-        DistanceSensor usingDistSensor = frontDistSens;
-
-
-        if (!isGoingForward)
-        {
-            usingDistSensor = backDistSens;
-            stepDistance = -stepDistance;
-            stepPivotAmtDeg = -stepPivotAmtDeg;
-        }
-
-        while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
-        {
-            straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
-            if(straightDist < distAwayFromFrontWall - Math.abs(stepDistance))
-            {
-                super.stopDriveMotors();
-                break;
-            }
-            else
-            {
-                linearOpMode.telemetry.addData("Going forward 11", null);
-                driveStraight(stepDistance, .8f);
-            }
-            linearOpMode.telemetry.addData("front Dist: ", straightDist);
-
-            if (straightDist > distAwayFromFrontWall)
-            {
-                rightDist = getRightDistance_IN();
-
-                linearOpMode.telemetry.addData("front Dist>18", null);
-                linearOpMode.telemetry.addData("right Dist ", rightDist);
-                if (rightDist < lowerDistFromSideWall)
-                {
-                    linearOpMode.telemetry.addData("rightdist < 4", null);
-                    pivotenc(stepPivotAmtDeg, .5f);
-                    driveStraight(stepDistance , .5f);
-                    pivotenc(-stepPivotAmtDeg, .5f);
-                }
-                else if (rightDist > upperDistFromSideWall)
-                {
-                    linearOpMode.telemetry.addData("right dist > 7", null);
-                    pivotenc(-stepPivotAmtDeg, .5f);
-                    driveStraight(stepDistance , .5f);
-                    pivotenc(stepPivotAmtDeg, .5f);
-                }
-                else //need this null zone for logic, this is where it goes straight, do not comment out
-                {
-                    driveStraight(stepDistance, .8f);
-                }
-               linearOpMode.telemetry.update();
-            }
-        }
-    }
-
     public DistanceSensor getFrontRightDistSens()
     {
         return frontRightDistSens;
@@ -167,15 +107,127 @@ public class CompRobot extends BasicBot
     {
         return frontRightDistSens.getDistance(DistanceUnit.INCH);
     }
-
+    public DistanceSensor getLeftDistSens()
+    {
+        return leftDistSens;
+    }
+    public double getLeftDistance_IN()
+    {
+        return leftDistSens.getDistance(DistanceUnit.INCH);
+    }
     public DistanceSensor getFrontDistSens()
-{
-    return frontDistSens;
-}
+    {
+        return frontDistSens;
+    }
 
     public double getFrontDistance_IN()
     {
         return frontDistSens.getDistance(DistanceUnit.INCH);
+    }
+
+    public void hugWall(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, boolean isGoingForward, float maximumDistance)
+    {
+        double straightDist, rightDist, leftDist;
+        double straightDistanceTraveled = 0;
+        float stepDistance = 8;
+        float stepPivotAmtDeg = 15;
+
+        DistanceSensor usingDistSensor = frontDistSens;
+
+
+        if (isGoingForward)
+        {
+            while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested()) {
+                straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
+                if (straightDist < distAwayFromFrontWall - Math.abs(stepDistance)) {
+                    super.stopDriveMotors();
+                    break;
+                } else {
+                    linearOpMode.telemetry.addData("Going forward 11", null);
+                    driveStraight(stepDistance, .8f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                }
+                linearOpMode.telemetry.addData("front Dist: ", straightDist);
+
+                if (straightDist > distAwayFromFrontWall) {
+                    rightDist = getRightDistance_IN();
+
+                    linearOpMode.telemetry.addData("front Dist>18", null);
+                    linearOpMode.telemetry.addData("right Dist ", rightDist);
+                    if (rightDist < lowerDistFromSideWall) {
+                        linearOpMode.telemetry.addData("rightdist < 4", null);
+                        pivotenc(stepPivotAmtDeg, .5f);
+                        driveStraight(stepDistance, .5f);
+                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                        pivotenc(-stepPivotAmtDeg, .5f);
+                    } else if (rightDist > upperDistFromSideWall) {
+                        linearOpMode.telemetry.addData("right dist > 7", null);
+                        pivotenc(-stepPivotAmtDeg, .5f);
+                        driveStraight(stepDistance, .5f);
+                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                        pivotenc(stepPivotAmtDeg, .5f);
+                    } else //need this null zone for logic, this is where it goes straight, do not comment out
+                    {
+                        driveStraight(stepDistance, .8f);
+                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                    }
+                    linearOpMode.telemetry.update();
+                    if (straightDistanceTraveled >= maximumDistance) {
+                        stopDriveMotors();
+                    }
+                }
+            }
+        }
+        else
+        {
+            while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested()) {
+                straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
+                if (straightDist < distAwayFromFrontWall - Math.abs(stepDistance)) {
+                    super.stopDriveMotors();
+                    break;
+                } else {
+                    linearOpMode.telemetry.addData("Going forward 11", null);
+                    driveStraight(stepDistance, .8f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                }
+                linearOpMode.telemetry.addData("front Dist: ", straightDist);
+
+                if (straightDist > distAwayFromFrontWall) {
+                    leftDist = getLeftDistance_IN();
+                    linearOpMode.telemetry.addData("front Dist>18", null);
+                    linearOpMode.telemetry.addData("left Dist ", leftDist);
+                    if (leftDist < lowerDistFromSideWall) {
+                        linearOpMode.telemetry.addData("left dist < 4", null);
+                        pivotenc(-stepPivotAmtDeg, .5f);
+                        driveStraight(stepDistance, .5f);
+                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                        pivotenc(stepPivotAmtDeg, .5f);
+                    } else if (leftDist > upperDistFromSideWall) {
+                        linearOpMode.telemetry.addData("left dist > 7", null);
+                        pivotenc(stepPivotAmtDeg, .5f);
+                        driveStraight(stepDistance, .5f);
+                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                        pivotenc(-stepPivotAmtDeg, .5f);
+                    } else //need this null zone for logic, this is where it goes straight, do not comment out
+                    {
+                        driveStraight(stepDistance, .8f);
+                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                    }
+                    linearOpMode.telemetry.update();
+                    if (straightDistanceTraveled >= maximumDistance) {
+                        stopDriveMotors();
+                    }
+                }
+            }
+        }           // if (!isGoingForward)
+
+    }
+
+    public void initCRServoAndServoPos()
+    {
+        wristCollectorServo.setPosition(0);
+        rightGrabCRServo.setPower(0);
+        leftGrabCRServo.setPower(0);
     }
 
     public void deployMarker()
@@ -189,12 +241,6 @@ public class CompRobot extends BasicBot
         initCRServoAndServoPos();
     }
 
-    public void initCRServoAndServoPos()
-    {
-        wristCollectorServo.setPosition(0);
-        rightGrabCRServo.setPower(0);
-        leftGrabCRServo.setPower(0);
-    }
 
     public void setGrabberWheelPower(double pow)
     {
