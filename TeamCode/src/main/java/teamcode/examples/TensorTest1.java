@@ -134,7 +134,7 @@ public class TensorTest1 extends LinearOpMode {
     }
 
     private void initialize() {
-        this.tfManager = new TensorFlowManager(this.hardwareMap);
+        this.tfManager = new TensorFlowManager(this.hardwareMap, this.telemetry);
         this.tfManager.initialize();
     }
 }
