@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -53,6 +54,24 @@ public class CompRobot extends BasicBot
         leftGrabCRServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
         initCRServoAndServoPos();
+
+        collectorLifterMotor = hardwareMap.get(DcMotorImplEx.class, "collectorLifterMotor");
+        collectorLifterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        collectorLifterMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        collectorLifterMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        collectorLifterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        collectorPivoterMotor = hardwareMap.get(DcMotorImplEx.class,"collectorPivoterMotor");
+        collectorPivoterMotor.setDirection(DcMotorImplEx.Direction.FORWARD);
+        collectorPivoterMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        collectorPivoterMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        collectorPivoterMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        climberMotor = hardwareMap.get(DcMotorImplEx.class,"climberMotor");
+        climberMotor.setDirection(DcMotorImplEx.Direction.FORWARD);
+        climberMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        climberMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        climberMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void driveStraight(float dist_In, float pow)
@@ -220,7 +239,6 @@ public class CompRobot extends BasicBot
                 }
             }
         }           // if (!isGoingForward)
-
     }
 
     public void initCRServoAndServoPos()
@@ -240,12 +258,29 @@ public class CompRobot extends BasicBot
 
         initCRServoAndServoPos();
     }
-
-
     public void setGrabberWheelPower(double pow)
     {
         rightGrabCRServo.setPower(pow);
         leftGrabCRServo.setPower(pow);
     }
 
+    public Servo getWristCollectorServo()
+    {
+        return wristCollectorServo;
+    }
+
+    public DcMotorImplEx getClimberMotor()
+    {
+        return climberMotor;
+    }
+
+    public DcMotorImplEx getCollectorLifterMotor()
+    {
+        return collectorLifterMotor;
+    }
+
+    public DcMotorImplEx getCollectorPivoterMotor()
+    {
+        return collectorPivoterMotor;
+    }
 }
