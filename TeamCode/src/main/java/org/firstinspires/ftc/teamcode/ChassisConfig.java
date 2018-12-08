@@ -9,9 +9,10 @@ public class ChassisConfig {
     private float moveSpeed;
     private boolean leftMotorsReversed;
     private boolean rightMotorsReversed;
+    private boolean hasWalle;
 
     protected ChassisConfig(float rearDiameter, boolean useFourWheelDrive, float rearWheelSpeed,
-                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed) {
+                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle) {
         this.rearDiameter = rearDiameter;
         this.useFourWheelDrive = useFourWheelDrive;
         this.rearWheelSpeed = rearWheelSpeed;
@@ -19,6 +20,7 @@ public class ChassisConfig {
         this.moveSpeed = moveSpeed;
         this.leftMotorsReversed = leftMotorsReversed;
         this.rightMotorsReversed = rightMotorsReversed;
+        this.hasWalle = hasWalle;
     }
 
     public float getRearWheelDiameter() {
@@ -34,6 +36,7 @@ public class ChassisConfig {
     public float getMoveSpeed() { return moveSpeed; }
     public boolean isLeftMotorReversed() { return leftMotorsReversed; }
     public boolean isRightMotorReversed() { return rightMotorsReversed; }
+    public boolean getHasWalle() {return hasWalle; }
 
 
     // https://www.wikihow.com/Determine-Gear-Ratio
@@ -55,6 +58,7 @@ public class ChassisConfig {
                 0.5f,
                 0.5f,
                 true,
+                false,
                 false);
     }
 
@@ -67,6 +71,7 @@ public class ChassisConfig {
                 0.5f,
                 0.75f,
                 false,
+                true,
                 true);
     }
 
@@ -75,9 +80,10 @@ public class ChassisConfig {
                 4.0f,
                 true,
                 COUNTS_PER_MOTOR_REV_HDHEX_40,
-                0.5f,
+                0.3f,
                 0.8f,
                 true,
+                false,
                 false);
     }
 }

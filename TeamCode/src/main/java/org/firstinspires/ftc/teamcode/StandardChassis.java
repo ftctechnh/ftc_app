@@ -31,13 +31,19 @@ public abstract class StandardChassis extends OpMode {
     protected Servo flagHolder;
     protected double angleHand;
 
+    // Walle state management
+    int wasteAllocationLoadLifterEarthBegin;
+    private DcMotor wasteAllocationLoadLifterEarth;
+
     //gyroscope built into hub
     private BNO055IMU bosch;
 
     // Hack stuff.
-    private boolean useMotors = true;
-    private boolean hackTimeouts = true;
-    private boolean useArm = true;
+    protected boolean useMotors = true;
+    protected boolean useTeamMarker = true;
+    protected boolean hackTimeouts = true;
+    protected boolean useArm = true;
+
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
@@ -76,9 +82,19 @@ public abstract class StandardChassis extends OpMode {
         }
 
         // Team marker servo
-        flagHolder = hardwareMap.get(Servo.class, "servo1");
-        angleHand = 0.75;
-        flagHolder.setPosition(angleHand);
+        if (useTeamMarker) {
+            flagHolder = hardwareMap.get(Servo.class, "servo1");
+            angleHand = 0.5;
+            flagHolder.setPosition(angleHand);
+        }
+
+        // init the lifter arm,
+        if (config.getHasWalle()) {
+            wasteAllocationLoadLifterEarth = hardwareMap.get(DcMotor.class, "motor6");
+            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            wasteAllocationLoadLifterEarthBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+        }
     }
 
     protected void initTimeouts() {
@@ -117,10 +133,11 @@ public abstract class StandardChassis extends OpMode {
 
 
     public void dropFlag() {
-        angleHand = 0;
-        flagHolder.setPosition(angleHand);
+        if (useTeamMarker) {
+            angleHand = 0.0;
+            flagHolder.setPosition(angleHand);
+        }
     }
-
 
 
     protected void encoderDrive(double leftInches, double rightInches) {
@@ -385,6 +402,28 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
+
+
+    protected void nudgeBack() {
+        float power = config.getTurnSpeed();
+
+        motorBackLeft.setPower(-power);
+        motorBackRight.setPower(-power);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(-power);
+            motorFrontRight.setPower(-power);
+        }
+        sleep(500);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+    }
+
+
     protected void pointToZero() {
 
         float currentAngle = getGyroscopeAngle();
@@ -405,7 +444,7 @@ public abstract class StandardChassis extends OpMode {
     }
 
     protected void slideUpExtender(int extenderCounts) {
-        double speed = 0.5;
+        double speed = 0.25;
 
         // Get the current position.
         int extenderStart = extender.getCurrentPosition();
@@ -480,18 +519,85 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
+
+    protected void strafeRight(int numberOfMillis) {
+        float power = config.getTurnSpeed();
+
+        motorBackLeft.setPower(-power);
+        motorBackRight.setPower(power);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(power);
+            motorFrontRight.setPower(-power);
+        }
+        sleep(numberOfMillis);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+    }
+
+
+
+
     protected void descendFromLander() {
+        // go down.
+        lyftDownWalle();
+        strafeLeft(250);
+        encoderDrive(2,2);
+
         //slide up the extender
         //TODO: this isn't really a todo, but always start the robot at -604 counts
-        slideUpExtender(5103);
+       // slideUpExtender(3100);
 
         //PullOut the shoulder
-        shiftShoulderDown(100);
+       // shiftShoulderDown(-21446);
 
-        //slide extender up
-        slideUpExtender(100);
+        //nudgeBack();
 
-        //Strafe left (to remove self from lander attachment)
-        strafeLeft(1000);
+       // slideUpExtender(400);
+
+        //Strafe right (to remove bot from lander attachment)
+         //turnRight(5);
+       // nudgeRight();
+       // nudgeRight();
+
+       //  pointToZero();
     }
+
+    protected void lyftDownWalle() {
+        double speed = 0.5;
+
+        // Get the current position.
+        int lyftBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+        telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
+
+        // Determine new target position, and pass to motor controller
+        int lyftTarget = lyftBegin - 3070;
+        wasteAllocationLoadLifterEarth.setTargetPosition(lyftTarget);
+        telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
+
+        // Turn On RUN_TO_POSITION
+        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wasteAllocationLoadLifterEarth.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && wasteAllocationLoadLifterEarth.isBusy()) {
+            telemetry.addData("lyftDownWalle", "Running at %7d to %7d", wasteAllocationLoadLifterEarth.getCurrentPosition(), lyftTarget);
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wasteAllocationLoadLifterEarth.setPower(0);
+
+        //sleep(5000);
+    }
+
+
+
+
 }
