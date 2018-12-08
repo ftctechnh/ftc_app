@@ -1,47 +1,17 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
-import com.qualcomm.robotcore.util.RobotLog;
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.MagneticFlux;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
 
 public abstract class StandardChassis extends OpMode {
-
-
-    //static final double COUNTS_PER_INCH = COUNTS_PER_MOTOR_TORQUENADO / (WHEEL_DIAMETER_INCHES * Math.PI);
 
     protected ChassisConfig config;
 
@@ -54,17 +24,26 @@ public abstract class StandardChassis extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
+    private DcMotor extender;
+    private DcMotor shoulder;
 
+    // Team Marker Servo
     protected Servo flagHolder;
     protected double angleHand;
+
+    // Walle state management
+    int wasteAllocationLoadLifterEarthBegin;
+    private DcMotor wasteAllocationLoadLifterEarth;
 
     //gyroscope built into hub
     private BNO055IMU bosch;
 
     // Hack stuff.
-    private boolean useMotors = true;
-    private boolean useFourWheelDrive = false;
-    private boolean hackTimeouts = true;
+    protected boolean useMotors = true;
+    protected boolean useTeamMarker = true;
+    protected boolean hackTimeouts = true;
+    protected boolean useArm = true;
+
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
@@ -77,39 +56,45 @@ public abstract class StandardChassis extends OpMode {
             motorBackLeft = hardwareMap.get(DcMotor.class, "motor0");
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
 
-            flagHolder = hardwareMap.get(Servo.class, "servo1");
-            angleHand = 0.75;
-            flagHolder.setPosition(angleHand);
-
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
-            motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
-            motorBackRight.setDirection(DcMotor.Direction.FORWARD);
+            motorBackLeft.setDirection(config.isLeftMotorReversed() ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+            motorBackRight.setDirection(config.isRightMotorReversed() ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
 
             // initilize the encoder
             motorBackLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motorBackRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            //tell the encoder what mode to run in
-            motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-            if (useFourWheelDrive) {
+            if (config.getUseFourWheelDrive()) {
                 motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
                 motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
 
-                motorBackLeft.setDirection(DcMotor.Direction.FORWARD);
-                motorBackRight.setDirection(DcMotor.Direction.REVERSE);
-                motorFrontLeft.setDirection(DcMotor.Direction.FORWARD);
-                motorFrontRight.setDirection(DcMotor.Direction.REVERSE);
+                motorFrontLeft.setDirection(config.isLeftMotorReversed() ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
+                motorFrontRight.setDirection(config.isRightMotorReversed() ? DcMotor.Direction.REVERSE : DcMotor.Direction.FORWARD);
 
                 motorFrontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorFrontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             }
         }
 
+        // Team marker servo
+        if (useTeamMarker) {
+            flagHolder = hardwareMap.get(Servo.class, "servo1");
+            angleHand = 0.5;
+            flagHolder.setPosition(angleHand);
+        }
+
+        // init the lifter arm,
+        if (config.getHasWalle()) {
+            wasteAllocationLoadLifterEarth = hardwareMap.get(DcMotor.class, "motor6");
+            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            wasteAllocationLoadLifterEarthBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+        }
     }
 
     protected void initTimeouts() {
@@ -120,6 +105,13 @@ public abstract class StandardChassis extends OpMode {
             this.msStuckDetectStart = 30000;
             this.msStuckDetectLoop = 30000;
             this.msStuckDetectStop = 30000;
+        }
+    }
+
+    protected void initArm() {
+        if (useArm) {
+            shoulder = hardwareMap.get(DcMotor.class, "motor4");
+            extender = hardwareMap.get(DcMotor.class, "motor5");
         }
     }
 
@@ -141,37 +133,56 @@ public abstract class StandardChassis extends OpMode {
 
 
     public void dropFlag() {
-        angleHand = 0;
-        flagHolder.setPosition(angleHand);
+        if (useTeamMarker) {
+            angleHand = 0.0;
+            flagHolder.setPosition(angleHand);
+        }
     }
 
 
-    protected void encoderDrive(double speed,
-                             double leftInches, double rightInches) {
-
+    protected void encoderDrive(double leftInches, double rightInches) {
+        double speed = config.getMoveSpeed();
         double countsPerInch = config.getRearWheelSpeed() / (config.getRearWheelDiameter() * Math.PI);
 
         // Get the current position.
         int leftBackStart = motorBackLeft.getCurrentPosition();
         int rightBackStart = motorBackRight.getCurrentPosition();
-        telemetry.addData("encoderDrive", "Starting %7d, %7d",
-                leftBackStart, rightBackStart);
+        int leftFrontStart = 0;
+        int rightFrontStart = 0;
+        if (config.getUseFourWheelDrive()) {
+             leftFrontStart = motorFrontLeft.getCurrentPosition();
+             rightFrontStart = motorFrontRight.getCurrentPosition();
+        }
+        telemetry.addData("encoderDrive", "Starting %7d, %7d, %7d, %7d",
+                leftBackStart, rightBackStart, leftFrontStart, rightFrontStart);
 
         // Determine new target position, and pass to motor controller
         int leftBackTarget = leftBackStart + (int) (leftInches * countsPerInch);
         int rightBackTarget = rightBackStart + (int) (rightInches * countsPerInch);
+        int leftFrontTarget = 0;
+        int rightFrontTarget = 0;
+        if (config.getUseFourWheelDrive()) {
+             leftFrontTarget = leftFrontStart + (int) (leftInches * countsPerInch);
+             rightFrontTarget = rightFrontStart + (int) (rightInches * countsPerInch);
+        }
 
         motorBackLeft.setTargetPosition(leftBackTarget);
         motorBackRight.setTargetPosition(rightBackTarget);
-        telemetry.addData("encoderDrive", "Target %7d, %7d",
-                leftBackTarget, rightBackTarget);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setTargetPosition(leftFrontTarget);
+            motorFrontRight.setTargetPosition(rightFrontTarget);
+        }
+        telemetry.addData("encoderDrive", "Target %7d, %7d, %7d, %7d",
+                leftBackTarget, rightBackTarget, leftFrontTarget, rightFrontTarget);
 
         // Turn On RUN_TO_POSITION
         motorBackLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorBackRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motorBackLeft.setPower(Math.abs(speed));
         motorBackRight.setPower(Math.abs(speed));
-        if (useFourWheelDrive) {
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             motorFrontLeft.setPower(Math.abs(speed));
             motorFrontRight.setPower(Math.abs(speed));
         }
@@ -183,14 +194,31 @@ public abstract class StandardChassis extends OpMode {
         // However, if you require that BOTH motors have finished their moves before the robot continues
         // onto the next step, use (isBusy() || isBusy()) in the loop test.
         ElapsedTime motorOnTime = new ElapsedTime();
-        while ((motorOnTime.seconds() < 30) &&
-                (motorBackRight.isBusy() && motorBackLeft.isBusy())) {
+        boolean keepGoing = true;
+        while ((motorOnTime.seconds() < 30) && keepGoing) {
 
-            // Display it for the driver.
-            // telemetry.addData("encoderDrive", "Running to %7d, %7d", motorBackLeft, motorBackRight);
-            telemetry.addData("encoderDrive", "Running at %7d, %7d",
-                    motorBackLeft.getCurrentPosition(),
-                    motorBackRight.getCurrentPosition());
+            if (config.getUseFourWheelDrive()) {
+                telemetry.addData("encoderDrive1", "Running at %7d, %7d, %7d, %7d",
+                        motorBackLeft.getCurrentPosition(),
+                        motorBackRight.getCurrentPosition(),
+                        motorFrontLeft.getCurrentPosition(),
+                        motorFrontRight.getCurrentPosition());
+                telemetry.addData("encoderDrive2", "Running to %7d, %7d, %7d, %7d",
+                        leftBackTarget,
+                        rightBackTarget,
+                        leftFrontTarget,
+                        rightFrontTarget);
+                keepGoing = motorBackRight.isBusy() && motorBackLeft.isBusy() && motorFrontLeft.isBusy() && motorFrontRight.isBusy();
+            } else {
+                telemetry.addData("encoderDrive1", "Running at %7d, %7d",
+                        motorBackLeft.getCurrentPosition(),
+                        motorBackRight.getCurrentPosition());
+                telemetry.addData("encoderDrive2", "Running to %7d, %7d",
+                        leftBackTarget,
+                        rightBackTarget);
+                keepGoing = motorBackRight.isBusy() && motorBackLeft.isBusy();
+            }
+
             telemetry.update();
             sleep(100);
         }
@@ -200,19 +228,27 @@ public abstract class StandardChassis extends OpMode {
         motorBackRight.setPower(0);
         motorBackLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         motorBackRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        if (useFourWheelDrive) {
+        if (config.getUseFourWheelDrive()) {
             motorFrontLeft.setPower(0);
             motorFrontRight.setPower(0);
+            motorFrontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motorFrontRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        telemetry.addData("encoderDrive", "Finished (%s) at %7d, %7d to [%7d, %7d] (%7d, %7d)",
+        /*telemetry.addData("encoderDrive", "Finished (%s) at %7d,%7d,%7d,%7d to [%7d,%7d,%7d,%7d] (%7d,%7d,%7d,%7d)",
                 motorOnTime.toString(),
                 leftBackStart,
                 rightBackStart,
+                leftFrontStart,
+                rightFrontStart,
                 motorBackLeft.getCurrentPosition(),
                 motorBackRight.getCurrentPosition(),
+                motorFrontLeft.getCurrentPosition(),
+                motorFrontRight.getCurrentPosition(),
                 leftBackTarget,
-                rightBackTarget);
+                rightBackTarget,
+                leftFrontTarget,
+                rightFrontTarget); */
         sleep(1000);
     }
 
@@ -230,7 +266,7 @@ public abstract class StandardChassis extends OpMode {
     // Always returns a number from 0-359.9999
     protected float getGyroscopeAngle() {
         Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-        float gyroAngle = exangles.thirdAngle;
+        float gyroAngle = exangles.thirdAngle + 50;
         return CrazyAngle.normalizeAngle(CrazyAngle.reverseAngle(gyroAngle));
     }
 
@@ -328,21 +364,240 @@ public abstract class StandardChassis extends OpMode {
 
     // This nudges over about 2 degrees.
     protected void nudgeRight() {
-        float power = 0.5f;
+        float power = config.getTurnSpeed();
+
         motorBackLeft.setPower(power);
         motorBackRight.setPower(-power);
-        sleep(2); // TODO: is 100 milliseconds a good value????????
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(power);
+            motorFrontRight.setPower(-power);
+        }
+        sleep(2);
+
         motorBackLeft.setPower(0);
         motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
     }
 
     // This nudges over about 2 degrees.
     protected void nudgeLeft() {
-        float power = 0.5f;
+        float power = config.getTurnSpeed();
+
         motorBackLeft.setPower(-power);
         motorBackRight.setPower(power);
-        sleep(2); // TODO: is 100 milliseconds a good value????????
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(-power);
+            motorFrontRight.setPower(power);
+        }
+        sleep(2);
+
         motorBackLeft.setPower(0);
         motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
     }
+
+
+
+    protected void nudgeBack() {
+        float power = config.getTurnSpeed();
+
+        motorBackLeft.setPower(-power);
+        motorBackRight.setPower(-power);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(-power);
+            motorFrontRight.setPower(-power);
+        }
+        sleep(500);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+    }
+
+
+    protected void pointToZero() {
+
+        float currentAngle = getGyroscopeAngle();
+        float destinationAngle = 0;
+        boolean keepGoing = true;
+        while (keepGoing) {
+            float oldAngle = currentAngle;
+            nudgeRight();
+            currentAngle = getGyroscopeAngle();
+
+            float justMoved = currentAngle - oldAngle;
+            float stillNeed = 360.0f - currentAngle;
+            telemetry.addData("turRight1", "current=%.0f, old=%.0f, dst=%.0f, moved=%.0f, need=%.0f", currentAngle, oldAngle, destinationAngle, justMoved, stillNeed);
+            telemetry.update();
+
+            keepGoing = (justMoved > -50.0);
+        }
+    }
+
+    protected void slideUpExtender(int extenderCounts) {
+        double speed = 0.25;
+
+        // Get the current position.
+        int extenderStart = extender.getCurrentPosition();
+        telemetry.addData("encoderDrive", "Starting %7d", extenderStart);
+
+        // Determine new target position, and pass to motor controller
+        int extenderTarget = extenderStart + extenderCounts;
+        extender.setTargetPosition(extenderTarget);
+        telemetry.addData("encoderDrive", "Target %7d", extenderTarget);
+
+        // Turn On RUN_TO_POSITION
+        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        extender.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && extender.isBusy()) {
+            telemetry.addData("slideUpExtender", "Running at %7d to %7d", extender.getCurrentPosition(), extenderTarget);
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extender.setPower(0);
+    }
+
+    protected void shiftShoulderDown(int shoulderCounts) {
+        double speed = 0.5;
+
+        // Get the current position.
+        int shoulderStart = shoulder.getCurrentPosition();
+        telemetry.addData("shoulderShifting", "Starting %7d", shoulderStart);
+
+        // Determine new target position, and pass to motor controller
+        int shoulderTarget = shoulderStart + shoulderCounts;
+        shoulder.setTargetPosition(shoulderTarget);
+        telemetry.addData("shoulderShifting", "Target %7d", shoulderTarget);
+
+        // Turn On RUN_TO_POSITION
+        shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        shoulder.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && shoulder.isBusy()) {
+            telemetry.addData("shiftShoulderDown", "Running at %7d to %7d", shoulder.getCurrentPosition(), shoulderTarget);
+            telemetry.update();
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        shoulder.setPower(0);
+    }
+
+    protected void strafeLeft(int numberOfMillis) {
+        float power = config.getTurnSpeed();
+
+        motorBackLeft.setPower(power);
+        motorBackRight.setPower(-power);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(-power);
+            motorFrontRight.setPower(power);
+        }
+        sleep(numberOfMillis);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+    }
+
+
+    protected void strafeRight(int numberOfMillis) {
+        float power = config.getTurnSpeed();
+
+        motorBackLeft.setPower(-power);
+        motorBackRight.setPower(power);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(power);
+            motorFrontRight.setPower(-power);
+        }
+        sleep(numberOfMillis);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        if (config.getUseFourWheelDrive()) {
+            motorFrontLeft.setPower(0);
+            motorFrontRight.setPower(0);
+        }
+    }
+
+
+
+
+    protected void descendFromLander() {
+        // go down.
+        lyftDownWalle();
+        strafeLeft(250);
+        encoderDrive(2,2);
+
+        //slide up the extender
+        //TODO: this isn't really a todo, but always start the robot at -604 counts
+       // slideUpExtender(3100);
+
+        //PullOut the shoulder
+       // shiftShoulderDown(-21446);
+
+        //nudgeBack();
+
+       // slideUpExtender(400);
+
+        //Strafe right (to remove bot from lander attachment)
+         //turnRight(5);
+       // nudgeRight();
+       // nudgeRight();
+
+       //  pointToZero();
+    }
+
+    protected void lyftDownWalle() {
+        double speed = 0.5;
+
+        // Get the current position.
+        int lyftBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+        telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
+
+        // Determine new target position, and pass to motor controller
+        int lyftTarget = lyftBegin - 3070;
+        wasteAllocationLoadLifterEarth.setTargetPosition(lyftTarget);
+        telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
+
+        // Turn On RUN_TO_POSITION
+        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wasteAllocationLoadLifterEarth.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && wasteAllocationLoadLifterEarth.isBusy()) {
+            telemetry.addData("lyftDownWalle", "Running at %7d to %7d", wasteAllocationLoadLifterEarth.getCurrentPosition(), lyftTarget);
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wasteAllocationLoadLifterEarth.setPower(0);
+
+        //sleep(5000);
+    }
+
+
+
+
 }
