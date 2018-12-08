@@ -21,7 +21,7 @@ public abstract class TTL2Auto extends LinearOpMode {
     @Override
     public void runOpMode() {
         TTL2HardwareManager.initialize(this);
-        this.tfManager = new TensorFlowManager(this.hardwareMap);
+        this.tfManager = new TensorFlowManager(this.hardwareMap, this.telemetry);
         this.tfManager.initialize();
         waitForStart();
         resetDriveEncoders();

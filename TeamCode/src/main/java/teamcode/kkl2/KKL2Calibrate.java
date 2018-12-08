@@ -333,7 +333,7 @@ public class KKL2Calibrate extends LinearOpMode {
     private void initialize() {
         KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.tfManager = new TensorFlowManager(this.hardwareMap);
+        this.tfManager = new TensorFlowManager(this.hardwareMap, this.telemetry);
         this.tfManager.initialize();
     }
 
