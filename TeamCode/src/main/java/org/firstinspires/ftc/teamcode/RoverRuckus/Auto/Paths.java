@@ -23,8 +23,8 @@ public class Paths {
             .lineTo(new Vector2d(0, 0), new ConstantInterpolator(0))
             .build();
 
-    static Trajectory FORWARD_A_LITTLE = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(3, 0), new ConstantInterpolator(0))
+    static Trajectory FORWARD = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(6, 0), new ConstantInterpolator(0))
             .build();
 
     static Trajectory FORWARD_RIGHT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
@@ -35,6 +35,14 @@ public class Paths {
             .lineTo(new Vector2d(15, 15), new ConstantInterpolator(0))
             .build();
 
+    static Trajectory STRAFE_LEFT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(0, 15), new ConstantInterpolator(0))
+            .build();
+
+    static Trajectory STRAFE_RIGHT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(0, -
+                    15), new ConstantInterpolator(0))
+            .build();
     public static Pose2d DEPOT_START = new Pose2d(-START_DIST, START_DIST, Math.PI*0.75);
 
     public static Pose2d CRATER_START = new Pose2d(START_DIST, START_DIST, Math.PI*0.25);
@@ -124,26 +132,24 @@ public class Paths {
             .closeComposite()
             .build();
 
-    static Trajectory CRATER_SAME_RIGHT_DIR = new TrajectoryBuilder(new Pose2d(48, 24, -Math.PI*0.25), DriveConstants.BASE_CONSTRAINTS)
+    static Trajectory CRATER_SAME_LEFT_DIR = new TrajectoryBuilder(new Pose2d(-(24 - 10), 48 - 10, Math.PI*0.75), DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(120, 56, 0))
-            .splineTo(new Pose2d(160, 56, 0))
+            .splineTo(new Pose2d(28, 63, 0))
+            .splineTo(new Pose2d(63, 63, 0))
             .closeComposite()
             .build();
 
-    static Trajectory CRATER_SAME_LEFT_DIR = new TrajectoryBuilder(new Pose2d(24, 48, -Math.PI*0.25), DriveConstants.BASE_CONSTRAINTS)
+    static Trajectory CRATER_SAME_CENTER_DIR = new TrajectoryBuilder(new Pose2d(-(36 - 10), 36 - 10, Math.PI*0.75), DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(39, 45, Math.PI * 0.25))
-            .splineTo(new Pose2d(96, 58, 0))
-            .splineTo(new Pose2d(120, 56, 0))
+            .splineTo(new Pose2d(34, 63, 0))
+            .splineTo(new Pose2d(63, 63, 0))
             .closeComposite()
             .build();
 
-    static Trajectory CRATER_SAME_CENTER_DIR = new TrajectoryBuilder(new Pose2d(36, 36, -Math.PI*0.25), DriveConstants.BASE_CONSTRAINTS)
+    static Trajectory CRATER_SAME_RIGHT_DIR = new TrajectoryBuilder(new Pose2d(48 - 10, 24 - 10, Math.PI*0.75), DriveConstants.BASE_CONSTRAINTS)
             .beginComposite()
-            .splineTo(new Pose2d(63, 45, Math.PI * 0.25))
-            .splineTo(new Pose2d(120, 56, 0))
-            .splineTo(new Pose2d(140, 56, 0))
+            .splineTo(new Pose2d(-40, 63, 0))
+            .splineTo(new Pose2d(-63, 63, 0))
             .closeComposite()
             .build();
 

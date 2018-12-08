@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.StartingPosition;
-import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
 import org.firstinspires.ftc.teamcode.Vision.VuforiaCVUtil;
 import org.opencv.core.Rect;
 
@@ -127,7 +126,8 @@ public abstract class AutoUtils extends VuforiaCVUtil {
             }
             telemetry.update();
 
-            robot.setMotorSpeeds(unscaledMotorPowers);
+            //robot.setMotorSpeeds(unscaledMotorPowers);
+            stopMoving();
         }
         stopMoving();
     }

@@ -3,10 +3,12 @@ package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
-import org.firstinspires.ftc.teamcode.Hardware.QuadWheelHardware;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.EndGoal;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto.StartingPosition;
+import org.firstinspires.ftc.teamcode.Utilities.RoadRunner.AssetsTrajectoryLoader;
+
+import java.io.IOException;
 
 public abstract class SophisticatedSampling extends AutoUtils {
 
@@ -30,11 +32,11 @@ public abstract class SophisticatedSampling extends AutoUtils {
     public void runOpMode() throws InterruptedException {
         // Set up road runner
         SampleMecanumDriveREV drive = new SampleMecanumDriveREV(hardwareMap);
-        robot = new SparkyTheRobot(this);
-        robot.calibrate(false);
-        robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
+        //robot = new SparkyTheRobot(this);
+        //robot.calibrate(false);
+        //robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
         initVuforia();
-        setWinchHoldPosition();
+        //setWinchHoldPosition();
 
         // Display telemetry feedback
         telemetry.log().add("Running sophisticated sampling op-mode");
@@ -51,31 +53,36 @@ public abstract class SophisticatedSampling extends AutoUtils {
             unhookFromLander(drive, robot, DetachMethod.TURN);
         }
 
-        robot.cameraPositioner.flipDown();
+        //robot.cameraPositioner.flipDown();
 
         if (startingPosition == StartingPosition.DEPOT) {
             switchAppendagePositions();
             followPath(drive, Paths.DEPO_SAME_SELECTOR[goldLoc.index]);
         } else {
-            robot.setFrontDir(QuadWheelHardware.FrontDir.HOOK);
-            followPath(drive, Paths.CRATER_SEL_SEL[goldLoc.index]);
-            switchAppendagePositions();
-            robot.setFrontDir(QuadWheelHardware.FrontDir.CAMERA);
-            followPath(drive, Paths.CRATER_DIR_SEL[goldLoc.index]);
+            try {
+                followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Sel"));
+                switchAppendagePositions();
+                turnToPos(Math.PI/4);
+                followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Dir"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         // Initialize with it facing the depo along whichever wall it should strafe
         turnToPos(0);
 
         // Strafe to wall
-        if (goal == EndGoal.BLUE_DOUBLE_SAMPLE || goal == EndGoal.BLUE_CRATER) {
-            followPath(drive, Paths.FORWARD_RIGHT);
-        } else { // goal == RED_CRATER
-            followPath(drive, Paths.FORWARD_LEFT);
+
+        if (goal == EndGoal.RED_CRATER) {
+            followPath(drive, Paths.STRAFE_LEFT);
+        } else {
+            followPath(drive, Paths.STRAFE_RIGHT);
         }
+        followPath(drive, Paths.FORWARD_RIGHT);
 
         // Deploy the team marker
-        robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
+        //robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
 
         if (goal == EndGoal.BLUE_CRATER) {
             followPath(drive, Paths.DEPOT_TO_SAME_CRATER_LONG);
