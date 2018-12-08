@@ -26,6 +26,7 @@ public class TeleOp1819 extends OpMode
     DcMotor motorBL;
     DcMotor mineralLiftL;
     DcMotor mineralLiftR;
+    DcMotor robotLift;
     Servo servo;
 
 
@@ -59,6 +60,8 @@ public class TeleOp1819 extends OpMode
         mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
         mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
         mineralLiftR.setDirection(DcMotor.Direction.REVERSE);
+        robotLift.setDirection(DcMotor.Direction.FORWARD);
+        robotLift = hardwareMap.dcMotor.get("robotLift");
         servo = hardwareMap.servo.get("servo");
     }
 
@@ -122,6 +125,14 @@ public class TeleOp1819 extends OpMode
 
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
+
+        //Robot Lifting
+        if(y)
+            robotLift.setPower(1);//up
+        else if (a)
+            robotLift.setPower(-1);//down
+        else
+            robotLift.setPower(0);
 
         double mineralLiftPower = 0;
         if(dpad_up)
