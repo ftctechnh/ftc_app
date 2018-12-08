@@ -100,7 +100,7 @@ public class RoverRuckus15091 extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        initDetecctor();
+        initDetector();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -131,7 +131,7 @@ public class RoverRuckus15091 extends LinearOpMode {
 
             // turn robot 180 degree to the right
             //encoderDrive(TURN_SPEED, -40d, 40d, 5d);
-            gyroTurn(0.7d, -111d);
+            gyroTurn(0.8d, -111d);
 
             //scan gold mineral for position 1,2,3
             int goldMineralLocation = -1;
@@ -160,12 +160,12 @@ public class RoverRuckus15091 extends LinearOpMode {
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -24d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -26d, targetHeading);
                     gyroDrive(DRIVE_SPEED, -36d, 135);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -6d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -33d, 180);
+                    gyroDrive(DRIVE_SPEED, -7d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -32d, 180);
                     gyroTurn(DRIVE_SPEED, -135);
                     break;
                 case 3:
@@ -174,25 +174,27 @@ public class RoverRuckus15091 extends LinearOpMode {
                     break;
             }
 
+            robot.markerServo.setPosition(1d);
             detector.disable();
+
+            sleep(500L);
 
             telemetry.addData("Path", "Complete");
             telemetry.update();
         }
-
-
     }
 
 
-    public void initDetecctor() {
+    public void initDetector() {
         // Set up detector
         detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
-        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-        detector.alignPosOffset = 143; // How far from center frame to offset this alignment zone.
+        detector.alignSize.width = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignSize.height = 480d;
+        detector.alignPosOffset = 120d; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
         detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
@@ -208,6 +210,7 @@ public class RoverRuckus15091 extends LinearOpMode {
     public void landing() {
         robot.armServo.setPosition(1d);
         robot.handServo.setPosition(0d);
+        robot.markerServo.setPosition(0.1d);
 
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(0.4d);

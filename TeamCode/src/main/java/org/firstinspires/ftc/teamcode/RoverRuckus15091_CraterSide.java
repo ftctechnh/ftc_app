@@ -96,7 +96,7 @@ public class RoverRuckus15091_CraterSide extends LinearOpMode {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        initDetecctor();
+        initDetector();
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -156,15 +156,21 @@ public class RoverRuckus15091_CraterSide extends LinearOpMode {
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -12d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -6d, 180);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -9d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -10d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -6d, 180);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -12d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -10d, 180);
                     break;
             }
+
+            gyroTurn(DRIVE_SPEED,180);
+            gyroDrive(DRIVE_SPEED, -6d, 180);
 
             detector.disable();
 
@@ -176,15 +182,16 @@ public class RoverRuckus15091_CraterSide extends LinearOpMode {
     }
 
 
-    public void initDetecctor() {
+    public void initDetector() {
         // Set up detector
         detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
-        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-        detector.alignPosOffset = 143; // How far from center frame to offset this alignment zone.
+        detector.alignSize.width = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignSize.height = 360d;
+        detector.alignPosOffset = 90d; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
         detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
@@ -200,6 +207,7 @@ public class RoverRuckus15091_CraterSide extends LinearOpMode {
     public void landing() {
         robot.armServo.setPosition(1d);
         robot.handServo.setPosition(0d);
+        robot.markerServo.setPosition(0.1d);
 
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(0.4d);

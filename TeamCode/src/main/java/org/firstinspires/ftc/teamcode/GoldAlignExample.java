@@ -55,11 +55,13 @@ public class GoldAlignExample extends OpMode
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
-        detector.alignSize = 100; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-        detector.alignPosOffset = 143; // How far from center frame to offset this alignment zone.
-        detector.downscale = 0.4; // How much to downscale the input frames
+        detector.alignSize.width = 100d; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
+        detector.alignSize.height = 380d;
+        detector.alignPosOffset = 120d; // How far from center frame to offset this alignment zone.
+        detector.downscale = 0.3; // How much to downscale the input frames
 
         detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+        //detector.areaScoringMethod = DogeCV.AreaScoringMethod.PERFECT_AREA;
         //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
         detector.maxAreaScorer.weight = 0.005; //
 

@@ -75,6 +75,7 @@ public class Hardware15091 {
     public Servo armServo = null;
     public Servo handServo = null;
     public Servo pickupServo = null;
+    public Servo markerServo = null;
     public AnalogInput armAngle = null;
     public AndroidTextToSpeech tts = null;
     public BNO055IMU imu;
@@ -141,9 +142,10 @@ public class Hardware15091 {
         rightDrive = hwMap.dcMotor.get("motor_1");
         armDrive = hwMap.dcMotor.get("motor_2");
         armAngle = hwMap.analogInput.get("arm_angle");
-        armServo = hwMap.servo.get("servo_1");
-        pickupServo = hwMap.servo.get("servo_2");
-        handServo = hwMap.servo.get("servo_3");
+        armServo = hwMap.servo.get("servo_3");
+        pickupServo = hwMap.servo.get("servo_5");
+        handServo = hwMap.servo.get("servo_4");
+        markerServo = hwMap.servo.get("servo_0");
         //sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_distance");
 
