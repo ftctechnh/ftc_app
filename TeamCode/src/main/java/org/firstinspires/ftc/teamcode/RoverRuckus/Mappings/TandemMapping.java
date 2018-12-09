@@ -6,6 +6,19 @@ public class TandemMapping extends SoloMapping {
         super(gamepad1, gamepad2);
     }
 
+    private boolean invert() {return gamepad1.right_trigger > 0.2;}
+    private int invFact() {return invert() ? -1 : 1; }
+
+    @Override
+    public double driveStickX() {
+        return gamepad1.left_stick_x * invFact();
+    }
+
+    @Override
+    public double driveStickY() {
+        return gamepad1.left_stick_y * invFact();
+    }
+
     @Override
     public double armSpeed() {
         return removeLowVals(gamepad2.left_trigger * FLIP_LEFT_FACTOR
