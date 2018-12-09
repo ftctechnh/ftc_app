@@ -68,11 +68,11 @@ public class AnimatornicsRobot {
         }
 
         if(!holdLift) {
-            double liftPower = op.gamepad1.left_trigger - op.gamepad1.right_trigger;
+            double liftPower = op.gamepad1.right_trigger - op.gamepad1.left_trigger;
             liftMotor.setPower(liftPower);
             telemetry.addData("Status", "liftPower: " + liftPower);
         } else {
-            double liftPower = 0.5;
+            double liftPower = -0.5;
             liftMotor.setPower(liftPower);
             telemetry.addData("Status", "liftPower: " + liftPower);
         }
@@ -81,7 +81,7 @@ public class AnimatornicsRobot {
         collectMotor.setPower(collectPower);
         telemetry.addData("Status", "collectPower: " + collectPower);
 
-        double collectSlidePower = op.gamepad2.left_stick_y;
+        double collectSlidePower = -op.gamepad2.left_stick_y;
         collectSlideMotor.setPower(collectSlidePower);
         telemetry.addData("Status", "collectSlidePower_1: " + collectSlidePower);
 
