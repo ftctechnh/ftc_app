@@ -20,10 +20,8 @@ public class QuadWheelHardware extends BaseHardware {
         motorArr = new DcMotor[] {frontLeft, frontRight, backLeft, backRight};
         tel.log().add("Initialized motor array");
 
-        //frontRight.setDirection(DcMotor.Direction.REVERSE);
-        //backRight.setDirection(DcMotor.Direction.REVERSE);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotor.Direction.REVERSE);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         for (DcMotor m : motorArr) {
             m.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
