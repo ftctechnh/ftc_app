@@ -55,16 +55,6 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
         Future<Boolean> CurrentFuture;
 
-        RegisterStates();
-
-        try {
-            stateMachine.prepare();
-        } catch (StateConfigurationException e) {
-            exceptions.add(e);
-        }
-
-        checkException();
-
         //calls user init
         CurrentFuture = service.submit(InitThread);
 
@@ -80,6 +70,14 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         }
 
         while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
+
+        RegisterStates();
+
+        try {
+            stateMachine.prepare();
+        } catch (StateConfigurationException e) {
+            exceptions.add(e);
+        }
 
         boolean stateMachineActive = true;
 
@@ -101,6 +99,7 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         }
 
         Stop();
+        telemetry.stop();
     }
 
     public abstract void RegisterStates();

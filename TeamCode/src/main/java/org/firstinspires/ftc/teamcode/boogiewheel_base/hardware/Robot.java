@@ -7,7 +7,6 @@ import java.util.concurrent.Callable;
 public class Robot extends AbstractRobot {
 
     private HardwareDevices hardware;
-    private boolean mineralGateOpen = false, driveInverted = false;
 
     //Robot Methods
     public Robot() {
@@ -15,7 +14,14 @@ public class Robot extends AbstractRobot {
     }
 
     public void updateAll() {
+        hardware.drive.update();
+        hardware.intake.update();
         hardware.mineralLift.update();
+        hardware.robotLift.update();
+    }
+
+    public void stop() {
+        hardware.stop();
     }
 
     //Drive Methods
@@ -28,7 +34,7 @@ public class Robot extends AbstractRobot {
     }
 
     public void driveUpdate() {
-        hardware.drive.update();
+        hardware.drive.updateYZDrive();
     }
 
     public void setDrivePower(double l, double r) {
@@ -82,10 +88,6 @@ public class Robot extends AbstractRobot {
         return hardware.drive.getHeading();
     }
 
-    public void stop() {
-        hardware.stop();
-    }
-
     //Intake Methods
     public Callable beginIntakingCallable() {
         return () -> {
@@ -107,8 +109,7 @@ public class Robot extends AbstractRobot {
 
     public void finishIntaking() {
         hardware.intake.finishIntaking();
-        driveInverted = true;
-        hardware.drive.setInverted(driveInverted);
+        hardware.drive.setInverted(true);
     }
 
     public Callable reverseIntakeCallable() {
@@ -155,8 +156,7 @@ public class Robot extends AbstractRobot {
     public void moveMineralLiftToCollectPosition() {
         hardware.mineralLift.closeGate();
         hardware.mineralLift.moveToCollectPosition();
-        driveInverted = false;
-        hardware.drive.setInverted(driveInverted);
+        hardware.drive.setInverted(false);
     }
 
     public Callable moveMineralLiftToDumpPositionCallable() {
@@ -194,13 +194,7 @@ public class Robot extends AbstractRobot {
 
     public Callable toggleMineralGateCallable() {
         return () -> {
-            if (mineralGateOpen) {
-                closeMineralGate();
-                mineralGateOpen = false;
-            } else {
-                openMineralGate();
-                mineralGateOpen = true;
-            }
+            hardware.mineralLift.toggleGate();
             return true;
         };
     }

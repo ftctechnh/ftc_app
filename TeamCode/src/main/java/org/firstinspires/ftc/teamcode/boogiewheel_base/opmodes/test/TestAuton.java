@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.boogiewheel_base;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 

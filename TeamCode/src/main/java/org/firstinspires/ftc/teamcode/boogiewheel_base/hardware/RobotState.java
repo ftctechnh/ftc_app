@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
-public class RobotState {
+public final class RobotState {
 
     public static MatchState currentMatchState = MatchState.UNKNOWN;
 
@@ -11,7 +11,9 @@ public class RobotState {
 
     public static RobotLiftState currentRobotLiftState = RobotLiftState.RAISED;
 
-    public enum MatchState{
+    public static IntakeLiftState currentIntakeLiftState = IntakeLiftState.LOWERED;
+
+    public enum MatchState {
         AUTONOMOUS,
         TELEOP,
         UNKNOWN
@@ -27,12 +29,19 @@ public class RobotState {
         DUMP_POSITION,
         IN_MOTION
     }
+
     public enum MineralGatePosition {
         OPEN,
         CLOSED
     }
 
     public enum RobotLiftState {
+        RAISED,
+        LOWERED,
+        IN_MOTION
+    }
+
+    public enum IntakeLiftState {
         RAISED,
         LOWERED,
         IN_MOTION

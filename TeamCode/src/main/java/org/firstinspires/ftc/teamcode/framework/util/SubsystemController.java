@@ -12,6 +12,8 @@ public abstract class SubsystemController {
 
     public abstract void init();
 
+    public abstract void update();
+
     public abstract void stop();
 
     public void opModeSetup() {

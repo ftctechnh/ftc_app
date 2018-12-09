@@ -3,6 +3,9 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.intake;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
+import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
+import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState.*;
+
 public class IntakeController extends SubsystemController {
 
     private Intake intake;
@@ -11,7 +14,6 @@ public class IntakeController extends SubsystemController {
         init();
     }
 
-    @Override
     public synchronized void init() {
 
         opModeSetup();
@@ -19,36 +21,45 @@ public class IntakeController extends SubsystemController {
         intake = new Intake(hardwareMap);
     }
 
+    public synchronized void update(){
+
+    }
+
+    public synchronized void stop() {
+        intake.stop();
+    }
+
     public synchronized void beginIntaking() {
-        intake.setIntakePower(1);
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
+            intake.setIntakePower(INTAKE_FORWARD_POWER);
     }
 
     public synchronized void finishIntaking() {
-        intake.setIntakePower(-1);
-        AbstractOpMode.delay(1000);
-        intake.setIntakePower(0);
+        //intake.setIntakePower(-1);
+        //AbstractOpMode.delay(1000);
+        intake.setIntakePower(INTAKE_STOP_POWER);
     }
 
     public synchronized void reverseIntake() {
-        intake.setIntakePower(-1);
-    }
-
-    public synchronized void liftIntake() {
-        intake.setLiftServoPosition(0);
-        intake.setIntakePower(0.2);
-        AbstractOpMode.delay(1000);
-        intake.setIntakePower(0);
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
+            intake.setIntakePower(INTAKE_REVERSE_POWER);
     }
 
     public synchronized void lowerIntake() {
-        intake.setLiftServoPosition(-1);
-        intake.setIntakePower(-0.5);
+        currentIntakeLiftState = IntakeLiftState.IN_MOTION;
+        intake.setLiftServoPosition(INTAKE_LIFT_LOWERED_POSITION);
+        intake.setIntakePower(INTAKE_REVERSE_POWER);
         AbstractOpMode.delay(1000);
-        intake.setIntakePower(1);
+        intake.setIntakePower(INTAKE_FORWARD_POWER);
+        currentIntakeLiftState = IntakeLiftState.LOWERED;
     }
 
-    @Override
-    public synchronized void stop() {
-        intake.stop();
+    public synchronized void liftIntake() {
+        currentIntakeLiftState = IntakeLiftState.IN_MOTION;
+        intake.setLiftServoPosition(INTAKE_LIFT_RAISED_POSITION);
+        intake.setIntakePower(INTAKE_LOWER_POWER);
+        AbstractOpMode.delay(1000);
+        intake.setIntakePower(INTAKE_STOP_POWER);
+        currentIntakeLiftState = IntakeLiftState.RAISED;
     }
 }

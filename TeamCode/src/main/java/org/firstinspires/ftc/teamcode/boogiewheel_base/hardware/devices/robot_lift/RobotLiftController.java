@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.robot_lift;
 
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
+
+import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
+import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState.*;
 
 public class RobotLiftController extends SubsystemController {
 
@@ -12,11 +13,18 @@ public class RobotLiftController extends SubsystemController {
         init();
     }
 
-    @Override
     public synchronized void init() {
         opModeSetup();
 
         robotLift = new RobotLift(hardwareMap);
+    }
+
+    public synchronized void update(){
+
+    }
+
+    public synchronized void stop() {
+        robotLift.stop();
     }
 
     public synchronized void robotLiftUp() {
@@ -32,17 +40,12 @@ public class RobotLiftController extends SubsystemController {
     }
 
     public synchronized void raiseLift() {
-        robotLift.setPosition((Constants.ROBOT_LIFT_RAISED_POSITION));
-        RobotState.currentRobotLiftState = RobotState.RobotLiftState.RAISED;
+        robotLift.setPosition((ROBOT_LIFT_RAISED_POSITION));
+        currentRobotLiftState = RobotLiftState.RAISED;
     }
 
     public synchronized void lowerLift() {
-        robotLift.setPosition((Constants.ROBOT_LIFT_LOWERED_POSITION));
-        RobotState.currentRobotLiftState = RobotState.RobotLiftState.LOWERED;
-    }
-
-    @Override
-    public synchronized void stop() {
-        robotLift.stop();
+        robotLift.setPosition((ROBOT_LIFT_LOWERED_POSITION));
+        currentRobotLiftState = RobotLiftState.LOWERED;
     }
 }

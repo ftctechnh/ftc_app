@@ -1,113 +1,33 @@
-package org.firstinspires.ftc.teamcode.boogiewheel_base;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
 
-@TeleOp(name = "OneDriver BoogieWheel Teleop", group = "New")
+@TeleOp(name = "TwoDriver BoogieWheel Teleop Tankdrive", group = "New")
 //@Disabled
 
-public class OneDriverBoogieTeleop extends AbstractTeleop {
+public class TwoDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
     private Robot robot;
 
     @Override
     public void RegisterEvents() {
-        singleGamepad();
-    }
-
-    private void singleGamepad() {
-
-        ////////Drive////////
-        addEventHandler("1_lsy_change", () -> {
-            robot.setDriveY(gamepad1.left_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsx_change", () -> {
-            robot.setDriveZ(gamepad1.right_stick_x);
-            return true;
-        });
-
-        addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
-
-        ////////Intake////////
-        addEventHandler("1_a_down", robot.finishIntakingCallable());
-
-        addEventHandler("1_b_down", robot.beginIntakingCallable());
-
-        addEventHandler("1_x_down", robot.reverseIntakeCallable());
-
-        addEventHandler("1_dpr_down", robot.liftIntakeCallable());
-
-        addEventHandler("1_dpl_down", robot.lowerIntakeCallable());
-
-        ///////Mineral Lift////////
-        addEventHandler("1_rt_down", robot.moveMineralLiftToDumpPositionCallable());
-
-        addEventHandler("1_lt_down", robot.moveMineralLiftToCollectPositionCallable());
-
-        addEventHandler("1_y_down", robot.toggleMineralGateCallable());
-
-        ////////Robot Lift////////
-        addEventHandler("1_dpu_down", robot.robotLiftUpCallable());
-
-        addEventHandler("1_dpd_down", robot.robotLiftDownCallable());
-
-        addEventHandler("1_dpu_up", robot.robotLiftStopCallable());
-
-        addEventHandler("1_dpd_up", robot.robotLiftStopCallable());
-    }
-
-    private void twoGamepads() {
-        ////////////////Gamepad 1////////////////
-        ////////Drive////////
-        addEventHandler("1_lsy_change", () -> {
-            robot.setDriveY(gamepad1.left_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsx_change", () -> {
-            robot.setDriveZ(gamepad1.right_stick_x);
-            return true;
-        });
-
-        ////////Intake////////
-        addEventHandler("1_a_down", robot.finishIntakingCallable());
-
-        addEventHandler("1_b_down", robot.beginIntakingCallable());
-
-        addEventHandler("1_x_down", robot.reverseIntakeCallable());
-
-        ////////////////Gamepad 2////////////////
-        ///////Mineral Lift////////
-        addEventHandler("2_rt_down", robot.moveMineralLiftToDumpPositionCallable());
-
-        addEventHandler("2_lt_down", robot.moveMineralLiftToCollectPositionCallable());
-
-        addEventHandler("2_x_down", robot.toggleMineralGateCallable());
-
-        ////////Robot Lift////////
-        addEventHandler("2_dpu_down", robot.robotLiftUpCallable());
-
-        addEventHandler("2_dpd_down", robot.robotLiftDownCallable());
-
-        addEventHandler("2_dpu_up", robot.robotLiftStopCallable());
-
-        addEventHandler("2_dpd_up", robot.robotLiftStopCallable());
+        twoDrivers();
     }
 
     private void twoDrivers() {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
+        //THIS CODE HAS BEEN MODIFIED FOR TANKDRIVE
         addEventHandler("1_lsy_change", () -> {
-            robot.setDriveY(gamepad1.left_stick_y);
+            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
             return true;
         });
 
         addEventHandler("1_rsx_change", () -> {
-            robot.setDriveZ(gamepad1.right_stick_x);
+            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
             return true;
         });
 
@@ -167,13 +87,13 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
         ////////////////Gamepad 2////////////////
         ////////Drive////////
         addEventHandler("2_lsy_change", () -> {
-            robot.setDriveY(-gamepad1.left_stick_y);
+            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
             return true;
         });
         pauseEvent("2_lsy_change");
 
         addEventHandler("2_rsx_change", () -> {
-            robot.setDriveZ(gamepad1.right_stick_x);
+            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
             return true;
         });
         pauseEvent("2_rsx_change");
@@ -241,7 +161,7 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
     @Override
     public void Loop() {
         robot.updateAll();
-        robot.driveUpdate();//updates Y and Z
+        telemetry.update();
     }
 
     @Override

@@ -18,19 +18,18 @@ public class Intake {
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
 
         intakeMotor.setSlewSpeed(2);
-        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         intakeMotor.setPower(0);
 
         liftServo = hardwareMap.servo.get("intake_lift");
-        liftServo.setDirection(Servo.Direction.FORWARD);
+        liftServo.setDirection(Servo.Direction.REVERSE);
         liftServo.setPosition(1);
     }
 
     public void setLiftServoPosition(double position) {
         liftServo.setPosition(position);
-
     }
 
     public void setIntakePower(double power) {

@@ -1,13 +1,17 @@
 package org.firstinspires.ftc.teamcode.framework.opModes;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
+import org.firstinspires.ftc.teamcode.framework.util.StateConfigurationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public abstract class AbstractAuton extends AbstractOpMode {
 
@@ -22,37 +26,63 @@ public abstract class AbstractAuton extends AbstractOpMode {
     @Override
     public void runOpMode() {
 
+        RobotState.currentMatchState = RobotState.MatchState.AUTONOMOUS;
+
         ExecutorService service = Executors.newSingleThreadExecutor();
 
-        Thread InitThread = new Thread(new initThread());
-        Thread InitLoopThread = new Thread(new initLoopThread());
-        Thread RunThread = new Thread(new runThread());
+        Callable<Boolean> InitThread = () -> {
+            try {
+                Init();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
+        Callable<Boolean> InitLoopThread = () -> {
+            try {
+                InitLoop();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
+        Callable<Boolean> RunThread = () -> {
+            try {
+                Run();
+            } catch (Exception e) {
+                throwException(e);
+            }
+            return true;
+        };
 
-        threadRunning = true;
-        service.execute(InitThread);
+        Future<Boolean> CurrentFuture;
+
+        checkException();
+
+        //calls user init
+        CurrentFuture = service.submit(InitThread);
+
+        int initLoops = 0;
 
         while (!isStopRequested() && !isStarted()) {
             checkException();
-            if (!threadRunning) {
-                threadRunning = true;
-                service.execute(InitLoopThread);
+
+            if (CurrentFuture.isDone()) {
+                initLoops++;
+                CurrentFuture = service.submit(InitLoopThread);
             }
         }
 
-        while (!isStopRequested() && opModeIsActive() && threadRunning) ;
+        while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 
-        threadRunning = true;
-        if (!isStopRequested() && opModeIsActive()) service.execute(RunThread);
+        if(!isStopRequested()) CurrentFuture = service.submit(RunThread);
 
-        while (!isStopRequested() && opModeIsActive() && threadRunning) {
-            checkException();
-        }
+        while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 
-        //AbstractOpMode.stopRequested();
+        AbstractOpMode.stopRequested();
 
-        if ((isStopRequested() || !opModeIsActive()) && threadRunning) {
-            service.shutdownNow();
-        }
+        //TODO remake our shutdown procedure
+        CurrentFuture.cancel(true);
 
         while (!service.isTerminated()) {
             service.shutdownNow();
@@ -60,6 +90,7 @@ public abstract class AbstractAuton extends AbstractOpMode {
         }
 
         Stop();
+        telemetry.stop();
     }
 
     public abstract void Init();
@@ -129,40 +160,6 @@ public abstract class AbstractAuton extends AbstractOpMode {
                     AbstractOpMode.delay(2000);
                 }
             }
-        }
-    }
-
-    class initThread implements Runnable {
-        public void run() {
-            try {
-                Init();
-            } catch (Exception e) {
-                throwException(e);
-            }
-            threadRunning = false;
-        }
-    }
-
-    class initLoopThread implements Runnable {
-        public void run() {
-            try {
-                InitLoop();
-            } catch (Exception e) {
-                throwException(e);
-            }
-
-            threadRunning = false;
-        }
-    }
-
-    class runThread implements Runnable {
-        public void run() {
-            try {
-                Run();
-            } catch (Exception e) {
-                throwException(e);
-            }
-            threadRunning = false;
         }
     }
 }

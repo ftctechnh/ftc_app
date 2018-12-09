@@ -21,8 +21,8 @@ public class Drive {
         leftMotor.setDirection(DcMotor.Direction.FORWARD);
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        leftMotor.setSlewSpeed(0.2);
-        rightMotor.setSlewSpeed(0.2);
+        leftMotor.setSlewSpeed(1);
+        rightMotor.setSlewSpeed(1);
 
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE); //can be.FLOAT if required
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

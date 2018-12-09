@@ -132,6 +132,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
         }
 
         Stop();
+        telemetry.stop();
     }
 
     public abstract void RegisterEvents();

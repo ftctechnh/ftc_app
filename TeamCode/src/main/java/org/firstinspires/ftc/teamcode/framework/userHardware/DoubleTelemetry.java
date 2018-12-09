@@ -7,6 +7,7 @@ import org.upacreekrobotics.dashboard.Dashboard.dashboardtelemetry;
 public class DoubleTelemetry {
 
     private LogMode loggingMode = LogMode.INFO;
+    private LogMode defaultLogMode = LogMode.TRACE;
 
     private Telemetry telemetry;
     private dashboardtelemetry dashtelem;
@@ -22,20 +23,24 @@ public class DoubleTelemetry {
         this.loggingMode = mode;
     }
 
+    public void setDefaultLogMode(LogMode mode) {
+        defaultLogMode = mode;
+    }
+
     public void addData(Object caption, Object data) {
-        addData(LogMode.INFO, caption, data);
+        addData(defaultLogMode, caption, data);
     }
 
     public void addData(Object data) {
-        addData(LogMode.INFO, data);
+        addData(defaultLogMode, data);
     }
 
     public void addDataDB(Object data) {
-        addDataDB(LogMode.INFO, data);
+        addDataDB(defaultLogMode, data);
     }
 
     public void addDataPhone(Object data) {
-        addDataPhone(LogMode.INFO, data);
+        addDataPhone(defaultLogMode, data);
     }
 
     public void addData(LogMode mode, Object caption, Object data) {
@@ -49,7 +54,7 @@ public class DoubleTelemetry {
 
     public void addData(LogMode mode, Object data) {
         if (loggingMode.shouldLog(mode)) {
-            telemetry.addData("", String.valueOf(data));
+            telemetry.addLine(String.valueOf(data));
             dashtelem.write(String.valueOf(data));
             dashtelem.info(String.valueOf(data));
         }
@@ -63,7 +68,7 @@ public class DoubleTelemetry {
 
     public void addDataPhone(LogMode mode, Object data) {
         if (loggingMode.shouldLog(mode)) {
-            telemetry.addData("", String.valueOf(data));
+            telemetry.addLine(String.valueOf(data));
             dashtelem.info(String.valueOf(data));
         }
     }
@@ -81,10 +86,15 @@ public class DoubleTelemetry {
         logger.log(String.valueOf(data));
     }
 
+    public void stop(){
+        logger.stop();
+    }
+
     public enum LogMode {
-        INFO(0),
-        DEBUG(1),
-        ERROR(2);
+        TRACE(0),
+        INFO(1),
+        DEBUG(2),
+        ERROR(3);
 
         private int level;
 

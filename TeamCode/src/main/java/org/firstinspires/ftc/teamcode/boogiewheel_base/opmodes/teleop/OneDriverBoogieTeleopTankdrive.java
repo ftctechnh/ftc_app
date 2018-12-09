@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.boogiewheel_base;
+package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -248,6 +248,7 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
     public void Loop() {
         robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         robot.updateAll();
+        telemetry.update();
     }
 
     @Override
