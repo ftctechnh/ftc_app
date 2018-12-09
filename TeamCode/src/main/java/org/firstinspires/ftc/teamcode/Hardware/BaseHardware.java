@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Quaternion;
 import org.firstinspires.ftc.teamcode.Utilities.Logging.LogQueue;
 import org.firstinspires.ftc.teamcode.Utilities.Startup.Alliance;
 
@@ -161,6 +162,13 @@ public class BaseHardware {
 
     public void updateReadings() {
         angles = primaryIMU.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
+    }
+
+    public double getHeading() {
+        Quaternion q = primaryIMU.getQuaternionOrientation();
+        // The atan2 returns the half-angle, so double it and convert to degrees.
+        double angle = -Math.atan2(q.z,q.w) * 2; // The atan gives us the half-angle.
+        return normAngle(angle);
     }
 
     /**
