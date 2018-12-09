@@ -16,7 +16,7 @@ import java.util.Arrays;
 @Config
 public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
-    public static double MAX_EXTEND_POWER = 0.8;
+    public static double MAX_EXTEND_POWER = 1.0;
 
     public ControlMapping controller;
     public boolean fieldCentric;
