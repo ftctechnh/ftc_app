@@ -264,7 +264,7 @@ public class CompRobot extends BasicBot
         climberMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         climberMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         climberMotor.setPower(-1);
-        while (climberMotor.getCurrentPosition() > -15000)
+        while (climberMotor.getCurrentPosition() > -15000 && !linearOpMode.isStopRequested())
         {
 
         }
@@ -276,7 +276,7 @@ public class CompRobot extends BasicBot
         climberMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         climberMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
         climberMotor.setPower(1);
-        while (climberMotor.getCurrentPosition() < 15000)
+        while (climberMotor.getCurrentPosition() < 15000 && !linearOpMode.isStopRequested())
         {
 
         }
