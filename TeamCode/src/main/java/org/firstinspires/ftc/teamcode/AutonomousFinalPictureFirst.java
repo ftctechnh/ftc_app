@@ -73,7 +73,8 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         telemetry.update();
         compRobot.driveStraight(-35, .5f);
         compRobot.pivotenc(-215, .8f);
-        compRobot.driveStraight(60, .8f);
+        compRobot.hugWall(6 + rightSensorDepth, 9 + rightSensorDepth, 38, false, 60);
+        //compRobot.driveStraight(60, .8f);
         compRobot.stopDriveMotors();
     }
 }

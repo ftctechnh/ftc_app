@@ -134,22 +134,24 @@ public class CompRobot extends BasicBot
 
         DistanceSensor usingDistSensor = frontDistSens;
 
-
         if (isGoingForward)
         {
-            while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested()) {
+            while (!linearOpMode.isStopRequested())
+            {
                 straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
-                if (straightDist < distAwayFromFrontWall - Math.abs(stepDistance)) {
-                    super.stopDriveMotors();
-                    break;
-                } else {
-                    linearOpMode.telemetry.addData("Going forward 11", null);
-                    driveStraight(stepDistance, .8f);
-                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                if (straightDist <= distAwayFromFrontWall)
+                {
+                     break;
                 }
+                linearOpMode.telemetry.addData("Going forward 8", null);
+                driveStraight(3, .8f);
+                linearOpMode.telemetry.update();
+                linearOpMode.sleep(5000);
+                straightDistanceTraveled = straightDistanceTraveled + 3;
                 linearOpMode.telemetry.addData("front Dist: ", straightDist);
 
-                if (straightDist > distAwayFromFrontWall) {
+                if (straightDist > distAwayFromFrontWall)
+                {
                     rightDist = getRightDistance_IN();
 
                     linearOpMode.telemetry.addData("front Dist>18", null);
@@ -172,17 +174,19 @@ public class CompRobot extends BasicBot
                         straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                     }
                     linearOpMode.telemetry.update();
-                    if (straightDistanceTraveled >= maximumDistance) {
-                        stopDriveMotors();
+                    if (straightDistanceTraveled >= maximumDistance)
+                    {
+                        break;
                     }
                 }
             }
         }
         else
         {
-            while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested()) {
+            while(true);
+            /*while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested()) {
                 straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
-                if (straightDist < distAwayFromFrontWall - Math.abs(stepDistance)) {
+                if (straightDist < distAwayFromFrontWall + Math.abs(stepDistance)) {
                     super.stopDriveMotors();
                     break;
                 } else {
@@ -215,10 +219,10 @@ public class CompRobot extends BasicBot
                     }
                     linearOpMode.telemetry.update();
                     if (straightDistanceTraveled >= maximumDistance) {
-                        stopDriveMotors();
+                        break;
                     }
                 }
-            }
+            }*/
         }           // if (!isGoingForward)
 
     }
