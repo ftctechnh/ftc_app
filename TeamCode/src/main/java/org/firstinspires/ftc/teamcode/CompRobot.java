@@ -258,6 +258,30 @@ public class CompRobot extends BasicBot
 
         initCRServoAndServoPos();
     }
+
+    public void  climbDown()
+    {
+        climberMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        climberMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        climberMotor.setPower(-1);
+        while (climberMotor.getCurrentPosition() > -15000)
+        {
+
+        }
+        climberMotor.setPower(0);
+    }
+
+    public void climbUp()
+    {
+        climberMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
+        climberMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
+        climberMotor.setPower(1);
+        while (climberMotor.getCurrentPosition() < 15000)
+        {
+
+        }
+        climberMotor.setPower(0);
+    }
     public void setGrabberWheelPower(double pow)
     {
         rightGrabCRServo.setPower(pow);

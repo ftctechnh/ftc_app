@@ -15,7 +15,11 @@ public class AutonomousFinalDepot extends LinearOpMode
     {
         compRobot = new CompRobot(hardwareMap, this);
         waitForStart();
-        compRobot.driveStraight(36, 1);
+        compRobot.climbDown();
+        sleep(2000);
+        compRobot.driveStraight(10, .5f);
+
+        compRobot.driveStraight(30, 1);
         sleep(500);
         while (compRobot.getFrontDistSens().getDistance(DistanceUnit.INCH) > 28 && compRobot.getFrontRightDistSens().getDistance(DistanceUnit.INCH) > 28)
         {
@@ -23,6 +27,7 @@ public class AutonomousFinalDepot extends LinearOpMode
         }
         compRobot.stopDriveMotors();
         compRobot.deployMarker();
+        compRobot.driveStraight(-6,1);
         compRobot.pivotenc(-150, .5f);
 
         compRobot.hugWall(4,7, 18, false, 84);
