@@ -99,12 +99,10 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
     public void turnToPos(double pos, int forcedDir) {
         double difference = Double.MAX_VALUE;
-        robot.setDriveMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         while (Math.abs(difference) > ACCEPTABLE_HEADING_VARIATION && opModeIsActive()) {
-            robot.updateReadings();
-
-            difference = robot.getSignedAngleDifference(robot.normAngle(pos), robot.getGyroHeading());
+            double heading = robot.getHeading();
+            difference = robot.getSignedAngleDifference(pos, heading);
 
             double turnSpeed = Math.max(-TURN_MAX_SPEED, Math.min(TURN_MAX_SPEED, difference));
             turnSpeed = Math.copySign(Math.max(0.05, Math.abs(turnSpeed)), turnSpeed);
@@ -124,10 +122,12 @@ public abstract class AutoUtils extends VuforiaCVUtil {
                     unscaledMotorPowers[i] = turnSpeed;
                 }
             }
+            telemetry.addData("Difference", difference);
+            telemetry.addData("Heading", heading);
+            telemetry.addData("Turn speed", turnSpeed);
             telemetry.update();
 
-            //robot.setMotorSpeeds(unscaledMotorPowers);
-            stopMoving();
+            robot.setMotorSpeeds(unscaledMotorPowers);
         }
         stopMoving();
     }
