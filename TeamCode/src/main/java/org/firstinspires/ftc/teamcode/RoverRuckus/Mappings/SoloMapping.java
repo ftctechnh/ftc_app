@@ -81,11 +81,7 @@ public class SoloMapping extends ControlMapping {
         } else if (!gamepad1.b && b_down) {
             b_down = false;
         }
-        if (gamepad1.right_trigger > 0.15) {
-            return gamepad1.right_trigger * -INTAKE_SLOW_SPEED;
-        } else {
-            return spinDir * INTAKE_SPEED;
-        }
+        return spinDir * INTAKE_SPEED;
     }
 
     @Override
