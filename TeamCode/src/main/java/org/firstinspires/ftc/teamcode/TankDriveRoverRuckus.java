@@ -40,7 +40,7 @@ public class TankDriveRoverRuckus extends LinearOpMode {
         boolean x = true;
         double loffset = 0;
         double roffset = 0;
-        double prevtime=0;
+        double prevtime= 0;
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             Left.setPower(Range.clip(gamepad1.left_stick_y, -1, 1));
@@ -74,7 +74,7 @@ public class TankDriveRoverRuckus extends LinearOpMode {
             Winch.setPower(Range.clip(gamepad1.right_trigger-gamepad1.left_trigger,-1,1));
             //Sideways- front wheel, push both sticks to control
             // both gamepads are inversed, so need to minus
-            Sideways.setPower(Range.clip(gamepad1.right_stick_y-gamepad1.left_stick_y,-1,1));
+            Sideways.setPower(Range.clip(-gamepad1.right_stick_y+gamepad1.left_stick_y,-1,1));
             prevtime = getRuntime();
             //telemetry.addData("bools",liftmode+" "+a);
             //telemetry.addData("lift pos", Lift.getCurrentPosition());
