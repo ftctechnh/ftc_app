@@ -28,12 +28,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         robot.winch.setTargetPosition(0);
     }
 
-    public enum DetachMethod {
-        STRAFE,
-        TURN
-    }
-
-    public void unhookFromLander(SampleMecanumDriveREV drive, SparkyTheRobot robot, DetachMethod method) {
+    public void unhookFromLander(SampleMecanumDriveREV drive, SparkyTheRobot robot, double finalHeading) {
 
         // Lower robot in two phases
         // In the first phase, we will lower the robot "manually"
@@ -55,27 +50,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         robot.winch.setPower(0);
 
         robot.updateReadings();
-        if (method == DetachMethod.STRAFE) {
-            followPath(drive, Paths.UNHOOK);
-        } else if (method == DetachMethod.TURN) {
-            // Flip around, making sure we turn the correct direction
-            turnToPos(robot.normAngle(Math.PI + robot.getGyroHeading()), -1);
-        }
-
-        // Now, lower the hang arm
-
-        if (method == DetachMethod.STRAFE) {
-            // Sleep a little bit to let things move
-            // a little
-            robot.intake.collect();
-
-            robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.winch.setPower(1);
-            robot.winch.setTargetPosition(-1500);
-
-            sleep(2500);
-            followPath(drive, Paths.UNDO_UNHOOK);
-        }
+        turnToPos(finalHeading, -1);
     }
 
     public void refoldMechanisms() {

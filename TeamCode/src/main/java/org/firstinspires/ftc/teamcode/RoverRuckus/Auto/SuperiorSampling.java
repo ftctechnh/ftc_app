@@ -58,19 +58,20 @@ public abstract class SuperiorSampling extends AutoUtils {
         }
 
         // Use appropriate method for dehooking
-        /*if (startingPosition == StartingPosition.DEPOT) {
-            unhookFromLander(drive, robot, DetachMethod.STRAFE);
+        double[] possibleHeadings = {Math.PI / 2, Math.PI * 3 / 4, Math.PI};
+        if (startingPosition == StartingPosition.DEPOT) {
+            unhookFromLander(drive, robot, possibleHeadings[goldLoc.index]);
         } else {
-            unhookFromLander(drive, robot, DetachMethod.TURN);
-        }*/
+            unhookFromLander(drive, robot, Math.PI * 3 / 4);
+        }
 
         robot.cameraPositioner.flipDown();
-
-        if (startingPosition == StartingPosition.DEPOT) {
-            //switchAppendagePositions();
-            followPath(drive, Paths.DEPO_SAME_SELECTOR[goldLoc.index]);
-        } else {
-            try {
+        try {
+            if (startingPosition == StartingPosition.DEPOT) {
+                //switchAppendagePositions();
+                followPath(drive, AssetsTrajectoryLoader.load("Depo" + goldLoc.fileName + "Sel"));
+                turnToPos(0);
+            } else {
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Sel"));
                 followPath(drive, AssetsTrajectoryLoader.load("CraterBackup"));
                 //switchAppendagePositions();
@@ -84,9 +85,9 @@ public abstract class SuperiorSampling extends AutoUtils {
                     turnToPos(0);
                 }
                 followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         // Initialize with it facing the depo along whichever wall it should strafe
