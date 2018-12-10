@@ -47,11 +47,13 @@ public abstract class SuperiorSampling extends AutoUtils {
         telemetry.update();
 
         GoldPosition goldLoc = waitAndWatchMinerals();
+        if (isStopRequested()) return;
+
         if (position == 0) {
             goldLoc = GoldPosition.LEFT;
         } else if (position == 1) {
             goldLoc = GoldPosition.CENTER;
-        } else {
+        } else if (position == 2) {
             goldLoc = GoldPosition.RIGHT;
         }
 
@@ -75,11 +77,11 @@ public abstract class SuperiorSampling extends AutoUtils {
                 turnToPos(Math.PI/4);
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Dir"));
                 if (goldLoc == GoldPosition.LEFT) {
-                    turnToPos(0);
+                    turnToPos(3 * Math.PI / 2);
                 } else if (goldLoc == GoldPosition.CENTER) {
-                    turnToPos(Math.PI / 4);
+                    turnToPos(5 * Math.PI / 4);
                 } else {
-
+                    turnToPos(0);
                 }
                 followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));
             } catch (IOException e) {
