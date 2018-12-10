@@ -14,7 +14,7 @@ import java.io.IOException;
 public abstract class SuperiorSampling extends AutoUtils {
 
     public EndGoal goal;
-    public static int position;
+    public static int position = -1;
 
     public void switchAppendagePositions() {
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -38,7 +38,7 @@ public abstract class SuperiorSampling extends AutoUtils {
         robot.calibrate(true);
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
         initVuforia();
-        //setWinchHoldPosition();
+        setWinchHoldPosition();
 
         // Display telemetry feedback
         telemetry.log().add("Running sophisticated sampling op-mode");
@@ -68,37 +68,37 @@ public abstract class SuperiorSampling extends AutoUtils {
         robot.cameraPositioner.flipDown();
         try {
             if (startingPosition == StartingPosition.DEPOT) {
-                //switchAppendagePositions();
+                switchAppendagePositions();
                 followPath(drive, AssetsTrajectoryLoader.load("Depo" + goldLoc.fileName + "Sel"));
                 turnToPos(0);
+                followPath(drive, Paths.STRAFE_LEFT);
+                followPath(drive, Paths.DEPOT_TO_OTHER_CRATER);
             } else {
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Sel"));
                 followPath(drive, AssetsTrajectoryLoader.load("CraterBackup"));
-                //switchAppendagePositions();
+                switchAppendagePositions();
                 turnToPos(Math.PI/4);
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Dir"));
-                if (goldLoc == GoldPosition.LEFT) {
-                    turnToPos(3 * Math.PI / 2);
-                } else if (goldLoc == GoldPosition.CENTER) {
-                    turnToPos(5 * Math.PI / 4);
+
+                if (goal == EndGoal.BLUE_DOUBLE_SAMPLE) {
+                    if (goldLoc == GoldPosition.LEFT) {
+                        turnToPos(3 * Math.PI / 2);
+                    } else if (goldLoc == GoldPosition.CENTER) {
+                        turnToPos(5 * Math.PI / 4);
+                    } else {
+                        turnToPos(0);
+                    }
+                    followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));
                 } else {
                     turnToPos(0);
+                    followPath(drive, Paths.STRAFE_RIGHT);
+                    followPath(drive, Paths.DEPOT_TO_SAME_CRATER);
                 }
-                followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));
             }
         } catch (IOException e) {
+            // TODO retry load
             e.printStackTrace();
         }
 
-        // Initialize with it facing the depo along whichever wall it should strafe
-
-        // Strafe to wall
-
-        /*if (goal == EndGoal.RED_CRATER) {
-            followPath(drive, Paths.STRAFE_LEFT);
-        } else {
-            followPath(drive, Paths.STRAFE_RIGHT);
-        }
-        followPath(drive, Paths.FORWARD_RIGHT);*/
     }
 }
