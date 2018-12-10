@@ -55,15 +55,15 @@ public abstract class DescendFromLander extends StandardChassis {
 
             descendFromLander();
 
-           /* encoderDrive(42, 42);
+            encoderDrive(52, 52);
 
             dropFlag();
             sleep(3000);
-            angleHand = 0.75;
-            flagHolder.setPosition(angleHand);
+            resetFlag();
 
-            turnRight(118);
-            encoderDrive(90, 90);*/
+            turnRight(125);
+            encoderDrive(90, 90);
+
 
             madeTheRun = true;
         }

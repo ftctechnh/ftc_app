@@ -10,9 +10,10 @@ public class ChassisConfig {
     private boolean leftMotorsReversed;
     private boolean rightMotorsReversed;
     private boolean hasWalle;
+    private boolean teamMarkersReversed;
 
     protected ChassisConfig(float rearDiameter, boolean useFourWheelDrive, float rearWheelSpeed,
-                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle) {
+                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle, boolean teamMarkersReversed) {
         this.rearDiameter = rearDiameter;
         this.useFourWheelDrive = useFourWheelDrive;
         this.rearWheelSpeed = rearWheelSpeed;
@@ -21,6 +22,7 @@ public class ChassisConfig {
         this.leftMotorsReversed = leftMotorsReversed;
         this.rightMotorsReversed = rightMotorsReversed;
         this.hasWalle = hasWalle;
+        this.teamMarkersReversed = teamMarkersReversed;
     }
 
     public float getRearWheelDiameter() {
@@ -37,6 +39,7 @@ public class ChassisConfig {
     public boolean isLeftMotorReversed() { return leftMotorsReversed; }
     public boolean isRightMotorReversed() { return rightMotorsReversed; }
     public boolean getHasWalle() {return hasWalle; }
+    public boolean isTeamMarkerReversed() { return teamMarkersReversed; }
 
 
     // https://www.wikihow.com/Determine-Gear-Ratio
@@ -59,6 +62,7 @@ public class ChassisConfig {
                 0.5f,
                 true,
                 false,
+                false,
                 false);
     }
 
@@ -69,8 +73,9 @@ public class ChassisConfig {
                 true,
                 COUNTS_PER_MOTOR_REV_HDHEX_20 * QUICK_SILVER_CHAIN_GEAR,
                 0.5f,
-                0.75f,
+                0.5f,
                 false,
+                true,
                 true,
                 true);
     }
@@ -83,6 +88,7 @@ public class ChassisConfig {
                 0.3f,
                 0.8f,
                 true,
+                false,
                 false,
                 false);
     }
