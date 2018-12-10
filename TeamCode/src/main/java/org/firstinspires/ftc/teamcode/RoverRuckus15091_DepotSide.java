@@ -33,12 +33,16 @@ import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.Locale;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -67,17 +71,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Rover Ruckus (Crater)", group = "Pushbot")
+@Autonomous(name = "Rover Ruckus", group = "Pushbot")
 //@Disabled
-public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
+public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
+
     @Override
     public void runOpMode() {
+
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
+        initDetector(480d, 120d);
         robot.init(hardwareMap);
-        initDetector(360d, 90d);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Status", "Resetting Encoders");    //
@@ -140,28 +146,35 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -12d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -20d, 180);
+                    gyroDrive(DRIVE_SPEED, -28d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -13d, 180d);
+                    gyroTurn(TURN_SPEED, 145d);
+                    gyroDrive(DRIVE_SPEED, -31d, 145d);
                     break;
                 case 2:
                     gyroDrive(DRIVE_SPEED, -10d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -8d, 180);
+                    gyroDrive(DRIVE_SPEED, -37d, 180d);
+                    gyroTurn(TURN_SPEED, 155d);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -16d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -11d, 180);
+                    gyroDrive(DRIVE_SPEED, -21d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -44d, -150d);
+                    gyroTurn(TURN_SPEED, 160d);
                     break;
             }
 
-            gyroTurn(DRIVE_SPEED,180);
-            gyroDrive(DRIVE_SPEED, -6d, 180);
-
+            robot.markerServo.setPosition(0d);
+            sleep(400L);
             detector.disable();
+
+            /*gyroTurn(TURN_SPEED, 90d);
+            gyroDrive(DRIVE_SPEED, -4, 90d);
+            gyroTurn(TURN_SPEED, 50d);
+            gyroDrive(DRIVE_SPEED, -24d, 50d);
+            gyroDrive(DRIVE_SPEED, -24d, 45d);*/
 
             telemetry.addData("Path", "Complete");
             telemetry.update();
         }
-
-
     }
 }
