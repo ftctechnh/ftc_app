@@ -1,24 +1,37 @@
 package org.firstinspires.ftc.teamcode;
 
+
+
+//import com.qualcomm.ftcrobotcontroller.CameraPreview;
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import java.io.ByteArrayOutputStream;
+import java.util.concurrent.atomic.AtomicReference;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
+import android.hardware.Camera;
+import android.util.Log;
+import android.widget.FrameLayout;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcontroller.internal.CameraPreview;
+import org.firstinspires.ftc.robotcore.external.Consumer;
 
 
 /**
  *
  */
-@TeleOp(name="QuickSilverController", group="MonsieurMallah")
-public class QuickSilverController extends OpMode {
+@TeleOp(name="CameraRover", group="MonsieurMallah")
+public class CameraRover extends OpMode implements Consumer<CameraPreview> {
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
@@ -35,22 +48,43 @@ public class QuickSilverController extends OpMode {
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
     private DcMotor extender;
-    private DcMotor tacVac;
+    //private DcMotor tacVac;
     private DcMotor shoulder;
-    private DcMotor lifter;
 
-    private int extenderStartPostion = 0;
+   // Servos on the arm.
+    private Servo rightGate;
+    private Servo leftGate;
+
+    // Camera Stuff
+    public Camera camera;
+    public CameraPreview preview;
+    public Bitmap image;
+    private Object imageLock = new Object();
+    private int width;
+    private int height;
+    private YuvImage yuvImage;
+    private int looped;
+    private String data;
 
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
-    private boolean useArm = true;
-    private boolean useLifter = true;
+    private boolean useArm = false;
+    private boolean useCamera = true;
+    private boolean hackTimeouts = true;
 
-    //Movement State
-     int armState;
-    int extenderTarget;
-    int shoulderTarget;
+    // Preview callback lambda
+    private Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
+        public void onPreviewFrame(byte[] data, Camera camera)
+        {
+            Camera.Parameters parameters = camera.getParameters();
+                width = parameters.getPreviewSize().width;
+                height = parameters.getPreviewSize().height;
+                yuvImage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+                looped += 1;
+        }
+    };
+
 
     /**
      * Code to run ONCE when the driver hits INITh6
@@ -58,18 +92,12 @@ public class QuickSilverController extends OpMode {
     @Override
     public void init() {
 
-        //Init Movement state
-        armState = 0;
-        extenderTarget = 0;
-        shoulderTarget = 0;
-
         // Initialize the motors.
         if (useMotors) {
             motorBackLeft = hardwareMap.get(DcMotor.class, "motor0");
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
             motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
             motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
-
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -93,17 +121,42 @@ public class QuickSilverController extends OpMode {
 
         if (useArm) {
             shoulder = hardwareMap.get(DcMotor.class, "motor4");
-            tacVac = hardwareMap.get(DcMotor.class, "motor7");
             extender = hardwareMap.get(DcMotor.class, "motor5");
-            extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        if (useLifter) {
-            lifter = hardwareMap.get(DcMotor.class, "motor6");
+        if (useCamera) {
+            camera_init();
+        }
+
+        if (hackTimeouts) {
+            this.msStuckDetectInit = 30000;
+            this.msStuckDetectInitLoop = 30000;
+            this.msStuckDetectStart = 30000;
+            this.msStuckDetectLoop = 30000;
+            this.msStuckDetectStop = 30000;
         }
     }
 
+
+    /*
+     * Code to run when the op mode is first enabled goes here
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
+     */
+    private void camera_init() {
+        camera = ((FtcRobotControllerActivity)hardwareMap.appContext).camera;
+        camera.setPreviewCallback(previewCallback);
+
+        Camera.Parameters parameters = camera.getParameters();
+        data = parameters.flatten();
+
+        // Build a little window on the app to display the image.
+        ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
+    }
+
+    @Override
+    public void accept(CameraPreview p) {
+        this.preview = p;
+    }
 
     /**
      * Code to run REPEATEDLY after the driver hits INIT, but before they hit PLAY
@@ -133,7 +186,6 @@ public class QuickSilverController extends OpMode {
     @Override
     public void loop() {
 
-
         if (useMotors) {
             // Control the wheel motors.
             // POV Mode uses left stick to go forward, and right stick to turn.
@@ -158,6 +210,8 @@ public class QuickSilverController extends OpMode {
             double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
 
             boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
+
+
             if (halfSpeed) {
                 motorBackLeft.setPower(halfLeftBackPower);
                 motorBackRight.setPower(halfRightBackPower);
@@ -169,122 +223,107 @@ public class QuickSilverController extends OpMode {
                 motorFrontLeft.setPower(leftFrontPower);
                 motorFrontRight.setPower(rightFrontPower);
             }
-
         }
 
         if (useArm) {
-            float pullUp = gamepad1.right_stick_y;
-            float pullOut = -gamepad1.right_stick_y;
+            boolean pullUp = gamepad1.dpad_down;
+            boolean pullOut = gamepad1.dpad_up;
             double pullPower = 0.0;
-            if ((pullUp > 0.0) && (pullOut == 0.0)) {
-                pullPower = -1.0;
-            } else if ((pullOut > 0.0) && (pullUp == 0.0)) {
+            if (pullUp) {
                 pullPower = 1.0;
+            } else if (pullOut) {
+                pullPower = -1.0;
             }
             shoulder.setPower(pullPower);
 
-            // Control the extender: MANUAL CONTROL
+            // Control the extender.
             boolean extendOut = gamepad1.y;
             boolean extendIn = gamepad1.a;
-            double extendManualPower = 0.0;
+            double extendPower = 0.0;
             if (extendOut) {
-                extendManualPower = -0.5;
+                extendPower = 1.0;
+            } else if (extendIn) {
+                extendPower = -1.0;
             }
-            if (extendIn) {
-                extendManualPower = 0.5;
-            }
-            if (extendManualPower != 0.0 || armState == 0) {
-                extender.setPower(extendManualPower);
-                armState = 0;
-            }
-
-            boolean extendAllIn = gamepad1.x;
-            boolean extendAllOut = gamepad1.b;
-            if (extendAllOut) {
-                startArmMoving(extenderStartPostion + 4500,0);
-            }
-            else if (extendAllIn) {
-                startArmMoving(0,0);
-            }
-
-            boolean extendCalibrate = gamepad1.dpad_right;
-            if (extendCalibrate) {
-                extenderStartPostion = extender.getCurrentPosition();
-            }
-
-            // Control the tacVac.
-            float suckIn = gamepad1.right_trigger;
-            float suckOut = gamepad1.left_trigger;
-            double suckPower = 0.0;
-            if ((suckOut > 0.0) && (suckIn == 0.0)) {
-                suckPower = -1.0;
-            } else if ((suckOut > 0.0) && (suckIn == 0.0)) {
-                suckPower = 1.0;
-            }
-            tacVac.setPower(suckPower);
-
-
-           // Setting certain postions for arm & extender
-           // boolean jewelPickUp = gamepad2.a;
-           // boolean moving = gamepad2.b;
-            //boolean deposit = gamepad2.x;
-           /* if (jewelPickUp){
-                startArmMoving(-3127, 16714);
-            }else if (moving){
-                startArmMoving(-2691, 9103);
-            }else if (deposit){
-                startArmMoving(3185, -8695);
-            } */
+            extender.setPower(extendPower);
         }
 
-        //Time to Move!
-
-       if(armState == 1 && !extender.isBusy()){
-            armState = 0;
-            extenderTarget = 0;
-            telemetry.addLine("Position Moved!");
-            extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            extender.setPower(0);
-
-            /*armState = 2;
-            shoulder.setTargetPosition(shoulderTarget);
-            shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            shoulder.setPower(0.75); */
-        }
-
-        /*if(armState == 2 && !shoulder.isBusy()){
-            armState = 0;
-            telemetry.addLine("Position Moved!");
-        } */
-
-        telemetry.addData("Extender", "start: %d, curr: %d, target: %d, armState: %d",
-                extenderStartPostion, extender.getCurrentPosition(), extenderTarget, armState);
-        telemetry.addData("Lifter", "curr: %d",
-                lifter.getCurrentPosition());
-    }
-
-    protected void startArmMoving(int eTarget, int sTarget){
-        // Get the current position.
-        int extenderStart = extender.getCurrentPosition();
-        telemetry.addData("StartingPos.", "Starting %7d", extenderStart);
-
-        // Turn On RUN_TO_POSITION
-        extender.setTargetPosition(eTarget);
-        extender.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        extender.setPower(0.75);
-
-        //Set global Movement State
-        armState = 1;
-        extenderTarget = eTarget;
-        shoulderTarget = sTarget;
-    }
-
-    protected void sleep ( long milliseconds){
-        try {
-            Thread.sleep(milliseconds);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-
+        if (useCamera) {
+            camera_loop();
         }
     }
+
+
+
+        private static int red(int pixel) {
+            return (pixel >> 16) & 0xff;
+        }
+
+        private static int green(int pixel) {
+            return (pixel >> 8) & 0xff;
+        }
+
+        private static int blue(int pixel) {
+            return pixel & 0xff;
+        }
+
+    /*
+     * This method will be called repeatedly in a loop
+     * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#loop()
+     */
+    private static int highestColor(int red, int green, int blue) {
+        int[] color = {red,green,blue};
+        int value = 0;
+        for (int i = 1; i < 3; i++) {
+            if (color[value] < color[i]) {
+                value = i;
+            }
+        }
+        return value;
+    }
+
+
+    private void convertImage() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        yuvImage.compressToJpeg(new Rect(0, 0, width, height), 0, out);
+        byte[] imageBytes = out.toByteArray();
+        image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+    }
+
+
+
+
+
+
+        private void camera_loop() {
+            if (yuvImage != null) {
+                int redValue = 0;
+                int blueValue = 0;
+                int greenValue = 0;
+                convertImage();
+                for (int x = 0; x < width; x++) {
+                    for (int y = 0; y < height; y++) {
+                        int pixel = image.getPixel(x, y);
+                        redValue += red(pixel);
+                        blueValue += blue(pixel);
+                        greenValue += green(pixel);
+                    }
+                }
+                int color = highestColor(redValue, greenValue, blueValue);
+                String colorString = "";
+                switch (color) {
+                    case 0:
+                        colorString = "RED";
+                        break;
+                    case 1:
+                        colorString = "GREEN";
+                        break;
+                    case 2:
+                        colorString = "BLUE";
+                }
+                telemetry.addData("Color:", "Color detected is: " + colorString);
+            }
+            telemetry.addData("Looped","Looped " + Integer.toString(looped) + " times");
+            Log.d("DEBUG:",data);
+        }
 }
