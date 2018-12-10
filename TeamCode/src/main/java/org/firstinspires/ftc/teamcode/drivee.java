@@ -50,6 +50,8 @@ public class drivee extends LinearOpMode {
         Elevator.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         Pulley.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        servo.setPosition(.55);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -141,9 +143,9 @@ public class drivee extends LinearOpMode {
 
     public void pullUp() {
         if (gamepad2.dpad_up) {
-            Pin.setPower(1);
-        } else if (gamepad2.dpad_down) {
             Pin.setPower(-1);
+        } else if (gamepad2.dpad_down) {
+            Pin.setPower(1);
         } else {
             Pin.setPower(0);
         }
@@ -151,11 +153,11 @@ public class drivee extends LinearOpMode {
 
     public void nom() {
         if (gamepad2.right_trigger > .1) {
-            Nom.setPower(1);
-            Elevator.setPower(-1);
-        } else if (gamepad2.left_trigger > .1) {
-            Nom.setPower(-1);
+            Nom.setPower(8);
             Elevator.setPower(1);
+        } else if (gamepad2.left_trigger > .1) {
+            Nom.setPower(-.8);
+            Elevator.setPower(-1);
         } else {
             Nom.setPower(0);
             Elevator.setPower(0);
@@ -171,11 +173,9 @@ public class drivee extends LinearOpMode {
             Pulley.setPower(0);
         }
         if(gamepad2.a) {
-            servo.setPosition(.5);
+            servo.setPosition(.209);
         } else if(gamepad2.b) {
-            servo.setPosition(1);
-        } else if(gamepad2.x) {
-            servo.setPosition(0);
+            servo.setPosition(.55);
         }
     }
 
