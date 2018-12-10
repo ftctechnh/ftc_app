@@ -109,7 +109,6 @@ public class Robot extends AbstractRobot {
 
     public void finishIntaking() {
         hardware.intake.finishIntaking();
-        hardware.drive.setInverted(true);
     }
 
     public Callable reverseIntakeCallable() {
@@ -168,6 +167,7 @@ public class Robot extends AbstractRobot {
 
     public void moveMineralLiftToDumpPosition() {
         hardware.mineralLift.moveToDumpPosition();
+        hardware.drive.setInverted(true);
     }
 
     public Callable openMineralGateCallable() {

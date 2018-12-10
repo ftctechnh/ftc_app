@@ -93,6 +93,14 @@ public class Drive {
         return rightMotor.getCurrentPosition();
     }
 
+    public double getLeftPower() {
+        return leftMotor.getPower();
+    }
+
+    public double getRightPower() {
+        return rightMotor.getPower();
+    }
+
     public double getHeading() {
         return imu.getHeading();
     }

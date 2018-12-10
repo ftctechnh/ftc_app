@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -52,7 +53,10 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void update() {
-
+        telemetry.addData(DoubleTelemetry.LogMode.TRACE,"Left drive power: "+drive.getLeftPower());
+        telemetry.addData(DoubleTelemetry.LogMode.TRACE,"Right drive power: "+drive.getRightPower());
+        telemetry.addData(DoubleTelemetry.LogMode.TRACE,"Left drive position: "+drive.getLeftPosition());
+        telemetry.addData(DoubleTelemetry.LogMode.TRACE,"Right drive position: "+drive.getRightPosition());
     }
 
     public synchronized void stop() {
@@ -115,7 +119,7 @@ public class DriveController extends SubsystemController {
         anglePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
         distancePID.reset();
         anglePID.setMinimumOutput(0);
-        int position = (int) (distance * 38); //
+        int position = (int) (distance * DRIVE_COUNTS_PER_INCH); //
         telemetry.addData("Encoder counts: " + position);
         double turn;
         speed = range(speed);
@@ -212,8 +216,8 @@ public class DriveController extends SubsystemController {
     }
 
     public synchronized void setY(double y) {
-        if (currentDriveDirection == DriveDirection.REVERSED) turnY = y;
-        else turnY = -y;
+        if (currentDriveDirection == DriveDirection.REVERSED && DRIVE_AUTO_INVERT) turnY = -y;
+        else turnY = y;
         turnY = (float) scaleInput(turnY);
     }
 

@@ -11,13 +11,13 @@ public class RobotLift {
     SlewDcMotor liftMotor;
 
     public RobotLift(HardwareMap hardwareMap) {
-        //liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("robot_lift"));
-        //liftMotor.setSlewSpeed(2);
-        //liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //liftMotor.setTargetPosition(0);
-        //liftMotor.setPower(0);
+        /*liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("robot_lift"));
+        liftMotor.setSlewSpeed(2);
+        liftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor.setTargetPosition(0);
+        liftMotor.setPower(0);*/
     }
 
     public void setLiftPower(double power) {

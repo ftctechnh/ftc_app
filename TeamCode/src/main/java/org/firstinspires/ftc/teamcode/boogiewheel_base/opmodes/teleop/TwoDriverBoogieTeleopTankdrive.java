@@ -12,6 +12,8 @@ public class TwoDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
     private Robot robot;
 
+    private boolean driver1 = true;
+
     @Override
     public void RegisterEvents() {
         twoDrivers();
@@ -21,22 +23,13 @@ public class TwoDriverBoogieTeleopTankdrive extends AbstractTeleop {
         ////////////////Gamepad 1////////////////
         ////////Drive////////
         //THIS CODE HAS BEEN MODIFIED FOR TANKDRIVE
-        addEventHandler("1_lsy_change", () -> {
-            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-            return true;
-        });
-
-        addEventHandler("1_rsx_change", () -> {
-            robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
-            return true;
-        });
 
         ////////Intake////////
         addEventHandler("1_a_down", robot.finishIntakingCallable());
 
-        addEventHandler("1_b_down", robot.beginIntakingCallable());
+        addEventHandler("1_x_down", robot.beginIntakingCallable());
 
-        addEventHandler("1_x_down", robot.reverseIntakeCallable());
+        addEventHandler("1_b_down", robot.reverseIntakeCallable());
 
         ////////Robot Lift////////
         addEventHandler("1_dpu_down", robot.robotLiftUpCallable());
@@ -49,6 +42,7 @@ public class TwoDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
         ////////Util////////
         addEventHandler("1_y_down", () -> {
+            driver1 = false;
             ////Gamepad 1////
             //Drive
             pauseEvent("1_lsy_change");
@@ -110,6 +104,7 @@ public class TwoDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
         ////////Util////////
         addEventHandler("2_y_down", () -> {
+            driver1 = true;
             ////Gamepad 1////
             //Drive
             resumeEvent("1_lsy_change");
@@ -149,8 +144,11 @@ public class TwoDriverBoogieTeleopTankdrive extends AbstractTeleop {
     @Override
     public void UpdateEvents() {
         //NEVER EVER PUT BLOCKING CODE HERE!!!
-        checkBooleanInput("1_lt", gamepad1.left_trigger > 0.5);
-        checkBooleanInput("1_rt", gamepad1.right_trigger > 0.5);
+        checkBooleanInput("2_lt", gamepad2.left_trigger > 0.5);
+        checkBooleanInput("2_rt", gamepad2.right_trigger > 0.5);
+
+        if(driver1) robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+        else robot.setDrivePower(gamepad2.right_stick_y, gamepad2.left_stick_y);
     }
 
     @Override

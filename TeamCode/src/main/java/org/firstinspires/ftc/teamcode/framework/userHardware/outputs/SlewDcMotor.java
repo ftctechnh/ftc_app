@@ -41,7 +41,7 @@ public class SlewDcMotor implements DcMotor, DcMotorEx, Runnable {
         setMotorEnable();
         while (running && AbstractOpMode.isOpModeActive()) {
             motorSlew(getSetPower());
-            AbstractOpMode.delay(15);
+            AbstractOpMode.delay(5);
         }
         shutDown();
     }

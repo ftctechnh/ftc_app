@@ -18,6 +18,6 @@ public abstract class SubsystemController {
 
     public void opModeSetup() {
         telemetry = AbstractOpMode.getTelemetry();
-        hardwareMap = AbstractOpMode.getOpModeInstance().hardwareMap;
+        hardwareMap = AbstractOpMode.getHardwareMap();
     }
 }

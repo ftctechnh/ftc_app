@@ -3,12 +3,15 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 public final class Constants {
     ////////DRIVE////////
     public static final double DRIVE_MINERAL_LIFT_RAISED_SCALAR = 0.5;
+    public static final double DRIVE_COUNTS_PER_INCH = 38.0;
+
+    public static final boolean DRIVE_AUTO_INVERT = false;
 
     ////////INTAKE////////
     //Brushes
     public static final double INTAKE_STOP_POWER = 0;
     public static final double INTAKE_FORWARD_POWER = 1;
-    public static final double INTAKE_REVERSE_POWER = 1;
+    public static final double INTAKE_REVERSE_POWER = -1;
     public static final double INTAKE_LOWER_POWER = 0.2;
 
     //Lift

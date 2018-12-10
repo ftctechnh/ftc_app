@@ -30,8 +30,8 @@ public class IntakeController extends SubsystemController {
     }
 
     public synchronized void beginIntaking() {
-        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
-            intake.setIntakePower(INTAKE_FORWARD_POWER);
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED) intake.setIntakePower(INTAKE_FORWARD_POWER);
+        else lowerIntake();
     }
 
     public synchronized void finishIntaking() {
@@ -41,8 +41,7 @@ public class IntakeController extends SubsystemController {
     }
 
     public synchronized void reverseIntake() {
-        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
-            intake.setIntakePower(INTAKE_REVERSE_POWER);
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED) intake.setIntakePower(INTAKE_REVERSE_POWER);
     }
 
     public synchronized void lowerIntake() {

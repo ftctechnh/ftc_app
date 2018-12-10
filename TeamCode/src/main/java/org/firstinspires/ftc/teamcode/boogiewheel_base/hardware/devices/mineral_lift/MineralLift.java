@@ -5,13 +5,16 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.DistanceSensor2m;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
 
 public class MineralLift {
 
-    SlewDcMotor liftMotor;
+    private SlewDcMotor liftMotor;
 
-    Servo gateServo;
+    private Servo gateServo;
+
+    private DistanceSensor2m distanceSensor;
 
     public MineralLift(HardwareMap hardwareMap) {
         liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("mineral_lift"));
@@ -25,6 +28,11 @@ public class MineralLift {
         gateServo.setDirection(Servo.Direction.FORWARD);
         gateServo.setPosition(0);
 
+        distanceSensor = new DistanceSensor2m("Distance1");
+    }
+
+    public double getDistance() {
+        return distanceSensor.getDistanceIN();
     }
 
     public void setCurrentPosition(int position) {

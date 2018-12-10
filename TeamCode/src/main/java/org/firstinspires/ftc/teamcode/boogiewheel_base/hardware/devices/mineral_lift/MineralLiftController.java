@@ -24,6 +24,7 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void update() {
         telemetry.addData(DoubleTelemetry.LogMode.INFO,"Lift Encoder: "+mineralLift.getCurrentPosition());
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "Distance: " + mineralLift.getDistance());
         if (isMovingDown) {
             int currentValue = mineralLift.getCurrentPosition();
             if (liftValues[0] == -1) {
@@ -35,7 +36,7 @@ public class MineralLiftController extends SubsystemController {
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
-            if (atPosition(liftValues[0], liftValues[1], 0) && atPosition(liftValues[1], liftValues[2], 0) && mineralLift.getCurrentPosition() < 50) {
+            if (atPosition(liftValues[0], liftValues[1], 2) && atPosition(liftValues[1], liftValues[2], 2) && mineralLift.getCurrentPosition() < 50) {
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;
@@ -51,6 +52,8 @@ public class MineralLiftController extends SubsystemController {
     }
 
     public synchronized void moveToCollectPosition() {
+
+        if(mineralLift.getDistance() < 20) return;
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setCurrentPosition(MINERAL_LIFT_COLLECT_POSITION);
         isMovingDown = true;

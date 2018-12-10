@@ -35,9 +35,9 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
         ////////Intake////////
         addEventHandler("2_a_down", robot.finishIntakingCallable());
 
-        addEventHandler("2_b_down", robot.beginIntakingCallable());
+        addEventHandler("2_x_down", robot.beginIntakingCallable());
 
-        addEventHandler("2_x_down", robot.reverseIntakeCallable());
+        addEventHandler("2_b_down", robot.reverseIntakeCallable());
 
         addEventHandler("2_dpr_down", robot.liftIntakeCallable());
 
@@ -65,6 +65,8 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
         //NEVER EVER PUT BLOCKING CODE HERE!!!
         checkBooleanInput("2_lt", gamepad2.left_trigger > 0.5);
         checkBooleanInput("2_rt", gamepad2.right_trigger > 0.5);
+
+        robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
     }
 
     @Override
@@ -74,7 +76,6 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
 
     @Override
     public void Loop() {
-        robot.setDrivePower(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         robot.updateAll();
         telemetry.update();
     }
