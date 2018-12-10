@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveBase;
@@ -17,7 +18,7 @@ import java.io.IOException;
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous
-@Config
+@Disabled
 public class SplineTestOpMode extends LinearOpMode {
 
     public static int position = 0;

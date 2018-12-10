@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.DriveConstants;
 import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.SampleMecanumDriveREV;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.teamcode.Utilities.RoadRunner.AssetsTrajectoryLoade
 import java.io.IOException;
 
 @Autonomous
-@Config
+@Disabled
 public class JustPathsSampling extends AutoUtils {
 
     public static int startX = 38;
