@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -71,6 +72,13 @@ public class BasicOpMode_Iterative extends OpMode
 
         robot.Initialize(hardwareMap);
 
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.liftBot.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.liftBot2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
@@ -81,11 +89,9 @@ public class BasicOpMode_Iterative extends OpMode
      */
     @Override
     public void init_loop() {
+
     }
 
-    /*
-     * Code to run ONCE when the driver hits PLAY
-     */
     @Override
     public void start() {
         runtime.reset();
@@ -99,53 +105,202 @@ public class BasicOpMode_Iterative extends OpMode
         // Setup a variable for each drive wheel to save power level for telemetry
         double leftPower = 0;
         double rightPower = 0;
+        double armPower = 0;
 
-        if(Math.abs(gamepad1.left_stick_y) > verticalDeadZone && Math.abs(gamepad1.left_stick_x) <= horizontalDeadZone)
+        Move(2);
+        Sucker();
+        liftBot();
+        flipper(0.3);
+        mineralCrater();
+
+       /* if(gamepad1.dpad_up)
         {
-            leftPower = gamepad1.left_stick_y;
-            rightPower = gamepad1.left_stick_y;
-        }
+            robot.rightDrive.setPower(-1);
+            robot.leftDrive.setPower(-1);
+        }else
+            {
+                robot.rightDrive.setPower(0);
+                robot.leftDrive.setPower(0);
+            }
 
-        if(Math.abs(gamepad1.left_stick_x) > horizontalDeadZone && Math.abs(gamepad1.left_stick_y) <= verticalDeadZone)
+        if(gamepad1.dpad_down)
         {
-            leftPower = -gamepad1.left_stick_x;
-            rightPower = gamepad1.left_stick_x;
-        }
+            robot.leftDrive.setPower(1);
+            robot.rightDrive.setPower(1);
 
-        if(Math.abs(gamepad1.left_stick_x) <= horizontalDeadZone && Math.abs(gamepad1.left_stick_y) <= verticalDeadZone)
+        }else
+            {
+                robot.rightDrive.setPower(0);
+                robot.leftDrive.setPower(0);
+            }
+        if(gamepad1.dpad_right)
         {
-            leftPower = 0;
-            rightPower = 0;
-        }
-
-        if(gamepad1.right_bumper) {
-            robot.liftBot2.setPower(0.2);
-            robot.liftBot.setPower(0.2);
+            robot.leftDrive.setPower(1);
+            robot.rightDrive.setPower(-1);
         }else{
+            robot.rightDrive.setPower(0);
+            robot.leftDrive.setPower(0);
+        }
+        if(gamepad1.dpad_left)
+        {
+            robot.leftDrive.setPower(-1);
+            robot.rightDrive.setPower(1);
+        }else{
+            robot.rightDrive.setPower(0);
+            robot.leftDrive.setPower(0);
+        }
+
+        if (Math.abs(gamepad1.left_stick_y) > verticalDeadZone && Math.abs(gamepad1.left_stick_x) <= horizontalDeadZone) {
+            //leftPower = gamepad1.left_stick_y;
+            y = gamepad1.left_stick_y;
+        }
+
+        if (Math.abs(gamepad1.left_stick_x) > horizontalDeadZone && Math.abs(gamepad1.left_stick_y) <= verticalDeadZone) {
+            x = gamepad1.left_stick_x;
+            //rightPower = -gamepad1.left_stick_x;
+        }
+
+        if (Math.abs(gamepad1.left_stick_x) <= horizontalDeadZone && Math.abs(gamepad1.left_stick_y) <= verticalDeadZone) {
+            y = 0;
+            x = 0;
+        }
+
+        if (gamepad2.right_bumper) {
+            robot.liftBot2.setPower(-0.5);
+            robot.liftBot.setPower(0.5);
+        } else {
             robot.liftBot2.setPower(0);
             robot.liftBot.setPower(0);
 
         }
-        if(gamepad1.left_bumper){
-            robot.liftBot2.setPower(-0.2);
-            robot.liftBot.setPower(-0.2);
-        }else{
+        if (gamepad2.left_bumper) {
+            robot.liftBot2.setPower(0.5);
+            robot.liftBot.setPower(-0.5);
+        } else {
             robot.liftBot2.setPower(0);
             robot.liftBot.setPower(0);
 
         }
 
-        robot.leftDrive.setPower(leftPower);
-        robot.rightDrive.setPower(rightPower);
+        robot.leftDrive.setPower(y+x);
+        robot.rightDrive.setPower(y-x);
+
+        if (gamepad1.right_bumper) {
+            robot.mineralCollect.setPower(1);
+        } else {
+            robot.mineralCollect.setPower(0);
+        }
+        if (gamepad1.left_bumper) {
+            robot.mineralCollect.setPower(-0.8);
+        } else {
+            robot.mineralCollect.setPower(0);
+        }
+        if (Math.abs(gamepad2.left_stick_y) > verticalDeadZone) {
+            armPower = gamepad2.left_stick_y;
+
+        } else {
+            robot.mineralArm.setPower(0);
+        }
+        robot.mineralArm.setPower(armPower);
 
 
+        if (gamepad2.a) {
+            robot.liftBot.setPower(-1.3);
+            robot.liftBot2.setPower(1.3);
+
+        }else{
+            robot.liftBot2.setPower(0);
+            robot.liftBot.setPower(0);
+        }
+        if(gamepad2.x){
+            robot.mineralArm.setPower(0.5);
+
+        }else
+            {
+                robot.mineralArm.setPower(0);
+            }
+            if(gamepad2.b){
+            robot.mineralArm.setPower(-0.5);
+            }else{
+            robot.mineralArm.setPower(0);
+            } */
 
 
     }
 
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
+
+
+    public void Move(double speed)
+    {
+        double y = 0;
+        double x =0;
+        x = speed * gamepad1.left_stick_x;
+        y = speed * gamepad1.left_stick_y;
+        robot.leftDrive.setPower(y+x);
+        robot.rightDrive.setPower(y-x);
+    }
+    public void Sucker()
+    {
+        if (gamepad1.right_bumper) {
+            robot.mineralCollect.setPower(1);
+        } else {
+            robot.mineralCollect.setPower(0);
+        }
+        if (gamepad1.left_bumper) {
+            robot.mineralCollect.setPower(-0.8);
+        } else {
+            robot.mineralCollect.setPower(0);
+        }
+    }
+    public void liftBot()
+    {
+        if (gamepad2.right_bumper)
+        {
+            robot.liftBot.setPower(0.3);
+            robot.liftBot2.setPower(0.3);
+        }
+        else {
+            robot.liftBot2.setPower(0);
+            robot.liftBot.setPower(0);
+        }if (gamepad2.left_bumper)
+        {
+            robot.liftBot.setPower(-1);
+            robot.liftBot.setPower(-1);
+        }else{
+            robot.liftBot.setPower(0);
+            robot.liftBot2.setPower(0);
+    }
+
+    }
+    public void flipper(double speed)
+    {
+     double y = 0;
+     y = speed * gamepad2.left_stick_y;
+     robot.mineralArm.setPower(y);
+
+    }
+    public void mineralCrater()
+    {
+        double spin = 0;
+        if(Math.abs(gamepad1.right_stick_y) > 0.0)
+        {
+            spin = gamepad1.right_stick_y;
+            robot.spin.setPower(gamepad1.right_stick_y);
+        }else
+            {
+                robot.spin.setPower(0);
+            }
+        if(gamepad1.x)
+        {
+            robot.craterArm.setPosition(180);
+        }
+        if(gamepad1.y)
+        {
+            robot.craterArm.setPosition(0);
+
+        }
+    }
+
     @Override
     public void stop() {
         robot.rightDrive.setPower(0);
