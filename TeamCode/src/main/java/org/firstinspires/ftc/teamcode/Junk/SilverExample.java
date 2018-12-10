@@ -27,43 +27,44 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.SubAssembly.Sample;
+package org.firstinspires.ftc.teamcode.Junk;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
-import com.disnodeteam.dogecv.detectors.roverrukus.GoldDetector;
-import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
-import com.disnodeteam.dogecv.filters.HSVColorFilter;
+import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.disnodeteam.dogecv.detectors.roverrukus.SilverDetector;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.opencv.core.Size;
 
 
-@TeleOp(name="Sampling Order Example", group="DogeCV")
-
-public class SamplingOrderExample extends OpMode
+@TeleOp(name="Silver Example", group="DogeCV")
+@Disabled
+public class SilverExample extends OpMode
 {
-    private SamplingOrderDetector detector;
+    private SilverDetector detector;
 
 
     @Override
     public void init() {
-        telemetry.addData("Status", "DogeCV 2018.0 - Sampling Order Example");
+        telemetry.addData("Status", "DogeCV 2018.0 - Gold SilverDetector Example");
 
-        detector = new SamplingOrderDetector();
+        detector = new SilverDetector();
+        detector.setAdjustedSize(new Size(480, 270));
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
+        // Optional Tuning
 
         detector.downscale = 0.4; // How much to downscale the input frames
 
-        // Optional Tuning
         detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
         //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
-        detector.maxAreaScorer.weight = 0.001;
+        detector.maxAreaScorer.weight = 0.005;
 
-        detector.ratioScorer.weight = 15;
+        detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
-
         detector.enable();
 
 
@@ -82,10 +83,9 @@ public class SamplingOrderExample extends OpMode
     }
 
 
-
+    @Override
     public void loop() {
-        telemetry.addData("Current Order" , detector.getCurrentOrder().toString()); // The current result for the frame
-        telemetry.addData("Last Order" , detector.getLastOrder().toString()); // The last known result
+
     }
 
     /*

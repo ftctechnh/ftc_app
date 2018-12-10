@@ -22,8 +22,11 @@ public class Auto3imu extends LinearOpMode {
     ClaimerControl Claimer = new ClaimerControl();
     LiftControl Lift = new LiftControl();
     LedControl Led = new LedControl();
+
+    //time based variables
     private ElapsedTime runtime = new ElapsedTime();
-    boolean twoSample = false;
+    private double lastReset = 0;
+    private double now = 0;
 
     /* Constants */
     final double TURN_SPEED = 0.3;
@@ -67,15 +70,20 @@ public class Auto3imu extends LinearOpMode {
     }
 
     //Enum variables (creates variables of the enum variable types previously created)
-    private State mCurrentState;
-    private Start orientation;
+    private State mCurrentState = State.STATE_INITIAL;
+    private Start orientation = Start.CRATER;
+    private boolean twoSample = false;
 
-    //time based variables
-    double lastReset = 0;
-    double now = 0;
+
 
     public void getUserInput() {
+
         /* Get user information */
+
+        /* Automatically switch to teleop? */
+        if (User.getYesNo("Transition to TeleOp?"))
+            AutoTransitioner.transitionOnStop(this, "teleop");
+
         if (User.getYesNo("Facing the crater?")) {
             orientation = Start.CRATER;
             telemetry.addLine("Facing crater");
@@ -111,15 +119,27 @@ public class Auto3imu extends LinearOpMode {
 
         getUserInput();
 
-        AutoTransitioner.transitionOnStop(this, "teleOp");
-
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");
         telemetry.update();
         telemetry.setAutoClear(true);
         waitForStart();
 
+        telemetry.update();
+        telemetry.setAutoClear(false);
+
         Vucam.setSamplePos();
+        if (Vucam.sample == VucamControl.Sample.LEFT) {
+            telemetry.addLine("Left");
+        } else if (Vucam.sample == VucamControl.Sample.RIGHT) {
+            telemetry.addLine("Right");
+        } else if (Vucam.sample == VucamControl.Sample.CENTER) {
+            telemetry.addLine("Center");
+        } else {
+            telemetry.addLine("Unknown");
+        }
+        telemetry.update();
+
         newState(State.STATE_INITIAL);
         Drive.imu.setStartAngle();
 
@@ -129,10 +149,10 @@ public class Auto3imu extends LinearOpMode {
 
             Drive.imu.update();
 
-            telemetry.addData("startAngle", Drive.imu.startAngle);
-            telemetry.addData("currentAngle", Drive.imu.currentAngle);
-            telemetry.addData("trueAngle", Drive.imu.trueAngle);
-            telemetry.update();
+//            telemetry.addData("startAngle", Drive.imu.startAngle);
+//            telemetry.addData("currentAngle", Drive.imu.currentAngle);
+//            telemetry.addData("trueAngle", Drive.imu.trueAngle);
+//            telemetry.update();
 
             //state switch
             //needs rearranged so that initial is starting state, not land
@@ -141,9 +161,6 @@ public class Auto3imu extends LinearOpMode {
                     Led.white();
                     telemetry.addLine("Initial");
                     telemetry.update();
-                    /*Sample.init();
-                    Sample.start();
-                    Sample.loop();*/
                     newState(State.STATE_LAND);
                     break;
 
@@ -151,24 +168,22 @@ public class Auto3imu extends LinearOpMode {
                     Led.red();
                     telemetry.addLine("Land");
                     telemetry.update();
-                  /* while(!Lift.LifterButtonT.isPressed()) {
+                    while (!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
                     }
-                    Lift.Stop();*/
+                    Lift.Stop();
                     sleep(1000);
                     newState(State.STATE_ADJUST);
                     break;
 
                 case STATE_ADJUST:
                     Led.orange();
+                    telemetry.addLine("Adjust");
+                    telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, 0);
                     if (orientation == Start.CRATER) {
-                        telemetry.addLine("Moving to crater");
-                        telemetry.update();
                         newState(State.STATE_MOVE_TO_CRATER);
                     } else if (orientation == Start.DEPOT) {
-                        telemetry.addLine("Moving to depot");
-                        telemetry.update();
                         newState(State.STATE_MOVE_TO_DEPOT);
                     }
                     break;
@@ -244,8 +259,7 @@ public class Auto3imu extends LinearOpMode {
                     telemetry.update();
                     if (Vucam.sample != Vucam.sample.LEFT) {
                         Drive.moveBackward(0.5, 3.2);
-                    }
-                    else {
+                    } else {
                         Drive.moveBackward(0.5, 1.7);
                         Drive.turn2Angle(TURN_SPEED, -20);
                         Drive.moveBackward(0.4, 0.6);
@@ -304,7 +318,8 @@ public class Auto3imu extends LinearOpMode {
             }
             sleep(40);
         }
-        //Sample.stop();
+
+        telemetry.setAutoClear(true);
     }
 }
 

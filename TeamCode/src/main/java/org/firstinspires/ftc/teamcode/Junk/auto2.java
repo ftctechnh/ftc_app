@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Junk;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.IMUcontrol;
 
 @Autonomous(name = "Auto2", group = "Drive")
+@Disabled
 public class auto2 extends LinearOpMode {
 
     /* Subassembly Constructors */

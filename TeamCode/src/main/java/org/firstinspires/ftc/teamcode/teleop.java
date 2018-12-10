@@ -19,9 +19,7 @@ public class teleop extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.setAutoClear(false);
-        telemetry.addLine("Drive Test: ");
-        telemetry.addLine("Ready Player One");
-        telemetry.addLine("Ready Player Two");
+        telemetry.addLine("TeleOp");
 
         double DriveSpeed = 1;
         double TurnSpeed = DriveSpeed / 2;

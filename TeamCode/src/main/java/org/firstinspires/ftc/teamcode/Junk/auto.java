@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Junk;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -11,11 +12,11 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 
 @Autonomous(name = "Auto1", group = "Drive")
+@Disabled
 public class auto extends LinearOpMode {
 
     /* Methods */
     DriveControl Drive = new DriveControl();
-    //SamplingOrderExample Sample = new SamplingOrderExample();
     ClaimerControl Claimer = new ClaimerControl();
     //LiftControl Lift = new LiftControl(this);
     VucamControl Vucam = new VucamControl();
