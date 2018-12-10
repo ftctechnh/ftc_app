@@ -18,9 +18,12 @@ public abstract class AutoUtils extends VuforiaCVUtil {
     public static double MARKER_DEPLOYER_DEPLOY = 0;
     public static double MARKER_DEPLOYER_RETRACTED = 0.85;
     public static double HANG_HOLD_POWER = -0.15;
+    public static String SETUP_ERROR_MSG = "WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG " +
+            "WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG";
 
     double TURN_MAX_SPEED = 0.6;
     double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45;
+    double SETUP_ERROR_DETECTION_TOLERANCE = Math.PI / 12;
 
     public void setWinchHoldPosition() {
         robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -138,6 +141,13 @@ public abstract class AutoUtils extends VuforiaCVUtil {
                 result = GoldPosition.LEFT;
             }
 
+            double heading = robot.getHeading();
+            double diff = robot.getSignedAngleDifference(robot.getHeading(), (7.0/4.0) * Math.PI);
+            String message = (Math.abs(diff) < SETUP_ERROR_DETECTION_TOLERANCE) ?
+                    "Correct" : SETUP_ERROR_MSG;
+
+            telemetry.addData("Setup", message);
+            telemetry.addData("Heading", heading);
             telemetry.addData("Vision line", middleLine);
             telemetry.addData("Vision", result.toString());
             telemetry.update();
