@@ -23,8 +23,10 @@ public class Auto3imu extends LinearOpMode {
     LiftControl Lift = new LiftControl();
     LedControl Led = new LedControl();
 
+    //time based variables
     private ElapsedTime runtime = new ElapsedTime();
-    boolean twoSample = false;
+    private double lastReset = 0;
+    private double now = 0;
 
     /* Constants */
     final double TURN_SPEED = 0.3;
@@ -68,15 +70,20 @@ public class Auto3imu extends LinearOpMode {
     }
 
     //Enum variables (creates variables of the enum variable types previously created)
-    private State mCurrentState;
-    private Start orientation;
+    private State mCurrentState = State.STATE_INITIAL;
+    private Start orientation = Start.CRATER;
+    private boolean twoSample = false;
 
-    //time based variables
-    double lastReset = 0;
-    double now = 0;
+
 
     public void getUserInput() {
+
         /* Get user information */
+
+        /* Automatically switch to teleop? */
+        if (User.getYesNo("Transition to TeleOp?"))
+            AutoTransitioner.transitionOnStop(this, "teleop");
+
         if (User.getYesNo("Facing the crater?")) {
             orientation = Start.CRATER;
             telemetry.addLine("Facing crater");
@@ -111,8 +118,6 @@ public class Auto3imu extends LinearOpMode {
         Led.init(this);
 
         getUserInput();
-
-        AutoTransitioner.transitionOnStop(this, "teleop");
 
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");

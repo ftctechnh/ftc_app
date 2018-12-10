@@ -77,7 +77,7 @@ public class VucamControl {
         CENTER
     }
 
-    public Sample sample;
+    public Sample sample = Sample.RIGHT;
 
     /* Subassembly constructor */
     public VucamControl() {
