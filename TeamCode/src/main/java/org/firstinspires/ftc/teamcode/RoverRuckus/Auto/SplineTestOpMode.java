@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -16,14 +17,27 @@ import java.io.IOException;
  * This is an example of a more complex path to really test the tuning.
  */
 @Autonomous
+@Config
 public class SplineTestOpMode extends LinearOpMode {
+
+    public static int position = 0;
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDriveBase drive = new SampleMecanumDriveREV(hardwareMap);
 
+        GoldPosition goldLoc;
+        if (position == 0) {
+            goldLoc = GoldPosition.LEFT;
+        } else if (position == 1) {
+            goldLoc = GoldPosition.CENTER;
+        } else {
+            goldLoc = GoldPosition.RIGHT;
+        }
+
         Trajectory trajectory = null;
+
         try {
-            trajectory = AssetsTrajectoryLoader.load("CraterCenterSel");
+            trajectory = AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -34,6 +34,7 @@ public class AssetsTrajectoryLoader {
      * @see #loadConfig(String)
      */
     public static Trajectory load(String name) throws IOException {
+
         return loadConfig(name).toTrajectory();
     }
 }

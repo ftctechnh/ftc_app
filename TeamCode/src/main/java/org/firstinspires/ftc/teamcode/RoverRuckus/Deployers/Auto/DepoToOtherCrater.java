@@ -2,10 +2,10 @@ package org.firstinspires.ftc.teamcode.RoverRuckus.Deployers.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.SophisticatedSampling;
+import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.SuperiorSampling;
 
 @Autonomous(name="Depo to other crater")
-public class DepoToOtherCrater extends SophisticatedSampling {
+public class DepoToOtherCrater extends SuperiorSampling {
     @Override
     public void runOpMode() throws InterruptedException {
         this.goal = EndGoal.RED_CRATER;
