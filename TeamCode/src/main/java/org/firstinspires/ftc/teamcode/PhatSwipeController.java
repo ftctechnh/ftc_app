@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipeController", group="PhatSwipe")
+@TeleOp(name="PhatSwipeController", group="BPhatSwipe")
 public class PhatSwipeController extends OpMode {
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -48,10 +48,15 @@ public class PhatSwipeController extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
-    private DcMotor shoulder;
-    private DcMotor vacuum;
-    private DcMotor extender;
+    //private DcMotor shoulder;
+    //private DcMotor vacuum;
+    //private DcMotor extender;
+    private DcMotor lifter;
 
+
+    private Servo bull;
+    private Servo dozer;
+   // protected double angleHand;
 
     // Hand servo.
      private Servo servoHand;
@@ -62,7 +67,9 @@ public class PhatSwipeController extends OpMode {
     private boolean useGyroscope = false;
     private boolean useMotors = true;
     private boolean useEncoders = true;
-    private boolean useArms = true;
+    private boolean useArms = false;
+    private boolean useLifter = true;
+    private boolean useBulldozer =true;
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -118,15 +125,23 @@ public class PhatSwipeController extends OpMode {
         }
 
         if (useArms) {
-            shoulder = hardwareMap.get(DcMotor.class, "motor4");
-            vacuum = hardwareMap.get(DcMotor.class, "motor6");
-            extender = hardwareMap.get(DcMotor.class, "motor5");
+           // shoulder = hardwareMap.get(DcMotor.class, "motor4");
+            //vacuum = hardwareMap.get(DcMotor.class, "motor6");
+           // extender = hardwareMap.get(DcMotor.class, "motor5");
         }
 
-
+        if (useLifter) {
+            lifter = hardwareMap.get(DcMotor.class, "motor6");
+        }
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+
+        if(useBulldozer){
+            bull = hardwareMap.get(Servo.class, "servo3");
+            dozer = hardwareMap.get(Servo.class, "servo2");
+
+        }
     }
 
     /**
@@ -166,6 +181,13 @@ public class PhatSwipeController extends OpMode {
       //  flagHolder.setPosition(angleHand);
 
     //}
+
+    public void bulldoze() {
+        angleHand = 0;
+        bull.setPosition(angleHand);
+        dozer.setPosition(angleHand);
+    }
+
 
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -210,22 +232,36 @@ public class PhatSwipeController extends OpMode {
                     motorFrontRight.setPower(rightFrontPower);
                 }
 
+                if(useLifter){
+                    //control lifter (temporary)
+                    //TODO: get auto lifter code from flynn
+                    boolean liftUp = gamepad1.y;
+                    boolean lowerDown = gamepad1.a;
+                    double liftPower = 0.0;
+                    if (liftUp) {
+                        liftPower = 0.4;
+                    } else if (lowerDown) {
+                        liftPower = -0.4;
+                    }
+                    lifter.setPower(liftPower);
+                }
 
 
 
-          /*  if (gamepad1.x) {
-                dropFlag();
-                dropTime.reset();
-            }
-
-            if (dropTime.seconds() > 3.0) {
-                angleHand = 0.75;
-                flagHolder.setPosition(angleHand);
-            }*/
+            //control bulldozer
+             boolean bullUp = gamepad1.dpad_up;
+             boolean bullDown = gamepad1.dpad_down;
+             if (bullUp) {
+             bull.setPosition(1);
+             dozer.setPosition(0);
+             } else if (bullDown) {
+                 bull.setPosition(0);
+                 dozer.setPosition(1);
+             }
 
 
             // Control the extender.
-            boolean extendOut = gamepad1.dpad_up;
+         /*   boolean extendOut = gamepad1.dpad_up;
             boolean extendIn = gamepad1.dpad_down;
             double extendPower = 0.0;
             if (extendOut) {
@@ -255,7 +291,7 @@ public class PhatSwipeController extends OpMode {
             } else if ((pullDown > 0.0) && (pullUp == 0.0)) {
                 pullPower = 1.0;
             }
-            shoulder.setPower(pullPower * 0.75);
+            shoulder.setPower(pullPower * 0.75);*/
 /*
 
             // control the hand

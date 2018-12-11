@@ -28,7 +28,9 @@ public class QuickSilverController extends OpMode {
 
     // arm motors
     private DcMotor extender;
+    private DcMotor tacVac;
     private DcMotor shoulder;
+    private DcMotor lifter;
 
     // servos in end scooper
     private Servo servoLeft;
@@ -38,13 +40,16 @@ public class QuickSilverController extends OpMode {
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useArm = true;
+    private boolean useLifter = true;
 
     //Movement State
-    int armState;
-    int extenderTarget;
-    int shoulderTarget;
-    int extenderBegin;
-    int shoulderBegin;
+    private int armState;
+    private int extenderTarget;
+    private int shoulderTarget;
+    private int lifterState;
+    private int lifterExtenderTarget;
+    private int extenderStartPostion = 0;
+    private int lifterStartPosition = 0;
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -63,6 +68,7 @@ public class QuickSilverController extends OpMode {
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
             motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
             motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
+
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -87,22 +93,18 @@ public class QuickSilverController extends OpMode {
         // Init the arm.
         if (useArm) {
             shoulder = hardwareMap.get(DcMotor.class, "motor4");
-            shoulder.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            shoulderBegin = shoulder.getCurrentPosition();
-
+            tacVac = hardwareMap.get(DcMotor.class, "motor7");
+          
             extender = hardwareMap.get(DcMotor.class, "motor5");
             extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            extenderBegin = extender.getCurrentPosition();
-
-            // Continuous rotation servos = stop is 0.5, 1.0 is turn CW, 0.0 is turn CCW. Does not track the current angle.
-            servoLeft = hardwareMap.get(Servo.class, "servo2");
-            servoLeft.setPosition(0.5);
-            servoRight = hardwareMap.get(Servo.class, "servo3");
-            servoRight.setPosition(0.5);
         }
 
+        if (useLifter) {
+            lifter = hardwareMap.get(DcMotor.class, "motor6");
+            lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
     }
 
 
@@ -170,112 +172,150 @@ public class QuickSilverController extends OpMode {
                 motorFrontLeft.setPower(leftFrontPower);
                 motorFrontRight.setPower(rightFrontPower);
             }
+
         }
 
         if (useArm) {
+            // shoulder MANUAL CONTROL
+            float pullUp = gamepad1.right_stick_y;
+            float pullOut = -gamepad1.right_stick_y;
+            double pullPower = 0.0;
+            if ((pullUp > 0.0) && (pullOut == 0.0)) {
+                pullPower = -1.0;
+            } else if ((pullOut > 0.0) && (pullUp == 0.0)) {
+                pullPower = 1.0;
+            }
+            shoulder.setPower(pullPower);
 
-            // Setting certain positions for arm & extender
-            boolean jewelPickUp = gamepad1.a;
-            boolean moving = gamepad1.b;
-            boolean deposit = gamepad1.x;
-            boolean landerAttach = gamepad1.y;
-            if (jewelPickUp){
-                startArmMoving(-3127, 16714);
-            }else if (moving){
-                startArmMoving(-2691, 9103);
-            }else if (deposit){
-                startArmMoving(1587, -7522);
-            }else if (landerAttach){
-                startArmMoving(3185, -8695);
-            } else {
-
-                // manual control of shoulder; will knock out any preset movement that may have been started.
-                boolean pullUp = gamepad1.dpad_down;
-                boolean pullOut = gamepad1.dpad_up;
-                double pullPower = 0.0;
-                if (pullUp) {
-                    pullPower = 1.0;
-                } else if (pullOut) {
-                    pullPower = -1.0;
-                }
-
-                if (pullPower != 0.0) {
-                    stopArmMoving();
-                    shoulder.setPower(pullPower);
-                } else if (armState == 0) {
-                    shoulder.setPower(0.0);
-                }
-
-
-                // manual control of extender; will knock out any preset movement that may have been started.
-                boolean extendOut = gamepad1.y;
-                boolean extendIn = gamepad1.a;
-                double extendPower = 0.0;
-                if (extendOut) {
-                    extendPower = 1.0;
-                } else if (extendIn) {
-                    extendPower = -1.0;
-                }
-
-                if (extendPower != 0.0) {
-                    stopArmMoving();
-                    extender.setPower(extendPower);
-                } else if (armState == 0) {
-                    extender.setPower(0.0);
-                }
+            // Control the extender: MANUAL CONTROL
+            boolean extendOut = gamepad1.y;
+            boolean extendIn = gamepad1.a;
+            double extendManualPower = 0.0;
+            if (extendOut) {
+                extendManualPower = -0.5;
+            }
+            if (extendIn) {
+                extendManualPower = 0.5;
+            }
+            if (extendManualPower != 0.0 || armState == 0) {
+                armState = 0;
+                extenderTarget = 0;
+                extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                extender.setPower(extendManualPower);
             }
 
-            // If we already started a 2-stage movement, lets see if the first stage is complete.
-            if(armState == 1 && !extender.isBusy()){
-                telemetry.addData("armMove", "Extender Moved Complete!");
+            // extender: presets
+            boolean extendAllIn = gamepad1.x;
+            boolean extendAllOut = gamepad1.b;
+            if (extendAllOut) {
+                startArmMoving(extenderStartPostion + 4500,0);
+            }
+            else if (extendAllIn) {
+                startArmMoving(extenderStartPostion,0);
+            }
 
-                // turn on the shoulder
-                armState = 2;
+            boolean extendCalibrate = gamepad1.dpad_right;
+            if (extendCalibrate) {
+                extenderStartPostion = extender.getCurrentPosition();
+            }
+
+            // Are we finishing a preset move?
+            if (armState == 1 && !extender.isBusy()){
+                armState = 0;
+                extenderTarget = 0;
+                extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                extender.setPower(0);
+                telemetry.addLine("Position Moved!");
+
+                /*armState = 2;
                 shoulder.setTargetPosition(shoulderTarget);
                 shoulder.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                shoulder.setPower(0.75);
+                shoulder.setPower(0.75); */
             }
 
-            // If we already started a 2-stage movement, lets see if the second stage is complete.
-            if(armState == 2 && !shoulder.isBusy()){
-                telemetry.addData("armMove", "Shoulder Moved Complete!");
-                stopArmMoving();
+            // Control the tacVac.
+            float suckIn = gamepad1.right_trigger;
+            float suckOut = gamepad1.left_trigger;
+            double suckPower = 0.0;
+            if ((suckOut > 0.0) && (suckIn == 0.0)) {
+                suckPower = -1.0;
+            } else if ((suckOut > 0.0) && (suckIn == 0.0)) {
+                suckPower = 1.0;
             }
-
-            // Left hand-servo
-            boolean leftServoUp = (gamepad1.left_trigger > 0.0);
-            boolean leftServoDown = gamepad1.left_bumper;
-            double leftServoPower = 0.5;
-            if (leftServoUp) {
-                leftServoPower = 1.0;
-            } else if (leftServoDown) {
-                leftServoPower = 0.0;
-            }
-            servoLeft.setPosition(leftServoPower);
-
-            // Right hand-servo
-            boolean rightServoUp = (gamepad1.right_trigger > 0.0);
-            boolean rightServoDown = gamepad1.right_bumper;
-            double rightServoPower = 0.5;
-            if (rightServoUp) {
-                rightServoPower = 1.0;
-            } else if (rightServoDown) {
-                rightServoPower = 0.0;
-            }
-            servoRight.setPosition(rightServoPower);
-
-            // Print debug.
-            int shoulderCount = shoulder.getCurrentPosition();
-            int extenderCount = extender.getCurrentPosition();
-            telemetry.addData("armStatus", "current shoulder: %7d", shoulderCount);
-            telemetry.addData("armStatus", "current extender: %7d", extenderCount);
-            telemetry.addData("armStatus", "armState: %d, %7d, %7d", armState, extenderTarget, shoulderTarget);
+            tacVac.setPower(suckPower);
         }
+
+        if (useLifter) {
+            // lyfter MANUAL CONTROL
+            boolean extendOut = gamepad2.y;
+            boolean extendIn = gamepad2.a;
+            double lifterManualPower = 0.0;
+            if (extendOut) {
+                lifterManualPower = -0.5;
+            }
+            if (extendIn) {
+                lifterManualPower = 0.5;
+            }
+            if (lifterManualPower != 0.0 || lifterState == 0) {
+                // we get here if we ar ealready in manual control, or if we are in the process of moving to a preset,
+                // and someone hit a manual control, so we have to cancel the preset.
+                lifterState = 0;
+                lifterExtenderTarget = 0;
+                lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                lifter.setPower(lifterManualPower);
+            }
+
+            boolean liftAllIn = gamepad2.x;
+            boolean liftAllOut = gamepad2.b;
+            if (liftAllOut) {
+                startLifterMoving(lifterStartPosition + 4500);
+            } else if (liftAllIn) {
+                startLifterMoving(lifterStartPosition);
+            }
+
+            boolean lyfterCalibrate = gamepad2.dpad_right;
+            if (lyfterCalibrate) {
+                lifterStartPosition = lifter.getCurrentPosition();
+            }
+
+            if (lifterState == 1 && !lifter.isBusy()) {
+                lifterState = 0;
+                lifterExtenderTarget = 0;
+                lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                lifter.setPower(0);
+                telemetry.addLine("Position Moved!");
+            }
+        }
+
+        /*if(armState == 2 && !shoulder.isBusy()){
+            armState = 0;
+            telemetry.addLine("Position Moved!");
+        } */
+
+        telemetry.addData("Shoulder", "curr: %7d", shoulder.getCurrentPosition());
+        telemetry.addData("Extender", "start: %d, curr: %d, target: %d, armState: %d",
+                extenderStartPostion, extender.getCurrentPosition(), extenderTarget, armState);
+        telemetry.addData("Lifter", "start: %d, curr: %d, target: %d, liftState: %d",
+                lifterStartPosition, lifter.getCurrentPosition(), lifterExtenderTarget, lifterState);
+    }
+
+
+    protected void startLifterMoving(int lTarget){
+        // Get the current position.
+        int lifterStart = lifter.getCurrentPosition();
+        telemetry.addData("LifterStartingPos.", "Starting %7d", lifterStart);
+
+        // Turn On RUN_TO_POSITION
+        lifter.setTargetPosition(lTarget);
+        lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lifter.setPower(0.75);
+
+        //Set global Movement State
+        lifterState = 1;
+        lifterExtenderTarget = lTarget;
     }
 
     protected void startArmMoving(int eTarget, int sTarget){
-        // save the g;obal movement state
-
         // Get the current position.
         int extenderStart = extender.getCurrentPosition();
         telemetry.addData("StartingPos.", "Starting %7d", extenderStart);
@@ -291,16 +331,12 @@ public class QuickSilverController extends OpMode {
         shoulderTarget = sTarget;
     }
 
-    protected void stopArmMoving() {
-        armState = 0;
-        extenderTarget = 0;
-        shoulderTarget = 0;
 
-        shoulder.setPower(0);
-        shoulder.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        extender.setPower(0);
-        extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    protected void sleep(long milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
     }
-
 }
-

@@ -28,8 +28,8 @@ public abstract class StandardChassis extends OpMode {
     private DcMotor shoulder;
 
     // Team Marker Servo
-    protected Servo flagHolder;
-    protected double angleHand;
+    private Servo flagHolder;
+    private double angleHand;
 
     // Walle state management
     int wasteAllocationLoadLifterEarthBegin;
@@ -84,8 +84,7 @@ public abstract class StandardChassis extends OpMode {
         // Team marker servo
         if (useTeamMarker) {
             flagHolder = hardwareMap.get(Servo.class, "servo1");
-            angleHand = 0.5;
-            flagHolder.setPosition(angleHand);
+            resetFlag();
         }
 
         // init the lifter arm,
@@ -134,7 +133,18 @@ public abstract class StandardChassis extends OpMode {
 
     public void dropFlag() {
         if (useTeamMarker) {
-            angleHand = 0.0;
+            if(config.isTeamMarkerReversed()) {
+                angleHand = 1.0;
+            } else {
+                angleHand = 0.0;
+            }
+            flagHolder.setPosition(angleHand);
+        }
+    }
+
+    public void resetFlag() {
+        if (useTeamMarker) {
+            angleHand = 0.5;
             flagHolder.setPosition(angleHand);
         }
     }
@@ -545,30 +555,12 @@ public abstract class StandardChassis extends OpMode {
     protected void descendFromLander() {
         // go down.
         lyftDownWalle();
-        strafeLeft(250);
-        encoderDrive(2,2);
+        strafeRight(450);
 
-        //slide up the extender
-        //TODO: this isn't really a todo, but always start the robot at -604 counts
-       // slideUpExtender(3100);
-
-        //PullOut the shoulder
-       // shiftShoulderDown(-21446);
-
-        //nudgeBack();
-
-       // slideUpExtender(400);
-
-        //Strafe right (to remove bot from lander attachment)
-         //turnRight(5);
-       // nudgeRight();
-       // nudgeRight();
-
-       //  pointToZero();
     }
 
     protected void lyftDownWalle() {
-        double speed = 0.5;
+        double speed = 1.0f;
 
         // Get the current position.
         int lyftBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
