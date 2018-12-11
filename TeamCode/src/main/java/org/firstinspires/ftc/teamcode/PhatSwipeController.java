@@ -232,17 +232,20 @@ public class PhatSwipeController extends OpMode {
                     motorFrontRight.setPower(rightFrontPower);
                 }
 
-            //control lifter (temporary)
-            //TODO: get auto lifter code from flynn
-            boolean liftUp = gamepad1.y;
-            boolean lowerDown = gamepad1.a;
-            double liftPower = 0.0;
-            if (liftUp) {
-                liftPower = 0.4;
-            } else if (lowerDown) {
-                liftPower = -0.4;
-            }
-            lifter.setPower(liftPower);
+                if(useLifter){
+                    //control lifter (temporary)
+                    //TODO: get auto lifter code from flynn
+                    boolean liftUp = gamepad1.y;
+                    boolean lowerDown = gamepad1.a;
+                    double liftPower = 0.0;
+                    if (liftUp) {
+                        liftPower = 0.4;
+                    } else if (lowerDown) {
+                        liftPower = -0.4;
+                    }
+                    lifter.setPower(liftPower);
+                }
+
 
 
             //control bulldozer
