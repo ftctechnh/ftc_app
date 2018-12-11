@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name = "!FinalDepot")
-public class AutonomousFinalDepot extends LinearOpMode
+@Autonomous(name = "PracticeDepot")
+public class PracticeDepot extends LinearOpMode
 {
     CompRobot compRobot;
 
@@ -28,9 +28,7 @@ public class AutonomousFinalDepot extends LinearOpMode
         compRobot.deployMarker();
         compRobot.driveStraight(-6,1);
         compRobot.pivotenc(-150, .5f);
-
-        compRobot.hugWallToLeft(4,7, 18, 84);
-        compRobot.driveStraight(6, .8f);
+        compRobot.driveStraight(80, .8f);
         telemetry.addData("Stopped", null);
         telemetry.update();
 
@@ -41,6 +39,3 @@ public class AutonomousFinalDepot extends LinearOpMode
 
     }
 }
-
-
-
