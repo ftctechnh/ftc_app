@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- *  This is from the position closest to the team depot.
+ *  This is from the position closest to the crater.
  */
-public abstract class TeamMarkerRun extends StandardChassis {
+public abstract class DescendFromLander2 extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected TeamMarkerRun(ChassisConfig config) {
+    protected DescendFromLander2 (ChassisConfig config) {
         super(config);
     }
 
@@ -17,7 +17,7 @@ public abstract class TeamMarkerRun extends StandardChassis {
     @Override
     public void init() {
         initMotors();
-        //initArm();
+        initArm();
         initGyroscope();
         initTimeouts();
     }
@@ -53,14 +53,21 @@ public abstract class TeamMarkerRun extends StandardChassis {
 
         if (madeTheRun == false) {
 
-           encoderDrive(52, 52);
+            descendFromLander();
+
+            encoderDrive(15, 15);
+            turnLeft(68);
+            encoderDrive(24, 24);
+            turnLeft(48);
+            encoderDrive(60, 60);
 
             dropFlag();
             sleep(3000);
             resetFlag();
 
-            turnRight(125);
-            encoderDrive(90, 90);
+            turnRight(165);
+            encoderDrive(103 , 110);
+
 
             madeTheRun = true;
         }

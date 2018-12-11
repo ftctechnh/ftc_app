@@ -61,11 +61,11 @@ public abstract class TeamMarkerRun2 extends StandardChassis {
 
             dropFlag();
             sleep(3000);
-            angleHand = 0.75;
-            flagHolder.setPosition(angleHand);
+            resetFlag();
 
             turnRight(165);
             encoderDrive(103 , 110);
+
 
             madeTheRun = true;
         }
