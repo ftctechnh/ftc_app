@@ -96,7 +96,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@TeleOp(name="Monsieur Mallah Vuforia", group="MonsieurMallah")
+@TeleOp(name="Monsieur Mallah Vuforia", group="User")
 public class MonsieurMallahNavigation extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";
