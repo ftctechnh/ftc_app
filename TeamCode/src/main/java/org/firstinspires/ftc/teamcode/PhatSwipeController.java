@@ -69,6 +69,7 @@ public class PhatSwipeController extends OpMode {
     private boolean useEncoders = true;
     private boolean useArms = false;
     private boolean useLifter = true;
+    private boolean useBulldozer =true;
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -135,6 +136,12 @@ public class PhatSwipeController extends OpMode {
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
+
+        if(useBulldozer){
+            bull = hardwareMap.get(Servo.class, "servo3");
+            dozer = hardwareMap.get(Servo.class, "servo2");
+
+        }
     }
 
     /**
@@ -231,9 +238,9 @@ public class PhatSwipeController extends OpMode {
             boolean lowerDown = gamepad1.a;
             double liftPower = 0.0;
             if (liftUp) {
-                liftPower = 1.0;
+                liftPower = 0.4;
             } else if (lowerDown) {
-                liftPower = -1.0;
+                liftPower = -0.4;
             }
             lifter.setPower(liftPower);
 
@@ -242,11 +249,11 @@ public class PhatSwipeController extends OpMode {
              boolean bullUp = gamepad1.dpad_up;
              boolean bullDown = gamepad1.dpad_down;
              if (bullUp) {
-             bull.setPosition(0.5);
+             bull.setPosition(1);
              dozer.setPosition(0);
              } else if (bullDown) {
                  bull.setPosition(0);
-                 dozer.setPosition(0.5);
+                 dozer.setPosition(1);
              }
 
 

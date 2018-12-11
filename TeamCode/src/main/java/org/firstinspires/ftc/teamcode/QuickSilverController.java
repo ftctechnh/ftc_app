@@ -48,9 +48,12 @@ public class QuickSilverController extends OpMode {
     private boolean useLifter = true;
 
     //Movement State
-     int armState;
+    int armState;
     int extenderTarget;
     int shoulderTarget;
+    int lifterState;
+    int lifterExtenderTarget;
+
 
     /**
      * Code to run ONCE when the driver hits INITh6
