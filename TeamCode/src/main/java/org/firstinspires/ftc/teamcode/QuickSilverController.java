@@ -20,26 +20,23 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 @TeleOp(name="QuickSilverController", group="MonsieurMallah")
 public class QuickSilverController extends OpMode {
 
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.9375;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-
-    // Elapsed time since the opmode started.
-    private ElapsedTime runtime = new ElapsedTime();
-
     // Motors connected to the hub.
     private DcMotor motorBackLeft;
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
+
+    // arm motors
     private DcMotor extender;
     private DcMotor tacVac;
     private DcMotor shoulder;
     private DcMotor lifter;
 
     private int extenderStartPostion = 0;
+
+    // servos in end scooper
+    private Servo servoLeft;
+    private Servo servoRight;
 
     // Hack stuff.
     private boolean useMotors = true;
@@ -54,14 +51,13 @@ public class QuickSilverController extends OpMode {
     int lifterState;
     int lifterExtenderTarget;
 
-
     /**
-     * Code to run ONCE when the driver hits INITh6
+     * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
 
-        //Init Movement state
+        // Init Movement state
         armState = 0;
         extenderTarget = 0;
         shoulderTarget = 0;
@@ -94,9 +90,11 @@ public class QuickSilverController extends OpMode {
             }
         }
 
+        // Init the arm.
         if (useArm) {
             shoulder = hardwareMap.get(DcMotor.class, "motor4");
             tacVac = hardwareMap.get(DcMotor.class, "motor7");
+          
             extender = hardwareMap.get(DcMotor.class, "motor5");
             extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -225,23 +223,8 @@ public class QuickSilverController extends OpMode {
                 suckPower = 1.0;
             }
             tacVac.setPower(suckPower);
-
-
-           // Setting certain postions for arm & extender
-           // boolean jewelPickUp = gamepad2.a;
-           // boolean moving = gamepad2.b;
-            //boolean deposit = gamepad2.x;
-           /* if (jewelPickUp){
-                startArmMoving(-3127, 16714);
-            }else if (moving){
-                startArmMoving(-2691, 9103);
-            }else if (deposit){
-                startArmMoving(3185, -8695);
-            } */
         }
-
-        //Time to Move!
-
+      
        if(armState == 1 && !extender.isBusy()){
             armState = 0;
             extenderTarget = 0;
@@ -260,6 +243,7 @@ public class QuickSilverController extends OpMode {
             telemetry.addLine("Position Moved!");
         } */
 
+        telemetry.addData("Shoulder", "curr: %7d", shoulder.getCurrentPosition());
         telemetry.addData("Extender", "start: %d, curr: %d, target: %d, armState: %d",
                 extenderStartPostion, extender.getCurrentPosition(), extenderTarget, armState);
         telemetry.addData("Lifter", "curr: %d",
@@ -282,12 +266,12 @@ public class QuickSilverController extends OpMode {
         shoulderTarget = sTarget;
     }
 
-    protected void sleep ( long milliseconds){
+
+    protected void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-
         }
     }
 }

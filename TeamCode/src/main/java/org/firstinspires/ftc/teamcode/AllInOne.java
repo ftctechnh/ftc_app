@@ -70,7 +70,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * - Finally, we translate it back along the X axis towards the red audience wall.
  */
 
-@TeleOp(name="All in One", group="MonsieurMallah")
+@TeleOp(name="All in One", group="User")
 public class AllInOne extends OpMode {
 
     public static final String TAG = "Vuforia Navigation Sample";

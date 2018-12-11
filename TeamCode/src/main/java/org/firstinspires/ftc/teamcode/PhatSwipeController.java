@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipeController", group="MonsieurMallah")
+@TeleOp(name="PhatSwipeController", group="BPhatSwipe")
 public class PhatSwipeController extends OpMode {
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -59,9 +59,9 @@ public class PhatSwipeController extends OpMode {
     protected double angleHand;
 
     // Hand servo.
-    // private Servo servoHand;
-    //private Servo flagHolder;
-    //private double angleHand;
+     private Servo servoHand;
+    private Servo flagHolder;
+    private double angleHand;
 
     // Hack stuff.
     private boolean useGyroscope = false;
@@ -97,7 +97,7 @@ public class PhatSwipeController extends OpMode {
 
 
 
-            // servoHand = hardwareMap.get(Servo.class, "servo0");
+            //servoHand = hardwareMap.get(Servo.class, "servo0");
             //flagHolder = hardwareMap.get(Servo.class, "servo1");
             //angleHand = 0.75;
             //flagHolder.setPosition(angleHand);
@@ -198,14 +198,14 @@ public class PhatSwipeController extends OpMode {
                 // Control the wheel motors.
                 // POV Mode uses left stick to go forward, and right stick to turn.
                 // - This uses basic math to combine motions and is easier to drive straight.
-                double driveNormal = -gamepad1.left_stick_y;
-                double driveStrafe = -gamepad1.left_stick_x;
+                double driveNormal = gamepad1.left_stick_y;
+                double driveStrafe = gamepad1.left_stick_x;
                 if (Math.abs(driveNormal) < 0.1)
                     driveNormal = 0.0; // Prevent the output from saying "-0.0".
                 if (Math.abs(driveStrafe) < 0.1)
                     driveStrafe = 0.0; // Prevent the output from saying "-0.0".
 
-                double turn = gamepad1.right_stick_x;
+                double turn = -gamepad1.right_stick_x;
 
                 double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
                 double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
