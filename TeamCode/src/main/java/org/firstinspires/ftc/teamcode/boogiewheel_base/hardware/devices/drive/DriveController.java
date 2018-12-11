@@ -184,6 +184,10 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
+    public synchronized void runPath(){
+
+    }
+
     public synchronized void setPosition(int position, double power) {
         this.motorPosition = position;
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
