@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-@Autonomous(name = "!FinalPictureFirst")
-public class AutonomousFinalPictureFirst extends LinearOpMode
+@Autonomous(name = "PracticePictureFirst")
+public class PracticePictureFirst extends LinearOpMode
 {
     CompRobot compRobot;
     VuforiaFunctions vuforiaFunctions;
@@ -18,28 +15,26 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         float yawAngle = 90;
         float frontSensorDepth = 2;
         float rightSensorDepth = 2;
-        float leftSensorDepth = 2;
-        float backSensorDepth = 2;
         float  yawAngleTurn;
         float distanceTraveled = 0;
         waitForStart();
         compRobot.climbDown();
-        sleep(200);
+        sleep(2000);
         compRobot.driveStraight(10,.8f);
         compRobot.pivotenc(95, .8f); //100 worked about 2/3 of the time
 
         while (true)
         {
             double frontDist = compRobot.getFrontDistance_IN();
-            if (frontDist <= 7 + frontSensorDepth)
-            break;
+            if (frontDist <= 3 + frontSensorDepth)
+                break;
             else
-                compRobot.driveStraight(5, .5f);
-                distanceTraveled = distanceTraveled + 5;
-                if (distanceTraveled >= 55)
-                {
-                    break;
-                }
+                compRobot.driveStraight(8, .5f);
+            distanceTraveled = distanceTraveled + 8;
+            if (distanceTraveled == 40)
+            {
+                break;
+            }
         }
         compRobot.stopDriveMotors();
         {
@@ -51,7 +46,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
                 telemetry.addData("X (ft): ", vuforiaFunctions.getXPosIn() / 12f);
                 telemetry.addData("Y (ft): ", vuforiaFunctions.getYPosIn() / 12f);
                 telemetry.addData("YAW ", vuforiaFunctions.getYawDeg());
-                sleep(100);
+                sleep(1000);
                 yawAngle = vuforiaFunctions.getYawDeg();
                 yawAngleTurn = 100 - yawAngle;
                 compRobot.pivotenc(yawAngleTurn, .8f);
@@ -64,18 +59,10 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
 
             telemetry.update();
         }
-        compRobot.hugWallToRight(6 + rightSensorDepth, 9 + rightSensorDepth, 26, 48);
-        //The hug wall code in the method is a bit different than the one that was in the original auto file
-        //make sure that it still runs as intended.
-
-        telemetry.addData("Stopped", null);
-        sleep(200);
+        compRobot.driveStraight(48, .8f);
         compRobot.deployMarker();
         telemetry.update();
-        compRobot.driveStraight(-35, .5f);
-        compRobot.pivotenc(-230, .8f);
-        compRobot.hugWallToLeft(6 + rightSensorDepth, 9 + rightSensorDepth, 38, 60);
-        compRobot.driveStraight(12, .8f); //since the hugwall stops at the crater, this takes robot into crater
+        compRobot.driveStraight(-72, .5f);
         compRobot.stopDriveMotors();
     }
 }
