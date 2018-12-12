@@ -14,7 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 public class CompRobot extends BasicBot {
     LinearOpMode linearOpMode;
 
-    private DistanceSensor frontDistSens, frontRightDistSens, leftDistSens;
+    private DistanceSensor frontDistSens, rightDistSens, leftDistSens;
     private DcMotorImplEx collectorPivoterMotor, collectorLifterMotor, climberMotor;
     private Servo wristCollectorServo;
     private CRServo rightGrabCRServo, leftGrabCRServo;
@@ -32,7 +32,7 @@ public class CompRobot extends BasicBot {
     }
 
     public void initSensors(HardwareMap hardwareMap) {
-        frontRightDistSens = hardwareMap.get(DistanceSensor.class, "rightDistSens");
+        rightDistSens = hardwareMap.get(DistanceSensor.class, "rightDistSens");
         frontDistSens = hardwareMap.get(DistanceSensor.class, "frontDistSens");
         leftDistSens = hardwareMap.get(DistanceSensor.class, "leftDistSens");
     }
@@ -79,7 +79,10 @@ public class CompRobot extends BasicBot {
         dist_In = Math.abs(dist_In);
         float encTarget = 19.4366f * dist_In - 44.004f;
 
-        while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested()) {
+        while ((Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget)
+                && (Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget)
+                && (!linearOpMode.isStopRequested()))
+        {
 
         }
         super.stopDriveMotors();
@@ -109,11 +112,11 @@ public class CompRobot extends BasicBot {
     }
 
     public DistanceSensor getFrontRightDistSens() {
-        return frontRightDistSens;
+        return rightDistSens;
     }
 
     public double getRightDistance_IN() {
-        return frontRightDistSens.getDistance(DistanceUnit.INCH);
+        return rightDistSens.getDistance(DistanceUnit.INCH);
     }
 
     public DistanceSensor getLeftDistSens() {
@@ -135,31 +138,34 @@ public class CompRobot extends BasicBot {
     public void hugWallToRight(float tooCloseToSideWall, float tooFarFromSideWall,
                                float distAwayFromFrontWall, float maximumDistance)
     {
-        double straightDist, rightDist;
-        straightDist = getFrontDistance_IN();
         double straightDistanceTraveled = 0;
         float stepDistance = 8;
         float stepPivotAmtDeg = 15;
+
         linearOpMode.telemetry.addData("in hug wall", null);
-        linearOpMode.telemetry.addData("front dist= ", straightDist);
+        linearOpMode.telemetry.addData("front dist= ", getFrontDistance_IN());
         linearOpMode.telemetry.update();
-        while (getFrontDistance_IN() > distAwayFromFrontWall
-                && !linearOpMode.isStopRequested())
+        linearOpMode.sleep(100);
+
+        while (!linearOpMode.isStopRequested())
         {
-            straightDist = getFrontDistance_IN();
+            double straightDist = getFrontDistance_IN();
             if (straightDist <= distAwayFromFrontWall)
             {
+                linearOpMode.telemetry.addData("Close Enough", null);
+                linearOpMode.telemetry.addData("front dist= ", straightDist);
+                linearOpMode.telemetry.update();
+                linearOpMode.sleep(2000);
                 break;
             }
             linearOpMode.telemetry.addData("Going forward 3", null);
             driveStraight(3, .8f);
-            linearOpMode.telemetry.update();
             straightDistanceTraveled = straightDistanceTraveled + 3;
             linearOpMode.telemetry.addData("front Dist: ", straightDist);
             linearOpMode.telemetry.update();
             if (straightDist > distAwayFromFrontWall)
             {
-                rightDist = getRightDistance_IN();
+                double rightDist = getRightDistance_IN();
 
                 linearOpMode.telemetry.addData("front Dist>18", null);
                 linearOpMode.telemetry.addData("right Dist ", rightDist);
