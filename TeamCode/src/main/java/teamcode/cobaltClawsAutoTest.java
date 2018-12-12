@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 
+import teamcode.connor.HardwareManager;
 import teamcode.examples.Helper;
 import teamcode.examples.Mineral;
 import teamcode.examples.TensorFlowManager;
@@ -60,9 +61,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             KKL2HardwareManager.liftLatchServo.setPosition(1);
             sleep(500);
             KKL2HardwareManager.liftLatchServo.setPosition(0);
-            sleep(2000);
-
-            turn(Direction.Right, 401, driveSpeed);
+            sleep(500);
 
             // move arm back down
             resetLiftEncoders();
@@ -73,9 +72,12 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             zeroLiftMotorPower();
             resetLiftEncoders();
 
+            //requestOpModeStop();
+
             //move(Direction.Forward, 10, driveSpeed);
 
-            /*int correctionAngle = 0;
+            int correctionAngle = 0;
+            int correctionDistance = 0;
             boolean searchForMinerals = true;
 
             while(searchForMinerals) {
@@ -97,7 +99,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
                                 telemetry.addData("center: ", center);
 
                                 //move straight
-                                move(Direction.Forward, 30, driveSpeed);
+                                move(Direction.Forward, 40, driveSpeed);
+
+                                correctionDistance += 10;
                                 searchForMinerals = !searchForMinerals;
 
 
@@ -148,9 +152,9 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             telemetry.addData("correctionAngle", correctionAngle);
             telemetry.update();
 
-            move(Direction.Backward, 30, driveSpeed);
+            move(Direction.Backward, 30 + correctionDistance, + driveSpeed);
             turn(Direction.Left, correctionAngle, driveSpeed);
-            move(Direction.Forward, 18, driveSpeed);
+            move(Direction.Forward, 17, driveSpeed);
             turn(Direction.Left, 80, driveSpeed);
 
 
@@ -158,7 +162,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
             move(Direction.Forward, 23, driveSpeed);
             turn(Direction.Left, 35, driveSpeed);
             move(Direction.Forward, 36, driveSpeed);
-            requestOpModeStop();*/
+            requestOpModeStop();
 
         }
 
