@@ -3,81 +3,43 @@ package teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
+
+import java.util.List;
+
+import teamcode.examples.Mineral;
+import teamcode.examples.TensorFlowManager;
+import teamcode.kkl2.KKL2HardwareManager;
 
 @Autonomous(name = "cobaltClawsDegreeTest", group = "Linear OpMode")
 
 public class cobaltClawsDegreeTest extends LinearOpMode {
 
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor LeftDriveMotor;  //motor 0
-    private DcMotor RightDriveMotor; //motor 1
 
-    //private DcMotor ArmMotor; //motor 2
-    //private DcMotor HangMotor; //motor 3
-
-    //private Servo ArmServoBase;  //servo
-    //private Servo ArmServoWrist; //servo
-    //private Servo GrabberServo;  //servo
-    //private Servo SensorServo;   // servo
-
-    //establishes and sets starting motor positions
-    //int armInitialPosition = 0; //guessed limit
-    //double armMaximumPosition = 600; //guessed limit
-
-    //int armPosition;
-
-    //boolean hangArmUp;
 
     double driveSpeed = 0.25;
 
-    //private ColorSensor colorSensorOuter;
-    //private ColorSensor colorSensorInner;
+    private static final double INCH_CONVERSION_RATIO = 55.0 / 0.39370079;
+    private static final double RADIAN_CONVERSION_RATIO = 1000;
+    private static final double DEGREES_TO_RADIANS = Math.PI / 180;
 
-    //1000 ticks is about 26 inches
-    private final double inchConversionRatio = 34.46;
+    private TensorFlowManager tfManager;
 
-    //100 ticks is about  degrees
-    private final double degreeConversionRatio = 1;
-
-    //public enum Direction {Forward, Backward, Left, Right}
+    public enum Direction {Forward, Backward, Left, Right}
 
     @Override
     public void runOpMode() {
 
 
         //run the initialize block
+        KKL2HardwareManager.initialize(this);
         this.initialize();
 
         waitForStart();
-        runtime.reset();
 
-        //READ: Resets motor encoders, sets motors to run to position. Turns left 100 ticks at a
-        //  safe speed until close to desired position. Then stops motors and degrees can be
-        //  measured for a conversion rate.
         while (opModeIsActive()) {
 
-            RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            LeftDriveMotor.setTargetPosition(100);
-            RightDriveMotor.setTargetPosition(-100);
-
-            LeftDriveMotor.setPower(0.25);
-            RightDriveMotor.setPower(0.25);
-
-            while (!motorsWithinTarget()) {
-
-                //Loop body can be empty
-                telemetry.update();
-
-            }
-
-            LeftDriveMotor.setPower(0);
-            RightDriveMotor.setPower(0);
+            turn(Direction.Left, 360, driveSpeed);
+            requestOpModeStop();
 
         }
 
@@ -86,78 +48,110 @@ public class cobaltClawsDegreeTest extends LinearOpMode {
 
     private void initialize() {
 
-        //giving internal hardware an external name for the app config
-        this.LeftDriveMotor = hardwareMap.get(DcMotor.class, "LeftDriveMotor");
-        this.RightDriveMotor = hardwareMap.get(DcMotor.class, "RightDriveMotor");
-        //this.ArmMotor = hardwareMap.get (DcMotor.class, "ArmMotor");
-        //this.HangMotor = hardwareMap.get(DcMotor.class, "HangMotor");
-        //this.ArmServoWrist = hardwareMap.get (Servo.class, "ArmServoWrist");
-        //this.ArmServoBase = hardwareMap.get (Servo.class, "ArmServoBase");
-        //this.GrabberServo = hardwareMap.get (Servo.class, "GrabberServo");
-        //this.SensorServo = hardwareMap.get(Servo.class, "SensorServo");
+        KKL2HardwareManager.driveLMotor.setDirection(DcMotor.Direction.FORWARD);
+        KKL2HardwareManager.driveRMotor.setDirection(DcMotor.Direction.REVERSE);
 
-        //this.colorSensorOuter = hardwareMap.get(ColorSensor.class, "colorSensorOuter");
-        //this.colorSensorInner = hardwareMap.get(ColorSensor.class, "colorSensorInner");
+        KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.tfManager = new TensorFlowManager(this.hardwareMap, this.telemetry);
+        this.tfManager.initialize();
+    }
 
 
-        //Sets correct directions for motors and servos
-        LeftDriveMotor.setDirection(DcMotor.Direction.FORWARD);
-        RightDriveMotor.setDirection(DcMotor.Direction.REVERSE);
-        //ArmMotor.setDirection(DcMotor.Direction.FORWARD);
-        //HangMotor.setDirection(DcMotor.Direction.FORWARD);
+    public void move(Direction direction, int inches, double speed) {
+
+        //Changes inches to work with ticks
+        inches *= INCH_CONVERSION_RATIO;
+
+        //Resets encoder and moves the inputted ticks
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
-        //ArmServoBase.setDirection(Servo.Direction.FORWARD);
-        //ArmServoWrist.setDirection(Servo.Direction.FORWARD);
+        if (direction == Direction.Forward) {
 
-        //GrabberServo.setDirection(Servo.Direction.FORWARD);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(inches);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(inches);
 
-        //SensorServo.setDirection(Servo.Direction.FORWARD);
+        } else if (direction == Direction.Backward) {
 
-        //Sets motors to work with position
-        //ArmMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        //HangMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        LeftDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        RightDriveMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(-inches);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(-inches);
 
-        RightDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        LeftDriveMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //ArmMotor.setMode    (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //HangMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+
+        KKL2HardwareManager.driveLMotor.setPower(speed);
+        KKL2HardwareManager.driveRMotor.setPower(speed);
+
+        while (!motorsWithinTarget()) {
+
+            //Loop body can be empty
+            telemetry.update();
+
+        }
+
+        KKL2HardwareManager.driveLMotor.setPower(0);
+        KKL2HardwareManager.driveRMotor.setPower(0);
+
+    }
+
+    public void turn(Direction direction, int degrees, double speed) {
+
+        //Converts degrees to radians, then changes to work with ticks
+        int radians = (int)(degrees * DEGREES_TO_RADIANS * RADIAN_CONVERSION_RATIO);
 
 
-        //hangArmUp = true;
+        //Resets the encoders and does a left point turn for the inputted degrees
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //Sets grabber servo to closed
-        //this.GrabberServo.setPosition(0);
+        KKL2HardwareManager.driveRMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        KKL2HardwareManager.driveLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        //Sets arm servos to hang position
-        //this.ArmServoWrist.setPosition(0);
-        //this.ArmServoBase.setPosition(0);
+        if (direction == Direction.Left) {
 
-        //Gives power to the arm motor
-        //this.ArmMotor.setPower(1.0);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(-radians);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(radians);
 
-        //Gets the current arm motor positions so driver can make sure motors are properly
-        // calibrated.
-        //armPosition = this.ArmMotor.getCurrentPosition();
+        }
 
-        //Tells the driver station that the robot is ready.
-        telemetry.addData("Status", "Online");
-        //telemetry.addData("Servo Position: ", SensorServo.getPosition());
-        telemetry.update();
+        if (direction == Direction.Right) {
+
+            KKL2HardwareManager.driveRMotor.setTargetPosition(radians);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(-radians);
+
+        }
+
+        KKL2HardwareManager.driveLMotor.setPower(speed);
+        KKL2HardwareManager.driveRMotor.setPower(speed);
+
+        while (!motorsWithinTarget()) {
+
+            //Loop body can be empty
+            telemetry.update();
+
+        }
+
+        KKL2HardwareManager.driveLMotor.setPower(0);
+        KKL2HardwareManager.driveRMotor.setPower(0);
+
     }
 
     public boolean motorsBusy() {
 
-        return (RightDriveMotor.isBusy() || LeftDriveMotor.isBusy()) && opModeIsActive();
+        return (KKL2HardwareManager.driveRMotor.isBusy() || KKL2HardwareManager.driveLMotor.isBusy()) && opModeIsActive();
 
     }
 
     public boolean motorsWithinTarget() {
 
-        int lDif = (LeftDriveMotor.getTargetPosition() - LeftDriveMotor.getCurrentPosition());
-        int rDif = (RightDriveMotor.getTargetPosition() - RightDriveMotor.getCurrentPosition());
+        int lDif = (KKL2HardwareManager.driveLMotor.getTargetPosition()
+                - KKL2HardwareManager.driveLMotor.getCurrentPosition());
+        int rDif = (KKL2HardwareManager.driveRMotor.getTargetPosition()
+                - KKL2HardwareManager.driveRMotor.getCurrentPosition());
 
         return ((Math.abs(lDif) <= 10) & (Math.abs(rDif) <= 10));
 

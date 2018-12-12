@@ -52,7 +52,7 @@ public class TensorFlowManager {
 
         this.telemetry = telemetry;
 
-        this.visionManager = new VisionManager(telemetry);
+        this.visionManager = new VisionManager();
 
     }
 

@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
     double driveSpeed = 0.25;
 
-    private static final double INCH_CONVERSION_RATIO = 55.0;
+    private static final double INCH_CONVERSION_RATIO = 55.0 / 0.39370079;
     private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
     private static final double DEGREES_TO_RADIANS = Math.PI / 180;
 
@@ -39,57 +40,84 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+            //move(Direction.Forward, 10, driveSpeed);
 
-            //Detects the gold, turns and drives forward to know it off, then moves back and goes to
-            //  a designated spot, then turns
-            List<Mineral> minerals = tfManager.getRecognizedMinerals();
-
-            //turn(Direction.Left, 50, driveSpeed);
             int correctionAngle = 0;
+            boolean searchForMinerals = true;
 
-            if (minerals != null) {
-
-                for (Mineral mineral : minerals) {
-
-                    if (mineral.isGold()) {
-                        // check where in the field of view is the gold
-                        float center = (mineral.getRight() + mineral.getLeft()) / 2;
-                        if (Math.abs(640 - center) <= 100) {
-
-                            //move straight
-                            move(Direction.Forward, 30, driveSpeed);
-
-                        } else if (640 - center < 0) {
-
-                            //turn left
-                            turn(Direction.Left, 50, driveSpeed);
-                            move(Direction.Forward, 30, driveSpeed);
-
-                            correctionAngle -= 50;
+            while(searchForMinerals) {
+                //Detects the gold, turns and drives forward to know it off, then moves back and goes to
+                //  a designated spot, then turns
+                List<Mineral> minerals = tfManager.getRecognizedMinerals();
 
 
-                        } else {
+                if (minerals != null) {
 
-                            //turn right
-                            turn(Direction.Right, 50, driveSpeed);
-                            move(Direction.Forward, 30, driveSpeed);
+                    for (Mineral mineral : minerals) {
 
-                            correctionAngle += 50;
+                        if (mineral.isGold()) {
+                            // check where in the field of view is the gold
+                            float center = (mineral.getTop() + mineral.getBottom()) / 2;
+                            if (Math.abs(640 - center) <= 300) {
+
+                                telemetry.addData("position: ", "center activated");
+                                telemetry.addData("center: ", center);
+
+                                //move straight
+                                move(Direction.Forward, 30, driveSpeed);
+                                searchForMinerals = !searchForMinerals;
+
+
+
+                            } else if (640 - center < 0) {
+
+                                telemetry.addData("position: ", "left activated");
+                                telemetry.addData("center: ", center);
+
+                                //turn left
+                                turn(Direction.Left, 30, driveSpeed);
+                                move(Direction.Forward, 30, driveSpeed);
+
+                                correctionAngle += 30;
+                                searchForMinerals = !searchForMinerals;
+
+
+
+                            } else {
+
+                                telemetry.addData("position: ", "right activated");
+                                telemetry.addData("center: ", center);
+
+                                //turn right
+                                turn(Direction.Right, 30, driveSpeed);
+                                move(Direction.Forward, 30, driveSpeed);
+
+                                correctionAngle -= 30;
+                                searchForMinerals = !searchForMinerals;
+
+
+                            }
+
 
                         }
 
-
                     }
-                    turn(Direction.Right, 50, driveSpeed);
-                    correctionAngle += 50;
 
                 }
 
+                telemetry.update();
+
             }
 
+            sleep(2000);
+
+            telemetry.addData("position: ", "go to crater");
+            telemetry.addData("correctionAngle", correctionAngle);
+            telemetry.update();
 
             move(Direction.Backward, 30, driveSpeed);
-            turn(Direction.Left, (50 + correctionAngle), driveSpeed);
+            move(Direction.Forward, 12, driveSpeed);
+            turn(Direction.Left, (90 + correctionAngle), driveSpeed);
             move(Direction.Forward, 12, driveSpeed);
             turn(Direction.Left, 90, driveSpeed);
 
@@ -106,6 +134,10 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     }
 
     private void initialize() {
+
+        KKL2HardwareManager.driveLMotor.setDirection(DcMotor.Direction.FORWARD);
+        KKL2HardwareManager.driveRMotor.setDirection(DcMotor.Direction.REVERSE);
+
         KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         this.tfManager = new TensorFlowManager(this.hardwareMap, this.telemetry);
@@ -168,15 +200,15 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         if (direction == Direction.Left) {
 
-            KKL2HardwareManager.driveRMotor.setTargetPosition(radians);
-            KKL2HardwareManager.driveLMotor.setTargetPosition(-radians);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(-radians);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(radians);
 
         }
 
         if (direction == Direction.Right) {
 
-            KKL2HardwareManager.driveRMotor.setTargetPosition(-radians);
-            KKL2HardwareManager.driveLMotor.setTargetPosition(radians);
+            KKL2HardwareManager.driveRMotor.setTargetPosition(radians);
+            KKL2HardwareManager.driveLMotor.setTargetPosition(-radians);
 
         }
 
