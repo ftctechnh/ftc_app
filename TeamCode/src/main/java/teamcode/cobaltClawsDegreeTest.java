@@ -19,7 +19,7 @@ public class cobaltClawsDegreeTest extends LinearOpMode {
     double driveSpeed = 0.25;
 
     private static final double INCH_CONVERSION_RATIO = 55.0 / 0.39370079;
-    private static final double RADIAN_CONVERSION_RATIO = 1000;
+    private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
     private static final double DEGREES_TO_RADIANS = Math.PI / 180;
 
     private TensorFlowManager tfManager;
@@ -38,7 +38,7 @@ public class cobaltClawsDegreeTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            turn(Direction.Left, 360, driveSpeed);
+            turn(Direction.Left, 90, driveSpeed);
             requestOpModeStop();
 
         }

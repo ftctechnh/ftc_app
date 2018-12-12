@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import java.util.List;
 
+import teamcode.examples.Helper;
 import teamcode.examples.Mineral;
 import teamcode.examples.TensorFlowManager;
 import teamcode.kkl2.KKL2HardwareManager;
@@ -23,6 +24,8 @@ public class cobaltClawsAutoTest extends LinearOpMode {
     private static final double INCH_CONVERSION_RATIO = 55.0 / 0.39370079;
     private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
     private static final double DEGREES_TO_RADIANS = Math.PI / 180;
+
+    private static final int LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD = 10;
 
     private TensorFlowManager tfManager;
 
@@ -40,9 +43,39 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+
+            // lower the robot using the servo
+            KKL2HardwareManager.liftSupportServo.setPosition(1.0);
+            sleep(9500);
+            KKL2HardwareManager.liftSupportServo.setPosition(0.5);
+
+            // push arm backwards
+
+            double liftBaseMotorPower = 1.0;
+            double ticksPerDegree = Helper.REV_CORE_HEX_MOTOR_TICKS_PER_ROTATION / 360.0 * 5.0;
+
+            // unlatch the lift arm
+            KKL2HardwareManager.liftLatchServo.setPosition(0);
+            sleep(500);
+            KKL2HardwareManager.liftLatchServo.setPosition(1);
+            sleep(500);
+            KKL2HardwareManager.liftLatchServo.setPosition(0);
+            sleep(2000);
+
+            turn(Direction.Right, 401, driveSpeed);
+
+            // move arm back down
+            resetLiftEncoders();
+            int ticks = (int)(ticksPerDegree * -70);
+            KKL2HardwareManager.liftBaseMotor.setTargetPosition(ticks);
+            KKL2HardwareManager.liftBaseMotor.setPower(liftBaseMotorPower);
+            while (opModeIsActive() && !liftNearTarget()) ;
+            zeroLiftMotorPower();
+            resetLiftEncoders();
+
             //move(Direction.Forward, 10, driveSpeed);
 
-            int correctionAngle = 0;
+            /*int correctionAngle = 0;
             boolean searchForMinerals = true;
 
             while(searchForMinerals) {
@@ -71,28 +104,28 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                             } else if (640 - center < 0) {
 
-                                telemetry.addData("position: ", "left activated");
+                                telemetry.addData("position: ", "right activated");
                                 telemetry.addData("center: ", center);
 
                                 //turn left
-                                turn(Direction.Left, 30, driveSpeed);
+                                turn(Direction.Right, 20, driveSpeed);
                                 move(Direction.Forward, 30, driveSpeed);
 
-                                correctionAngle += 30;
+                                correctionAngle += 20;
                                 searchForMinerals = !searchForMinerals;
 
 
 
                             } else {
 
-                                telemetry.addData("position: ", "right activated");
+                                telemetry.addData("position: ", "left activated");
                                 telemetry.addData("center: ", center);
 
                                 //turn right
-                                turn(Direction.Right, 30, driveSpeed);
+                                turn(Direction.Left, 20, driveSpeed);
                                 move(Direction.Forward, 30, driveSpeed);
 
-                                correctionAngle -= 30;
+                                correctionAngle -= 20;
                                 searchForMinerals = !searchForMinerals;
 
 
@@ -109,24 +142,23 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             }
 
-            sleep(2000);
+            //sleep(2000);
 
             telemetry.addData("position: ", "go to crater");
             telemetry.addData("correctionAngle", correctionAngle);
             telemetry.update();
 
             move(Direction.Backward, 30, driveSpeed);
-            move(Direction.Forward, 12, driveSpeed);
-            turn(Direction.Left, (90 + correctionAngle), driveSpeed);
-            move(Direction.Forward, 12, driveSpeed);
-            turn(Direction.Left, 90, driveSpeed);
+            turn(Direction.Left, correctionAngle, driveSpeed);
+            move(Direction.Forward, 18, driveSpeed);
+            turn(Direction.Left, 80, driveSpeed);
 
 
             //From the designated spot, drives to and into the crater.
             move(Direction.Forward, 23, driveSpeed);
-            turn(Direction.Left, 15, driveSpeed);
+            turn(Direction.Left, 35, driveSpeed);
             move(Direction.Forward, 36, driveSpeed);
-            requestOpModeStop();
+            requestOpModeStop();*/
 
         }
 
@@ -242,6 +274,32 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
         return ((Math.abs(lDif) <= 10) & (Math.abs(rDif) <= 10));
 
+    }
+
+    private void resetLiftEncoders() {
+        KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        KKL2HardwareManager.liftBaseMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    private void zeroLiftMotorPower() {
+        KKL2HardwareManager.liftBaseMotor.setPower(0.0);
+    }
+
+    private boolean liftNearTarget() {
+
+        int targetLiftMotorPos = KKL2HardwareManager.liftBaseMotor.getTargetPosition();
+
+        int currentLiftMotorPos = KKL2HardwareManager.liftBaseMotor.getCurrentPosition();
+
+        boolean nearTarget = Math.abs(currentLiftMotorPos - targetLiftMotorPos) < LIFT_MOTOR_TICKS_AWAY_FROM_TARGET_THRESHOLD;
+
+        telemetry.addData("liftTarget", targetLiftMotorPos);
+        telemetry.addData("liftCurrent", currentLiftMotorPos);
+
+        telemetry.update();
+
+        return nearTarget;
     }
 
 }
