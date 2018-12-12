@@ -81,7 +81,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                     }
                     turn(Direction.Right, 50, driveSpeed);
-                    correctionAngle++;
+                    correctionAngle += 50;
 
                 }
 
