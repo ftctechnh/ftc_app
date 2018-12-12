@@ -1,51 +1,27 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
-
+//DogeCV Imports
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.vuforia.CameraDevice;
-import com.vuforia.Vuforia;
-import com.vuforia.CameraDevice;
-import com.vuforia.DataSet;
-import com.vuforia.Frame;
-import com.vuforia.HINT;
-import com.vuforia.Image;
-import com.vuforia.Matrix34F;
-import com.vuforia.ObjectTracker;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.STORAGE_TYPE;
-import com.vuforia.State;
-import com.vuforia.Tool;
-import com.vuforia.Trackable;
-import com.vuforia.TrackableResult;
-import com.vuforia.Tracker;
-import com.vuforia.TrackerManager;
-import com.vuforia.Vec2F;
-import com.vuforia.Vec3F;
-import com.vuforia.Vuforia;
 
-
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 
-import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
-
-@Autonomous(name = "AutoStartNearDepot", group = "Neha")
-public class AutoStartNearDepot extends LinearOpMode {
+@Autonomous(name = "AutoTestDepot", group = "Neha")
+public class AutoTestDepot extends LinearOpMode {
 
     HardwareBruinBot robot = new HardwareBruinBot();
+
+    /**Settings for mineral distances */
+    double clicksToCenter = 0;
+    double clicksBetweenMineral = 0.800;
+    long millisecondsToPush = 800;
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
@@ -71,11 +47,11 @@ public class AutoStartNearDepot extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
 
     //public boolean found() { return GoldAlignExample.isFound(); }
-    //public boolean isAligned() { return detector.getAligned(); }
-    //public double getX() { return detector.getXPosition(); }
+    public boolean isAligned() { return detector.getAligned(); }
+    public double getX() { return detector.getXPosition(); }
+
     //----------------------------------runOpMode-------------------------------------------------------
     public void runOpMode() {
-
 
         // Initialize the Robot
         robot.init(hardwareMap);
@@ -88,8 +64,7 @@ public class AutoStartNearDepot extends LinearOpMode {
 
         }
 
-/*
-        //Variable setting rotation angle;
+        //DOGECV Variable setting rotation angle;
         detector = new GoldAlignDetector();
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
         detector.useDefaults();
@@ -106,10 +81,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         detector.ratioScorer.weight = 5;
         detector.ratioScorer.perfectRatio = 1.0;
 
-        //detector.enable();
-
-*/
-
+        detector.enable();
 
         // Wait for the Start button to be pushed ----------------------------START----------------------------------------------
 
@@ -122,6 +94,9 @@ public class AutoStartNearDepot extends LinearOpMode {
         while (opModeIsActive()) {
             //start landing here
             int landingLevel = -2090;  // Target level to land
+            /**temporary!/*/
+             landingLevel = -500;  // Target level to land
+
             double latchPower;
             //Reset the Encoder
             robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -178,27 +153,104 @@ public class AutoStartNearDepot extends LinearOpMode {
             }
         }
 */
+
             // Move  back to unhook the robot
             gyroHold(-0.5, 0, 0.2);
             // Move away from the robot
             gyroStrafe(0.5, 0);
-            sleep(1000);
+            sleep(900);
+            gyroHold(0.5, 0, 0.4);
             stopBot();
+
+            /** This code is not in the Crater code */
             if (isStopRequested()) stop();
 
             gyroSpin(0);
+
+            /**TRIAL CODE TO TRY SORTING LOGIC (need to add to Near Depot Also) */
+
+            //Move robot to center on center mineral
+            //moveBot(0.3,0,0,.5);
+            //sleep(500);
+            //stopBot();
+
+            /**TRIAL CODE WHICH NEEDS TO BE REMOVED AFTER:
+             * Move .5s, pause 6 sec to reset, move .7s, pause 6 sec, move .9s, pause 6 sec
+             * Each time, take a camera reading
+             * Once this is tested, choose the right interval and pixel settings
+              */
+            /**gyroHold(0.5,0,.5);
+            telemetry.addData("0.5 sec align", detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("0.5 sec pixels", detector.getXPosition()); // Gold X pos.
+            telemetry.update();
+            sleep(6000);
+
+            gyroHold(0.5,0,.7);
+            telemetry.addData("0.7 sec align", detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("0.7 sec pixels", detector.getXPosition()); // Gold X pos.
+            telemetry.update();
+            sleep(6000);
+
+            gyroHold(0.5,0,.9);
+            telemetry.addData("0.9 sec align #1", detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("0.9 sec pixels", detector.getXPosition()); // Gold X pos.
+            telemetry.update();
+            sleep(2000);
+            telemetry.addData("0.9 sec align #2", detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("0.9 sec pixels", detector.getXPosition()); // Gold X pos.
+            telemetry.update();
+            sleep(2000);
+            telemetry.addData("0.9 sec align #3", detector.getAligned()); // Is the bot aligned with the gold mineral
+            telemetry.addData("0.9 sec pixels", detector.getXPosition()); // Gold X pos.
+            telemetry.addData("pixels minus 300 Abs", (Math.abs(detector.getXPosition() - 300) < 100));
+            telemetry.update();
+            sleep(2000);
+*/
+            //If center, then push & move to close position,
+            // else move to far and if far, push and move to close position,
+            // else move to close position and push
+
+            //If mineral is near center, push it and then return to position
+            if (Math.abs(detector.getXPosition() - 330) < 150) {
+                telemetry.addData("Center mineral IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
+                telemetry.addData("Center mineral Pos", detector.getXPosition()); // Gold X pos.
+                telemetry.update();
+
+                mineralPush();
+
+                //Move to closest position
+                gyroHold(0.5,0,clicksBetweenMineral);
+               // moveToEncoder(clicksBetweenMineral);
+            } else {
+                //Move robot to center on farthest mineral
+                gyroHold(0.5,0,clicksBetweenMineral);
+               // moveToEncoder(-clicksBetweenMineral);
+                mineralPush();
+
+            }
+
+            //Turn off the camera
+            detector.disable();
+
             // Move towards the center of the field
-            gyroHold(0.4, 0, 1.5);
+            /**Can probably reduce this by about 1 second based on the new robot position */
+            gyroHold(0.4, 0, 0.5);
             //sleep(3000);
+
             // Spin to put the distance sensor towards the wall
             gyroSpin(315);
+
+            /** This code is not in the Crater code */
             if (isStopRequested()) stop();
 
+            /** The crater code uses a distance of 7 inches*/
             // Move towards the wall
             while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10) {
                 gyroStrafe(.5, 315);
             }
             stopBot();
+
+            /** This code is not in the Crater code */
             if (isStopRequested()) stop();
 
             // Back into the depot based on time
@@ -207,8 +259,9 @@ public class AutoStartNearDepot extends LinearOpMode {
                 moveBot(-0.3, 0, wallSteer(7), 0.3);
             }
             stopBot();
-            if (isStopRequested()) stop();
 
+            /** This code is not in the Crater code */
+            if (isStopRequested()) stop();
 
             int dropTarget = 3200;  // Target for dropping totem
             int levelTarget = 500;  // Target for holding arm forward and level
@@ -236,7 +289,6 @@ public class AutoStartNearDepot extends LinearOpMode {
             robot.armRotate.setPower(0);
             if (isStopRequested()) stop();
 
-
             // Drive towards the crater, stop 50 inches from wall
             while (sonarDistance() > 36) {
                 double wsteer = wallSteer(7);
@@ -260,7 +312,6 @@ public class AutoStartNearDepot extends LinearOpMode {
 
     public void moveToEncoder (double clicks) {
         double drivePower;
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
         if (clicks > 0) {
@@ -313,6 +364,10 @@ public class AutoStartNearDepot extends LinearOpMode {
             }
         }
         // Drive the motors scaled by scaleFactor
+
+        /**MAKE MOTORS RUN WITHOUT ENCODERS */
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         robot.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
         robot.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
         robot.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
@@ -331,6 +386,16 @@ public class AutoStartNearDepot extends LinearOpMode {
         robot.leftRearDrive.setPower(0);
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
+    }
+
+    //Method which pushes the mineral then returns to position
+    public void mineralPush() {
+        gyroStrafe(0.5, 0);
+        sleep(millisecondsToPush);
+        gyroStrafe(-0.5, 0);
+        sleep(millisecondsToPush);
+        stopBot();
+        gyroSpin(0);
     }
 
     public double wallSteer(double distance) {

@@ -46,6 +46,8 @@ public class CompetitionTeleOp extends LinearOpMode {
 
             moveBot(drive, rotate, strafe,0.3);
 
+ //           robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
             // LIFTING ARM SECTION!!!! --------------------------------------------------------
 
             // Read the driving gamepad triggers for the lifting arm
@@ -116,11 +118,55 @@ public class CompetitionTeleOp extends LinearOpMode {
 
             telemetry.update();
 
+            telemetry.addData("rightFront Drive Motor:", robot.rightFrontDrive.getCurrentPosition());
+            telemetry.update();
+
         }
     }
+    public void moveToEncoder (double clicks) {
+        double drivePower;
+ //       robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        if (clicks > 0) {
+            drivePower = 0.3;
+            while (robot.rightFrontDrive.getCurrentPosition()<clicks) {
+                robot.rightFrontDrive.setPower(drivePower);
+                robot.leftFrontDrive.setPower(drivePower);
+                robot.rightRearDrive.setPower(drivePower);
+                robot.leftRearDrive.setPower(drivePower);
+            }
+
+
+        }
+        else {
+            drivePower = -0.3;
+            while (robot.rightFrontDrive.getCurrentPosition()>clicks) {
+                robot.rightFrontDrive.setPower(drivePower);
+                robot.leftFrontDrive.setPower(drivePower);
+                robot.rightRearDrive.setPower(drivePower);
+                robot.leftRearDrive.setPower(drivePower);
+            }
+
+
+        }
+        robot.rightFrontDrive.setPower(0);
+        robot.leftFrontDrive.setPower(0);
+        robot.rightRearDrive.setPower(0);
+        robot.leftRearDrive.setPower(0);
+    }
+
+
+
+
+
+
+
+
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
     {
         // This module takes inputs, normalizes them to DRIVE_SPEED, and drives the motors
+//        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // How to normalize...Version 3
         //Put the raw wheel speeds into an array

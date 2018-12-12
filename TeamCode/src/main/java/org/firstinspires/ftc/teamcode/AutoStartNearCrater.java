@@ -184,6 +184,12 @@ public class AutoStartNearCrater extends LinearOpMode {
             stopBot();
             gyroSpin(0);
 
+            //TRIAL CODE TO TRY SORTING LOGIC WOULD GO HERE (need to add to Near Depot Also)
+           // telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
+            //telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
+            //telemetry.update();
+
+
             // Move closer to the wall
             gyroHold(0.4, 0, 1.5);
 
@@ -247,6 +253,41 @@ public class AutoStartNearCrater extends LinearOpMode {
 
         stop();
     }
+
+
+    public void moveToEncoder (double clicks) {
+        double drivePower;
+        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        if (clicks > 0) {
+            drivePower = 0.3;
+            while (robot.rightFrontDrive.getCurrentPosition()<clicks) {
+                robot.rightFrontDrive.setPower(drivePower);
+                robot.leftFrontDrive.setPower(drivePower);
+                robot.rightRearDrive.setPower(drivePower);
+                robot.leftRearDrive.setPower(drivePower);
+            }
+
+
+        }
+        else {
+            drivePower = -0.3;
+            while (robot.rightFrontDrive.getCurrentPosition()>clicks) {
+                robot.rightFrontDrive.setPower(drivePower);
+                robot.leftFrontDrive.setPower(drivePower);
+                robot.rightRearDrive.setPower(drivePower);
+                robot.leftRearDrive.setPower(drivePower);
+            }
+
+
+        }
+        robot.rightFrontDrive.setPower(0);
+        robot.leftFrontDrive.setPower(0);
+        robot.rightRearDrive.setPower(0);
+        robot.leftRearDrive.setPower(0);
+    }
+
 
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
     {
