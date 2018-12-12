@@ -45,8 +45,8 @@ public class TankDriveRoverRuckus extends LinearOpMode {
         while (opModeIsActive()) {
             Left.setPower(Range.clip(gamepad1.left_stick_y, -1, 1));
             Right.setPower(Range.clip(-gamepad1.right_stick_y, -1, 1));
-            Shoulder.setPower(Range.clip(gamepad2.left_stick_y, -1,1));
-            Elbow.setPower(Range.clip(-gamepad2.right_stick_y, -1,1));
+            Shoulder.setPower(.5*Range.clip(gamepad2.left_stick_y, -1,1));
+            Elbow.setPower(.5*Range.clip(-gamepad2.right_stick_y, -1,1));
             if(gamepad2.right_bumper&&!bumper){
                 wristdir = wristdir*-1;
             }

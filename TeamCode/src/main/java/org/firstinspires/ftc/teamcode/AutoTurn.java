@@ -35,9 +35,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Autonomous(name="AutoStillPhone", group="AutoStillPhone")
+@Autonomous(name="AutoTurn", group="AutoTurn")
 
-public class AutoStillPhone extends LinearOpMode {
+public class AutoTurn extends LinearOpMode {
 
     /* Declare OpMode members. */
     private DcMotor Left;
@@ -52,8 +52,8 @@ public class AutoStillPhone extends LinearOpMode {
         Left = hardwareMap.get(DcMotor.class, "left");
         Right = hardwareMap.get(DcMotor.class, "right");
 
-        //@Override
-        //public void runOpMode() {
+    //@Override
+    //public void runOpMode() {
 
         /*
          * Initialize the drive system variables.
@@ -68,16 +68,32 @@ public class AutoStillPhone extends LinearOpMode {
 
         // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
 
-        // Step 1:  Drive forward for 7 seconds
+        // Step 1:  Drive forward for .5 seconds
         Right.setPower(-FORWARD_SPEED);
         Left.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 2)) {
+        while (opModeIsActive() && (runtime.seconds() < 0.8)) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
 
+        // Step 2:  Spin right for 1 seconds
+        Right.setPower(-TURN_SPEED);
+        Left.setPower(-TURN_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 0.6)) {
+            telemetry.addData("Path", "Leg 2: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
+        // Step 3:  Drive Forward for 1 Second
+        Right.setPower(-FORWARD_SPEED);
+        Left.setPower(FORWARD_SPEED);
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 3.5)) {
+            telemetry.addData("Path", "Leg 3: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
 
     }
 }
