@@ -20,7 +20,7 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
 
 
-    double driveSpeed = 0.25;
+    double driveSpeed = 0.5;
 
     private static final double INCH_CONVERSION_RATIO = 55.0 / 0.39370079;
     private static final double RADIAN_CONVERSION_RATIO = 1066.15135303;
@@ -76,11 +76,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             //move(Direction.Forward, 10, driveSpeed);
 
+            move(Direction.Backward, 10, driveSpeed);
+
             int correctionAngle = 0;
             int correctionDistance = 0;
             boolean searchForMinerals = true;
 
-            while(searchForMinerals) {
+            while(searchForMinerals && opModeIsActive()) {
                 //Detects the gold, turns and drives forward to know it off, then moves back and goes to
                 //  a designated spot, then turns
                 List<Mineral> minerals = tfManager.getRecognizedMinerals();
@@ -90,51 +92,56 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
                     for (Mineral mineral : minerals) {
 
-                        if (mineral.isGold()) {
-                            // check where in the field of view is the gold
-                            float center = (mineral.getTop() + mineral.getBottom()) / 2;
-                            if (Math.abs(640 - center) <= 300) {
+                        if(searchForMinerals) {
 
-                                telemetry.addData("position: ", "center activated");
-                                telemetry.addData("center: ", center);
+                            if (mineral.isGold()) {
 
-                                //move straight
-                                move(Direction.Forward, 40, driveSpeed);
+                                move(Direction.Forward, 10, driveSpeed);
 
-                                correctionDistance += 10;
-                                searchForMinerals = !searchForMinerals;
+                                // check where in the field of view is the gold
+                                float center = (mineral.getTop() + mineral.getBottom()) / 2;
+                                if (Math.abs(640 - center) <= 100) {
 
+                                    telemetry.addData("position: ", "center activated");
+                                    telemetry.addData("center: ", center);
 
+                                    //move straight
+                                    move(Direction.Forward, 40, driveSpeed);
 
-                            } else if (640 - center < 0) {
-
-                                telemetry.addData("position: ", "right activated");
-                                telemetry.addData("center: ", center);
-
-                                //turn left
-                                turn(Direction.Right, 20, driveSpeed);
-                                move(Direction.Forward, 30, driveSpeed);
-
-                                correctionAngle += 20;
-                                searchForMinerals = !searchForMinerals;
+                                    correctionDistance += 10;
+                                    searchForMinerals = !searchForMinerals;
 
 
+                                } else if (640 - center < 0) {
 
-                            } else {
+                                    telemetry.addData("position: ", "right activated");
+                                    telemetry.addData("center: ", center);
 
-                                telemetry.addData("position: ", "left activated");
-                                telemetry.addData("center: ", center);
+                                    //turn left
+                                    turn(Direction.Right, 30, driveSpeed);
+                                    move(Direction.Forward, 30, driveSpeed);
 
-                                //turn right
-                                turn(Direction.Left, 20, driveSpeed);
-                                move(Direction.Forward, 30, driveSpeed);
+                                    correctionAngle += 30;
+                                    searchForMinerals = !searchForMinerals;
 
-                                correctionAngle -= 20;
-                                searchForMinerals = !searchForMinerals;
+
+                                } else {
+
+                                    telemetry.addData("position: ", "left activated");
+                                    telemetry.addData("center: ", center);
+
+                                    //turn right
+                                    turn(Direction.Left, 20, driveSpeed);
+                                    move(Direction.Forward, 30, driveSpeed);
+
+                                    correctionAngle -= 20;
+                                    searchForMinerals = !searchForMinerals;
+
+
+                                }
 
 
                             }
-
 
                         }
 
@@ -154,13 +161,13 @@ public class cobaltClawsAutoTest extends LinearOpMode {
 
             move(Direction.Backward, 30 + correctionDistance, + driveSpeed);
             turn(Direction.Left, correctionAngle, driveSpeed);
-            move(Direction.Forward, 17, driveSpeed);
+            move(Direction.Forward, 16, driveSpeed);
             turn(Direction.Left, 80, driveSpeed);
 
 
             //From the designated spot, drives to and into the crater.
             move(Direction.Forward, 23, driveSpeed);
-            turn(Direction.Left, 35, driveSpeed);
+            turn(Direction.Left, 20, driveSpeed);
             move(Direction.Forward, 36, driveSpeed);
             requestOpModeStop();
 
