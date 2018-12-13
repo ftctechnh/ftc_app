@@ -32,7 +32,8 @@ public class SparkyTheRobot extends MecanumHardware {
     public Intake intake;
 
     public Servo markerDeployer;
-    public Servo cameraFlipper;
+    public Servo parkingMarker;
+    private Servo cameraFlipper;
     public CameraFlipper cameraPositioner;
 
     // Sensors
@@ -60,6 +61,7 @@ public class SparkyTheRobot extends MecanumHardware {
 
             markerDeployer = hwMap.get(ServoImplEx.class, "markerDeployer");
             cameraFlipper = hwMap.get(ServoImplEx.class, "cameraFlipper");
+            parkingMarker = hwMap.get(ServoImplEx.class, "parkingMarker");
             cameraPositioner = new CameraFlipper(cameraFlipper);
 
             //armIMU = hwMap.get(BNO055IMU.class, "armIMU");
@@ -77,6 +79,7 @@ public class SparkyTheRobot extends MecanumHardware {
             linearSlide = new DcMotorExMock();
             winch = new DcMotorExMock();
             markerDeployer = new ServoMock();
+            parkingMarker = new ServoMock();
             cameraFlipper = new ServoMock();
             intake = new IntakeMock(null, null, null, null);
             cameraPositioner = new CameraFlipper(new ServoMock());

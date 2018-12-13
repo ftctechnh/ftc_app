@@ -21,7 +21,7 @@ public abstract class SuperiorSampling extends AutoUtils {
         robot.winch.setPower(1);
         robot.winch.setTargetPosition(-1500);
 
-        robot.intake.collect();
+        robot.intake.prepWinchLower();
 
         robot.sleep(2500);
 
@@ -37,6 +37,7 @@ public abstract class SuperiorSampling extends AutoUtils {
         robot = new SparkyTheRobot(this);
         robot.calibrate(true);
         robot.markerDeployer.setPosition(MARKER_DEPLOYER_RETRACTED);
+        robot.parkingMarker.setPosition(PARKING_MARKER_RETRACTED);
         initVuforia();
         setWinchHoldPosition();
 
@@ -58,11 +59,11 @@ public abstract class SuperiorSampling extends AutoUtils {
         }
 
         // Use appropriate method for dehooking
-        double[] possibleHeadings = {Math.PI / 2, Math.PI * 3 / 4, Math.PI};
+        double[] possibleHeadings = {Math.PI * 0.5, Math.PI * 0.75, Math.PI};
         if (startingPosition == StartingPosition.DEPOT) {
             unhookFromLander(drive, robot, possibleHeadings[goldLoc.index]);
         } else {
-            unhookFromLander(drive, robot, Math.PI * 3 / 4);
+            unhookFromLander(drive, robot, Math.PI * 1.75);
         }
 
         robot.cameraPositioner.flipDown();
@@ -72,15 +73,18 @@ public abstract class SuperiorSampling extends AutoUtils {
                 followPath(drive, AssetsTrajectoryLoader.load("Depo" + goldLoc.fileName + "Sel"));
                 turnToPos(0);
                 followPath(drive, Paths.STRAFE_LEFT);
+                robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                 followPath(drive, Paths.DEPOT_TO_OTHER_CRATER);
             } else {
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Sel"));
-                followPath(drive, AssetsTrajectoryLoader.load("CraterBackup"));
                 switchAppendagePositions();
+                turnToPos(Math.PI * 1.75);
+                followPath(drive, AssetsTrajectoryLoader.load("CraterBackup"));
                 turnToPos(Math.PI/4);
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Dir"));
 
-                if (goal == EndGoal.BLUE_DOUBLE_SAMPLE) {
+                if (goal == EndGoal.BLUE_DOUBLE_SAMPLE || goldLoc == GoldPosition.RIGHT) {
+                    robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                     if (goldLoc == GoldPosition.LEFT) {
                         turnToPos(3 * Math.PI / 2);
                     } else if (goldLoc == GoldPosition.CENTER) {
@@ -91,6 +95,7 @@ public abstract class SuperiorSampling extends AutoUtils {
                     followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));
                 } else {
                     turnToPos(0);
+                    robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                     followPath(drive, Paths.STRAFE_RIGHT);
                     followPath(drive, Paths.DEPOT_TO_SAME_CRATER);
                 }
@@ -100,5 +105,7 @@ public abstract class SuperiorSampling extends AutoUtils {
             e.printStackTrace();
         }
 
+        // Now we're parked by crater
+        robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
     }
 }

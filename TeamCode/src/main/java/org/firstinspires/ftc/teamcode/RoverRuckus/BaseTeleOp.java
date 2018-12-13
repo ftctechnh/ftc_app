@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
+import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.AutoUtils;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.ControlMapping;
 import org.firstinspires.ftc.teamcode.Utilities.Control.FeedbackController;
 import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
@@ -60,7 +61,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         // Intake flipper servos are disabled by default
         waitForStart();
-        robot.markerDeployer.setPosition(0.9);
+        robot.markerDeployer.setPosition(AutoUtils.MARKER_DEPLOYER_RETRACTED);
+        robot.parkingMarker.setPosition(AutoUtils.PARKING_MARKER_RETRACTED);
         loopTime.reset();
 
         while (opModeIsActive()) {

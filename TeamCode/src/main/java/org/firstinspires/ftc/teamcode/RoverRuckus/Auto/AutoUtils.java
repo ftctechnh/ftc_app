@@ -17,12 +17,19 @@ public abstract class AutoUtils extends VuforiaCVUtil {
 
     public static double MARKER_DEPLOYER_DEPLOY = 0;
     public static double MARKER_DEPLOYER_RETRACTED = 0.85;
+
+    public static double PARKING_MARKER_EXTENDED = 1;
+    public static double PARKING_MARKER_RETRACTED = 0;
+
     public static double HANG_HOLD_POWER = -0.15;
     public static String SETUP_ERROR_MSG = "WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG " +
             "WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG";
 
-    double TURN_MAX_SPEED = 0.6;
-    double ACCEPTABLE_HEADING_VARIATION = Math.PI / 45;
+    public static double DEPO_START_HEADING = Math.PI * 1.75;
+    public static double CRATER_START_HEADING = Math.PI * 0.75;
+
+    double TURN_MAX_SPEED = 0.5;
+    double ACCEPTABLE_HEADING_VARIATION = Math.PI / 180;
     double SETUP_ERROR_DETECTION_TOLERANCE = Math.PI / 12;
 
     public void setWinchHoldPosition() {
@@ -53,7 +60,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         robot.winch.setPower(0);
 
         robot.updateReadings();
-        turnToPos(finalHeading, -1);
+        turnToPos(finalHeading, 1);
     }
 
     public void refoldMechanisms() {
@@ -130,6 +137,9 @@ public abstract class AutoUtils extends VuforiaCVUtil {
         // Center: 297
         // Right: 80
 
+        double targetDir = startingPosition == StartingPosition.CRATER ?
+                CRATER_START_HEADING : DEPO_START_HEADING;
+
         while (!isStarted() && !isStopRequested()) {
             int middleLine = getMiddlePosition(detector.getFoundRect());
 
@@ -142,7 +152,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
             }
 
             double heading = robot.getHeading();
-            double diff = robot.getSignedAngleDifference(robot.getHeading(), (7.0/4.0) * Math.PI);
+            double diff = robot.getSignedAngleDifference(robot.getHeading(), targetDir);
             String message = (Math.abs(diff) < SETUP_ERROR_DETECTION_TOLERANCE) ?
                     "Correct" : SETUP_ERROR_MSG;
 
