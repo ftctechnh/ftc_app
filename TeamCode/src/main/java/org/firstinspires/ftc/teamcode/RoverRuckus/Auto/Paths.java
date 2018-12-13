@@ -13,19 +13,19 @@ import org.firstinspires.ftc.teamcode.DriveSystems.Mecanum.RoadRunner.DriveConst
 @Config
 public class Paths {
 
-    static Trajectory STRAFE_LEFT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+    static Trajectory STRAFE_RIGHT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(0, 15), new ConstantInterpolator(0))
             .build();
 
-    static Trajectory STRAFE_RIGHT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+    static Trajectory STRAFE_LEFT = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(0, -15), new ConstantInterpolator(0))
             .build();
 
-    static Trajectory DEPOT_TO_SAME_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-65, -10), new ConstantInterpolator(0))
+    static Trajectory DEPOT_TO_SAME_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(-65, -10), new ConstantInterpolator(Math.PI))
             .build();
 
-    static Trajectory DEPOT_TO_OTHER_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-65, 10), new ConstantInterpolator(0))
+    static Trajectory DEPOT_TO_OTHER_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(-65, 10), new ConstantInterpolator(Math.PI))
             .build();
 }
