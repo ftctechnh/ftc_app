@@ -25,7 +25,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         waitForStart();
         compRobot.climbDown();
         sleep(200);
-        compRobot.driveStraight(10,.8f);
+        compRobot.driveStraight(8,.8f);
         compRobot.pivotenc(95, .8f); //100 worked about 2/3 of the time
 
         while (true)
@@ -64,7 +64,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
 
             telemetry.update();
         }
-        compRobot.hugWallToRight(6 + rightSensorDepth, 9 + rightSensorDepth, 26, 48);
+        compRobot.hugWallToRight(4 + rightSensorDepth, 6 + rightSensorDepth, 18, 56);
         //The hug wall code in the method is a bit different than the one that was in the original auto file
         //make sure that it still runs as intended.
 
@@ -75,7 +75,7 @@ public class AutonomousFinalPictureFirst extends LinearOpMode
         compRobot.driveStraight(-35, .5f);
         compRobot.pivotenc(-230, .8f);
         compRobot.hugWallToLeft(6 + rightSensorDepth, 9 + rightSensorDepth, 38, 60);
-        compRobot.driveStraight(12, .8f); //since the hugwall stops at the crater, this takes robot into crater
+        compRobot.driveStraight(15, .8f); //since the hugwall stops at the crater, this takes robot into crater
         compRobot.stopDriveMotors();
     }
 }
