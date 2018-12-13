@@ -41,6 +41,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
+public abstract class BullRunCrater extends StandardChassis {
 
     private boolean madeTheRun = false;
 
