@@ -102,7 +102,7 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Send telemetry message to indicate successful Encoder reset
 
-        telemetry.addData("Working",
+        telemetry.addData("Working",  "Starting at %7d :%7d",
                          // robot.leftDrive.getCurrentPosition(),
                           //robot.rightDrive.getCurrentPosition()),
                             robot.armMotor.getCurrentPosition());
