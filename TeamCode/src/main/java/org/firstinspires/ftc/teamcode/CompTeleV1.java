@@ -6,8 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "CompTeleV1")
 public class CompTeleV1 extends OpMode
 {
-    CompRobot compRobot;
+    private CompRobot compRobot;
     private double wristPosition = 0;
+
     @Override
     public void init()
     {
@@ -21,12 +22,10 @@ public class CompTeleV1 extends OpMode
     {
         //Gramepad 1 -- DRIVER
         //Driving robot
-        /*
         telemetry.addData("LJoyStick= ", -gamepad1.left_stick_y);
         telemetry.addData("RJoyStick= ", -gamepad1.right_stick_y);
         telemetry.addData("Right Encod Ct: ", compRobot.getDriveRightOne().getCurrentPosition());
         telemetry.addData("Left Encod Ct: ", compRobot.getDriveLeftOne().getCurrentPosition());
-        */
         compRobot.driveMotors(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
 
         // control the motor for climbing
@@ -45,7 +44,7 @@ public class CompTeleV1 extends OpMode
         }
         else if (gamepad2.left_bumper)
         {
-            compRobot.setGrabberWheelPower(1);
+            compRobot.setGrabberWheelPower(1); //Positive power means you're spitting it out
         }
         else
         {
@@ -56,13 +55,13 @@ public class CompTeleV1 extends OpMode
 
         if (gamepad2.right_trigger > .2f)
         {
-            wristPosition += .007;
+            wristPosition += .0038;
             if (wristPosition > 1)
                 wristPosition = 1;
         }
         else if (gamepad2.right_bumper)
         {
-            wristPosition -= .007;
+            wristPosition -= .0038;
             if (wristPosition < 0)
                 wristPosition = 0;
         }
