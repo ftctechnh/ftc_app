@@ -135,6 +135,24 @@ public class VuforiaFunctions
         return false;
     }
 
+    public void updatePositions()
+    {
+        for (VuforiaTrackable trackable : allTrackables)
+        {
+            if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible())
+            {
+                currentNameOfTargetSeen = trackable.getName();
+                OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener) trackable.getListener()).getUpdatedRobotLocation();
+                if (robotLocationTransform != null)
+                {
+                    lastLocation = robotLocationTransform;
+                    translation = robotLocationTransform.getTranslation();
+                    rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
+                }
+            }
+        }
+    }
+
     public float getXPosIn()
     {
         return translation.get(0) / 25.4f;
