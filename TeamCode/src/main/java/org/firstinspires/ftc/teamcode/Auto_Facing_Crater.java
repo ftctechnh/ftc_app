@@ -28,7 +28,15 @@
  */
 
 package org.firstinspires.ftc.teamcode;
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.util.List;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -105,17 +113,19 @@ public class Auto_Facing_Crater extends LinearOpMode {
         robot.bot_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.top_left.getCurrentPosition(),
-                robot.top_right.getCurrentPosition(),
-                robot.bot_left.getCurrentPosition(),
-                robot.bot_right.getCurrentPosition(),
+        //telemetry.addData("Path0", "Starting at %7d :%7d",
+                //robot.top_left.getCurrentPosition(),
+                //robot.top_right.getCurrentPosition(),
+                //robot.bot_left.getCurrentPosition(),
+                //robot.bot_right.getCurrentPosition(),
 
-                telemetry.update());
-
+                //telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
+
         encoderDrive(DRIVE_SPEED, -8.75, 8.75, 5.0);
+        //ConceptTensorFlowObjectDetection TensorTime = new ConceptTensorFlowObjectDetection();
+        //TensorTime.runTensorFlow();
         encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
         encoderDrive(DRIVE_SPEED, -16,16,5.0 );
         encoderDrive(DRIVE_SPEED, 60,60,5.0 );
@@ -151,15 +161,15 @@ public class Auto_Facing_Crater extends LinearOpMode {
             robot.top_right.setTargetPosition(newTopRightTarget);
             robot.bot_right.setTargetPosition(newBotRightTarget);
 
-            telemetry.addData( "Start encoderDrive leftInches:", leftInches );
-            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
-            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
-            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
-            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
-            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
-            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
-            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
-            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+          //  telemetry.addData( "Start encoderDrive leftInches:", leftInches );
+            //telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            //telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            //telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            //telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            //telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            //telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            //telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            //telemetry.addData("TopRightBusy",robot.top_right.isBusy());
 
             //robot.leftDrive.getCurrentPosition(),
             telemetry.update();
@@ -195,15 +205,15 @@ public class Auto_Facing_Crater extends LinearOpMode {
                 //telemetry.addData("Path2", "Running ");
 
             }
-            telemetry.addData( "After while leftInches:", leftInches );
-            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
-            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
-            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
-            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
-            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
-            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
-            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
-            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+            //telemetry.addData( "After while leftInches:", leftInches );
+            //telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            //telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            //telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            //telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            //telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            //telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            //telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            //telemetry.addData("TopRightBusy",robot.top_right.isBusy());
 
             //robot.leftDrive.getCurrentPosition(),
             telemetry.update();
