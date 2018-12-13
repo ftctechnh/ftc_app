@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 @Autonomous(name="Quick; DescendBullDepot", group="AQuickSilver")
-public class QuickSilverDescendBull2 extends DescendBull2 {
-    public QuickSilverDescendBull2() {
+public class QuickSilverDescendBullDepot extends DescendBullDepot {
+    public QuickSilverDescendBullDepot() {
         super(ChassisConfig.forQuickSilver());
     }
 }

@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipeController", group="BPhatSwipe")
+@TeleOp(name="PhatSwipe Master", group="AAA")
 public class PhatSwipeController extends OpMode {
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
@@ -234,14 +234,13 @@ public class PhatSwipeController extends OpMode {
 
                 if(useLifter){
                     //control lifter (temporary)
-                    //TODO: get auto lifter code from flynn
                     boolean liftUp = gamepad1.y;
                     boolean lowerDown = gamepad1.a;
                     double liftPower = 0.0;
                     if (liftUp) {
-                        liftPower = 0.4;
+                        liftPower = 0.8;
                     } else if (lowerDown) {
-                        liftPower = -0.4;
+                        liftPower = -0.8;
                     }
                     lifter.setPower(liftPower);
                 }
