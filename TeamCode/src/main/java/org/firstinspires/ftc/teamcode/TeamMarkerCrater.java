@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- * This is from the position farthest from the team depot
+ * This is from the position closest to the crater.
  */
-public abstract class TeamMarkerRun2 extends StandardChassis {
+public abstract class TeamMarkerCrater extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected TeamMarkerRun2(ChassisConfig config) {
+    protected TeamMarkerCrater(ChassisConfig config) {
         super(config);
     }
 
