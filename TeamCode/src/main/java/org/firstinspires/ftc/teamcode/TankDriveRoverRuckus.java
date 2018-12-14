@@ -40,13 +40,18 @@ public class TankDriveRoverRuckus extends LinearOpMode {
         boolean x = true;
         double loffset = 0;
         double roffset = 0;
-        double prevtime= 0;
+        double prevTime= 0;
+        double currentTime = 0;
+        double elbow = Elbow.getCurrentPosition();
+        double shoulder = Shoulder.getCurrentPosition();
+        PID elbowPID = new PID(1,.0000000001,.00001);
+        PID shoulderPID = new PID(1,.0000000001,.00001);
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
             Left.setPower(Range.clip(gamepad1.left_stick_y, -1, 1));
             Right.setPower(Range.clip(-gamepad1.right_stick_y, -1, 1));
-            Shoulder.setPower(Range.clip(gamepad2.left_stick_y, -1,1));
-            Elbow.setPower(Range.clip(-gamepad2.right_stick_y, -1,1));
+            Shoulder.setPower(Range.clip(shoulderPID.getPID(), -1,1));
+            Elbow.setPower(Range.clip(elbowPID.getPID(), -1,1));
             if(gamepad2.right_bumper&&!bumper){
                 wristdir = wristdir*-1;
             }
@@ -69,13 +74,17 @@ public class TankDriveRoverRuckus extends LinearOpMode {
             }
             x = gamepad2.x;
             LGrabber.setPosition(Range.clip(LGrabber.MIN_POSITION+loffset,LGrabber.MIN_POSITION,LGrabber.MAX_POSITION));
-
+            prevTime = currentTime;
+            currentTime =getRuntime();
+            elbow-=gamepad1.right_stick_y*(currentTime-prevTime)*4/100;
+            shoulder-=gamepad1.left_stick_y*(currentTime-prevTime)*4/100;
+            elbowPID.iteratePID(elbow-Elbow.getCurrentPosition(), currentTime-prevTime);
+            shoulderPID.iteratePID(shoulder-Shoulder.getCurrentPosition(), currentTime-prevTime);
             //Winch code- up: right trigger, down: left trigger
             Winch.setPower(Range.clip(gamepad1.right_trigger-gamepad1.left_trigger,-1,1));
             //Sideways- front wheel, push both sticks to control
             // both gamepads are inversed, so need to minus
             Sideways.setPower(Range.clip(-gamepad1.right_stick_y+gamepad1.left_stick_y,-1,1));
-            prevtime = getRuntime();
             //telemetry.addData("bools",liftmode+" "+a);
             //telemetry.addData("lift pos", Lift.getCurrentPosition());
             telemetry.addData("loffset",loffset);
