@@ -1,0 +1,131 @@
+
+.toolbox-node-icon {
+  background-repeat: no-repeat;
+  background-position: center;
+  vertical-align: -2px;
+  width: 16px; height: 16px;
+}
+
+.AccelerationSensor-icon {
+  background-image: url(../images/ftcAccelerationSensor.png);
+}
+
+.AnalogInput-icon {
+  background-image: url(../images/ftcAnalogInput.png);
+}
+
+.AnalogOutput-icon {
+  background-image: url(../images/ftcAnalogOutput.png);
+}
+
+.CRServo-icon {
+  background-image: url(../images/ftcCRServo.png);
+}
+
+.ColorSensor-icon {
+  background-image: url(../images/ftcColorSensor.png);
+}
+
+.CompassSensor-icon {
+  background-image: url(../images/ftcCompassSensor.png);
+}
+
+.DcMotor-icon {
+  background-image: url(../images/ftcDcMotor.png);
+}
+
+.DcMotorController-icon {
+  background-image: url(../images/ftcDcMotorController.png);
+}
+
+.DeviceInterfaceModule-icon {
+  background-image: url(../images/ftcDeviceInterfaceModule.png);
+}
+
+.DigitalChannel-icon {
+  background-image: url(../images/ftcDigitalChannel.png);
+}
+
+.ElapsedTime-icon {
+  background-image: url(../images/ftcElapsedTime.png);
+}
+
+.Gamepad-icon {
+  background-image: url(../images/ftcGamepad.png);
+}
+
+.GyroSensor-icon {
+  background-image: url(../images/ftcGyroSensor.png);
+}
+
+.I2cDevice-icon {
+  background-image: url(../images/ftcI2cDevice.png);
+}
+
+.I2cDeviceReader-icon {
+  background-image: url(../images/ftcI2cDeviceReader.png);
+}
+
+.I2cDeviceSynch-icon {
+  background-image: url(../images/ftcI2cDeviceSynch.png);
+}
+
+.IrSeekerSensor-icon {
+  background-image: url(../images/ftcIrSeekerSensor.png);
+}
+
+.LED-icon {
+  background-image: url(../images/ftcLED.png);
+}
+
+.LegacyModule-icon {
+  background-image: url(../images/ftcLegacyModule.png);
+}
+
+.LightSensor-icon {
+  background-image: url(../images/ftcLightSensor.png);
+}
+
+.LinearOpMode-icon {
+  background-image: url(../images/ftcLinearOpMode.png);
+}
+
+.OpMode-icon {
+  background-image: url(../images/ftcOpMode.png);
+}
+
+.OpticalDistanceSensor-icon {
+  background-image: url(../images/ftcOpticalDistanceSensor.png);
+}
+
+.PwmOutput-icon {
+  background-image: url(../images/ftcPwmOutput.png);
+}
+
+.RobotController-icon {
+  background-image: url(../images/ftcRobotController.png);
+}
+
+.Servo-icon {
+  background-image: url(../images/ftcServo.png);
+}
+
+.ServoController-icon {
+  background-image: url(../images/ftcServoController.png);
+}
+
+.TouchSensor-icon {
+  background-image: url(../images/ftcTouchSensor.png);
+}
+
+.TouchSensorMultiplexer-icon {
+  background-image: url(../images/ftcTouchSensorMultiplexer.png);
+}
+
+.UltrasonicSensor-icon {
+  background-image: url(../images/ftcUltrasonicSensor.png);
+}
+
+.VoltageSensor-icon {
+  background-image: url(../images/ftcVoltageSensor.png);
+}

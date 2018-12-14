@@ -1,0 +1,788 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+<variables>
+<variable type="" id=":poZT:[9@TC4^b_`zHMf">vuforiaResults</variable>
+<variable type="" id="9%1=O[%=suSM}`zX=8_-">isVisible</variable>
+<variable type="" id="=,})]|h;VM:6puB$|09.">x</variable>
+<variable type="" id="+@8DSWH|-`y9s2SEv;Oz">trackableName</variable>
+<variable type="" id="-+Q@GPPN{tb]c3tGeajF">units</variable>
+<variable type="" id="z=C3W1=vm6bY}2Bb8*hI">convertedValue</variable>
+<variable type="" id="L#ua=TlSXhX^ZH2MB]Fp">originalValue</variable>
+</variables>
+<block type="procedures_defnoreturn" id="WtpyD@tEu+EoY=P9iY,D" deletable="false" editable="false" x="0" y="0">
+<field name="NAME">runOpMode</field>
+<comment pinned="false" h="32" w="532">This function is executed when this Op Mode is selected from the Driver Station.</comment>
+<statement name="STACK">
+<block type="comment" id="0buJ0U.#`zE1)o)K[}Xa">
+<field name="COMMENT">Use optimized Vuforia blocks.</field>
+<next>
+<block type="telemetry_addTextData_All" id="aFd~N;%9TK*Q_ynia2|9">
+<value name="KEY">
+<shadow type="text" id="v.Fswy)$w`:eU^8FBth!">
+<field name="TEXT">Status</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="7ota3h8(nie=,b@^dX}_">
+<field name="TEXT">Initializing Vuforia... please wait.</field>
+</shadow>
+</value>
+<next>
+<block type="telemetry_update" id="~KsKnZ|ijPao[XmGRzRE">
+<next>
+<block type="comment" id="t1$uJER0JJ.uJ38KBL|l">
+<field name="COMMENT">Rotate phone -90 so back camera faces "forward" direction on robot.</field>
+<next>
+<block type="vuforiaRoverRuckus_initialize_withCameraDirection" id=".burxAp65ETuHtk0vUF,">
+<comment pinned="false" h="105" w="493">Assume the phone is in the dead center of the robot (no translation in X, Y, or Z directions).  Since we want to use the rear camera, we need to rotate the phone -90 degrees about the Y axis to turn it so the rear camera is facing forward (in a landscape orientation).</comment>
+<value name="CAMERA_DIRECTION">
+<shadow type="navigation_typedEnum_cameraDirection" id="uBIy5c[`5[MG+je@PjW_">
+<field name="CAMERA_DIRECTION">BACK</field>
+</shadow>
+</value>
+<value name="USE_EXTENDED_TRACKING">
+<shadow type="logic_boolean" id="X[y{aIZtS-sT-eWu85@9">
+<field name="BOOL">TRUE</field>
+</shadow>
+</value>
+<value name="ENABLE_CAMERA_MONITORING">
+<shadow type="logic_boolean" id="sAL.96L)`hs%u#$Y=[lX">
+<field name="BOOL">TRUE</field>
+</shadow>
+</value>
+<value name="CAMERA_MONITOR_FEEDBACK">
+<shadow type="navigation_typedEnum_cameraMonitorFeedback" id="[EsZhOCYMqS6r$szWBQD">
+<field name="CAMERA_MONITOR_FEEDBACK">AXES</field>
+</shadow>
+</value>
+<value name="PHONE_LOCATION_ON_ROBOT_DX">
+<shadow type="math_number" id="ZHxB`E((MdN/pMu(PiOq">
+<field name="NUM">0</field>
+</shadow>
+</value>
+<value name="PHONE_LOCATION_ON_ROBOT_DY">
+<shadow type="math_number" id="T6n!X(,C8jL-Aw3_9dw7">
+<field name="NUM">0</field>
+</shadow>
+</value>
+<value name="PHONE_LOCATION_ON_ROBOT_DZ">
+<shadow type="math_number" id="^F;p4Pss:Hze[?!i4Oj%">
+<field name="NUM">0</field>
+</shadow>
+</value>
+<value name="PHONE_LOCATION_ON_ROBOT_X_ANGLE">
+<shadow type="math_number" id=".jvm(CpAj(HH$oYB_.Mf">
+<field name="NUM">0</field>
+</shadow>
+</value>
+<value name="PHONE_LOCATION_ON_ROBOT_Y_ANGLE">
+<shadow type="math_number" id="+J[OosbfgCqUjx^t:##3">
+<field name="NUM">-90</field>
+</shadow>
+</value>
+<value name="PHONE_LOCATION_ON_ROBOT_Z_ANGLE">
+<shadow type="math_number" id="NU0.-[[9%!g1]/dv%XgQ">
+<field name="NUM">0</field>
+</shadow>
+</value>
+<value name="USE_COMPETITION_FIELD_TARGET_LOCATIONS">
+<shadow type="logic_boolean" id="XW7p7x2Meycj3hXfKL=?">
+<field name="BOOL">TRUE</field>
+</shadow>
+</value>
+<next>
+<block type="comment" id="e|[-{q6b8kR8Bbqa|W4?">
+<field name="COMMENT">Prompt user to push Start button.</field>
+<next>
+<block type="telemetry_addTextData_All" id="YI+Gx?mUJ,k2KT#Z-I)-">
+<value name="KEY">
+<shadow type="text" id="j^[fP2t,ya`;`jb06]#^">
+<field name="TEXT">Status</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="{4Tr[ihy^5JN[!F)U9/C">
+<field name="TEXT">Vuforia initialized. Press start to continue...</field>
+</shadow>
+</value>
+<next>
+<block type="telemetry_update" id=".K7|),8Q;f@5L3ml5m^p">
+<next>
+<block type="linearOpMode_waitForStart" id=":`$wN_ci`O;o6P0~.(+g">
+<next>
+<block type="controls_if" id="}Q?5mbxSO8Di;i!__6[y">
+<value name="IF0">
+<block type="linearOpMode_opModeIsActive" id=")o%YFX/#9kvv^sgXr4~5">
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="RV5p}q1WpE1j!gONKsJd">
+<field name="COMMENT">Activate Vuforia</field>
+<next>
+<block type="vuforiaRoverRuckus_activate" id="jpEiAyj9kK7t~e5_Z.+M">
+<next>
+<block type="comment" id="(rU-p_T_/B|vExcs}liL">
+<field name="COMMENT">While op mode is running, loop continuously.</field>
+<next>
+<block type="controls_whileUntil" id="^0Kagy/e+Ea{rbZPv2G6">
+<field name="MODE">WHILE</field>
+<value name="BOOL">
+<block type="linearOpMode_opModeIsActive" id="e)cr{!2VIET83s,JWC.=">
+</block>
+</value>
+<statement name="DO">
+<block type="comment" id="3[l]BI{p^hbNdQpcWJ|,">
+<field name="COMMENT">Are the targets visible?</field>
+<next>
+<block type="comment" id="=cOa^;#bgHniPd55e8wY">
+<field name="COMMENT">(Note we only process first visible target).</field>
+<next>
+<block type="controls_if" id="1?@mKI}?=@Fqgcp*4rq!">
+<mutation elseif="3" else="1">
+</mutation>
+<value name="IF0">
+<block type="procedures_callreturn" id="x$l[3+v0_CIC_A@r`Jg?">
+<mutation name="isTargetVisible">
+<arg name="trackableName">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaRoverRuckus_typedEnum_trackableName" id="m2^e#%lM.36nsi#vZFH,">
+<field name="TRACKABLE_NAME">BluePerimeter</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="procedures_callnoreturn" id="Kl]S~SZGEKj!`h5*33dZ">
+<mutation name="processTarget">
+</mutation>
+</block>
+</statement>
+<value name="IF1">
+<block type="procedures_callreturn" id=")j=F5Iok3Hc{dHL(~?zW">
+<mutation name="isTargetVisible">
+<arg name="trackableName">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaRoverRuckus_typedEnum_trackableName" id="_/d/[l.t0gw]eKEzz)k(">
+<field name="TRACKABLE_NAME">RedPerimeter</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO1">
+<block type="procedures_callnoreturn" id="L{~taiJ|~}AJv_3b7DA5">
+<mutation name="processTarget">
+</mutation>
+</block>
+</statement>
+<value name="IF2">
+<block type="procedures_callreturn" id="0WM(oj+.c+}tVkD|JM/^">
+<mutation name="isTargetVisible">
+<arg name="trackableName">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaRoverRuckus_typedEnum_trackableName" id="m=`Rmy~FC+=a+BlYHoAZ">
+<field name="TRACKABLE_NAME">FrontPerimeter</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO2">
+<block type="procedures_callnoreturn" id="yCbWQje+)VN,($%fX^s,">
+<mutation name="processTarget">
+</mutation>
+</block>
+</statement>
+<value name="IF3">
+<block type="procedures_callreturn" id="B}PlZ@pTV)w53pQZP9WY">
+<mutation name="isTargetVisible">
+<arg name="trackableName">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaRoverRuckus_typedEnum_trackableName" id="D/]iITQpxBV1Tn*DDk6y">
+<field name="TRACKABLE_NAME">BackPerimeter</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO3">
+<block type="procedures_callnoreturn" id="|pZ:P$zS6smHo5/%4?;!">
+<mutation name="processTarget">
+</mutation>
+</block>
+</statement>
+<statement name="ELSE">
+<block type="telemetry_addTextData_All" id="ku2^Hrd`M6B:)T4qkO{*">
+<value name="KEY">
+<shadow type="text" id="3.,BfqV`Dwe%_=$~Yyz:">
+<field name="TEXT">No Targets Detected</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="+cNM6lxmY-U:hCKv9hww">
+<field name="TEXT">Targets are not visible.</field>
+</shadow>
+</value>
+</block>
+</statement>
+<next>
+<block type="comment" id="%cs_ey@4fPXP0r;$nLrE">
+<field name="COMMENT">Send telemetry info to Driver Station.</field>
+<next>
+<block type="telemetry_update" id="exvivmft-pX$n!1,8Ea$">
+<next>
+<block type="comment" id="M~w*otgB]tft:ID_Y8m$">
+<field name="COMMENT">Wait a bit before repeating the cycle.</field>
+<next>
+<block type="linearOpMode_sleep_Number" id="W?WF}e)G.AKRcr5kObrT">
+<value name="MILLISECONDS">
+<shadow type="math_number" id="~Ezb((d9Q_tj(e}Gajw:">
+<field name="NUM">50</field>
+</shadow>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+<next>
+<block type="comment" id="$fOe0da~b-3x,0giNk=:">
+<field name="COMMENT">Deactivate Vuforia</field>
+<next>
+<block type="vuforiaRoverRuckus_deactivate" id="(6hvaFo$f?v@!{usyDb3">
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+<block type="procedures_defreturn" id="oKsCkghuw*qaT$-YC)37" x="770" y="-11">
+<mutation>
+<arg name="trackableName">
+</arg>
+</mutation>
+<field name="NAME">isTargetVisible</field>
+<comment pinned="false" h="52" w="238">Check to see if the target is visible.</comment>
+<statement name="STACK">
+<block type="comment" id="Jh/;L$n@JuX8AQJDFCul">
+<field name="COMMENT">Get vuforia results for target.</field>
+<next>
+<block type="variables_set" id="DgJptUz.B#Fy5PZ(|;{F">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+<value name="VALUE">
+<block type="vuforiaRoverRuckus_track" id="~Oy=Sr;]P,Wk:oBjpl;b">
+<value name="TRACKABLE_NAME">
+<shadow type="vuforiaRoverRuckus_typedEnum_trackableName" id="yNJ`DuZ0*/J~Occ{e,b!">
+<field name="TRACKABLE_NAME">BluePerimeter</field>
+</shadow>
+<block type="variables_get" id="#iCxj]yw%~i6|giT1)gf">
+<field name="VAR" id="+@8DSWH|-`y9s2SEv;Oz" variabletype="">trackableName</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="comment" id="guv9joc,cFQ`)I,r_n_y">
+<field name="COMMENT">Is this target visible?</field>
+<next>
+<block type="controls_if" id=")A?uaN?Z3LXnN=a)dK|m">
+<mutation else="1">
+</mutation>
+<value name="IF0">
+<block type="vuforiaTrackingResults_getProperty_Boolean" id="b;R6(a8kuX_CG%6L[8rd">
+<field name="PROP">IsVisible</field>
+<value name="VUFORIA_TRACKING_RESULTS">
+<block type="variables_get" id="~Zn@jr0kE,daPYe:=d1V">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="variables_set" id="Qj%5#`!iX[}34TA(xA~R">
+<field name="VAR" id="9%1=O[%=suSM}`zX=8_-" variabletype="">isVisible</field>
+<value name="VALUE">
+<block type="logic_boolean" id="x78dIgV^.Ybn#53#s_!~">
+<field name="BOOL">TRUE</field>
+</block>
+</value>
+</block>
+</statement>
+<statement name="ELSE">
+<block type="variables_set" id="*xkWpT/py!:C)ok|E_Yx">
+<field name="VAR" id="9%1=O[%=suSM}`zX=8_-" variabletype="">isVisible</field>
+<value name="VALUE">
+<block type="logic_boolean" id="%D[7pqoXYT{+qOS8PKG)">
+<field name="BOOL">FALSE</field>
+</block>
+</value>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+<value name="RETURN">
+<block type="variables_get" id="MtovXx1;~{2m,F=(*M?i">
+<field name="VAR" id="9%1=O[%=suSM}`zX=8_-" variabletype="">isVisible</field>
+</block>
+</value>
+</block>
+<block type="procedures_defnoreturn" id=";*]}?=r{sc?CCElk_mgq" x="774" y="300">
+<field name="NAME">processTarget</field>
+<comment pinned="false" h="84" w="352">This function displays location on the field and rotation about the Z axis on the field.  It uses results from the isTargetVisible function.</comment>
+<statement name="STACK">
+<block type="telemetry_addTextData_All" id="*op$7df9@`8HF,3y!oQT">
+<comment pinned="false" h="46" w="193">Display the target name.</comment>
+<value name="KEY">
+<shadow type="text" id="t9,7Ks@T8SH*dy|tHkHq">
+<field name="TEXT">Target Detected</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="+cNM6lxmY-U:hCKv9hww">
+<field name="TEXT">text</field>
+</shadow>
+<block type="text_join" id="%%A8if3K;T=XwljtQ.)T">
+<mutation items="2">
+</mutation>
+<value name="ADD0">
+<block type="vuforiaTrackingResults_getProperty_String" id="le]{WIz2TYG*WbHW*|Nz">
+<field name="PROP">Name</field>
+<value name="VUFORIA_TRACKING_RESULTS">
+<block type="variables_get" id="x,lA?R?k:o.K(h-qfO.L">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+</block>
+</value>
+</block>
+</value>
+<value name="ADD1">
+<block type="text" id="1[RG(9aJzwlw*p@,FBAN">
+<field name="TEXT"> is visible.</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="telemetry_addNumericData_Number" id=":X]T2-42}uWR@U{BkzXe">
+<value name="KEY">
+<shadow type="text" id="-%2{Mr#|RIwnK6d-gc21">
+<field name="TEXT">X (in)</field>
+</shadow>
+</value>
+<value name="NUMBER">
+<block type="misc_roundDecimal" id="Ji|suZVk!CVu[qTnm;YP">
+<value name="NUMBER">
+<shadow type="math_number" id="D]{88[Jx2MQFPR/L@QV7">
+<field name="NUM">3.14159265</field>
+</shadow>
+<block type="procedures_callreturn" id="ii_-]6Q?djjGbdkQ$%%U">
+<mutation name="displayValue">
+<arg name="originalValue">
+</arg>
+<arg name="units">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaTrackingResults_getProperty_Number" id=")S=S4SV#2n2z#_]FiOWZ">
+<field name="PROP">X</field>
+<value name="VUFORIA_TRACKING_RESULTS">
+<block type="variables_get" id="OM]Y|Lvj9eJX5KGQsA3}">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+</block>
+</value>
+</block>
+</value>
+<value name="ARG1">
+<block type="text" id="7.c]SmD=BC@X@:6DuYQw">
+<field name="TEXT">IN</field>
+</block>
+</value>
+</block>
+</value>
+<value name="PRECISION">
+<shadow type="math_number" id="bW8KB(!h!Yk?cCf,1N%G">
+<field name="NUM">2</field>
+</shadow>
+</value>
+</block>
+</value>
+<next>
+<block type="telemetry_addNumericData_Number" id="!B$E|*|O-@@B{D3YnN$f">
+<value name="KEY">
+<shadow type="text" id="1-@aL7p=u]3%@({-.7h8">
+<field name="TEXT">Y (in)</field>
+</shadow>
+</value>
+<value name="NUMBER">
+<block type="misc_roundDecimal" id="de0qxeEu|SAMb1KA;?Ap">
+<value name="NUMBER">
+<shadow type="math_number" id="D]{88[Jx2MQFPR/L@QV7">
+<field name="NUM">3.14159265</field>
+</shadow>
+<block type="procedures_callreturn" id="*h%`SUTY9+=$iGeDhcz:">
+<mutation name="displayValue">
+<arg name="originalValue">
+</arg>
+<arg name="units">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaTrackingResults_getProperty_Number" id="x[t:lMcjAdA6$5k`y}i!">
+<field name="PROP">Y</field>
+<value name="VUFORIA_TRACKING_RESULTS">
+<block type="variables_get" id="8HF.[mvx4FMSfOo_]RUO">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+</block>
+</value>
+</block>
+</value>
+<value name="ARG1">
+<block type="text" id="pZfS+)U*~]jH`nF{~tnj">
+<field name="TEXT">IN</field>
+</block>
+</value>
+</block>
+</value>
+<value name="PRECISION">
+<shadow type="math_number" id=",vD^a.D.{~:H/A-^./T?">
+<field name="NUM">2</field>
+</shadow>
+</value>
+</block>
+</value>
+<next>
+<block type="telemetry_addNumericData_Number" id="C7*jmX.1S(#sT,N7rL{$">
+<value name="KEY">
+<shadow type="text" id="S)#1)WQzDvqtI8yDFvaI">
+<field name="TEXT">Z (in)</field>
+</shadow>
+</value>
+<value name="NUMBER">
+<block type="misc_roundDecimal" id="yEecPQK{3D:~Tsqp+2fF">
+<value name="NUMBER">
+<shadow type="math_number" id="D]{88[Jx2MQFPR/L@QV7">
+<field name="NUM">3.14159265</field>
+</shadow>
+<block type="procedures_callreturn" id="I|M;]U?#Z~2_l2-zCCc:">
+<mutation name="displayValue">
+<arg name="originalValue">
+</arg>
+<arg name="units">
+</arg>
+</mutation>
+<value name="ARG0">
+<block type="vuforiaTrackingResults_getProperty_Number" id="Sm)WMJvU*AJ%*@!]sfDG">
+<field name="PROP">Z</field>
+<value name="VUFORIA_TRACKING_RESULTS">
+<block type="variables_get" id="4a_M%m6EfDh2]9Oq+y1h">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+</block>
+</value>
+</block>
+</value>
+<value name="ARG1">
+<block type="text" id="#.7vbpM8NzmB;.xG6a:R">
+<field name="TEXT">IN</field>
+</block>
+</value>
+</block>
+</value>
+<value name="PRECISION">
+<shadow type="math_number" id="ZMlDDXGi|{UVn8E]%CU|">
+<field name="NUM">2</field>
+</shadow>
+</value>
+</block>
+</value>
+<next>
+<block type="telemetry_addNumericData_Number" id="?^]5b={D6@iSk}(W{i*j">
+<value name="KEY">
+<shadow type="text" id="l`rNt@r5XhAxL/|/VCvI">
+<field name="TEXT">Rotation about Z (deg)</field>
+</shadow>
+</value>
+<value name="NUMBER">
+<block type="misc_roundDecimal" id="Hb]p0GvSqX^3mDk(__Wz">
+<value name="NUMBER">
+<shadow type="math_number" id="D]{88[Jx2MQFPR/L@QV7">
+<field name="NUM">3.14159265</field>
+</shadow>
+<block type="vuforiaTrackingResults_getProperty_Number" id="s$Lut0W7h(1XVB5Ts+};">
+<field name="PROP">ZAngle</field>
+<value name="VUFORIA_TRACKING_RESULTS">
+<block type="variables_get" id="moPb2Z+`Omn_MQ#6*!q:">
+<field name="VAR" id=":poZT:[9@TC4^b_`zHMf" variabletype="">vuforiaResults</field>
+</block>
+</value>
+</block>
+</value>
+<value name="PRECISION">
+<shadow type="math_number" id="5r)#L]MfDI2wa|Te;8+^">
+<field name="NUM">2</field>
+</shadow>
+</value>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+<block type="procedures_defreturn" id="UxB8d%{1-udCaf4Tj)kr" x="779" y="1271">
+<mutation>
+<arg name="originalValue">
+</arg>
+<arg name="units">
+</arg>
+</mutation>
+<field name="NAME">displayValue</field>
+<comment pinned="false" h="85" w="283">By default, distances are returned in millimeters by Vuforia.  Convert to other distance units (CM, M, IN, and FT).</comment>
+<statement name="STACK">
+<block type="comment" id="?T+Go=(x2mS~57g!.{YZ">
+<field name="COMMENT">Vuforia returns distances in mm.</field>
+<next>
+<block type="controls_if" id="8-Yy+lpuI^qfQD7*QY9b">
+<mutation elseif="3" else="1">
+</mutation>
+<value name="IF0">
+<block type="logic_compare" id="~?@J/Zi%/GF-upKP^{wu">
+<field name="OP">EQ</field>
+<value name="A">
+<block type="variables_get" id="8-pAQ#r?@0w}?M,Kc?zy">
+<field name="VAR" id="-+Q@GPPN{tb]c3tGeajF" variabletype="">units</field>
+</block>
+</value>
+<value name="B">
+<block type="text" id="B:*~#:jz!jrId|JS)2X3">
+<field name="TEXT">CM</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="variables_set" id="#*HJVFH|28[3eZ*5JzBu">
+<field name="VAR" id="z=C3W1=vm6bY}2Bb8*hI" variabletype="">convertedValue</field>
+<value name="VALUE">
+<block type="math_arithmetic" id="tXW[(.uBZ6Eg6ELp5#@s">
+<field name="OP">DIVIDE</field>
+<value name="A">
+<shadow type="math_number" id=":3;dO2^un_oSWtaNDGnI">
+<field name="NUM">1</field>
+</shadow>
+<block type="variables_get" id="rdF=lbNGq{mH45k|2.+Y">
+<field name="VAR" id="L#ua=TlSXhX^ZH2MB]Fp" variabletype="">originalValue</field>
+</block>
+</value>
+<value name="B">
+<shadow type="math_number" id="0c)]t]*6-ZlZ5-HBfnCk">
+<field name="NUM">10</field>
+</shadow>
+</value>
+</block>
+</value>
+</block>
+</statement>
+<value name="IF1">
+<block type="logic_compare" id="DzjY}!CSQBI_axTAFTpV">
+<field name="OP">EQ</field>
+<value name="A">
+<block type="variables_get" id="/#%-NJ~_xCGCO73JX5R0">
+<field name="VAR" id="-+Q@GPPN{tb]c3tGeajF" variabletype="">units</field>
+</block>
+</value>
+<value name="B">
+<block type="text" id="RT`bLCgLRjOd4#@jy!v2">
+<field name="TEXT">M</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO1">
+<block type="variables_set" id="Vf!Ge{e1L5,,}`]+?ya-">
+<field name="VAR" id="z=C3W1=vm6bY}2Bb8*hI" variabletype="">convertedValue</field>
+<value name="VALUE">
+<block type="math_arithmetic" id="[z|7a=#Sa{+bRy#(Rv7g">
+<field name="OP">DIVIDE</field>
+<value name="A">
+<shadow type="math_number" id=":3;dO2^un_oSWtaNDGnI">
+<field name="NUM">1</field>
+</shadow>
+<block type="variables_get" id="qKd|8N)3`M.JkQ?G@.T7">
+<field name="VAR" id="L#ua=TlSXhX^ZH2MB]Fp" variabletype="">originalValue</field>
+</block>
+</value>
+<value name="B">
+<shadow type="math_number" id="HvkMy!a*.|3{S@L~0|^D">
+<field name="NUM">1000</field>
+</shadow>
+</value>
+</block>
+</value>
+</block>
+</statement>
+<value name="IF2">
+<block type="logic_compare" id="xYh]j[`C%.q8gIBUwyQl">
+<field name="OP">EQ</field>
+<value name="A">
+<block type="variables_get" id="v@[:7Z+/W#p:%RgnN2j=">
+<field name="VAR" id="-+Q@GPPN{tb]c3tGeajF" variabletype="">units</field>
+</block>
+</value>
+<value name="B">
+<block type="text" id="bLU-!OyV5U=L+|k:,}[c">
+<field name="TEXT">IN</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO2">
+<block type="variables_set" id="|jedk+WURgCc(]R4qQa/">
+<field name="VAR" id="z=C3W1=vm6bY}2Bb8*hI" variabletype="">convertedValue</field>
+<value name="VALUE">
+<block type="math_arithmetic" id="MFH65avKr,B`e$Kbn%dy">
+<field name="OP">DIVIDE</field>
+<value name="A">
+<shadow type="math_number" id=":3;dO2^un_oSWtaNDGnI">
+<field name="NUM">1</field>
+</shadow>
+<block type="variables_get" id="o@b2/8n)Z32{/#CQ$MLO">
+<field name="VAR" id="L#ua=TlSXhX^ZH2MB]Fp" variabletype="">originalValue</field>
+</block>
+</value>
+<value name="B">
+<shadow type="math_number" id="5YQl@j0r0MleBEC_i?sK">
+<field name="NUM">25.4</field>
+</shadow>
+</value>
+</block>
+</value>
+</block>
+</statement>
+<value name="IF3">
+<block type="logic_compare" id="X}Ov?ZCj/[0bKU`-_+_n">
+<field name="OP">EQ</field>
+<value name="A">
+<block type="variables_get" id="5QgL#n*,*8YCl:~p~}S)">
+<field name="VAR" id="-+Q@GPPN{tb]c3tGeajF" variabletype="">units</field>
+</block>
+</value>
+<value name="B">
+<block type="text" id="nj{]+$y[Wn1_Q6ZNAqDS">
+<field name="TEXT">FT</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO3">
+<block type="variables_set" id="9M4J[T)8AxnW2Ti|R!(U">
+<field name="VAR" id="z=C3W1=vm6bY}2Bb8*hI" variabletype="">convertedValue</field>
+<value name="VALUE">
+<block type="math_arithmetic" id="3=}w!zfQi()nRcCHO?)A">
+<field name="OP">DIVIDE</field>
+<value name="A">
+<shadow type="math_number" id="B4E.Ac=eBh1w7D%H=p5f">
+<field name="NUM">1</field>
+</shadow>
+<block type="math_arithmetic" id="cbqkU;sc$1+`ve$kWPpb">
+<field name="OP">DIVIDE</field>
+<value name="A">
+<shadow type="math_number" id=":3;dO2^un_oSWtaNDGnI">
+<field name="NUM">1</field>
+</shadow>
+<block type="variables_get" id="NcQ_6Ec*!Nj1TQ*R8Bn9">
+<field name="VAR" id="L#ua=TlSXhX^ZH2MB]Fp" variabletype="">originalValue</field>
+</block>
+</value>
+<value name="B">
+<shadow type="math_number" id="![m{]/$lBl%*4rZtQW[l">
+<field name="NUM">25.4</field>
+</shadow>
+</value>
+</block>
+</value>
+<value name="B">
+<shadow type="math_number" id="t:Z);e`h^RxOS=jc)@pS">
+<field name="NUM">12</field>
+</shadow>
+</value>
+</block>
+</value>
+</block>
+</statement>
+<statement name="ELSE">
+<block type="variables_set" id="L7?P|bWhJC%Tg=Z]t{~u">
+<field name="VAR" id="z=C3W1=vm6bY}2Bb8*hI" variabletype="">convertedValue</field>
+<value name="VALUE">
+<block type="variables_get" id="x(XLLRh.-:p$CP^7jiX}">
+<field name="VAR" id="L#ua=TlSXhX^ZH2MB]Fp" variabletype="">originalValue</field>
+</block>
+</value>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</statement>
+<value name="RETURN">
+<block type="variables_get" id="+TTq_;:Zq6=uxru5NfoW">
+<field name="VAR" id="z=C3W1=vm6bY}2Bb8*hI" variabletype="">convertedValue</field>
+</block>
+</value>
+</block>
+</xml>
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Extra>
+<OpModeMeta flavor="TELEOP" group="" />
+<Enabled value="true" />
+</Extra>

@@ -1,0 +1,101 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:1-51:12
+	package
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:4:11-52
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+	android:versionName
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:6:11-36
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+	xmlns:tools
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:3:11-57
+	xmlns:android
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:2:11-69
+	android:versionCode
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:5:11-35
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:8:3-79
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:8:20-76
+application
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:10:3-49:17
+	android:label
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:14:5-37
+	android:largeHeap
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:12:5-29
+	android:icon
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:13:5-41
+	android:allowBackup
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:11:5-31
+	android:theme
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:15:5-41
+activity#org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:18:5-42:16
+	android:screenOrientation
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:20:7-43
+	android:label
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:22:7-39
+	android:launchMode
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:23:7-38
+	android:configChanges
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:21:7-53
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:19:7-95
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:25:7-28:23
+category#android.intent.category.LAUNCHER
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:26:9-69
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:26:19-66
+action#android.intent.action.MAIN
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:27:9-61
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:27:17-58
+intent-filter#action:name:android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:30:7-32:23
+action#android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:31:9-82
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:31:17-79
+meta-data#android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:34:7-36:49
+	android:resource
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:36:9-46
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:35:9-71
+meta-data#org.firstinspires.main.entry
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:38:7-41:13
+	android:value
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:40:11-31
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:39:11-54
+service#com.qualcomm.ftccommon.FtcRobotControllerService
+ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:45:5-47:32
+	android:enabled
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:47:7-29
+	android:name
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml:46:7-70
+uses-sdk
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		ADDED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\FtcRobotController\src\main\AndroidManifest.xml

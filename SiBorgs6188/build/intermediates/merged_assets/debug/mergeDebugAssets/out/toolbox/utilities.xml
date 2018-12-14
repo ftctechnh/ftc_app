@@ -1,0 +1,1091 @@
+<category name="Acceleration">
+  <block type="acceleration_getProperty_DistanceUnit">
+    <field name="PROP">DistanceUnit</field>
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+  </block>
+  <block type="acceleration_getProperty_Number">
+    <field name="PROP">XAccel</field>
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+  </block>
+  <block type="acceleration_getProperty_Number">
+    <field name="PROP">YAccel</field>
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+  </block>
+  <block type="acceleration_getProperty_Number">
+    <field name="PROP">ZAccel</field>
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+  </block>
+  <block type="acceleration_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+  </block>
+  <block type="acceleration_toDistanceUnit">
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+    <value name="DISTANCE_UNIT"><shadow type="navigation_typedEnum_distanceUnit"></shadow></value>
+  </block>
+  <block type="acceleration_toText">
+    <value name="ACCELERATION"><block type="variables_get"><field name="VAR">{accelerationVariable}</field></block></value>
+  </block>
+  <block type="acceleration_create"></block>
+  <block type="acceleration_create_withArgs">
+    <value name="DISTANCE_UNIT"><shadow type="navigation_typedEnum_distanceUnit"></shadow></value>
+    <value name="X_ACCEL"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="Y_ACCEL"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="Z_ACCEL"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+  <block type="acceleration_fromGravity">
+    <value name="GX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="GY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="GZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+</category>
+<category name="AngleUnit">
+  <block type="navigation_angleUnit_normalize">
+    <value name="ANGLE"><shadow type="math_number"><field name="NUM">360</field></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"><field name="ANGLE_UNIT">DEGREES</field></shadow></value>
+  </block>
+  <block type="navigation_angleUnit_convert">
+    <value name="ANGLE"><shadow type="math_number"><field name="NUM">3.14</field></shadow></value>
+    <value name="FROM_ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"><field name="ANGLE_UNIT">RADIANS</field></shadow></value>
+    <value name="TO_ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"><field name="ANGLE_UNIT">DEGREES</field></shadow></value>
+  </block>
+</category>
+<category name="AngularVelocity">
+  <block type="angularVelocity_getProperty_AngleUnit">
+    <field name="PROP">AngleUnit</field>
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+  </block>
+  <block type="angularVelocity_getProperty_Number">
+    <field name="PROP">XRotationRate</field>
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+  </block>
+  <block type="angularVelocity_getProperty_Number">
+    <field name="PROP">YRotationRate</field>
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+  </block>
+  <block type="angularVelocity_getProperty_Number">
+    <field name="PROP">ZRotationRate</field>
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+  </block>
+  <block type="angularVelocity_getRotationRate">
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+    <value name="AXIS"><shadow type="navigation_typedEnum_axis"></shadow></value>
+  </block>
+  <block type="angularVelocity_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+  </block>
+  <block type="angularVelocity_toAngleUnit">
+    <value name="ANGULAR_VELOCITY"><block type="variables_get"><field name="VAR">{angularVelocityVariable}</field></block></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+  </block>
+  <block type="angularVelocity_create"></block>
+  <block type="angularVelocity_create_withArgs">
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="X_ROTATION_RATE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="Y_ROTATION_RATE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="Z_ROTATION_RATE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+</category>
+<category name="Axis">
+  <block type="navigation_typedEnum_axis"><field name="AXIS">X</field></block>
+  <block type="navigation_typedEnum_axis"><field name="AXIS">Y</field></block>
+  <block type="navigation_typedEnum_axis"><field name="AXIS">Z</field></block>
+</category>
+<category name="Color">
+  <block type="color_getProperty_Number">
+    <field name="PROP">Red</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_getProperty_Number">
+    <field name="PROP">Green</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_getProperty_Number">
+    <field name="PROP">Blue</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_getProperty_Number">
+    <field name="PROP">Alpha</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_getProperty_Number">
+    <field name="PROP">Hue</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_getProperty_Number">
+    <field name="PROP">Saturation</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_getProperty_Number">
+    <field name="PROP">Value</field>
+    <value name="COLOR"><block type="variables_get"><field name="VAR">{colorVariable}</field></block></value>
+  </block>
+  <block type="color_rgbToColor_Number">
+    <value name="RED"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="GREEN"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="BLUE"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+  </block>
+  <block type="color_argbToColor_Number">
+    <value name="ALPHA"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="RED"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="GREEN"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="BLUE"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+  </block>
+  <block type="color_hsvToColor_Number">
+    <value name="HUE"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="SATURATION"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+  </block>
+  <block type="color_ahsvToColor_Number">
+    <value name="ALPHA"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="HUE"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="SATURATION"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">255</field></shadow></value>
+  </block>
+  <block type="color_textToColor_Number">
+    <value name="TEXT"><shadow type="text"><field name="TEXT">#FFFFFF</field></shadow></value>
+  </block>
+  <block type="color_textToColor_Number">
+    <value name="TEXT"><shadow type="text"><field name="TEXT">#FFFFFFFF</field></shadow></value>
+  </block>
+  <block type="color_textToColor_Number">
+    <value name="TEXT"><shadow type="text"><field name="TEXT">red</field></shadow></value>
+  </block>
+  <block type="normalizedColors_getProperty_Number">
+    <field name="PROP">Red</field>
+    <value name="NORMALIZED_COLORS"><block type="variables_get"><field name="VAR">{normalizedColorsVariable}</field></block></value>
+  </block>
+  <block type="normalizedColors_getProperty_Number">
+    <field name="PROP">Green</field>
+    <value name="NORMALIZED_COLORS"><block type="variables_get"><field name="VAR">{normalizedColorsVariable}</field></block></value>
+  </block>
+  <block type="normalizedColors_getProperty_Number">
+    <field name="PROP">Blue</field>
+    <value name="NORMALIZED_COLORS"><block type="variables_get"><field name="VAR">{normalizedColorsVariable}</field></block></value>
+  </block>
+  <block type="normalizedColors_getProperty_Number">
+    <field name="PROP">Alpha</field>
+    <value name="NORMALIZED_COLORS"><block type="variables_get"><field name="VAR">{normalizedColorsVariable}</field></block></value>
+  </block>
+  <block type="normalizedColors_getProperty_Number">
+    <field name="PROP">Color</field>
+    <value name="NORMALIZED_COLORS"><block type="variables_get"><field name="VAR">{normalizedColorsVariable}</field></block></value>
+  </block>
+</category>
+<category name="DbgLog">
+  <block type="dbgLog_msg">
+    <value name="MESSAGE">
+      <shadow type="text">
+        <field name="TEXT">abc</field>
+      </shadow>
+    </value>
+  </block>
+  <block type="dbgLog_error">
+    <value name="MESSAGE">
+      <shadow type="text">
+        <field name="TEXT">abc</field>
+      </shadow>
+    </value>
+  </block>
+</category>
+<category name="MagneticFlux">
+  <block type="magneticFlux_getProperty_Number">
+    <field name="PROP">X</field>
+    <value name="MAGNETIC_FLUX"><block type="variables_get"><field name="VAR">{magneticFluxVariable}</field></block></value>
+  </block>
+  <block type="magneticFlux_getProperty_Number">
+    <field name="PROP">Y</field>
+    <value name="MAGNETIC_FLUX"><block type="variables_get"><field name="VAR">{magneticFluxVariable}</field></block></value>
+  </block>
+  <block type="magneticFlux_getProperty_Number">
+    <field name="PROP">Z</field>
+    <value name="MAGNETIC_FLUX"><block type="variables_get"><field name="VAR">{magneticFluxVariable}</field></block></value>
+  </block>
+  <block type="magneticFlux_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="MAGNETIC_FLUX"><block type="variables_get"><field name="VAR">{magneticFluxVariable}</field></block></value>
+  </block>
+  <block type="magneticFlux_toText">
+    <value name="MAGNETIC_FLUX"><block type="variables_get"><field name="VAR">{magneticFluxVariable}</field></block></value>
+  </block>
+  <block type="magneticFlux_create"></block>
+  <block type="magneticFlux_create_withArgs">
+    <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="Y"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="Z"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+</category>
+<category name="Matrix">
+  <block type="openGLMatrix_identityMatrix"></block>
+  <block type="openGLMatrix_multiplied">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="openGLMatrix_multiply">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="openGLMatrix_rotation">
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="DX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="DY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="DZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_rotation_withAxesArgs">
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="FIRST_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="SECOND_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="THIRD_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_rotate">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="DX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="DY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="DZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_rotate_withAxesArgs">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="FIRST_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="SECOND_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="THIRD_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_rotated">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="DX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="DY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="DZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_rotated_withAxesArgs">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="FIRST_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="SECOND_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="THIRD_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_scale_with3">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="SCALE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="SCALE_Y"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="SCALE_Z"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_scale_with1">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_scaled_with3">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="SCALE_X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="SCALE_Y"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="SCALE_Z"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_scaled_with1">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_translation">
+    <value name="DX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="DY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="DZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_translate">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="DX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="DY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="DZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_translated">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="DX"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="DY"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="DZ"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+  </block>
+  <block type="openGLMatrix_create"></block>
+  <block type="openGLMatrix_create_withMatrixF">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_getProperty_Number">
+    <field name="PROP">NumCols</field>
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_getProperty_Number">
+    <field name="PROP">NumRows</field>
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_diagonalMatrix">
+    <value name="DIM"><shadow type="math_number"><field name="NUM">4</field></shadow></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="matrixF_diagonalMatrix_withVector">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_identityMatrix">
+    <value name="DIM"><shadow type="math_number"><field name="NUM">4</field></shadow></value>
+  </block>
+  <block type="matrixF_get">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="ROW"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="COL"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="matrixF_put">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="ROW"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="COL"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">123</field></shadow></value>
+  </block>
+  <block type="matrixF_getRow">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="ROW"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="matrixF_getColumn">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="COL"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="matrixF_added_withMatrix">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_added_withVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_add_withMatrix">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_add_withVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_multiplied_withMatrix">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_multiplied_withScale">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="matrixF_multiplied_withVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_multiply_withMatrix">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_multiply_withScale">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="matrixF_multiply_withVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_slice">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="ROW"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="COL"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="NUM_ROWS"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+    <value name="NUM_COLS"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+  </block>
+  <block type="matrixF_subtracted_withMatrix">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_subtracted_withVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_subtract_withMatrix">
+    <value name="MATRIX1"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="MATRIX2"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_subtract_withVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_inverted">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_transform">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="matrixF_transposed">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_toText">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_formatAsTransform">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_formatAsTransform_withArgs">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+  </block>
+  <block type="matrixF_toVector">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="matrixF_getTranslation">
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+</category>
+<category name="Orientation">
+  <block type="orientation_getProperty_AxesReference">
+    <field name="PROP">AxesReference</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getProperty_AxesOrder">
+    <field name="PROP">AxesOrder</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getProperty_AngleUnit">
+    <field name="PROP">AngleUnit</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getProperty_Number">
+    <field name="PROP">FirstAngle</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getProperty_Number">
+    <field name="PROP">SecondAngle</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getProperty_Number">
+    <field name="PROP">ThirdAngle</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_toAngleUnit">
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+  </block>
+  <block type="orientation_toAxesReference">
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+  </block>
+  <block type="orientation_toAxesOrder">
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+  </block>
+  <block type="orientation_toText">
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getRotationMatrix">
+    <value name="ORIENTATION"><block type="variables_get"><field name="VAR">{orientationVariable}</field></block></value>
+  </block>
+  <block type="orientation_getRotationMatrix_withArgs">
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="FIRST_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="SECOND_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="THIRD_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+  </block>
+  <block type="orientation_create"></block>
+  <block type="orientation_create_withArgs">
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+    <value name="FIRST_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="SECOND_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="THIRD_ANGLE"><shadow type="math_number"><field name="NUM">90</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+  <block type="orientation_getOrientation">
+    <value name="AXES_REFERENCE"><shadow type="navigation_typedEnum_axesReference"></shadow></value>
+    <value name="AXES_ORDER"><shadow type="navigation_typedEnum_axesOrder"></shadow></value>
+    <value name="ANGLE_UNIT"><shadow type="navigation_typedEnum_angleUnit"></shadow></value>
+  </block>
+</category>
+<category name="PIDFCoefficients">
+  <block type="pidfCoefficients_create"></block>
+  <block type="pidfCoefficients_create_withPIDFAlgorithm">
+    <value name="P"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="I"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
+    <value name="D"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="F"><shadow type="math_number"><field name="NUM">7</field></shadow></value>
+    <value name="ALGORITHM"><shadow type="pidfCoefficients_typedEnum_motorControlAlgorithm">
+      <field name="MOTOR_CONTROL_ALGORITHM">PIDF</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_create_withPIDF">
+    <value name="P"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="I"><shadow type="math_number"><field name="NUM">3</field></shadow></value>
+    <value name="D"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="F"><shadow type="math_number"><field name="NUM">7</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_create_withPIDFCoefficients">
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+  <block type="pidfCoefficients_setProperty_Number">
+    <field name="PROP">P</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_getProperty_Number">
+    <field name="PROP">P</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+  <block type="pidfCoefficients_setProperty_Number">
+    <field name="PROP">I</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_getProperty_Number">
+    <field name="PROP">I</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+  <block type="pidfCoefficients_setProperty_Number">
+    <field name="PROP">D</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_getProperty_Number">
+    <field name="PROP">D</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+  <block type="pidfCoefficients_setProperty_Number">
+    <field name="PROP">F</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_getProperty_Number">
+    <field name="PROP">F</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+  <block type="pidfCoefficients_setProperty_MotorControlAlgorithm">
+    <field name="PROP">Algorithm</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+    <value name="VALUE"><shadow type="pidfCoefficients_typedEnum_motorControlAlgorithm">
+      <field name="MOTOR_CONTROL_ALGORITHM">PIDF</field></shadow></value>
+  </block>
+  <block type="pidfCoefficients_getProperty_MotorControlAlgorithm">
+    <field name="PROP">Algorithm</field>
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+  <block type="pidfCoefficients_toText">
+    <value name="PIDF_COEFFICIENTS"><block type="variables_get"><field name="VAR">{pidfCoefficientsVariable}</field></block></value>
+  </block>
+</category>
+<category name="Position">
+  <block type="position_getProperty_DistanceUnit">
+    <field name="PROP">DistanceUnit</field>
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+  </block>
+  <block type="position_getProperty_Number">
+    <field name="PROP">X</field>
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+  </block>
+  <block type="position_getProperty_Number">
+    <field name="PROP">Y</field>
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+  </block>
+  <block type="position_getProperty_Number">
+    <field name="PROP">Z</field>
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+  </block>
+  <block type="position_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+  </block>
+  <block type="position_toDistanceUnit">
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+    <value name="DISTANCE_UNIT"><shadow type="navigation_typedEnum_distanceUnit"></shadow></value>
+  </block>
+  <block type="position_toText">
+    <value name="POSITION"><block type="variables_get"><field name="VAR">{positionVariable}</field></block></value>
+  </block>
+  <block type="position_create"></block>
+  <block type="position_create_withArgs">
+    <value name="DISTANCE_UNIT"><shadow type="navigation_typedEnum_distanceUnit"></shadow></value>
+    <value name="X"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="Y"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="Z"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+</category>
+<category name="Quaternion">
+  <block type="quaternion_getProperty_Number">
+    <field name="PROP">W</field>
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_getProperty_Number">
+    <field name="PROP">X</field>
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_getProperty_Number">
+    <field name="PROP">Y</field>
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_getProperty_Number">
+    <field name="PROP">Z</field>
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_normalized">
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_congugate">
+    <value name="QUATERNION"><block type="variables_get"><field name="VAR">{quaternionVariable}</field></block></value>
+  </block>
+  <block type="quaternion_create"></block>
+  <block type="quaternion_create_withArgs">
+    <value name="W"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="X"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="Y"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+    <value name="Z"><shadow type="math_number"><field name="NUM">40</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+</category>
+<category name="Range">
+  <block type="range_clip">
+    <value name="MIN"><shadow type="math_number"><field name="NUM">-1</field></shadow></value>
+    <value name="MAX"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+  </block>
+  <block type="range_scale">
+    <value name="X1"><shadow type="math_number"><field name="NUM">-100</field></shadow></value>
+    <value name="X2"><shadow type="math_number"><field name="NUM">100</field></shadow></value>
+    <value name="Y1"><shadow type="math_number"><field name="NUM">-1</field></shadow></value>
+    <value name="Y2"><shadow type="math_number"><field name="NUM">1</field></shadow></value>
+  </block>
+</category>
+<category name="Telemetry">
+  <block type="telemetry_addNumericData_Number">
+    <value name="KEY"><shadow type="text"><field name="TEXT">key</field></shadow></value>
+    <value name="NUMBER"><shadow type="math_number"><field name="NUM">123</field></shadow></value>
+  </block>
+  <block type="telemetry_addNumericData_Number">
+    <value name="KEY"><shadow type="text"><field name="TEXT">key</field></shadow></value>
+    <value name="NUMBER"><block type="misc_roundDecimal">
+      <value name="NUMBER"><shadow type="math_number"><field name="NUM">3.14159265</field></shadow></value>
+      <value name="PRECISION"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+    </block></value>
+  </block>
+  <block type="telemetry_addTextData_All">
+    <value name="KEY"><shadow type="text"><field name="TEXT">key</field></shadow></value>
+    <value name="TEXT"><shadow type="text"><field name="TEXT">text</field></shadow></value>
+  </block>
+  <block type="telemetry_addTextData_All">
+    <value name="KEY"><shadow type="text"><field name="TEXT">key</field></shadow></value>
+    <value name="TEXT"><block type="misc_formatNumber">
+      <value name="NUMBER"><shadow type="math_number"><field name="NUM">3.14159265</field></shadow></value>
+      <value name="PRECISION"><shadow type="math_number"><field name="NUM">2</field></shadow></value>
+    </block></value>
+  </block>
+  <block type="telemetry_update">
+  </block>
+</category>
+<category name="Temperature">
+  <block type="temperature_getProperty_TempUnit">
+    <field name="PROP">TempUnit</field>
+    <value name="TEMPERATURE"><block type="variables_get"><field name="VAR">{temperatureVariable}</field></block></value>
+  </block>
+  <block type="temperature_getProperty_Number">
+    <field name="PROP">Temperature</field>
+    <value name="TEMPERATURE"><block type="variables_get"><field name="VAR">{temperatureVariable}</field></block></value>
+  </block>
+  <block type="temperature_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="TEMPERATURE"><block type="variables_get"><field name="VAR">{temperatureVariable}</field></block></value>
+  </block>
+  <block type="temperature_create"></block>
+  <block type="temperature_create_withArgs">
+    <value name="TEMP_UNIT"><shadow type="navigation_typedEnum_tempUnit"></shadow></value>
+    <value name="TEMPERATURE"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+  <block type="temperature_toTempUnit">
+    <value name="TEMPERATURE"><block type="variables_get"><field name="VAR">{temperatureVariable}</field></block></value>
+    <value name="TEMP_UNIT"><shadow type="navigation_typedEnum_tempUnit"></shadow></value>
+  </block>
+</category>
+<placeholder_tfod_tensorFlowObjectDetection/>
+<category name="Time">
+  <block type="system_nanoTime"></block>
+  <category name="ElapsedTime">
+    <block type="elapsedTime2_create"></block>
+    <block type="elapsedTime2_create_withStartTime">
+      <value name="START_TIME"><shadow type="system_nanoTime"></shadow></value>
+    </block>
+    <block type="elapsedTime2_create_withResolution">
+      <value name="RESOLUTION"><shadow type="elapsedTime2_typedEnum_resolution"></shadow></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">StartTime</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">Time</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">Seconds</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Number">
+      <field name="PROP">Milliseconds</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_getProperty_Resolution">
+      <field name="PROP">Resolution</field>
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_reset">
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+    <block type="elapsedTime2_log">
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+      <value name="LABEL"><shadow type="text"><field name="TEXT">label</field></shadow></value>
+    </block>
+    <block type="elapsedTime2_toText">
+      <value name="ELAPSED_TIME"><block type="variables_get"><field name="VAR">{elapsedTimeVariable}</field></block></value>
+    </block>
+  </category>
+</category>
+<category name="Vector">
+  <block type="vectorF_getProperty_Number">
+    <field name="PROP">Length</field>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_getProperty_Number">
+    <field name="PROP">Magnitude</field>
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_get">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="INDEX"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+  </block>
+  <block type="vectorF_put">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="INDEX"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    <value name="VALUE"><shadow type="math_number"><field name="NUM">123</field></shadow></value>
+  </block>
+  <block type="vectorF_toText">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_normalized3D">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_dotProduct">
+    <value name="VECTOR1"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="VECTOR2"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_multiplied">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="vectorF_added_withMatrix">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="vectorF_added_withVector">
+    <value name="VECTOR1"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="VECTOR2"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_add_withVector">
+    <value name="VECTOR1"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="VECTOR2"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_subtracted_withMatrix">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+  </block>
+  <block type="vectorF_subtracted_withVector">
+    <value name="VECTOR1"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="VECTOR2"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_subtract_withVector">
+    <value name="VECTOR1"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="VECTOR2"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+  </block>
+  <block type="vectorF_multiplied_withScale">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="vectorF_multiply_withScale">
+    <value name="VECTOR"><block type="variables_get"><field name="VAR">{vectorVariable}</field></block></value>
+    <value name="SCALE"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+  </block>
+  <block type="vectorF_create">
+    <value name="LENGTH"><shadow type="math_number"><field name="NUM">4</field></shadow></value>
+  </block>
+</category>
+<category name="Velocity">
+  <block type="velocity_getProperty_DistanceUnit">
+    <field name="PROP">DistanceUnit</field>
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+  </block>
+  <block type="velocity_getProperty_Number">
+    <field name="PROP">XVeloc</field>
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+  </block>
+  <block type="velocity_getProperty_Number">
+    <field name="PROP">YVeloc</field>
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+  </block>
+  <block type="velocity_getProperty_Number">
+    <field name="PROP">ZVeloc</field>
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+  </block>
+  <block type="velocity_getProperty_Number">
+    <field name="PROP">AcquisitionTime</field>
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+  </block>
+  <block type="velocity_toDistanceUnit">
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+    <value name="DISTANCE_UNIT"><shadow type="navigation_typedEnum_distanceUnit"></shadow></value>
+  </block>
+  <block type="velocity_toText">
+    <value name="VELOCITY"><block type="variables_get"><field name="VAR">{velocityVariable}</field></block></value>
+  </block>
+  <block type="velocity_create"></block>
+  <block type="velocity_create_withArgs">
+    <value name="DISTANCE_UNIT"><shadow type="navigation_typedEnum_distanceUnit"></shadow></value>
+    <value name="X_VELOC"><shadow type="math_number"><field name="NUM">10</field></shadow></value>
+    <value name="Y_VELOC"><shadow type="math_number"><field name="NUM">20</field></shadow></value>
+    <value name="Z_VELOC"><shadow type="math_number"><field name="NUM">30</field></shadow></value>
+    <value name="ACQUISITION_TIME"><shadow type="system_nanoTime"></shadow></value>
+  </block>
+</category>
+<category name="Vuforia">
+  <category name="Optimized for Rover Ruckus">
+    <block type="vuforiaRoverRuckus_initialize_withCameraDirection">
+      <value name="CAMERA_DIRECTION"><shadow type="navigation_typedEnum_cameraDirection"></shadow></value>
+      <value name="USE_EXTENDED_TRACKING"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+      <value name="ENABLE_CAMERA_MONITORING"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+      <value name="CAMERA_MONITOR_FEEDBACK"><shadow type="navigation_typedEnum_cameraMonitorFeedback"><field name="CAMERA_MONITOR_FEEDBACK">AXES</field></shadow></value>
+      <value name="PHONE_LOCATION_ON_ROBOT_DX"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="PHONE_LOCATION_ON_ROBOT_DY"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="PHONE_LOCATION_ON_ROBOT_DZ"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="PHONE_LOCATION_ON_ROBOT_X_ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="PHONE_LOCATION_ON_ROBOT_Y_ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="PHONE_LOCATION_ON_ROBOT_Z_ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="USE_COMPETITION_FIELD_TARGET_LOCATIONS"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+    </block>
+<placeholder_webcam_vuforiaRoverRuckus_initialize_withWebcam/>
+    <block type="vuforiaRoverRuckus_activate"></block>
+    <block type="vuforiaRoverRuckus_deactivate"></block>
+    <block type="vuforiaRoverRuckus_track">
+      <value name="TRACKABLE_NAME"><shadow type="vuforiaRoverRuckus_typedEnum_trackableName"></shadow></value>
+    </block>
+    <block type="vuforiaRoverRuckus_trackPose">
+      <value name="TRACKABLE_NAME"><shadow type="vuforiaRoverRuckus_typedEnum_trackableName"></shadow></value>
+    </block>
+    <block type="vuforiaRoverRuckus_typedEnum_trackableName"></block>
+    <block type="vuforiaTrackingResults_getProperty_String">
+        <field name="PROP">Name</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Boolean">
+        <field name="PROP">IsVisible</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Boolean">
+        <field name="PROP">IsUpdatedRobotLocation</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Number">
+        <field name="PROP">X</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Number">
+        <field name="PROP">Y</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Number">
+        <field name="PROP">Z</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Number">
+        <field name="PROP">XAngle</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Number">
+        <field name="PROP">YAngle</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getProperty_Number">
+        <field name="PROP">ZAngle</field>
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_getUpdatedRobotLocation">
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_formatAsTransform">
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackingResults_toText">
+        <value name="VUFORIA_TRACKING_RESULTS"><block type="variables_get"><field name="VAR">{vuforiaTrackingResultsVariable}</field></block></value>
+    </block>
+  </category>
+  <category name="VuforiaLocalizer">
+    <block type="vuforiaLocalizer_create">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+    <block type="vuforiaLocalizer_loadTrackablesFromAsset">
+      <value name="VUFORIA_LOCALIZER"><block type="variables_get"><field name="VAR">{vuforiaLocalizerVariable}</field></block></value>
+      <value name="ASSET_NAME"><shadow type="text"><field name="TEXT">text</field></shadow></value>
+    </block>
+    <block type="vuforiaLocalizer_loadTrackablesFromFile">
+      <value name="VUFORIA_LOCALIZER"><block type="variables_get"><field name="VAR">{vuforiaLocalizerVariable}</field></block></value>
+      <value name="ABSOLUTE_FILE_NAME"><shadow type="text"><field name="TEXT">text</field></shadow></value>
+    </block>
+  </category>
+  <category name="VuforiaLocalizerParameters">
+    <block type="vuforiaLocalizerParameters_create"></block>
+    <block type="vuforiaLocalizerParameters_setVuforiaLicenseKey">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+      <value name="VUFORIA_LICENSE_KEY"><shadow type="text"><field name="TEXT">text</field></shadow></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_setCameraDirection">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+      <value name="CAMERA_DIRECTION"><shadow type="navigation_typedEnum_cameraDirection"></shadow></value>
+    </block>
+<placeholder_webcam_vuforiaLocalizerParameters_setCameraName/>
+<placeholder_webcam_vuforiaLocalizerParameters_addWebcamCalibrationFile/>
+    <block type="vuforiaLocalizerParameters_setUseExtendedTracking">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+      <value name="USE_EXTENDED_TRACKING"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_setEnableCameraMonitoring">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+      <value name="ENABLE_CAMERA_MONITORING"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_setCameraMonitorFeedback">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+      <value name="CAMERA_MONITOR_FEEDBACK"><shadow type="navigation_typedEnum_cameraMonitorFeedback"><field name="CAMERA_MONITOR_FEEDBACK">AXES</field></shadow></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_setFillCameraMonitorViewParent">
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+      <value name="FILL_CAMERA_MONITOR_VIEW_PARENT"><shadow type="logic_boolean"><field name="BOOL">FALSE</field></shadow></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_getProperty_String">
+      <field name="PROP">VuforiaLicenseKey</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_getProperty_CameraDirection">
+      <field name="PROP">CameraDirection</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+<placeholder_webcam_vuforiaLocalizerParameters_getProperty_CameraName/>
+    <block type="vuforiaLocalizerParameters_getProperty_Boolean">
+      <field name="PROP">UseExtendedTracking</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_getProperty_Boolean">
+      <field name="PROP">EnableCameraMonitoring</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_getProperty_CameraMonitorFeedback">
+      <field name="PROP">CameraMonitorFeedback</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+    <block type="vuforiaLocalizerParameters_getProperty_Boolean">
+      <field name="PROP">FillCameraMonitorViewParent</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
+  </category>
+  <category name="VuforiaTrackable">
+    <block type="vuforiaTrackable_getProperty_OpenGLMatrix">
+      <field name="PROP">Location</field>
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_getProperty_Object">
+      <field name="PROP">UserData</field>
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_getProperty_VuforiaTrackables">
+      <field name="PROP">Trackables</field>
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_getProperty_String">
+      <field name="PROP">Name</field>
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_getProperty_VuforiaTrackableDefaultListener">
+      <field name="PROP">Listener</field>
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_setLocation">
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+      <value name="MATRIX"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_setUserData">
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackable_setName">
+      <value name="VUFORIA_TRACKABLE"><block type="variables_get"><field name="VAR">{vuforiaTrackableVariable}</field></block></value>
+      <value name="NAME"><shadow type="text"><field name="TEXT">text</field></shadow></value>
+    </block>
+  </category>
+  <category name="VuforiaTrackableDefaultListener">
+    <block type="vuforiaTrackableDefaultListener_setPhoneInformation">
+      <value name="VUFORIA_TRACKABLE_DEFAULT_LISTENER"><block type="variables_get"><field name="VAR">{vuforiaTrackableDefaultListenerVariable}</field></block></value>
+      <value name="PHONE_LOCATION_ON_ROBOT"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
+      <value name="CAMERA_DIRECTION"><shadow type="navigation_typedEnum_cameraDirection"></shadow></value>
+    </block>
+<placeholder_webcam_vuforiaTrackableDefaultListener_setCameraLocationOnRobot/>
+    <block type="vuforiaTrackableDefaultListener_isVisible">
+      <value name="VUFORIA_TRACKABLE_DEFAULT_LISTENER"><block type="variables_get"><field name="VAR">{vuforiaTrackableDefaultListenerVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackableDefaultListener_getUpdatedRobotLocation">
+      <value name="VUFORIA_TRACKABLE_DEFAULT_LISTENER"><block type="variables_get"><field name="VAR">{vuforiaTrackableDefaultListenerVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackableDefaultListener_getPose">
+      <value name="VUFORIA_TRACKABLE_DEFAULT_LISTENER"><block type="variables_get"><field name="VAR">{vuforiaTrackableDefaultListenerVariable}</field></block></value>
+    </block>
+  </category>
+  <category name="VuforiaTrackables">
+    <block type="vuforiaTrackables_getProperty_Number">
+      <field name="PROP">Size</field>
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackables_getProperty_String">
+      <field name="PROP">Name</field>
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackables_getProperty_VuforiaLocalizer">
+      <field name="PROP">Localizer</field>
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackables_get">
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+      <value name="INDEX"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+    </block>
+    <block type="vuforiaTrackables_setName">
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+      <value name="NAME"><shadow type="text"><field name="TEXT">text</field></shadow></value>
+    </block>
+    <block type="vuforiaTrackables_activate">
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+    </block>
+    <block type="vuforiaTrackables_deactivate">
+      <value name="VUFORIA_TRACKABLES"><block type="variables_get"><field name="VAR">{vuforiaTrackablesVariable}</field></block></value>
+    </block>
+  </category>
+</category>

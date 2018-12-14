@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" xmlns:altova="http://www.altova.com/xml-schema-extensions" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:element name="Robot">
+		<xs:annotation>
+			<xs:documentation>name is only allowed in resource-based configurations</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:choice>
+					<xs:element name="MotorController" type="USBMotorController"/>
+					<xs:element name="ServoController" type="USBServoController"/>
+					<xs:element name="LegacyModuleController" type="USBLegacyModuleController"/>
+					<xs:element name="DeviceInterfaceModule" type="USBDeviceIntervaceModuleController"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="type" type="RobotTypeAttribute" use="optional"/>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="RobotTypeAttribute">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FirstInspires-FTC"/>
+			<xs:enumeration value="FirstInspires-FTC-template"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="PortDevice">
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="port">
+			<xs:simpleType>
+				<xs:restriction base="xs:int">
+					<xs:minInclusive value="0"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Servo">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Motor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ContinuousRotationServo">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="USBController">
+		<xs:attribute name="name" type="xs:string"/>
+		<xs:attribute name="serialNumber" type="xs:string"/>
+	</xs:complexType>
+	<xs:complexType name="USBMotorController">
+		<xs:complexContent>
+			<xs:extension base="USBController">
+				<xs:sequence minOccurs="0" maxOccurs="2">
+					<xs:element name="Motor" type="Motor"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="USBServoController">
+		<xs:complexContent>
+			<xs:extension base="USBController">
+				<xs:sequence minOccurs="0" maxOccurs="6">
+					<xs:choice>
+						<xs:element name="Servo" type="Servo"/>
+						<xs:element name="ContinuousRotationServo" type="ContinuousRotationServo"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="USBLegacyModuleController">
+		<xs:complexContent>
+			<xs:extension base="USBController">
+				<xs:sequence minOccurs="0" maxOccurs="unbounded">
+					<xs:choice>
+						<xs:element name="Compass" type="Compass"/>
+						<xs:element name="LightSensor" type="LightSensor"/>
+						<xs:element name="IrSeeker" type="IrSeeker"/>
+						<xs:element name="Accelerometer" type="Accelerometer"/>
+						<xs:element name="Gyro" type="Gyro"/>
+						<xs:element name="TouchSensor" type="TouchSensor"/>
+						<xs:element name="TouchSensorMultiplexer" type="TouchSensorMultiplexer"/>
+						<xs:element name="UltrasonicSensor" type="UltrasonicSensor"/>
+						<xs:element name="ColorSensor" type="ColorSensor"/>
+						<xs:element name="MotorController" type="MotorController"/>
+						<xs:element name="ServoController" type="ServoController"/>
+						<xs:element name="MatrixController" type="MatrixController"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="USBDeviceIntervaceModuleController">
+		<xs:complexContent>
+			<xs:extension base="USBController">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:group ref="CDIMAnalogInputChoices"/>
+					<xs:group ref="CDIMDigitalDeviceChoices"/>
+					<xs:group ref="CDIMI2cChoices"/>
+					<xs:group ref="CDIMPwmChoices"/>
+					<xs:group ref="CDIMAnalogOutputChoices"/>
+				</xs:choice>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:group name="CDIMDigitalDeviceChoices">
+		<xs:choice>
+			<xs:element name="TouchSensor" type="TouchSensor"/>
+			<xs:element name="LED" type="LED"/>
+			<xs:element name="DigitalDevice" type="DigitalDevice"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="CDIMAnalogInputChoices">
+		<xs:choice>
+			<xs:element name="OpticalDistanceSensor" type="OpticalDistanceSensor"/>
+			<xs:element name="AnalogInput" type="AnalogInput"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="CDIMI2cChoices">
+		<xs:choice>
+			<xs:element name="IrSeeker" type="IrSeeker"/>
+			<xs:element name="ColorSensor" type="ColorSensor"/>
+			<xs:element name="AdaFruitColorSensor" type="AdaFruitColorSensor"/>
+			<xs:element name="Gyro" type="Gyro"/>
+			<xs:element name="I2cDevice" type="I2cDevice"/>
+			<xs:any namespace="##any">
+				<xs:annotation>
+					<xs:documentation>user-extensible I2c devices may also appear</xs:documentation>
+				</xs:annotation>
+			</xs:any>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="CDIMAnalogOutputChoices">
+		<xs:choice>
+			<xs:element name="AnalogOutput" type="AnalogOutput"/>
+		</xs:choice>
+	</xs:group>
+	<xs:group name="CDIMPwmChoices">
+		<xs:choice>
+			<xs:element name="PulseWidthDevice" type="PulseWidthDevice"/>
+		</xs:choice>
+	</xs:group>
+	<xs:complexType name="Gyro">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TouchSensor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Compass">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="IrSeeker">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LightSensor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Accelerometer">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="UltrasonicSensor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="MotorController">
+		<xs:complexContent>
+			<xs:extension base="PortDevice">
+				<xs:sequence minOccurs="0" maxOccurs="2">
+					<xs:element name="Motor" type="Motor"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ServoController">
+		<xs:complexContent>
+			<xs:extension base="PortDevice">
+				<xs:sequence minOccurs="0" maxOccurs="6">
+					<xs:choice>
+						<xs:element name="Servo" type="Servo"/>
+						<xs:element name="ContinuousRotationServo" type="ContinuousRotationServo"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="MatrixController">
+		<xs:annotation>
+			<xs:documentation>There can be at most four servos and four motors, though that's not captured in this schema.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="PortDevice">
+				<xs:sequence>
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element name="Motor" type="Motor"/>
+						<xs:element name="Servo" type="Servo"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TouchSensorMultiplexer">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ColorSensor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="OpticalDistanceSensor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AnalogInput">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="LED">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="DigitalDevice">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AdaFruitColorSensor">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="I2cDevice">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AnalogOutput">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="PulseWidthDevice">
+		<xs:complexContent>
+			<xs:extension base="PortDevice"/>
+		</xs:complexContent>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,325 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet/less" type="text/css" href="/css/frame.less">
+    <script type="text/javascript" src="/js/less.min.js"></script>
+    <script type="text/javascript" src="/js/URI.min.js"></script> <!-- http://medialize.github.io/URI.js/docs.html -->
+    <script>
+    // https://stackoverflow.com/questions/901115/how-can-i-get-query-string-values-in-javascript
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+        var results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    // The following function does not work on the first document load, if this function is not in the document HEAD
+    // Fires every time the iframe navigates
+    window.iframeChanged = function iframeChanged() {
+        var theIframe = document.getElementById('theIFrame');
+        var currentUri = theIframe.contentWindow.document.URL;
+        var id = "";
+        if (currentUri.indexOf("/") !== -1) {
+            id = currentUri.replace(/http(?:s|):\/\/[.\d:]+\//, '');
+        }
+
+        if (id !== "") {
+            var newDocLocation;
+            if (document.URL.indexOf('?') === -1) {
+                newDocLocation = document.URL;
+            } else {
+                newDocLocation = document.URL.substring(0, document.URL.indexOf('?') - 1);
+            }
+
+            newDocLocation += "?page=";
+            newDocLocation += id;
+            if (document.URL !== newDocLocation) {
+                const hostUrl = window.location.protocol + '//' + window.location.host;
+                // test if the history already knows about this state or we are coming from the host url, if so update accordingly
+                if (getParameterByName('pop') === 'true' || window.location.origin === hostUrl || window.location.origin === hostUrl + '/') {
+                    window.history.replaceState('', theIframe.contentWindow.document.title, newDocLocation + '&pop=true');
+                } else {
+                    window.history.pushState('', theIframe.contentWindow.document.title, newDocLocation + '&pop=true');
+                }
+            }
+        }
+
+        document.title = theIframe.contentWindow.document.title;
+    }
+
+
+    </script>
+</head>
+
+<body>
+
+<!-- fetch configuration information -->
+<script type="text/javascript" src="/js/rc_config.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+
+<nav id="theNavBar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#theNavBarData">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand navbar-link" href="javascript:void(0);" onclick="navTo(URI_NAV_HOME);">
+                <span class="wordmarkandphrase">
+                    <span class="wordmark"><span class="wordmarkfirstword">FIRST</span><span class="trademark">®</span></span>
+                    <span class="brandphrase">
+                        <span class="brandphraseword">robot</span>
+                        <span class="brandphraseword">controller</span>
+                        <span class="brandphraseword">console</span>
+                    </span>
+                </span>
+            </a>
+            <button id="pingFailure" class="btn navbar-btn btn-warning hidden">robot controller disconnected</button>
+        </div>
+        <div id="theNavBarData" class="collapse navbar-collapse">
+            <ul id="theNavBarItems" class="nav navbar-nav">
+                <!-- see RobotControllerWebHandlers -->
+                <li role="presentation" id="id_nav_blocks"   ><a href="javascript:void(0);" onclick="navToFromAnchor(this);">Blocks</a></li>
+                <li role="presentation" id="id_nav_onbotjava"><a href="javascript:void(0);" onclick="navToFromAnchor(this);">OnBotJava</a></li>
+                <li role="presentation" id="id_nav_manage"   ><a href="javascript:void(0);" onclick="navToFromAnchor(this);">Manage</a></li>
+            </ul>
+            <ul id="theNavBarItemsRight" class="nav navbar-nav navbar-right">
+                <li role="presentation" id="id_nav_help"     ><a href="javascript:void(0);" onclick="navToFromAnchor(this);">Help</a></li>
+                <!-- 'exit' is below 'help' (ie: farther from 'manage' etc) so that clumsy fingers will less accidentally hit it -->
+                <li role="presentation" id="id_nav_exit" class="hidden"><a href="javascript:void(0);" onclick="navToFromAnchor(this);">Exit</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- the the point of the iframecontainer is to be able to suppress an extra scrollbar that comes
+     up when the iframe is within 5px of its container height (remove the overflow-y to see) -->
+<div id="theIFrameContainer" style="overflow-y: hidden">
+    <iframe id="theIFrame" class="theiframe" onload="iframeChanged()"></iframe>
+</div>
+
+<script type="text/javascript">
+    //----------------------------------------------------------------------------------------------
+    // Globals
+    //----------------------------------------------------------------------------------------------
+
+    var theNavBar = document.getElementById("theNavBar");
+    var theNavBarData = document.getElementById("theNavBarData");
+    var theNavBarItems = document.getElementById("theNavBarItems");
+    var theNavBarItemsRight = document.getElementById("theNavBarItemsRight");
+    var theIFrameContainer = document.getElementById("theIFrameContainer");
+    var theIFrame = document.getElementById("theIFrame");
+    var pingFailure = document.getElementById("pingFailure");
+
+    //----------------------------------------------------------------------------------------------
+    // Navigation management
+    //----------------------------------------------------------------------------------------------
+
+    function setNavDestById(id, value) {
+        document.getElementById(id).setAttribute("data-page", value);
+    }
+
+    function getNavDest(obj) {
+        return obj.getAttribute("data-page");
+    }
+
+    setNavDestById("id_nav_blocks", URI_NAV_BLOCKS);
+    setNavDestById("id_nav_onbotjava", URI_NAV_ONBOTJAVA);
+    setNavDestById("id_nav_manage", URI_NAV_MANAGE);
+    setNavDestById("id_nav_help", URI_NAV_HELP);
+    setNavDestById("id_nav_exit", URI_EXIT_PROGRAM_AND_MANAGE);
+
+    loadRcInfo(function (rcInfo) {
+        if (rcInfo) {
+            var uaIsAndroid = rcInfo.ftcUserAgentCategory !== "OTHER";
+            if (uaIsAndroid) {
+                hideElement(document.getElementById("id_nav_exit"), false);
+            }
+        }
+    });
+
+    // Expand the height of the iframe from to occupy the entire remainder of the window below the nav bar
+    function resizeIframe() {
+        var navbarBottom = pageY(theNavBar) + theNavBar.offsetHeight;
+        // It is better to be one pixel too small, then 1px too large and needlessly displaying an extra scrollbar
+        var availableHeight = window.innerHeight - navbarBottom - 1;
+        availableHeight = (availableHeight < 0) ? 0 : availableHeight;
+        theIFrameContainer.style.marginTop = navbarBottom + 'px';
+        theIFrameContainer.style.height = availableHeight + 'px';
+        theIFrame.style.height = availableHeight + 'px';
+    }
+
+    function navToFromAnchor(anchor) {
+        navTo(getNavDest(anchor.parentElement));
+    }
+
+    function navTo(page) {
+        console.log("navigating to '" + page + "'");
+        makeButtonActive(findNavButtonForPage(page));
+        theIFrame.src = page;
+    }
+
+    function navToJavaFile(javaFileName) {
+        console.log("navigating to java file '" + javaFileName + "'");
+        makeButtonActive(document.getElementById('id_nav_onbotjava'));
+        theIFrame.src = URI_NAV_ONBOTJAVA + '?/src/' + javaFileName;
+    }
+
+    function makeButtonActive(button) {
+        clearActiveFromNavButtons();
+        if (button) {
+            addClass(button, "active");
+        }
+    }
+
+    // Dismiss menu on click in 'collapsed' case
+    // http://getbootstrap.com/javascript/#collapse-usage
+    $('.navbar a').click(function(){
+        $('#theNavBarData').collapse('hide');
+    });
+
+    function clearActiveFromNavButtons() {
+        var bars = theNavBarData.children;
+        var i;
+        for (i = 0; i < bars.length; i++) {
+            if (bars[i].tagName === 'UL') {
+                var items = bars[i].children;
+                var j;
+                for (j = 0; j < items.length; j++) {
+                    removeClass(items[j], "active");
+                }
+            }
+        }
+    }
+
+    function findNavButtonForPage(page) {
+        var relPage = getRelativeURI(page);
+        var bars = theNavBarData.children;
+        var i;
+        for (i = 0; i < bars.length; i++) {
+            if (bars[i].tagName === 'UL') {
+                var items = bars[i].children;
+                var j;
+                for (j = 0; j < items.length; j++) {
+                    var attr = getRelativeURI(getNavDest(items[j]));
+                    if (attr === relPage) {
+                        return items[j];
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    function getRelativeURI(loc) {
+        var there = new URI(getUrlParts(loc).href);
+        var here = new URI(location.href);
+        return there.relativeTo(here).toString();
+    }
+
+    function getUrlParts(url) {
+        var a = document.createElement('a');
+        a.href = url;
+        return {
+            href: a.href,
+            host: a.host,
+            hostname: a.hostname,
+            port: a.port,
+            pathname: a.pathname,
+            protocol: a.protocol,
+            hash: a.hash,
+            search: a.search
+        };
+    }
+
+    function navigateToPageInQueryString() {
+        var requestedPage = getParameterByName('page', null);
+        if (requestedPage && requestedPage.length > 0) {
+            navTo(requestedPage);
+        } else {
+            navTo(URI_NAV_HOME);
+        }
+    }
+
+    function pageY(elem) {
+        return elem.offsetParent ? elem.offsetTop + pageY(elem.offsetParent) : elem.offsetTop;
+    }
+
+    //----------------------------------------------------------------------------------------------
+    // Pings
+    //----------------------------------------------------------------------------------------------
+
+    function sendPingRequest() {
+        sendPing(getRelativeURI(theIFrame.src), function (pingDetailsList) {
+            var hiddenClass = "hidden";
+            if (pingDetailsList) {
+                ensureClass(pingFailure, hiddenClass);
+                removeClass(theNavBarItems, hiddenClass);
+                removeClass(theNavBarItemsRight, hiddenClass);
+            } else {
+                removeClass(pingFailure, hiddenClass);
+                ensureClass(theNavBarItems, hiddenClass);
+                ensureClass(theNavBarItemsRight, hiddenClass);
+            }
+        
+            var child = theIFrame.contentDocument;
+            if (child && child.onPingResult) {
+                child.onPingResult(pingDetailsList);
+            }
+
+        });
+    }
+
+    function sendPing(name, callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', URI_PING, true);
+        xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    var pingDetailsList = JSON.parse(xhr.responseText);
+                    callback(pingDetailsList);
+                } else {
+                    callback(null);
+                }
+            }
+        };
+        var params = PARAM_NAME + '=' + encodeURIComponent(name);
+        xhr.send(params);
+    }
+
+    window.onpopstate = function popHistory() {
+        navigateToPageInQueryString();
+    };
+
+    //----------------------------------------------------------------------------------------------
+    // Event plumbing
+    //----------------------------------------------------------------------------------------------
+
+    window.onresize=resizeIframe;
+    less.pageLoadFinished.then(resizeIframe);
+    less.pageLoadFinished.then(function() {
+        sendPingRequest();
+        setInterval(function() {
+          sendPingRequest();
+        }, 2000);
+    });
+    less.pageLoadFinished.then(navigateToPageInQueryString);
+    less.pageLoadFinished.then(function() {
+        console.log("finished loading");
+    });
+</script>
+
+</body>
+</html>

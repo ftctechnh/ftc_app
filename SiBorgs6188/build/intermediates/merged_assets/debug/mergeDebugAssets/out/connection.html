@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/SourceCodePro.css">
+    <script type="text/javascript" src="/js/jquery-3.1.1.min.js"></script>
+    <script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet/less" type="text/css" href="/css/connection.less">
+    <script type="text/javascript" src="/js/less.min.js"></script>
+</head>
+<body>
+
+<script type="text/javascript" src="/js/rc_config.js"></script>
+<script type="text/javascript" src="/js/util.js"></script>
+<script type="text/javascript">
+
+    var serverStatusNotOK = function() {
+        var serverStatus = document.getElementById("id_server_status");
+        serverStatus.innerHTML = "Server not OK";
+        removeClass(serverStatus, "text-ok");
+        addClass(serverStatus, "text-error");
+    }
+
+    var hideWhenAndroid = function(hide) {
+        hideElement(document.getElementById("id_when_android"), hide);
+    }
+
+    var refreshServerStatus = function() {
+        loadRcInfo(function (rcInfo) {
+            if (rcInfo) {
+                console.log("refreshSeverStatus(connected)");
+
+                scaleTextInDocumentBody(rcInfo);
+
+                var uaIsAndroid = rcInfo.ftcUserAgentCategory !== "OTHER";
+
+                document.getElementById("id_network_name").innerHTML = rcInfo.networkName;
+                document.getElementById("id_passphrase").innerHTML = rcInfo.passphrase;
+                document.getElementById("id_server_url").innerHTML = rcInfo.serverUrl;
+
+                hideElement(document.getElementById("id_span_connected"), false);
+                hideWhenAndroid(!uaIsAndroid);
+
+                if (!rcInfo.serverIsAlive) {
+                    serverStatusNotOK();
+                } else {
+                    var serverStatus = document.getElementById("id_server_status");
+                    var formattedDate = rcInfo.timeServerStarted;
+                    var status = "Server OK (Running since " + formattedDate + ")";
+                    serverStatus.innerHTML = status;
+                    removeClass(serverStatus, "text-error");
+                    addClass(serverStatus, "text-ok");
+                }
+            } else {
+                console.log("refreshSeverStatus(disconnected)");
+                hideElement(document.getElementById("id_span_connected"), true);
+                hideWhenAndroid(true);
+                serverStatusNotOK();
+            }
+        });
+    }
+
+    var isConnected = false;
+
+    document.onPingResult = function (pingDetailsList) {
+        var activeConnections = document.getElementById("id_active_connections");
+        if (pingDetailsList && pingDetailsList.length > 0) {
+
+            if (!isConnected) refreshServerStatus();
+            isConnected = true;
+
+            // remove all children
+            while (activeConnections.childNodes.length > 0) {
+                activeConnections.removeChild(activeConnections.childNodes[0]);
+            }
+            var table = document.createElement("TABLE");
+            addClass(table, "active_connections_table");
+            var tbody = document.createElement("TBODY");
+            table.appendChild(tbody);
+            var i;
+            for (i = 0; i < pingDetailsList.length; i++) {
+                var pingDetails = pingDetailsList[i];
+                var row = document.createElement("TR");
+                addClass(row, "active_connections_row");
+                //
+                var machine = document.createElement("TD");
+                addClass(machine, "active_connections_machine");
+                machine.innerHTML = pingDetails.machineName;
+                //
+                var name = document.createElement("TD");
+                addClass(name, "active_connections_name");
+                name.innerHTML = pingDetails.name;
+                //
+                row.appendChild(machine);
+                row.appendChild(name);
+                tbody.appendChild(row);
+            }
+            activeConnections.appendChild(table);
+        } else {
+            console.log("onPingResult: disconnected");
+
+            if (isConnected) refreshServerStatus();
+            isConnected = false;
+
+            activeConnections.innerHTML = "<p class=\"active_connections_none\">&lt;none&gt;</p>";
+        }
+    }
+
+    refreshServerStatus();
+
+</script>
+
+<div class="bordered-text-block">
+<h1>Robot Controller Connection Info</h1>
+<p class="web_server_banter">The <span id="id_span_connected">connected </span>robot controller resides on the wireless network named:</p>
+<p class="web_server_datum"><span id="id_network_name">(network)</span></p>
+
+<p class="web_server_banter">The passphrase for this network is:</p>
+<p class="web_server_datum"><span id="id_passphrase">(passphrase)</span></p>
+
+<div id="id_when_android">
+<p class="web_server_banter">To <em>remotely</em> connect to the controller, connect your laptop's wireless adapter to this network, using
+    the passphrase to gain access. Once connected, enter the following address into your web
+    browser:</p>
+<p class="web_server_datum"><span id="id_server_url">(url)</span></p>
+</div>
+</div>
+
+<div class="bordered-text-block">
+<p class="web_server_banter_header">Robot controller status:</p>
+<p class="web_server_datum"><span id="id_server_status">(status)</span></p>
+
+<p class="web_server_banter_header">Active connections:</p>
+<div id="id_active_connections"><p class="active_connections_none">&lt;none&gt;</p></div>
+</div>
+
+</body>
+</html>

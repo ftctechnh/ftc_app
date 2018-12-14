@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.qualcomm.ftcrobotcontroller"
+      android:versionCode="31"
+      android:versionName="4.3"
+      split="lib_slice_1_apk">
+</manifest>

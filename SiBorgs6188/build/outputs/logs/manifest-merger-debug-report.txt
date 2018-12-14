@@ -1,0 +1,672 @@
+-- Merging decision tree log ---
+manifest
+ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+MERGED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:2:1-51:12
+MERGED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:2:1-99:12
+MERGED from [:Hardware-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Hardware-release.aar\ca393660cbe096b04fcdfa7d5d6d5f10\AndroidManifest.xml:2:1-11:12
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:3:1-235:12
+MERGED from [:WirelessP2p-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\WirelessP2p-release.aar\19371c8268f4838c0394eb284d63c1ea\AndroidManifest.xml:2:1-11:12
+MERGED from [:tfod-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\tfod-release.aar\01e722f5e51779e7dae8883f2bcdf1d4\AndroidManifest.xml:2:1-11:12
+MERGED from [:tensorflow-lite-0.0.0-nightly:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\tensorflow-lite-0.0.0-nightly.aar\abf35a3ecb690d800fbb8a5bffaa64f4\AndroidManifest.xml:2:1-6:12
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:2:1-32:12
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:2:1-41:12
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+	package
+		ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:9:5-45
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+	android:versionName
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+	android:versionCode
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:10:5-63
+application
+ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:11:5-19
+MERGED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:14:5-49:19
+MERGED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:14:5-49:19
+MERGED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:78:5-97:19
+MERGED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:78:5-97:19
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:23:5-233:19
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:23:5-233:19
+MERGED from [:tensorflow-lite-0.0.0-nightly:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\tensorflow-lite-0.0.0-nightly.aar\abf35a3ecb690d800fbb8a5bffaa64f4\AndroidManifest.xml:4:5-5:19
+MERGED from [:tensorflow-lite-0.0.0-nightly:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\tensorflow-lite-0.0.0-nightly.aar\abf35a3ecb690d800fbb8a5bffaa64f4\AndroidManifest.xml:4:5-5:19
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:19:5-30:19
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:19:5-30:19
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:18:5-39:19
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:18:5-39:19
+	android:label
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:17:9-41
+	android:largeHeap
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:18:9-33
+	android:icon
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:16:9-45
+	android:allowBackup
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:15:9-35
+	android:theme
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:19:9-45
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:78:18-97
+uses-sdk
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+MERGED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:8:5-10:41
+MERGED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:8:5-10:41
+MERGED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:7:5-9:41
+MERGED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:7:5-9:41
+MERGED from [:Hardware-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Hardware-release.aar\ca393660cbe096b04fcdfa7d5d6d5f10\AndroidManifest.xml:7:5-9:41
+MERGED from [:Hardware-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Hardware-release.aar\ca393660cbe096b04fcdfa7d5d6d5f10\AndroidManifest.xml:7:5-9:41
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:8:5-10:41
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:8:5-10:41
+MERGED from [:WirelessP2p-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\WirelessP2p-release.aar\19371c8268f4838c0394eb284d63c1ea\AndroidManifest.xml:5:5-7:41
+MERGED from [:WirelessP2p-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\WirelessP2p-release.aar\19371c8268f4838c0394eb284d63c1ea\AndroidManifest.xml:5:5-7:41
+MERGED from [:tfod-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\tfod-release.aar\01e722f5e51779e7dae8883f2bcdf1d4\AndroidManifest.xml:7:5-9:41
+MERGED from [:tfod-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\tfod-release.aar\01e722f5e51779e7dae8883f2bcdf1d4\AndroidManifest.xml:7:5-9:41
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:7:5-9:41
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:7:5-9:41
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:7:5-9:41
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:7:5-9:41
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		ADDED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+		INJECTED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml
+uses-permission#android.permission.RECEIVE_BOOT_COMPLETED
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:12:5-81
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:12:22-78
+activity#org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:22:9-43:20
+	android:screenOrientation
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:27:13-49
+	android:label
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:25:13-45
+	android:launchMode
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:26:13-44
+	android:configChanges
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:24:13-59
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:23:13-101
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:28:13-32:29
+category#android.intent.category.LAUNCHER
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:29:17-77
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:29:27-74
+action#android.intent.action.MAIN
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:31:17-69
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:31:25-66
+intent-filter#action:name:android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:33:13-35:29
+action#android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:34:17-90
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:34:25-87
+meta-data#android.hardware.usb.action.USB_DEVICE_ATTACHED
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:37:13-39:57
+	android:resource
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:39:17-54
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:38:17-79
+meta-data#org.firstinspires.main.entry
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:40:13-42:40
+	android:value
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:42:17-37
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:41:17-60
+service#com.qualcomm.ftccommon.FtcRobotControllerService
+ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:46:9-48:38
+	android:enabled
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:48:13-35
+	android:name
+		ADDED from [:FtcRobotController] C:\FTC\ftc_app\FtcRobotController\build\intermediates\merged_manifests\debug\processDebugManifest\merged\AndroidManifest.xml:47:13-76
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:11:5-13:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:12:5-76
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:12:5-76
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:11:5-76
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:11:5-76
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:13:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:12:9-60
+uses-permission#android.permission.CHANGE_WIFI_STATE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:14:5-16:35
+MERGED from [:WirelessP2p-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\WirelessP2p-release.aar\19371c8268f4838c0394eb284d63c1ea\AndroidManifest.xml:9:5-76
+MERGED from [:WirelessP2p-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\WirelessP2p-release.aar\19371c8268f4838c0394eb284d63c1ea\AndroidManifest.xml:9:5-76
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:13:5-76
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:13:5-76
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:16:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:15:9-60
+uses-permission#android.permission.BLUETOOTH
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:17:5-68
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:17:5-68
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:17:5-68
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:17:22-65
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:18:5-20:35
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:16:5-79
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:16:5-79
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:20:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:19:9-63
+uses-permission#android.permission.CHANGE_NETWORK_STATE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:21:5-23:35
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:14:5-79
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:14:5-79
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:23:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:22:9-63
+uses-permission#android.permission.INTERNET
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:24:5-26:35
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:15:5-67
+MERGED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:15:5-67
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:26:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:25:9-51
+uses-permission#android.permission.WRITE_EXTERNAL_STORAGE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:27:5-29:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:13:5-15:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:13:5-15:35
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:11:5-13:35
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:11:5-13:35
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:29:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:28:9-65
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:30:5-32:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:16:5-18:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:16:5-18:35
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:14:5-16:35
+MERGED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:14:5-16:35
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:32:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:31:9-64
+uses-permission#android.permission.WRITE_SETTINGS
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:33:5-35:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:19:5-21:35
+MERGED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:19:5-21:35
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:35:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:34:9-57
+uses-permission#android.permission.SERIAL_PORT
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:41:5-43:35
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:43:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:42:9-54
+uses-permission#android.permission.SET_TIME_ZONE
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:46:5-48:35
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:48:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:47:9-56
+uses-permission#android.permission.WAKE_LOCK
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:55:5-57:35
+	android:required
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:57:9-32
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:56:9-52
+uses-permission#android.permission.CAMERA
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:58:5-65
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:58:22-62
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:59:5-81
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:59:22-78
+uses-feature#android.hardware.usb.accessory
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:61:5-67
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:61:19-64
+uses-feature#0x00020000
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:62:5-54
+	android:glEsVersion
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:62:19-51
+uses-feature#android.hardware.camera
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:76:5-60
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:76:19-57
+service#org.firstinspires.ftc.robotcore.internal.files.MediaTransferProtocolMonitorService
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:81:9-83:38
+	android:enabled
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:83:13-35
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:82:13-110
+meta-data#autoStartService.org.firstinspires.ftc.robotcore.internal.files.MediaTransferProtocolMonitorService
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:85:9-87:41
+	android:value
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:87:13-38
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:86:13-127
+service#org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaService
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:90:9-92:38
+	android:enabled
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:92:13-35
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:91:13-92
+meta-data#autoStartService.org.firstinspires.ftc.robotcore.internal.opmode.OnBotJavaService
+ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:94:9-96:39
+	android:value
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:96:13-36
+	android:name
+		ADDED from [:RobotCore-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\RobotCore-release.aar\3ac6139a7e7a1e7650c7acc3ddda4670\AndroidManifest.xml:95:13-109
+activity#com.qualcomm.ftccommon.FtcRobotControllerSettingsActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:26:9-30:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:29:13-54
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:28:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:27:13-85
+activity#com.qualcomm.ftccommon.configuration.FtcLoadFileActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:31:9-36:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:35:13-55
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:34:13-36
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:33:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:32:13-84
+activity#com.qualcomm.ftccommon.configuration.ConfigureFromTemplateActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:37:9-42:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:41:13-70
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:40:13-36
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:39:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:38:13-94
+activity#com.qualcomm.ftccommon.ViewLogsActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:43:9-48:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:47:13-55
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:46:13-36
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:45:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:44:13-67
+activity#com.qualcomm.ftccommon.configuration.FtcConfigurationActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:49:9-53:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:52:13-45
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:51:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:50:13-89
+activity#com.qualcomm.ftccommon.configuration.FtcNewFileActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:54:9-58:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:57:13-45
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:56:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:55:13-83
+activity#com.qualcomm.ftccommon.ConfigWifiDirectActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:59:9-62:73
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:62:13-70
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:61:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:60:13-75
+activity#com.qualcomm.ftccommon.FtcAdvancedRCSettingsActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:63:9-67:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:66:13-60
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:65:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:64:13-80
+activity#com.qualcomm.ftccommon.FtcLynxFirmwareUpdateActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:68:9-71:20
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:70:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:69:13-80
+activity#com.qualcomm.ftccommon.FtcLynxModuleAddressUpdateActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:72:9-75:20
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:74:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:73:13-85
+activity#com.qualcomm.ftccommon.FtcWifiDirectChannelSelectorActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:76:9-80:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:79:13-73
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:78:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:77:13-87
+activity#com.qualcomm.ftccommon.FtcWifiDirectRememberedGroupsActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:81:9-85:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:84:13-81
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:83:13-36
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:82:13-88
+activity#com.qualcomm.ftccommon.AboutActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:86:9-89:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:88:13-51
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:87:13-64
+activity#com.qualcomm.ftccommon.FtcAboutActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:90:9-93:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:92:13-55
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:91:13-67
+activity#com.qualcomm.ftccommon.configuration.EditSwapUsbDevices
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:94:9-99:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:97:13-63
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:98:13-54
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:96:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:95:13-83
+activity#com.qualcomm.ftccommon.configuration.EditMotorControllerActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:100:9-105:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:103:13-67
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:104:13-54
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:102:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:101:13-92
+activity#com.qualcomm.ftccommon.configuration.EditLegacyMotorControllerActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:106:9-111:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:109:13-67
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:110:13-54
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:108:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:107:13-98
+activity#com.qualcomm.ftccommon.configuration.EditMotorListActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:112:9-117:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:115:13-67
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:116:13-54
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:114:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:113:13-86
+activity#com.qualcomm.ftccommon.configuration.EditServoControllerActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:118:9-123:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:121:13-67
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:122:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:120:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:119:13-92
+activity#com.qualcomm.ftccommon.configuration.EditLegacyServoControllerActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:124:9-129:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:127:13-67
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:128:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:126:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:125:13-98
+activity#com.qualcomm.ftccommon.configuration.EditServoListActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:130:9-135:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:133:13-67
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:134:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:132:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:131:13-86
+activity#com.qualcomm.ftccommon.configuration.EditLegacyModuleControllerActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:136:9-141:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:139:13-75
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:140:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:138:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:137:13-99
+activity#com.qualcomm.ftccommon.configuration.EditMatrixControllerActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:142:9-147:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:145:13-68
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:146:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:144:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:143:13-93
+activity#com.qualcomm.ftccommon.configuration.EditDeviceInterfaceModuleActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:148:9-153:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:151:13-90
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:152:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:150:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:149:13-98
+activity#com.qualcomm.ftccommon.configuration.EditLynxModuleActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:154:9-159:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:157:13-73
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:158:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:156:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:155:13-87
+activity#com.qualcomm.ftccommon.configuration.EditLynxUsbDeviceActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:160:9-165:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:163:13-66
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:164:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:162:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:161:13-90
+activity#com.qualcomm.ftccommon.configuration.EditWebcamActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:166:9-171:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:169:13-57
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:170:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:168:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:167:13-83
+activity#com.qualcomm.ftccommon.configuration.EditPWMDevicesActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:172:9-177:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:175:13-62
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:176:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:174:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:173:13-87
+activity#com.qualcomm.ftccommon.configuration.EditAnalogInputDevicesActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:178:9-183:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:181:13-71
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:182:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:180:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:179:13-95
+activity#com.qualcomm.ftccommon.configuration.EditDigitalDevicesActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:184:9-189:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:187:13-66
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:188:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:186:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:185:13-91
+activity#com.qualcomm.ftccommon.configuration.EditDigitalDevicesActivityLynx
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:190:9-195:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:193:13-71
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:194:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:192:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:191:13-95
+activity#com.qualcomm.ftccommon.configuration.EditI2cDevicesActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:196:9-201:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:199:13-62
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:200:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:198:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:197:13-87
+activity#com.qualcomm.ftccommon.configuration.EditI2cDevicesActivityLynx
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:202:9-207:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:205:13-62
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:206:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:204:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:203:13-91
+activity#com.qualcomm.ftccommon.configuration.EditAnalogOutputDevicesActivity
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:208:9-213:20
+	android:label
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:211:13-72
+	android:windowSoftInputMode
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:212:13-67
+	android:configChanges
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:210:13-59
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:209:13-96
+receiver#org.firstinspires.ftc.ftccommon.internal.RunOnBoot
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:216:9-227:20
+	android:enabled
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:218:13-35
+	android:exported
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:219:13-36
+	android:permission
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:220:13-75
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:217:13-78
+intent-filter#action:name:android.intent.action.BOOT_COMPLETED+action:name:android.intent.action.QUICKBOOT_POWERON+category:name:android.intent.category.DEFAULT
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:221:13-226:29
+category#android.intent.category.DEFAULT
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:222:17-76
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:222:27-73
+action#android.intent.action.BOOT_COMPLETED
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:224:17-79
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:224:25-76
+action#android.intent.action.QUICKBOOT_POWERON
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:225:17-82
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:225:25-79
+service#org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService
+ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:230:9-232:38
+	android:enabled
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:232:13-35
+	android:name
+		ADDED from [:FtcCommon-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\FtcCommon-release.aar\57c1502ba3d6c7fde9a8769d2315aecc\AndroidManifest.xml:231:13-102
+uses-permission#android.permission.READ_PHONE_STATE
+IMPLIED from C:\FTC\ftc_app\SiBorgs6188\src\main\AndroidManifest.xml:8:1-12:12 reason: org.tensorflow.lite has a targetSdkVersion < 4
+uses-permission#android.permission.BLUETOOTH_ADMIN
+ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:12:5-74
+	android:name
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:12:22-71
+activity#org.firstinspires.inspection.DsInspectionActivity
+ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:20:9-24:20
+	android:label
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:23:13-56
+	android:configChanges
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:22:13-59
+	android:name
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:21:13-77
+activity#org.firstinspires.inspection.RcInspectionActivity
+ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:25:9-29:20
+	android:label
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:28:13-56
+	android:configChanges
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:27:13-59
+	android:name
+		ADDED from [:Inspection-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Inspection-release.aar\4def0f8c33b830e3adabe03322e71704\AndroidManifest.xml:26:13-77
+activity#com.google.blocks.ftcrobotcontroller.ProgrammingModeActivity
+ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:19:9-23:20
+	android:label
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:22:13-62
+	android:configChanges
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:21:13-59
+	android:name
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:20:13-88
+activity#org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity
+ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:24:9-28:20
+	android:label
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:27:13-64
+	android:configChanges
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:26:13-59
+	android:name
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:25:13-93
+activity#com.google.blocks.ftcdriverstation.RemoteProgrammingModeActivity
+ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:29:9-33:20
+	android:label
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:32:13-62
+	android:configChanges
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:31:13-59
+	android:name
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:30:13-92
+activity#com.google.blocks.ftcrobotcontroller.BlocksActivity
+ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:34:9-38:20
+	android:label
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:37:13-52
+	android:configChanges
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:36:13-59
+	android:name
+		ADDED from [:Blocks-release:] C:\Users\furry\.gradle\caches\transforms-1\files-1.1\Blocks-release.aar\f23b50524ffd584a7989785472231bd6\AndroidManifest.xml:35:13-79
