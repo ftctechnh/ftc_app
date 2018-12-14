@@ -10,9 +10,7 @@ public class SoloMapping extends ControlMapping {
 
     public static double FLIP_LEFT_FACTOR = 0.65;
     public static double FLIP_RIGHT_FACTOR = 0.6;
-
-    public static boolean EXPERIMENTAL_FEATURES = false;
-
+    
     public int spinDir;
     private boolean x_down, b_down;
 

@@ -36,7 +36,7 @@ public class TandemMapping extends SoloMapping {
 
     @Override
     public boolean flipBack() {
-        if (gamepad2.dpad_right && EXPERIMENTAL_FEATURES) {
+        if (gamepad2.dpad_right) {
             spinDir = -1;
         }
         return gamepad2.dpad_right;
@@ -55,10 +55,15 @@ public class TandemMapping extends SoloMapping {
 
     @Override
     public int getHangDir() {
+        int dir;
         if (gamepad2.left_bumper || gamepad2.right_bumper) {
-            return boolsToDir(gamepad2.left_bumper, gamepad2.right_bumper);
+            dir = boolsToDir(gamepad2.left_bumper, gamepad2.right_bumper);
         } else {
-            return boolsToDir(gamepad1.left_bumper, gamepad1.right_bumper);
+            dir = boolsToDir(gamepad1.left_bumper, gamepad1.right_bumper);
         }
+        if (dir != 0) {
+            spinDir = 0;
+        }
+        return dir;
     }
 }
