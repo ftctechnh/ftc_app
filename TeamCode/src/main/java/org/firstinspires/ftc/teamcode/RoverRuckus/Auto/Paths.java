@@ -22,10 +22,10 @@ public class Paths {
             .build();
 
     static Trajectory DEPOT_TO_SAME_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-65, -10), new ConstantInterpolator(Math.PI))
+            .lineTo(new Vector2d(-75, -8), new ConstantInterpolator(Math.PI))
             .build();
 
     static Trajectory DEPOT_TO_OTHER_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-65, 10), new ConstantInterpolator(Math.PI))
+            .lineTo(new Vector2d(-75, 8), new ConstantInterpolator(Math.PI))
             .build();
 }

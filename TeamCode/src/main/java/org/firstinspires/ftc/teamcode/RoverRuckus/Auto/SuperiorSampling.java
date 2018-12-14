@@ -21,7 +21,7 @@ public abstract class SuperiorSampling extends AutoUtils {
         robot.winch.setPower(1);
         robot.winch.setTargetPosition(-1500);
 
-        robot.intake.prepWinchLower();
+        robot.intake.collect();
 
         robot.sleep(2500);
 

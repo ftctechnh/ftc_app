@@ -69,5 +69,11 @@ public class JustDeploy extends AutoUtils {
         } else {
             unhookFromLander(drive, robot, Math.PI * 1.75);
         }
+
+        robot.sleep(5000);
+
+        switchAppendagePositions();
+        telemetry.log().add("Swapped appendage positions");
+        stop();
     }
 }
