@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode;
 /**
  *  This is from the position closest to the team depot.
  */
-public abstract class DescendFromLander extends StandardChassis {
+public abstract class DescendDelayMarkerCrater extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected DescendFromLander(ChassisConfig config) {
+    protected DescendDelayMarkerCrater(ChassisConfig config) {
         super(config);
     }
 
@@ -52,17 +52,23 @@ public abstract class DescendFromLander extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-
             descendFromLander();
+            sleep(3000);
 
-            encoderDrive(52, 52);
+            encoderDrive(15, 15);
+            turnLeft(68);
+            encoderDrive(24, 24);
+            turnLeft(48);
+            encoderDrive(60, 60);
 
             dropFlag();
             sleep(3000);
             resetFlag();
 
-            turnRight(125);
-            encoderDrive(90, 90);
+            turnRight(165);
+            encoderDrive(103 , 110);
+
+
 
 
             madeTheRun = true;

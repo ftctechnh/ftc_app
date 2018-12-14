@@ -560,14 +560,14 @@ public abstract class StandardChassis extends OpMode {
     }
 
     protected void lyftDownWalle() {
-        double speed = 1.0f;
+        double speed = 0.5f;
 
         // Get the current position.
         int lyftBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
         telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
 
         // Determine new target position, and pass to motor controller
-        int lyftTarget = lyftBegin - 3070;
+        int lyftTarget = lyftBegin - 3270;
         wasteAllocationLoadLifterEarth.setTargetPosition(lyftTarget);
         telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
 
