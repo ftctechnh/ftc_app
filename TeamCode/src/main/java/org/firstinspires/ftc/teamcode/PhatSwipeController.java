@@ -204,6 +204,10 @@ public class PhatSwipeController extends OpMode {
             }
         }
 
+        if(gamepad1.left_bumper && gamepad1.right_bumper && gamepad1.right_stick_button && gamepad1.left_stick_button) {
+            swiggle(3);
+        }
+
         if(useLifter){
             //control lifter (temporary)
             boolean liftUp = gamepad1.y;
@@ -298,4 +302,41 @@ public class PhatSwipeController extends OpMode {
             Thread.currentThread().interrupt();
         }
     }
+    protected void swiggle(long secondsToSwiggle) {
+        for(int lit = 0; lit < secondsToSwiggle; lit++) {
+            turnLeft(500);
+            turnRight(500);
+        }
+    }
+    protected void turnLeft(int numberOfMillis) {
+        float power = 0.3f;
+        motorBackLeft.setPower(-power);
+        motorBackRight.setPower(power);
+        motorFrontLeft.setPower(-power);
+        motorFrontRight.setPower(power);
+
+        sleep(numberOfMillis);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
+
+    }
+
+    protected void turnRight(int numberOfMillis) {
+        float power = 0.3f;
+        motorBackLeft.setPower(power);
+        motorBackRight.setPower(-power);
+        motorFrontLeft.setPower(power);
+        motorFrontRight.setPower(-power);
+
+        sleep(numberOfMillis);
+
+        motorBackLeft.setPower(0);
+        motorBackRight.setPower(0);
+        motorFrontLeft.setPower(0);
+        motorFrontRight.setPower(0);
+    }
+
 }
