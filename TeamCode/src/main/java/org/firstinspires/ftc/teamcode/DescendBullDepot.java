@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode;
 /**
  *  This is from the position closest to the team depot.
  */
-public abstract class DescendBull2 extends StandardChassis {
+public abstract class DescendBullDepot extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected DescendBull2(ChassisConfig config) {
+    protected DescendBullDepot(ChassisConfig config) {
         super(config);
     }
 
@@ -56,9 +56,10 @@ public abstract class DescendBull2 extends StandardChassis {
             descendFromLander();
 
             encoderDrive(52, 52);
-            turnRight(125);
-            encoderDrive(90, 90);
 
+            dropFlag();
+            sleep(3000);
+            resetFlag();
 
 
             madeTheRun = true;

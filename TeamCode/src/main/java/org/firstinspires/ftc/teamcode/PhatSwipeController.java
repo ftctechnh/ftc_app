@@ -18,22 +18,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipeController", group="BPhatSwipe")
+@TeleOp(name="PhatSwipe Master", group="AAA")
 public class PhatSwipeController extends OpMode {
-
-    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int CYCLE_MS = 50;     // period of each cycle
-    static final double MAX_POS = 1.0;     // Maximum rotational position
-    static final double MIN_POS = 0.0;     // Minimum rotational position
-
-    //constants from encoder sample
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.7;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 4.7);
-    static final double DRIVE_SPEED = 0.6;
-    static final double TURN_SPEED = 0.5;
 
 
     // Elapsed time since the opmode started.
@@ -48,18 +34,15 @@ public class PhatSwipeController extends OpMode {
     private DcMotor motorBackRight;
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
-    //private DcMotor shoulder;
-    //private DcMotor vacuum;
-    //private DcMotor extender;
     private DcMotor lifter;
 
 
+    //Bulldozer contraption in front of robot
     private Servo bull;
     private Servo dozer;
-   // protected double angleHand;
 
-    // Hand servo.
-     private Servo servoHand;
+
+    //teammarkerservo
     private Servo flagHolder;
     private double angleHand;
 
@@ -67,9 +50,10 @@ public class PhatSwipeController extends OpMode {
     private boolean useGyroscope = false;
     private boolean useMotors = true;
     private boolean useEncoders = true;
-    private boolean useArms = false;
     private boolean useLifter = true;
     private boolean useBulldozer =true;
+    private boolean useDropper =true;
+    private boolean reverseDrive = true;
 
     /**
      * Code to run ONCE when the driver hits INIT
@@ -94,16 +78,6 @@ public class PhatSwipeController extends OpMode {
             motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
 
 
-
-
-
-            //servoHand = hardwareMap.get(Servo.class, "servo0");
-            //flagHolder = hardwareMap.get(Servo.class, "servo1");
-            //angleHand = 0.75;
-            //flagHolder.setPosition(angleHand);
-
-            //  angleHand = (MAX_POS - MIN_POS) / 2; // Start at halfway position
-
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
             motorBackLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -124,24 +98,24 @@ public class PhatSwipeController extends OpMode {
             }
         }
 
-        if (useArms) {
-           // shoulder = hardwareMap.get(DcMotor.class, "motor4");
-            //vacuum = hardwareMap.get(DcMotor.class, "motor6");
-           // extender = hardwareMap.get(DcMotor.class, "motor5");
-        }
-
         if (useLifter) {
             lifter = hardwareMap.get(DcMotor.class, "motor6");
+            lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        // Tell the driver that initialization is complete.
-        telemetry.addData("Status", "Initialized");
+        if (useDropper) {
+            flagHolder = hardwareMap.get(Servo.class, "servo1");
+            flagHolder.setPosition(0.5);
+        }
 
         if(useBulldozer){
             bull = hardwareMap.get(Servo.class, "servo3");
             dozer = hardwareMap.get(Servo.class, "servo2");
-
         }
+
+        // Tell the driver that initialization is complete.
+        telemetry.addData("Status", "Initialized");
     }
 
     /**
@@ -176,152 +150,93 @@ public class PhatSwipeController extends OpMode {
         }
     }
 
-  //  public void dropFlag() {
-    //    angleHand = 0;
-      //  flagHolder.setPosition(angleHand);
-
-    //}
-
-    public void bulldoze() {
-        angleHand = 0;
-        bull.setPosition(angleHand);
-        dozer.setPosition(angleHand);
-    }
-
-
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
      */
     @Override
     public void loop() {
-                   if (useMotors) {
-                // Control the wheel motors.
-                // POV Mode uses left stick to go forward, and right stick to turn.
-                // - This uses basic math to combine motions and is easier to drive straight.
-                double driveNormal = gamepad1.left_stick_y;
-                double driveStrafe = gamepad1.left_stick_x;
-                if (Math.abs(driveNormal) < 0.1)
-                    driveNormal = 0.0; // Prevent the output from saying "-0.0".
-                if (Math.abs(driveStrafe) < 0.1)
-                    driveStrafe = 0.0; // Prevent the output from saying "-0.0".
-
-                double turn = -gamepad1.right_stick_x;
-
-                double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
-                double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
-                double leftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.8, 0.8);
-                double rightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.8, 0.8);
-
-                double halfLeftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.25, 0.25);
-                double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
-                double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
-                double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
-
-                boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
-
-
-                if (halfSpeed) {
-                    motorBackLeft.setPower(halfLeftBackPower);
-                    motorBackRight.setPower(halfRightBackPower);
-                    motorFrontLeft.setPower(halfLeftFrontPower);
-                    motorFrontRight.setPower(halfRightFrontPower);
-                } else {
-                    motorBackLeft.setPower(leftBackPower);
-                    motorBackRight.setPower(rightBackPower);
-                    motorFrontLeft.setPower(leftFrontPower);
-                    motorFrontRight.setPower(rightFrontPower);
-                }
-
-                if(useLifter){
-                    //control lifter (temporary)
-                    //TODO: get auto lifter code from flynn
-                    boolean liftUp = gamepad1.y;
-                    boolean lowerDown = gamepad1.a;
-                    double liftPower = 0.0;
-                    if (liftUp) {
-                        liftPower = 0.4;
-                    } else if (lowerDown) {
-                        liftPower = -0.4;
-                    }
-                    lifter.setPower(liftPower);
-                }
-
-
-
-            //control bulldozer
-             boolean bullUp = gamepad1.dpad_up;
-             boolean bullDown = gamepad1.dpad_down;
-             if (bullUp) {
-             bull.setPosition(1);
-             dozer.setPosition(0);
-             } else if (bullDown) {
-                 bull.setPosition(0);
-                 dozer.setPosition(1);
-             }
-
-
-            // Control the extender.
-         /*   boolean extendOut = gamepad1.dpad_up;
-            boolean extendIn = gamepad1.dpad_down;
-            double extendPower = 0.0;
-            if (extendOut) {
-                extendPower = 1.0;
-            } else if (extendIn) {
-                extendPower = -1.0;
-            }
-            extender.setPower(extendPower);
-
-            // Control the vacuum.
-            boolean suckIn = gamepad1.x;
-            boolean suckOut = gamepad1.b;
-            double suckPower = 0.0;
-            if (suckIn) {
-                suckPower = -1.0;
-            } else if (suckOut) {
-                suckPower = 1.0;
-            }
-            vacuum.setPower(suckPower);
-
-           // control the arm
-            float pullUp = gamepad1.right_trigger;
-            float pullDown = gamepad1.left_trigger;
-            double pullPower = 0.0;
-            if ((pullUp > 0.0) && (pullDown == 0.0)) {
-                pullPower = -1.0;
-            } else if ((pullDown > 0.0) && (pullUp == 0.0)) {
-                pullPower = 1.0;
-            }
-            shoulder.setPower(pullPower * 0.75);*/
-/*
-
-            // control the hand
-            if (gamepad1.dpad_up) {
-                // Keep stepping up until we hit the max value.
-                angleHand += INCREMENT;
-                angleHand = Math.min(angleHand, MAX_POS);
-            } else if (gamepad1.dpad_down) {
-                // Keep stepping down until we hit the min value.
-                angleHand -= INCREMENT;
-                angleHand = Math.max(angleHand, MIN_POS);
-            }
-            servoHand.setPosition(angleHand);
-*/
-
-
-            // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "time: " + runtime.toString());
-
-
-            // telemetry.addData("Sweeper", "sweep (%.2f)", suckPower);
-           // telemetry.addData("Hand", " angle %5.2f", angleHand);
+        if (gamepad1.start) {
+            reverseDrive = !reverseDrive;
+            sleep(250);
         }
 
+        if (useMotors) {
+            // Control the wheel motors.
+            // POV Mode uses left stick to go forward, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
+            double driveNormal = gamepad1.left_stick_y;
+            double driveStrafe = gamepad1.left_stick_x;
+            if (Math.abs(driveNormal) < 0.1)
+                driveNormal = 0.0; // Prevent the output from saying "-0.0".
+            if (Math.abs(driveStrafe) < 0.1)
+                driveStrafe = 0.0; // Prevent the output from saying "-0.0".
+
+            if (reverseDrive) {
+                driveNormal = -driveNormal;
+                driveStrafe = -driveStrafe;
+            }
+
+            double turn = gamepad1.right_stick_x;
+
+            double leftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.8, 0.8);
+            double rightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.8, 0.8);
+            double leftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.8, 0.8);
+            double rightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.8, 0.8);
+
+            double halfLeftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.25, 0.25);
+            double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
+            double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
+            double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
+
+            boolean halfSpeed = gamepad1.left_bumper && gamepad1.right_bumper;
 
 
+            if (halfSpeed) {
+                motorBackLeft.setPower(halfLeftBackPower);
+                motorBackRight.setPower(halfRightBackPower);
+                motorFrontLeft.setPower(halfLeftFrontPower);
+                motorFrontRight.setPower(halfRightFrontPower);
+            } else {
+                motorBackLeft.setPower(leftBackPower);
+                motorBackRight.setPower(rightBackPower);
+                motorFrontLeft.setPower(leftFrontPower);
+                motorFrontRight.setPower(rightFrontPower);
+            }
+        }
+
+        if(useLifter){
+            //control lifter (temporary)
+            boolean liftUp = gamepad1.y;
+            boolean lowerDown = gamepad1.a;
+            double liftPower = 0.0;
+            if (liftUp) {
+                liftPower = 0.8;
+            } else if (lowerDown) {
+                liftPower = -0.8;
+            }
+            lifter.setPower(liftPower);
+            telemetry.addData("Lifter", "curr: %d", lifter.getCurrentPosition());
+        }
+
+        if(useBulldozer) {
+            //control Bulldozer
+            float bullUp = gamepad1.right_trigger;
+            bull.setPosition(1.0 - bullUp);
+            dozer.setPosition(bullUp);
+
+            telemetry.addData("BullDoze", "set: %f, curr: %f, %f", bullUp, bull.getPosition(), dozer.getPosition());
+        }
+
+        if(useDropper) {
+            flagHolder.setPosition(gamepad1.left_trigger);
+        }
 
         if (useGyroscope) {
             reportGyroscope();
         }
+
+        // Show the elapsed game time and wheel power.
+        telemetry.addData("Status", "time: " + runtime.toString());
     }
 
     /******** GYROSCOPE STUFF **********/
@@ -376,69 +291,11 @@ public class PhatSwipeController extends OpMode {
         BNO055IMU.CalibrationStatus cstatus = bosch.getCalibrationStatus();
         telemetry.addData("Gyro", "cstatus: " + cstatus);
     }
-
-
-    /*
-     *  Method to perfmorm a relative move, based on encoder counts.
-     *  Encoders are not reset as the move is based on the current position.
-     *  Move will stop if any of three conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Move runs out of time
-     *  3) Driver stops the opmode running.
-
-    public void encoderDrive (double speed, double leftInches, double rightInches) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = motorRight.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = motorLeft.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        motorRight.setTargetPosition(newLeftTarget);
-        motorLeft.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        motorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-        motorRight.setPower(Math.abs(speed));
-        motorLeft.setPower(Math.abs(speed));
-
-        // keep looping while we are still active, and there is time left, and both motors are running.
-        // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-        // its target position, the motion will stop.  This is "safer" in the event that the robot will
-        // always end the motion as soon as possible.
-        // However, if you require that BOTH motors have finished their moves before the robot continues
-        // onto the next step, use (isBusy() || isBusy()) in the loop test.
-        ElapsedTime motorOnTime = new ElapsedTime();
-        while ((motorOnTime.seconds() < 30) &&
-                (motorRight.isBusy() && motorLeft.isBusy())) {
-
-            // Display it for the driver.
-            telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-            telemetry.addData("Path2", "Running at %7d :%7d",
-                    motorRight.getCurrentPosition(),
-                    motorLeft.getCurrentPosition());
-            telemetry.update();
-           sleep(100);
-        }
-
-        // Stop all motion;
-        motorRight.setPower(0);
-        motorLeft.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        motorRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        motorLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-
-    public final void sleep(long milliseconds) {
+    protected void sleep(long milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-   */
+    }
 }
