@@ -9,7 +9,7 @@ poses:
 - x: -30.0
   y: 63.0
   heading: 0.0
-- x: 15.0
+- x: -24.0
   y: 63.0
   heading: 0.0
 constraints:

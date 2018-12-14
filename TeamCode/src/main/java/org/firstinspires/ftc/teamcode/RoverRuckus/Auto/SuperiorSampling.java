@@ -75,6 +75,9 @@ public abstract class SuperiorSampling extends AutoUtils {
                 followPath(drive, Paths.STRAFE_LEFT);
                 robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                 followPath(drive, Paths.DEPOT_TO_OTHER_CRATER);
+                // Deploy whacker after we finish driving
+                // to avoid accidentally whacking our minerals
+                robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
             } else {
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Sel"));
                 switchAppendagePositions();
@@ -84,19 +87,30 @@ public abstract class SuperiorSampling extends AutoUtils {
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Dir"));
 
                 if (goal == EndGoal.BLUE_DOUBLE_SAMPLE || goldLoc == GoldPosition.RIGHT) {
-                    robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                     if (goldLoc == GoldPosition.LEFT) {
                         turnToPos(3 * Math.PI / 2);
                     } else if (goldLoc == GoldPosition.CENTER) {
                         turnToPos(5 * Math.PI / 4);
                     } else {
                         turnToPos(0);
+                        robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                     }
                     followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));
+
+                    if (goldLoc != GoldPosition.RIGHT) {
+                        turnToPos(0);
+                        followPath(drive, Paths.DOUBLE_RETURN_TO_DEPO);
+                        robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
+                        robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
+                        followPath(drive, Paths.DEPOT_TO_SAME_CRATER_SHORT);
+                    }
                 } else {
                     turnToPos(0);
                     robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                     followPath(drive, Paths.STRAFE_RIGHT);
+                    // Deploy marker here to ensure that if we time out, we
+                    // can slide into crater
+                    robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
                     followPath(drive, Paths.DEPOT_TO_SAME_CRATER);
                 }
             }
@@ -106,6 +120,5 @@ public abstract class SuperiorSampling extends AutoUtils {
         }
 
         // Now we're parked by crater
-        robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
     }
 }
