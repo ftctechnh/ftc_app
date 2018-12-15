@@ -100,6 +100,9 @@ public abstract class SuperiorSampling extends AutoUtils {
                         turnToPos(5 * Math.PI / 4);
                     } else {
                         turnToPos(0);
+                        followPath(drive, Paths.STRAFE_RIGHT);
+                        followPath(drive, Paths.FORWARD);
+
                         robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                     }
                     followPath(drive, AssetsTrajectoryLoader.load("CraterDouble" + goldLoc.fileName));

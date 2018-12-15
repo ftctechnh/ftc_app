@@ -21,6 +21,10 @@ public class Paths {
             .lineTo(new Vector2d(0, -15), new ConstantInterpolator(0))
             .build();
 
+    static Trajectory FORWARD = new TrajectoryBuilder(new Pose2d(0, 0, 0), DriveConstants.BASE_CONSTRAINTS)
+            .lineTo(new Vector2d(-15, 0), new ConstantInterpolator(0))
+            .build();
+
     static Trajectory DEPOT_TO_SAME_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.BASE_CONSTRAINTS)
             .lineTo(new Vector2d(-75, -8), new ConstantInterpolator(Math.PI))
             .build();
