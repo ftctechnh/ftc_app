@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.Range;
 
 
 /** DRIVETRAIN CONFIGURATION
@@ -17,7 +18,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
 
-@TeleOp(name = "FourwdTeleop", group = "Joystick Opmode")
+@TeleOp(name = "FourwdTeleop2", group = "Joystick Opmode")
 public class FourwdTeleOp2 extends OpMode {
 
     private DcMotor aDrive = null;
@@ -32,6 +33,8 @@ public class FourwdTeleOp2 extends OpMode {
     private double forward = 0;
     private double turn = 0;
     private double multiplier = 1;
+    private double ForwardExponent = 2;
+    private double TurnExponent = 2;
 
     //FOR TUNER: make sure to match these names when getting values
     //These are the default values
@@ -66,6 +69,10 @@ public class FourwdTeleOp2 extends OpMode {
     public void loop() {
 
         tuner.tune();
+        multiplier = tuner.get("multiplier");
+        ForwardExponent = tuner.get("ForwardExponent");
+        TurnExponent = tuner.get("TurnExponent");
+
 
         if (gamepad1.dpad_up){
             forward = 0.9;
@@ -80,16 +87,15 @@ public class FourwdTeleOp2 extends OpMode {
             forward = 0;
             turn = -0.9;
         }else{
-            forward = Calculate.sensCurve(-gamepad1.left_stick_y, 2);
-            turn = Calculate.sensCurve(-gamepad1.right_stick_x, 2);
+            forward = Calculate.sensCurve(-gamepad1.left_stick_y, ForwardExponent);
+            turn = Calculate.sensCurve(-gamepad1.right_stick_x, TurnExponent);
         }
 
         multiplier = tuner.get("multiplier");
-        aDrive.setPower((forward+turn)*multiplier);
-        bDrive.setPower((forward-turn)*multiplier);
-        cDrive.setPower((forward-turn)*multiplier);
-        dDrive.setPower((forward+turn)*multiplier);
-
+        aDrive.setPower(Range.clip((forward + turn)*multiplier,-1,1));
+        bDrive.setPower(Range.clip((forward - turn)*multiplier,-1,1));
+        cDrive.setPower(Range.clip((forward - turn)*multiplier,-1,1));
+        dDrive.setPower(Range.clip((forward + turn)*multiplier,-1,1));
 
 
         if(gamepad2.dpad_up){ aMech.setPower(0.9); }
