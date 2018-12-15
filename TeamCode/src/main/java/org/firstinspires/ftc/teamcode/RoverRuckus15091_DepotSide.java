@@ -104,16 +104,16 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -22d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -32d, 150d);
+                    gyroDrive(DRIVE_SPEED, -26d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -42d, 150d);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -7d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -32d, 180);
+                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -36d, 180);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -22d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -24d, -150d);
+                    gyroDrive(DRIVE_SPEED, -26d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -34d, -150d);
                     break;
             }
 
