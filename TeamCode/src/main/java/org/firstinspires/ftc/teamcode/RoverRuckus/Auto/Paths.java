@@ -26,7 +26,7 @@ public class Paths {
             .build();
 
     static Trajectory DEPOT_TO_OTHER_CRATER = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.BASE_CONSTRAINTS)
-            .lineTo(new Vector2d(-75, 8), new ConstantInterpolator(Math.PI))
+            .lineTo(new Vector2d(-83, 8), new ConstantInterpolator(Math.PI))
             .build();
 
     static Trajectory DOUBLE_RETURN_TO_DEPO = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.RAPID_CONSTRAINTS)
