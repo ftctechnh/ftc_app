@@ -11,9 +11,10 @@ public class ChassisConfig {
     private boolean rightMotorsReversed;
     private boolean hasWalle;
     private boolean teamMarkersReversed;
+    private boolean lyftStrategy;
 
     protected ChassisConfig(float rearDiameter, boolean useFourWheelDrive, float rearWheelSpeed,
-                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle, boolean teamMarkersReversed) {
+                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle, boolean teamMarkersReversed, boolean lyftStrategy) {
         this.rearDiameter = rearDiameter;
         this.useFourWheelDrive = useFourWheelDrive;
         this.rearWheelSpeed = rearWheelSpeed;
@@ -23,6 +24,7 @@ public class ChassisConfig {
         this.rightMotorsReversed = rightMotorsReversed;
         this.hasWalle = hasWalle;
         this.teamMarkersReversed = teamMarkersReversed;
+        this.lyftStrategy = lyftStrategy;
     }
 
     public float getRearWheelDiameter() {
@@ -40,6 +42,7 @@ public class ChassisConfig {
     public boolean isRightMotorReversed() { return rightMotorsReversed; }
     public boolean getHasWalle() {return hasWalle; }
     public boolean isTeamMarkerReversed() { return teamMarkersReversed; }
+    public boolean getlyftStrategy() { return lyftStrategy; }
 
 
     // https://www.wikihow.com/Determine-Gear-Ratio
@@ -63,6 +66,7 @@ public class ChassisConfig {
                 true,
                 false,
                 false,
+                false,
                 false);
     }
 
@@ -77,7 +81,8 @@ public class ChassisConfig {
                 false,
                 true,
                 true,
-                true);
+                true,
+                false);
     }
 
     public static ChassisConfig forPhatSwipe() {
@@ -89,7 +94,8 @@ public class ChassisConfig {
                 0.8f,
                 true,
                 false,
-                false,
-                false);
+                true,
+                true,
+                true);
     }
 }
