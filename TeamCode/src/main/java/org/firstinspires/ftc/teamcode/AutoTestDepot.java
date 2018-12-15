@@ -95,7 +95,7 @@ public class AutoTestDepot extends LinearOpMode {
             //start landing here
             int landingLevel = -2090;  // Target level to land
             /**temporary!/*/
-             landingLevel = -500;  // Target level to land
+             landingLevel = -3000;  // Target level to land
 
             double latchPower;
             //Reset the Encoder
@@ -108,51 +108,6 @@ public class AutoTestDepot extends LinearOpMode {
             }
             robot.landerLatchLift.setPower(0);
             if (isStopRequested()) stop();
-
-
-            // Find the Gold mineral and knock it off the spot
-            // Initialize a counter to count our attempts to get a little closer to the mineral
-/*        double mineralCt = 0;
-        boolean bumpSuccess = false;
-        // Strafe a little closer to the minerals
-        //gyroStrafe(0.5,0);
-        //sleep(500);
-        stopBot();
-
-        while (mineralCt <1 && !bumpSuccess) {
-            sleep(200); // Give the detector a second to register the cube
-            if (detector.isFound()) {
-                telemetry.addLine("Found it, going to mineralBump");
-                telemetry.addData("mineralCt = ", mineralCt);
-                telemetry.update();
-                sleep(2000);
-                bumpSuccess = mineralBump(1);
-            } else {
-                //gyroSpin(-12);  // Spin to the left to look for the mineral
-                gyroHold(-0.4, 0,.9);
-                sleep(2000);
-                if (detector.isFound()) {
-                    bumpSuccess = mineralBump(1);
-                } else {
-                    //gyroSpin(12);  // Spin to the right to look for the mineral
-                    gyroHold(0.4, 0,1.8);
-                    sleep(2000);
-
-                    if (detector.isFound()) {
-                        bumpSuccess = mineralBump(1);
-                    }
-                }
-            }
-            if (!bumpSuccess) {
-                mineralCt = mineralCt + 1;
-                //gyroSpin(0);
-                //moveBot(0,0,0.5,0.5);
-                //sleep(1000);
-                stopBot();
-
-            }
-        }
-*/
 
             // Move  back to unhook the robot
             gyroHold(-0.5, 0, 0.2);
@@ -169,72 +124,31 @@ public class AutoTestDepot extends LinearOpMode {
 
             /**TRIAL CODE TO TRY SORTING LOGIC (need to add to Near Depot Also) */
 
-            //Move robot to center on center mineral
-            //moveBot(0.3,0,0,.5);
-            //sleep(500);
-            //stopBot();
-
-            /**TRIAL CODE WHICH NEEDS TO BE REMOVED AFTER:
-             * Move .5s, pause 6 sec to reset, move .7s, pause 6 sec, move .9s, pause 6 sec
-             * Each time, take a camera reading
-             * Once this is tested, choose the right interval and pixel settings
-              */
-            /**gyroHold(0.5,0,.5);
-            telemetry.addData("0.5 sec align", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("0.5 sec pixels", detector.getXPosition()); // Gold X pos.
-            telemetry.update();
-            sleep(6000);
-
-            gyroHold(0.5,0,.7);
-            telemetry.addData("0.7 sec align", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("0.7 sec pixels", detector.getXPosition()); // Gold X pos.
-            telemetry.update();
-            sleep(6000);
-
-            gyroHold(0.5,0,.9);
-            telemetry.addData("0.9 sec align #1", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("0.9 sec pixels", detector.getXPosition()); // Gold X pos.
-            telemetry.update();
-            sleep(2000);
-            telemetry.addData("0.9 sec align #2", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("0.9 sec pixels", detector.getXPosition()); // Gold X pos.
-            telemetry.update();
-            sleep(2000);
-            telemetry.addData("0.9 sec align #3", detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("0.9 sec pixels", detector.getXPosition()); // Gold X pos.
-            telemetry.addData("pixels minus 300 Abs", (Math.abs(detector.getXPosition() - 300) < 100));
-            telemetry.update();
-            sleep(2000);
-*/
-            //If center, then push & move to close position,
-            // else move to far and if far, push and move to close position,
-            // else move to close position and push
-
             //If mineral is near center, push it and then return to position
-            if (Math.abs(detector.getXPosition() - 330) < 150) {
+/**            if (Math.abs(detector.getXPosition() - 330) < 150) {
                 telemetry.addData("Center mineral IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
                 telemetry.addData("Center mineral Pos", detector.getXPosition()); // Gold X pos.
                 telemetry.update();
-
+*/
                 mineralPush();
 
                 //Move to closest position
                 gyroHold(0.5,0,clicksBetweenMineral);
-               // moveToEncoder(clicksBetweenMineral);
+/**               // moveToEncoder(clicksBetweenMineral);
             } else {
                 //Move robot to center on farthest mineral
+/**
                 gyroHold(0.5,0,clicksBetweenMineral);
                // moveToEncoder(-clicksBetweenMineral);
                 mineralPush();
-
             }
-
+*/
             //Turn off the camera
             detector.disable();
 
             // Move towards the center of the field
             /**Can probably reduce this by about 1 second based on the new robot position */
-            gyroHold(0.4, 0, 0.5);
+            gyroHold(0.5, 0, 0.4);
             //sleep(3000);
 
             // Spin to put the distance sensor towards the wall
@@ -249,6 +163,7 @@ public class AutoTestDepot extends LinearOpMode {
                 gyroStrafe(.5, 315);
             }
             stopBot();
+            gyroSpin(315);
 
             /** This code is not in the Crater code */
             if (isStopRequested()) stop();
@@ -289,8 +204,10 @@ public class AutoTestDepot extends LinearOpMode {
             robot.armRotate.setPower(0);
             if (isStopRequested()) stop();
 
+            gyroSpin(315);
+
             // Drive towards the crater, stop 50 inches from wall
-            while (sonarDistance() > 36) {
+            while (sonarDistance() > 55) {
                 double wsteer = wallSteer(7);
                 moveBot(0.25, 0, wsteer, 0.5);
                 if (isStopRequested()) stop();
@@ -322,7 +239,6 @@ public class AutoTestDepot extends LinearOpMode {
                 robot.rightRearDrive.setPower(drivePower);
                 robot.leftRearDrive.setPower(drivePower);
             }
-
 
         }
         else {
@@ -365,9 +281,6 @@ public class AutoTestDepot extends LinearOpMode {
         }
         // Drive the motors scaled by scaleFactor
 
-        /**MAKE MOTORS RUN WITHOUT ENCODERS */
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         robot.leftFrontDrive.setPower(scaleFactor * wheelSpeeds[0]);
         robot.leftRearDrive.setPower(scaleFactor * wheelSpeeds[1]);
         robot.rightFrontDrive.setPower(scaleFactor * wheelSpeeds[2]);
@@ -390,9 +303,13 @@ public class AutoTestDepot extends LinearOpMode {
 
     //Method which pushes the mineral then returns to position
     public void mineralPush() {
-        gyroStrafe(0.5, 0);
+
+        //Don't use gyro?*/
+        //gyroStrafe(0.5, 0);
+        moveBot(0,0,0.4,0.6);
         sleep(millisecondsToPush);
-        gyroStrafe(-0.5, 0);
+        //gyroStrafe(-0.5, 0);
+        moveBot(0,0,-0.4,0.6);
         sleep(millisecondsToPush);
         stopBot();
         gyroSpin(0);

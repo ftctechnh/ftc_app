@@ -121,7 +121,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         }
         while (opModeIsActive()) {
             //start landing here
-            int landingLevel = -2090;  // Target level to land
+            int landingLevel = -3000;  // Target level to land
             double latchPower;
             //Reset the Encoder
             robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -201,6 +201,8 @@ public class AutoStartNearDepot extends LinearOpMode {
             stopBot();
             if (isStopRequested()) stop();
 
+            gyroSpin(315);
+
             // Back into the depot based on time
             ElapsedTime holdTimer = new ElapsedTime();
             while ((holdTimer.time() < 2.7)) {
@@ -237,8 +239,10 @@ public class AutoStartNearDepot extends LinearOpMode {
             if (isStopRequested()) stop();
 
 
+            gyroSpin(315);
+
             // Drive towards the crater, stop 50 inches from wall
-            while (sonarDistance() > 36) {
+            while (sonarDistance() > 55) {
                 double wsteer = wallSteer(7);
                 moveBot(0.25, 0, wsteer, 0.5);
                 if (isStopRequested()) stop();

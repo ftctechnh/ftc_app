@@ -1,40 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.hardware.Camera;
-import android.hardware.Camera.Parameters;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-import com.vuforia.CameraDevice;
-import com.vuforia.Vuforia;
-import com.vuforia.CameraDevice;
-import com.vuforia.DataSet;
-import com.vuforia.Frame;
-import com.vuforia.HINT;
-import com.vuforia.Image;
-import com.vuforia.Matrix34F;
-import com.vuforia.ObjectTracker;
-import com.vuforia.PIXEL_FORMAT;
-import com.vuforia.STORAGE_TYPE;
-import com.vuforia.State;
-import com.vuforia.Tool;
-import com.vuforia.Trackable;
-import com.vuforia.TrackableResult;
-import com.vuforia.Tracker;
-import com.vuforia.TrackerManager;
-import com.vuforia.Vec2F;
-import com.vuforia.Vec3F;
-import com.vuforia.Vuforia;
-
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -63,11 +38,6 @@ public class AutoStartNearCrater extends LinearOpMode {
 
     private GoldAlignDetector detector;
 
-
-  /*  private static final String VUFORIA_KEY = "AU8YYQn/////AAAAGXFrahulqEjulTTNdLAcySmHbygwS4xr5RSUhekqrTcj7ErEbW1t0GxYBrB1fZFvZQcM3NCjk0dHuDH0I5cqwrblwH33sSHg0IO6XB9zE60YKnY2UiLPE8H9DQLAZjBoAAoOoNhJJQuFD2+hxs0vU74jNqyvyvsGUqqHQ7aj2EMCEbP4p6xElobK2w374MQsFvtnviNJ/pGZxeFlzta1W/DXRpq7xJY9+1eheCOGrRrkzIvS5i/L/nb9OKUP5kwJefb4oi0wMi7O1xxSMfUq+Aq1JfI4sXTXgLM/Z7dPb9zod+x8Kl9GnJ2e43OUGYqChmcpKKH0SguasN741T3zcrs1+iynm9ATD4NOk87F56xT";
-    VuforiaLocalizer vuforia;
-    private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
-*/
     private ElapsedTime runtime = new ElapsedTime();
     //public boolean found() { return GoldAlignExample.isFound(); }
     //public boolean isAligned() { return detector.getAligned(); }
@@ -119,7 +89,7 @@ public class AutoStartNearCrater extends LinearOpMode {
 
         }
         while (opModeIsActive()) {
-            int landingLevel = -2090;  // Target level to land
+            int landingLevel = -3000;  // Target level to land
             double latchPower;
             //Reset the Encoder
             robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -133,49 +103,6 @@ public class AutoStartNearCrater extends LinearOpMode {
             robot.landerLatchLift.setPower(0);
 
 
-            // Find the Gold mineral and knock it off the spot
-            // Initialize a counter to count our attempts to get a little closer to the mineral
-/*        double mineralCt = 0;
-        boolean bumpSuccess = false;
-        // Strafe a little closer to the minerals
-        //gyroStrafe(0.5,0);
-        //sleep(500);
-        stopBot();
-
-        while (mineralCt <1 && !bumpSuccess) {
-            sleep(200); // Give the detector a second to register the cube
-            if (detector.isFound()) {
-                telemetry.addLine("Found it, going to mineralBump");
-                telemetry.addData("mineralCt = ", mineralCt);
-                telemetry.update();
-                sleep(2000);
-                bumpSuccess = mineralBump(1);
-            } else {
-                //gyroSpin(-12);  // Spin to the left to look for the mineral
-                gyroHold(-0.4, 0,.9);
-                sleep(2000);
-                if (detector.isFound()) {
-                    bumpSuccess = mineralBump(1);
-                } else {
-                    //gyroSpin(12);  // Spin to the right to look for the mineral
-                    gyroHold(0.4, 0,1.8);
-                    sleep(2000);
-
-                    if (detector.isFound()) {
-                        bumpSuccess = mineralBump(1);
-                    }
-                }
-            }
-            if (!bumpSuccess) {
-                mineralCt = mineralCt + 1;
-                //gyroSpin(0);
-                //moveBot(0,0,0.5,0.5);
-                //sleep(1000);
-                stopBot();
-
-            }
-        }
-*/
             //Clear the hook
             gyroHold(-0.5, 0, 0.2);
             // Move away from the lander
@@ -183,12 +110,6 @@ public class AutoStartNearCrater extends LinearOpMode {
             sleep(1000);
             stopBot();
             gyroSpin(0);
-
-            //TRIAL CODE TO TRY SORTING LOGIC WOULD GO HERE (need to add to Near Depot Also)
-           // telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
-            //telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
-            //telemetry.update();
-
 
             // Move closer to the wall
             gyroHold(0.4, 0, 1.5);
@@ -202,6 +123,9 @@ public class AutoStartNearCrater extends LinearOpMode {
                 gyroStrafe(.5, 315);
             }
             stopBot();
+
+            gyroSpin(315);
+
             //Drive backwards maintaining 2-4 inches from the wall
             while (sonarDistance() > 18) {
                 double wsteer = wallSteer(5);
@@ -227,6 +151,8 @@ public class AutoStartNearCrater extends LinearOpMode {
             sleep(1000);
             robot.rightMineral.setPower(0);
 
+
+            gyroSpin(315);
 
             // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
             while (sonarDistance() < 72) {

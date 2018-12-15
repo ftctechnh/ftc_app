@@ -20,9 +20,9 @@ public class AutoTestCrater extends LinearOpMode {
     HardwareBruinBot robot = new HardwareBruinBot();
 
     /**Settings for mineral distances NEED TO ADD PUSHMINERAL AND LOGIC // */
-    double clicksToCenter = -200;
-    double clicksBetweenMineral = 400;
-    double millisecondsToPush = 200;
+    double clicksToCenter = 0;
+    double clicksBetweenMineral = 0.800;
+    long millisecondsToPush = 800;
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
@@ -94,7 +94,7 @@ public class AutoTestCrater extends LinearOpMode {
 
         }
         while (opModeIsActive()) {
-            int landingLevel = -2090;  // Target level to land
+            int landingLevel = -3000;  // Target level to land
             double latchPower;
             //Reset the Encoder
             robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -108,49 +108,6 @@ public class AutoTestCrater extends LinearOpMode {
             robot.landerLatchLift.setPower(0);
 
 
-            // Find the Gold mineral and knock it off the spot
-            // Initialize a counter to count our attempts to get a little closer to the mineral
-/*        double mineralCt = 0;
-        boolean bumpSuccess = false;
-        // Strafe a little closer to the minerals
-        //gyroStrafe(0.5,0);
-        //sleep(500);
-        stopBot();
-
-        while (mineralCt <1 && !bumpSuccess) {
-            sleep(200); // Give the detector a second to register the cube
-            if (detector.isFound()) {
-                telemetry.addLine("Found it, going to mineralBump");
-                telemetry.addData("mineralCt = ", mineralCt);
-                telemetry.update();
-                sleep(2000);
-                bumpSuccess = mineralBump(1);
-            } else {
-                //gyroSpin(-12);  // Spin to the left to look for the mineral
-                gyroHold(-0.4, 0,.9);
-                sleep(2000);
-                if (detector.isFound()) {
-                    bumpSuccess = mineralBump(1);
-                } else {
-                    //gyroSpin(12);  // Spin to the right to look for the mineral
-                    gyroHold(0.4, 0,1.8);
-                    sleep(2000);
-
-                    if (detector.isFound()) {
-                        bumpSuccess = mineralBump(1);
-                    }
-                }
-            }
-            if (!bumpSuccess) {
-                mineralCt = mineralCt + 1;
-                //gyroSpin(0);
-                //moveBot(0,0,0.5,0.5);
-                //sleep(1000);
-                stopBot();
-
-            }
-        }
-*/
             //Clear the hook
             gyroHold(-0.5, 0, 0.2);
             // Move away from the lander
@@ -160,17 +117,30 @@ public class AutoTestCrater extends LinearOpMode {
             gyroSpin(0);
 
             /**TRIAL CODE TO TRY SORTING LOGIC (need to add to Near Depot Also) */
-            telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral
-            telemetry.addData("X Pos" , detector.getXPosition()); // Gold X pos.
-            //telemetry.addData("error", error);
-            //telemetry.addData("detectorCt",detectorCt);
-            telemetry.update();
+
+            //If mineral is near center, push it and then return to position
+            if (Math.abs(detector.getXPosition() - 330) < 150) {
+                telemetry.addData("Center mineral IsAligned", detector.getAligned()); // Is the bot aligned with the gold mineral
+                telemetry.addData("Center mineral Pos", detector.getXPosition()); // Gold X pos.
+                telemetry.update();
+
+                mineralPush();
+
+                //Move to closest position
+                gyroHold(0.5,0,clicksBetweenMineral);
+                // moveToEncoder(clicksBetweenMineral);
+            } else {
+                //Move robot to center on farthest mineral
+                gyroHold(0.5,0,clicksBetweenMineral);
+                // moveToEncoder(-clicksBetweenMineral);
+                mineralPush();
+            }
 
             //Turn off the camera
             detector.disable();
 
             // Move closer to the wall
-            gyroHold(0.4, 0, 1.5);
+            gyroHold(0.5, 0, 0.4);
 
             // Rotate to a heading of 315R
             gyroSpin(315);
@@ -180,6 +150,8 @@ public class AutoTestCrater extends LinearOpMode {
                 gyroStrafe(.5, 315);
             }
             stopBot();
+
+            gyroSpin(315);
 
             //Drive backwards maintaining 2-4 inches from the wall toward the depot
             while (sonarDistance() > 18) {
@@ -206,6 +178,7 @@ public class AutoTestCrater extends LinearOpMode {
             sleep(1000);
             robot.rightMineral.setPower(0);
 
+            gyroSpin(315);
 
             // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
             while (sonarDistance() < 72) {
@@ -231,40 +204,6 @@ public class AutoTestCrater extends LinearOpMode {
         }
 
         stop();
-    }
-
-
-    public void moveToEncoder (double clicks) {
-        double drivePower;
-        robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-        if (clicks > 0) {
-            drivePower = 0.3;
-            while (robot.rightFrontDrive.getCurrentPosition()<clicks) {
-                robot.rightFrontDrive.setPower(drivePower);
-                robot.leftFrontDrive.setPower(drivePower);
-                robot.rightRearDrive.setPower(drivePower);
-                robot.leftRearDrive.setPower(drivePower);
-            }
-
-
-        }
-        else {
-            drivePower = -0.3;
-            while (robot.rightFrontDrive.getCurrentPosition()>clicks) {
-                robot.rightFrontDrive.setPower(drivePower);
-                robot.leftFrontDrive.setPower(drivePower);
-                robot.rightRearDrive.setPower(drivePower);
-                robot.leftRearDrive.setPower(drivePower);
-            }
-
-
-        }
-        robot.rightFrontDrive.setPower(0);
-        robot.leftFrontDrive.setPower(0);
-        robot.rightRearDrive.setPower(0);
-        robot.leftRearDrive.setPower(0);
     }
 
 
@@ -315,6 +254,20 @@ public class AutoTestCrater extends LinearOpMode {
         robot.leftRearDrive.setPower(0);
         robot.rightFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
+    }
+
+    //Method which pushes the mineral then returns to position
+    public void mineralPush() {
+
+        //Don't use gyro?*/
+        //gyroStrafe(0.5, 0);
+        moveBot(0,0,0.5,0.6);
+        sleep(millisecondsToPush);
+        //gyroStrafe(-0.5, 0);
+        moveBot(0,0,0.5,0.6);
+        sleep(millisecondsToPush);
+        stopBot();
+        gyroSpin(0);
     }
 
     public double wallSteer( double distance) {
