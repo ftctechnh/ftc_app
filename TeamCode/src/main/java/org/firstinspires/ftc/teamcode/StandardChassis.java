@@ -549,17 +549,22 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
-
-
-
     protected void descendFromLander() {
-        // go down.
-        lyftDownWalle();
-        strafeRight(450);
-
+        if(!config.getlyftStrategy()) {
+            // go down.
+            lyftDownWalle(-4956);
+            //existing Quiksilver descend stragety
+            strafeRight(450);
+        } else {
+            lyftDownWalle(-1449);
+            //write new phatswipe descend strategy
+            turnLeft(25);
+            encoderDrive(2,2);
+            turnRight(25);
+        }
     }
 
-    protected void lyftDownWalle() {
+    protected void lyftDownWalle(int howManySpins) {
         double speed = 0.5f;
 
         // Get the current position.
@@ -567,7 +572,7 @@ public abstract class StandardChassis extends OpMode {
         telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
 
         // Determine new target position, and pass to motor controller
-        int lyftTarget = lyftBegin - 3270;
+        int lyftTarget = lyftBegin + howManySpins;
         wasteAllocationLoadLifterEarth.setTargetPosition(lyftTarget);
         telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
 

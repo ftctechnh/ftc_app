@@ -39,8 +39,8 @@ public class QuickSilverController extends OpMode {
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
-    private boolean useArm = true;
-    private boolean useLifter = true;
+    private boolean useArm = true; // HACK
+    private boolean useLifter = true; // HACL
 
     //Movement State
     private int armState;
@@ -297,6 +297,9 @@ public class QuickSilverController extends OpMode {
             } else {
                 tacVac.setPower(0);
             }
+
+            telemetry.addData("Shoulder", "start: %d, curr: %d, target: %d", shoulderStartPosition, shoulder.getCurrentPosition(), shoulderTarget);
+            telemetry.addData("Extender", "start: %d, curr: %d, target: %d, armState: %d", extenderStartPostion, extender.getCurrentPosition(), extenderTarget, armState);
         }
 
         if (useLifter) {
@@ -340,6 +343,9 @@ public class QuickSilverController extends OpMode {
                 lifter.setPower(0);
                 telemetry.addLine("Position Moved!");
             }
+
+            telemetry.addData("Lifter", "start: %d, curr: %d, target: %d, liftState: %d",
+                    lifterStartPosition, lifter.getCurrentPosition(), lifterExtenderTarget, lifterState);
         }
 
         /*if(armState == 2 && !shoulder.isBusy()){
@@ -347,10 +353,7 @@ public class QuickSilverController extends OpMode {
             telemetry.addLine("Position Moved!");
         } */
 
-        telemetry.addData("Shoulder", "start: %d, curr: %d, target: %d", shoulderStartPosition, shoulder.getCurrentPosition(), shoulderTarget);
-        telemetry.addData("Extender", "start: %d, curr: %d, target: %d, armState: %d", extenderStartPostion, extender.getCurrentPosition(), extenderTarget, armState);
-        telemetry.addData("Lifter", "start: %d, curr: %d, target: %d, liftState: %d",
-                lifterStartPosition, lifter.getCurrentPosition(), lifterExtenderTarget, lifterState);
+
     }
 
 
