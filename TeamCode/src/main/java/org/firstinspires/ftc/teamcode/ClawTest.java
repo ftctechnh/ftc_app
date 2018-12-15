@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 /**
  * This OpMode tests the Claw.
  */
-@TeleOp(name = "Monsieur Mallah Claw", group = "Concept")
+//@TeleOp(name = "Monsieur Mallah Claw", group = "ZZ")
 public class ClawTest extends OpMode {
 
     private static final double LEFT_CLAWS_OPEN = 0.40;

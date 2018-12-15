@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  *
  */
-@TeleOp(name="QuickSilverController", group="MonsieurMallah")
+@TeleOp(name="QuickSilver TeleOp", group="AAA")
 public class QuickSilverController extends OpMode {
 
     // Motors connected to the hub.
@@ -194,13 +194,19 @@ public class QuickSilverController extends OpMode {
 
         if (useArm) {
             // shoulder MANUAL CONTROL
-            boolean pullUp = gamepad1.y;
-            boolean pullOut = gamepad1.a;
+            boolean pullUpOne = gamepad1.dpad_up;
+            boolean pullOutOne = gamepad1.dpad_down;
+            boolean pullUpTwo = gamepad2.dpad_up;
+            boolean pullOutTwo = gamepad2.dpad_down;
             double pullPower = 0.0;
-            if (pullUp ) {
+            if (pullUpOne||pullUpTwo) {
                 pullPower = -0.8;
-            } else if (pullOut) {
+            } else if (pullOutOne || pullOutTwo) {
                 pullPower = 0.8;
+            }else if(pullUpOne && pullOutTwo) {
+                pullPower = 0.8;
+            }else if(pullOutOne && pullUpTwo){
+                pullPower = -0.8;
             }
             if (pullPower != 0.0 || armState == 0) {
                 // if anyone uses manual reset presets and turn everything off
@@ -216,8 +222,8 @@ public class QuickSilverController extends OpMode {
             }
 
             // Control the extender: MANUAL CONTROL
-            boolean extendOut = gamepad1.x;
-            boolean extendIn = gamepad1.b;
+            boolean extendOut = gamepad1.a;
+            boolean extendIn = gamepad1.y;
             double extendManualPower = 0.0;
             if (extendOut) {
                 extendManualPower = -0.5;
@@ -239,14 +245,14 @@ public class QuickSilverController extends OpMode {
             }
 
             // extender: presets
-            boolean depositeState = gamepad2.y;
-            boolean homeState = gamepad2.x;
+            /*boolean depositeState = gamepad2.y;
+            boolean homeState = gamepad2.a;
             if (depositeState) {
                 //All the way out + all the way up or depositeState
-                startArmMoving(extenderStartPostion + 4500,0);
+                startArmMoving(extenderStartPostion + 4000,shoulderStartPosition + 4500);
             }
             else if (homeState) {
-                startArmMoving(extenderStartPostion,0);
+                startArmMoving(extenderStartPostion,shoulderStartPosition);
             }
 
             boolean extendCalibrate = gamepad2.dpad_right && gamepad2.left_bumper;
@@ -285,7 +291,7 @@ public class QuickSilverController extends OpMode {
                 extenderTarget = 0;
                 shoulderTarget = 0;
                 armState = 0;
-            }
+            }*/
 
             // Control the tacVac.
             float suckOut = gamepad1.left_trigger;
@@ -301,14 +307,14 @@ public class QuickSilverController extends OpMode {
 
         if (useLifter) {
             // lyfter MANUAL CONTROL
-            boolean extendOut = gamepad1.dpad_up && !gamepad1.left_bumper;
-            boolean extendIn = gamepad1.dpad_down;
+            boolean extendOut = gamepad1.right_bumper;
+            boolean extendIn = gamepad1.left_bumper;
             double lifterManualPower = 0.0;
             if (extendOut) {
-                lifterManualPower = -0.5;
+                lifterManualPower = -1.0;
             }
             if (extendIn) {
-                lifterManualPower = 0.5;
+                lifterManualPower = 1.0;
             }
             if (lifterManualPower != 0.0 || lifterState == 0) {
                 // we get here if we ar ealready in manual control, or if we are in the process of moving to a preset,
@@ -319,8 +325,8 @@ public class QuickSilverController extends OpMode {
                 lifter.setPower(lifterManualPower);
             }
 
-            boolean liftAllIn = gamepad1.dpad_left;
-            boolean liftAllOut = gamepad1.dpad_right;
+            boolean liftAllIn = gamepad2.dpad_left;
+            boolean liftAllOut = gamepad2.dpad_right;
             if (liftAllOut) {
                 startLifterMoving(lifterStartPosition + 4500);
             } else if (liftAllIn) {
