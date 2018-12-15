@@ -22,7 +22,8 @@ public class holonomicDrive_0_2 extends LinearOpMode
         while (opModeIsActive())
         {
             robot.manualDrive();
-            robot.manualRotate();
+            if(robot.gamepad.right_stick_x != 0)
+                robot.manualRotate();
 
             if(gamepad1.dpad_up && x < .6)
             {
@@ -61,7 +62,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
 
             robot.manualLift();
-
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");

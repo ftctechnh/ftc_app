@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class DriveEngine {
@@ -25,9 +26,9 @@ public class DriveEngine {
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        back.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
-        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        back.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         back.setDirection (DcMotor.Direction.FORWARD);
         right.setDirection(DcMotor.Direction.FORWARD);

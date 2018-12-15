@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
@@ -61,7 +59,7 @@ public class Auto {
     }
 
 
-
+    boolean hasMovedSideways = false;
     Mode slide()
     {
         double inchesMovedX = robot.driveEngine.xDist();
@@ -70,13 +68,14 @@ public class Auto {
         {
             robot.lift(.2); //drop a bit more
         }
-        else if(inchesMovedX < 6) //the back encoder has moved less than 4 inches
+        else if(inchesMovedX < 6 && !hasMovedSideways) //the back encoder has moved less than 4 inches
         {
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(-.3,0); //drive to the side to unhook
         }
-        else if(inchesMovedY < 8) //the back encoder has moved less than 6 inches
+        else if(inchesMovedY < 8)
         {
+            hasMovedSideways = true;
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(0,.4); //drive diagonally
             robot.driveEngine.resetXDist();
@@ -144,7 +143,7 @@ public class Auto {
         telemetry.addLine("Made it to point Harpoon");
         if((null == location)){
             double t = timer.seconds();
-            robot.driveEngine.rotate(t/1 - Math.floor(t/1) < .40 ? .4 : 0);
+            robot.driveEngine.rotate(t % 2 < .4 ? .15 : 0);
             return Mode.MoveToWall;
         }
 
@@ -153,7 +152,10 @@ public class Auto {
         robot.sensors.rotateMobile(-iSP * 90);
 
         if(robot.rotateToTarget(targetLocation[0], targetLocation[1], 5) &&
-                robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 3))
+                robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 3) &&
+                robot.driveToTarget(wallTarget[0], wallTarget[1], .2, 1) &&
+                robot.rotateToWall(1))
+
             return Mode.MoveToDepot;
 
         return Mode.MoveToWall;

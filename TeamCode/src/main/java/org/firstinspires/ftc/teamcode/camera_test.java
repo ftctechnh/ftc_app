@@ -65,30 +65,28 @@ public class camera_test extends LinearOpMode
                 double heading_of_target_from_robot_location = Math.atan2(delta_y,delta_x);
 
                 //where compass would say the mountain is located considering our compass isn't pointed north
-                double target_heading = heading_of_robot_on_field - heading_of_target_from_robot_location;
+                double target_heading = heading - heading_of_target_from_robot_location;
 
                 double wall_target_heading = heading - Math.atan2(wallTarget[1] - robot_y, wallTarget[0] - robot_x);
 
+                double wall_heading = heading - Math.round(heading / 90) * 90;
 
-                if(Math.abs(delta_x) < 4 && Math.abs(delta_y) < 4)
-                {
-                    telemetry.addData("drive", "0");
-                }
-
-                if (Math.abs(wall_target_heading) < 5 * Math.PI/180)
-                    telemetry.addLine("Good on rotation");
-                else
+                if(Math.abs(wall_target_heading) > 5 * Math.PI/180)
                     telemetry.addData("rotation",.2 * Math.signum(wall_target_heading));
-
-                if(Math.abs(delta_x) < 4 && Math.abs(delta_y) < 4 && Math.abs(wall_target_heading) < 5 * Math.PI/180)
-                {
-                    telemetry.update();
-                    continue;
+                if(Math.abs(delta_x) > 4 || Math.abs(delta_y) > 4) {
+                    telemetry.addData("drive x",Math.sin(target_heading) * .3);
+                    telemetry.addData("drive y",Math.cos(target_heading) * .3);
                 }
+                else if(Math.abs(delta_x) > 1 || Math.abs(delta_y) > 1){
+                    telemetry.addData("drive x2",Math.sin(target_heading) * .2);
+                    telemetry.addData("drive y2",Math.cos(target_heading) * .2);
+                }
+                else if(Math.abs(wall_heading) > 1)
+                    telemetry.addData("rotation2", .2 * Math.signum(wall_heading));
+                else
+                    telemetry.addLine("Move to wall complete!");
 
 
-                telemetry.addData("Drive x",Math.sin(target_heading) * .3);
-                telemetry.addData("Drive y",Math.cos(target_heading) * .3);
 
                 telemetry.addData("Loc. x", location[0]);
                 telemetry.addData("Loc. y", location[1]);
