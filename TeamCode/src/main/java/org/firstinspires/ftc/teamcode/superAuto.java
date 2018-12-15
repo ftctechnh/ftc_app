@@ -55,6 +55,9 @@ abstract public class superAuto extends LinearOpMode {
     DcMotor mineralLiftL;
     DcMotor mineralLiftR;
     Servo servo;
+    Servo slide;
+    CRServo outake1;
+    CRServo outake2;
 
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
     static final int gyroFlipped = -1;
@@ -122,6 +125,9 @@ abstract public class superAuto extends LinearOpMode {
         mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
         mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
         servo = hardwareMap.servo.get("servo");
+        slide = hardwareMap.servo.get("slide"); //
+        outake1 = hardwareMap.crservo.get("outake1");
+        outake2 = hardwareMap.crservo.get("outake2");
     }
 
     void composeTelemetry() {
@@ -282,8 +288,6 @@ abstract public class superAuto extends LinearOpMode {
 
     void updateLocation() {
         while (opModeIsActive()) {
-
-
             // check all the trackable target to see which one (if any) is visible.
             Boolean targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {

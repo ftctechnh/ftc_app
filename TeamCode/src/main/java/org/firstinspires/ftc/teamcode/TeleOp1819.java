@@ -28,6 +28,9 @@ public class TeleOp1819 extends OpMode
     DcMotor mineralLiftR;
     DcMotor robotLift;
     Servo servo;
+    Servo slide;
+    CRServo outake1;
+    CRServo outake2;
 
 
    /* IntegratingGyroscope gyro;
@@ -60,9 +63,13 @@ public class TeleOp1819 extends OpMode
         mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
         mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
         mineralLiftR.setDirection(DcMotor.Direction.REVERSE);
-        robotLift.setDirection(DcMotor.Direction.FORWARD);
         robotLift = hardwareMap.dcMotor.get("robotLift");
+        robotLift.setDirection(DcMotor.Direction.FORWARD);
         servo = hardwareMap.servo.get("servo");
+        slide = hardwareMap.servo.get("slide"); //
+        outake1 = hardwareMap.crservo.get("outake1");
+        outake2 = hardwareMap.crservo.get("outake2");
+
     }
 
     /*
@@ -126,10 +133,35 @@ public class TeleOp1819 extends OpMode
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
 
+        //Moves slide servo back and forth
+        if(rightPad && !leftPad){
+
+            slide.setPosition(1);
+        }
+
+        else if(leftPad && !rightPad ){
+            slide.setPosition(0);
+        }
+
+        //Moves outake servos
+        if(x && !a) {
+            outake1.setPower(1);
+            outake2.setPower(1);
+        }
+        else if(x && a) {
+            outake1.setPower(-1);
+            outake2.setPower(-1);
+        }
+        else{
+            outake1.setPower(0);
+            outake2.setPower(0);
+        }
+
+
         //Robot Lifting
         if(y)
             robotLift.setPower(1);//up
-        else if (a)
+        else if (a && !x)
             robotLift.setPower(-1);//down
         else
             robotLift.setPower(0);

@@ -24,7 +24,7 @@ public class auto extends superAuto {
         final double diagonalHalfField = Math.sqrt(Math.pow(halfFieldWidth,2)*2);
         final double stopInFrontOfMineral= diagonalHalfField-centerMineralLocation-(robotSize/2);
         final double xStopinFrontofMineral = stopInFrontOfMineral* Math.cos(45);
-        final double yStopinFrontofMineral =xStopinFrontofMineral;
+        final double yStopinFrontofMineral = xStopinFrontofMineral;
 
         //ALL AUTOS DO:
         //Drop down
