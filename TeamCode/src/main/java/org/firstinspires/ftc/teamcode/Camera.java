@@ -61,8 +61,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
  * Vuforia uses the phone's camera to inspect it's surroundings, and attempt to locate target images.
  *
  * When images are located, Vuforia is able to determine the position and orientation of the
- * image relative to the camera.  This sample code than combines that information with a
- * knowledge of where the target images are on the field, to determine the location of the camera.
+ * image relative to the   This sample code than combines that information with a
+ * knowledge of where the target images are on the field, to determine the location of the 
  *
  * This example assumes a "square" field configuration where the red and blue alliance stations
  * are on opposite walls of each other.
@@ -264,9 +264,9 @@ public class Camera{
          * In this example, it is centered (left to right), but 110 mm forward of the middle of the robot, and 200 mm above ground level.
          */
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 190;   // eg: Camera is 190 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 225;   // eg: Camera is 225 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 60;     // eg: Camera is 60 mm off the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 0;   // eg: Camera is 190 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 0;   // eg: Camera is 225 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is 60 mm off the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -288,6 +288,7 @@ public class Camera{
     {
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
+        lastLocation = null;
         for (VuforiaTrackable trackable : allTrackables) {
             if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
                 targetVisible = true;
@@ -328,6 +329,42 @@ public class Camera{
             }
         }
         return null;
+    }
+    
+    double headingToTarget()
+    {
+        double[] location = getLocation();
+        VuforiaTrackable target = null;
+        if(location != null) {
+
+            double heading =  getHeading();
+
+            for (int i = 0; i<4; i++ ) {
+                if(targetVisible(i))
+                    target = allTrackables.get(i);
+            }
+
+            double target_x = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+            double target_y = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
+
+            double robot_x = location[0];
+            double robot_y = location[1];
+            return heading - Math.atan2(target_y - robot_y, target_x - robot_x);
+        }
+        return 0;
+    }
+
+    
+    double headingToTarget(double target_x, double target_y)
+    {
+        double[] location = getLocation();
+        if(location != null) {
+            double heading =  getHeading();
+            double robot_x = location[0];
+            double robot_y = location[1];
+            return heading - Math.atan2(target_y - robot_y, target_x - robot_x);
+        }
+        return 0;
     }
 
     public boolean targetVisible(int whichTarget) {

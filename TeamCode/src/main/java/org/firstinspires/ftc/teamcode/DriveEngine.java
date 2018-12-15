@@ -25,9 +25,9 @@ public class DriveEngine {
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        back.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        left.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
 
         back.setDirection (DcMotor.Direction.FORWARD);
         right.setDirection(DcMotor.Direction.FORWARD);
@@ -84,5 +84,49 @@ public class DriveEngine {
         back.setPower(x);
         right.setPower(x);
         left.setPower(x);
+    }
+
+    void resetDistances()
+    {
+        back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        back.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    void resetXDist()
+    {
+        back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        back.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+    void resetYDist()
+    {
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        left.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    double xDist()
+    {
+        return Math.abs(back.getCurrentPosition() * DriveEngine.inPerTicks);
+    }
+
+    double yDist()
+    {
+        return Math.abs(right.getCurrentPosition() - left.getCurrentPosition()) /2 * DriveEngine.inPerTicks;
+    }
+
+    /**
+     *
+     * @return angle in radians
+     */
+    double spinAngle()
+    {
+        return Math.abs(back.getCurrentPosition() * DriveEngine.inPerTicks) /8; //TODO: Find radius
     }
 }

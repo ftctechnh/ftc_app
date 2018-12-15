@@ -162,9 +162,9 @@ public class Bogg
             double heading_of_target_from_robot_location = Math.atan2(delta_y,delta_x);
 
             //where compass would say the mountain is located considering our compass isn't pointed north
-            double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
+            double target_heading = heading_of_robot_on_field - heading_of_target_from_robot_location;
 
-            driveEngine.drive(Math.cos(target_heading + Math.PI/2) * speed, Math.sin(target_heading+ Math.PI/2) * speed);
+            driveEngine.drive(Math.sin(target_heading) * speed, Math.cos(target_heading) * speed);
 
         }
          return false;
@@ -189,14 +189,14 @@ public class Bogg
             double heading_of_target_from_robot_location = Math.atan2(delta_y, delta_x);
 
             //where compass would say the mountain is located considering our compass isn't pointed north
-            double target_heading = heading_of_target_from_robot_location - heading_of_robot_on_field;
+            double target_heading = heading_of_robot_on_field - heading_of_target_from_robot_location;
 
             if (Math.abs(target_heading) < accuracy_angle * Math.PI/180) {
                 driveEngine.rotate(0);
                 return true;
             }
 
-            driveEngine.rotate(.2 * Math.signum(target_heading)); //if target is more counterclockwise, we want to move counterclockwise.
+            driveEngine.rotate(.8 * Math.signum(target_heading)); //if target is more counterclockwise, we want to move counterclockwise.
         }
         return false;
     }

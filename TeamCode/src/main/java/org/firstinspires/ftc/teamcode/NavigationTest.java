@@ -10,27 +10,34 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 import java.util.ArrayList;
-@TeleOp(name="  camera_test", group="Testing")
-public class camera_test extends LinearOpMode
+@TeleOp(name="NavigationTest", group="Testing")
+public class NavigationTest extends LinearOpMode
 {
     Camera camera;
+    Bogg robot;
 
     @Override
     public void runOpMode()
     {
         camera = new Camera(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap,gamepad1);
+
         waitForStart();
         VuforiaTrackable target = null;
         double[] targetLocation = new double[2];
         double[] unitTargetLocation = new double[2];
-        double target_x, target_y;
+        double target_x = 0, target_y = 0;
+        double deltaRight = 0, deltaUp = 0;
 
         while (opModeIsActive())
         {
             double[] location = camera.getLocation();
+            double heading =  camera.getHeading();
             if(location != null) {
-
-                double heading =  camera.getHeading();
+                telemetry.addData("x", location[0]);
+                telemetry.addData("y", location[1]);
+                telemetry.addData("z", location[2]);
+                telemetry.addData("heading", heading);
 
                 if(camera.targetVisible(0))
                     target = camera.allTrackables.get(0);
@@ -48,8 +55,22 @@ public class camera_test extends LinearOpMode
                 unitTargetLocation[1] = Math.signum(targetLocation[1]);
 
                 double[] wallTarget = new double[]{(5*12 + 8) * unitTargetLocation[0], (5*12 + 8) * unitTargetLocation[1]};
-                target_x = wallTarget[0];
-                target_y = wallTarget[1];
+                if(gamepad1.dpad_up)
+                    deltaUp += 2;
+                else if(gamepad1.dpad_down)
+                    deltaUp -= 2;
+
+                if(gamepad1.dpad_right)
+                    deltaRight += 2;
+                else if(gamepad1.dpad_right)
+                    deltaRight -= 2;
+
+                double theta = Math.atan2(wallTarget[1],wallTarget[0]);
+                double deltaX = Math.cos(theta) * deltaRight - Math.sin(theta) * deltaUp;
+                double deltaY = Math.sin(theta) * deltaRight + Math.cos(theta) * deltaUp;
+
+                target_x = wallTarget[0] + deltaX;
+                target_y = wallTarget[1] + deltaY;
 
                 double robot_x = location[0];
                 double robot_y = location[1];
@@ -57,55 +78,37 @@ public class camera_test extends LinearOpMode
                 double delta_x = target_x - robot_x;
                 double delta_y = target_y - robot_y;
 
-
-                //the direction a compass would tell us
-                double heading_of_robot_on_field = heading;
-
-                //where a map would tell us a mountain is, relative to us
-                double heading_of_target_from_robot_location = Math.atan2(delta_y,delta_x);
-
-                //where compass would say the mountain is located considering our compass isn't pointed north
-                double target_heading = heading_of_robot_on_field - heading_of_target_from_robot_location;
-
-                double wall_target_heading = heading - Math.atan2(wallTarget[1] - robot_y, wallTarget[0] - robot_x);
-
-
                 if(Math.abs(delta_x) < 4 && Math.abs(delta_y) < 4)
                 {
                     telemetry.addData("drive", "0");
                 }
 
+                double target_heading = (heading - Math.atan2(target_y - robot_y, target_x - robot_x));
+
+                double wall_target_heading = (heading - Math.atan2(wallTarget[1] - robot_y, wallTarget[0] - robot_x));
+
+                robot.rotateToTarget(targetLocation[0], targetLocation[1], 5);
+                robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 3);
+
                 if (Math.abs(wall_target_heading) < 5 * Math.PI/180)
                     telemetry.addLine("Good on rotation");
                 else
-                    telemetry.addData("rotation",.2 * Math.signum(wall_target_heading));
-
-                if(Math.abs(delta_x) < 4 && Math.abs(delta_y) < 4 && Math.abs(wall_target_heading) < 5 * Math.PI/180)
-                {
-                    telemetry.update();
-                    continue;
-                }
+                    telemetry.addData("Rotation:",.2 * Math.signum(wall_target_heading));
 
 
-                telemetry.addData("Drive x",Math.sin(target_heading) * .3);
-                telemetry.addData("Drive y",Math.cos(target_heading) * .3);
-
-                telemetry.addData("Loc. x", location[0]);
-                telemetry.addData("Loc. y", location[1]);
-                telemetry.addData("Loc. z", location[2]);
-                telemetry.addData("heading", heading);
-
+                telemetry.addData("x",Math.sin(target_heading) * .3);
+                telemetry.addData("y",Math.cos(target_heading) * .3);
                 telemetry.addData("target x:", targetLocation[0]);
                 telemetry.addData("target y:", targetLocation[1]);
                 telemetry.addData("destination x:", wallTarget[0]);
                 telemetry.addData("destination y:", wallTarget[1]);
-                telemetry.addData("heading from location", heading_of_target_from_robot_location);
                 telemetry.addData("target heading", target_heading * 180/Math.PI);
-
-                telemetry.update();
             }
+
+            telemetry.update();
             idle();
         }
     }
 }
+
 

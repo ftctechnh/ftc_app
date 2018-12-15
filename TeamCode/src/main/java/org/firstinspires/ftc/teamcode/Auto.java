@@ -36,7 +36,6 @@ public class Auto {
         MoveToCrater
     }
 
-    boolean midTargetAchieved = false;
 
     Mode drop()
     {
@@ -55,6 +54,7 @@ public class Auto {
         }
         else {
             timer.reset();
+            robot.driveEngine.resetDistances();
             return Mode.Slide;
         }
         return Mode.Drop;
@@ -64,8 +64,8 @@ public class Auto {
 
     Mode slide()
     {
-        double inchesMovedX = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-        double inchesMovedY = Math.abs(robot.driveEngine.right.getCurrentPosition() * DriveEngine.inPerTicks) - inchesMovedX/2;
+        double inchesMovedX = robot.driveEngine.xDist();
+        double inchesMovedY = robot.driveEngine.yDist();
         if(timer.seconds() < .2) //for an additional .2 seconds
         {
             robot.lift(.2); //drop a bit more
@@ -79,12 +79,12 @@ public class Auto {
         {
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(0,.4); //drive diagonally
+            robot.driveEngine.resetXDist();
         }
         else  //if the robot has unhooked
         {
             robot.driveEngine.drive(0,0);
-            robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.driveEngine.resetDistances();
             timer.reset(); //Needed for DropPark
             return Mode.Spin;
         }
@@ -95,22 +95,12 @@ public class Auto {
     double[] targetLocation = new double[2];
     double[] unitTargetLocation = new double[2];
 
-    int count = 0;
     Mode spin()
     {
-        count += 1;
-        telemetry.addLine("Made it to point A" + count);
-        telemetry.update();
-
-        double t = timer.seconds();
-
-        if(Math.abs(robot.driveEngine.back.getCurrentPosition()) < Math.PI * 2/3 * 9)  //rotates 60 degrees
+        if(robot.driveEngine.spinAngle() < Math.PI * 2/3)  //rotates 60 degrees
             robot.driveEngine.rotate(.15);
         else
             robot.driveEngine.rotate(0);  //and stops so we can see the target
-
-        telemetry.addLine("Made it to point B" + count);
-        telemetry.update();
 
         double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
         if(!(null == location)) {
@@ -124,23 +114,20 @@ public class Auto {
             else if(robot.camera.targetVisible(3))
                 target = robot.camera.allTrackables.get(3);
 
-            targetLocation[0] = target.getLocation().getTranslation().get(0);
-            unitTargetLocation[0] = targetLocation[0] / Math.abs(targetLocation[0]);
+            targetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+            targetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
 
-            targetLocation[1] = target.getLocation().getTranslation().get(1);
-            unitTargetLocation[1] = targetLocation[1] / Math.abs(targetLocation[1]);
+            unitTargetLocation[0] = Math.signum(targetLocation[0]);
+            unitTargetLocation[1] = Math.signum(targetLocation[1]);
 
             double x = location[0];
             double y = location[1];
 
-            iSP = Math.signum(x * y);
+            iSP = Math.signum(x * y); //initial slope positivity, 1 for craters, -1 for depots.
 
             telemetry.update();
             return Mode.MoveToWall;
         }
-
-        telemetry.addLine("Made it to point Gingerbread");
-        telemetry.update();
         return Mode.Spin;
     }
 
@@ -157,25 +144,17 @@ public class Auto {
         telemetry.addLine("Made it to point Harpoon");
         if((null == location)){
             double t = timer.seconds();
-            robot.driveEngine.rotate(t/1.5 - Math.floor(t/1.5) < .60 ? .2 : 0);
+            robot.driveEngine.rotate(t/1 - Math.floor(t/1) < .40 ? .4 : 0);
             return Mode.MoveToWall;
         }
 
-        double[] wallTarget = new double[]{5 * unitTargetLocation[0], 5 * unitTargetLocation[1]};
+        double[] wallTarget = new double[]{(5*12 + 8) * unitTargetLocation[0], (5*12 + 8) * unitTargetLocation[1]};
 
         robot.sensors.rotateMobile(-iSP * 90);
 
-        //TODO: it would be cool to combine moving to the right place and spinning like Josh did right here.
-        //Use an and statement with the two conditions to move to Depot.
-        if(!wallTargetAchieved)
-        {
-            wallTargetAchieved = robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 4); //drive to the wall
-        }
-        else
-        {
-            if(robot.rotateToTarget(targetLocation[0], targetLocation[1], 5)) //align to the wall; if we're good then
-                return Mode.MoveToDepot;                           //move to the depot
-        }
+        if(robot.rotateToTarget(targetLocation[0], targetLocation[1], 5) &&
+                robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 3))
+            return Mode.MoveToDepot;
 
         return Mode.MoveToWall;
     }
@@ -191,8 +170,7 @@ public class Auto {
         if(mobileDistance < 6) {
             robot.sensors.rotateMobile(iSP * 90);
             timer.reset();
-            robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            robot.driveEngine.resetDistances();
             return Mode.DropMarker;
         }
         return Mode.MoveToDepot;
@@ -201,40 +179,37 @@ public class Auto {
 
     Mode dropMarker()
     {
-        double inchesMoved = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-        if(iSP == -1 && inchesMoved < Math.PI * 9.0) //half a rotation
+        double rotation = robot.driveEngine.spinAngle();
+        if(iSP == -1 && rotation < Math.PI) //half a rotation
         {
             robot.driveEngine.rotate(.5);
             timer.reset();
             return Mode.DropMarker;
         }
 
-        if(timer.seconds() < 3)
+        if(timer.seconds() < 2)
         {
             robot.driveEngine.drive(0, 0);
             robot.push(false);
             return Mode.DropMarker;
         }
-        else
+
+        if (iSP == -1 && rotation < 2 * Math.PI) //full rotation
         {
-            if(iSP == 1)
-                return Mode.MoveToCrater;
-            else if (inchesMoved < 2 * Math.PI * 9.0) //full rotation
-            {
-                robot.driveEngine.rotate(.5);
-                return Mode.DropMarker;
-            }
-            else
-                return Mode.MoveToCrater;
+            robot.driveEngine.rotate(.5);
+            return Mode.DropMarker;
         }
+
+        return Mode.MoveToCrater;
+
     }
 
 
     Mode moveToCrater()
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
-        robot.push(false);
         robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
+
         if(robot.sensors.isTilted())
         {
             return Mode.Stop;
