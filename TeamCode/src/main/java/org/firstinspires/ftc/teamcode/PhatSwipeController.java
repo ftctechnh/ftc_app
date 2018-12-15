@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipe Master", group="AAA")
+@TeleOp(name="PhatSwipe TeleOp", group="BBB")
 public class PhatSwipeController extends OpMode {
 
 
@@ -214,9 +214,9 @@ public class PhatSwipeController extends OpMode {
             boolean lowerDown = gamepad1.a;
             double liftPower = 0.0;
             if (liftUp) {
-                liftPower = 0.8;
+                liftPower = 1.0;
             } else if (lowerDown) {
-                liftPower = -0.8;
+                liftPower = -1.0;
             }
             lifter.setPower(liftPower);
             telemetry.addData("Lifter", "curr: %d", lifter.getCurrentPosition());

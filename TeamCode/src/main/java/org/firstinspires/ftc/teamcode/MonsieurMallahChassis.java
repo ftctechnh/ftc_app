@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="Monsieur Mallah Chassis", group="User")
+//@TeleOp(name="Monsieur Mallah Chassis", group="ZZ")
 public class MonsieurMallahChassis extends OpMode {
 
     static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle

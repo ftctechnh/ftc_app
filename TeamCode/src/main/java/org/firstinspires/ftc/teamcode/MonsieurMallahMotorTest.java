@@ -24,7 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import java.util.Iterator;
 import java.util.Set;
 
-@TeleOp(name="Monsieur Mallah Motor OpMode", group="User")
+//@TeleOp(name="Monsieur Mallah Motor OpMode", group="ZZ")
 public class MonsieurMallahMotorTest extends OpMode {
     // Elapsed time since the opmode started.
     private ElapsedTime runtime = new ElapsedTime();

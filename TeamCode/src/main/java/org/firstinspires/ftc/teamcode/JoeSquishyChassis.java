@@ -19,7 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="JoeSquishy Chassis", group="JoeSquishy")
+//@TeleOp(name="JoeSquishy Chassis", group="JoeSquishy")
 public class JoeSquishyChassis extends OpMode {
 
     //constants from encoder sample
