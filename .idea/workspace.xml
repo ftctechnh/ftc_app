@@ -7,21 +7,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2f1d9b7-23e5-494d-8bec-5f6c2227614e" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/DepotSideSampleAuto.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/HardwareMap/BasicChasieHardware.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/BasicChasieTeleop.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/TeleOpDisaster.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/build.release.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build.release.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/res/raw/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/res/raw/readme.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TeamCode/src/main/res/xml/teamwebcamcalibrations.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/res/xml/teamwebcamcalibrations.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/classAnalysis.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/javaCompile.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/build-info/debug/build-info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/build-info/debug/build-info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental-verifier/debug/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.class" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental-verifier/debug/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_4/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_4/dex-renamer-state.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.class" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_4.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_4.apk" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexBuilder/debug/134/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.dex" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexBuilder/debug/134/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexMerger/debug/4/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexMerger/debug/4/classes.dex" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/instantRun/debug/0/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.class" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/instantRun/debug/0/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -44,11 +45,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CraterSideSampleAuto.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CraterSideSampleAuto.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="9163">
-              <caret line="614" column="56" lean-forward="true" selection-start-line="614" selection-start-column="56" selection-end-line="614" selection-end-column="56" />
+            <state relative-caret-position="10472">
+              <caret line="691" column="59" selection-start-line="691" selection-start-column="59" selection-end-line="691" selection-end-column="59" />
               <folding>
                 <element signature="e#8443#8507#0" />
               </folding>
@@ -56,11 +57,14 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BasicChasieTeleop.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="BasicChasieTeleop.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/BasicChasieTeleop.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="802">
+            <state relative-caret-position="697">
               <caret line="84" column="13" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
+              <folding>
+                <element signature="docComment;class#BasicChasieTeleop#0" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -4612,7 +4616,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-6" y="-6" width="1933" height="1053" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Android Profiler" />
@@ -4674,19 +4677,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/BasicChasieTeleop.java">
+    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="802">
-          <caret line="84" column="13" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
+        <state relative-caret-position="10472">
+          <caret line="691" column="59" selection-start-line="691" selection-start-column="59" selection-end-line="691" selection-end-column="59" />
+          <folding>
+            <element signature="e#8443#8507#0" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
+    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/BasicChasieTeleop.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9163">
-          <caret line="614" column="56" lean-forward="true" selection-start-line="614" selection-start-column="56" selection-end-line="614" selection-end-column="56" />
+        <state relative-caret-position="697">
+          <caret line="84" column="13" selection-start-line="84" selection-start-column="13" selection-end-line="84" selection-end-column="13" />
           <folding>
-            <element signature="e#8443#8507#0" />
+            <element signature="docComment;class#BasicChasieTeleop#0" />
           </folding>
         </state>
       </provider>

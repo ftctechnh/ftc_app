@@ -6,22 +6,22 @@
     density="xhdpi"
     format="10"
     plugin-version="3.2.1"
-    timestamp="1544830800068"
+    timestamp="1544831844819"
     token="-7031193878525283231"
     verifier="FULL_BUILD_REQUESTED" >
 
     <task
         name="javac"
-        duration="160" />
+        duration="319" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="41" />
+        duration="71" />
     <task
         name="verifier"
-        duration="57" />
+        duration="76" />
 
     <artifact
         location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_4.apk"
@@ -62,7 +62,7 @@
 
     <build
         build-mode="FULL"
-        timestamp="1544830800068"
+        timestamp="1544831844819"
         verifier="FULL_BUILD_REQUESTED" >
         <artifact
             location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_4.apk"

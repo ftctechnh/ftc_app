@@ -76,6 +76,7 @@ public class CraterSideSampleAuto extends LinearOpMode {
     private static final String VUFORIA_KEY = "AUcoxf//////AAABmcMpe4Yi60OAn/zHVg0dTNYPj79vn8iRC7orx3abDd4T72PWJbSaMUO3w2/0RnvIBrjc7Ti42j2uJNh0Rk37IbQ4VjYz49C/nowtdGo+7+FL4TMUF9SQfz2I2C5exQu+rnOZ1ueGOppkD7eTcepeBm0ePez/ucss6O4ehkWjjtGuqvkak2rETObU+ZxeTdzNNgUzy+iMD/pdORuIiEcoC5agEX4ff8Ck4UqER9AlOQn5Lsst/LmnudVSV9SiS3LBat9H6RpS0aDjjHFhddoYBF9TFW6gASh5hsGCAgKWygkpHj1Kqp6D4QlvyBZp8HNBW8jPaQYLQEXksbKidoOeeq/PDEkxoT7t/TmpC7pw+dz6";
 
 
+    private static final int ARM_LIFT_DISTANCE = 13069; //enc value for full descent
     // Since ImageTarget trackables use mm to specify their dimensions, we must use mm for all the physical dimension.
     // We will define some constants and conversions here
     private static final float mmPerInch = 25.4f;
@@ -669,7 +670,7 @@ public class CraterSideSampleAuto extends LinearOpMode {
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.arm.setPower(1);
-        robot.arm.setTargetPosition(13069);
+        robot.arm.setTargetPosition(ARM_LIFT_DISTANCE);
         runtime.reset();
 
         // Wait for motor to stop moving or we timeout
@@ -688,7 +689,7 @@ public class CraterSideSampleAuto extends LinearOpMode {
         double timeout = 30;
         robot.arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.arm.setTargetPosition (-5000);
+        robot.arm.setTargetPosition (-ARM_LIFT_DISTANCE/4);
         robot.arm.setPower(1);
         runtime.reset();
 
