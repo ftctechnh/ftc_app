@@ -18,7 +18,7 @@ public class autonomousDrive_DropPark extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1);
+        robot = new Bogg(hardwareMap, gamepad1, telemetry);
         auto = new Auto(robot, telemetry);
 
         waitForStart();

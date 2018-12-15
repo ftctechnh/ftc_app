@@ -20,7 +20,7 @@ public class prepAutonomous extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1);
+        robot = new Bogg(hardwareMap, gamepad1, telemetry);
         waitForStart();
         action = Mode.Drop;
 

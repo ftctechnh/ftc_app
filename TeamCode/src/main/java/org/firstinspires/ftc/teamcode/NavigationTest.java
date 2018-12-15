@@ -20,7 +20,7 @@ public class NavigationTest extends LinearOpMode
     public void runOpMode()
     {
         camera = new Camera(hardwareMap, telemetry);
-        robot = new Bogg(hardwareMap,gamepad1);
+        robot = new Bogg(hardwareMap,gamepad1,telemetry);
 
         waitForStart();
         VuforiaTrackable target = null;

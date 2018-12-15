@@ -91,12 +91,12 @@ public class Auto {
     }
 
     VuforiaTrackable target = null;
-    double[] targetLocation = new double[2];
+    double[] walltargetLocation = new double[2];
     double[] unitTargetLocation = new double[2];
 
     Mode spin()
     {
-        if(robot.driveEngine.spinAngle() < Math.PI * 2/3)  //rotates 60 degrees
+        if(robot.driveEngine.spinAngle() < Math.PI * 1/4)  //rotates 45 degrees
             robot.driveEngine.rotate(.15);
         else
             robot.driveEngine.rotate(0);  //and stops so we can see the target
@@ -113,11 +113,11 @@ public class Auto {
             else if(robot.camera.targetVisible(3))
                 target = robot.camera.allTrackables.get(3);
 
-            targetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
-            targetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
+            walltargetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+            walltargetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
 
-            unitTargetLocation[0] = Math.signum(targetLocation[0]);
-            unitTargetLocation[1] = Math.signum(targetLocation[1]);
+            unitTargetLocation[0] = Math.signum(walltargetLocation[0]);
+            unitTargetLocation[1] = Math.signum(walltargetLocation[1]);
 
             double x = location[0];
             double y = location[1];
@@ -147,18 +147,25 @@ public class Auto {
             return Mode.MoveToWall;
         }
 
-        double[] wallTarget = new double[]{(5*12 + 8) * unitTargetLocation[0], (5*12 + 8) * unitTargetLocation[1]};
 
         robot.sensors.rotateMobile(-iSP * 90);
 
-        if(robot.rotateToTarget(targetLocation[0], targetLocation[1], 5) &&
-                robot.driveToTarget(wallTarget[0], wallTarget[1], .3, 3) &&
-                robot.driveToTarget(wallTarget[0], wallTarget[1], .2, 1) &&
-                robot.rotateToWall(1))
-
+        double[] drive = robot.getMoveToWall();
+        if(drive.length == 2){
+            robot.driveEngine.drive(drive[0], drive[1]);
             return Mode.MoveToDepot;
+        }
+        else if(drive.length == 1)
+        {
+            robot.driveEngine.rotate(drive[0]);
+            return Mode.MoveToDepot;
+        }
+        else if(drive.length == 3)
+        {
+            return Mode.MoveToWall;
+        }
 
-        return Mode.MoveToWall;
+        return Mode.MoveToDepot;
     }
 
 

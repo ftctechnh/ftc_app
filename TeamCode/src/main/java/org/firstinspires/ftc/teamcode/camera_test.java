@@ -69,19 +69,20 @@ public class camera_test extends LinearOpMode
 
                 double wall_target_heading = heading - Math.atan2(wallTarget[1] - robot_y, wallTarget[0] - robot_x);
 
-                double wall_heading = heading - Math.round(heading / 90) * 90;
+                double wall_heading = heading - Math.round(heading / (Math.PI /2)) * Math.PI/2;
 
                 if(Math.abs(wall_target_heading) > 5 * Math.PI/180)
                     telemetry.addData("rotation",.2 * Math.signum(wall_target_heading));
-                if(Math.abs(delta_x) > 4 || Math.abs(delta_y) > 4) {
+
+                else if(Math.abs(delta_x) > 4 || Math.abs(delta_y) > 4) {
                     telemetry.addData("drive x",Math.sin(target_heading) * .3);
                     telemetry.addData("drive y",Math.cos(target_heading) * .3);
                 }
-                else if(Math.abs(delta_x) > 1 || Math.abs(delta_y) > 1){
+                else if(Math.abs(delta_x) > .5 || Math.abs(delta_y) > .5){
                     telemetry.addData("drive x2",Math.sin(target_heading) * .2);
                     telemetry.addData("drive y2",Math.cos(target_heading) * .2);
                 }
-                else if(Math.abs(wall_heading) > 1)
+                else if(Math.abs(wall_heading) > 4 * Math.PI/180)
                     telemetry.addData("rotation2", .2 * Math.signum(wall_heading));
                 else
                     telemetry.addLine("Move to wall complete!");
@@ -91,7 +92,7 @@ public class camera_test extends LinearOpMode
                 telemetry.addData("Loc. x", location[0]);
                 telemetry.addData("Loc. y", location[1]);
                 telemetry.addData("Loc. z", location[2]);
-                telemetry.addData("heading", heading);
+                telemetry.addData("heading", heading * 180 /Math.PI);
 
                 telemetry.addData("target x:", targetLocation[0]);
                 telemetry.addData("target y:", targetLocation[1]);
