@@ -69,7 +69,7 @@ import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
  * @see <a href="https://www.bosch-sensortec.com/bst/products/all_products/bno055">BNO055 product page</a>
  * @see <a href="https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST_BNO055_DS000_14.pdf">BNO055 specification</a>
  */
-@TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "Sensor")
+//@TeleOp(name = "Sensor: BNO055 IMU Calibration", group = "ZZ")
 public class MonsieurMallahCalibration extends LinearOpMode
 {
     //----------------------------------------------------------------------------------------------
