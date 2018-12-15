@@ -69,7 +69,6 @@ public abstract class SuperiorSampling extends AutoUtils {
         robot.cameraPositioner.flipDown();
         try {
             if (startingPosition == StartingPosition.DEPOT) {
-                switchAppendagePositions();
                 followPath(drive, AssetsTrajectoryLoader.load("Depo" + goldLoc.fileName + "Sel"));
                 turnToPos(0);
                 followPath(drive, Paths.STRAFE_LEFT);
@@ -78,9 +77,14 @@ public abstract class SuperiorSampling extends AutoUtils {
                 // Deploy whacker after we finish driving
                 // to avoid accidentally whacking our minerals
                 robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
+                switchAppendagePositions();
+                robot.sleep(1000);
             } else {
                 followPath(drive, AssetsTrajectoryLoader.load("Crater" + goldLoc.fileName + "Sel"));
-                switchAppendagePositions();
+
+                if (goal == EndGoal.BLUE_CRATER || goldLoc == GoldPosition.RIGHT) {
+                    switchAppendagePositions();
+                }
                 turnToPos(Math.PI * 1.75);
                 followPath(drive, AssetsTrajectoryLoader.load("CraterBackup"));
                 turnToPos(Math.PI/4);
@@ -102,7 +106,17 @@ public abstract class SuperiorSampling extends AutoUtils {
                         followPath(drive, Paths.DOUBLE_RETURN_TO_DEPO);
                         robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);
                         robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
+                        robot.winch.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                        robot.winch.setPower(1);
+                        robot.winch.setTargetPosition(-1500);
+                        robot.intake.collect();
                         followPath(drive, Paths.DEPOT_TO_SAME_CRATER_SHORT);
+                        robot.winch.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                        robot.winch.setPower(0);
+                        refoldMechanisms();
+                        robot.sleep(500);
+                    } else {
+                        robot.parkingMarker.setPosition(PARKING_MARKER_EXTENDED);
                     }
                 } else {
                     turnToPos(0);
