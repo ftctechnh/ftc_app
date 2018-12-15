@@ -79,24 +79,7 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
         robot.init(hardwareMap);
         initDetector(360d, 90d);
 
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Status", "Resetting Encoders");    //
-        telemetry.update();
-
-        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.leftDrive.getCurrentPosition(),
-                robot.rightDrive.getCurrentPosition());
-        telemetry.update();
+        resetMotors();
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted()) {
@@ -109,52 +92,24 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
             // so, first thing to do is unlatch
             landing();
 
-            // turn robot 180 degree to the right
-            //encoderDrive(TURN_SPEED, -40d, 40d, 5d);
-            gyroTurn(0.75d, -111d);
-
-            //scan gold mineral for position 1,2,3
-            int goldMineralLocation = -1;
-            double targetHeading = robot.getHeading();
-            for (int i = 0; i < 20; i++) {
-                if (!detector.getAligned()) {
-                    targetHeading -= 6d;
-                    gyroTurn(0.9d, targetHeading);
-                } else {
-                    if (i < 6) {
-                        goldMineralLocation = 1;
-                        break;
-                    } else if (i < 13) {
-                        goldMineralLocation = 2;
-                        break;
-                    } else {
-                        goldMineralLocation = 3;
-                        break;
-                    }
-                }
-            }
-
-            double goldMineralDistance = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-            robot.tts.speak("Gold on position " + goldMineralLocation);
+            // Then turn and stop at gold mineral
+            sampling();
 
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -12d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -20d, 180);
+                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -12d, 180);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -10d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -8d, 180);
+                    gyroDrive(DRIVE_SPEED, -7d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -9d, 180);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -16d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -11d, 180);
+                    gyroDrive(DRIVE_SPEED, -12d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, -6d, 150d);
                     break;
             }
-
-            gyroTurn(DRIVE_SPEED,180);
-            gyroDrive(DRIVE_SPEED, -6d, 180);
 
             detector.disable();
 

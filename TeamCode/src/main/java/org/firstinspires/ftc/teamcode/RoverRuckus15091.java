@@ -8,21 +8,25 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
 public abstract class RoverRuckus15091 extends LinearOpMode {
 
     /* Declare OpMode members. */
     protected Hardware15091 robot = new Hardware15091();   // Use a Pushbot's hardware
     protected ElapsedTime runtime = new ElapsedTime();
+    protected int goldMineralLocation = -1;
+    protected double targetHeading;
 
     static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1d;     // This is < 1.0 if geared UP, eg. 26d/10d
+    static final double DRIVE_GEAR_REDUCTION = 26d/10d;     // This is < 1.0 if geared UP, eg. 26d/10d
     static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 1d;
-    static final double TURN_SPEED = 0.75d;
+    static final double TURN_SPEED = 1d;
 
-    static final double HEADING_THRESHOLD = 2;      // As tight as we can make it with an integer gyro
+    static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
 
@@ -50,17 +54,57 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         detector.enable(); // Start the detector!
     }
 
-    public void landing() {
+    protected void resetMotors() {
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    protected void sampling() {
+        // turn robot 180 degree to the right
+        //encoderDrive(TURN_SPEED, -40d, 40d, 5d);
+        gyroTurn(0.8d, -111d);
+
+        //scan gold mineral for position 1,2,3
+        targetHeading = robot.getHeading();
+        for (int i = 0; i < 20; i++) {
+            if (!detector.getAligned()) {
+                targetHeading -= 6d;
+                gyroTurn(TURN_SPEED, targetHeading);
+            } else {
+                if (i < 6) {
+                    goldMineralLocation = 1;
+                    break;
+                } else if (i < 13) {
+                    goldMineralLocation = 2;
+                    break;
+                } else {
+                    goldMineralLocation = 3;
+                    break;
+                }
+            }
+        }
+
+        //double goldMineralDistance = robot.sensorDistance.getDistance(DistanceUnit.INCH);
+        robot.tts.speak("Gold on position " + goldMineralLocation);
+    }
+
+    protected void landing() {
         robot.armServo.setPosition(1d);
         robot.handServo.setPosition(0d);
-        robot.markerServo.setPosition(1d);
+        robot.markerServo.setPosition(0.1d);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(1d);
-        robot.leftDrive.setPower(-0.2d);
-        robot.rightDrive.setPower(-0.2d);
+        robot.leftDrive.setPower(-0.4d);
+        robot.rightDrive.setPower(-0.4d);
         while (robot.armDrive.isBusy()) {
             //wait for motor to finish
         }
