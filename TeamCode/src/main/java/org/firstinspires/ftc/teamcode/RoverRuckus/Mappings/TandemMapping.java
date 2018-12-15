@@ -45,7 +45,7 @@ public class TandemMapping extends SoloMapping {
 
     @Override
     public double moveSpeedScale() {
-        return scaleControl(gamepad1.left_trigger, 0.3, 1);
+        return scaleControl(gamepad1.left_trigger, MIN_SLOW_MOVE_SPEED, 1);
     }
 
     @Override

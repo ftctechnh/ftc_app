@@ -95,6 +95,9 @@ public abstract class SuperiorSampling extends AutoUtils {
                         turnToPos(3 * Math.PI / 2);
                     } else if (goldLoc == GoldPosition.CENTER) {
                         turnToPos(5 * Math.PI / 4);
+                        // Strafe diagonally into the corner to align ourselves
+                        followPath(drive, Paths.CRATER_DOUBLE_CENTER_DIAGONAL_STRAFE);
+                        turnToPos(5 * Math.PI / 4);
                     } else {
                         turnToPos(0);
                         robot.markerDeployer.setPosition(MARKER_DEPLOYER_DEPLOY);

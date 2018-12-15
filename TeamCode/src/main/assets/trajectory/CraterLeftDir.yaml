@@ -3,8 +3,11 @@ poses:
 - x: 14.0
   y: 38.0
   heading: -0.7853981633974483
-- x: -63.0
-  y: 63.0
+- x: -40.0
+  y: 60.0
+  heading: 0.0
+- x: -60.0
+  y: 60.0
   heading: 0.0
 constraints:
   maximumVelocity: 25.0

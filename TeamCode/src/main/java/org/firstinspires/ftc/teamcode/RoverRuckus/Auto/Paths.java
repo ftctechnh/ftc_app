@@ -36,4 +36,7 @@ public class Paths {
     static Trajectory DEPOT_TO_SAME_CRATER_SHORT = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI), DriveConstants.RAPID_CONSTRAINTS)
             .lineTo(new Vector2d(-65, -6), new ConstantInterpolator(Math.PI))
             .build();
-}
+
+    static Trajectory CRATER_DOUBLE_CENTER_DIAGONAL_STRAFE = new TrajectoryBuilder(new Pose2d(0, 0, Math.PI * 0.75), DriveConstants.RAPID_CONSTRAINTS)
+            .lineTo(new Vector2d(-15, 0), new ConstantInterpolator(Math.PI * 0.75))
+            .build();}

@@ -10,7 +10,9 @@ public class SoloMapping extends ControlMapping {
 
     public static double FLIP_LEFT_FACTOR = 0.65;
     public static double FLIP_RIGHT_FACTOR = 0.6;
-    
+
+    public static double MIN_SLOW_MOVE_SPEED = 0.4;
+
     public int spinDir;
     private boolean x_down, b_down;
 
@@ -34,7 +36,6 @@ public class SoloMapping extends ControlMapping {
         return removeLowVals(gamepad1.right_stick_x, 0.2);
     }
 
-    final static double MIN_SLOW_MOVE_SPEED = 0.3;
     @Override
     public double moveSpeedScale() {
         return stickyGamepad1.right_stick_button ? MIN_SLOW_MOVE_SPEED : 1;
