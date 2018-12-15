@@ -20,7 +20,7 @@ public class Bogg
     Servo brake;
     Servo push;
 
-    double alpha = 0.039;
+    double alpha = 0.5;
     double alphaInc = 0.000001;
     double xAve = 0;
     double yAve = 0;
@@ -66,10 +66,10 @@ public class Bogg
             liftAve = 0;
         else if(l == -.02)
         {
-            liftAve = alpha*3 * l + (1-alpha*3) * liftAve;
+            liftAve = .12 * l + (1-.12) * liftAve;
         }
         else
-            liftAve = alpha * l + (1-alpha) * liftAve;
+            liftAve = .04 * l + (1-.04) * liftAve;
         return liftAve;
     }
 
@@ -258,7 +258,7 @@ public class Bogg
             unitTargetLocation[0] = Math.signum(targetLocation[0]);
             unitTargetLocation[1] = Math.signum(targetLocation[1]);
 
-            double[] wallTarget = new double[]{(5 * 12 + 8) * unitTargetLocation[0], (5 * 12 + 8) * unitTargetLocation[1]};
+            double[] wallTarget = new double[]{(5 * 12 + 3) * unitTargetLocation[0], (5 * 12 + 3) * unitTargetLocation[1]};
             target_x = wallTarget[0];
             target_y = wallTarget[1];
 
@@ -278,27 +278,38 @@ public class Bogg
             //where compass would say the mountain is located considering our compass isn't pointed north
             double target_heading = heading - heading_of_target_from_robot_location;
 
-            double wall_target_heading = heading - Math.atan2(wallTarget[1] - robot_y, wallTarget[0] - robot_x);
+            double wall_target_heading = heading - Math.atan2(targetLocation[1] - robot_y, targetLocation[0] - robot_x);
 
             double wall_heading = heading - Math.round(heading / (Math.PI / 2)) * Math.PI / 2;
 
-            if (Math.abs(wall_target_heading) > 5 * Math.PI / 180) {
-                telemetry.addData("rotation", .2 * Math.signum(wall_target_heading));
-                return new double[]{.2 * Math.signum(wall_target_heading)};
-            } else if (Math.abs(delta_x) > 4 || Math.abs(delta_y) > 4) {
-                telemetry.addData("drive x", Math.sin(target_heading) * .3);
-                telemetry.addData("drive y", Math.cos(target_heading) * .3);
-                return new double[]{Math.sin(target_heading) * .3, Math.cos(target_heading) * .3};
-            } else if (Math.abs(delta_x) > .5 || Math.abs(delta_y) > .5) {
-                telemetry.addData("drive x2", Math.sin(target_heading) * .2);
-                telemetry.addData("drive y2", Math.cos(target_heading) * .2);
-                return new double[]{Math.sin(target_heading) * .2, Math.cos(target_heading) * .2};
-            } else if (Math.abs(wall_heading) > 4 * Math.PI / 180) {
-                telemetry.addData("rotation2", .2 * Math.signum(wall_heading));
-                return new double[]{.2 * Math.signum(wall_heading)};
-            } else {
+            telemetry.addData("Loc. x", location[0]);
+            telemetry.addData("Loc. y", location[1]);
+            telemetry.addData("Loc. z", location[2]);
+            telemetry.addData("heading", heading * 180 / Math.PI);
+
+            telemetry.addData("target x:", targetLocation[0]);
+            telemetry.addData("target y:", targetLocation[1]);
+            telemetry.addData("destination x:", wallTarget[0]);
+            telemetry.addData("destination y:", wallTarget[1]);
+            telemetry.addData("heading from location", heading_of_target_from_robot_location);
+            telemetry.addData("target heading", target_heading * 180 / Math.PI);
+             if (Math.abs(delta_x) > 4 || Math.abs(delta_y) > 4)
+             {
+                telemetry.addData("drive x", Math.sin(target_heading) * .10);
+                telemetry.addData("drive y", Math.cos(target_heading) * .10);
+                telemetry.update();
+                return new double[]{Math.sin(target_heading) * .10, Math.cos(target_heading) * .10};
+            }
+            else if (Math.abs(delta_x) > .5 || Math.abs(delta_y) > .5) {
+                telemetry.addData("drive x2", Math.sin(target_heading) * .10);
+                telemetry.addData("drive y2", Math.cos(target_heading) * .10);
+                telemetry.update();
+                return new double[]{Math.sin(target_heading) * .10, Math.cos(target_heading) * .10};
+
+            }
+            else {
                 telemetry.addLine("Move to wall complete!");
-                return new double[]{0, 0,0};
+                return new double[]{0, 0, 0};
             }
 //
 //

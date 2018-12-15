@@ -71,13 +71,13 @@ public class Auto {
         else if(inchesMovedX < 6 && !hasMovedSideways) //the back encoder has moved less than 4 inches
         {
             robot.lift(0); //stop the lift motor
-            robot.driveEngine.drive(-.3,0); //drive to the side to unhook
+            robot.driveEngine.drive(-.2,0); //drive to the side to unhook
         }
         else if(inchesMovedY < 8)
         {
             hasMovedSideways = true;
             robot.lift(0); //stop the lift motor
-            robot.driveEngine.drive(0,.4); //drive diagonally
+            robot.driveEngine.drive(0,.2); //drive diagonally
             robot.driveEngine.resetXDist();
         }
         else  //if the robot has unhooked
@@ -141,31 +141,22 @@ public class Auto {
     {
         double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
         telemetry.addLine("Made it to point Harpoon");
-        if((null == location)){
-            double t = timer.seconds();
-            robot.driveEngine.rotate(t % 2 < .4 ? .15 : 0);
-            return Mode.MoveToWall;
-        }
-
 
         robot.sensors.rotateMobile(-iSP * 90);
 
         double[] drive = robot.getMoveToWall();
+        if(robot.sensors.dFixed.getDistance(DistanceUnit.INCH) < 6)
+        {
+            return Mode.MoveToDepot;
+        }
         if(drive.length == 2){
             robot.driveEngine.drive(drive[0], drive[1]);
-            return Mode.MoveToDepot;
-        }
-        else if(drive.length == 1)
-        {
-            robot.driveEngine.rotate(drive[0]);
-            return Mode.MoveToDepot;
-        }
-        else if(drive.length == 3)
-        {
             return Mode.MoveToWall;
         }
+        if(drive.length == 3)
+            return Mode.MoveToDepot;
 
-        return Mode.MoveToDepot;
+        return Mode.MoveToWall;
     }
 
 

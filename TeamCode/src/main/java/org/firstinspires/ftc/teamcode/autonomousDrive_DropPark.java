@@ -42,12 +42,13 @@ public class autonomousDrive_DropPark extends LinearOpMode
                         robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                         robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                     }
-                    else if(inchesMovedX < Math.PI * 9 /2){
+                    else if(inchesMovedX < Math.PI * 1 /2){
                         robot.driveEngine.rotate(.2);
                     }
                     else{
                         robot.push(false);
-                        robot.driveEngine.drive(0, .7);
+                        robot.driveEngine.drive(0, 0);
+                        action = Auto.Mode.Stop;
                     }
                     break;
                 default:
