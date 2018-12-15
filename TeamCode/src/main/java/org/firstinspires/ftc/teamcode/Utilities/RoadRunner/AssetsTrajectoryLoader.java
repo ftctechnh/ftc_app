@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Utilities.RoadRunner;
 
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryConfig;
+import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.fasterxml.jackson.module.kotlin.KotlinModule;
@@ -34,7 +35,11 @@ public class AssetsTrajectoryLoader {
      * @see #loadConfig(String)
      */
     public static Trajectory load(String name) throws IOException {
-
         return loadConfig(name).toTrajectory();
+    }
+
+    public static Trajectory load(String name, DriveConstraints overrideConstraints) throws IOException {
+        TrajectoryConfig loaded = loadConfig(name);
+        return new TrajectoryConfig(loaded.getPoses(), overrideConstraints, loaded.getResolution()).toTrajectory();
     }
 }
