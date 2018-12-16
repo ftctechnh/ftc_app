@@ -56,7 +56,7 @@ public class AutoStartNearDepot extends LinearOpMode {
     static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
     static final double P_DRIVE_COEFF = 0.1;     // Larger is more responsive, but also less stable
 
-    static final short STARTING_HEADING = 315;      // Used to set the gyro offset
+
     static final double fwdSpeed = 0.5;  // Forward Speed, Normally 0.1
     static final double rotate = 0.5; // Rotation Speed
     static final double strafe = 0.5;  // Strafe Speed
@@ -209,6 +209,7 @@ public class AutoStartNearDepot extends LinearOpMode {
                 moveBot(-0.3, 0, wallSteer(7), 0.3);
             }
             stopBot();
+            gyroSpin(315);
             if (isStopRequested()) stop();
 
 
@@ -238,8 +239,6 @@ public class AutoStartNearDepot extends LinearOpMode {
             robot.armRotate.setPower(0);
             if (isStopRequested()) stop();
 
-
-            gyroSpin(315);
 
             // Drive towards the crater, stop 50 inches from wall
             while (sonarDistance() > 55) {

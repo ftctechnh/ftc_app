@@ -57,10 +57,10 @@ public class CompetitionTeleOpOneDriver extends LinearOpMode {
             // Read the driving gamepad buttons for the lifting arm
 
             if (gamepad2.b)
-                {liftingArmUp = (float)0.2;}
+                {liftingArmUp = (float) 1;}
                 else {
                 if (gamepad2.a) {
-                    liftingArmDown = (float) 0.2;
+                    liftingArmDown = (float) 1;
                 } else {
                     liftingArmDown = 0;
                     liftingArmUp = 0;
@@ -143,7 +143,7 @@ public class CompetitionTeleOpOneDriver extends LinearOpMode {
 
             if (gamepad2.dpad_down) {
                 // Lower arm to ground
-                int groundPosition = 3200;
+                int groundPosition = 3100;
                 if (robot.armRotate.getCurrentPosition() < groundPosition) {
                     // Rotate arm up to level - Negative drive power
                     while (opModeIsActive() && robot.armRotate.getCurrentPosition() < groundPosition) {
@@ -159,7 +159,7 @@ public class CompetitionTeleOpOneDriver extends LinearOpMode {
 
             } else if  (gamepad2.dpad_left){
                 // Make the arm flat
-                int levelPosition = 3000;
+                int levelPosition = 2300;
                 if (robot.armRotate.getCurrentPosition() > levelPosition){
                     // Rotate arm up to level - Negative drive power
                     while (opModeIsActive() && robot.armRotate.getCurrentPosition() > levelPosition) {
@@ -196,6 +196,9 @@ public class CompetitionTeleOpOneDriver extends LinearOpMode {
             } else if (gamepad2.dpad_right){
                 // Reset Rotation Arm Encoder
                 robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                robot.armRotate.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                robot.armExtend.setPower(0);
+
             }
 
 
@@ -211,11 +214,6 @@ public class CompetitionTeleOpOneDriver extends LinearOpMode {
             {
                 robot.rightMineral.setPower(-mineralServosOut);
             }
-
-            telemetry.update();
-
-            telemetry.addData("rightFront Drive Motor:", robot.rightFrontDrive.getCurrentPosition());
-            telemetry.update();
 
         }
     }

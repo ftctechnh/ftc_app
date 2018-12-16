@@ -110,6 +110,7 @@ public class AutoStartNearCrater extends LinearOpMode {
             sleep(1000);
             stopBot();
             gyroSpin(0);
+            if (isStopRequested()) stop();
 
             // Move closer to the wall
             gyroHold(0.4, 0, 1.5);
@@ -123,6 +124,7 @@ public class AutoStartNearCrater extends LinearOpMode {
                 gyroStrafe(.5, 315);
             }
             stopBot();
+            if (isStopRequested()) stop();
 
             gyroSpin(315);
 
@@ -132,6 +134,7 @@ public class AutoStartNearCrater extends LinearOpMode {
                 moveBot(0.2, 0, wsteer, 0.5);
             }
             stopBot();
+            if (isStopRequested()) stop();
             //detector.disable();
 
             int dropTarget = 3200;  // Target for dropping totem
@@ -140,7 +143,7 @@ public class AutoStartNearCrater extends LinearOpMode {
             //Reset the Encoder
             robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //Rotate the arm to level position
-            while (robot.armRotate.getCurrentPosition() < levelTarget) {
+            while (!isStopRequested() && robot.armRotate.getCurrentPosition() < levelTarget) {
                 robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rotatePower = 0.25;
                 robot.armRotate.setPower(rotatePower);
@@ -151,24 +154,26 @@ public class AutoStartNearCrater extends LinearOpMode {
             sleep(1000);
             robot.rightMineral.setPower(0);
 
+            if (isStopRequested()) stop();
 
             gyroSpin(315);
 
             // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
-            while (sonarDistance() < 72) {
+            while (!isStopRequested() && sonarDistance() < 72) {
                 double wsteer = wallSteer(7);
                 moveBot(-0.25, 0, wsteer, 0.5);
             }
             stopBot();
+            gyroSpin(315);
             //Rotate the arm over the crater
-            while (robot.armRotate.getCurrentPosition() < dropTarget) {
+            while (!isStopRequested() && robot.armRotate.getCurrentPosition() < dropTarget) {
                 robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rotatePower = 0.25;
                 robot.armRotate.setPower(rotatePower);
             }
             robot.armRotate.setPower(0);
             //  Extend the arm
-            while (robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
+            while (!isStopRequested() && robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
                 robot.armExtend.setPower(-0.15);
             }
