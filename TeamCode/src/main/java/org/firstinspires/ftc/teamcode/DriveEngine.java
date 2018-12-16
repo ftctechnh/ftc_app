@@ -87,6 +87,14 @@ public class DriveEngine {
         left.setPower(x);
     }
 
+    void driveCurvy(double x, double y, double spin)
+    {
+        double root3 = Math.sqrt(3);
+        back.setPower ( (x                + spin) /2);
+        right.setPower( (-x/2 + y*root3/2 + spin) /2);
+        left.setPower ( (-x/2 - y*root3/2 + spin) /2);
+    }
+
     void resetDistances()
     {
         back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);

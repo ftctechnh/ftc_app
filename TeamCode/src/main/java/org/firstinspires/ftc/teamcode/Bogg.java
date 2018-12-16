@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 public class Bogg
 {
     Gamepad gamepad = null;
+    Gamepad gamepad2 = null;
     HardwareMap hardwareMap = null;
     DriveEngine driveEngine = null;
     DcMotor lift = null;
@@ -26,11 +27,26 @@ public class Bogg
     double yAve = 0;
     double spinAve = 0;
     double liftAve = 0;
+    double open = -.4;
+    double close = .4;
     Telemetry telemetry;
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
     {
         this.gamepad = gamepad;
+        this.hardwareMap = hardwareMap;
+        this.telemetry = telemetry;
+        driveEngine = new DriveEngine(hardwareMap);
+        lift  = hardwareMap.dcMotor.get("lift");
+        sensors = new Sensors(hardwareMap);
+        brake = hardwareMap.servo.get("brake");
+        push = hardwareMap.servo.get("push");
+    }
+
+    public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Gamepad gamepad2, Telemetry telemetry)
+    {
+        this.gamepad = gamepad;
+        this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         driveEngine = new DriveEngine(hardwareMap);
@@ -124,21 +140,41 @@ public class Bogg
         brake.setPosition(position);
     }
 
-    void push(boolean out)
+    void push(boolean close)
     {
-        if(out)
-            push.setPosition(.6);
+        if(close)
+            push.setPosition(this.close);
         else
-            push.setPosition(-.4);
+            push.setPosition(open);
     }
 
-    void manualDrive()
+    void manualDrive(Gamepad g)
     {
-        if(gamepad.left_stick_button)
-            driveEngine.drive(gamepad.left_stick_x, -gamepad.left_stick_y,true);
+        if(g.left_stick_button)
+            driveEngine.drive(g.left_stick_x, -g.left_stick_y,true);
         else
-            driveEngine.drive(smoothX(gamepad.left_stick_x), smoothY(-gamepad.left_stick_y));
+            driveEngine.drive(smoothX(g.left_stick_x), smoothY(-g.left_stick_y));
     }
+
+    void manualCurvy(Gamepad gDrive, Gamepad gRotate)
+    {
+        double leftX = smoothX(gDrive.left_stick_x);
+        double leftY = smoothY(-gDrive.left_stick_y);
+        double spin = smoothSpin(-gRotate.right_stick_x);
+
+        driveEngine.driveCurvy(leftX, leftY, spin);
+
+    }
+
+    void manualRotate(Gamepad g)
+    {
+        if(g.right_stick_button)
+            driveEngine.rotate(-g.right_stick_x);
+        else
+            driveEngine.rotate(smoothSpin(-g.right_stick_x));
+    }
+
+
 
     boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
     {
@@ -231,7 +267,55 @@ public class Bogg
         return true;
     }
 
+    boolean driveCurvyToWall()
+    {
+        double[] location = camera.getLocation();
+        double targetHeading;
 
+        double wallTargetX, wallTargetY = 0;
+        double[] unitTargetLocation = new double[2];
+        double target_x, target_y;
+        if(location != null)
+        {
+            VuforiaTrackable target = null;
+            if (camera.targetVisible(0))
+                target = camera.allTrackables.get(0);
+            else if (camera.targetVisible(1))
+                target = camera.allTrackables.get(1);
+            else if (camera.targetVisible(2))
+                target = camera.allTrackables.get(2);
+            else if (camera.targetVisible(3))
+                target = camera.allTrackables.get(3);
+
+
+            //the direction a compass would tell us
+            double currentHeading = camera.getHeading() * 180 / Math.PI;
+            targetHeading = Math.round(currentHeading / 90) * 90;
+
+            double headingDifference =  currentHeading - targetHeading;
+
+            wallTargetX = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+            wallTargetY = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
+
+            unitTargetLocation[0] = Math.signum(wallTargetX);
+            unitTargetLocation[1] = Math.signum(wallTargetY);
+            double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
+            target_x = driveTarget[0];
+            target_y = driveTarget[1];
+
+            double headingToTarget = camera.headingToTarget(location, target_x, target_y);
+
+            if(Math.abs(headingDifference) < 5 && Math.hypot(target_x, target_y) < .5)
+                return true;
+            else
+            {
+                driveEngine.driveCurvy(Math.sin(headingToTarget) * .05, Math.cos(headingToTarget) * .05, headingDifference / 100);
+            }
+
+            return false;
+        }
+        return true;
+    }
 
 
     void incAlpha()
@@ -249,13 +333,5 @@ public class Bogg
     double getAlpha()
     {
         return alpha;
-    }
-
-    void manualRotate()
-    {
-        if(gamepad.right_stick_button)
-            driveEngine.rotate(-gamepad.right_stick_x);
-        else
-            driveEngine.rotate(smoothSpin(-gamepad.right_stick_x));
     }
 }
