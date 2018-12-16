@@ -53,7 +53,7 @@ public class Sensors {
         dServo.setPosition(position);
     }
 
-    private boolean usingImu = true;
+    private boolean usingImu = false;
     private boolean gotMobile = false;
     boolean isTilted()
     {

@@ -10,7 +10,7 @@ public class Auto {
     Bogg robot = null;
     Telemetry telemetry = null;
     private ElapsedTime timer = null;
-    private double iSP; //initialSlopePositivity
+    private double iSP = -1; //initialSlopePositivity
 
     Auto(Bogg robot, Telemetry telemetry)
     {
@@ -44,10 +44,12 @@ public class Auto {
         }
         if (timer.seconds() < 2) //for the first 2 seconds
         {
+            telemetry.addData("time", getTime());
             robot.lift(-1); //pull while we
             robot.setBrake(false); //disengage the brake
         } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
         {
+            telemetry.addData("touchTop", robot.sensors.touchTop.isPressed());
             robot.lift(.2); //push up, which drops the robot
         }
         else {
@@ -66,15 +68,19 @@ public class Auto {
         double inchesMovedY = robot.driveEngine.yDist();
         if(timer.seconds() < .2) //for an additional .2 seconds
         {
+            telemetry.addData("time", getTime());
             robot.lift(.2); //drop a bit more
         }
         else if(inchesMovedX < 6 && !hasMovedSideways) //the back encoder has moved less than 4 inches
         {
+            telemetry.addData("inchesMovedX", inchesMovedX);
+            telemetry.addData("hasMovedSideways", hasMovedSideways);
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(-.2,0); //drive to the side to unhook
         }
         else if(inchesMovedY < 8)
         {
+            telemetry.addData("inchesMovedY", inchesMovedY);
             hasMovedSideways = true;
             robot.lift(0); //stop the lift motor
             robot.driveEngine.drive(0,.2); //drive diagonally
@@ -82,6 +88,7 @@ public class Auto {
         }
         else  //if the robot has unhooked
         {
+            robot.sensors.dServo.setPosition(-.6);
             robot.driveEngine.drive(0,0);
             robot.driveEngine.resetDistances();
             timer.reset(); //Needed for DropPark
@@ -96,38 +103,16 @@ public class Auto {
 
     Mode spin()
     {
-        if(robot.driveEngine.spinAngle() < Math.PI * 1/4)  //rotates 45 degrees
+        if(robot.driveEngine.spinAngle() < Math.PI * 1/4) {  //rotates 45 degrees
+            telemetry.addData("spinAngle", robot.driveEngine.spinAngle());
+
             robot.driveEngine.rotate(.15);
-        else
+            return Mode.Spin;
+        }
+        else {
             robot.driveEngine.rotate(0);  //and stops so we can see the target
-
-        double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
-        if(!(null == location)) {
-
-            if(robot.camera.targetVisible(0))
-                target = robot.camera.allTrackables.get(0);
-            else if(robot.camera.targetVisible(1))
-                target = robot.camera.allTrackables.get(1);
-            else if(robot.camera.targetVisible(2))
-                target = robot.camera.allTrackables.get(2);
-            else if(robot.camera.targetVisible(3))
-                target = robot.camera.allTrackables.get(3);
-
-            walltargetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
-            walltargetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
-
-            unitTargetLocation[0] = Math.signum(walltargetLocation[0]);
-            unitTargetLocation[1] = Math.signum(walltargetLocation[1]);
-
-            double x = location[0];
-            double y = location[1];
-
-            iSP = Math.signum(x * y); //initial slope positivity, 1 for craters, -1 for depots.
-
-            telemetry.update();
             return Mode.MoveToWall;
         }
-        return Mode.Spin;
     }
 
     boolean wallTargetAchieved = false;
@@ -139,22 +124,17 @@ public class Auto {
 //    The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
     Mode moveToWall()
     {
-        double[] location = robot.camera.getLocation();//get a location, looks like [5.65,-2.54]
-        telemetry.addLine("Made it to point Harpoon");
-
         robot.sensors.rotateMobile(-iSP * 90);
 
-        double[] drive = robot.getMoveToWall();
         if(robot.sensors.dFixed.getDistance(DistanceUnit.INCH) < 6)
         {
+            telemetry.addData("fixedDistance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
             return Mode.MoveToDepot;
         }
-        if(drive.length == 2){
-            robot.driveEngine.drive(drive[0], drive[1]);
-            return Mode.MoveToWall;
+        else
+        {
+            robot.driveEngine.drive(0,.1);
         }
-        if(drive.length == 3)
-            return Mode.MoveToDepot;
 
         return Mode.MoveToWall;
     }
@@ -164,10 +144,12 @@ public class Auto {
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
+        telemetry.addData("fixedDistance", fixedDistance);
+        telemetry.addData("mobileDistance", mobileDistance);
 
-        robot.driveEngine.drive(-iSP * .7,(6 - fixedDistance)/6.0);
+        robot.driveEngine.drive(-iSP * .2,(6 - fixedDistance)/10.0);
 
-        if(mobileDistance < 6) {
+        if(mobileDistance < 18) {
             robot.sensors.rotateMobile(iSP * 90);
             timer.reset();
             robot.driveEngine.resetDistances();
@@ -180,6 +162,7 @@ public class Auto {
     Mode dropMarker()
     {
         double rotation = robot.driveEngine.spinAngle();
+        robot.sensors.rotateMobile(iSP * 90);
         if(iSP == -1 && rotation < Math.PI) //half a rotation
         {
             robot.driveEngine.rotate(.5);
@@ -187,7 +170,7 @@ public class Auto {
             return Mode.DropMarker;
         }
 
-        if(timer.seconds() < 2)
+        if(timer.seconds() < 4)
         {
             robot.driveEngine.drive(0, 0);
             robot.push(false);
@@ -208,7 +191,7 @@ public class Auto {
     Mode moveToCrater()
     {
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
-        robot.driveEngine.drive(iSP * .7,(6 - fixedDistance)/6.0);
+        robot.driveEngine.drive(iSP * .2,(6 - fixedDistance)/10);
 
         if(robot.sensors.isTilted())
         {

@@ -56,6 +56,7 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
             telemetry.addData("Drive x:", robot.driveEngine.xOut);
             telemetry.addData("Drive y:", robot.driveEngine.yOut);
             telemetry.addData("mode:", action);
+            telemetry.update();
             idle();
         }
         auto.stop();
