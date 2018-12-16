@@ -21,7 +21,7 @@ public abstract class AutoUtils extends VuforiaCVUtil {
     public static double PARKING_MARKER_EXTENDED = 1;
     public static double PARKING_MARKER_RETRACTED = 0;
 
-    public static double HANG_HOLD_POWER = -0.15;
+    public static double HANG_HOLD_POWER = -0.25;
     public static String SETUP_ERROR_MSG = "WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG " +
             "WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG WRONG";
 
