@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.TeleOpComp;
+package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,8 +37,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.teamcode.HardwareMap.BasicChasieHardware;
 
 import java.util.Set;
 
@@ -57,7 +55,7 @@ import java.util.Set;
  */
 
 @TeleOp(name="TeleOp Disaster", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class TeleOpDisaster extends LinearOpMode {
 
     // Declare OpMode members.
@@ -66,7 +64,7 @@ public class TeleOpDisaster extends LinearOpMode {
     private DcMotor forwardLeftDrive = null;
     private DcMotor backRightDrive = null;
     private DcMotor forwardRightDrive = null;
-    private DcMotor leftArm = null;
+    private DcMotor tapeMotor = null;
     private Servo markerDropper = null;
 
     @Override
@@ -74,13 +72,9 @@ public class TeleOpDisaster extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        BasicChasieHardware robot = new BasicChasieHardware();
-
         boolean previousMarkerButton = false;
         boolean markerOpen = false;
 
-
-        /*
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
@@ -88,21 +82,18 @@ public class TeleOpDisaster extends LinearOpMode {
         backLeftDrive  = hardwareMap.get(DcMotor.class, "LBD");
         forwardRightDrive = hardwareMap.get(DcMotor.class, "RFD");
         backRightDrive = hardwareMap.get(DcMotor.class, "RBD");
-        leftArm = hardwareMap.get(DcMotor.class, "arm");
+        tapeMotor = hardwareMap.get(DcMotor.class, "arm");
         markerDropper = hardwareMap.get(Servo.class, "mark");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
-        forwardLeftDrive.setDirection(DcMotor.Direction.FORWARD);
+        forwardLeftDrive.setDirection(DcMotor.Direction.REVERSE);
         forwardRightDrive.setDirection(DcMotor.Direction.REVERSE);
         backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
-        backRightDrive.setDirection(DcMotor.Direction.REVERSE);
-        leftArm.setDirection(DcMotor.Direction.FORWARD);
+        backRightDrive.setDirection(DcMotor.Direction.FORWARD);
+        tapeMotor.setDirection(DcMotor.Direction.FORWARD);
+        tapeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         markerDropper.setPosition(0);
-        */
-
-        robot.init(hardwareMap);
-        robot.markerDropper.setPosition(0);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -111,18 +102,18 @@ public class TeleOpDisaster extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            if (gamepad1.a)
+            if (gamepad2.a)
             {
-                if(!previousMarkerButton)
+                if(previousMarkerButton == false)
                 {
                     markerOpen = !markerOpen;
                     if (markerOpen)
                     {
-                        robot.markerDropper.setPosition(1);
+                        markerDropper.setPosition(1);
                     }
                     else
                     {
-                        robot.markerDropper.setPosition(0);
+                        markerDropper.setPosition(0);
                     }
                     previousMarkerButton = true;
                 }
@@ -136,6 +127,7 @@ public class TeleOpDisaster extends LinearOpMode {
             // Setup a variable for each drive wheel to save power level for telemetry
             double leftPower;
             double rightPower;
+            double tapePower;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -149,23 +141,25 @@ public class TeleOpDisaster extends LinearOpMode {
             // Arcade Mode
             // Theoretically, this uses the left stick to control all directional movement.
             // Maybe it'll work? I'll have to try it out.
-            leftPower = -gamepad1.left_stick_y - -gamepad1.left_stick_x;
-            rightPower = -gamepad1.left_stick_y + -gamepad1.left_stick_x;
+            //leftPower = -gamepad1.left_stick_y - -gamepad1.left_stick_x;
+            //rightPower = gamepad1.left_stick_y + -gamepad1.left_stick_x;
 
-            leftPower    = Range.clip(leftPower, -1.0, 1.0) ;
-            rightPower   = Range.clip(rightPower, -1.0, 1.0) ;
+            //leftPower    = Range.clip(leftPower, -1.0, 1.0) ;
+            //rightPower   = Range.clip(rightPower, -1.0, 1.0) ;
 
             // Tank Mode uses one stick to control each wheel.
             // - This requires no math, but it is hard to drive forward slowly and keep straight.
-            // leftPower  = -gamepad1.left_stick_y ;
-            // rightPower = -gamepad1.right_stick_y ;
+            leftPower  = -gamepad1.left_stick_y;
+            rightPower = -gamepad1.right_stick_y;
+            tapePower = -gamepad2.right_stick_y;
 
             // Send calculated power to wheels
 
-            robot.leftDriveFront.setPower(leftPower);
-            robot.leftDriveBack.setPower(leftPower);
-            robot.rightDriveFront.setPower(-rightPower);
-            robot.rightDriveBack.setPower(-rightPower);
+            forwardLeftDrive.setPower(leftPower);
+            backLeftDrive.setPower(leftPower);
+            forwardRightDrive.setPower(rightPower);
+            backRightDrive.setPower(rightPower);
+            tapeMotor.setPower(tapePower);
 
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
