@@ -38,7 +38,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.opencv.core.Size;
 
 /**
  * This file illustrates the concept of driving a path based on encoder counts.
@@ -77,13 +79,15 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
          * The init() method of the hardware class does all the work here
          */
         robot.init(hardwareMap);
-        initDetector(360d, 90d);
+        initDetector(new Size(100d, 360d), 90d);
 
         resetMotors();
+        robot.tts.speak("Hello Aztec, make sure heading is zero.");
+        Telemetry.Item headingItem = telemetry.addData("Heading: ", "%.4f", robot.getHeading());
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted()) {
-            telemetry.addData(">", "Robot Heading = %.4f", robot.getHeading());
+            headingItem.setValue("%.4f", robot.getHeading());
             telemetry.update();
         }
 
@@ -112,11 +116,6 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
             }
 
             detector.disable();
-
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
         }
-
-
     }
 }

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.opencv.core.Size;
 
 public abstract class RoverRuckus15091 extends LinearOpMode {
 
@@ -19,7 +19,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
     protected double targetHeading;
 
     static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 20d/10d;     // This is < 1.0 if geared UP, eg. 26d/10d
+    static final double DRIVE_GEAR_REDUCTION = 20d / 10d;     // This is < 1.0 if geared UP, eg. 26d/10d
     static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -32,15 +32,14 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
 
     protected GoldAlignDetector detector;
 
-    public void initDetector(double alignSizeHeight, double alignPosOffset) {
+    protected final void initDetector(Size alignSize, double alignPosOffset) {
         // Set up detector
         detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
         detector.useDefaults(); // Set detector to use default settings
 
         // Optional tuning
-        detector.alignSize.width = 100d; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
-        detector.alignSize.height = alignSizeHeight;
+        detector.alignSize = alignSize; // How wide (in pixels) is the range in which the gold object will be aligned. (Represented by green bars in the preview)
         detector.alignPosOffset = alignPosOffset; // How far from center frame to offset this alignment zone.
         detector.downscale = 0.4; // How much to downscale the input frames
 
@@ -54,7 +53,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         detector.enable(); // Start the detector!
     }
 
-    protected void resetMotors() {
+    protected final void resetMotors() {
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -67,7 +66,6 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
 
     protected void sampling() {
         // turn robot 180 degree to the right
-        //encoderDrive(TURN_SPEED, -40d, 40d, 5d);
         gyroTurn(0.8d, -111d);
 
         //scan gold mineral for position 1,2,3
@@ -94,7 +92,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.tts.speak("Gold on position " + goldMineralLocation);
     }
 
-    protected void landing() {
+    protected final void landing() {
         robot.armServo.setPosition(1d);
         robot.handServo.setPosition(0d);
         robot.markerServo.setPosition(0.1d);
@@ -103,9 +101,10 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
 
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(1d);
+        sleep(10L);
         robot.leftDrive.setPower(-0.4d);
         robot.rightDrive.setPower(-0.4d);
-        while (robot.armDrive.isBusy()) {
+        while (opModeIsActive() && robot.armDrive.isBusy()) {
             //wait for motor to finish
         }
 
@@ -130,7 +129,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
      *  2) Move runs out of time
      *  3) Driver stops the opmode running.
      */
-    public void encoderDrive(double speed,
+    protected final void encoderDrive(double speed,
                              double leftInches, double rightInches,
                              double timeoutS) {
         int newLeftTarget;
@@ -184,7 +183,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         }
     }
 
-    public void gyroHold(double speed, double angle, double holdTime) {
+    protected final void gyroHold(double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
 
@@ -201,7 +200,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.rightDrive.setPower(0);
     }
 
-    public void gyroDrive(double speed,
+    protected final void gyroDrive(double speed,
                           double distance,
                           double angle) {
 
@@ -278,7 +277,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         }
     }
 
-    public void gyroTurn(double speed, double angle) {
+    protected final void gyroTurn(double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
@@ -287,7 +286,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         }
     }
 
-    boolean onHeading(double speed, double angle, double PCoeff) {
+    private boolean onHeading(double speed, double angle, double PCoeff) {
         double error;
         double steer;
         boolean onTarget = false;
@@ -320,7 +319,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         return onTarget;
     }
 
-    public double getError(double targetAngle) {
+    private double getError(double targetAngle) {
 
         double robotError;
 
@@ -331,7 +330,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         return robotError;
     }
 
-    public double getSteer(double error, double PCoeff) {
+    private double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
 }

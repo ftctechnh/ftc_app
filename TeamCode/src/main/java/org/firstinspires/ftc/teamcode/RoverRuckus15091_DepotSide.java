@@ -40,7 +40,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.opencv.core.Size;
 
 import java.util.Locale;
 
@@ -77,19 +79,20 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
 
     @Override
     public void runOpMode() {
-
         /*
          * Initialize the drive system variables.
          * The init() method of the hardware class does all the work here
          */
-        initDetector(480d, 120d);
-        robot.init(hardwareMap);
+        initDetector(new Size(100d, 480d), 120d);
+        this.robot.init(hardwareMap);
 
         resetMotors();
+        this.robot.tts.speak("Hello Aztec, make sure heading is zero and don't forget Team Marker.");
+        Telemetry.Item headingItem = telemetry.addData("Heading: ", "%.4f", this.robot.getHeading());
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted()) {
-            telemetry.addData(">", "Robot Heading = %.4f", robot.getHeading());
+            headingItem.setValue("%.4f", this.robot.getHeading());
             telemetry.update();
         }
 
@@ -117,7 +120,7 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
                     break;
             }
 
-            robot.markerServo.setPosition(1d);
+            this.robot.markerServo.setPosition(1d);
             sleep(500L);
             detector.disable();
 
@@ -126,9 +129,6 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
             gyroTurn(TURN_SPEED, 50d);
             gyroDrive(DRIVE_SPEED, -24d, 50d);
             gyroDrive(DRIVE_SPEED, -24d, 45d);*/
-
-            telemetry.addData("Path", "Complete");
-            telemetry.update();
         }
     }
 }
