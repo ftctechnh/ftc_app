@@ -26,6 +26,9 @@ public class auto extends superAuto {
         final double xStopinFrontofMineral = stopInFrontOfMineral* Math.cos(45);
         final double yStopinFrontofMineral = xStopinFrontofMineral;
 
+        goToPoint(xStopinFrontofMineral,yStopinFrontofMineral);
+
+        /*
         //ALL AUTOS DO:
         //Drop down
         //Go straight
@@ -50,9 +53,6 @@ public class auto extends superAuto {
         //Deposit Claimer
         //Move backwards full speed into crater
         goToPoint(1193,1562);
-
-
-
-
+        */
     }
 }

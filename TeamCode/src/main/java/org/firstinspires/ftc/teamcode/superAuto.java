@@ -111,6 +111,7 @@ abstract public class superAuto extends LinearOpMode {
         imu.initialize(parameters);
         //rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
 
+        Boolean fullRobot = false;
 
         motorFL = hardwareMap.dcMotor.get("motorFL");
         motorFL.setDirection(DcMotor.Direction.REVERSE);
@@ -120,14 +121,16 @@ abstract public class superAuto extends LinearOpMode {
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
-        mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
-        mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
-        mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
-        mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
-        servo = hardwareMap.servo.get("servo");
-        slide = hardwareMap.servo.get("slide"); //
-        outake1 = hardwareMap.crservo.get("outake1");
-        outake2 = hardwareMap.crservo.get("outake2");
+        if (fullRobot) {
+            mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
+            mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
+            mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
+            mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
+            servo = hardwareMap.servo.get("servo");
+            slide = hardwareMap.servo.get("slide"); //
+            outake1 = hardwareMap.crservo.get("outake1");
+            outake2 = hardwareMap.crservo.get("outake2");
+        }
     }
 
     void composeTelemetry() {
@@ -310,21 +313,23 @@ abstract public class superAuto extends LinearOpMode {
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
                 telemetry.addData("Pos (mm)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0) , translation.get(1) , translation.get(2));
+                        translation.get(0), translation.get(1), translation.get(2));
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
                 telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
                 location.setPositionValues(translation.get(0), translation.get(1), rotation.thirdAngle);
-            }
-            else {
+                break;
+            } else if (!targetVisible) {
+                // Eliminate search algorithm temporarily
+            } else {
                 configureGyro();
                 angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 double currentHeading = angles.firstAngle;
-                int degrees = (int)currentHeading;
+                int degrees = (int) currentHeading;
                 while (targetVisible == false) {
-                    degrees+=13;
-                    if (degrees >180)//This is incorrect since there is no 360. Range is from 0->180, -180->0
+                    degrees += 13;
+                    if (degrees > 180)//This is incorrect since there is no 360. Range is from 0->180, -180->0
                         break;
                     pivotTo(degrees);
                     Wait(2);
@@ -338,16 +343,16 @@ abstract public class superAuto extends LinearOpMode {
                     if (targetVisible)
                         break;
                 }
-                if (!targetVisible){
+                if (!targetVisible) {
                     telemetry.addData("We have pivoted 360 degrees and haven't seen anything.  We Have Depression Now!  Target Visible = ", targetVisible);
                     sR();
                     //Move Code: eventually use range sensor to move NOT INTO A CORNER
                     //This stop robot is because we have pivoted 360 degrees but still havent seen a picture
                     //We will have to work on this but for now, whatever :)
                 }
-                }
-                 }
+            }
             telemetry.update();
+        }
     }
 
     void goToPoint(double DestinationX, double DestinationY){
