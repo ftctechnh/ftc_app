@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidAccelerometer;
 import org.firstinspires.ftc.robotcore.external.android.AndroidGyroscope;
@@ -84,11 +85,10 @@ public class Hardware15091 {
 
     public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
     public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
-    public static final double ARM_POWER_MID = 0.6d;
-    public static final double ARM_POWER_MIN = 0.3d;
-    public static final double ARM_POWER_MAX = 1d;
+    public static final double ARM_POWER = 1d;
+    static final double P_ARM_COEFF = 0.0008;     // Larger is more responsive, but also less stable
 
-    public ARM_STATUS setArmTarget(double targetToSet) {
+    public int setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double voltageDelta = armAngle.getVoltage() - targetToSet;
         int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
@@ -96,15 +96,7 @@ public class Hardware15091 {
         armDrive.setTargetPosition(newTarget);
         int howManyTurnsLeft = Math.abs(armDrive.getCurrentPosition() - newTarget);
 
-        if (howManyTurnsLeft < 100d) {
-            return ARM_STATUS.DONE;
-        } else if (howManyTurnsLeft < 600d) {
-            return ARM_STATUS.ALMOST;
-        } else if (howManyTurnsLeft < 1100d) {
-            return ARM_STATUS.CLOSE;
-        } else {
-            return ARM_STATUS.NOT_YET;
-        }
+        return howManyTurnsLeft;
     }
 
     public void setArmPower(double powerToSet) {
@@ -146,8 +138,8 @@ public class Hardware15091 {
         pickupServo = hwMap.servo.get("servo_5");
         handServo = hwMap.servo.get("servo_4");
         markerServo = hwMap.servo.get("servo_0");
-        //sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_distance");
+        sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
+        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -177,11 +169,11 @@ public class Hardware15091 {
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled      = true;
-        parameters.loggingTag          = "IMU";
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
@@ -189,21 +181,11 @@ public class Hardware15091 {
         // and named "imu".
         imu = hwMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
-        tts.speak("Hello aztec, good luck.");
     }
 
-    public double getArmPower(ARM_STATUS armStatus) {
-        switch (armStatus) {
-            case ALMOST:
-                return ARM_POWER_MIN;
-            case CLOSE:
-                return ARM_POWER_MID;
-            case DONE:
-                return 0d;
-            default:
-                return ARM_POWER_MAX;
-        }
+    public double getArmPower(int turnsLeft) {
+        double error = Range.clip(turnsLeft * P_ARM_COEFF, 0, 1);
+        return ARM_POWER * error;
     }
 }
 

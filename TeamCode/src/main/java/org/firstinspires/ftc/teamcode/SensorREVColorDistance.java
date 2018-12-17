@@ -61,29 +61,23 @@ public class SensorREVColorDistance extends LinearOpMode {
      * It has a light/distance (range) sensor.  It also has an RGB color sensor.
      * The light/distance sensor saturates at around 2" (5cm).  This means that targets that are 2"
      * or closer will display the same value for distance/light detected.
-     *
+     * <p>
      * Although you configure a single REV Robotics Color-Distance sensor in your configuration file,
      * you can treat the sensor as two separate sensors that share the same name in your op mode.
-     *
+     * <p>
      * In this example, we represent the detected color by a hue, saturation, and value color
      * model (see https://en.wikipedia.org/wiki/HSL_and_HSV).  We change the background
      * color of the screen to match the detected color.
-     *
+     * <p>
      * In this example, we  also use the distance sensor to display the distance
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
-     *
      */
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+    Hardware15091 robot = new Hardware15091();
 
     @Override
     public void runOpMode() {
 
-        // get a reference to the color sensor.
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-
-        // get a reference to the distance sensor that shares the same name.
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        robot.init(hardwareMap);
 
         // hsvValues is an array that will hold the hue, saturation, and value information.
         float hsvValues[] = {0F, 0F, 0F};
@@ -109,18 +103,18 @@ public class SensorREVColorDistance extends LinearOpMode {
             // convert the RGB values to HSV values.
             // multiply by the SCALE_FACTOR.
             // then cast it back to int (SCALE_FACTOR is a double)
-            Color.RGBToHSV((int) (sensorColor.red() * SCALE_FACTOR),
-                    (int) (sensorColor.green() * SCALE_FACTOR),
-                    (int) (sensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (robot.sensorColor.red() * SCALE_FACTOR),
+                    (int) (robot.sensorColor.green() * SCALE_FACTOR),
+                    (int) (robot.sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
 
             // send the info back to driver station using telemetry function.
             telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("Alpha", sensorColor.alpha());
-            telemetry.addData("Red  ", sensorColor.red());
-            telemetry.addData("Green", sensorColor.green());
-            telemetry.addData("Blue ", sensorColor.blue());
+                    String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("Alpha", robot.sensorColor.alpha());
+            telemetry.addData("Red  ", robot.sensorColor.red());
+            telemetry.addData("Green", robot.sensorColor.green());
+            telemetry.addData("Blue ", robot.sensorColor.blue());
             telemetry.addData("Hue", hsvValues[0]);
 
             // change the background color to match the color detected by the RGB sensor.
