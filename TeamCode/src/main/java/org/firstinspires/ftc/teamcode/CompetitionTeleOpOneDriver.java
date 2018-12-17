@@ -42,6 +42,7 @@ public class CompetitionTeleOpOneDriver extends LinearOpMode {
             telemetry.addData("Lift Encoder:", robot.landerLatchLift.getCurrentPosition());
             telemetry.addData("Arm Encoder:", robot.armRotate.getCurrentPosition());
             telemetry.update();
+            if (isStopRequested()) {stop(); sleep(5000);}
 
             // DRIVING SECTION!!!! ----------------------------------------------------------------
             drive = gamepad2.left_stick_y;// Negative because the gamepad is weird

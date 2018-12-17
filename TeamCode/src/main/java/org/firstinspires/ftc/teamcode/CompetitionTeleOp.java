@@ -120,6 +120,7 @@ public class CompetitionTeleOp extends LinearOpMode {
 
             telemetry.addData("rightFront Drive Motor:", robot.rightFrontDrive.getCurrentPosition());
             telemetry.update();
+            if (isStopRequested()) {stop(); sleep(5000);}
 
         }
     }

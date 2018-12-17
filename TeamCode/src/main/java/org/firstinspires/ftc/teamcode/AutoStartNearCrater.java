@@ -56,7 +56,7 @@ public class AutoStartNearCrater extends LinearOpMode {
             if (isStopRequested()) stop();
 
         }
-
+        if (isStopRequested()) stop();
 
 /*        //Variable setting rotation angle;
         detector = new GoldAlignDetector();
@@ -89,29 +89,27 @@ public class AutoStartNearCrater extends LinearOpMode {
 
         }
         while (opModeIsActive()) {
-            int landingLevel = -3000;  // Target level to land
+            int landingLevel = -3050;  // Target level to land
             double latchPower;
             //Reset the Encoder
             robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             //Lower the Robot from the lander
-            while (robot.landerLatchLift.getCurrentPosition() > landingLevel) {
+            while (!isStopRequested() && robot.landerLatchLift.getCurrentPosition() > landingLevel) {
                 robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 latchPower = -0.2;
                 robot.landerLatchLift.setPower(latchPower);
 
             }
             robot.landerLatchLift.setPower(0);
-
-
+            if (isStopRequested()) {stop(); sleep(5000);}
             //Clear the hook
-            gyroHold(-0.5, 0, 0.2);
+            gyroHold(-0.5, 0, 0.22);
             // Move away from the lander
             gyroStrafe(0.5, 0);
             sleep(1000);
             stopBot();
             gyroSpin(0);
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
             // Move closer to the wall
             gyroHold(0.4, 0, 1.5);
 
@@ -120,25 +118,23 @@ public class AutoStartNearCrater extends LinearOpMode {
 
 
             // Move towards the wall until 7 inches away while maintaining a heading of 270
-            while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7) {
+            while (!isStopRequested() && robot.rangeSensor.getDistance(DistanceUnit.INCH) > 7) {
                 gyroStrafe(.5, 315);
             }
             stopBot();
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
             gyroSpin(315);
 
             //Drive backwards maintaining 2-4 inches from the wall
-            while (sonarDistance() > 18) {
+            while (!isStopRequested() && sonarDistance() > 18) {
                 double wsteer = wallSteer(5);
                 moveBot(0.2, 0, wsteer, 0.5);
             }
             stopBot();
-            if (isStopRequested()) stop();
-            //detector.disable();
+            if (isStopRequested()) {stop(); sleep(5000);}            //detector.disable();
 
             int dropTarget = 3200;  // Target for dropping totem
-            int levelTarget = 500;  // Target for holding arm forward and level
+            int levelTarget = 400;  // Target for holding arm forward and level
             double rotatePower;
             //Reset the Encoder
             robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -148,14 +144,14 @@ public class AutoStartNearCrater extends LinearOpMode {
                 rotatePower = 0.25;
                 robot.armRotate.setPower(rotatePower);
             }
-            robot.armRotate.setPower(0);
+            if (isStopRequested()) {stop(); sleep(5000);}            robot.armRotate.setPower(0);
             //Drop the Totem
             robot.rightMineral.setPower(0.7);
             sleep(1000);
             robot.rightMineral.setPower(0);
 
-            if (isStopRequested()) stop();
 
+            if (isStopRequested()) {stop(); sleep(5000);}
             gyroSpin(315);
 
             // Let's try wall crawling for a time, then turning and homing on the crater with the distance sensor
@@ -164,6 +160,7 @@ public class AutoStartNearCrater extends LinearOpMode {
                 moveBot(-0.25, 0, wsteer, 0.5);
             }
             stopBot();
+            if (isStopRequested()) {stop(); sleep(5000);}
             gyroSpin(315);
             //Rotate the arm over the crater
             while (!isStopRequested() && robot.armRotate.getCurrentPosition() < dropTarget) {
@@ -172,12 +169,15 @@ public class AutoStartNearCrater extends LinearOpMode {
                 robot.armRotate.setPower(rotatePower);
             }
             robot.armRotate.setPower(0);
+            if (isStopRequested()) {stop(); sleep(5000);}
+
             //  Extend the arm
             while (!isStopRequested() && robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
                 robot.armExtend.setPower(-0.15);
             }
             robot.armExtend.setPower(0);  // Otherwise set the power to zero
+            if (isStopRequested()) {stop(); sleep(5000);}
 
         break;
         }
@@ -186,7 +186,7 @@ public class AutoStartNearCrater extends LinearOpMode {
     }
 
 
-    public void moveToEncoder (double clicks) {
+    /*public void moveToEncoder (double clicks) {
         double drivePower;
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -217,7 +217,7 @@ public class AutoStartNearCrater extends LinearOpMode {
         robot.leftFrontDrive.setPower(0);
         robot.rightRearDrive.setPower(0);
         robot.leftRearDrive.setPower(0);
-    }
+    }*/
 
 
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor)
@@ -286,7 +286,7 @@ public class AutoStartNearCrater extends LinearOpMode {
         // Get the current heading error between actual and desired
         double error = getError(heading);
         // While we are greater than 5 degrees from desired heading (5 seems to work best)
-        while (Math.abs(error) > 5) {
+        while (!isStopRequested() && Math.abs(error) > 5) {
             // Rotate the robot in the correct direction.
             // Don't use more than 0.3 input power or it goes too fast
             if (error < 0 && Math.abs(error) > 5) {
@@ -339,7 +339,7 @@ public class AutoStartNearCrater extends LinearOpMode {
         double PCoeff = 0.01;
         // keep looping while we have time remaining.
         holdTimer.reset();
-        while ((holdTimer.time() < holdTime)) {
+        while ((!isStopRequested() && holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
             //error = Range.clip(getError(angle),-0.3,0.3);
             error = PCoeff * getError(angle);

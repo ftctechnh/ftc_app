@@ -87,7 +87,7 @@ public class AutoStartNearDepot extends LinearOpMode {
             if (isStopRequested()) stop();
 
         }
-
+        if (isStopRequested()) stop();
 /*
         //Variable setting rotation angle;
         detector = new GoldAlignDetector();
@@ -121,19 +121,18 @@ public class AutoStartNearDepot extends LinearOpMode {
         }
         while (opModeIsActive()) {
             //start landing here
-            int landingLevel = -3000;  // Target level to land
+            int landingLevel = -3050;  // Target level to land
             double latchPower;
             //Reset the Encoder
             robot.landerLatchLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             // Lower the robot
-            while (robot.landerLatchLift.getCurrentPosition() > landingLevel) {
+            while (!isStopRequested() && robot.landerLatchLift.getCurrentPosition() > landingLevel) {
                 robot.landerLatchLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 latchPower = -0.2;
                 robot.landerLatchLift.setPower(latchPower);
             }
             robot.landerLatchLift.setPower(0);
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
 
             // Find the Gold mineral and knock it off the spot
             // Initialize a counter to count our attempts to get a little closer to the mineral
@@ -179,39 +178,36 @@ public class AutoStartNearDepot extends LinearOpMode {
         }
 */
             // Move  back to unhook the robot
-            gyroHold(-0.5, 0, 0.2);
+            gyroHold(-0.5, 0, 0.22);
             // Move away from the robot
             gyroStrafe(0.5, 0);
             sleep(1000);
             stopBot();
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
             gyroSpin(0);
             // Move towards the center of the field
             gyroHold(0.4, 0, 1.5);
             //sleep(3000);
             // Spin to put the distance sensor towards the wall
             gyroSpin(315);
-            if (isStopRequested()) stop();
+            if (isStopRequested()) {stop(); sleep(5000);}
 
             // Move towards the wall
-            while (robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10) {
+            while (!isStopRequested() && robot.rangeSensor.getDistance(DistanceUnit.INCH) > 10) {
                 gyroStrafe(.5, 315);
             }
             stopBot();
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
             gyroSpin(315);
 
             // Back into the depot based on time
             ElapsedTime holdTimer = new ElapsedTime();
-            while ((holdTimer.time() < 2.7)) {
+            while (!isStopRequested() && (holdTimer.time() < 2.4)) {
                 moveBot(-0.3, 0, wallSteer(7), 0.3);
             }
             stopBot();
             gyroSpin(315);
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
 
             int dropTarget = 3200;  // Target for dropping totem
             int levelTarget = 500;  // Target for holding arm forward and level
@@ -219,26 +215,26 @@ public class AutoStartNearDepot extends LinearOpMode {
             //Reset the Encoder
             robot.armRotate.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-            while (robot.armRotate.getCurrentPosition() < dropTarget) {
+            while (!isStopRequested() && robot.armRotate.getCurrentPosition() < dropTarget) {
                 robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rotatePower = 0.25;
                 robot.armRotate.setPower(rotatePower);
             }
+            if (isStopRequested()) stop();
             robot.armRotate.setPower(0);
             // Drop the totem
             robot.rightMineral.setPower(0.7);
             sleep(800);
             robot.rightMineral.setPower(0);
-
+            if (isStopRequested()) {stop(); sleep(5000);}
             // Rotate the arm to level facing forward
-            while (robot.armRotate.getCurrentPosition() > levelTarget) {
+            while (!isStopRequested() && robot.armRotate.getCurrentPosition() > levelTarget) {
                 robot.armRotate.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rotatePower = -0.25;
                 robot.armRotate.setPower(rotatePower);
             }
             robot.armRotate.setPower(0);
-            if (isStopRequested()) stop();
-
+            if (isStopRequested()) {stop(); sleep(5000);}
 
             // Drive towards the crater, stop 50 inches from wall
             while (sonarDistance() > 55) {
@@ -247,10 +243,10 @@ public class AutoStartNearDepot extends LinearOpMode {
                 if (isStopRequested()) stop();
 
             }
-            stopBot();
+            if (isStopRequested()) {stop(); sleep(5000);}            stopBot();
 
             // Extend the arm over the crater
-            while (robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
+            while (!isStopRequested() && robot.extendArmFrontStop.getState() == false) { // As long as the front limit switch isn't pressed, move the arm forward
 
                 robot.armExtend.setPower(-0.2);
             }
@@ -261,7 +257,7 @@ public class AutoStartNearDepot extends LinearOpMode {
     }
 
 
-    public void moveToEncoder (double clicks) {
+   /* public void moveToEncoder (double clicks) {
         double drivePower;
         robot.rightFrontDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -291,6 +287,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         robot.rightRearDrive.setPower(0);
         robot.leftRearDrive.setPower(0);
     }
+*/
 
     public void moveBot(double drive, double rotate, double strafe, double scaleFactor) {
         // This module takes inputs, normalizes them, applies a scaleFactor, and drives the motors
@@ -353,7 +350,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         // Get the current heading error between actual and desired
         double error = getError(heading);
         // While we are greater than 5 degrees from desired heading (5 seems to work best)
-        while (Math.abs(error) > 5) {
+        while (!isStopRequested() && Math.abs(error) > 5) {
             // Rotate the robot in the correct direction.
             // Don't use more than 0.3 input power or it goes too fast
             if (error < 0 && Math.abs(error) > 5) {
@@ -407,7 +404,7 @@ public class AutoStartNearDepot extends LinearOpMode {
         double PCoeff = 0.01;
         // keep looping while we have time remaining.
         holdTimer.reset();
-        while ((holdTimer.time() < holdTime)) {
+        while ((!isStopRequested() && holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
             //error = Range.clip(getError(angle),-0.3,0.3);
             error = PCoeff * getError(angle);
