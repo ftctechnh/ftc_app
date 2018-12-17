@@ -113,9 +113,7 @@ public class CraterSample extends LinearOpMode {
             ///////////////////////////////////////////////////////////////// ACTIONS
 
             if (timedAction(0, tuner.get("armtime"))) { //arm
-                if(cMech.getCurrentPosition() < tuner.get("armdist")){
-                    cMech.setPower(tuner.get("armpower"));
-                }
+                cMech.setPower(tuner.get("armpower"));
             }
 
             if (timedAction(tuner.get("armtime"), tuner.get("turn0time"))) { //turn to release hook

@@ -117,6 +117,7 @@ public class FourwdTeleOp2 extends OpMode {
 
         telemetry.addData("forward",forward);
         telemetry.addData("turn",turn);
+        telemetry.addData("armPos",cMech.getCurrentPosition());
         telemetry.update();
 
     }
