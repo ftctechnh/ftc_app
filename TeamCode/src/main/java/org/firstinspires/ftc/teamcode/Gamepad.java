@@ -127,9 +127,9 @@ public class Gamepad extends LinearOpMode {
                     robot.armServo.getPosition(), robot.handServo.getPosition());
             telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",
                     robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
-            telemetry.addData("Heading", "%.4f", robot.getHeading());
+            /*telemetry.addData("Heading", "%.4f", robot.getHeading());
             telemetry.addData("Distance (inch)",
-                    String.format(Locale.US, "%.2f", robot.sensorDistance.getDistance(DistanceUnit.INCH)));
+                    String.format(Locale.US, "%.2f", robot.sensorDistance.getDistance(DistanceUnit.INCH)));*/
             telemetry.update();
         }
     }
@@ -149,32 +149,26 @@ public class Gamepad extends LinearOpMode {
             armPower = -Range.scale(gamepad1.right_trigger, 0d, 1d, 0d, 1d);
         }
 
-        if (gamepad2.left_bumper || gamepad1.left_bumper || gamepad2.y || gamepad1.y) { //set arm to drop mineral
-            if (armSequence == 0) {
-                int turnsLeft = robot.setArmTarget(1.3050d);
-                armPower = robot.getArmPower(turnsLeft);
-                if (turnsLeft <= 100) {
-                    if (gamepad2.left_bumper || gamepad1.left_bumper) {
-                        armPosition = 0.3489d;
-                        handPosition = 0.3439d;
-                    } else {
-                        handPosition = 0d;
-                        armPosition = 1d;
-                    }
-                    armSequence = 2;
-                }
+        if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
+            int turnsLeft = robot.setArmTarget(1.3050d);
+            armPower = robot.getArmPower(turnsLeft);
+            if (turnsLeft <= 100) {
+                armPosition = 0.3489d;
+                handPosition = 0.3439d;
             }
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
-            if (armSequence == 0) {
-                int turnsLeft = robot.setArmTarget(2.2600d);
-                armPower = robot.getArmPower(turnsLeft);
-                armPosition = 0.1528d;
-                handPosition = 0.8261d;
-                if (turnsLeft <= 100) {
-                    armSequence = 3;
-                }
+            int turnsLeft = robot.setArmTarget(2.3290d);
+            armPower = robot.getArmPower(turnsLeft);
+            armPosition = 0.1528d;
+            handPosition = 0.8261d;
+        } else if (gamepad2.y || gamepad1.y) { //End game
+            int turnsLeft = robot.setArmTarget(1.3050d);
+            armPower = robot.getArmPower(turnsLeft);
+            if (turnsLeft <= 100) {
+                handPosition = 0d;
+                armPosition = 1d;
             }
-        } else if (gamepad2.x || gamepad1.x)         { //retract arm
+        } else if (gamepad2.x || gamepad1.x) { //retract arm
             if (armSequence == 0) {
                 int turnsLeft = robot.setArmTarget(0.9800d);
                 armPower = robot.ARM_POWER;
@@ -184,10 +178,9 @@ public class Gamepad extends LinearOpMode {
                     armSequence = 1;
                 }
             }
-
             if (armSequence == 1) {
-                robot.setArmTarget(0.7450d);
-                armPower = robot.ARM_POWER;
+                int turnsLeft = robot.setArmTarget(0.7450d);
+                armPower = robot.getArmPower(turnsLeft);
             }
         } else {
             armSequence = 0;

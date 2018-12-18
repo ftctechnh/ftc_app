@@ -86,7 +86,7 @@ public class Hardware15091 {
     public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
     public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
     public static final double ARM_POWER = 1d;
-    static final double P_ARM_COEFF = 0.0008;     // Larger is more responsive, but also less stable
+    static final double P_ARM_COEFF = 0.0004d;     // Larger is more responsive, but also less stable
 
     public int setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
