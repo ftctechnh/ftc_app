@@ -1,0 +1,27 @@
+<category name="Orientation">
+  <block type="androidOrientation_isAvailable"></block>
+  <block type="androidOrientation_startListening"></block>
+  <block type="androidOrientation_stopListening"></block>
+  <block type="androidOrientation_getProperty_Number">
+    <field name="PROP">Azimuth</field>
+  </block>
+  <block type="androidOrientation_getProperty_Number">
+    <field name="PROP">Pitch</field>
+  </block>
+  <block type="androidOrientation_getProperty_Number">
+    <field name="PROP">Roll</field>
+  </block>
+  <block type="androidOrientation_getProperty_Number">
+    <field name="PROP">Angle</field>
+  </block>
+  <block type="androidOrientation_getProperty_Number">
+    <field name="PROP">Magnitude</field>
+  </block>
+  <block type="androidOrientation_getProperty_AngleUnit">
+    <field name="PROP">AngleUnit</field>
+  </block>
+  <block type="androidOrientation_setProperty_AngleUnit">
+    <field name="PROP">AngleUnit</field>
+    <value name="VALUE"><shadow type="navigation_enum_angleUnit"></shadow></value>
+  </block>
+</category>

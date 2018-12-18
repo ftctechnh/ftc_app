@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html ng-app="editor" lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>Code Editor</title>
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/SourceCodePro.css">
+    <link rel="stylesheet" href='/java/css/tether.css'>
+    <link rel="stylesheet" href="/java/css/angular-resizable.css">
+    <link rel="stylesheet" href="/java/css/perfect-scrollbar.css">
+    <link rel="stylesheet" href="/java/css/jquery.contextmenu.css">
+    <link rel="stylesheet/less" href="/java/css/main.less">
+    <script type="text/javascript" src="/js/less.min.js"></script>
+
+    <!-- CSS Styles below should not be external because they control the loading system, which may or may not be able to access the RC (therefore external files) -->
+    <style>
+        #page-load-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        #connection-message, #js-disabled {
+            margin-top: 10%;
+            width: 100%;
+        }
+
+        #connection-message h1, #js-disabled h1 {
+            text-align: center;
+        }
+
+        #connection-message {
+            display: inline-block;
+        }
+
+        #connection-message div {
+            width: 60%;
+            margin: auto;
+        }
+
+        #connection-message div p {
+            padding: 10px;
+        }
+
+        #js-disabled {
+            display: none;
+        }
+
+        #js-disabled p {
+            text-align: center;
+        }
+
+        /* The following code was initially from: https://jsbin.com/qowegagopo/edit, accessed 8/13/2017 */
+        .progress-bar.indeterminate {
+            position: relative;
+            animation: progress-indeterminate 3s linear infinite;
+            background-color: black;
+        }
+
+        .progress {
+            background-color: white;
+            border: none;
+            box-shadow: none;
+            height: 5px;
+            position: relative;
+            width: 60%;
+            margin: auto;
+        }
+
+        @keyframes progress-indeterminate {
+            from { left: -25%; width: 25%; }
+            to { left: 100%; width: 25%;}
+        }
+    </style>
+
+    <noscript>
+        <style>
+            #js-disabled {
+                display: inline-block;
+            }
+
+            #connection-message {
+                display: none;
+            }
+        </style>
+    </noscript>
+</head>
+<body>
+<div id="page-load-container">
+    <div id="connection-message">
+        <h1>Loading OnBotJava</h1>
+        <div class="progress">
+            <div class="progress-bar indeterminate"></div>
+        </div>
+        <div class="help-block"><p>If OnBotJava doesn't load in a few seconds, try:</p>
+            <ul>
+                <li>Refreshing the page</li>
+                <li>Verifying the connection to the Robot Controller</li>
+            </ul>
+        </div>
+    </div>
+    <div id="js-disabled">
+        <h1>JavaScript is disabled!</h1>
+        <p class="help-block">OnBotJava requires JavaScript to be enabled to work.</p>
+    </div>
+</div>
+<div id="editor-container" style="visibility: hidden;" class="container-fluid" ng-controller="EditorController">
+    <div id="left-pane" class="hidden-print" min-width>
+        <div id="menu-container">
+            <div class="navbar-header">
+                <a id="dropdown-toggler" class="navbar-toggler navbar-toggler-right" type="button"
+                   data-toggle="collapse"
+                   data-target="#navbarMenuTarget" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa fa-bars"></i>
+                </a>
+                <a href="javascript:void(0)" class="navbar-right">
+                    <i id="minimize-button" ng-click="tools.minimizePane()" class="editor-task fa fa-window-minimize"
+                       data-toggle="tooltip" data-placement="bottom" title="Collapse this window"></i>
+                </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarMenuTarget">
+                <ul class="nav navbar-nav">
+                    <li ng-click="tools.settingsAction()">
+                        <a class="nav-item nav-link" href="javascript:void(0)" data-toggle="tooltip"
+                           data-placement="bottom" title="Settings">
+                            <i id="settings-button" class="editor-task fa fa-cog"></i>
+                            <span class="help-text">Settings</span>
+                        </a>
+                    </li>
+                    <li ng-click="tools.undo()">
+                        <a class="nav-item nav-link" href="javascript:void(0)" data-toggle="tooltip"
+                           data-placement="bottom" title="Undo">
+                            <i id="undo-button" class="editor-task fa fa-undo"></i>
+                            <span class="help-text">Undo</span>
+                        </a>
+                    </li>
+                    <li ng-click="tools.add()">
+                        <a class="nav-item nav-link" href="javascript:void(0)" data-toggle="tooltip"
+                           data-placement="bottom" title="Add File">
+                            <i id="add-button" class="file-task fa fa-plus"></i>
+                            <span class="help-text">New File</span>
+                        </a>
+                    </li>
+                    <input type="file" method="post" enctype="multipart/form-data"
+                           onchange="angular.element(this).scope().tools.filesSelect(files)"
+                           id="file-upload-form" name="file-upload" multiple
+                           accept=".java,.jar,.zip,.txt,.md,text-plain,text/x-java-source,application/x-compressed,application/x-zip-compressed,application/zip,multipart/x-zip"
+                           style="display: none"/>
+                    <li ng-click="tools.upload()">
+                        <a class="nav-item nav-link" href="javascript:void(0)"
+                           data-toggle="tooltip" data-placement="bottom" title="Upload Files" rc-title="Copy Files to OnBotJava">
+                            <i id="upload-button" class="file-task fa fa-upload"></i>
+                            <span class="help-text">{{ tools.uploadTaskName }}</span>
+                        </a>
+                    </li>
+                    <li ng-click="tools.delete()" disabled-tooltip disabled-no-project-view-node-selected>
+                        <a class="nav-item nav-link" href="javascript:void(0)"
+                           data-toggle="tooltip" data-placement="bottom" title="Delete File" disabled-title="Delete requires a file to be selected">
+                            <i id="delete-button" class="danger-task fa fa-trash-o"></i>
+                            <span class="help-text">Delete</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="project-files-container" style="height: 94%">
+            <span class="file-tree-title">Project Files</span>
+            <div id="file-tree-container" perfect-scrollbar>
+                <div id="file-tree"></div>
+            </div>
+        </div>
+    </div>
+    <div id="left-pane-handle" class="rg-right hidden-print"></div>
+    <div id="main-window" class="hidden-print">
+        <div id="editor-component-container">
+            <div id="editor" class="editor-font" ui-ace="{theme: editorTheme,
+              mode: 'java', onLoad: aceLoaded, onBlur: aceBlurred, onChange: aceChanged}">
+                <div id="loading-screen" class="text-center">
+                    <h1>Loading</h1>
+                    <p>Please wait...</p>
+                    <i class="fa fa-circle-o-notch fa-4x fa-spin" style="color: black;"></i>
+                </div>
+            </div>
+            <div id="editor-toolbox" ng-show="editorReady" class="ng-hide"
+                 style="position: absolute; bottom: 20px; right: 20px; z-index: 1;">
+                <div id="save-button" data-toggle="tooltip" data-placement="left" title="Save As.."
+                     ng-click="tools.saveNewCode()" ng-show="outsideSource" data-animation="false">
+                    <i class="fa fa-2x fa-save"></i>
+                </div>
+                <div id="build-button" data-toggle="tooltip" data-placement="left" title="Build Everything"
+                     ng-click="tools.buildCode()" ng-disabled="building" data-animation="false">
+                    <i class="fa fa-2x fa-wrench"></i>
+                </div>
+            </div>
+        </div>
+        <div id="build-log-handle" class="rg-top"></div>
+        <div id="build-log-pane" perfect-scrollbar>
+            <div id="build-log-content" class="editor-font">Please start a build to see build output.</div>
+        </div>
+    </div>
+    <!-- New File Modal -->
+    <div class="modal fade hidden-print" id="new-file-modal" tabindex="-1" role="dialog"
+         aria-labelledby="newFileDialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true"><i class="fa fa-window-close-o" aria-hidden="true"></i></span></button>
+                    <h4 class="modal-title" id="new-file-modal-label">New File</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" name="newFileForm" novalidate>
+                        <div class="form-group" ng-class="{ 'has-error' : (newFileForm.fileName.$invalid && !newFileForm.fileName.$pristine) ||
+                                    (newFileForm.fileExt.$invalid && !newFileForm.fileExt.$pristine) }">
+                            <label for="new-file-name">File Name</label>
+                            <div class="input-group" >
+                                <input type="text" name="fileName" id="new-file-name" class="form-control"
+                                       ng-model="newFile.file.name" required ng-pattern="/^[A-Z_$]([\w\d]+)$/">
+                                <div class="input-group-addon">.</div>
+                                <input type="text" name="fileExt" class="form-control" ng-model="newFile.file.ext"
+                                       style="width: 5em;" required ng-pattern="/^(java|txt|md|properties|json)$/">
+                            </div>
+                            <div ng-messages="newFileForm.fileName.$error" ng-show="newFileForm.fileName.$touched">
+                                <p ng-message="required" class="help-block">A filename is required</p>
+                                <p ng-message="pattern" class="help-block">The filename is not valid. Use a upper camelcase format, like <code>MyAwesomeOpMode</code></p>
+                            </div>
+                            <div ng-messages="newFileForm.fileExt.$error" ng-show="newFileForm.fileExt.$touched" class="help-block">
+                                <p ng-message="required">A file extension is required.</p>
+                                <p ng-message="pattern">Valid file extensions are <code>java</code>, <code>txt</code>, <code>properties</code>, <code>json</code> and <code>md</code></p>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (newFileForm.fileLocation.$invalid && !newFileForm.fileLocation.$pristine) }">
+                            <label for="new-file-location">Location</label>
+                            <div class="input-group">
+                                <input type="text" name="fileLocation" id="new-file-location" class="form-control"
+                                       ng-model="newFile.file.location" required
+                                        ng-pattern="/^[^/][\w.\d/]+$/">
+                                <div class="input-group-addon"><a ng-click="newFile.newFolder()" title="New Folder" id="new-folder-button">
+                                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                                </a></div>
+                            </div>
+                            <div id="save-as-project-files-container" >
+                                <div id="save-as-file-tree-container" perfect-scrollbar style="position: relative; height: 150px">
+                                    <div id="save-as-file-tree"></div>
+                                </div>
+                            </div>
+                            <div ng-messages="newFileForm.fileLocation.$error" class="help-block" ng-show="newFileForm.fileLocation.$touched">
+                                <p ng-message="required">A file location is required</p>
+                                <p ng-message="pattern">
+                                    The file location is not valid. It should not have any spaces or special
+                                    characters and should not begin with a "/" character. Example: <code>org/myawesometeam/onbot</code>.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="new-file-template">Sample</label>
+                            <select id="new-file-template" class="form-control" ng-model="newFile.template">
+                                <option ng-repeat="template in newFile.templates" value="{{ template.value}}">
+                                    {{ template.name }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="new-file-opmode-options">
+                            <label class="radio-inline">
+                                <input type="radio" name="new-file-opmode-type" id="new-file-auto" value="auto"
+                                       ng-model="newFile.type">Autonomous
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="new-file-opmode-type" id="new-file-teleop" value="teleop"
+                                       ng-model="newFile.type">TeleOp
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="new-file-opmode-type" id="new-file-not-opmode" value="none"
+                                       ng-model="newFile.type">Not an OpMode
+                            </label>
+                            <label class="radio-inline"  ng-show="newFile.hasOwnProperty('template') && newFile.template !== 'none'">
+                                <input type="radio" name="new-file-opmode-type" id="new-file-no-change" value="nc"
+                                       ng-model="newFile.type">Preserve Sample</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-inline" id="new-file-opmode-disabled">
+                                <input type="checkbox" ng-model="newFile.disabled">Disable OpMode</label>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-inline" id="new-file-opmode-setup-hardware">
+                                <input type="checkbox" ng-model="newFile.setupHardware">Setup Code for Configured Hardware</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="new-file-okay" ng-disabled="newFileForm.$invalid">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade hidden-print" id="settings-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true"><i class="fa fa-window-close-o" aria-hidden="true"></i></span></button>
+                    <h4 class="modal-title" id="settings-modal-label">Settings</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" novalidate name="settingsForm">
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.theme.$invalid && !settingsForm.theme.$pristine) }">
+                            <label for="settings-theme-select">Theme</label>
+                            <select id="settings-theme-select" name="theme" class="form-control" ng-model="settings.theme" required>
+                                <option ng-repeat="theme in settings.themes" value="{{ theme }}">{{ theme }}</option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.defaultPackage.$invalid && !settingsForm.defaultPackage.$pristine) }">
+                            <label for="settings-default-package-input">Default Package</label>
+                            <input type="text" class="form-control" name="defaultPackage" ng-model="settings.defaultPackage" required
+                                   placeholder="org.firstinspires.ftc.teamcode" id="settings-default-package-input">
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.font.$invalid && !settingsForm.font.$pristine) }">
+                            <label for="settings-font-input">Font</label>
+                            <input type="text" class="form-control" name="font" ng-model="settings.font" required
+                                   placeholder="Source Code Pro" id="settings-font-input">
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.fontSize.$invalid && !settingsForm.fontSize.$pristine) }">
+                            <label for="settings-font-size-input">Font Size</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" id="settings-font-size-input" placeholder="16"
+                                       ng-model="settings.fontSize" required name="fontSize">
+                                <div class="input-group-addon">px</div>
+                            </div>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.whitespace.$invalid && !settingsForm.whitespace.$pristine) }">
+                            <label for="settings-whitespace-select">Indent Using</label>
+                            <select id="settings-whitespace-select" ng-model="settings.whitespace" class="form-control"
+                                    name="whitespace" required>
+                                <option value="space">Spaces</option>
+                                <option value="tab">Tabs</option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.tabSize.$invalid && !settingsForm.tabSize.$pristine) }">
+                            <label for="settings-space-tab-input">Tab Size</label>
+                            <input type="number" id="settings-space-tab-input" placeholder="4" required name="spacesToTab"
+                                   ng-model="settings.spacesToTab" class="form-control">
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.keybinding.$invalid && !settingsForm.keybinding.$pristine) }">
+                            <label for="settings-key-binding-select">Key Binding</label>
+                            <select id="settings-key-binding-select" required name="keybinding" ng-model="settings.keybinding" class="form-control">
+                                <option value="OnBotJava">OnBotJava</option>
+                                <option value="emacs">Emacs</option>
+                                <option value="vim">Vim</option>
+                            </select>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.autocompleteEnabled.$invalid && !settingsForm.autocompleteEnabled.$pristine) }">
+                            <input type="checkbox" id="settings-autocomplete-enabled" name="autocompleteEnabled" ng-model="settings.autocompleteEnabled">
+                            <label for="settings-autocomplete-enabled">Enable autocomplete</label>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.autocompleteForceEnable.$invalid && !settingsForm.autocompleteForceEnable.$pristine) }">
+                            <input type="checkbox" id="settings-autocomplete-force-enable" name="autocompleteForceEnabled" ng-model="settings.autocompleteForceEnabled">
+                            <label for="settings-autocomplete-force-enable">Always enable autocomplete</label>
+                        </div>
+                        <div ng-show="isAutocompleteDisabledForPerformance()">
+                            <p class="help-block">
+                                Autocomplete is currently disabled for performance reasons.<br />
+                                To prevent this check, enable "Always enable autocomplete" under Settings.
+                            </p>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.autoImportEnabled.$invalid && !settingsForm.autoImportEnabled.$pristine) }">
+                            <input type="checkbox" id="settings-autoimport-enabled" name="autoImportEnabled" ng-model="settings.autoImportEnabled" />
+                            <label for="settings-autoimport-enabled">Enable autoimport</label>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.printMargin.$invalid && !settingsForm.printMargin.$pristine) }">
+                            <input type="checkbox" id="settings-print-margin" name="printMargin" ng-model="settings.printMargin" />
+                            <label for="settings-print-margin">Show the print margin</label>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.invisibleChars.$invalid && !settingsForm.invisibleChars.$pristine) }">
+                            <input type="checkbox" id="settings-invisible-chars" name="invisibleChars" ng-model="settings.invisibleChars" />
+                            <label for="settings-invisible-chars">Show invisible characters</label>
+                        </div>
+                        <div class="form-group" ng-class="{ 'has-error' : (settingsForm.softWrap.$invalid && !settingsForm.softWrap.$pristine) }">
+                            <input type="checkbox" id="settings-soft-wrap" name="softWrap" ng-model="settings.softWrap" />
+                            <label for="settings-soft-wrap">Use soft wrap</label>
+                        </div>
+                        <a id="settings-advanced-toggle" class="collapsed" data-toggle="collapse" data-target="#settings-advanced-menu" role="button">Advanced Settings</a>
+                        <div id="settings-advanced-menu" class="collapse">
+                            <div class="input-group">
+                                <label for="settings-advanced-verify">Verify OnBotJava Setup</label>
+                                <button id="settings-advanced-verify" class="btn pull-right">Verify</button>
+                                <p class="help-block">
+                                    This attempts to ensure all directories that are supposed to exist for OnBotJava actually exist.
+                                </p>
+                            </div>
+                            <div class="input-group">
+                                <label for="settings-advanced-cache-clear">Clear OnBotJava Cache</label>
+                                <button id="settings-advanced-cache-clear" class="btn btn-warning pull-right">Clear Cache</button>
+                                <p class="help-block">
+                                    This clears the OnBotJava cache; it is exceeding rare that you will ever need to touch this button.
+                                </p>
+                            </div>
+                            <div class="input-group">
+                                <label for="settings-advanced-factory-reset">Completely Reset OnBotJava</label>
+                                <button id="settings-advanced-factory-reset" class="btn btn-danger pull-right">Reset</button>
+                                <p class="help-block">
+                                    This will <b>COMPLETELY AND UTTERLY delete all files</b> in OnBotJava, including any code you might have written.
+                                    Please <b>backup your code</b> before proceeding. If you have been brought to use this function because OnBotJava is
+                                    broken, <b>please try the Verify button or restarting your phone first</b>.
+                                </p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="pull-left btn btn-danger" id="settings-reset">Restore Settings to
+                        Defaults
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="settings-okay" ng-disabled="settingsForm.$invalid">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade hidden-print" id="save-as-modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-document">
+                <div class="modal-header">
+                    <h4 class="modal-title">Save As</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true"><i class="fa fa-window-close-o" aria-hidden="true"></i></span></button>
+                </div>
+                <div class="modal-content">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="new-file-name">File Name</label>
+                            <div class="input-group">
+                                <input type="text" id="save-as-name" class="form-control" ng-model="newFile.file.name">
+                                <div class="input-group-addon">.</div>
+                                <input type="text" class="form-control" ng-model="newFile.file.ext" style="width: 5em;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="save-as-location">Location</label>
+                            <input type="text" id="save-as-location" ng-model="newFile.file.location">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="save-as-okay">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="print-container" class="visible-print-inline editor-font">
+        <div class="ace_layer ace_text-layer"></div>
+    </div>
+</div>
+<div id="script-container">
+    <!-- Normalize the JS engine to not break older browsers -->
+    <script src="/java/js/es6-shim.js"></script>
+    <script src="/js/jquery-3.1.1.min.js"></script>
+    <script src="/java/js/jquery.position.js"></script>
+    <script src="/java/js/tether.min.js"></script>
+    <script src="/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="/java/js/angular.min.js"></script>
+    <script src="/java/js/angular-messages.min.js"></script>
+    <script src="/java/js/ace.js"></script>
+    <script src="/java/js/ext-spellcheck.js"></script>
+    <script src="/java/js/ext-whitespace.js"></script>
+    <script src="/java/js/ext-language_tools.js"></script>
+    <script src="/java/js/mode-markdown.js"></script>
+    <script src="/java/js/mode-text.js"></script>
+    <script src="/java/js/keybinding-emacs.js"></script>
+    <script src="/java/js/keybinding-vim.js"></script>
+    <script src="/java/js/ui-ace.js"></script>
+    <script src="/java/js/bootstrap-tree.js"></script>
+    <script src="/java/js/perfect-scrollbar.jquery.js"></script>
+    <script src="/java/js/jquery.contextmenu.js"></script>
+    <script src="/java/js/polyfills.js"></script>
+    <script src="/java/js/flowtype.js"></script>
+    <!--suppress HtmlUnknownTarget -->
+    <script type="text/javascript" src="/js/rc_config.js"></script>
+    <script type="text/javascript" src="/js/util.js"></script>
+    <script src="/java/js/toe.min.js"></script>
+    <!--suppress HtmlUnknownTarget -->
+    <script src="/java/js/settings.js"></script>
+    <script src="/java/js/ftclangtools.js"></script>
+    <script src="/java/js/main.js"></script>
+    <script src="/java/js/mode-java.js"></script>
+    <script src="/java/js/app.js"></script>
+</div>
+</body>
+</html>

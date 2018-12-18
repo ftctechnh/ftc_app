@@ -1,0 +1,14 @@
+    <block type="vuforiaRoverRuckus_initialize_withWebcam">
+      <value name="CAMERA_NAME"><shadow type="navigation_webcamName"></shadow></value>
+      <value name="WEBCAM_CALIBRATION_FILE"><shadow type="text"><field name="TEXT"></field></shadow></value>
+      <value name="USE_EXTENDED_TRACKING"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+      <value name="ENABLE_CAMERA_MONITORING"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+      <value name="CAMERA_MONITOR_FEEDBACK"><shadow type="navigation_typedEnum_cameraMonitorFeedback"><field name="CAMERA_MONITOR_FEEDBACK">AXES</field></shadow></value>
+      <value name="CAMERA_LOCATION_ON_ROBOT_DX"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="CAMERA_LOCATION_ON_ROBOT_DY"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="CAMERA_LOCATION_ON_ROBOT_DZ"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="CAMERA_LOCATION_ON_ROBOT_X_ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="CAMERA_LOCATION_ON_ROBOT_Y_ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="CAMERA_LOCATION_ON_ROBOT_Z_ANGLE"><shadow type="math_number"><field name="NUM">0</field></shadow></value>
+      <value name="USE_COMPETITION_FIELD_TARGET_LOCATIONS"><shadow type="logic_boolean"><field name="BOOL">TRUE</field></shadow></value>
+    </block>

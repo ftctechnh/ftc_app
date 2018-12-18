@@ -1,0 +1,662 @@
+<xml xmlns="http://www.w3.org/1999/xhtml">
+<variables>
+<variable type="" id="Kx;-bsrNjMPTZ?Gh/@;H">pattern</variable>
+<variable type="" id="_A@%7_?t|;}7^yA)fZvM">autoDisplay</variable>
+<variable type="" id="TX-ie,dW!;Uz#KaBSYkq">gamepadTimer</variable>
+<variable type="" id="=Bru.PJ*T`.u=I{Pid,r">displayTimer</variable>
+</variables>
+<block type="procedures_defnoreturn" id="Ld(N:t}-_)RB?q]XK7je" x="421" y="-335">
+<field name="NAME">doTelemetry</field>
+<comment pinned="false" h="80" w="239">This function sends telemetry info to Driver Station.</comment>
+<statement name="STACK">
+<block type="telemetry_addTextData_All" id="{it?h_H/]S{-ol#8/Gel">
+<value name="KEY">
+<shadow type="text" id="KS18p:X=$lIqLaw`p^Dw">
+<field name="TEXT">&gt;&gt;</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="RF/;KiY=PRKj1,851BdS">
+<field name="TEXT">Press A for Manual Mode, Press B for Auto Mode.</field>
+</shadow>
+</value>
+<next>
+<block type="telemetry_addTextData_All" id=",uok$)dE1l,DT#*B@Su=">
+<value name="KEY">
+<shadow type="text" id="/Z~D0CCcmZ-]NLt~k?VN">
+<field name="TEXT">Auto Display Mode</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="mYMt*?JK:xwcP/)L)2)G">
+<field name="TEXT">text</field>
+</shadow>
+<block type="variables_get" id="C%g8`G%jG0]6v+~jvcQa">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+</block>
+</value>
+<next>
+<block type="telemetry_addTextData_All" id="HY#yj-UIzT$UCytsP`fF">
+<value name="KEY">
+<shadow type="text" id="/pcqw,bdaje[5aw6U(n7">
+<field name="TEXT">Pattern</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="mYMt*?JK:xwcP/)L)2)G">
+<field name="TEXT">text</field>
+</shadow>
+<block type="revBlinkinLedDriver_blinkinPattern_toText" id="n|L[}OjH7v3ZmDFbux+(">
+<value name="BLINKIN_PATTERN">
+<block type="variables_get" id="slq+cT|[y:vr(0r,j.]@">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="controls_if" id=":FA~CJN5#bSdtw[d^mX+">
+<value name="IF0">
+<block type="logic_negate" id="z{/gL[h3=cM69Nvt;(.(">
+<value name="BOOL">
+<block type="variables_get" id="O$+7_uZJdN|cWX[%]_Ps">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="telemetry_addTextData_All" id="J;]ka5?Y^s*iTBNtwNe,">
+<value name="KEY">
+<shadow type="text" id="9vM/MJ{71Me~Iw30nRCa">
+<field name="TEXT">   &gt;&gt;</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="Crn@]CXsd*YYxM}#@J^:">
+<field name="TEXT">Left Bumper = Previous, Right Bumper = Next</field>
+</shadow>
+</value>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+<block type="procedures_defnoreturn" id="WtpyD@tEu+EoY=P9iY,D" deletable="false" editable="false" x="-476" y="-66">
+<field name="NAME">runOpMode</field>
+<comment pinned="false" h="32" w="532">This function is executed when this Op Mode is selected from the Driver Station.</comment>
+<statement name="STACK">
+<block type="comment" id="Lc#BFtj*NTB48YL;eBl.">
+<field name="COMMENT">This op mode shows how to use the Blinkin LED Controller.</field>
+<next>
+<block type="comment" id="uICR?i}RNr=wyhoY;u2)">
+<field name="COMMENT">Initialize the system.</field>
+<next>
+<block type="procedures_callnoreturn" id="2O+;LMUSNN4bDGCES|Z4">
+<mutation name="initializeSystem">
+</mutation>
+<next>
+<block type="comment" id=";Uuu+)?+@#/C)`l-meWY">
+<field name="COMMENT">Wait for user to push start button.</field>
+<next>
+<block type="linearOpMode_waitForStart" id=":`$wN_ci`O;o6P0~.(+g">
+<next>
+<block type="comment" id="d+ECDojO_t6T:!``#COF">
+<field name="COMMENT">Check to make sure op mode is still active.</field>
+<next>
+<block type="controls_if" id="}Q?5mbxSO8Di;i!__6[y">
+<value name="IF0">
+<block type="linearOpMode_opModeIsActive" id=")o%YFX/#9kvv^sgXr4~5">
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="n^P/jv?T#14DDi]|.pC+">
+<field name="COMMENT">Start timer to lock out repeated button pushes.</field>
+<next>
+<block type="variables_set" id="(_])qQGly`?tpZ`oJY-X">
+<field name="VAR" id="TX-ie,dW!;Uz#KaBSYkq" variabletype="">gamepadTimer</field>
+<value name="VALUE">
+<block type="elapsedTime2_create_withResolution" id="Ms+$|wNDH$cVw}[:|9y_">
+<value name="RESOLUTION">
+<shadow type="elapsedTime2_typedEnum_resolution" id=",z*P]E#~y[36vo:u([LA">
+<field name="RESOLUTION">MILLISECONDS</field>
+</shadow>
+</value>
+</block>
+</value>
+<next>
+<block type="comment" id="282cnSEvWA.]fp~bRs!$">
+<field name="COMMENT">Start timer to auto cycle through patterns</field>
+<next>
+<block type="variables_set" id="gJJ#@@wG|Iu5r41:G{Nf">
+<field name="VAR" id="=Bru.PJ*T`.u=I{Pid,r" variabletype="">displayTimer</field>
+<value name="VALUE">
+<block type="elapsedTime2_create_withResolution" id="}olNC1B%F(G/-f6pGA/6">
+<value name="RESOLUTION">
+<shadow type="elapsedTime2_typedEnum_resolution" id="VH!TQV.|{bGaHki-v3ay">
+<field name="RESOLUTION">SECONDS</field>
+</shadow>
+</value>
+</block>
+</value>
+<next>
+<block type="comment" id="AL8[=;*GT}#h]S#pUKOe">
+<field name="COMMENT">Loop while the op mode is still active.</field>
+<next>
+<block type="controls_whileUntil" id="^0Kagy/e+Ea{rbZPv2G6">
+<field name="MODE">WHILE</field>
+<value name="BOOL">
+<block type="linearOpMode_opModeIsActive" id="e)cr{!2VIET83s,JWC.=">
+</block>
+</value>
+<statement name="DO">
+<block type="comment" id="Jh/;L$n@JuX8AQJDFCul">
+<field name="COMMENT">Handle gamepad input.</field>
+<next>
+<block type="procedures_callnoreturn" id="N5kKSeiNC1+pTvp=7U{@">
+<mutation name="handleGamepad">
+</mutation>
+<next>
+<block type="comment" id="U%P_79PouAVZ,47|A[bF">
+<field name="COMMENT">Check to see if in auto display mode.</field>
+<next>
+<block type="controls_if" id="[sdZLWB]ap!Y?~qJ-(gM">
+<value name="IF0">
+<block type="variables_get" id="3)CxhXo^CWKV!!z1#l{.">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="xgtm)8UgL4l+$u2NC({U">
+<field name="COMMENT">Is it time to toggle to next pattern?</field>
+<next>
+<block type="procedures_callnoreturn" id="Ua1^gT{*b_)tRbH1*y4,">
+<mutation name="doAutoDisplay">
+</mutation>
+</block>
+</next>
+</block>
+</statement>
+<next>
+<block type="comment" id="ieV~QtasSS@Gls$vZ4[o">
+<field name="COMMENT">Display telemetry info.</field>
+<next>
+<block type="procedures_callnoreturn" id="FQ@LE_;zv1q~.~pI*JV[">
+<mutation name="doTelemetry">
+</mutation>
+<next>
+<block type="telemetry_update" id="P{2o+lx/01bYV0FsZsmc">
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+<block type="procedures_defnoreturn" id="-Wehr?^V+lU0VPol!CEo" x="425" y="103">
+<field name="NAME">initializeSystem</field>
+<comment pinned="false" h="84" w="331">This function initializes the Blinkin pattern and prompts the user to push the start button.</comment>
+<statement name="STACK">
+<block type="comment" id="~-iOh_IA^:wXPWDad#uU">
+<field name="COMMENT">Set the initial blink pattern of the LEDs.</field>
+<next>
+<block type="variables_set" id="l-l8Uan=%pvoj4i#S(Jf">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+<comment pinned="false" h="64" w="353">Set a variable called "pattern" to be a BlinkinPattern.</comment>
+<value name="VALUE">
+<block type="revBlinkinLedDriver_typedEnum_blinkinPatternByCategoryPalette" id="I{a2F7Aju]2=J#BsVK3k">
+<field name="CATEGORY">RAINBOW</field>
+<field name="PALETTE">RAINBOW_PALETTE</field>
+</block>
+</value>
+<next>
+<block type="revBlinkinLedDriver_setProperty_BlinkinPattern" id=";4|/WV+UMmf$|(*5q,1r">
+<field name="IDENTIFIER">blinkinAsRevBlinkinLedDriver</field>
+<field name="PROP">Pattern</field>
+<value name="VALUE">
+<block type="variables_get" id="6b7t,.O0vNTAGPj;K+r$">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+<next>
+<block type="comment" id="8bniZ|fL|zl|0]N)_+9t">
+<field name="COMMENT">If autoDisplay is true, then automatically cycle through blink patterns.</field>
+<next>
+<block type="variables_set" id="glH8Rku~/sZ^a*`;PbI(">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+<comment pinned="false" h="69" w="381">If autoDisplay is true, then the op mode should cycle automatically through the blink patterns.</comment>
+<value name="VALUE">
+<block type="logic_boolean" id="@M9~@55v6^u(JcDtPf+x">
+<field name="BOOL">TRUE</field>
+</block>
+</value>
+<next>
+<block type="comment" id="RZ^FIgj^89#gR!|NzM%Q">
+<field name="COMMENT">Send telemetry data and prompt user to push start</field>
+<next>
+<block type="telemetry_addTextData_All" id=")f5OAb)=HaP|X-x!U6?u">
+<value name="KEY">
+<shadow type="text" id=".2KW$zTXXh*bsLmZ1cFQ">
+<field name="TEXT">&gt;&gt;</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="mYMt*?JK:xwcP/)L)2)G">
+<field name="TEXT">Push start to run op mode...</field>
+</shadow>
+</value>
+<next>
+<block type="telemetry_addTextData_All" id="%YpchQvGgm5!nC!k~~p@">
+<value name="KEY">
+<shadow type="text" id="6ov5EpL`-9;P+9?)LXFh">
+<field name="TEXT">Auto Display Mode</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="mYMt*?JK:xwcP/)L)2)G">
+<field name="TEXT">text</field>
+</shadow>
+<block type="variables_get" id="efrf-c^XO%_gD2(!U8#g">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+</block>
+</value>
+<next>
+<block type="telemetry_addTextData_All" id="+gVte`.BsVS^73Vn+h;F">
+<value name="KEY">
+<shadow type="text" id="6q%caZViMQ9YSl1)IAs:">
+<field name="TEXT">Pattern</field>
+</shadow>
+</value>
+<value name="TEXT">
+<shadow type="text" id="mYMt*?JK:xwcP/)L)2)G">
+<field name="TEXT">text</field>
+</shadow>
+<block type="revBlinkinLedDriver_blinkinPattern_toText" id="_`oL^C+v269DgoM,gt_3">
+<value name="BLINKIN_PATTERN">
+<block type="variables_get" id="yx73cWpeb@(Ks4qlo]SM">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="telemetry_update" id="HZci0a3lmk}oEM^11{*[">
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+<block type="procedures_defnoreturn" id=".us7-@^,W@u1E3X*IJUq" x="428" y="624">
+<field name="NAME">handleGamepad</field>
+<comment pinned="false" h="105" w="384">This function will check to see if the user wants to toggle between auto display mode and manual mode.  if it's in manual mode, the function will increment or decrement the blink pattern based on the button presses.</comment>
+<statement name="STACK">
+<block type="comment" id="5A3_K-5KD+ql)w8~eJl#">
+<field name="COMMENT">Don't handle gamepad unless timer exceeds limit.</field>
+<next>
+<block type="controls_if" id="tk.eSLN.B7^@TQnXtPG~">
+<value name="IF0">
+<block type="logic_compare" id="q+cv_~V;fyIV05V1_dns">
+<field name="OP">GT</field>
+<value name="A">
+<block type="elapsedTime2_getProperty_Number" id="p%m!kryY4I$r`9Bk}y7V">
+<field name="PROP">Milliseconds</field>
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="6K8,_rHpDZ$cTkaxY50L">
+<field name="VAR" id="TX-ie,dW!;Uz#KaBSYkq" variabletype="">gamepadTimer</field>
+</block>
+</value>
+</block>
+</value>
+<value name="B">
+<block type="math_number" id="ndoPcI(3T#kq;-|]Y(ep">
+<field name="NUM">500</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="controls_if" id="vt`1]6Tk0son+8841)v-">
+<mutation elseif="2">
+</mutation>
+<value name="IF0">
+<block type="gamepad_getProperty_Boolean" id="VA^r5-Z7`SPk!xto5a]F">
+<field name="IDENTIFIER">gamepad1</field>
+<field name="PROP">A</field>
+<data>{"IDENTIFIER":"gamepad1"}</data>
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="x@r*rr$Tp%,wX~|v]+lO">
+<field name="COMMENT">switch to manual mode.</field>
+<next>
+<block type="variables_set" id="o0^MF;6rB-umko^]]Y#C">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+<value name="VALUE">
+<block type="logic_boolean" id="x)Zaf^T.KDk$*{p/g|QG">
+<field name="BOOL">FALSE</field>
+</block>
+</value>
+<next>
+<block type="elapsedTime2_reset" id="y8oKs|mA_Tm^+)U=Xme;">
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="62)]hi_om`A8Nl/ylDr`">
+<field name="VAR" id="TX-ie,dW!;Uz#KaBSYkq" variabletype="">gamepadTimer</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+<value name="IF1">
+<block type="gamepad_getProperty_Boolean" id="=OrgWUaNlxnynm6E+Y*w">
+<field name="IDENTIFIER">gamepad1</field>
+<field name="PROP">B</field>
+<data>{"IDENTIFIER":"gamepad1"}</data>
+</block>
+</value>
+<statement name="DO1">
+<block type="controls_if" id="ip+u[an^:lHx(PfV!2^?">
+<value name="IF0">
+<block type="logic_negate" id="9vZ%W=0qty?(F3];O^g.">
+<value name="BOOL">
+<block type="variables_get" id="rksWn|f}+Cvh:W@6KOYp">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="CVoX`-oZ$1l_n)sGf{iu">
+<field name="COMMENT">Reset display timer.</field>
+<next>
+<block type="elapsedTime2_reset" id=",-)d!)o7X7uilyi4YbZx">
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="/Nx4%)s.`d[)%=)Kf+nb">
+<field name="VAR" id="=Bru.PJ*T`.u=I{Pid,r" variabletype="">displayTimer</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</statement>
+<next>
+<block type="comment" id="u@L1sl.Y_;nOv]IOaLnI">
+<field name="COMMENT">switch to auto display mode.</field>
+<next>
+<block type="variables_set" id=";6mBGig`GKVH8LHTt@GP">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+<value name="VALUE">
+<block type="logic_boolean" id="j1fcSQ[`EkGt5~z(Z^^g">
+<field name="BOOL">TRUE</field>
+</block>
+</value>
+<next>
+<block type="elapsedTime2_reset" id="=V*15pm`|llo5]?@%zq]">
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="`/BDN#PS`lv[cu+lB63y">
+<field name="VAR" id="TX-ie,dW!;Uz#KaBSYkq" variabletype="">gamepadTimer</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+<value name="IF2">
+<block type="logic_negate" id="b}.p~X6zm%Bq4Ye09C/g">
+<value name="BOOL">
+<block type="variables_get" id="miUQI?ep+~_~(ts5R~B:">
+<field name="VAR" id="_A@%7_?t|;}7^yA)fZvM" variabletype="">autoDisplay</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO2">
+<block type="comment" id="1(#sjl2P65pY@2@4t;QH">
+<field name="COMMENT">manual mode</field>
+<next>
+<block type="controls_if" id="fV^:0J%@l#GH{sK2{Dm#">
+<mutation elseif="1">
+</mutation>
+<value name="IF0">
+<block type="gamepad_getProperty_Boolean" id="kkg_qAQ~W?P7mmmvh:C.">
+<field name="IDENTIFIER">gamepad1</field>
+<field name="PROP">LeftBumper</field>
+<data>{"IDENTIFIER":"gamepad1"}</data>
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="Cncu/WA=8nttWvLlZUX5">
+<field name="COMMENT">change to previous pattern.</field>
+<next>
+<block type="variables_set" id="*m7o409h`gY1Ur^F`Z2I">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+<value name="VALUE">
+<block type="revBlinkinLedDriver_blinkinPattern_previous" id="uzuM2%Zi;ru#{/m7We;!">
+<value name="BLINKIN_PATTERN">
+<block type="variables_get" id="[O.i-#@~Bx10?;k,6nbJ">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="revBlinkinLedDriver_setProperty_BlinkinPattern" id="75E@YsddAw$=T-xwv/Wo">
+<field name="IDENTIFIER">blinkinAsRevBlinkinLedDriver</field>
+<field name="PROP">Pattern</field>
+<value name="VALUE">
+<block type="variables_get" id="k=L[IrIhdp8l2-GpSXJF">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+<next>
+<block type="elapsedTime2_reset" id="r#f5lP(:mP0j`!gB.QMJ">
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="[:a[WnQ9{X(~Np6]4}L(">
+<field name="VAR" id="TX-ie,dW!;Uz#KaBSYkq" variabletype="">gamepadTimer</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+<value name="IF1">
+<block type="gamepad_getProperty_Boolean" id="c|ZO{=Tsl4F2U25U8d5+">
+<field name="IDENTIFIER">gamepad1</field>
+<field name="PROP">RightBumper</field>
+<data>{"IDENTIFIER":"gamepad1"}</data>
+</block>
+</value>
+<statement name="DO1">
+<block type="comment" id="?YXkfOY%Djda-ZSy%M$,">
+<field name="COMMENT">change to next pattern.</field>
+<next>
+<block type="variables_set" id="LXl:bj@@j#a?L{Gie;=X">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+<value name="VALUE">
+<block type="revBlinkinLedDriver_blinkinPattern_next" id="X}!CH@Jv^lzeJMn:#?SF">
+<value name="BLINKIN_PATTERN">
+<block type="variables_get" id=":8m(N|CC?Ox4eJ!0PO1f">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="revBlinkinLedDriver_setProperty_BlinkinPattern" id="ZzbYfh,WK=2a|q!C=|$A">
+<field name="IDENTIFIER">blinkinAsRevBlinkinLedDriver</field>
+<field name="PROP">Pattern</field>
+<value name="VALUE">
+<block type="variables_get" id="b6@f;).ukVj6=OFENT~w">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+<next>
+<block type="elapsedTime2_reset" id="]#Zf]W=]34)G#vKEf[d9">
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="gkY=*8u}QXUt=g{1%ww[">
+<field name="VAR" id="TX-ie,dW!;Uz#KaBSYkq" variabletype="">gamepadTimer</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</statement>
+</block>
+<block type="procedures_defnoreturn" id="%,/=JE!=CrtG_CCGw^Zk" x="426" y="1647">
+<field name="NAME">doAutoDisplay</field>
+<comment pinned="false" h="68" w="294">This function will cycle the pattern if the display timer has exceeded its limit.</comment>
+<statement name="STACK">
+<block type="comment" id="SF{Y%c.5BGu#A2G,}*`m">
+<field name="COMMENT">does display timer exceed limit?</field>
+<next>
+<block type="controls_if" id="jP1Vk:-VJAF)4vpDk~$U">
+<value name="IF0">
+<block type="logic_compare" id="?c@mF?X[A1=O,~|iq3~X">
+<field name="OP">GT</field>
+<value name="A">
+<block type="elapsedTime2_getProperty_Number" id="H^fQ^d9NV~PaDZl7h?`j">
+<field name="PROP">Seconds</field>
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="3-LMNQ:7x@ZMNYjezLJ]">
+<field name="VAR" id="=Bru.PJ*T`.u=I{Pid,r" variabletype="">displayTimer</field>
+</block>
+</value>
+</block>
+</value>
+<value name="B">
+<block type="math_number" id="v)RZ*OJDFX0G{Zh)H*UF">
+<field name="NUM">5</field>
+</block>
+</value>
+</block>
+</value>
+<statement name="DO0">
+<block type="comment" id="I]Fm5qX:@YtIgHnW{o4b">
+<field name="COMMENT">move to the next pattern</field>
+<next>
+<block type="variables_set" id="ic;OS~/pBmK~A2kus0g{">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+<value name="VALUE">
+<block type="revBlinkinLedDriver_blinkinPattern_next" id="j+d4[]YWXlZCe)c(i3wy">
+<value name="BLINKIN_PATTERN">
+<block type="variables_get" id="(MPXW{bQvV5uS9n5yxfQ">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+</block>
+</value>
+<next>
+<block type="revBlinkinLedDriver_setProperty_BlinkinPattern" id="Pnhosf=i,c.9H`|K:bK;">
+<field name="IDENTIFIER">blinkinAsRevBlinkinLedDriver</field>
+<field name="PROP">Pattern</field>
+<value name="VALUE">
+<block type="variables_get" id="^_^DokO8=,w:mSsV|Ip/">
+<field name="VAR" id="Kx;-bsrNjMPTZ?Gh/@;H" variabletype="">pattern</field>
+</block>
+</value>
+<next>
+<block type="elapsedTime2_reset" id="P69K8*]C8^2/ldFTQ5=9">
+<value name="ELAPSED_TIME">
+<block type="variables_get" id="[(2UOi/Pb$,C!u8mgE@X">
+<field name="VAR" id="=Bru.PJ*T`.u=I{Pid,r" variabletype="">displayTimer</field>
+</block>
+</value>
+</block>
+</next>
+</block>
+</next>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</next>
+</block>
+</statement>
+</block>
+</xml>
+<?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
+<Extra>
+<OpModeMeta flavor="TELEOP" group="" />
+<Enabled value="true" />
+</Extra>

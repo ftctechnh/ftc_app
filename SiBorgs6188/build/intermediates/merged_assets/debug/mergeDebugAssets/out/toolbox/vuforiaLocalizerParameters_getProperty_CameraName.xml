@@ -1,0 +1,4 @@
+    <block type="vuforiaLocalizerParameters_getProperty_CameraName">
+      <field name="PROP">CameraName</field>
+      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
+    </block>
