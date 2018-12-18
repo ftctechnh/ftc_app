@@ -1,34 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
-    abi="armeabi-v7a,armeabi"
+    abi="armeabi-v7a"
     api-level="25"
     build-mode="FULL"
     density="xhdpi"
     format="10"
     plugin-version="3.2.1"
-    timestamp="1544831844819"
+    timestamp="1545109804116"
     token="-7031193878525283231"
     verifier="FULL_BUILD_REQUESTED" >
 
     <task
         name="javac"
-        duration="319" />
+        duration="0" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="71" />
+        duration="4468" />
     <task
         name="verifier"
-        duration="76" />
+        duration="0" />
 
-    <artifact
-        location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_4.apk"
-        type="SPLIT" />
     <artifact
         location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_8.apk"
         type="SPLIT" />
+    <artifact
+        location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\instant-run-apk\debug\SiBorgs6188-debug.apk"
+        type="SPLIT_MAIN" />
     <artifact
         location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_7.apk"
         type="SPLIT" />
@@ -37,6 +37,9 @@
         type="SPLIT" />
     <artifact
         location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\dep\dependencies.apk"
+        type="SPLIT" />
+    <artifact
+        location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_4.apk"
         type="SPLIT" />
     <artifact
         location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_3.apk"
@@ -56,20 +59,17 @@
     <artifact
         location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_9.apk"
         type="SPLIT" />
-    <artifact
-        location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\instant-run-apk\debug\SiBorgs6188-debug.apk"
-        type="SPLIT_MAIN" />
 
     <build
         build-mode="FULL"
-        timestamp="1544831844819"
+        timestamp="1545109804116"
         verifier="FULL_BUILD_REQUESTED" >
-        <artifact
-            location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_4.apk"
-            type="SPLIT" />
         <artifact
             location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_8.apk"
             type="SPLIT" />
+        <artifact
+            location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\instant-run-apk\debug\SiBorgs6188-debug.apk"
+            type="SPLIT_MAIN" />
         <artifact
             location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_7.apk"
             type="SPLIT" />
@@ -78,6 +78,9 @@
             type="SPLIT" />
         <artifact
             location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\dep\dependencies.apk"
+            type="SPLIT" />
+        <artifact
+            location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_4.apk"
             type="SPLIT" />
         <artifact
             location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_3.apk"
@@ -97,9 +100,6 @@
         <artifact
             location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\split-apk\debug\slices\slice_9.apk"
             type="SPLIT" />
-        <artifact
-            location="C:\FTC\ftc_app\SiBorgs6188\build\intermediates\instant-run-apk\debug\SiBorgs6188-debug.apk"
-            type="SPLIT_MAIN" />
     </build>
 
 </instant-run>
