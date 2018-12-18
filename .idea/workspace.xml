@@ -10,54 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="a2f1d9b7-23e5-494d-8bec-5f6c2227614e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/javaCompile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/javaCompile/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/javaCompile/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.6/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/outputFiles.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" beforeDir="false" afterPath="$PROJECT_DIR$/FtcRobotController/FtcRobotController.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/SiBorgs6188.iml" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/SiBorgs6188.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/build-info/debug/build-info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/build-info/debug/build-info.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental-verifier/debug/org/firstinspires/ftc/teamcode/TeleOpComp/TeleOpDisaster.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_dep/debug/package_dependencies/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_dep/debug/package_dependencies/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_0/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_0/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_1/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_1/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_2/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_2/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_3/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_3/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_4/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_4/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_5/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_5/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_6/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_6/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_7/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_7/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_8/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_8/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_9/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/ir_slices/debug/package_slice_9/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/packageDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/packageDebug/tmp/debug/file-input-save-data.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/packageDebug/tmp/debug/file-input-save-data.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/packageInstantRunResourcesDebug/tmp/debug/dex-renamer-state.txt" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/incremental/packageInstantRunResourcesDebug/tmp/debug/dex-renamer-state.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/instant-run-apk/debug/SiBorgs6188-debug.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/instant-run-apk/debug/SiBorgs6188-debug.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/instant-run-resources/resources-debug.ir.ap_" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/instant-run-resources/resources-debug.ir.ap_" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/javac/debug/compileDebugJavaWithJavac/classes/org/firstinspires/ftc/teamcode/TeleOpComp/TeleOpDisaster.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_0.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_0.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_1.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_1.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_2.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_2.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_4.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_4.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_7.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_7.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_8.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_8.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_9.apk" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/split-apk/debug/slices/slice_9.apk" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexBuilder/debug/137/org/firstinspires/ftc/teamcode/TeleOpComp/TeleOpDisaster.dex" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexMerger/debug/1/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexMerger/debug/1/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexMerger/debug/7/classes.dex" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/dexMerger/debug/7/classes.dex" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/instantRun/debug/0/org/firstinspires/ftc/teamcode/TeleOpComp/TeleOpDisaster.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/instantRun/debug/__content__.json" beforeDir="false" afterPath="$PROJECT_DIR$/SiBorgs6188/build/intermediates/transforms/instantRun/debug/__content__.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/Old Code/ConceptVuforiaNavRoverRuckus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/Old Code/FancyAuto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/Old Code/PushbotHardwareDisaster.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/Old Code/TodaysAuto.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/Old Code/VuforiaNavPts.java" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -83,7 +36,7 @@
       <file leaf-file-name="CraterSideSampleAuto.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="10897">
+            <state relative-caret-position="11747">
               <caret line="691" column="59" selection-start-line="691" selection-start-column="59" selection-end-line="691" selection-end-column="59" />
             </state>
           </provider>
@@ -3579,6 +3532,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView">
         <subPane>
           <expand>
@@ -3590,9 +3545,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="ProjectPane" />
       <pane id="Scope" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -3778,7 +3731,7 @@
       <window_info id="Image Layers" order="2" />
       <window_info id="Build Variants" order="2" side_tool="true" />
       <window_info anchor="right" id="Capture Analysis" order="3" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="7" sideWeight="0.5008" side_tool="true" visible="true" weight="0.32897604" />
+      <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.5008" side_tool="true" visible="true" weight="0.32897604" />
       <window_info anchor="bottom" id="Run" order="2" sideWeight="0.4992" weight="0.32897604" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="7" sideWeight="0.49973333" weight="0.32897604" />
@@ -3786,7 +3739,7 @@
       <window_info id="Captures" order="2" weight="0.25" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2496" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2496" />
       <window_info anchor="bottom" id="Build" order="7" sideWeight="0.4992" weight="0.32897604" />
       <window_info anchor="right" id="Android WiFi ADB" order="3" weight="0.3296" />
       <window_info anchor="right" id="Gradle" order="3" />
@@ -3809,6 +3762,40 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11747">
+          <caret line="691" column="59" selection-start-line="691" selection-start-column="59" selection-end-line="691" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/BasicChasieTeleop.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="64" column="61" selection-start-line="64" selection-start-column="61" selection-end-line="64" selection-end-column="61" />
+          <folding>
+            <element signature="docComment;class#BasicChasieTeleop#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="11747">
+          <caret line="691" column="59" selection-start-line="691" selection-start-column="59" selection-end-line="691" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/TeleOpComp/BasicChasieTeleop.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1088">
+          <caret line="64" column="61" selection-start-line="64" selection-start-column="61" selection-end-line="64" selection-end-column="61" />
+          <folding>
+            <element signature="docComment;class#BasicChasieTeleop#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="11747">
@@ -3883,7 +3870,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/SiBorgs6188/src/main/java/org/firstinspires/ftc/teamcode/AutonomousComp/CraterSideSampleAuto.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="10897">
+        <state relative-caret-position="11747">
           <caret line="691" column="59" selection-start-line="691" selection-start-column="59" selection-end-line="691" selection-end-column="59" />
         </state>
       </provider>

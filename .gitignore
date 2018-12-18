@@ -26,3 +26,6 @@ build/
 
 *ASUS_PC_01*
 
+#Intelij
+**/.idea/workspace.xml
+**/.idea/tasks.xml
