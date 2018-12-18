@@ -7,9 +7,8 @@ public class TurnSegment extends Segment {
     private final double error;
     private final int period;
 
-
-    public TurnSegment(double angle, double speed, double error, int period) {
-        super(SegmentType.TURN);
+    public TurnSegment(String name, double angle, double speed, double error, int period) {
+        super(name, SegmentType.TURN);
         this.angle = angle;
         this.speed = speed;
         this.error = error;

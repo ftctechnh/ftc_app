@@ -10,17 +10,15 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor
 
 public class Intake {
 
-    private SlewDcMotor intakeMotor;
+    private DcMotorSimple intakeMotor;
 
     private Servo liftServo;
 
     public Intake(HardwareMap hardwareMap) {
-        intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
+        intakeMotor = hardwareMap.get(DcMotorSimple.class, "intake");
 
-        intakeMotor.setSlewSpeed(2);
-        intakeMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        intakeMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
         intakeMotor.setPower(0);
 
         liftServo = hardwareMap.servo.get("intake_lift");
@@ -37,6 +35,6 @@ public class Intake {
     }
 
     public void stop() {
-        intakeMotor.stop();
+
     }
 }

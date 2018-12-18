@@ -35,9 +35,9 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
         ////////Intake////////
         addEventHandler("2_a_down", robot.finishIntakingCallable());
 
-        addEventHandler("2_x_down", robot.beginIntakingCallable());
+        addEventHandler("2_b_down", robot.beginIntakingCallable());
 
-        addEventHandler("2_b_down", robot.reverseIntakeCallable());
+        addEventHandler("2_x_down", robot.reverseIntakeCallable());
 
         addEventHandler("2_dpr_down", robot.liftIntakeCallable());
 

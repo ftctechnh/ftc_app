@@ -21,7 +21,7 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
 
         ////////Drive////////
         addEventHandler("1_lsy_change", () -> {
-            robot.setDriveY(gamepad1.left_stick_y);
+            robot.setDriveY(-gamepad1.left_stick_y);
             return true;
         });
 

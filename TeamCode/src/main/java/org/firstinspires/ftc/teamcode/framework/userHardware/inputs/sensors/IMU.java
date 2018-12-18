@@ -8,6 +8,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 
 public class IMU {
 
@@ -21,10 +22,11 @@ public class IMU {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-        parameters.mode = BNO055IMU.SensorMode.GYRONLY;
-
+        parameters.mode = BNO055IMU.SensorMode.IMU;
 
         imu = hwMap.get(BNO055IMU.class, "imu");
+
+        AbstractOpMode.telemetry.addData("IMU initializing: "+imu.toString());
 
         imu.initialize(parameters);
 
@@ -32,6 +34,8 @@ public class IMU {
         GyroTimeOut.reset();
 
         while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) ;
+        //while (!imu.isGyroCalibrated() && AbstractOpMode.isOpModeActive());
+        AbstractOpMode.telemetry.addData("IMU initialized");
     }
 
     public double getHeading() {

@@ -23,7 +23,6 @@ public class BoogieAuton extends AbstractAuton {
 
     @Override
     public void Init() {
-
         robot = new Robot();
         intakeMotor = new SlewDcMotor(hardwareMap.dcMotor.get("intake"));
         intakeMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

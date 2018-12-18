@@ -6,6 +6,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
+import org.firstinspires.ftc.teamcode.framework.userHardware.paths.DriveSegment;
+import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Path;
+import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Segment;
+import org.firstinspires.ftc.teamcode.framework.userHardware.paths.TurnSegment;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import java.text.DecimalFormat;
@@ -19,9 +23,7 @@ public class DriveController extends SubsystemController {
 
     private Drive drive;
 
-    private PIDController anglePID;
-
-    private PIDController distancePID;
+    private PIDController anglePID, straightPID, distancePID;
 
     private double motorPosition, baseHeading = 0;
 
@@ -47,7 +49,8 @@ public class DriveController extends SubsystemController {
         //Put general setup here
         drive = new Drive(hardwareMap);
         //anglePID = new PIDController(10,1.6,24, 2);
-        anglePID = new PIDController(8, 0.5, 10, 1, 0);
+        anglePID = new PIDController(9, 0.1, 10, 0.5, 0);
+        straightPID = new PIDController(200,0,400);
         distancePID = new PIDController(0.6, 0.1, 0, 2);
         drive.setSlewSpeed(0.1);
     }
@@ -116,6 +119,152 @@ public class DriveController extends SubsystemController {
         AbstractOpMode.delay(100);
 
         telemetry.addData("starting drive segment---------------------------");
+        straightPID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
+        distancePID.reset();
+        straightPID.setMinimumOutput(0);
+        int position = (int) (distance * DRIVE_COUNTS_PER_INCH); //
+        telemetry.addData("Encoder counts: " + position);
+        double turn;
+        speed = range(speed);
+        telemetry.addData("Speed: " + speed);
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        drive.setPosisionP(5);
+        double startHeading = angle;
+        telemetry.addData("Start Heading: " + startHeading);
+        telemetry.update();
+        double leftPower, rightPower;
+        double power;
+        while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
+            power = range(distancePID.output(position, drive.getRightPosition()));
+
+            turn = straightPID.output(startHeading, getHeading());
+
+            if (power > 0) {
+                leftPower = range(power * (speed - turn));
+                rightPower = range(power * (speed + turn));
+            } else {
+                leftPower = range(power * (speed + turn));
+                rightPower = range(power * (speed - turn));
+            }
+
+            drive.setPower(leftPower, rightPower);
+
+            telemetry.addData("Encoder counts: " + position);
+            telemetry.addData("Left Position: " + drive.getLeftPosition());
+            telemetry.addData("Right Position: " + drive.getRightPosition());
+            telemetry.addData("Left Power: " + leftPower);
+            telemetry.addData("Right Power: " + rightPower);
+            telemetry.addData("Heading: " + getHeading());
+            telemetry.addData("PID Output: " + turn);
+            telemetry.update();
+        }
+
+        for (int i = 0; i < 5; i++) {
+            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
+
+            turn = straightPID.output(startHeading, getHeading());
+
+            if (power > 0) {
+                leftPower = range(power * (speed - turn));
+                rightPower = range(power * (speed + turn));
+            } else {
+                leftPower = range(power * (speed + turn));
+                rightPower = range(power * (speed - turn));
+            }
+
+            drive.setPower(leftPower, rightPower);
+
+            telemetry.addData("Encoder counts: " + position);
+            telemetry.addData("Left Position: " + drive.getLeftPosition());
+            telemetry.addData("Right Position: " + drive.getRightPosition());
+            telemetry.addData("Left Power: " + leftPower);
+            telemetry.addData("Right Power: " + rightPower);
+            telemetry.addData("Heading: " + getHeading());
+            telemetry.update();
+        }
+
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public synchronized void runPath(Path path){
+        currentPath = path;
+        while(!path.isDone()){
+            if(path.getCurrentSegment().getType() == Segment.SegmentType.TURN){
+                turnToSegment((TurnSegment) path.getNextSegment());
+            } else if(path.getCurrentSegment().getType() == Segment.SegmentType.DRIVE){
+                driveToSegment((DriveSegment) path.getNextSegment());
+            }
+            path.getNextSegment();
+        }
+    }
+
+    //Autonomous Methods
+    public synchronized void turnToSegment(TurnSegment segment) {
+        AbstractOpMode.delay(100);
+
+        double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
+
+        baseHeading = angle;
+
+        telemetry.addData("starting turn segment---------------------------");
+        anglePID.reset();
+        anglePID.setMinimumOutput(0);
+        drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double power;
+        while (isOpModeActive()) {
+            //While we are not in the error band keep turning
+            while (!atPosition(angle, drive.getHeading(), error) && isOpModeActive()) {
+
+                if(segment.isDone()){
+                    setPower(0, 0);
+                    return;
+                }
+                if(!segment.isRunning()){
+                    setPower(0, 0);
+                    continue;
+                }
+
+                telemetry.addDataDB("--------------------");
+                //Use the PIDController class to calculate power values for the wheels
+                if (angle - getHeading() > 180) {
+                    power = anglePID.output(angle, 180 + (180 + getHeading()));
+                    telemetry.addData("How Far", 180 + (180 + getHeading()));
+                } else {
+                    power = anglePID.output(angle, getHeading());
+                    telemetry.addData("How Far", getHeading());
+                }
+                setPower(-power * speed, power * speed);
+                telemetry.addData("Heading", getHeading());
+                telemetry.addData("Power", power);
+                telemetry.update();
+            }
+            runtime.reset();
+            while (runtime.milliseconds() < period) {
+                if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
+                    break;
+            }
+            if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
+                continue;
+            telemetry.addData("Final heading", getHeading());
+            telemetry.update();
+            drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            return;
+        }
+        drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    public synchronized void driveToSegment(DriveSegment segment) {
+
+        double distance = segment.getDistance(), speed = segment.getSpeed(), angle = baseHeading;
+
+        if(segment.getAngle()!=null) angle = segment.getAngle();
+
+        baseHeading = angle;
+
+        AbstractOpMode.delay(100);
+
+        telemetry.addData("starting drive segment---------------------------");
         anglePID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
         distancePID.reset();
         anglePID.setMinimumOutput(0);
@@ -133,6 +282,16 @@ public class DriveController extends SubsystemController {
         double leftPower, rightPower;
         double power;
         while ((!atPosition(position, drive.getLeftPosition(), 15) && !atPosition(position, drive.getRightPosition(), 15)) && isOpModeActive()) {
+
+            if(segment.isDone()){
+                setPower(0, 0);
+                return;
+            }
+            if(!segment.isRunning()){
+                setPower(0, 0);
+                continue;
+            }
+
             power = range(distancePID.output(position, drive.getRightPosition()));
 
             turn = anglePID.output(startHeading, getHeading());
@@ -182,10 +341,6 @@ public class DriveController extends SubsystemController {
         }
 
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-
-    public synchronized void runPath(){
-
     }
 
     public synchronized void setPosition(int position, double power) {
