@@ -1,4 +1,0 @@
-    <block type="vuforiaLocalizerParameters_setCameraName">
-      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
-      <value name="CAMERA_NAME"><shadow type="navigation_webcamName"></shadow></value>
-    </block>
