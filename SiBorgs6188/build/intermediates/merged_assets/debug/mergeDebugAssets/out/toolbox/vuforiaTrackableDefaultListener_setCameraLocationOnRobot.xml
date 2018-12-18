@@ -1,5 +1,0 @@
-    <block type="vuforiaTrackableDefaultListener_setCameraLocationOnRobot">
-      <value name="VUFORIA_TRACKABLE_DEFAULT_LISTENER"><block type="variables_get"><field name="VAR">{vuforiaTrackableDefaultListenerVariable}</field></block></value>
-      <value name="CAMERA_NAME"><shadow type="navigation_webcamName"></shadow></value>
-      <value name="CAMERA_LOCATION_ON_ROBOT"><block type="variables_get"><field name="VAR">{matrixVariable}</field></block></value>
-    </block>

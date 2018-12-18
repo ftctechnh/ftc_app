@@ -1,4 +1,0 @@
-    <block type="vuforiaLocalizerParameters_addWebcamCalibrationFile">
-      <value name="VUFORIA_LOCALIZER_PARAMETERS"><block type="variables_get"><field name="VAR">{vuforiaLocalizerParametersVariable}</field></block></value>
-      <value name="WEBCAM_CALIBRATION_FILE"><shadow type="text"><field name="TEXT">MyCamera.xml</field></shadow></value>
-    </block>
