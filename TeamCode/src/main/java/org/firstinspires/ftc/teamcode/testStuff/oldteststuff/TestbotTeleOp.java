@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.testStuff;
+package org.firstinspires.ftc.teamcode.testStuff.oldteststuff;
 
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.testStuff.TestbotHardware;
+import org.firstinspires.ftc.teamcode.testStuff.oldteststuff.TestbotHardware;
 
 @TeleOp(name = "TestbotTeleOp", group = "Testbot")
 //@Disabled

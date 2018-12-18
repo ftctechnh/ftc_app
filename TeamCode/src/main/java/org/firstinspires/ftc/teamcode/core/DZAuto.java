@@ -9,42 +9,44 @@ public class DZAuto extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        Functions Func = new Functions();
+
         int classification = 1;
-        Functions.OffLander(.5);
-        //scan for number 1-3 from jewels (We need a vision system, Ethan has one)
-        //These cases need to be tested
-        //Once hardware is fixed, this will need some changes
+
+
+        //come off of lander
+        //scan for number 1-3 from jewels (We need a vision system)
         switch(classification){
             case 1:
-                Functions.turn(-30,1);
-                Functions.move(33,1);
-                Functions.turn(30,1);
-                Functions.move(18,1);
-                Functions.move(-21,1);
-                Functions.turn(45,1);
-                Functions.move(78,1);
-                Functions.turn(45,1);
-                Functions.move(45,1);
+                Func.turn(-30,1);
+                Func.move(33,1);
+                Func.turn(30,1);
+                Func.move(18,1);
+                Func.move(-21,1);
+                Func.turn(45,1);
+                Func.move(78,1);
+                Func.turn(45,1);
+                Func.move(45,1);
                 break;
             case 2:
-                Functions.move(39,1);
-                Functions.move(-20,1);
-                Functions.turn(90,1);
-                Functions.move(39,1);
-                Functions.turn(60,1);
-                Functions.move(57,1);
+                Func.move(39,1);
+                Func.move(-20,1);
+                Func.turn(90,1);
+                Func.move(39,1);
+                Func.turn(60,1);
+                Func.move(57,1);
                 break;
             case 3:
-                Functions.turn(30,1);
-                Functions.move(-39,1);
-                Functions.turn(-60,1);
-                Functions.move(9,1);
-                Functions.turn(180,1);
-                Functions.move(96,1);
+                Func.turn(30,1);
+                Func.move(-39,1);
+                Func.turn(-60,1);
+                Func.move(9,1);
+                Func.turn(180,1);
+                Func.move(96,1);
                 break;
         }
-        Functions.move(-44,1);
-        Functions.PlaceMarker();
-        Functions.move(90, 1);
+        Func.move(-44,1);
+        Func.PlaceMarker();
+        Func.move(90, 1);
     }
 }

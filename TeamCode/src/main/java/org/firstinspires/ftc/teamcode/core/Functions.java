@@ -4,72 +4,65 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.GyroSensor;
 
 
-public class Functions{
+public class Functions {
 
-    private static GyroSensor gyro;
+    private GyroSensor gyro;
+
+    Hardware Hw = new Hardware();
 
     //Move function using INCHES and POWER
-    public static void move(int distance, double power){
+    public void move(int distance, double power) {
 
         int target = distance * (int) (288 / (4 * Math.PI));
-        //When hardware is updated things will need to change here
-        Hardware.backLeftDrive.setTargetPosition(target);
-        Hardware.backRightDrive.setTargetPosition(target);
-        Hardware.frontLeftDrive.setTargetPosition(target);
-        Hardware.frontRightDrive.setTargetPosition(target);
+        Hw.backLeftDrive.setTargetPosition(target);
+        Hw.backRightDrive.setTargetPosition(target);
+        Hw.frontLeftDrive.setTargetPosition(target);
+        Hw.frontRightDrive.setTargetPosition(target);
 
-        Hardware.backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Hardware.backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Hardware.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        Hardware.frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Hw.backLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Hw.backRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Hw.frontLeftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        Hw.frontRightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        Hardware.backLeftDrive.setPower(power);
-        Hardware.backRightDrive.setPower(power);
-        Hardware.frontLeftDrive.setPower(power);
-        Hardware.frontRightDrive.setPower(power);
+        Hw.backLeftDrive.setPower(power);
+        Hw.backRightDrive.setPower(power);
+        Hw.frontLeftDrive.setPower(power);
+        Hw.frontRightDrive.setPower(power);
 
-        while (Hardware.backLeftDrive.isBusy() && Hardware.backRightDrive.isBusy()) {
-            Hardware.telemetry.addData("BackLeft", Hardware.backLeftDrive.isBusy());
+        while (Hw.backLeftDrive.isBusy() && Hw.backRightDrive.isBusy()) {
+            Hw.telemetry.addData("BackLeft", Hw.backLeftDrive.isBusy());
         }
-        Hardware.backLeftDrive.setPower(0);
-        Hardware.backRightDrive.setPower(0);
-        Hardware.frontLeftDrive.setPower(0);
-        Hardware.frontRightDrive.setPower(0);
+        Hw.backLeftDrive.setPower(0);
+        Hw.backRightDrive.setPower(0);
+        Hw.frontLeftDrive.setPower(0);
+        Hw.frontRightDrive.setPower(0);
     }
 
     //Turn function using DEGREES and POWER
-    public static void turn(int degree, double power){
+    public void turn(int degree, double power) {
         gyro.resetZAxisIntegrator();
         double multiplier = 1.0;
-        if(degree > 180) multiplier = -1.0;
-       while(gyro.getHeading() != degree){
-            Hardware.backLeftDrive.setPower(power * multiplier);
-            Hardware.backRightDrive.setPower(-power * multiplier);
-            Hardware.frontLeftDrive.setPower(power * multiplier);
-            Hardware.frontRightDrive.setPower(-power * multiplier);
+        if (degree > 180) multiplier = -1.0;
+        while (gyro.getHeading() != degree) {
+            Hw.backLeftDrive.setPower(power * multiplier);
+            Hw.backRightDrive.setPower(-power * multiplier);
+            Hw.frontLeftDrive.setPower(power * multiplier);
+            Hw.frontRightDrive.setPower(-power * multiplier);
         }
     }
 
 
-    public static void sleep(long time){
+    public void sleep(long time) {
         try {
             Thread.sleep(time);
-        } catch (InterruptedException ignore) {}
+        } catch (InterruptedException ignore) {
+        }
     }
 
     //PlaceMarker function that places the marker
-    public static void PlaceMarker(){
-        Hardware.markerServo.setPosition(-1);
-        Hardware.markerServo.setPosition(1);
+    public void PlaceMarker() {
+        Hw.markerServo.setPosition(-1);
+        Hw.markerServo.setPosition(1);
     }
 
-    //The arm that drops the Hardware down
-    public static void OffLander(double power){
-        Hardware.armServo.setPower(1);
-        sleep(2500);
-        Hardware.armServo.setPower(0);
-
-        Hardware.armLiftMotorTop.setPower(power);
-        Hardware.armLiftMotorBottom.setPower(power);
-        }
 }
