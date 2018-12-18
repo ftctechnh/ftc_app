@@ -1,2 +1,4 @@
-include ':FtcRobotController'
+include ':FtcRobotController', ':openCVLibrary3', ':DogeCV'
 include ':TeamCode'
+project(':openCVLibrary3').projectDir = new File('DogeCV-master/openCVLibrary3')
+project(':DogeCV').projectDir = new File('DogeCV-master/DogeCV')
