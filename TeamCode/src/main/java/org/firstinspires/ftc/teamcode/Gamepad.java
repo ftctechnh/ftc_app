@@ -153,20 +153,20 @@ public class Gamepad extends LinearOpMode {
             int turnsLeft = robot.setArmTarget(1.3050d);
             armPower = robot.getArmPower(turnsLeft);
             if (turnsLeft <= 100) {
-                armPosition = 0.3489d;
-                handPosition = 0.3439d;
+                armPosition = 0.7139d; //0.3489d;
+                handPosition = 0.3539d;
             }
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
             int turnsLeft = robot.setArmTarget(2.3290d);
             armPower = robot.getArmPower(turnsLeft);
-            armPosition = 0.1528d;
+            armPosition = 0.9394d; //0.1528d;
             handPosition = 0.8261d;
         } else if (gamepad2.y || gamepad1.y) { //End game
             int turnsLeft = robot.setArmTarget(1.3050d);
             armPower = robot.getArmPower(turnsLeft);
             if (turnsLeft <= 100) {
                 handPosition = 0d;
-                armPosition = 1d;
+                armPosition = 0d;
             }
         } else if (gamepad2.x || gamepad1.x) { //retract arm
             if (armSequence == 0) {
@@ -174,7 +174,7 @@ public class Gamepad extends LinearOpMode {
                 armPower = robot.ARM_POWER;
                 if (turnsLeft <= 100) {
                     handPosition = 0d;
-                    armPosition = 1d;
+                    armPosition = 0d;
                     armSequence = 1;
                 }
             }
