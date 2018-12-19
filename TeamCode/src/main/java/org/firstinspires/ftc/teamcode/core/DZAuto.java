@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.core;
 
+import com.disnodeteam.dogecv.detectors.roverrukus.SamplingOrderDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
@@ -7,17 +8,33 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 public class DZAuto extends LinearOpMode {
 
+    Functions Func;
+    ResourceAPI RA;
+
+    int tryCount;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        Functions Func = new Functions();
 
-        int classification = 1;
+        Func = new Functions();
+        RA = new ResourceAPI();
 
 
         //come off of lander
         //scan for number 1-3 from jewels (We need a vision system)
-        switch(classification){
-            case 1:
+
+        Func.move(-44,1);
+        Func.PlaceMarker();
+        Func.move(90, 1);
+    }
+
+    private void TryAgain()
+    {
+
+        SamplingOrderDetector.GoldLocation location = RA.getCurrentOrder();
+
+        switch(location){
+            case LEFT:
                 Func.turn(-30,1);
                 Func.move(33,1);
                 Func.turn(30,1);
@@ -28,7 +45,7 @@ public class DZAuto extends LinearOpMode {
                 Func.turn(45,1);
                 Func.move(45,1);
                 break;
-            case 2:
+            case CENTER:
                 Func.move(39,1);
                 Func.move(-20,1);
                 Func.turn(90,1);
@@ -36,7 +53,7 @@ public class DZAuto extends LinearOpMode {
                 Func.turn(60,1);
                 Func.move(57,1);
                 break;
-            case 3:
+            case RIGHT:
                 Func.turn(30,1);
                 Func.move(-39,1);
                 Func.turn(-60,1);
@@ -45,8 +62,6 @@ public class DZAuto extends LinearOpMode {
                 Func.move(96,1);
                 break;
         }
-        Func.move(-44,1);
-        Func.PlaceMarker();
-        Func.move(90, 1);
     }
+
 }
