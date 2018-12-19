@@ -20,6 +20,7 @@ public class CAuto extends LinearOpMode {
         RA = new ResourceAPI();
         tryCount = 0;
 
+        RA.enableDetection();
         //come off of lander
         //scan for number 1-3 from jewels
         TryAgain();

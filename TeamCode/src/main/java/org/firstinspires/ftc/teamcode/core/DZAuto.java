@@ -10,7 +10,6 @@ public class DZAuto extends LinearOpMode {
 
     Functions Func;
     ResourceAPI RA;
-
     int tryCount;
 
     @Override
@@ -18,10 +17,12 @@ public class DZAuto extends LinearOpMode {
 
         Func = new Functions();
         RA = new ResourceAPI();
+        tryCount = 0;
 
-
+        RA.enableDetection();
         //come off of lander
         //scan for number 1-3 from jewels (We need a vision system)
+        TryAgain();
 
         Func.move(-44,1);
         Func.PlaceMarker();
@@ -60,6 +61,18 @@ public class DZAuto extends LinearOpMode {
                 Func.move(9,1);
                 Func.turn(180,1);
                 Func.move(96,1);
+                break;
+            case UNKNOWN:
+
+                if(tryCount > 3)
+                    return;
+
+                tryCount++;
+
+                sleep(667);
+
+                TryAgain();
+
                 break;
         }
     }
