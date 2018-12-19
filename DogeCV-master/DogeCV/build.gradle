@@ -21,7 +21,7 @@ android {
 }
 repositories {
     flatDir {
-        dirs 'C:\\Users\\Trevor\\StudioProjects\\ftc_app-2018-2019\\libs'
+        dirs System.getProperty("user.home") + '\\StudioProjects\\ftc_app-2018-2019\\libs'
     }
 }
 dependencies {
