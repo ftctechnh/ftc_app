@@ -24,7 +24,6 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
     static final double DRIVE_SPEED = 1d;
-    static final double TURN_SPEED = 1d;
 
     static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
@@ -73,7 +72,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         for (int i = 0; i < 20; i++) {
             if (!detector.getAligned()) {
                 targetHeading -= 6d;
-                gyroTurn(TURN_SPEED, targetHeading);
+                gyroTurn(DRIVE_SPEED, targetHeading);
             } else {
                 if (i < 6) {
                     goldMineralLocation = 1;
@@ -101,7 +100,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
 
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(1d);
-        sleep(10L);
+        sleep(15L);
         robot.leftDrive.setPower(-0.4d);
         robot.rightDrive.setPower(-0.4d);
         while (opModeIsActive() && robot.armDrive.isBusy()) {

@@ -75,7 +75,6 @@ public class Gamepad extends LinearOpMode {
     private final double SERVO_CYCLE = 50d;
     private final double SERVO_INCREMENT_MIN = 0.005d;
     private final double SERVO_INCREMENT_MAX = 0.01d;
-    private final double DRIVE_SPEED_MAX = 1d;
 
     // Setup a variable for each drive wheel to save power level for telemetry
     double leftPower;
@@ -96,8 +95,8 @@ public class Gamepad extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            drive = gamepad1.right_stick_y;
-            turn = gamepad1.left_stick_x;
+            drive = 0d;
+            turn = 0d;
             if (gamepad1.dpad_down || gamepad2.dpad_down) {
                 drive = 1d;
             } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
@@ -110,19 +109,19 @@ public class Gamepad extends LinearOpMode {
                 turn = -0.7d;
             }
 
-            ArmControl();
-
-            leftPower = Range.scale(drive - turn, -1d, 1d, -DRIVE_SPEED_MAX, DRIVE_SPEED_MAX);
-            rightPower = Range.scale(drive + turn, -1d, 1d, -DRIVE_SPEED_MAX, DRIVE_SPEED_MAX);
+            leftPower = Range.clip(drive - turn, -1d, 1d);
+            rightPower = Range.clip(drive + turn, -1d, 1d);
 
             // Send calculated power to wheels
             robot.leftDrive.setPower(leftPower);
             robot.rightDrive.setPower(rightPower);
 
+            ArmControl();
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.4f), right (%.4f)",
-                    leftPower, rightPower);
+                    robot.leftDrive.getPower(), robot.rightDrive.getPower());
             telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)",
                     robot.armServo.getPosition(), robot.handServo.getPosition());
             telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",

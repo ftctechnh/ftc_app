@@ -111,7 +111,6 @@ public class Hardware15091 {
 
     /* local OpMode members. */
     HardwareMap hwMap = null;
-    private ElapsedTime period = new ElapsedTime();
 
     /* Constructor */
     public Hardware15091() {
@@ -158,7 +157,6 @@ public class Hardware15091 {
 
         armDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        period.reset();
 
         // Set all motors to zero power
         leftDrive.setPower(0);
@@ -172,7 +170,7 @@ public class Hardware15091 {
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
+        parameters.loggingEnabled = false;
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
