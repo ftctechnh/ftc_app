@@ -40,20 +40,20 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
  * This OpMode uses the common HardwareK9bot class to define the devices on the robot.
  * All device access is managed through the HardwareK9bot class. (See this class for device names)
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * This particular OpMode executes a basic Tank Drive Teleop for the K9 bot
  * It raises and lowers the arm using the Gampad Y and A buttons respectively.
  * It also opens and closes the claw slowly using the X and B buttons.
- *
+ * <p>
  * Note: the configuration of the servos is such that
  * as the arm servo approaches 0, the arm position moves up (away from the floor).
  * Also, as the claw servo approaches 0, the claw opens up (drops the game element).
- *
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Telop Tank", group="BACON")
+@TeleOp(name = "Telop Tank", group = "BACON")
 //@Disabled
 public class TeleopTank_Drive extends LinearOpMode {
 
@@ -68,7 +68,7 @@ public class TeleopTank_Drive extends LinearOpMode {
     public void runOpMode() {
         double left;
         double right;
-        double arm;
+        //double arm;
 
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
@@ -100,17 +100,11 @@ public class TeleopTank_Drive extends LinearOpMode {
                 robot.armMotor.setPower(.5);
             else
                 robot.armMotor.setPower(0);
-               // robot.rightDrive.setPower(0);
 
-           /* if (gamepad1.right_bumper)
-                robot.armMotor.setPower(.5);
-            else
-                    robot.armMotor.setPower(0);
-            // Use gamepad X & B to open and close the claw
-            if (gamepad1.x)
-                clawPosition += CLAW_SPEED;
-            else if (gamepad1.b)
-                clawPosition -= CLAW_SPEED;
+
+            // robot.rightDrive.setPower(0);
+
+           /*
 
             // Move both servos to new position.
            armPosition  = Range.clip(armPosition, robot.ARM_MIN_RANGE, robot.ARM_MAX_RANGE);
