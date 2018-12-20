@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode.Teleops;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
@@ -79,7 +80,12 @@ public class TeleopTank_Drive extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");
         telemetry.update();
+        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        //robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -119,6 +125,10 @@ public class TeleopTank_Drive extends LinearOpMode {
                     */
             telemetry.addData("left", "%.2f", left);
             telemetry.addData("right", "%.2f", right);
+            telemetry.addData("Working",  "Encoder at:%7d",
+                    // robot.leftDrive.getCurrentPosition(),
+                    //robot.rightDrive.getCurrentPosition()),
+                    robot.armMotor.getCurrentPosition());
             telemetry.update();
 
             //Pause for 40 mS each cycle = update 25 times a second.
