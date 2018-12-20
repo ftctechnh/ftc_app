@@ -14,7 +14,7 @@ public class RobotLift {
 
     Servo ratchetServo;
 
-    Servo liftpaul;
+    Servo liftpawl;
 
     public RobotLift(HardwareMap hardwareMap) {
         liftMotor = new SlewDcMotor(hardwareMap.dcMotor.get("robot_lift"));
@@ -25,8 +25,10 @@ public class RobotLift {
         liftMotor.setTargetPosition(0);
         liftMotor.setPower(0);
 
-        //ratchetServo = hardwareMap.servo.get("robot_lift"); //Name is the same as above.
-        liftpaul = hardwareMap.servo.get("liftpaul");
+        ratchetServo = hardwareMap.servo.get("liftpawl");
+
+
+
 
     }
 
@@ -37,7 +39,7 @@ public class RobotLift {
     }
 
     public void setPosition(int position) {
-        //
+
         liftMotor.setPower(0.5);
         liftMotor.setTargetPosition(position);
     }
