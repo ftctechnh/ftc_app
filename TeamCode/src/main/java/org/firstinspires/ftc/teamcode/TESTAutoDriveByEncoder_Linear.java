@@ -102,15 +102,7 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Send telemetry message to indicate successful Encoder reset
 
-        telemetry.addData("Working",
-                         // robot.leftDrive.getCurrentPosition(),
-                          //robot.rightDrive.getCurrentPosition()),
-                            robot.armMotor.getCurrentPosition());
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-
-        telemetry.update();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
       //  encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
@@ -127,7 +119,14 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.armMotor.setPower(Math.abs(1));
         sleep(1000);     // pause for servos to move
 
-        telemetry.addData("Path", "Complete");
+        telemetry.addData("Working",  "Starting at:%7d",
+                // robot.leftDrive.getCurrentPosition(),
+                //robot.rightDrive.getCurrentPosition()),
+                robot.armMotor.getCurrentPosition());
+
+        // Wait for the game to start (driver presses PLAY)
+
+
         telemetry.update();
     }
 
