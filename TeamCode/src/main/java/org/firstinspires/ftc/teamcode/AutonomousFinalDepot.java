@@ -29,18 +29,17 @@ public class AutonomousFinalDepot extends LinearOpMode
         compRobot.stopDriveMotors();
         compRobot.deployMarker();
         compRobot.driveStraight(-6,1);
-        compRobot.pivotenc(-160, .5f);
+        compRobot.pivotenc(160, .5f);
 
         compRobot.pivotenc(15, .5f);
         compRobot.driveStraight(16,.6f);
 
-
-        compRobot.pivotenc(-55, .5f);
+        compRobot.pivotenc(55, .5f);
         telemetry.addData("No target seen, so -55 deg turn", null);
         telemetry.update();
 
-        sleep(4000);
-        compRobot.hugWallToLeft(4,6, 18, 84);
+        sleep(600);
+        compRobot.hugWallToRight(4,6, 18, 84);
         compRobot.driveStraight(6, .8f);
         telemetry.addData("Stopped", null);
         telemetry.update();
