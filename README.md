@@ -1,10 +1,23 @@
 ## General Info for 2018 Code:
 
+DRIVETRAIN CONFIGURATION
+       front
+       C   D
+  left       right
+       B   A
+       back
+
+
 Competition Autonomous: Cratersample2
-* drops and turns
+* drops and turns left to unhook
+* linear OpMode
 
 Competition TeleOp: FourwdTeleop2
-* controller for all motors
+* gamepad1 for drivetrain, gamepad2 for the other 4 motors
+* uses tuner to adjust drivetrain multiplier and senscurve exponents
+* iterative opmode
+
+
 
 NOT DONE, I'll do it sometime -chris
 
@@ -13,7 +26,7 @@ NOT DONE, I'll do it sometime -chris
 
 
 
-## Welcome!
+## ABOUT THE APP
 This GitHub repository contains the source code that is used to build an Android app to control a *FIRST* Tech Challenge competition robot.  To use this SDK, download/clone the entire project to your local computer.
 
 If you are new to the *FIRST* Tech Challenge software and control system, you should visit the online wiki to learn how to install, configure, and use the software and control system:
