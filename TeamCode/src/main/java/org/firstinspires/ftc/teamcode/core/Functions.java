@@ -40,7 +40,7 @@ public class Functions {
         Hw.gyro.
         double multiplier = 1.0;
         if (degree > 180) multiplier = -1.0;
-        while (Hw.gyro.getPosition() != degree) {
+        while (Hw.gyro.getPtion() != degree) {
             Hw.backLeftDrive.setPower(power * multiplier);
             Hw.backRightDrive.setPower(-power * multiplier);
             Hw.frontLeftDrive.setPower(power * multiplier);
