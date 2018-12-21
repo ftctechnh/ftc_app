@@ -10,16 +10,19 @@ import org.firstinspires.ftc.teamcode.core.Functions;
 
 public class TestAuto extends LinearOpMode {
 
+    Functions Func;
+
     @Override
     public void runOpMode() throws InterruptedException {
-        Functions.OffLander(0.3);
-        //scan for number 1-3 from jewels
-        Functions.turn(-30, 1);
-        Functions.move(33, 1);
-        Functions.move(-9, 1);
-        Functions.turn(-30, 1);
-        Functions.move(43, 1);
-        Functions.turn(-30, 1);
-        Functions.move(35, 1);
-        Functions.turn(180, 1);
+        Func = new Functions();
+        //come off lander
+        //scan for number 1 from jewels
+        Func.turn(-30, 1);
+        Func.move(33, 1);
+        Func.move(-9, 1);
+        Func.turn(-30, 1);
+        Func.move(43, 1);
+        Func.turn(-30, 1);
+        Func.move(35, 1);
+        Func.turn(180, 1);
     }}

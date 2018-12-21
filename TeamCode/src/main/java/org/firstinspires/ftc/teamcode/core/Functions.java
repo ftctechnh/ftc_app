@@ -1,12 +1,9 @@
 package org.firstinspires.ftc.teamcode.core;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.GyroSensor;
 
 
 public class Functions {
-
-    private GyroSensor gyro;
 
     Hardware Hw = new Hardware();
 
@@ -40,10 +37,10 @@ public class Functions {
 
     //Turn function using DEGREES and POWER
     public void turn(int degree, double power) {
-        gyro.resetZAxisIntegrator();
+        Hw.gyro.
         double multiplier = 1.0;
         if (degree > 180) multiplier = -1.0;
-        while (gyro.getHeading() != degree) {
+        while (Hw.gyro.getPosition() != degree) {
             Hw.backLeftDrive.setPower(power * multiplier);
             Hw.backRightDrive.setPower(-power * multiplier);
             Hw.frontLeftDrive.setPower(power * multiplier);
