@@ -29,8 +29,7 @@ public class Functions extends Hardware {
 
     //Move function using INCHES and POWER
     public void move(int distance, double power) {
-
-        int target = distance * (int) (288 / (4 * Math.PI));
+        int target = frontLeftDrive.getCurrentPosition() + (distance * (int)(288 / (4 * Math.PI)));
         backLeftDrive.setTargetPosition(target);
         backRightDrive.setTargetPosition(target);
         frontLeftDrive.setTargetPosition(target);
