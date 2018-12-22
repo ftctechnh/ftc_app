@@ -2,9 +2,16 @@ package org.firstinspires.ftc.teamcode.core;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
+
 
 public class Functions {
-
+    Orientation lastAngles = new Orientation();
+    double globalAngle, power = .30, correction;
     Hardware Hw = new Hardware();
 
     //Move function using INCHES and POWER
@@ -35,18 +42,99 @@ public class Functions {
         Hw.frontRightDrive.setPower(0);
     }
 
-    //Turn function using DEGREES and POWER
-    public void turn(int degree, double power) {
-        Hw.gyro.
-        double multiplier = 1.0;
-        if (degree > 180) multiplier = -1.0;
-        while (Hw.gyro.getPtion() != degree) {
-            Hw.backLeftDrive.setPower(power * multiplier);
-            Hw.backRightDrive.setPower(-power * multiplier);
-            Hw.frontLeftDrive.setPower(power * multiplier);
-            Hw.frontRightDrive.setPower(-power * multiplier);
-        }
+    public float getZAxis(){
+        return Hw.gyro.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES).thirdAngle;
     }
+
+
+    private void resetAngle()
+    {
+        lastAngles = Hw.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        globalAngle = 0;
+    }
+
+    private double getAngle()
+    {
+
+        Orientation angles = Hw.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    private double checkDirection()
+    {
+        double correction, angle, gain = .10;
+
+        angle = getAngle();
+
+        if (angle == 0)
+            correction = 0;             // no adjustment.
+        else
+            correction = -angle;        // reverse sign of angle for correction.
+
+        correction = correction * gain;
+
+        return correction;
+    }
+    //Turn function using DEGREES and POWER
+    private void turn(int degrees, double power)
+    {
+        double  leftPower, rightPower;
+
+        resetAngle();
+
+        if (degrees < 0)
+        {   // turn right.
+            leftPower = -power;
+            rightPower = power;
+        }
+        else if (degrees > 0)
+        {   // turn left.
+            leftPower = power;
+            rightPower = -power;
+        }
+        else return;
+
+        Hw.backLeftDrive.setPower(leftPower);
+        Hw.backRightDrive.setPower(rightPower);
+        Hw.frontLeftDrive.setPower(leftPower);
+        Hw.frontRightDrive.setPower(rightPower);
+
+        // rotate until turn is completed.
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0) {}
+
+            while (opModeIsActive() && getAngle() > degrees) {}
+        }
+        else    // left turn.
+            while (opModeIsActive() && getAngle() < degrees) {}
+
+        // turn the motors off.
+        Hw.backLeftDrive.setPower(0);
+        Hw.backRightDrive.setPower(0);
+        Hw.frontLeftDrive.setPower(0);
+        Hw.frontRightDrive.setPower(0);
+
+        // wait for rotation to stop.
+        sleep(1000);
+
+        // reset angle tracking on new heading.
+        resetAngle();
+    }
+}
 
 
     public void sleep(long time) {
