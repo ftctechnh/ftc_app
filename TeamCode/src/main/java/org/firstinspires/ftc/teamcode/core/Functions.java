@@ -102,7 +102,7 @@ public class Functions extends Hardware {
     }
 
     //Turn function using DEGREES and POWER
-    private void turn(int degrees, double power)
+    public void turn(int degrees, double power)
     {
         double  leftPower, rightPower;
 
