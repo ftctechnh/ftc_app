@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.core;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,19 +15,30 @@ import static java.lang.Thread.sleep;
  */
 public class Hardware
 {
-    public DcMotor frontRightDrive;
-    public DcMotor frontLeftDrive;
-    public DcMotor backRightDrive;
-    public DcMotor backLeftDrive;
 
-    public Servo markerServo;
+    protected DcMotor frontRightDrive;
+    protected DcMotor frontLeftDrive;
+    protected DcMotor backRightDrive;
+    protected DcMotor backLeftDrive;
 
-    public BNO055IMU gyro;
+    protected Servo markerServo;
 
+    protected BNO055IMU gyro;
 
+    protected Telemetry telemetry;
+    protected HardwareMap hardwareMap;
 
-    public Telemetry telemetry;
-    public HardwareMap hardwareMap;
+    public Hardware(Telemetry telemetry, HardwareMap hardwareMap, LinearOpMode linearOpMode)
+    {
+        this.telemetry = telemetry;
+        this.hardwareMap = hardwareMap;
+    }
+
+    public Hardware(Telemetry telemetry, HardwareMap hardwareMap)
+    {
+        this.telemetry = telemetry;
+        this.hardwareMap = hardwareMap;
+    }
 
     /**
      * init EVERYTHING
