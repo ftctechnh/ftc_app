@@ -5,39 +5,62 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorImplEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-public class CompRobot extends BasicBot {
-    LinearOpMode linearOpMode;
+public class CompRobot extends BasicBot
+{
+    private LinearOpMode linearOpMode;
 
     private DistanceSensor frontDistSens, rightDistSens, leftDistSens;
     private DcMotorImplEx collectorPivoterMotor, collectorLifterMotor, climberMotor;
     private Servo wristCollectorServo;
     private CRServo rightGrabCRServo, leftGrabCRServo;
+    private DigitalChannel switchSample, switchDepot, switchCrater, switchDelay;
 
-    public CompRobot(HardwareMap hardwareMap) {
+    public CompRobot(HardwareMap hardwareMap)
+    {
         super(hardwareMap);
         initMotorsAndMechParts(hardwareMap);
     }
 
-    public CompRobot(HardwareMap hardwareMap, LinearOpMode linearOpMode_In) {
+    public CompRobot(HardwareMap hardwareMap, LinearOpMode linearOpMode_In)
+    {
         super(hardwareMap);
         initSensors(hardwareMap);
         linearOpMode = linearOpMode_In;
         initMotorsAndMechParts(hardwareMap);
+        //initAutoSwitches(hardwareMap);
+        //Uncomment above as soon as switches are on robot and are configged
     }
 
-    public void initSensors(HardwareMap hardwareMap) {
+    private void initSensors(HardwareMap hardwareMap)
+    {
         rightDistSens = hardwareMap.get(DistanceSensor.class, "rightDistSens");
         frontDistSens = hardwareMap.get(DistanceSensor.class, "frontDistSens");
         leftDistSens = hardwareMap.get(DistanceSensor.class, "leftDistSens");
     }
 
-    public void initMotorsAndMechParts(HardwareMap hardwareMap) {
+    //Inits the autonomous switches
+    private void initAutoSwitches(HardwareMap hardwareMap)
+    {
+        switchSample = hardwareMap.digitalChannel.get("switchSample");
+        switchSample.setMode(DigitalChannel.Mode.INPUT);
+        switchDepot = hardwareMap.digitalChannel.get("switchDepot");
+        switchDepot.setMode(DigitalChannel.Mode.INPUT);
+        switchCrater = hardwareMap.digitalChannel.get("switchCrater");
+        switchCrater.setMode(DigitalChannel.Mode.INPUT);
+        switchDelay = hardwareMap.digitalChannel.get("switchSample");
+        switchDelay.setMode(DigitalChannel.Mode.INPUT);
+
+    }
+
+    private void initMotorsAndMechParts(HardwareMap hardwareMap)
+    {
 
         wristCollectorServo = hardwareMap.servo.get("wristCollectorServo");
         wristCollectorServo.setPosition(0);
@@ -69,7 +92,8 @@ public class CompRobot extends BasicBot {
         climberMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void driveStraight(float dist_In, float pow) {
+    public void driveStraight(float dist_In, float pow)
+    {
         super.resetEncoders();
         if (dist_In > 0)
             super.goForward(pow, pow);
@@ -88,7 +112,8 @@ public class CompRobot extends BasicBot {
         super.stopDriveMotors();
     }
 
-    public void pivotenc(float degrees, float pow) {
+    public void pivotenc(float degrees, float pow)
+    {
         pow = Math.abs(pow);
         super.resetEncoders();
 
@@ -105,33 +130,40 @@ public class CompRobot extends BasicBot {
         else
             encTarget = 2.3313f * degrees - 2.11769f;
 
-        while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested()) {
+        while (Math.abs(super.getDriveLeftOne().getCurrentPosition()) < encTarget && Math.abs(super.getDriveRightOne().getCurrentPosition()) < encTarget && !linearOpMode.isStopRequested())
+        {
 
         }
         super.stopDriveMotors();
     }
 
-    public DistanceSensor getFrontRightDistSens() {
+    public DistanceSensor getFrontRightDistSens()
+    {
         return rightDistSens;
     }
 
-    public double getRightDistance_IN() {
+    public double getRightDistance_IN()
+    {
         return rightDistSens.getDistance(DistanceUnit.INCH);
     }
 
-    public DistanceSensor getLeftDistSens() {
+    public DistanceSensor getLeftDistSens()
+    {
         return leftDistSens;
     }
 
-    public double getLeftDistance_IN() {
+    public double getLeftDistance_IN()
+    {
         return leftDistSens.getDistance(DistanceUnit.INCH);
     }
 
-    public DistanceSensor getFrontDistSens() {
+    public DistanceSensor getFrontDistSens()
+    {
         return frontDistSens;
     }
 
-    public double getFrontDistance_IN() {
+    public double getFrontDistance_IN()
+    {
         return frontDistSens.getDistance(DistanceUnit.INCH);
     }
 
@@ -178,8 +210,7 @@ public class CompRobot extends BasicBot {
                     driveStraight(stepDistance, .5f);
                     straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                     pivotenc(-stepPivotAmtDeg, .5f);
-                }
-                else if (rightDist > tooFarFromSideWall && rightDist < 80)
+                } else if (rightDist > tooFarFromSideWall && rightDist < 80)
                 {
                     linearOpMode.telemetry.addData("too Far", rightDist);
                     linearOpMode.telemetry.update();
@@ -187,8 +218,7 @@ public class CompRobot extends BasicBot {
                     driveStraight(stepDistance, .5f);
                     straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                     pivotenc(stepPivotAmtDeg, .5f);
-                }
-                else //need this null zone for logic, this is where it goes straight, do not comment out
+                } else //need this null zone for logic, this is where it goes straight, do not comment out
                 {
                     driveStraight(stepDistance, .8f);
                     straightDistanceTraveled = straightDistanceTraveled + stepDistance;
@@ -201,62 +231,63 @@ public class CompRobot extends BasicBot {
             }
         }
     }
+
     public void hugWallToLeft(float lowerDistFromSideWall, float upperDistFromSideWall, float distAwayFromFrontWall, float maximumDistance)
+    {
+        double straightDist, rightDist, leftDist;
+        double straightDistanceTraveled = 0;
+        float stepDistance = 8;
+        float stepPivotAmtDeg = 15;
+
+        DistanceSensor usingDistSensor = frontDistSens;
+
+        while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
         {
-            double straightDist, rightDist, leftDist;
-            double straightDistanceTraveled = 0;
-            float stepDistance = 8;
-            float stepPivotAmtDeg = 15;
-
-            DistanceSensor usingDistSensor = frontDistSens;
-
-            while (usingDistSensor.getDistance(DistanceUnit.INCH) > distAwayFromFrontWall && !linearOpMode.isStopRequested())
+            straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
+            if (straightDist < distAwayFromFrontWall + Math.abs(stepDistance))
             {
-                straightDist = usingDistSensor.getDistance(DistanceUnit.INCH);
-                if (straightDist < distAwayFromFrontWall + Math.abs(stepDistance))
+                super.stopDriveMotors();
+                break;
+            } else
+            {
+                linearOpMode.telemetry.addData("Going forward 11", null);
+                driveStraight(stepDistance, .8f);
+                straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+            }
+            linearOpMode.telemetry.addData("front Dist: ", straightDist);
+
+            if (straightDist > distAwayFromFrontWall)
+            {
+                leftDist = getLeftDistance_IN();
+                linearOpMode.telemetry.addData("front Dist>18", null);
+                linearOpMode.telemetry.addData("left Dist ", leftDist);
+                if (leftDist < lowerDistFromSideWall)
                 {
-                    super.stopDriveMotors();
-                    break;
-                } else
+                    linearOpMode.telemetry.addData("left dist < 4", null);
+                    pivotenc(-stepPivotAmtDeg, .5f);
+                    driveStraight(stepDistance, .5f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                    pivotenc(stepPivotAmtDeg, .5f);
+                } else if (leftDist > upperDistFromSideWall)
                 {
-                    linearOpMode.telemetry.addData("Going forward 11", null);
+                    linearOpMode.telemetry.addData("left dist > 7", null);
+                    pivotenc(stepPivotAmtDeg, .5f);
+                    driveStraight(stepDistance, .5f);
+                    straightDistanceTraveled = straightDistanceTraveled + stepDistance;
+                    pivotenc(-stepPivotAmtDeg, .5f);
+                } else //need this null zone for logic, this is where it goes straight, do not comment out
+                {
                     driveStraight(stepDistance, .8f);
                     straightDistanceTraveled = straightDistanceTraveled + stepDistance;
                 }
-                linearOpMode.telemetry.addData("front Dist: ", straightDist);
-
-                if (straightDist > distAwayFromFrontWall)
+                linearOpMode.telemetry.update();
+                if (straightDistanceTraveled >= maximumDistance)
                 {
-                    leftDist = getLeftDistance_IN();
-                    linearOpMode.telemetry.addData("front Dist>18", null);
-                    linearOpMode.telemetry.addData("left Dist ", leftDist);
-                    if (leftDist < lowerDistFromSideWall)
-                    {
-                        linearOpMode.telemetry.addData("left dist < 4", null);
-                        pivotenc(-stepPivotAmtDeg, .5f);
-                        driveStraight(stepDistance, .5f);
-                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
-                        pivotenc(stepPivotAmtDeg, .5f);
-                    } else if (leftDist > upperDistFromSideWall)
-                    {
-                        linearOpMode.telemetry.addData("left dist > 7", null);
-                        pivotenc(stepPivotAmtDeg, .5f);
-                        driveStraight(stepDistance, .5f);
-                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
-                        pivotenc(-stepPivotAmtDeg, .5f);
-                    } else //need this null zone for logic, this is where it goes straight, do not comment out
-                    {
-                        driveStraight(stepDistance, .8f);
-                        straightDistanceTraveled = straightDistanceTraveled + stepDistance;
-                    }
-                    linearOpMode.telemetry.update();
-                    if (straightDistanceTraveled >= maximumDistance)
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
         }
+    }
 
     public void initCRServoAndServoPos()
     {
@@ -276,7 +307,7 @@ public class CompRobot extends BasicBot {
         initCRServoAndServoPos();
     }
 
-    public void  climbDown()
+    public void climbDown()
     {
         climberMotor.setMode(DcMotorImplEx.RunMode.STOP_AND_RESET_ENCODER);
         climberMotor.setMode(DcMotorImplEx.RunMode.RUN_USING_ENCODER);
@@ -299,6 +330,7 @@ public class CompRobot extends BasicBot {
         }
         climberMotor.setPower(0);
     }
+
     public void setGrabberWheelPower(double pow)
     {
         rightGrabCRServo.setPower(pow);
@@ -323,5 +355,25 @@ public class CompRobot extends BasicBot {
     public DcMotorImplEx getCollectorPivoterMotor()
     {
         return collectorPivoterMotor;
+    }
+
+    public DigitalChannel getSwitchSample()
+    {
+        return switchSample;
+    }
+
+    public DigitalChannel getSwitchDepot()
+    {
+        return switchDepot;
+    }
+
+    public DigitalChannel getSwitchCrater()
+    {
+        return switchCrater;
+    }
+
+    public DigitalChannel getSwitchDelay()
+    {
+        return switchDelay;
     }
 }
