@@ -30,10 +30,6 @@ public class ResourceAPI
         detector.ratioScorer.perfectRatio = 1.0;
     }
 
-    public ResourceAPI() {
-
-    }
-
     public void enableDetection(){
         detector.enable();
     }

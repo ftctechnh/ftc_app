@@ -17,7 +17,7 @@ public class CAuto extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Func = new Functions(telemetry, hardwareMap, this);
-        RA = new ResourceAPI();
+        RA = new ResourceAPI(hardwareMap);
         tryCount = 0;
 
         RA.enableDetection();
@@ -28,6 +28,8 @@ public class CAuto extends LinearOpMode {
         Func.move(-30, 1);
         Func.PlaceMarker();
         Func.move(90, 1);
+
+        RA.disableDetector();
     }
 
     private void TryAgain()
