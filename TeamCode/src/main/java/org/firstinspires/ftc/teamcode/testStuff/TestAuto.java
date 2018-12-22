@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.testStuff;
+/*package org.firstinspires.ftc.teamcode.testStuff;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -26,3 +26,4 @@ public class TestAuto extends LinearOpMode {
         Func.move(35, 1);
         Func.turn(180, 1);
     }}
+    */

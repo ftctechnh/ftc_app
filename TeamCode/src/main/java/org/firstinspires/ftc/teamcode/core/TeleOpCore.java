@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @TeleOp(name = "TeleOp", group = "Nessie")
 
 public class TeleOpCore extends OpMode {
-    Hardware Hw = new Hardware();
+    Hardware Hw = new Hardware(telemetry, hardwareMap);
 
     @Override
     public void init() {
