@@ -15,7 +15,7 @@ public class DZAuto extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        Func = new Functions();
+        Func = new Functions(telemetry, hardwareMap, this);
         RA = new ResourceAPI();
         tryCount = 0;
 
