@@ -1,12 +1,13 @@
 ## General Info for 2018 Code:
 
+```
 DRIVETRAIN CONFIGURATION
        front
        C   D
   left       right
        B   A
        back
-
+```
 
 Competition Autonomous: Cratersample2
 * drops and turns left to unhook
@@ -18,8 +19,7 @@ Competition TeleOp: FourwdTeleop2
 * iterative opmode
 
 
-
-NOT DONE, I'll do it sometime -chris
+look in individual classes for more info
 
 
 
