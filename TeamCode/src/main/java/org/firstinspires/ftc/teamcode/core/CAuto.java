@@ -80,4 +80,3 @@ public class CAuto extends LinearOpMode {
         }
     }
 }
-
