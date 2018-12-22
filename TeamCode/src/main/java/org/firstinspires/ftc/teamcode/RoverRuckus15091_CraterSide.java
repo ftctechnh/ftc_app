@@ -82,8 +82,13 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
         initDetector(new Size(100d, 360d), 90d);
 
         resetMotors();
-        robot.tts.speak("Hello Aztec, make sure heading is zero.");
+
+        while (!robot.imu.isGyroCalibrated()) {
+            idle();
+        }
+
         Telemetry.Item headingItem = telemetry.addData("Heading: ", "%.4f", robot.getHeading());
+        robot.tts.speak("Hello Aztec, make sure heading is zero.");
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted()) {
@@ -102,16 +107,16 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {
                 case 1:
-                    gyroDrive(DRIVE_SPEED, -14d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -16d, 180);
+                    gyroDrive(DRIVE_SPEED, 14d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, 16d, 180);
                     break;
                 case 2:
-                    gyroDrive(DRIVE_SPEED, -11d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -12d, 180);
+                    gyroDrive(DRIVE_SPEED, 11d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, 12d, 180);
                     break;
                 case 3:
-                    gyroDrive(DRIVE_SPEED, -15d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, -10d, 150d);
+                    gyroDrive(DRIVE_SPEED, 15d, targetHeading);
+                    gyroDrive(DRIVE_SPEED, 10d, 150d);
                     break;
             }
 

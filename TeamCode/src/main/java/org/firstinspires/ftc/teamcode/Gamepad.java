@@ -98,15 +98,15 @@ public class Gamepad extends LinearOpMode {
             drive = 0d;
             turn = 0d;
             if (gamepad1.dpad_down || gamepad2.dpad_down) {
-                drive = 1d;
-            } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
                 drive = -1d;
+            } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
+                drive = 1d;
             }
 
             if (gamepad1.dpad_right || gamepad2.dpad_right) {
-                turn = 0.7d;
-            } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
                 turn = -0.7d;
+            } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
+                turn = 0.7d;
             }
 
             leftPower = Range.clip(drive - turn, -1d, 1d);
@@ -184,6 +184,22 @@ public class Gamepad extends LinearOpMode {
         } else {
             armSequence = 0;
             robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+            if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
+                armTime.reset();
+                armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            } else if (gamepad2.left_stick_y > 0d && armTime.milliseconds() > SERVO_CYCLE) {
+                armTime.reset();
+                armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            }
+
+            if (gamepad2.right_stick_y < 0d && handTime.milliseconds() > SERVO_CYCLE) {
+                handTime.reset();
+                handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE) {
+                handTime.reset();
+                handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            }
         }
 
         if (gamepad2.a || gamepad1.a) {
@@ -192,22 +208,6 @@ public class Gamepad extends LinearOpMode {
             robot.pickupServo.setPosition(0.1d);
         } else {
             robot.pickupServo.setPosition(0.5d);
-        }
-
-        if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
-            armTime.reset();
-            armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-        } else if (gamepad2.left_stick_y > 0d && armTime.milliseconds() > SERVO_CYCLE) {
-            armTime.reset();
-            armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-        }
-
-        if (gamepad2.right_stick_y < 0d && handTime.milliseconds() > SERVO_CYCLE) {
-            handTime.reset();
-            handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-        } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE) {
-            handTime.reset();
-            handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
         }
 
         robot.setArmPower(armPower);

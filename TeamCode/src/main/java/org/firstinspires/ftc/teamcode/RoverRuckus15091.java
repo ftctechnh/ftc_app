@@ -101,8 +101,8 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(1d);
         sleep(15L);
-        robot.leftDrive.setPower(-0.4d);
-        robot.rightDrive.setPower(-0.4d);
+        robot.leftDrive.setPower(0.4d);
+        robot.rightDrive.setPower(0.4d);
         while (opModeIsActive() && robot.armDrive.isBusy()) {
             //wait for motor to finish
         }
@@ -244,8 +244,8 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
                 if (distance < 0)
                     steer *= -1.0;
 
-                leftSpeed = speed + steer;
-                rightSpeed = speed - steer;
+                leftSpeed = speed - steer;
+                rightSpeed = speed + steer;
 
                 // Normalize speeds if either one exceeds +/- 1.0;
                 max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
@@ -302,8 +302,8 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
             onTarget = true;
         } else {
             steer = getSteer(error, PCoeff);
-            leftSpeed = speed * steer;
-            rightSpeed = -leftSpeed;
+            rightSpeed = speed * steer;
+            leftSpeed = -rightSpeed;
         }
 
         // Send desired speeds to motors.
