@@ -134,7 +134,6 @@ public class Functions {
         // reset angle tracking on new heading.
         resetAngle();
     }
-}
 
 
     public void sleep(long time) {
