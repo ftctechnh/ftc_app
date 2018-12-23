@@ -81,6 +81,7 @@ public class Gamepad extends LinearOpMode {
     double rightPower;
     double drive, turn;
     int armSequence = 0;
+    double lastRuntime = 0d;
 
     @Override
     public void runOpMode() {
@@ -119,7 +120,9 @@ public class Gamepad extends LinearOpMode {
             ArmControl();
 
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            double elapsed = runtime.milliseconds() - lastRuntime;
+            lastRuntime = runtime.milliseconds();
+            telemetry.addData("Status", "Run Time: " + runtime.toString() + String.format("(%.1f ms)", elapsed));
             telemetry.addData("Motors", "left (%.4f), right (%.4f)",
                     robot.leftDrive.getPower(), robot.rightDrive.getPower());
             telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)",
@@ -137,16 +140,6 @@ public class Gamepad extends LinearOpMode {
         double armPower = 0d;
         double armPosition = robot.armServo.getPosition();
         double handPosition = robot.handServo.getPosition();
-
-        if (gamepad2.left_trigger > 0d) { //Arm going up
-            armPower = Range.scale(gamepad2.left_trigger, 0d, 1d, 0d, 1d);
-        } else if (gamepad2.right_trigger > 0d) { //Arm going down
-            armPower = -Range.scale(gamepad2.right_trigger, 0d, 1d, 0d, 1d);
-        } else if (gamepad1.left_trigger > 0d) { //Arm going up
-            armPower = Range.scale(gamepad1.left_trigger, 0d, 1d, 0d, 1d);
-        } else if (gamepad1.right_trigger > 0d) { //Arm going down
-            armPower = -Range.scale(gamepad1.right_trigger, 0d, 1d, 0d, 1d);
-        }
 
         if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
             int turnsLeft = robot.setArmTarget(1.3050d);
@@ -199,6 +192,16 @@ public class Gamepad extends LinearOpMode {
             } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE) {
                 handTime.reset();
                 handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            }
+
+            if (gamepad2.left_trigger > 0d) { //Arm going up
+                armPower = Range.clip(gamepad2.left_trigger, 0d, 1d);
+            } else if (gamepad2.right_trigger > 0d) { //Arm going down
+                armPower = -Range.clip(gamepad2.right_trigger, 0d, 1d);
+            } else if (gamepad1.left_trigger > 0d) { //Arm going up
+                armPower = Range.clip(gamepad1.left_trigger, 0d, 1d);
+            } else if (gamepad1.right_trigger > 0d) { //Arm going down
+                armPower = -Range.clip(gamepad1.right_trigger, 0d, 1d);
             }
         }
 

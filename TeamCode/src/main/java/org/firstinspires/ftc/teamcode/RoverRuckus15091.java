@@ -18,16 +18,16 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
     protected int goldMineralLocation = -1;
     protected double targetHeading;
 
-    static final double COUNTS_PER_MOTOR_REV = 288;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 20d / 10d;     // This is < 1.0 if geared UP, eg. 26d/10d
-    static final double WHEEL_DIAMETER_INCHES = 3.5;     // For figuring circumference
+    static final double COUNTS_PER_MOTOR_REV = 288d;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 26d / 15d;     // This is < 1.0 if geared UP, eg. 26d/10d
+    static final double WHEEL_DIAMETER_INCHES = 3.54331d;     // For figuring circumference
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
+            (WHEEL_DIAMETER_INCHES * 3.14159265359d);
     static final double DRIVE_SPEED = 1d;
 
-    static final double HEADING_THRESHOLD = 1;      // As tight as we can make it with an integer gyro
-    static final double P_TURN_COEFF = 0.1;     // Larger is more responsive, but also less stable
-    static final double P_DRIVE_COEFF = 0.15;     // Larger is more responsive, but also less stable
+    static final double HEADING_THRESHOLD = 1d;      // As tight as we can make it with an integer gyro
+    static final double P_TURN_COEFF = 0.1d;     // Larger is more responsive, but also less stable
+    static final double P_DRIVE_COEFF = 0.15d;     // Larger is more responsive, but also less stable
 
     protected GoldAlignDetector detector;
 
@@ -101,8 +101,8 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.setArmTarget(1.2470d);
         robot.armDrive.setPower(1d);
         sleep(15L);
-        robot.leftDrive.setPower(0.4d);
-        robot.rightDrive.setPower(0.4d);
+        robot.leftDrive.setPower(0.35d);
+        robot.rightDrive.setPower(0.35d);
         while (opModeIsActive() && robot.armDrive.isBusy()) {
             //wait for motor to finish
         }
