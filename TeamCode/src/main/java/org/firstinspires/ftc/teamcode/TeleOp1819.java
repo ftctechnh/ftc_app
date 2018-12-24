@@ -65,6 +65,7 @@ public class TeleOp1819 extends OpMode
         mineralLiftR.setDirection(DcMotor.Direction.REVERSE);
         robotLift = hardwareMap.dcMotor.get("robotLift");
         robotLift.setDirection(DcMotor.Direction.FORWARD);
+        robotLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         servo = hardwareMap.servo.get("servo");
         slide = hardwareMap.servo.get("slide"); //
         outake1 = hardwareMap.crservo.get("outake1");
@@ -159,8 +160,9 @@ public class TeleOp1819 extends OpMode
 
 
         //Robot Lifting
-        if(y)
+        if(y) {
             robotLift.setPower(1);//up
+        }
         else if (a && !x)
             robotLift.setPower(-1);//down
         else

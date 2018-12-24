@@ -54,6 +54,7 @@ abstract public class superAuto extends LinearOpMode {
     DcMotor motorBL;
     DcMotor mineralLiftL;
     DcMotor mineralLiftR;
+    DcMotor robotLift;
     Servo servo;
     Servo slide;
     CRServo outake1;
@@ -117,15 +118,22 @@ abstract public class superAuto extends LinearOpMode {
         motorFL.setDirection(DcMotor.Direction.REVERSE);
         motorFR = hardwareMap.dcMotor.get("motorFR");
         motorFR.setDirection(DcMotor.Direction.REVERSE);
+
         motorBL = hardwareMap.dcMotor.get("motorBL");
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
+        robotLift = hardwareMap.dcMotor.get("robotLift");
+        robotLift.setDirection(DcMotor.Direction.FORWARD);
+        robotLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         if (fullRobot) {
             mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
             mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
             mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
             mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
+            robotLift = hardwareMap.dcMotor.get("robotLift");
+            robotLift.setDirection(DcMotor.Direction.FORWARD);
             servo = hardwareMap.servo.get("servo");
             slide = hardwareMap.servo.get("slide"); //
             outake1 = hardwareMap.crservo.get("outake1");
@@ -218,6 +226,18 @@ abstract public class superAuto extends LinearOpMode {
         telemetry.update();
     }
 
+
+    void lowerRobot(double seconds) {
+        //drop down
+        robotLift.setPower(1);
+        Wait(seconds);
+        robotLift.setPower(0);
+
+
+        //back up
+
+
+    }
 
     void configVuforiaRoverRuckus() {
         final String TAG = "Vuforia Navigation Sample";
@@ -538,6 +558,35 @@ abstract public class superAuto extends LinearOpMode {
         return currentHeading;
     }
 
+    void pivotToVuforia(int target) {
+        //Pivot to counterclockwise is positive.
+        //Pivot to clockwise is negative.
+        float fudgeFactor = .5f;
+        updateLocation();
+        double currentHeading = location.getHeading();
+        double wheelPower = .2;
+        telemetry.addData("target: ", target);
+        telemetry.update();
+
+        while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
+            updateLocation();
+            currentHeading = location.getHeading();
+            telemetry.addData("current heading: ", currentHeading);
+            telemetry.update();
+            if (target - currentHeading > 0) {
+                motorFL.setPower(-wheelPower);
+                motorBL.setPower(-wheelPower);
+                motorFR.setPower(wheelPower);
+                motorBR.setPower(wheelPower);
+            } else {
+                motorFL.setPower(wheelPower);
+                motorBL.setPower(wheelPower);
+                motorFR.setPower(-wheelPower);
+                motorBR.setPower(-wheelPower);
+            }
+        }
+        sR();
+    }
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
         //Pivot to clockwise is negative.
@@ -572,7 +621,6 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
-
     public double compassConverter(double raw)
     {
            double compass;

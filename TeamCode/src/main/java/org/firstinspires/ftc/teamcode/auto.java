@@ -12,6 +12,17 @@ public class auto extends superAuto {
     public void runOpMode() {
         setUp();
         configVuforiaRoverRuckus();
+        //Lower
+        lowerRobot(6.6);
+        sR();
+        //pivotToVuforia();
+
+
+
+
+
+
+
         getQuadrant();
 
         final double mmPerInch       = 25.4f;
@@ -23,8 +34,12 @@ public class auto extends superAuto {
         final double centerMineralLocation = Math.sqrt(Math.pow(1.5*squareSize,2)*2);
         final double diagonalHalfField = Math.sqrt(Math.pow(halfFieldWidth,2)*2);
         final double stopInFrontOfMineral= diagonalHalfField-centerMineralLocation-(robotSize/2);
+
         final double xStopinFrontofMineral = stopInFrontOfMineral* Math.cos(45);
         final double yStopinFrontofMineral = xStopinFrontofMineral;
+
+        //Triangle from vector and base-- Arc Tangent of y/x (CurrentVector) - Tangent(TargetVector) = pivotAngle
+
 
         goToPoint(xStopinFrontofMineral,yStopinFrontofMineral);
 
