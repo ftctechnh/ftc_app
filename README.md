@@ -7,6 +7,8 @@ DRIVETRAIN CONFIGURATION
   left       right
        B   A
        back
+       
+      Works with the hub:port configuration
 ```
 
 Competition Autonomous: Cratersample2
@@ -18,8 +20,11 @@ Competition TeleOp: FourwdTeleop2
 * uses tuner to adjust drivetrain multiplier and senscurve exponents
 * iterative opmode
 
+Tuner:
+* use this to adjust values of something while program is running. 
 
-look in individual classes for more info
+
+look in individual classes for more info.
 
 
 
