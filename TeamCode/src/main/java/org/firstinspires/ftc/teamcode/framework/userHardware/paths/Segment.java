@@ -14,12 +14,16 @@ public abstract class Segment {
         this.type = type;
     }
 
-    protected void setNumber(int number){
+    protected void setNumber(int number) {
         this.number = number;
     }
 
-    protected int getNumber(){
+    protected int getNumber() {
         return number;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public SegmentType getType() {
@@ -31,20 +35,21 @@ public abstract class Segment {
         TURN
     }
 
-    protected void start(){
+    protected void start() {
         isRunning = true;
+        isDone = false;
     }
 
-    protected void stop(){
+    protected void stop() {
         isRunning = false;
         isDone = true;
     }
 
-    protected void pause(){
+    protected void pause() {
         isRunning = false;
     }
 
-    protected void resume(){
+    protected void resume() {
         isRunning = true;
     }
 

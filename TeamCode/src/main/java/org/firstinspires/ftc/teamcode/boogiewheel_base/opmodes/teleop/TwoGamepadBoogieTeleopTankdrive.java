@@ -33,31 +33,33 @@ public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {
 
         ////////////////Gamepad 2////////////////
         ////////Intake////////
-        addEventHandler("2_a_down", robot.finishIntakingCallable());
-
         addEventHandler("2_b_down", robot.beginIntakingCallable());
+
+        addEventHandler("2_b_up", robot.finishIntakingCallable());
 
         addEventHandler("2_x_down", robot.reverseIntakeCallable());
 
-        addEventHandler("2_dpr_down", robot.liftIntakeCallable());
+        addEventHandler("2_x_up", robot.finishIntakingCallable());
 
-        addEventHandler("2_dpl_down", robot.lowerIntakeCallable());
+        addEventHandler("2_dpu_down", robot.liftIntakeCallable());
+
+        addEventHandler("2_dpd_down", robot.lowerIntakeCallable());
 
         ///////Mineral Lift////////
-        addEventHandler("2_rt_down", robot.moveMineralLiftToDumpPositionCallable());
+        addEventHandler("2_rt_down", robot.moveMineralLiftToCollectPositionCallable());
 
-        addEventHandler("2_lt_down", robot.moveMineralLiftToCollectPositionCallable());
+        addEventHandler("2_rb_down", robot.moveMineralLiftToDumpPositionCallable());
 
         addEventHandler("2_y_down", robot.toggleMineralGateCallable());
 
         ////////Robot Lift////////
-        addEventHandler("2_dpu_down", robot.robotLiftUpCallable());
+        addEventHandler("2_lb_down", robot.robotLiftUpCallable());
 
-        addEventHandler("2_dpd_down", robot.robotLiftDownCallable());
+        addEventHandler("2_lb_up", robot.robotLiftStopCallable());
 
-        addEventHandler("2_dpu_up", robot.robotLiftStopCallable());
+        addEventHandler("2_lt_down", robot.robotLiftDownCallable());
 
-        addEventHandler("2_dpd_up", robot.robotLiftStopCallable());
+        addEventHandler("2_lt_up", robot.robotLiftStopCallable());
     }
 
     @Override

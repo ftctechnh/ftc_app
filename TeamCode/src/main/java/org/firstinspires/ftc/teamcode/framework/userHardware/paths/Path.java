@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Path {
 
     private ConcurrentHashMap<Integer, Segment> segments = new ConcurrentHashMap<>();
-    private Segment currentSegment;
+    private Segment currentSegment = null;
 
     private int numSegments = 0;
 
@@ -15,7 +15,11 @@ public class Path {
 
     public Path(String name){
         this.name = name;
-        currentSegment = segments.get(0);
+    }
+
+    public void reset(){
+        currentSegment=null;
+        isDone=false;
     }
 
     public void addSegment(Segment segment) {
@@ -25,7 +29,17 @@ public class Path {
     }
 
     public Segment getNextSegment(){
-        currentSegment.stop();
+        if(currentSegment==null){
+            currentSegment = segments.get(0);
+            currentSegment.start();
+            return currentSegment;
+        } else {
+            currentSegment.stop();
+        }
+        if(currentSegment.getNumber()>=segments.size()-1){
+            isDone = true;
+            return null;
+        }
         if(currentSegment.getNumber()>=numSegments){
             isDone = true;
             return null;
@@ -37,6 +51,7 @@ public class Path {
     }
 
     public Segment getCurrentSegment(){
+        if(currentSegment==null)return segments.get(0);
         return currentSegment;
     }
 

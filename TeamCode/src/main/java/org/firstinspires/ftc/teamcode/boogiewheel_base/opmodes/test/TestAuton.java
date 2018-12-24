@@ -44,6 +44,11 @@ public class TestAuton extends AbstractAutonNew {
     }
 
     @Override
+    public void Run() {
+
+    }
+
+    @Override
     public void Stop() {
 
     }

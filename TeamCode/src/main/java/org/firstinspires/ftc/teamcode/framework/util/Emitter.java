@@ -51,15 +51,6 @@ public class Emitter {
     // executed inside of the executor service, which means events may be handled in parallel.
     public Future<Boolean> emit(String name) throws RuntimeException {
 
-        /*// Clears the cache of finished futures
-        ArrayList<String> finishedFutures = new ArrayList<>();
-        for(Map.Entry<String, Future<Boolean>> entry:cache.entrySet()){
-            if(entry.getValue().isDone())finishedFutures.add(entry.getKey());
-        }
-        for(String finishedFuture:finishedFutures){
-            cache.remove(finishedFuture);
-        }*/
-
         for (String pausedName : PausedEvents) {
             if (pausedName.equals(name)) return new EmptyResult();
         }
@@ -80,9 +71,7 @@ public class Emitter {
     // the resulting future for cancelation.
     protected Future<Boolean> fire(String eventName) throws RuntimeException {
         Callable eventHandler = EventRegistry.get(eventName);
-        if (eventHandler != null) {
-            return service.submit(eventHandler);
-        }
+        if (eventHandler != null) return service.submit(eventHandler);
         // By default, we return a future that returns false.
         return new EmptyResult();
     }

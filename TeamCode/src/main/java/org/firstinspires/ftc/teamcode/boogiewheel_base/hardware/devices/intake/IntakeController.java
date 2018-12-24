@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.intake;
 
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -27,6 +28,15 @@ public class IntakeController extends SubsystemController {
 
     public synchronized void stop() {
         intake.stop();
+    }
+
+    public void autonIntakeSequence(){
+        while (!currentPath.getName().equals("crater side to depot") && !currentPath.getCurrentSegment().getName().equals("drive to minerals") &&
+                !currentPath.getCurrentSegment().getName().equals("back up from minerals") && AbstractOpMode.isOpModeActive());
+        beginIntaking();
+        while (currentPath.getName().equals("crater side to depot") && (currentPath.getCurrentSegment().getName().equals("drive to minerals") ||
+                currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
+        finishIntaking();
     }
 
     public synchronized void beginIntaking() {

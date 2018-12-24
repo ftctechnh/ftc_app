@@ -25,6 +25,8 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     private StateMachine stateMachine = new StateMachine();
 
+    private int initLoops = 0;
+
     public AbstractAutonNew() {
 
     }
@@ -47,6 +49,7 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         Callable<Boolean> InitLoopThread = () -> {
             try {
                 InitLoop();
+                InitLoop(initLoops);
             } catch (Exception e) {
                 throwException(e);
             }
@@ -57,8 +60,6 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
         //calls user init
         CurrentFuture = service.submit(InitThread);
-
-        int initLoops = 0;
 
         while (!isStopRequested() && !isStarted()) {
             checkException();
@@ -78,6 +79,11 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
         } catch (StateConfigurationException e) {
             exceptions.add(e);
         }
+
+        addState(new State("run", "start", ()-> {
+            Run();
+            return true;
+        }));
 
         boolean stateMachineActive = true;
 
@@ -110,7 +116,13 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     }
 
-    public abstract void Stop();
+    public void InitLoop(int loops) {
+
+    }
+
+    public abstract void Run();
+
+    public void Stop(){}
 
     public void addState(State state) {
         stateMachine.addState(state);

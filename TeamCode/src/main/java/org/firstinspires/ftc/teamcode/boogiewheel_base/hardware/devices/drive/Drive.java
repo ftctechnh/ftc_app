@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.IMU;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
@@ -10,6 +11,7 @@ public class Drive {
 
     private SlewDcMotor leftMotor, rightMotor;
     private IMU imu;
+    private Servo servoMarker;
 
     public Drive(HardwareMap hardwareMap) {
 
@@ -43,6 +45,10 @@ public class Drive {
         */
 
         imu = new IMU(hardwareMap);
+
+        servoMarker = hardwareMap.servo.get("servo_marker");
+        servoMarker.setPosition(0);
+
     }
 
     public void setSlewSpeed(double ss) {
@@ -123,4 +129,10 @@ public class Drive {
         leftMotor.stop();
         rightMotor.stop();
     }
+
+    public void setMarkerServo(double servoPosition) {
+        servoMarker.setPosition(servoPosition);
+    }
+
+
 }
