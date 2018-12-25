@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,10 +16,12 @@ public class AnimatornicsRobot {
     private DcMotor rfMotor;
     private DcMotor rbMotor;
 
-    private DcMotor collectMotor;
-    private DcMotor flipMotor;
-    private DcMotor liftMotor;
-    private DcMotor collectSlideMotor;
+    private DcMotor liftMotor_1;
+    private DcMotor liftMotor_2;
+    private DcMotor slideMotor;
+
+    private Servo leftServo;
+    private Servo rightServo;
 
     private Telemetry telemetry;
 
@@ -33,10 +36,12 @@ public class AnimatornicsRobot {
         rfMotor = hardwareMap.get(DcMotor.class, "rfmotor");
         rbMotor = hardwareMap.get(DcMotor.class, "rbmotor");
 
-        collectMotor = hardwareMap.get(DcMotor.class, "collect_motor");
-        collectSlideMotor = hardwareMap.get(DcMotor.class, "collect_slide_motor");
-        flipMotor = hardwareMap.get(DcMotor.class, "flip_motor");
-        liftMotor = hardwareMap.get(DcMotor.class, "lift_motor");
+        slideMotor = hardwareMap.get(DcMotor.class, "slide_motor");
+        liftMotor_1 = hardwareMap.get(DcMotor.class, "lift_motor_1");
+        liftMotor_2 = hardwareMap.get(DcMotor.class, "lift_motor_2");
+
+        leftServo = hardwareMap.get(Servo.class, "leftServo");
+        rightServo = hardwareMap.get(Servo.class, "rightServo");
 
         telemetry.addData("Status", "DC motor variables initialized");
     }
@@ -69,36 +74,49 @@ public class AnimatornicsRobot {
 
         if(!holdLift) {
             double liftPower = op.gamepad1.right_trigger - op.gamepad1.left_trigger;
-            liftMotor.setPower(liftPower);
+            liftPower = liftPower; // full power is too fast.
+            liftMotor_1.setPower(liftPower);
+            liftMotor_2.setPower(-liftPower);
             telemetry.addData("Status", "liftPower: " + liftPower);
         } else {
-            double liftPower = -0.5;
-            liftMotor.setPower(liftPower);
+            double liftPower = -0.25;
+            liftMotor_1.setPower(liftPower);
+            liftMotor_2.setPower(-liftPower);
             telemetry.addData("Status", "liftPower: " + liftPower);
         }
 
-        double collectPower = op.gamepad2.left_trigger - op.gamepad2.right_trigger;
-        collectMotor.setPower(collectPower);
-        telemetry.addData("Status", "collectPower: " + collectPower);
+        double slidePower = op.gamepad2.left_stick_y+op.gamepad2.right_stick_y;
+        slidePower = Range.clip(slidePower, -1, 1);
+        slidePower = slidePower; // full power is too fast.
+        slideMotor.setPower(slidePower);
+        telemetry.addData("Status", "slidePower: " + slidePower);
 
-        double collectSlidePower = -op.gamepad2.left_stick_y;
-        collectSlideMotor.setPower(collectSlidePower);
-        telemetry.addData("Status", "collectSlidePower_1: " + collectSlidePower);
+        double leftServoPower = op.gamepad2.left_trigger;
+        double rightServoPower = op.gamepad2.right_trigger;
+        if(leftServoPower < 0.75) {
+            leftServo.setPosition(1.0);
+        } else {
+            leftServo.setPosition(0.0);
+        }
 
-        double flipPower = op.gamepad2.right_stick_y;
-        flipMotor.setPower(flipPower);
-        telemetry.addData("Status", "flipPower: " + flipPower);
+        if(rightServoPower > 0.75) {
+            rightServo.setPosition(1.0);
+        } else {
+            rightServo.setPosition(0.0);
+        }
     }
 
     public void moveLift(LinearOpMode op, double time, String direction, double liftPower) {
 
-        liftMotor.setPower(liftPower);
+        liftMotor_1.setPower(liftPower);
+        liftMotor_2.setPower(-liftPower);
         runtime.reset();
         while (op.opModeIsActive() && runtime.seconds() < time) {
             telemetry.addData("Path", "Lift:"+direction+": %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        liftMotor.setPower(0.0);
+        liftMotor_1.setPower(0.0);
+        liftMotor_2.setPower(0.0);
     }
 
     public void moveRobot(LinearOpMode op, double time, String direction, double lfPower, double lbPower, double rfPower, double rbPower) {
@@ -118,14 +136,14 @@ public class AnimatornicsRobot {
         rbMotor.setPower(0.0);
     }
 
-    public void moveSlide(LinearOpMode op, double time, String direction, double collectSlidePower) {
+    public void moveSlide(LinearOpMode op, double time, String direction, double slidePower) {
 
-        collectSlideMotor.setPower(collectSlidePower);
+        slideMotor.setPower(slidePower);
         runtime.reset();
         while (op.opModeIsActive() && runtime.seconds() < time) {
             telemetry.addData("Path", "Slide:"+direction+": %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-        collectSlideMotor.setPower(0.0);
+        slideMotor.setPower(0.0);
     }
 }
