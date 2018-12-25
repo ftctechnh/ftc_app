@@ -6,6 +6,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
+import java.util.ArrayList;
+
 public class Auto {
     Bogg robot = null;
     Telemetry telemetry = null;
@@ -28,7 +30,7 @@ public class Auto {
         Drop,
         Slide,
         Spin,
-        MoveToWall,
+        MoveByEncoder,
         MoveToDepot,
         DropMarker,
         MoveToCrater
@@ -111,7 +113,12 @@ public class Auto {
         }
         else {
             robot.driveEngine.rotate(0);  //and stops so we can see the target
-            return Mode.MoveToWall;
+
+            for(int i = 0; i<3; i++)
+            {
+                robot.driveEngine.checkpoint.add(false);
+            }
+            return Mode.MoveByEncoder;
         }
     }
 
@@ -122,21 +129,15 @@ public class Auto {
 //    The Y axis runs from the Red Alliance Station towards the other side of the field
 //    where the Blue Alliance Station is. (Positive is from the center, towards the BlueAlliance station)
 //    The Z axis runs from the floor, upwards towards the ceiling.  (Positive is above the floor)
-    Mode moveToWall()
+    Mode moveByEncoder()
     {
         robot.sensors.rotateMobile(-iSP * 90);
 
-        if(robot.sensors.dFixed.getDistance(DistanceUnit.INCH) < 6)
-        {
-            telemetry.addData("fixedDistance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
-            return Mode.MoveToDepot;
-        }
-        else
-        {
-            robot.driveEngine.drive(0,.1);
-        }
+        if(robot.driveEngine.moveOnPath(new double[]{-12,12},
+                                        new double[]{0  ,24}))
+            return Mode.MoveByEncoder;
 
-        return Mode.MoveToWall;
+        return Mode.MoveToDepot;
     }
 
 

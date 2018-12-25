@@ -13,7 +13,7 @@ public class holonomicKids extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new MiniBogg(hardwareMap, gamepad1);
+        robot = new MiniBogg(hardwareMap, gamepad1, telemetry);
         robot.alpha *= 5;
 
         waitForStart();

@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -35,8 +34,8 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                 case Spin:
                     action = auto.spin();
                     break;
-                case MoveToWall:
-                    action = auto.moveToWall();
+                case MoveByEncoder:
+                    action = auto.moveByEncoder();
                     break;
                 case MoveToDepot:
                     action = auto.moveToDepot();

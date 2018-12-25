@@ -18,11 +18,11 @@ public class holonomicDrive_test_alpha extends LinearOpMode
         {
             if(gamepad1.right_stick_y != 0 )
             {
-                robot.manualRotate();
+                robot.manualRotate(gamepad1);
             }
             else
             {
-                robot.manualDrive();
+                robot.manualDrive(gamepad1);
             }
 
             robot.manualLift();

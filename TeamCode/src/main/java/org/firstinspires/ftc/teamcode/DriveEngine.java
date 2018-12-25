@@ -1,8 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.annotation.TargetApi;
+import android.os.Build;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.util.ArrayList;
 
 public class DriveEngine {
     DcMotor back;
@@ -15,8 +22,11 @@ public class DriveEngine {
 
     double theta;
     double xOut, yOut;
+    Telemetry telemetry;
 
-    DriveEngine(HardwareMap hardwareMap) {
+    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+
         back  = hardwareMap.dcMotor.get("back");
         right = hardwareMap.dcMotor.get("right");
         left  = hardwareMap.dcMotor.get("left");
@@ -104,6 +114,40 @@ public class DriveEngine {
         back.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    ArrayList<Boolean> checkpoint = new ArrayList<>();
+    boolean moveOnPath(double[] ... args)
+    {
+        int c = 0;
+        for(boolean b: checkpoint)
+        {
+            if(b == true)
+                c++;
+        }
+        telemetry.addData("checkpoint count", c);
+
+        if(c == checkpoint.size())
+            return true;
+        double[] point = args[c];
+        double x = xDist();
+        double y = yDist();
+        double deltaX = point[0] - x;
+        double deltaY = point[1] - y;
+        double r = Math.hypot(deltaX, deltaY);
+        telemetry.addData("radius", r);
+
+        if(r > 4) {
+            drive(deltaX / r * .2, deltaY / r * .2);
+        }
+        if(r > 1) {
+            drive(deltaX / r * .2, deltaY / r * .2);
+        }
+        else if(r <= 1){
+            checkpoint.set(c, true);
+            resetDistances();
+        }
+        return false;
     }
 
     void resetXDist()

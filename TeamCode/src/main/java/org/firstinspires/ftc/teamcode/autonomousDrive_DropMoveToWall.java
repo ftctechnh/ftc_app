@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name="3: Drop and move to wall", group = "Testing")
 public class autonomousDrive_DropMoveToWall extends LinearOpMode
@@ -36,8 +33,8 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                 case Spin:
                     action = auto.spin();
                     break;
-                case MoveToWall:
-                    action = auto.moveToWall();
+                case MoveByEncoder:
+                    action = auto.moveByEncoder();
                     break;
                 default:
                     auto.stop();

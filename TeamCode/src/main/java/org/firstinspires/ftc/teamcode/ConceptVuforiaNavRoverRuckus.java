@@ -147,7 +147,7 @@ public class ConceptVuforiaNavRoverRuckus extends LinearOpMode {
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-        driveEngine = new DriveEngine(hardwareMap);
+        driveEngine = new DriveEngine(hardwareMap, telemetry);
 
         // Load the data sets that for the trackable objects. These particular data
         // sets are stored in the 'assets' part of our application.

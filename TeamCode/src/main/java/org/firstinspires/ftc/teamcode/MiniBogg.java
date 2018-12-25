@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class MiniBogg
@@ -24,11 +25,11 @@ public class MiniBogg
     double liftAve = 0;
     boolean goingUp;
 
-    public MiniBogg(HardwareMap hardwareMap, Gamepad gamepad)
+    public MiniBogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
     {
         this.gamepad = gamepad;
         this.hardwareMap = hardwareMap;
-        driveEngine = new DriveEngine(hardwareMap);
+        driveEngine = new DriveEngine(hardwareMap, telemetry);
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");

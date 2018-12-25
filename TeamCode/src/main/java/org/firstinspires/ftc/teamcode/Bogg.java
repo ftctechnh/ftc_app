@@ -36,7 +36,7 @@ public class Bogg
         this.gamepad = gamepad;
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
-        driveEngine = new DriveEngine(hardwareMap);
+        driveEngine = new DriveEngine(hardwareMap, telemetry);
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
@@ -49,7 +49,7 @@ public class Bogg
         this.gamepad2 = gamepad2;
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
-        driveEngine = new DriveEngine(hardwareMap);
+        driveEngine = new DriveEngine(hardwareMap, telemetry);
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
