@@ -22,6 +22,7 @@ public class Bogg
     Servo push;
 
     double alpha = 0.5;
+    double liftAlpha = .12;
     double alphaInc = 0.000001;
     double xAve = 0;
     double yAve = 0;
@@ -58,21 +59,21 @@ public class Bogg
 
 
 
-    private double smoothX(double x)
+    private double smoothX(double x, double multiplier)
     {
         if(x * xAve < 0 || x == 0)
             xAve = 0;
         else
-            xAve = alpha * x + (1-alpha) * xAve;
+            xAve = alpha * multiplier * x + (1- alpha * multiplier) * xAve;
         return xAve;
     }
 
-    private double smoothY(double y)
+    private double smoothY(double y, double multiplier)
     {
         if(y * yAve < 0 || y == 0)
             yAve = 0;
         else
-            yAve = alpha * y + (1-alpha) * yAve;
+            yAve = alpha * multiplier * y + (1-alpha * multiplier) * yAve;
         return yAve;
     }
 
@@ -82,10 +83,10 @@ public class Bogg
             liftAve = 0;
         else if(l == -.02)
         {
-            liftAve = .12 * l + (1-.12) * liftAve;
+            liftAve = liftAlpha * l + (1-liftAlpha) * liftAve;
         }
         else
-            liftAve = .04 * l + (1-.04) * liftAve;
+            liftAve = liftAlpha/3 * l + (1-liftAlpha/3) * liftAve;
         return liftAve;
     }
 
@@ -151,15 +152,15 @@ public class Bogg
     void manualDrive(Gamepad g)
     {
         if(g.left_stick_button)
-            driveEngine.drive(g.left_stick_x, -g.left_stick_y,true);
+            driveEngine.drive(smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5),true);
         else
-            driveEngine.drive(smoothX(g.left_stick_x), smoothY(-g.left_stick_y));
+            driveEngine.drive(smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1));
     }
 
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
     {
-        double leftX = smoothX(gDrive.left_stick_x);
-        double leftY = smoothY(-gDrive.left_stick_y);
+        double leftX = smoothX(gDrive.left_stick_x, 1);
+        double leftY = smoothY(-gDrive.left_stick_y, 1);
         double spin = smoothSpin(-gRotate.right_stick_x);
 
         driveEngine.driveCurvy(leftX, leftY, spin);
@@ -264,7 +265,7 @@ public class Bogg
 
             return false;
         }
-        return true;
+        return false;
     }
 
     boolean driveCurvyToWall()

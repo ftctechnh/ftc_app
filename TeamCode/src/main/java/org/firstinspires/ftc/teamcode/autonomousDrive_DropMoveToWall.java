@@ -48,7 +48,6 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
             telemetry.addData("Drive x:", robot.driveEngine.xOut);
             telemetry.addData("Drive y:", robot.driveEngine.yOut);
             telemetry.addData("location", robot.camera.getLocation() != null ? robot.camera.getLocation()[0]: "N/A");
-            telemetry.addData("walltarget achieved", auto.wallTargetAchieved);
             telemetry.update();
             idle();
         }

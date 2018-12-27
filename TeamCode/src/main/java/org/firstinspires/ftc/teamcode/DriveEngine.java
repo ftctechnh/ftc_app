@@ -16,8 +16,11 @@ public class DriveEngine {
     DcMotor right;
     DcMotor left;
 
+    static double wheelDiameter = 5;
+    static double robotRadius = 8;
+
     private static final double ticksPerRev = 1120;
-    private static final double inPerRev = Math.PI * 5;
+    private static double inPerRev = Math.PI * wheelDiameter;
     static final double inPerTicks = inPerRev /ticksPerRev;
 
     double theta;
@@ -53,6 +56,9 @@ public class DriveEngine {
         xOut = x = xprime;
         yOut = y = yprime;
 
+        telemetry.addData("driveE x", xOut);
+        telemetry.addData("driveE y", yOut);
+
         back.setPower(x);
         right.setPower( (-x/2) + ( (y*Math.sqrt(3)) / 2 ) );
         left.setPower ( (-x/2) + ( (-y*Math.sqrt(3)) / 2 ) );
@@ -81,6 +87,9 @@ public class DriveEngine {
         xOut = backPower;
         yOut = (rightPower - leftPower)/2;
 
+        telemetry.addData("driveE x", xOut);
+        telemetry.addData("driveE y", yOut);
+
         back.setPower(backPower);
         right.setPower(rightPower);
         left.setPower (leftPower);
@@ -91,14 +100,18 @@ public class DriveEngine {
         this.theta = theta;
     }
 
-    void rotate(double x) {
-        back.setPower(x);
-        right.setPower(x);
-        left.setPower(x);
+    void rotate(double spin) {
+        telemetry.addData("driveE rotate", spin);
+        back.setPower(spin);
+        right.setPower(spin);
+        left.setPower(spin);
     }
 
     void driveCurvy(double x, double y, double spin)
     {
+        telemetry.addData("driveE x", xOut);
+        telemetry.addData("driveE y", yOut);
+        telemetry.addData("driveE rotate", spin);
         double root3 = Math.sqrt(3);
         back.setPower ( (x                + spin) /2);
         right.setPower( (-x/2 + y*root3/2 + spin) /2);
@@ -129,23 +142,43 @@ public class DriveEngine {
 
         if(c == checkpoint.size())
             return true;
-        double[] point = args[c];
-        double x = xDist();
-        double y = yDist();
-        double deltaX = point[0] - x;
-        double deltaY = point[1] - y;
-        double r = Math.hypot(deltaX, deltaY);
-        telemetry.addData("radius", r);
+        switch (args[c].length)
+        {
+            case 1:
+                double targetAngle = args[c][0];
+                double currentAngle = spinAngle();
+                telemetry.addData("current angle", spinAngle());
 
-        if(r > 4) {
-            drive(deltaX / r * .2, deltaY / r * .2);
-        }
-        if(r > 1) {
-            drive(deltaX / r * .2, deltaY / r * .2);
-        }
-        else if(r <= 1){
-            checkpoint.set(c, true);
-            resetDistances();
+                if(Math.abs(currentAngle) < Math.abs(targetAngle)) {
+                    rotate(Math.signum(targetAngle) * .15);
+                }
+                else{
+                    checkpoint.set(c, true);
+                    resetDistances();
+                }
+                break;
+            case 2:
+                double[] point = args[c];
+                double x = xDist();
+                double y = yDist();
+                double deltaX = point[0] - x;
+                double deltaY = point[1] - y;
+                double r = Math.hypot(deltaX, deltaY);
+                telemetry.addData("targetX", point[0]);
+                telemetry.addData("targetY", point[1]);
+                telemetry.addData("radius", r);
+
+                if(r > 4) {
+                    drive(deltaX / r * .2, deltaY / r * .2);
+                }
+                else if(r > 1) {
+                    drive(deltaX / r * .1, deltaY / r * .1);
+                }
+                else if(r <= 1){
+                    checkpoint.set(c, true);
+                    resetDistances();
+                }
+                break;
         }
         return false;
     }
@@ -180,6 +213,7 @@ public class DriveEngine {
      */
     double spinAngle()
     {
-        return Math.abs(back.getCurrentPosition() * DriveEngine.inPerTicks) /8; //TODO: Find radius
+        double averagePosition = (back.getCurrentPosition() + left.getCurrentPosition() + right.getCurrentPosition()) / 3;
+        return Math.abs(averagePosition * DriveEngine.inPerTicks) /robotRadius; //TODO: Find radius
     }
 }
