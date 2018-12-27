@@ -35,9 +35,14 @@ public class MineralLift {
         return distanceSensor.getDistanceIN();
     }
 
-    public void setCurrentPosition(int position) {
+    public void setTargetPosition(int position) {
+        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setPower(1);
         liftMotor.setTargetPosition(position);
+    }
+
+    public void setCurrentPosition(int position){
+        liftMotor.setCurrentPosition(position);
     }
 
     public int getCurrentPosition() {

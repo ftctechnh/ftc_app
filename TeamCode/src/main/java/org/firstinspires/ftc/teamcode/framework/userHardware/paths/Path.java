@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.paths;
 
+import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAutonNew;
+
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Path {
@@ -13,13 +16,13 @@ public class Path {
 
     private final String name;
 
-    public Path(String name){
+    public Path(String name) {
         this.name = name;
     }
 
-    public void reset(){
-        currentSegment=null;
-        isDone=false;
+    public void reset() {
+        currentSegment = null;
+        isDone = false;
     }
 
     public void addSegment(Segment segment) {
@@ -28,46 +31,50 @@ public class Path {
         numSegments++;
     }
 
-    public Segment getNextSegment(){
-        if(currentSegment==null){
+    public Segment getNextSegment() {
+        if (currentSegment == null) {
             currentSegment = segments.get(0);
             currentSegment.start();
             return currentSegment;
         } else {
             currentSegment.stop();
         }
-        if(currentSegment.getNumber()>=segments.size()-1){
-            isDone = true;
-            return null;
-        }
-        if(currentSegment.getNumber()>=numSegments){
-            isDone = true;
-            return null;
-        } else {
-            currentSegment = segments.get(currentSegment.getNumber()+1);
-            currentSegment.start();
-            return currentSegment;
-        }
-    }
 
-    public Segment getCurrentSegment(){
-        if(currentSegment==null)return segments.get(0);
+        AbstractAutonNew.addFinishedState(currentSegment.getName());
+
+        if (currentSegment.getNumber() >= segments.size() - 1) {
+            isDone = true;
+            return null;
+        }
+
+        currentSegment = segments.get(currentSegment.getNumber() + 1);
+
+        currentSegment.start();
         return currentSegment;
     }
 
-    public void pause(){
+    public Segment getCurrentSegment() {
+        if (currentSegment == null) return segments.get(0);
+        return currentSegment;
+    }
+
+    public void nextSegment(){
+        currentSegment.stop();
+    }
+
+    public void pause() {
         currentSegment.pause();
     }
 
-    public void resume(){
+    public void resume() {
         currentSegment.resume();
     }
 
-    public boolean isDone(){
+    public boolean isDone() {
         return isDone;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 }

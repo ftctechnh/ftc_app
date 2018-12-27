@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.drive;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.PIDController;
@@ -51,9 +52,9 @@ public class DriveController extends SubsystemController {
         //Put general setup here
         drive = new Drive(hardwareMap);
         //anglePID = new PIDController(10,1.6,24, 2);
-        anglePID = new PIDController(10, 0.05, 15, 0.1, 0);
-        straightPID = new PIDController(50, 0.5, 60);
-        distancePID = new PIDController(0.6, 0.1, 0, 2);
+        anglePID = new PIDController(10, 0, 15, 0.1, 0.02);
+        straightPID = new PIDController(50, 0.5, 40, 1, 0);
+        distancePID = new PIDController(0.6, 0.1, 0, 2, 0.04);
         drive.setSlewSpeed(0.1);
     }
 
@@ -210,12 +211,14 @@ public class DriveController extends SubsystemController {
 
         baseHeading = angle;
 
-        telemetry.addData("starting turn segment---------------------------");
         anglePID.reset();
-        anglePID.setMinimumOutput(0);
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
         while (isOpModeActive()) {
+
+            int loop = 0;
+            runtime.reset();
+
             //While we are not in the error band keep turning
             while (!atPosition(angle, drive.getHeading(), error) && isOpModeActive()) {
 
@@ -228,23 +231,20 @@ public class DriveController extends SubsystemController {
                     continue;
                 }
 
-                telemetry.addDataDB("--------------------");
                 //Use the PIDController class to calculate power values for the wheels
                 if (angle - getHeading() > 180) {
                     power = anglePID.output(angle, 360 + getHeading());
-                    telemetry.addData("How Far", 360 + getHeading());
                 } else if (getHeading() - angle > 180) {
-                    power = anglePID.output(angle, angle + (360 - (getHeading() - angle)));
-                    telemetry.addData("How Far", angle + (360 - (getHeading() - angle)));
+                    power = anglePID.output(angle, angle - (360 - (getHeading() - angle)));
                 } else {
                     power = anglePID.output(angle, getHeading());
-                    telemetry.addData("How Far", getHeading());
                 }
                 setPower(-power * speed, power * speed);
-                telemetry.addData("Heading", getHeading());
-                telemetry.addData("Power", power);
-                telemetry.update();
+
+                loop++;
             }
+            telemetry.addData(INFO, "Average loop time for turn: "+runtime.milliseconds()/loop);
+            telemetry.update();
             runtime.reset();
             while (runtime.milliseconds() < period) {
                 if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
@@ -262,19 +262,13 @@ public class DriveController extends SubsystemController {
 
     public synchronized void driveToSegment(DriveSegment segment) {
 
+        AbstractOpMode.delay(100);
+
         double distance = segment.getDistance(), speed = segment.getSpeed(), angle = baseHeading;
         if (segment.getAngle() != null) angle = segment.getAngle();
         int error = segment.getError();
 
-        telemetry.addData(TRACE, "starting drive segment---------------------------");
-        telemetry.addData(TRACE, "speed: " + speed);
-        telemetry.addData(TRACE, "distance: " + distance);
-        telemetry.addData(TRACE, "angle: " + angle);
-        telemetry.update();
-
         baseHeading = angle;
-
-        AbstractOpMode.delay(100);
 
         straightPID.reset(); //Resets the PID values in the PID class to make sure we do not have any left over values from the last segment
         distancePID.reset();
@@ -289,6 +283,10 @@ public class DriveController extends SubsystemController {
         telemetry.update();
         double leftPower, rightPower;
         double power;
+
+        int loop = 0;
+        runtime.reset();
+
         while ((!atPosition(position, drive.getLeftPosition(), error) && !atPosition(position, drive.getRightPosition(), error)) && isOpModeActive()) {
 
             if (segment.isDone()) {
@@ -314,15 +312,19 @@ public class DriveController extends SubsystemController {
 
             drive.setPower(leftPower, rightPower);
 
-            telemetry.addData("Encoder counts: " + position);
+            /*telemetry.addData("Encoder counts: " + position);
             telemetry.addData("Left Position: " + drive.getLeftPosition());
             telemetry.addData("Right Position: " + drive.getRightPosition());
             telemetry.addData("Left Power: " + leftPower);
             telemetry.addData("Right Power: " + rightPower);
             telemetry.addData("Heading: " + getHeading());
             telemetry.addData("PID Output: " + turn);
-            telemetry.update();
+            telemetry.update();*/
+            loop++;
         }
+
+        telemetry.addData(INFO, "Average loop time for drive: "+runtime.milliseconds()/loop);
+        telemetry.update();
 
         for (int i = 0; i < 5; i++) {
             power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
@@ -361,8 +363,13 @@ public class DriveController extends SubsystemController {
 
     public synchronized void autonReleaseWheelsSequence() {
         setPower(DRIVE_RELEASE_WHEELS_POWER, DRIVE_RELEASE_WHEELS_POWER);
-        delay(2000);
+        delay(1000);
         setPower(0, 0);
+    }
+
+    public void autonDriveToWallSequence(){
+        while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")&&drive.getDistance()>=4 && AbstractOpMode.isOpModeActive());
+        RobotState.currentPath.nextSegment();
     }
 
     public synchronized double getHeading() {

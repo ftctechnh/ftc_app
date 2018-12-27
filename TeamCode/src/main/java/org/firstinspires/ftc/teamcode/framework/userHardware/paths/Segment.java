@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.paths;
 
 public abstract class Segment {
+
     private boolean isRunning = false, isDone = false;
 
     private int number;
@@ -30,11 +31,6 @@ public abstract class Segment {
         return type;
     }
 
-    public enum SegmentType {
-        DRIVE,
-        TURN
-    }
-
     protected void start() {
         isRunning = true;
         isDone = false;
@@ -59,6 +55,11 @@ public abstract class Segment {
 
     public boolean isDone() {
         return isDone;
+    }
+
+    public enum SegmentType {
+        DRIVE,
+        TURN
     }
 }
 

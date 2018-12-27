@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
 import org.firstinspires.ftc.teamcode.framework.util.State;
@@ -41,7 +42,7 @@ public class TensorFlowTest extends AbstractAutonNew {
         }
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
         if(currentPosition!=SamplePosition.UNKNOWN)lastPosition = currentPosition;
-        telemetry.addData(currentPosition.toString());
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, currentPosition.toString());
         telemetry.update();
         loop++;
         if(loop>=5) loop = 0;

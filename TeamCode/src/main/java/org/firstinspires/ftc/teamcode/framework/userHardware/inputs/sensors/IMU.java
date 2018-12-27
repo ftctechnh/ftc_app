@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 
 public class IMU {
 
@@ -33,8 +34,11 @@ public class IMU {
         GyroTimeOut = new ElapsedTime();
         GyroTimeOut.reset();
 
-        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000) ;
-        //while (!imu.isGyroCalibrated() && AbstractOpMode.isOpModeActive());
+        while (!imu.isGyroCalibrated() && GyroTimeOut.milliseconds() <= 1000 && AbstractOpMode.isOpModeActive()) {
+            AbstractOpMode.telemetry.addDataPhone(DoubleTelemetry.LogMode.INFO, imu.getCalibrationStatus().toString());
+            AbstractOpMode.telemetry.update();
+        }
+
         AbstractOpMode.telemetry.addData("IMU initialized");
     }
 

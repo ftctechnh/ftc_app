@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.Logger;
+import org.upacreekrobotics.dashboard.Dashboard;
 import org.upacreekrobotics.dashboard.Dashboard.dashboardtelemetry;
 
 public class DoubleTelemetry {
@@ -83,7 +84,7 @@ public class DoubleTelemetry {
     }
 
     public void log(Object data) {
-        logger.log(String.valueOf(data));
+        logger.log(Dashboard.getInstance().getLogPreMessage() + String.valueOf(data));
     }
 
     public void stop(){

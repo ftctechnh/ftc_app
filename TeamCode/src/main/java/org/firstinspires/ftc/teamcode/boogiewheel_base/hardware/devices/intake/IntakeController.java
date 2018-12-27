@@ -31,10 +31,10 @@ public class IntakeController extends SubsystemController {
     }
 
     public void autonIntakeSequence(){
-        while (!currentPath.getName().equals("crater side to depot") && !currentPath.getCurrentSegment().getName().equals("drive to minerals") &&
-                !currentPath.getCurrentSegment().getName().equals("back up from minerals") && AbstractOpMode.isOpModeActive());
+        while ((!currentPath.getCurrentSegment().getName().equals("drive to minerals") &&
+                !currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
         beginIntaking();
-        while (currentPath.getName().equals("crater side to depot") && (currentPath.getCurrentSegment().getName().equals("drive to minerals") ||
+        while ((currentPath.getCurrentSegment().getName().equals("drive to minerals") ||
                 currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
         finishIntaking();
     }
@@ -45,8 +45,6 @@ public class IntakeController extends SubsystemController {
     }
 
     public synchronized void finishIntaking() {
-        //intake.setIntakePower(-1);
-        //AbstractOpMode.delay(1000);
         intake.setIntakePower(INTAKE_STOP_POWER);
     }
 

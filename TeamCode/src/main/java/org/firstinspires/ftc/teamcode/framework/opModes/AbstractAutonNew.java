@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.framework.opModes;
 
-import com.qualcomm.robotcore.robocol.Command;
-
-import org.firstinspires.ftc.robotcore.internal.network.NetworkConnectionHandler;
-import org.firstinspires.ftc.robotcore.internal.network.RobotCoreCommandList;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
@@ -25,10 +21,12 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     private StateMachine stateMachine = new StateMachine();
 
+    private static AbstractAutonNew abstractAutonNew;
+
     private int initLoops = 0;
 
     public AbstractAutonNew() {
-
+        abstractAutonNew = this;
     }
 
     @Override
@@ -126,6 +124,10 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     public void addState(State state) {
         stateMachine.addState(state);
+    }
+
+    public static void addFinishedState(String state){
+        abstractAutonNew.stateMachine.addFinishedState(state);
     }
 
     private void throwException(Exception e) {

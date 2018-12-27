@@ -407,6 +407,25 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
             requestedOpModeStatus = RobotStatus.OpModeStatus.STOPPED;
     }
 
+    public String getLogPreMessage(){
+        return dashboard.internalGetLogPreMessage();
+    }
+
+    private String internalGetLogPreMessage(){
+        String packet = "";
+
+        if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
+                activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
+            double currentTime = (System.currentTimeMillis() - opModeStartTime) / 1000;
+            packet = date.getDateTime() + "`Time since start: " + currentTime + "`";
+        } else if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
+            double currentTime = (System.currentTimeMillis() - opModeInitTime) / 1000;
+            packet = date.getDateTime() + "`Time since init: " + currentTime + "`";
+        } else packet = date.getDateTime() + "`Stopped`";
+
+        return packet;
+    }
+
     ////////////////Thread to start up dashboardtelemetry and then call "receiveMessage()" in a loop////////////////
     private class DashboardHandler implements Runnable {
 
@@ -469,16 +488,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         }
 
         public void write(String text) {
-            String packet = "";
-
-            if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING) ||
-                    activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
-                double currentTime = (System.currentTimeMillis() - opModeStartTime) / 1000;
-                packet = date.getDateTime() + "`Time since start: " + currentTime + "`" + text;
-            } else if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-                double currentTime = (System.currentTimeMillis() - opModeInitTime) / 1000;
-                packet = date.getDateTime() + "`Time since init: " + currentTime + "`" + text;
-            } else packet = date.getDateTime() + "`Stopped`" + text;
+            String packet = internalGetLogPreMessage() + text;
 
             if (data != null && connected) data.write(new Message(MessageType.TELEMETRY, packet));
             else oldTelemetry = oldTelemetry + "&#%#&" + packet;

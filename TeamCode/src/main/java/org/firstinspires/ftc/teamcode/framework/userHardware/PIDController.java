@@ -38,8 +38,8 @@ public class PIDController {
         AbstractOpMode.getTelemetry().addData("Last Error", lastError);
         out = PTerm(error) + ITerm(error) + DTerm(error);
         lastError = error;
-        //if(out>0 && out<minimumOutput)out = minimumOutput;
-        //if(out<0 && out>-minimumOutput)out = -minimumOutput;
+        if(out>0 && out<minimumOutput)out = minimumOutput;
+        if(out<0 && out>-minimumOutput)out = -minimumOutput;
         return out;
     }
 
