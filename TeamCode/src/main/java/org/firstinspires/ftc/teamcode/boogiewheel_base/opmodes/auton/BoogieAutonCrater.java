@@ -57,19 +57,19 @@ public class BoogieAutonCrater extends AbstractAutonNew {
 
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
-                robot.runDrivePaths(Constants.collectRightMineral);
+                robot.runDrivePath(Constants.collectRightMineral);
                 break;
             case LEFT:
-                robot.runDrivePaths(Constants.collectLeftMineral);
+                robot.runDrivePath(Constants.collectLeftMineral);
                 break;
             case CENTER:
-                robot.runDrivePaths(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectCenterMineral);
                 break;
             default:
-                robot.runDrivePaths(Constants.collectCenterMineral);
+                robot.runDrivePath(Constants.collectCenterMineral);
                 break;
         }
-        robot.runDrivePaths(Constants.craterSideToCrater);
+        robot.runDrivePath(Constants.craterSideToCrater);
     }
 
     @Override

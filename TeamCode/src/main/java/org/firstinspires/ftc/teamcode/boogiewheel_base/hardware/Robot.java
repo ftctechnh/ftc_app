@@ -53,7 +53,7 @@ public class Robot extends AbstractRobot {
         hardware.drive.turnTo(angle, speed, error, period);
     }
 
-    public void runDrivePaths(Path path) {
+    public void runDrivePath(Path path) {
         hardware.drive.runDrivePath(path);
     }
 
