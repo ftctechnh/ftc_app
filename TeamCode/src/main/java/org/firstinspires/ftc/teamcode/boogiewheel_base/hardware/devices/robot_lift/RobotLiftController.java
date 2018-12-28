@@ -62,8 +62,10 @@ public class RobotLiftController extends SubsystemController {
 
         while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION));
 
-        robotLift.setLiftPower(0);
+        robotLift.setPosition(ROBOT_LIFT_LOWERED_POSITION);
         //so the mineral lift doesn't hit the pawl on the way down
+        delay(1000);
+        robotLift.setLiftPower(0);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_ENGAGED);
         telemetry.addData(DoubleTelemetry.LogMode.INFO,"encoder: "+robotLift.getCurrentPosition());
         currentRobotLiftState = RobotLiftState.LOWERED;

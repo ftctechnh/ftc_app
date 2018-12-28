@@ -26,6 +26,7 @@ public class BoogieAutonCrater extends AbstractAutonNew {
         addState(new State("auton mineral lift zero sequence", "start", robot.autonLowerMineralLiftSequenceCallable()));
         addState(new PathState("begin intaking", "turn to gold mineral", robot.beginIntakingCallable()));
         addState(new PathState("finish intaking", "back up from minerals", robot.finishIntakingCallable()));
+        addState(new PathState("drop marker", "drive to depot", robot.dropMarkerCallable()));
         //addState(new PathState("drive to wall with distance", "turn to wall", robot.autonDriveToWallSequenceCallable()));
     }
 
@@ -52,7 +53,7 @@ public class BoogieAutonCrater extends AbstractAutonNew {
     @Override
     public void Run() {
         robot.moveRobotLiftToBottom();
-        robot.runDrivePaths(Constants.unlatchRobot);
+        //robot.runDrivePaths(Constants.unlatchRobot);
         switch (RobotState.currentSamplePosition) {
             case RIGHT:
                 robot.runDrivePaths(Constants.collectRightMineral);

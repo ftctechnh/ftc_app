@@ -2,9 +2,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift.MineralLiftController;
 import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
 
 @TeleOp(name = "OneDriver BoogieWheel Teleop Tankdrive", group = "New")
@@ -33,7 +31,7 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
 
         addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
 
-        addEventHandler("1_lb_down", robot.DropMarker());
+        addEventHandler("1_lb_down", robot.dropMarkerCallable());
 
         ////////Intake////////
         addEventHandler("1_a_down", robot.finishIntakingCallable());

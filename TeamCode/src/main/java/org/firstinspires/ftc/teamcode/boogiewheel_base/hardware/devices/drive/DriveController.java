@@ -12,6 +12,7 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Segment;
 import org.firstinspires.ftc.teamcode.framework.userHardware.paths.TurnSegment;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
+import org.upacreekrobotics.dashboard.Dashboard;
 
 import java.text.DecimalFormat;
 
@@ -20,7 +21,6 @@ import static org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode.is
 import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
 import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState.*;
 import static org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry.LogMode.INFO;
-import static org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry.LogMode.TRACE;
 
 public class DriveController extends SubsystemController {
 
@@ -51,8 +51,8 @@ public class DriveController extends SubsystemController {
 
         //Put general setup here
         drive = new Drive(hardwareMap);
-        //anglePID = new PIDController(10,1.6,24, 2);
-        anglePID = new PIDController(10, 0, 15, 0.1, 0.02);
+        anglePID = new PIDController(15, 0,150, 0.1, 0.02);
+        //anglePID.setLogging(true);
         straightPID = new PIDController(50, 0.5, 40, 1, 0);
         distancePID = new PIDController(0.6, 0.1, 0, 2, 0.04);
         drive.setSlewSpeed(0.1);
@@ -219,8 +219,10 @@ public class DriveController extends SubsystemController {
             int loop = 0;
             runtime.reset();
 
+            double currentHeading;
+
             //While we are not in the error band keep turning
-            while (!atPosition(angle, drive.getHeading(), error) && isOpModeActive()) {
+            while (!atPosition(angle, currentHeading = getHeading(), error) && isOpModeActive()) {
 
                 if (segment.isDone()) {
                     setPower(0, 0);
@@ -232,18 +234,20 @@ public class DriveController extends SubsystemController {
                 }
 
                 //Use the PIDController class to calculate power values for the wheels
-                if (angle - getHeading() > 180) {
-                    power = anglePID.output(angle, 360 + getHeading());
-                } else if (getHeading() - angle > 180) {
-                    power = anglePID.output(angle, angle - (360 - (getHeading() - angle)));
+                if (angle - currentHeading > 180) {
+                    power = anglePID.output(angle, 360 + currentHeading);
+                } else if (currentHeading - angle > 180) {
+                    power = anglePID.output(angle, angle - (360 - (currentHeading - angle)));
                 } else {
-                    power = anglePID.output(angle, getHeading());
+                    power = anglePID.output(angle, currentHeading);
                 }
                 setPower(-power * speed, power * speed);
 
+                telemetry.addDataDB(INFO, "error: " + anglePID.getError());
+
                 loop++;
             }
-            telemetry.addData(INFO, "Average loop time for turn: "+runtime.milliseconds()/loop);
+            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
             telemetry.update();
             runtime.reset();
             while (runtime.milliseconds() < period) {
@@ -287,6 +291,8 @@ public class DriveController extends SubsystemController {
         int loop = 0;
         runtime.reset();
 
+        double currentHeading;
+
         while ((!atPosition(position, drive.getLeftPosition(), error) && !atPosition(position, drive.getRightPosition(), error)) && isOpModeActive()) {
 
             if (segment.isDone()) {
@@ -298,9 +304,11 @@ public class DriveController extends SubsystemController {
                 continue;
             }
 
+            currentHeading = getHeading();
+
             power = range(distancePID.output(position, drive.getRightPosition()));
 
-            turn = straightPID.output(startHeading, getHeading());
+            turn = straightPID.output(startHeading, currentHeading);
 
             if (power > 0) {
                 leftPower = range(power * (speed - turn));
@@ -323,13 +331,16 @@ public class DriveController extends SubsystemController {
             loop++;
         }
 
-        telemetry.addData(INFO, "Average loop time for drive: "+runtime.milliseconds()/loop);
+        telemetry.addData(INFO, "Average loop time for drive: " + runtime.milliseconds() / loop);
         telemetry.update();
 
         for (int i = 0; i < 5; i++) {
+
+            currentHeading = getHeading();
+
             power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
 
-            turn = straightPID.output(startHeading, getHeading());
+            turn = straightPID.output(startHeading, currentHeading);
 
             if (power > 0) {
                 leftPower = range(power * (speed - turn));
@@ -340,14 +351,6 @@ public class DriveController extends SubsystemController {
             }
 
             drive.setPower(leftPower, rightPower);
-
-            telemetry.addData("Encoder counts: " + position);
-            telemetry.addData("Left Position: " + drive.getLeftPosition());
-            telemetry.addData("Right Position: " + drive.getRightPosition());
-            telemetry.addData("Left Power: " + leftPower);
-            telemetry.addData("Right Power: " + rightPower);
-            telemetry.addData("Heading: " + getHeading());
-            telemetry.update();
         }
 
         drive.setPower(0, 0);
@@ -367,8 +370,9 @@ public class DriveController extends SubsystemController {
         setPower(0, 0);
     }
 
-    public void autonDriveToWallSequence(){
-        while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall")&&drive.getDistance()>=4 && AbstractOpMode.isOpModeActive());
+    public void autonDriveToWallSequence() {
+        while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && drive.getDistance() >= 4 && AbstractOpMode.isOpModeActive())
+            ;
         RobotState.currentPath.nextSegment();
     }
 
@@ -520,9 +524,11 @@ public class DriveController extends SubsystemController {
         return drive.isGyroCalibrated();
     }
 
-    public void DropTeamMarker() {
+    public void dropTeamMarker() {
+        currentPath.pause();
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(1000);
         drive.setMarkerServo(DRIVE_TEAM_MARKER_RETRACTED);
+        currentPath.resume();
     }
 }

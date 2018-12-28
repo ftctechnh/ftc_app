@@ -18,7 +18,7 @@ public class OneDriverBoogieTeleop extends AbstractTeleop {
         ////////Drive////////
         addEventHandler("1_lsb_down", robot.toggleDriveInvertedCallable());
 
-        addEventHandler("1_lb_down", robot.DropMarker());
+        addEventHandler("1_lb_down", robot.dropMarkerCallable());
 
         ////////Intake////////
         addEventHandler("1_a_down", robot.finishIntakingCallable());

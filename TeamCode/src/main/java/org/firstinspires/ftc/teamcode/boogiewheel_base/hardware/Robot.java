@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware;
 
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift.MineralLift;
 import org.firstinspires.ftc.teamcode.framework.userHardware.paths.Path;
 import org.firstinspires.ftc.teamcode.framework.util.AbstractRobot;
 
@@ -284,9 +283,9 @@ public class Robot extends AbstractRobot {
         hardware.robotLift.lowerLift();
     }
 
-    public Callable DropMarker() {
+    public Callable dropMarkerCallable() {
         return () -> {
-            hardware.drive.DropTeamMarker();
+            hardware.drive.dropTeamMarker();
             return true;
         };
     }
