@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-@Autonomous(name="5: Ambition", group = "Testing")
-public class autonomousDrive_SortPlacePark extends LinearOpMode
+@Autonomous(name="X: Drop and park", group = "Testing")
+public class autonomousDriveX_DropPark extends LinearOpMode
 {
     Bogg robot;
     Auto auto;
@@ -18,8 +16,9 @@ public class autonomousDrive_SortPlacePark extends LinearOpMode
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         auto = new Auto(robot, telemetry);
-        action = Auto.Mode.Drop;
+
         waitForStart();
+        action = Auto.Mode.Drop;
 
         while (opModeIsActive())
         {
@@ -29,36 +28,38 @@ public class autonomousDrive_SortPlacePark extends LinearOpMode
                     action = auto.drop();
                     break;
                 case LookForMinerals:
-                    action = auto.lookForMinerals();
                 case Slide1:
                     action = auto.slide1();
                     break;
-                case PushGold:
-                    action = auto.pushGold();
+                case PushGold: // ==Park
+                    double inchesMovedX = robot.driveEngine.xDist();
+                    double inchesMovedY = robot.driveEngine.yDist();
+                    if(inchesMovedY < 4 * 12) {
+                        robot.driveEngine.drive(0, .3);
+                        robot.driveEngine.resetDistances();
+                    }
+                    else if(inchesMovedX < Math.PI * 1 /2){
+                        robot.driveEngine.rotate(.2);
+                    }
+                    else{
+                        robot.dropMarker(Bogg.Direction.Right);
+                        robot.driveEngine.drive(0, 0);
+                        action = Auto.Mode.Stop;
+                    }
                     break;
-                case Slide2:
-                    action = auto.slide2();
-                    break;
-                case TurnByCamera:
-                    action = auto.turnByCamera();
-                    break;
-                case MoveToDepot:
-                    action = auto.moveToDepot();
-                    break;
-                case DropMarker:
-                    action = auto.dropMarker();
-                case MoveToCrater:
-                    action = auto.moveToCrater();
                 default:
                     auto.stop();
+
             }
 
             // Display the current values
-            telemetry.addData("mode:", action);
+            telemetry.addData("mode", action);
             telemetry.update();
             idle();
         }
-        auto.stop();
     }
+
+
+
 }
 

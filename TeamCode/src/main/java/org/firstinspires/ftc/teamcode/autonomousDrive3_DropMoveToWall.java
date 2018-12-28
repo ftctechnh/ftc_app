@@ -2,16 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-@Autonomous(name="2: Drop and slide", group = "Testing")
-public class autonomousDrive_DropSlide extends LinearOpMode
+@Autonomous(name="3: Drop and move to wall", group = "Testing")
+public class autonomousDrive3_DropMoveToWall extends LinearOpMode
 {
     Bogg robot;
-    Auto auto;
-    Auto.Mode action;
+    private Auto auto;
+    private Auto.Mode action;
+
 
     @Override
     public void runOpMode()
@@ -33,18 +31,23 @@ public class autonomousDrive_DropSlide extends LinearOpMode
                 case Slide1:
                     action = auto.slide1();
                     break;
+                case PushGold:
+                case Slide2:
+                    action = auto.slide2();
+                    break;
+                case TurnByCamera:
+                    action = auto.turnByCamera();
+                    break;
                 default:
                     auto.stop();
             }
 
             // Display the current values
-            telemetry.addData("mode", action);
+            telemetry.addData("mode", action);         //put this before the things that break
             telemetry.update();
             idle();
         }
+        auto.stop();
     }
-
-
-
 }
 

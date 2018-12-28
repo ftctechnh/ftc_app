@@ -7,8 +7,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Auto {
-    Bogg robot = null;
-    Telemetry telemetry = null;
+    Bogg robot;
+    Telemetry telemetry;
     private ElapsedTime timer = null;
     private int iSP = -1; //initialSlopePositivity
 
@@ -43,7 +43,7 @@ public class Auto {
         {
             timer = new ElapsedTime();
         }
-        if (timer.seconds() < 2) //for the first 2 seconds
+        if (getTime() < 2) //for the first 2 seconds
         {
             telemetry.addData("time", getTime());
             robot.lift(-1); //pull while we
@@ -65,7 +65,7 @@ public class Auto {
     }
 
 
-    int goldPosition = -1;
+    private int goldPosition = -1;
     Mode lookForMinerals()
     {
         telemetry.addLine("Looking for minerals");
@@ -173,7 +173,7 @@ public class Auto {
 
     Mode moveToDepot()
     {
-        if(timer.seconds() < 1.5) {
+        if(getTime() < 1.5) {
             return Mode.MoveToDepot;  //time to move the sensor
         }
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
@@ -207,7 +207,7 @@ public class Auto {
                 robot.dropMarker(Bogg.Direction.Left);
                 break;
         }
-        if(timer.seconds() > 4)
+        if(getTime() > 4)
             return Mode.MoveToCrater;
 
         return Mode.DropMarker;
@@ -235,7 +235,7 @@ public class Auto {
         robot.lift(0);
     }
 
-    double getTime()
+    private double getTime()
     {
         return timer.seconds();
     }

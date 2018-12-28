@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="1: Drop with touch sensor", group = "Testing")
-public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
+public class autonomousDrive1_DropWithTouchSensor extends LinearOpMode
 {
     Bogg robot;
     Auto auto;

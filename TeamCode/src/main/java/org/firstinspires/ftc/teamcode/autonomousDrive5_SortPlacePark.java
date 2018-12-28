@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="3: Drop and move to wall", group = "Testing")
-public class autonomousDrive_DropMoveToWall extends LinearOpMode
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+@Autonomous(name="5: Ambition", group = "Testing")
+public class autonomousDrive5_SortPlacePark extends LinearOpMode
 {
     Bogg robot;
-    private Auto auto;
-    private Auto.Mode action;
+    Auto auto;
+    Auto.Mode action;
 
 
     @Override
@@ -16,9 +18,8 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
     {
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         auto = new Auto(robot, telemetry);
-
-        waitForStart();
         action = Auto.Mode.Drop;
+        waitForStart();
 
         while (opModeIsActive())
         {
@@ -28,22 +29,32 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                     action = auto.drop();
                     break;
                 case LookForMinerals:
+                    action = auto.lookForMinerals();
                 case Slide1:
                     action = auto.slide1();
                     break;
                 case PushGold:
+                    action = auto.pushGold();
+                    break;
                 case Slide2:
                     action = auto.slide2();
                     break;
                 case TurnByCamera:
                     action = auto.turnByCamera();
                     break;
+                case MoveToDepot:
+                    action = auto.moveToDepot();
+                    break;
+                case DropMarker:
+                    action = auto.dropMarker();
+                case MoveToCrater:
+                    action = auto.moveToCrater();
                 default:
                     auto.stop();
             }
 
             // Display the current values
-            telemetry.addData("mode", action);         //put this before the things that break
+            telemetry.addData("mode:", action);
             telemetry.update();
             idle();
         }
