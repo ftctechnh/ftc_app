@@ -54,11 +54,6 @@ public class autonomousDrive_SortPlacePark extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("time: ", auto.getTime());
-            telemetry.addData("mobile distance: ", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
-            telemetry.addData("fixed distance:", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
-            telemetry.addData("Drive x:", robot.driveEngine.xOut);
-            telemetry.addData("Drive y:", robot.driveEngine.yOut);
             telemetry.addData("mode:", action);
             telemetry.update();
             idle();

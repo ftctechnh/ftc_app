@@ -147,12 +147,7 @@ public class Bogg
             brake.setPosition(.6);
     }
 
-    void setBrake(double position)
-    {
-        brake.setPosition(position);
-    }
-
-    void rotateMobile(Direction direction) //in degrees for clarity
+    void rotateMobile(Direction direction)
     {
         switch (direction)
         {
@@ -190,6 +185,9 @@ public class Bogg
             driveEngine.drive(smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5),true);
         else
             driveEngine.drive(smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1));
+        telemetry.addData("gamepad x", g.left_stick_x);
+        telemetry.addData("gamepad y", g.left_stick_y);
+        telemetry.addLine("Note: y is negated");
     }
 
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
@@ -197,6 +195,11 @@ public class Bogg
         double leftX = smoothX(gDrive.left_stick_x, 1);
         double leftY = smoothY(-gDrive.left_stick_y, 1);
         double spin = smoothSpin(-gRotate.right_stick_x);
+
+        telemetry.addData("gamepad x", gDrive.left_stick_x);
+        telemetry.addData("gamepad y", gDrive.left_stick_y);
+        telemetry.addData("gamepad spin", gRotate.right_stick_x);
+        telemetry.addLine("Note: y and spin are negated");
 
         driveEngine.driveCurvy(leftX, leftY, spin);
 
@@ -208,8 +211,10 @@ public class Bogg
             driveEngine.rotate(-g.right_stick_x);
         else
             driveEngine.rotate(smoothSpin(-g.right_stick_x));
-    }
 
+        telemetry.addData("gamepad spin", g.right_stick_x);
+        telemetry.addLine("Note: spin is negated");
+    }
 
 
     boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
@@ -217,30 +222,9 @@ public class Bogg
         double[] location = camera.getLocation();
         if(location != null)
         {
-
-            double robot_x = location[0];
-            double robot_y = location[1];
-
-            double delta_x = target_x - robot_x;
-            double delta_y = target_y - robot_y;
-
-            if(Math.abs(delta_x) < target_radius && Math.abs(delta_y) < target_radius)
-            {
-                driveEngine.drive(0,0);
-                return true;
-            }
-
-            //the direction a compass would tell us
-            double heading_of_robot_on_field = camera.getHeading();
-
-            //where a map would tell us a mountain is, relative to us
-            double heading_of_target_from_robot_location = Math.atan2(delta_y,delta_x);
-
-            //where compass would say the mountain is located considering our compass isn't pointed north
-            double target_heading = heading_of_robot_on_field - heading_of_target_from_robot_location;
+            double target_heading = camera.headingToTarget(location,target_x,target_y);
 
             driveEngine.drive(Math.sin(target_heading) * speed, Math.cos(target_heading) * speed);
-
         }
          return false;
     }
@@ -249,50 +233,29 @@ public class Bogg
     {
         double[] location = camera.getLocation();
         if(location != null) {
-
-            double robot_x = location[0];
-            double robot_y = location[1];
-
-            double delta_x = target_x - robot_x;
-            double delta_y = target_y - robot_y;
-
-
-            //the direction a compass would tell us
-            double heading_of_robot_on_field = camera.getHeading();
-
-            //where a map would tell us a mountain is, relative to us
-            double heading_of_target_from_robot_location = Math.atan2(delta_y, delta_x);
-
-            //where compass would say the mountain is located considering our compass isn't pointed north
-            double target_heading = heading_of_robot_on_field - heading_of_target_from_robot_location;
+            double target_heading = camera.headingToTarget(location,target_x,target_y);
 
             if (Math.abs(target_heading) < accuracy_angle * Math.PI/180) {
                 driveEngine.rotate(0);
                 return true;
             }
 
-            driveEngine.rotate(.1 * Math.signum(target_heading)); //if target is more counterclockwise, we want to move counterclockwise.
+            driveEngine.rotate(.08 * Math.signum(target_heading)); //if target is more counterclockwise, we want to move counterclockwise.
         }
         return false;
     }
+
     boolean rotateToWall(double accuracy_angle)
     {
-        double[] location = camera.getLocation();
-        double targetHeading;
-        if(location != null)
+        Double wallHeading = camera.headingToWall();
+        telemetry.addData("wall heading", wallHeading);
+        if(wallHeading != null)
         {
-
-            //the direction a compass would tell us
-            double currentHeading = camera.getHeading() * 180 / Math.PI;
-            targetHeading = Math.round(currentHeading / 90) * 90;
-
-            double headingDifference = targetHeading - currentHeading;
-
-            if(Math.abs(headingDifference) < accuracy_angle)
+            if(Math.abs(wallHeading) < accuracy_angle)
                 return true;
             else
             {
-                if(headingDifference > 0)
+                if(wallHeading > 0)
                     driveEngine.rotate(.08);
                 else
                     driveEngine.rotate(-.08);
@@ -320,7 +283,7 @@ public class Bogg
                 target = camera.allTrackables.get(1);
             else if (camera.targetVisible(2))
                 target = camera.allTrackables.get(2);
-            else if (camera.targetVisible(3))
+            else // if (camera.targetVisible(3))
                 target = camera.allTrackables.get(3);
 
 

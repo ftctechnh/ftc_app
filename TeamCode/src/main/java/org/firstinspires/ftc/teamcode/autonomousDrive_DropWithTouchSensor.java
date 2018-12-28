@@ -34,11 +34,6 @@ public class autonomousDrive_DropWithTouchSensor extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("touch top", robot.sensors.touchTop.isPressed());
-            telemetry.addData("brake position: ", robot.brake.getPosition());
-            telemetry.addData("touch bottom", robot.sensors.touchBottom.isPressed());
-            telemetry.addData("lift power", robot.liftAve);
-            telemetry.addData("time: ", auto.getTime());
             telemetry.addData("mode", action);
             telemetry.update();
             idle();

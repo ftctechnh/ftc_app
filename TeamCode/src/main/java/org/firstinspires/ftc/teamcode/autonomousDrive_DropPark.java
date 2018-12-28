@@ -53,13 +53,7 @@ public class autonomousDrive_DropPark extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("time: ", auto.getTime());
             telemetry.addData("mode", action);
-            telemetry.addData("Drive x:", robot.driveEngine.xOut);
-            telemetry.addData("Drive y:", robot.driveEngine.yOut);
-            telemetry.addData("brake position: ", robot.brake.getPosition());
-            telemetry.addData("touch bottom", robot.sensors.touchBottom.isPressed());
-            telemetry.addData("touch top", robot.sensors.touchTop.isPressed());
             telemetry.update();
             idle();
         }

@@ -38,10 +38,7 @@ public class autonomousDrive_DropSlide extends LinearOpMode
             }
 
             // Display the current values
-            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
             telemetry.addData("mode", action);
-            telemetry.addData("time: ", auto.getTime());
-            telemetry.addData("touch top", robot.sensors.touchTop.isPressed());
             telemetry.update();
             idle();
         }
