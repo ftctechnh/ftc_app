@@ -38,19 +38,21 @@ public class BoogieAutonCrater extends AbstractAutonNew {
 
     @Override
     public void InitLoop(int loop) {
-        if (loop % 5 == 0) {
-            tensorFlow.pause();
-            tensorFlow.start();
-        }
+        if (loop % 5 == 0) tensorFlow.restart();
+
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
+
         if (currentPosition != SamplePosition.UNKNOWN)
             RobotState.currentSamplePosition = currentPosition;
+
         telemetry.addData(DoubleTelemetry.LogMode.INFO, currentPosition.toString());
         telemetry.update();
     }
 
     @Override
     public void Run() {
+        tensorFlow.stop();
+
         robot.moveRobotLiftToBottom();
 
         switch (RobotState.currentSamplePosition) {
@@ -72,7 +74,7 @@ public class BoogieAutonCrater extends AbstractAutonNew {
 
     @Override
     public void Stop() {
-        robot.stop();
         tensorFlow.stop();
+        robot.stop();
     }
 }

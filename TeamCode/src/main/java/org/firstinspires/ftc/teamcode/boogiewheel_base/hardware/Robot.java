@@ -54,7 +54,7 @@ public class Robot extends AbstractRobot {
     }
 
     public void runDrivePaths(Path path) {
-        hardware.drive.runDrivePaths(path);
+        hardware.drive.runDrivePath(path);
     }
 
     public int[][] recordPath(int numSamples, int timeInterval) {

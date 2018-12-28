@@ -189,10 +189,10 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
 
-    public synchronized void runDrivePaths(Path path) {
+    public synchronized void runDrivePath(Path path) {
         currentPath = path;
         currentPath.reset();
-        while (!path.isDone()) {
+        while (!path.isDone() && AbstractOpMode.isOpModeActive()) {
             if (path.getNextSegment() == null) break;
             if (path.getCurrentSegment().getType() == Segment.SegmentType.TURN) {
                 turnToSegment((TurnSegment) path.getCurrentSegment());
@@ -214,9 +214,6 @@ public class DriveController extends SubsystemController {
         drive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double power;
         while (isOpModeActive()) {
-
-            int loop = 0;
-            runtime.reset();
 
             double currentHeading;
 
@@ -241,22 +238,15 @@ public class DriveController extends SubsystemController {
                     power = anglePID.output(angle, currentHeading);
                 }
                 setPower(-power * speed, power * speed);
-
-                telemetry.addDataDB(INFO, "error: " + anglePID.getError());
-
-                loop++;
             }
-            telemetry.addData(INFO, "Average loop time for turn: " + runtime.milliseconds() / loop);
-            telemetry.update();
-            runtime.reset();
+
             while (runtime.milliseconds() < period) {
                 if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
                     break;
             }
             if ((abs(getHeading() - angle)) > error && (abs(getHeading() + angle)) > error)
                 continue;
-            telemetry.addData("Final heading", getHeading());
-            telemetry.update();
+
             drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             return;
         }
@@ -287,9 +277,6 @@ public class DriveController extends SubsystemController {
         double leftPower, rightPower;
         double power;
 
-        int loop = 0;
-        runtime.reset();
-
         double currentHeading;
 
         while ((!atPosition(position, drive.getLeftPosition(), error) && !atPosition(position, drive.getRightPosition(), error)) && isOpModeActive()) {
@@ -307,7 +294,13 @@ public class DriveController extends SubsystemController {
 
             power = range(distancePID.output(position, drive.getRightPosition()));
 
-            turn = straightPID.output(startHeading, currentHeading);
+            if (angle - currentHeading > 180) {
+                turn = anglePID.output(angle, 360 + currentHeading);
+            } else if (currentHeading - angle > 180) {
+                turn = anglePID.output(angle, angle - (360 - (currentHeading - angle)));
+            } else {
+                turn = anglePID.output(angle, currentHeading);
+            }
 
             if (power > 0) {
                 leftPower = range(power * (speed - turn));
@@ -318,20 +311,7 @@ public class DriveController extends SubsystemController {
             }
 
             drive.setPower(leftPower, rightPower);
-
-            /*telemetry.addData("Encoder counts: " + position);
-            telemetry.addData("Left Position: " + drive.getLeftPosition());
-            telemetry.addData("Right Position: " + drive.getRightPosition());
-            telemetry.addData("Left Power: " + leftPower);
-            telemetry.addData("Right Power: " + rightPower);
-            telemetry.addData("Heading: " + getHeading());
-            telemetry.addData("PID Output: " + turn);
-            telemetry.update();*/
-            loop++;
         }
-
-        telemetry.addData(INFO, "Average loop time for drive: " + runtime.milliseconds() / loop);
-        telemetry.update();
 
         for (int i = 0; i < 5; i++) {
 
