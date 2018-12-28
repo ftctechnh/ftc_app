@@ -18,7 +18,7 @@ public class Auto {
         robot.dropMarker(Bogg.Direction.Straight);
         this.telemetry = telemetry;
         robot.camera = new Camera(robot.hardwareMap, telemetry);
-        telemetry.addLine("Made it to Point X");
+        telemetry.addLine("Wait for start");
         telemetry.update();
     }
 
@@ -68,6 +68,7 @@ public class Auto {
     int goldPosition = -1;
     Mode lookForMinerals()
     {
+        telemetry.addLine("Looking for minerals");
         switch(robot.camera.getGoldPosition())
         {
             case 0:
@@ -102,6 +103,7 @@ public class Auto {
 
     Mode pushGold()
     {
+        telemetry.addData("gold position", goldPosition);
         switch (goldPosition)
         {
             case 0:

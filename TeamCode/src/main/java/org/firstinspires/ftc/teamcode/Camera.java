@@ -313,7 +313,13 @@ public class Camera{
 
     }
 
-    public double[] getLocation()
+    boolean targetVisible(int whichTarget)
+    {
+        VuforiaTrackable trackable = allTrackables.get(whichTarget);
+        return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
+    }
+
+    double[] getLocation()
     {
         // check all the trackable target to see which one (if any) is visible.
         targetVisible = false;
@@ -340,7 +346,7 @@ public class Camera{
         return null;
     }
 
-    public Double getHeading()
+    Double getHeading()
     {
         // check all the trackable target to see which one (if any) is visible.
         for (VuforiaTrackable trackable : allTrackables) {
@@ -392,11 +398,21 @@ public class Camera{
         }
         return 0;
     }
-
-    boolean targetVisible(int whichTarget)
+    
+    Double headingToWall()
     {
-        VuforiaTrackable trackable = allTrackables.get(whichTarget);
-        return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
+        double[] location = getLocation();
+        double targetHeading;
+        if(location != null)
+        {
+
+            //the direction a compass would tell us
+            double currentHeading = getHeading() * 180 / Math.PI;
+            targetHeading = Math.round(currentHeading / 90) * 90;
+
+            return targetHeading - currentHeading;
+        }
+        return null;
     }
 
     double[] getMoveToWall(double[] location, double heading, VuforiaTrackable target)
@@ -458,7 +474,6 @@ public class Camera{
             telemetry.addLine("Move to wall complete!");
             return new double[]{0, 0, 0};
         }
-
     }
 
     double[] getOrbit(double[] location, double target_x, double target_y, boolean CounterClockwise)
