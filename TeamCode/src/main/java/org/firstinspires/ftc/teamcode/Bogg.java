@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.icu.lang.UProperty;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 public class Bogg
@@ -20,6 +21,7 @@ public class Bogg
     Sensors sensors;
     Servo brake;
     Servo push;
+    Servo dServo;
 
     double alpha = 0.5;
     double liftAlpha = .12;
@@ -28,9 +30,16 @@ public class Bogg
     double yAve = 0;
     double spinAve = 0;
     double liftAve = 0;
-    double open = -.4;
-    double close = .4;
+
+
     Telemetry telemetry;
+
+    enum Direction
+    {
+        Left,
+        Straight,
+        Right
+    }
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
     {
@@ -41,7 +50,8 @@ public class Bogg
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
-        push = hardwareMap.servo.get("push");
+        push = hardwareMap.servo.get("dropMarker");
+        dServo = hardwareMap.get(Servo.class, "dServo");
     }
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Gamepad gamepad2, Telemetry telemetry)
@@ -54,7 +64,8 @@ public class Bogg
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
-        push = hardwareMap.servo.get("push");
+        push = hardwareMap.servo.get("dropMarker");
+        dServo = hardwareMap.get(Servo.class, "dServo");
     }
 
 
@@ -141,12 +152,36 @@ public class Bogg
         brake.setPosition(position);
     }
 
-    void push(boolean close)
+    void rotateMobile(Direction direction) //in degrees for clarity
     {
-        if(close)
-            push.setPosition(this.close);
-        else
-            push.setPosition(open);
+        switch (direction)
+        {
+            case Left:
+                dServo.setPosition(-.6);
+                break;
+            case Straight:
+                dServo.setPosition(0);
+                break;
+            case Right:
+                dServo.setPosition(.6);
+                break;
+        }
+    }
+
+    void dropMarker(Direction direction)
+    {
+        switch (direction)
+        {
+            case Left:
+                push.setPosition(-.4);
+                break;
+            case Straight:
+                push.setPosition(0);
+                break;
+            case Right:
+                push.setPosition(.4);
+                break;
+        }
     }
 
     void manualDrive(Gamepad g)
@@ -257,10 +292,10 @@ public class Bogg
                 return true;
             else
             {
-                if(headingDifference < 0)
-                    driveEngine.rotate(.2);
+                if(headingDifference > 0)
+                    driveEngine.rotate(.08);
                 else
-                    driveEngine.rotate(-.2);
+                    driveEngine.rotate(-.08);
             }
 
             return false;

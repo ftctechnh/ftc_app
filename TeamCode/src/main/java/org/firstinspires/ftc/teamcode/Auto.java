@@ -5,20 +5,17 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-
-import java.util.ArrayList;
 
 public class Auto {
     Bogg robot = null;
     Telemetry telemetry = null;
     private ElapsedTime timer = null;
-    private double iSP = -1; //initialSlopePositivity
+    private int iSP = -1; //initialSlopePositivity
 
     Auto(Bogg robot, Telemetry telemetry)
     {
         this.robot = robot;
-        robot.push(true);
+        robot.dropMarker(Bogg.Direction.Straight);
         this.telemetry = telemetry;
         robot.camera = new Camera(robot.hardwareMap, telemetry);
         telemetry.addLine("Made it to Point X");
@@ -27,21 +24,21 @@ public class Auto {
 
     public enum Mode
     {
-        Stop,
         Drop,
-        Slide,
-        Spin,
-        MoveByEncoder,
+        LookForMinerals,
+        Slide1,
+        PushGold,
+        Slide2,
         TurnByCamera,
         MoveToDepot,
         DropMarker,
-        MoveToCrater
+        MoveToCrater,
+        Stop
     }
 
 
     Mode drop()
     {
-        robot.push(true);
         if(timer == null) //TODO: Don't fix what's not broken
         {
             timer = new ElapsedTime();
@@ -54,36 +51,95 @@ public class Auto {
         } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
         {
             telemetry.addData("touchTop", robot.sensors.touchTop.isPressed());
-            robot.lift(.2); //push up, which drops the robot
+            robot.lift(.2); //dropMarker up, which drops the robot
         }
         else {
             timer.reset();
             robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.lift(0);
             robot.driveEngine.resetDistances();
-            for(int i = 0; i < 6; i++){robot.driveEngine.checkpoint.add(false);}
 
-            return Mode.Slide;
+            return Mode.Slide1;
         }
         return Mode.Drop;
     }
 
 
-    Mode slide()
+    int goldPosition = -1;
+    Mode lookForMinerals()
     {
-            robot.lift(0);
-            if (robot.driveEngine.moveOnPath(
-                    new double[]{-6, 0},
-                    new double[]{0, 4},
-                    new double[]{6, 0},
-                    new double[]{0, 24},
-                    new double[]{Math.PI / 4},
-                    new double[]{-24, 24}))
-            {
-                robot.driveEngine.drive(0,0);
-                return Mode.TurnByCamera;
-            }
-            return Mode.Slide;
+        switch(robot.camera.getGoldPosition())
+        {
+            case 0:
+                goldPosition = 0;
+                return Mode.Slide1;
+            case 1:
+                goldPosition = 1;
+                return Mode.Slide1;
+            case 2:
+                goldPosition = 2;
+                return Mode.Slide1;
+            default:
+                return Mode.LookForMinerals;
+        }
+    }
+
+
+    Mode slide1()
+    {
+        robot.lift(0);
+        if (robot.driveEngine.moveOnPath("slide1",
+                new double[]{-6, 0},
+                new double[]{0, 4},
+                new double[]{6, 0},
+                new double[]{0, 24}))
+        {
+            robot.driveEngine.drive(0,0);
+            return Mode.Slide2;
+        }
+        return Mode.Slide1;
+    }
+
+    Mode pushGold()
+    {
+        switch (goldPosition)
+        {
+            case 0:
+                if(robot.driveEngine.moveOnPath("pushGold",
+                        new double[]{-34,0},
+                        new double[]{0,12},
+                        new double[]{0,-12},
+                        new double[]{34,0}))
+                    return Mode.Slide2;
+                break;
+            case 1:
+                if(robot.driveEngine.moveOnPath("pushGold",
+                        new double[]{0,12}))
+                    return Mode.Slide2;
+                break;
+            case 2:
+                if(robot.driveEngine.moveOnPath("pushGold",
+                        new double[]{34,0},
+                        new double[]{0,12},
+                        new double[]{0,-12},
+                        new double[]{-34,0}))
+                    return Mode.Slide2;
+                break;
+        }
+        return Mode.PushGold;
+    }
+
+    Mode slide2()
+    {
+        robot.lift(0);
+        if (robot.driveEngine.moveOnPath("slide2",
+                new double[]{Math.PI / 4},
+                new double[]{-24, 24}))
+        {
+            robot.driveEngine.drive(0,0);
+            return Mode.TurnByCamera;
+        }
+        return Mode.Slide2;
     }
 
 
@@ -97,7 +153,15 @@ public class Auto {
     {
         if(robot.rotateToWall(2)) {
             double[] location = robot.camera.getLocation();
-            iSP = Math.signum(location[0] * location[1]);
+            double max = Math.max(Math.abs(location[0]), Math.abs(location[1]));
+            if(max == Math.abs(location[0])) {
+                iSP = -1;
+                robot.rotateMobile(Bogg.Direction.Right);
+            }
+            else {
+                iSP = 1;
+                robot.rotateMobile(Bogg.Direction.Left);
+            }
             timer.reset();
             return Mode.MoveToDepot;
         }
@@ -108,8 +172,7 @@ public class Auto {
     Mode moveToDepot()
     {
         if(timer.seconds() < 1.5) {
-            robot.sensors.rotateMobile(-iSP * 90);
-            return Mode.MoveToDepot;
+            return Mode.MoveToDepot;  //time to move the sensor
         }
         double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
         double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
@@ -119,7 +182,10 @@ public class Auto {
         robot.driveEngine.drive(-iSP * .2,(4 - fixedDistance)/10.0);
 
         if(mobileDistance < 18) {
-            robot.sensors.rotateMobile(iSP * 90);
+            if(iSP == -1)
+                robot.rotateMobile(Bogg.Direction.Left);
+            else
+                robot.rotateMobile(Bogg.Direction.Right);
             timer.reset();
             robot.driveEngine.resetDistances();
             return Mode.DropMarker;
@@ -130,30 +196,19 @@ public class Auto {
 
     Mode dropMarker()
     {
-        double rotation = robot.driveEngine.spinAngle();
-        robot.sensors.rotateMobile(iSP * 90);
-        if(iSP == -1 && rotation < Math.PI) //half a rotation
+        switch (iSP)
         {
-            robot.driveEngine.rotate(.5);
-            timer.reset();
-            return Mode.DropMarker;
+            case -1: //drop on right side
+                robot.dropMarker(Bogg.Direction.Right);
+                break;
+            case 1:  //drop on left side
+                robot.dropMarker(Bogg.Direction.Left);
+                break;
         }
+        if(timer.seconds() > 4)
+            return Mode.MoveToCrater;
 
-        if(timer.seconds() < 4)
-        {
-            robot.driveEngine.drive(0, 0);
-            robot.push(false);
-            return Mode.DropMarker;
-        }
-
-        if (iSP == -1 && rotation < 2 * Math.PI) //full rotation
-        {
-            robot.driveEngine.rotate(.5);
-            return Mode.DropMarker;
-        }
-
-        return Mode.MoveToCrater;
-
+        return Mode.DropMarker;
     }
 
 
@@ -174,6 +229,7 @@ public class Auto {
     void stop()
     {
         robot.driveEngine.drive(0,0);
+        robot.dropMarker(Bogg.Direction.Straight);
         robot.lift(0);
     }
 

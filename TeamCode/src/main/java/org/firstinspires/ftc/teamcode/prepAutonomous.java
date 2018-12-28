@@ -24,7 +24,7 @@ public class prepAutonomous extends LinearOpMode
         waitForStart();
         action = Mode.Drop;
 
-        robot.push(false);
+        robot.dropMarker(Bogg.Direction.Up);
         timer = new ElapsedTime();
 
         while (opModeIsActive())
@@ -45,12 +45,10 @@ public class prepAutonomous extends LinearOpMode
                     else if(t < 7)
                     {
                         robot.setBrake(true);
-                        robot.push(false);
                     }
                     else if(t < 9) //wait for brake to engage
                     {
                         robot.lift(0); //relax, which drops the robot
-                        robot.push(true);
                     }
                     else //if t > 9
                         action = Mode.Stop;

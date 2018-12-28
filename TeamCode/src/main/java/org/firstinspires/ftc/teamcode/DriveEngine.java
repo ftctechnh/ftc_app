@@ -129,9 +129,11 @@ public class DriveEngine {
         left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    ArrayList<Boolean> checkpoint = new ArrayList<>();
-    boolean moveOnPath(double[] ... args)
+    private ArrayList<Boolean> checkpoint = new ArrayList<>();
+    boolean moveOnPath(String commandKey, double[] ... args)
     {
+        addCommands(args.length, commandKey);
+
         int c = 0;
         for(boolean b: checkpoint)
         {
@@ -171,10 +173,10 @@ public class DriveEngine {
                 if(r > 4) {
                     drive(deltaX / r * .2, deltaY / r * .2);
                 }
-                else if(r > 1) {
+                else if(r > .5) {
                     drive(deltaX / r * .1, deltaY / r * .1);
                 }
-                else if(r <= 1){
+                else if(r <= .5){
                     checkpoint.set(c, true);
                     resetDistances();
                 }
@@ -183,18 +185,15 @@ public class DriveEngine {
         return false;
     }
 
-    void resetXDist()
+    private ArrayList<String> keyList;
+    private void addCommands(int n, String commandKey)
     {
-        back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        back.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-    }
-    void resetYDist()
-    {
-        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        left.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if(keyList.contains(commandKey))
+            return;
+        keyList.add(commandKey);
+        for (int i = 0; i < n; i++)
+            checkpoint.add(false);
+        resetDistances();
     }
 
     double xDist()

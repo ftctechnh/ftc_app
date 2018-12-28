@@ -27,14 +27,16 @@ public class autonomousDrive_DropMoveToWall extends LinearOpMode
                 case Drop:
                     action = auto.drop();
                     break;
-                case Slide:
-                    action = auto.slide();
+                case LookForMinerals:
+                case Slide1:
+                    action = auto.slide1();
                     break;
-                case Spin:
-                    action = auto.spin();
+                case PushGold:
+                case Slide2:
+                    action = auto.slide2();
                     break;
-                case MoveByEncoder:
-                    action = auto.moveByEncoder();
+                case TurnByCamera:
+                    action = auto.turnByCamera();
                     break;
                 default:
                     auto.stop();

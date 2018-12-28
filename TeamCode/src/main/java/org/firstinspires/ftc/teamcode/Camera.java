@@ -42,6 +42,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -136,9 +138,23 @@ public class Camera{
     VuforiaTrackable backSpace;
     List<VuforiaTrackable> allTrackables;
 
+    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
+    /**
+     * {@link #tfod} is the variable we will use to store our instance of the Tensor Flow Object
+     * Detection engine.
+     */
+    private TFObjectDetector tfod;
+
+
     public Camera(HardwareMap hardwareMap, Telemetry telemetry){
         this.telemetry = telemetry;
         startCamera(hardwareMap);
+        if (tfod != null) {
+            tfod.activate();
+        }
     }
 
     public void startCamera(HardwareMap hardwareMap) {
@@ -284,6 +300,17 @@ public class Camera{
         /** Start tracking the data sets we care about. */
         targetsRoverRuckus.activate();
 
+
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                    "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+            tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+            tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
     }
 
     public double[] getLocation()
@@ -366,27 +393,10 @@ public class Camera{
         return 0;
     }
 
-    public boolean targetVisible(int whichTarget) {
-        VuforiaTrackable trackable = allTrackables.get(whichTarget);
-        return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
-    }
-
-    public Double alignToTarget(int whichTarget)
+    boolean targetVisible(int whichTarget)
     {
         VuforiaTrackable trackable = allTrackables.get(whichTarget);
-        targetVisible = false;
-        if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-            targetVisible = true;
-
-            OpenGLMatrix robotLocationTransform = ((VuforiaTrackableDefaultListener)trackable.getListener()).getUpdatedRobotLocation();
-            if (robotLocationTransform != null) {
-                lastLocation = robotLocationTransform;
-            }
-
-            VectorF translation = lastLocation.getTranslation();
-            return (double)(translation.get(1) / mmPerInch);
-        }
-        return null;
+        return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
     }
 
     double[] getMoveToWall(double[] location, double heading, VuforiaTrackable target)
@@ -458,4 +468,46 @@ public class Camera{
         double driveHeading = headingToTarget + counterClockwise * Math.PI / 2;
         return new double[]{1 * Math.sin(driveHeading), 1 * Math.cos(driveHeading)};
     }
+
+    int getGoldPosition()
+    {
+        if (tfod != null) {
+            // getUpdatedRecognitions() will return null if no new information is available since
+            // the last time that call was made.
+            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+            if (updatedRecognitions != null) {
+                telemetry.addData("# Object Detected", updatedRecognitions.size());
+                if (updatedRecognitions.size() == 3) {
+                    int goldMineralX = -1;
+                    int silverMineral1X = -1;
+                    int silverMineral2X = -1;
+                    for (Recognition recognition : updatedRecognitions) {
+                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                            goldMineralX = (int) recognition.getLeft();
+                        } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                        } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                        }
+                    }
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                            return 0;
+                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                            return 1;
+                        } else {
+                            telemetry.addData("Gold Mineral Position", "Center");
+                            return 2;
+                        }
+                    }
+                }
+            }
+        }
+        return -1;
+    }
+
+
+
 }

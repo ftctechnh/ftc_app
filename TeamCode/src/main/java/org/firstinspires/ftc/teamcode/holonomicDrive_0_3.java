@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
@@ -39,11 +38,11 @@ public class holonomicDrive_0_3 extends LinearOpMode
 
             if(gamepad1.left_bumper)
             {
-                robot.push(true);
+                robot.dropMarker(Bogg.Direction.Left);
             }
             else if(gamepad1.right_bumper)
             {
-                robot.push(false);
+                robot.dropMarker(Bogg.Direction.Right);
             }
 
 

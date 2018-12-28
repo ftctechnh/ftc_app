@@ -1,12 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Autonomous(name="4: Competition", group = "Testing")
-public class autonomousDrive_DropPlacePark extends LinearOpMode
+@Autonomous(name="5: Ambition", group = "Testing")
+public class autonomousDrive_SortPlacePark extends LinearOpMode
 {
     Bogg robot;
     Auto auto;
@@ -29,10 +29,13 @@ public class autonomousDrive_DropPlacePark extends LinearOpMode
                     action = auto.drop();
                     break;
                 case LookForMinerals:
+                    action = auto.lookForMinerals();
                 case Slide1:
                     action = auto.slide1();
                     break;
                 case PushGold:
+                    action = auto.pushGold();
+                    break;
                 case Slide2:
                     action = auto.slide2();
                     break;

@@ -29,8 +29,9 @@ public class autonomousDrive_DropSlide extends LinearOpMode
                 case Drop:
                     action = auto.drop();
                     break;
-                case Slide:
-                    action = auto.slide();
+                case LookForMinerals:
+                case Slide1:
+                    action = auto.slide1();
                     break;
                 default:
                     auto.stop();

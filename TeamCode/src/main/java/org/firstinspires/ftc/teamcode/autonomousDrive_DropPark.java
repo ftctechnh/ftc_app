@@ -2,10 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name="X: Drop and park", group = "Testing")
 public class autonomousDrive_DropPark extends LinearOpMode
@@ -31,22 +27,22 @@ public class autonomousDrive_DropPark extends LinearOpMode
                 case Drop:
                     action = auto.drop();
                     break;
-                case Slide:
-                    action = auto.slide();
+                case LookForMinerals:
+                case Slide1:
+                    action = auto.slide1();
                     break;
-                case Spin: // ==Park
-                    double inchesMovedX = Math.abs(robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-                    double inchesMovedY = Math.abs(robot.driveEngine.right.getCurrentPosition() * DriveEngine.inPerTicks) - inchesMovedX/2;
+                case PushGold: // ==Park
+                    double inchesMovedX = robot.driveEngine.xDist();
+                    double inchesMovedY = robot.driveEngine.yDist();
                     if(inchesMovedY < 4 * 12) {
-                        robot.driveEngine.drive(0, .4);
-                        robot.driveEngine.back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                        robot.driveEngine.back.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                        robot.driveEngine.drive(0, .3);
+                        robot.driveEngine.resetDistances();
                     }
                     else if(inchesMovedX < Math.PI * 1 /2){
                         robot.driveEngine.rotate(.2);
                     }
                     else{
-                        robot.push(false);
+                        robot.dropMarker(Bogg.Direction.Right);
                         robot.driveEngine.drive(0, 0);
                         action = Auto.Mode.Stop;
                     }

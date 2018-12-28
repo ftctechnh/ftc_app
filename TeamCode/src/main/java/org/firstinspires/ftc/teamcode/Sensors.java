@@ -17,10 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 public class Sensors {
     HardwareMap hardwareMap;
 
-    Servo dServo;
-
-    public TouchSensor touchTop;
-    public TouchSensor touchBottom;
+    TouchSensor touchTop;
+    TouchSensor touchBottom;
 
     DistanceSensor dFixed;
     DistanceSensor dMobile;
@@ -31,26 +29,16 @@ public class Sensors {
     Orientation angles;
     Acceleration gravity;
 
-    public Sensors(HardwareMap hardwareMap)
+
+    Sensors(HardwareMap hardwareMap)
     {
         this.hardwareMap = hardwareMap;
-        dServo = hardwareMap.get(Servo.class, "dServo");
+
         dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
         dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
 
-    }
-
-    public void rotateMobile(double rightOfCenter) //in degrees for clarity
-    {
-        //angle    should go from -90   to 90
-        //position should go from min to max
-        double center = 0;
-        double right = .6;
-        double position = (right - center) * rightOfCenter / 90 ;
-
-        dServo.setPosition(position);
     }
 
     private boolean usingImu = false;
@@ -88,10 +76,10 @@ public class Sensors {
         else
         {
             if(gotMobile)
-                return dMobile.getDistance(DistanceUnit.INCH) > 12 * 5; //Tilted up so far that it sees air
+                return dMobile.getDistance(DistanceUnit.INCH) > 12 * 5.5; //Tilted up so far that it sees air
             else
             {
-                if(dMobile.getDistance(DistanceUnit.INCH) < 12.0 * 4.5)
+                if(dMobile.getDistance(DistanceUnit.INCH) < 12.0 * 5)
                     gotMobile = true;
                 return false;
             }
