@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="  encoderFineTuning", group="Testing")
+@TeleOp(name="  encoderTest", group="Testing")
 public class encoderTest extends LinearOpMode
 {
     Bogg robot;
@@ -14,11 +14,9 @@ public class encoderTest extends LinearOpMode
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         waitForStart();
 
-        for(int i = 0; i < 6; i++){robot.driveEngine.checkpoint.add(false);}
-
         while (opModeIsActive())
         {
-            if (robot.driveEngine.moveOnPath(
+            if (robot.driveEngine.moveOnPath("encoder test",
                     new double[]{-6, 0},
                     new double[]{0, 4},
                     new double[]{6, 0},

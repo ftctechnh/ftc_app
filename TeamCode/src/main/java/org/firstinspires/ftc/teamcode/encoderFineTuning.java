@@ -22,13 +22,12 @@ public class encoderFineTuning extends LinearOpMode
         double savedRadius = DriveEngine.robotRadius;
         double savedDiameter = DriveEngine.wheelDiameter;
 
-        robot.driveEngine.checkpoint.add(false);
 
         while (opModeIsActive())
         {
             deltaX += Math.round(robot.gamepad.left_stick_x * 10) /20;
             deltaY += Math.round(robot.gamepad.left_stick_y * 10) /20;
-            deltaS += Math.round(robot.gamepad.right_stick_x * 10) * Math.PI/100;
+            deltaS += Math.round(robot.gamepad.right_stick_x * 10) * Math.PI/200;
 
             telemetry.addData("wheel diameter", DriveEngine.wheelDiameter);
             telemetry.addData("robot radius", DriveEngine.robotRadius);
@@ -44,11 +43,11 @@ public class encoderFineTuning extends LinearOpMode
 
             if(deltaS != 0)
             {
-                robot.driveEngine.moveOnPath(new double[]{deltaS});
+                robot.driveEngine.moveOnPath("fineTuning", new double[]{deltaS});
             }
             else
             {
-                robot.driveEngine.moveOnPath(new double[]{deltaX, deltaY});
+                robot.driveEngine.moveOnPath("fineTuning", new double[]{deltaX, deltaY});
             }
 
             if(robot.gamepad.left_bumper || robot.gamepad.right_bumper)
