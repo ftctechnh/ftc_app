@@ -39,9 +39,9 @@ public class DriveEngine {
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        back.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        left.setMode (DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        back.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
 
         back.setDirection (DcMotor.Direction.FORWARD);
         right.setDirection(DcMotor.Direction.FORWARD);
@@ -50,6 +50,13 @@ public class DriveEngine {
     }
 
     void drive(double x, double y) {
+        double r = Math.hypot(x,y);
+        if(r > 1)
+        {
+            x /= r;
+            y /= r;
+        }
+
         double xprime = x * Math.cos(theta) - y * Math.sin(theta);
         double yprime = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -66,6 +73,13 @@ public class DriveEngine {
 
 
     void drive(double x, double y, boolean op) {
+        double r = Math.hypot(x,y);
+        if(r > 1)
+        {
+            x /= r;
+            y /= r;
+        }
+
         double xprime = x * Math.cos(theta) - y * Math.sin(theta);
         double yprime = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -151,9 +165,11 @@ public class DriveEngine {
                 double currentAngle = spinAngle();
                 telemetry.addData("current angle", spinAngle());
 
-                if(Math.abs(currentAngle) < Math.abs(targetAngle)) {
+                if(Math.abs(targetAngle) - Math.abs(currentAngle) > .1 ) {
                     rotate(Math.signum(targetAngle) * .15);
                 }
+                else if(Math.abs(targetAngle) - Math.abs(currentAngle) > 0 )
+                    rotate(Math.signum(targetAngle) * .05);
                 else{
                     checkpoint.set(c, true);
                     resetDistances();
@@ -185,7 +201,7 @@ public class DriveEngine {
         return false;
     }
 
-    private ArrayList<String> keyList;
+    private ArrayList<String> keyList = new ArrayList<>();
     private void addCommands(int n, String commandKey)
     {
         if(keyList.contains(commandKey))
