@@ -1,9 +1,8 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.SamplePosition;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.TensorFlow;
@@ -20,9 +19,9 @@ public class TensorFlowTest extends AbstractAutonNew {
 
     @Override
     public void RegisterStates() {
-        addState(new State("run", "start", ()-> {
+        addState(new State("run", "start", () -> {
             tensorFlow.stop();
-            telemetry.addData("Position: "+lastPosition.toString());
+            telemetry.addData("Position: " + lastPosition.toString());
             telemetry.update();
             return true;
         }));
@@ -30,22 +29,22 @@ public class TensorFlowTest extends AbstractAutonNew {
 
     @Override
     public void Init() {
-        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1",false);
+        tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.VERTICAL, "Webcam 1", false);
         //tensorFlow = new TensorFlow(TensorFlow.CameraOrientation.HORIZONTAL, false);
     }
 
     @Override
-    public void InitLoop(){
-        if(loop==0) {
+    public void InitLoop() {
+        if (loop == 0) {
             tensorFlow.pause();
             tensorFlow.start();
         }
         SamplePosition currentPosition = tensorFlow.getSamplePosition();
-        if(currentPosition!=SamplePosition.UNKNOWN)lastPosition = currentPosition;
+        if (currentPosition != SamplePosition.UNKNOWN) lastPosition = currentPosition;
         telemetry.addData(DoubleTelemetry.LogMode.INFO, currentPosition.toString());
         telemetry.update();
         loop++;
-        if(loop>=5) loop = 0;
+        if (loop >= 5) loop = 0;
     }
 
     @Override

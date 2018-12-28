@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.opModes;
+package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
@@ -78,7 +78,7 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
             exceptions.add(e);
         }
 
-        addState(new State("run", "start", ()-> {
+        addState(new State("run", "start", () -> {
             Run();
             return true;
         }));
@@ -120,13 +120,14 @@ public abstract class AbstractAutonNew extends AbstractOpMode {
 
     public abstract void Run();
 
-    public void Stop(){}
+    public void Stop() {
+    }
 
     public void addState(State state) {
         stateMachine.addState(state);
     }
 
-    public static void addFinishedState(String state){
+    public static void addFinishedState(String state) {
         abstractAutonNew.stateMachine.addFinishedState(state);
     }
 

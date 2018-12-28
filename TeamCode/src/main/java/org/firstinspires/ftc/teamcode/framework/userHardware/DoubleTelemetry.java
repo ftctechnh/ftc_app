@@ -87,7 +87,7 @@ public class DoubleTelemetry {
         logger.log(Dashboard.getInstance().getLogPreMessage() + String.valueOf(data));
     }
 
-    public void stop(){
+    public void stop() {
         logger.stop();
     }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.opModes;
+package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -94,7 +94,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             }
         }
 
-        while (!isStopRequested() && !CurrentFuture.isDone());
+        while (!isStopRequested() && !CurrentFuture.isDone()) ;
 
         if (!isStopRequested()) {
             checkException();
@@ -102,7 +102,7 @@ public abstract class AbstractTeleop extends AbstractOpMode {
             CurrentFuture = service.submit(StartThread);
         }
 
-        while (!isStopRequested() && !CurrentFuture.isDone());
+        while (!isStopRequested() && !CurrentFuture.isDone()) ;
 
         RegisterEvents();
 

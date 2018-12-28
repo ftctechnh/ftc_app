@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "TwoGamepad BoogieWheel Teleop Tankdrive", group = "New")
+@TeleOp(name = "TwoGamepad Boogie Teleop Tankdrive", group = "New")
 //@Disabled
 
 public class TwoGamepadBoogieTeleopTankdrive extends AbstractTeleop {

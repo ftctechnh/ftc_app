@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.teamcode.framework.opModes;
+package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.util.StateConfigurationException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -75,7 +74,7 @@ public abstract class AbstractAuton extends AbstractOpMode {
 
         while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 
-        if(!isStopRequested()) CurrentFuture = service.submit(RunThread);
+        if (!isStopRequested()) CurrentFuture = service.submit(RunThread);
 
         while (!isStopRequested() && !CurrentFuture.isDone()) checkException();
 

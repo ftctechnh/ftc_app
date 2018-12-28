@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.framework.opModes;
+package org.firstinspires.ftc.teamcode.framework.abstractopmodes;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;

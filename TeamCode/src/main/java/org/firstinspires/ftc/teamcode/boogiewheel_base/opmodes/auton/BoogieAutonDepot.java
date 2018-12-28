@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
@@ -12,10 +11,10 @@ import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.visi
 import org.firstinspires.ftc.teamcode.framework.util.PathState;
 import org.firstinspires.ftc.teamcode.framework.util.State;
 
-@Autonomous(name = "Boogie Auton Crater", group = "New")
+@Autonomous(name = "Boogie Auton Depot", group = "New")
 //@Disabled
 
-public class BoogieAutonCrater extends AbstractAutonNew {
+public class BoogieAutonDepot extends AbstractAutonNew {
 
     Robot robot;
     TensorFlow tensorFlow;
@@ -52,22 +51,6 @@ public class BoogieAutonCrater extends AbstractAutonNew {
     @Override
     public void Run() {
         robot.moveRobotLiftToBottom();
-
-        switch (RobotState.currentSamplePosition) {
-            case RIGHT:
-                robot.runDrivePaths(Constants.collectRightMineral);
-                break;
-            case LEFT:
-                robot.runDrivePaths(Constants.collectLeftMineral);
-                break;
-            case CENTER:
-                robot.runDrivePaths(Constants.collectCenterMineral);
-                break;
-            default:
-                robot.runDrivePaths(Constants.collectCenterMineral);
-                break;
-        }
-        robot.runDrivePaths(Constants.craterSideToCrater);
     }
 
     @Override

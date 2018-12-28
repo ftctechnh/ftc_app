@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 
 public class DistanceSensor2m {
 

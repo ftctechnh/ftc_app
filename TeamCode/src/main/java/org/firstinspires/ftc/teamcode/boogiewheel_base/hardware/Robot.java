@@ -96,14 +96,16 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public void autonReleaseWheelsSequence(){
+    public void autonReleaseWheelsSequence() {
         hardware.drive.autonReleaseWheelsSequence();
     }
 
-    public void autonDriveToWallSequence (){hardware.drive.autonDriveToWallSequence();}
+    public void autonDriveToWallSequence() {
+        hardware.drive.autonDriveToWallSequence();
+    }
 
-    public Callable autonDriveToWallSequenceCallable(){
-        return () ->{
+    public Callable autonDriveToWallSequenceCallable() {
+        return () -> {
             hardware.drive.autonDriveToWallSequence();
             return true;
         };
@@ -231,14 +233,14 @@ public class Robot extends AbstractRobot {
         };
     }
 
-    public Callable autonLowerMineralLiftSequenceCallable(){
-        return () ->{
+    public Callable autonLowerMineralLiftSequenceCallable() {
+        return () -> {
             autonLowerMineralLiftSequence();
             return true;
         };
     }
 
-    public void autonLowerMineralLiftSequence(){
+    public void autonLowerMineralLiftSequence() {
         hardware.mineralLift.autonLowerLiftSequence();
     }
 

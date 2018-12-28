@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.State;
+import org.upacreekrobotics.dashboard.Dashboard;
 
 @Autonomous(name = "Test Auton", group = "New")
-//@Disabled
+@Disabled
 
 public class TestAuton extends AbstractAutonNew {
     @Override
@@ -14,26 +17,23 @@ public class TestAuton extends AbstractAutonNew {
 
         //Previous State is the name of the state which should call this one when it is finished
         addState(new State("first", "start", () -> {
-            telemetry.addData("Running state: first");
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Running state: first");
             telemetry.update();
+            delay(1000);
             return true;
         }));
 
         addState(new State("second", "first", () -> {
-            telemetry.addData("Running state: second");
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Running state: second");
             telemetry.update();
-            return true;
-        }));
-
-        addState(new State("first", "second", () -> {
-            telemetry.addData("Running state: first");
-            telemetry.update();
+            delay(1000);
             return true;
         }));
 
         addState(new State("third", "second", () -> {
-            telemetry.addData("Running state: third");
+            telemetry.addData(DoubleTelemetry.LogMode.INFO, "Running state: third");
             telemetry.update();
+            delay(1000);
             return true;
         }));
     }

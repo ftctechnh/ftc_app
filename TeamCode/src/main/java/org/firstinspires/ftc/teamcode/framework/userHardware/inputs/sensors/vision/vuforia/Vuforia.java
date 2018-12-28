@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 
 public class Vuforia {
     private VuforiaLocalizer vuforia;

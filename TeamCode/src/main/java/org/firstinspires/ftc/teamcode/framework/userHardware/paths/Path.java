@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.framework.userHardware.paths;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAutonNew;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
 
-import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Path {
@@ -58,7 +57,7 @@ public class Path {
         return currentSegment;
     }
 
-    public void nextSegment(){
+    public void nextSegment() {
         currentSegment.stop();
     }
 

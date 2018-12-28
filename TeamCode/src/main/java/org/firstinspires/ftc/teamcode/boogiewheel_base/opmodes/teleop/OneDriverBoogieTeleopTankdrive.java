@@ -3,9 +3,9 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.teleop;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractTeleop;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractTeleop;
 
-@TeleOp(name = "OneDriver BoogieWheel Teleop Tankdrive", group = "New")
+@TeleOp(name = "OneDriver Boogie Teleop Tankdrive", group = "New")
 //@Disabled
 
 public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
@@ -82,7 +82,6 @@ public class OneDriverBoogieTeleopTankdrive extends AbstractTeleop {
         addEventHandler("1_b_down", robot.beginIntakingCallable());
 
         addEventHandler("1_x_down", robot.reverseIntakeCallable());
-
 
 
         ////////////////Gamepad 2////////////////

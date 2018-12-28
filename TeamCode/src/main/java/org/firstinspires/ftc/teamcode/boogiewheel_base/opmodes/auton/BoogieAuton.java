@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
-import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAuton;
 import org.firstinspires.ftc.teamcode.framework.userHardware.outputs.SlewDcMotor;
-import org.upacreekrobotics.dashboard.RobotStatus;
 
-@Autonomous(name = "BoogieWheel Auton", group = "New")
-//@Disabled
+@Autonomous(name = "Boogie Auton", group = "New")
+@Disabled
 
 public class BoogieAuton extends AbstractAuton {
 

@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.robot_lift;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
@@ -60,14 +60,15 @@ public class RobotLiftController extends SubsystemController {
         delay(1000);
         robotLift.setLiftNoEncoderPower(ROBOT_LIFT_LOWER_POWER);
 
-        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION));
+        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION))
+            ;
 
         robotLift.setPosition(ROBOT_LIFT_LOWERED_POSITION);
         //so the mineral lift doesn't hit the pawl on the way down
         delay(1000);
         robotLift.setLiftPower(0);
         robotLift.setServoPosition(ROBOT_LIFT_PAWL_ENGAGED);
-        telemetry.addData(DoubleTelemetry.LogMode.INFO,"encoder: "+robotLift.getCurrentPosition());
+        telemetry.addData(DoubleTelemetry.LogMode.INFO, "encoder: " + robotLift.getCurrentPosition());
         currentRobotLiftState = RobotLiftState.LOWERED;
     }
 }

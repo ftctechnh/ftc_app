@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.intake;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractAuton;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
@@ -22,7 +21,7 @@ public class IntakeController extends SubsystemController {
         intake = new Intake(hardwareMap);
     }
 
-    public synchronized void update(){
+    public synchronized void update() {
 
     }
 
@@ -30,17 +29,20 @@ public class IntakeController extends SubsystemController {
         intake.stop();
     }
 
-    public void autonIntakeSequence(){
+    public void autonIntakeSequence() {
         while ((!currentPath.getCurrentSegment().getName().equals("drive to minerals") &&
-                !currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
+                !currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive())
+            ;
         beginIntaking();
         while ((currentPath.getCurrentSegment().getName().equals("drive to minerals") ||
-                currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive());
+                currentPath.getCurrentSegment().getName().equals("back up from minerals")) && AbstractOpMode.isOpModeActive())
+            ;
         finishIntaking();
     }
 
     public synchronized void beginIntaking() {
-        if (currentIntakeLiftState == IntakeLiftState.LOWERED) intake.setIntakePower(INTAKE_FORWARD_POWER);
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
+            intake.setIntakePower(INTAKE_FORWARD_POWER);
         else lowerIntake();
     }
 
@@ -49,7 +51,8 @@ public class IntakeController extends SubsystemController {
     }
 
     public synchronized void reverseIntake() {
-        if (currentIntakeLiftState == IntakeLiftState.LOWERED) intake.setIntakePower(INTAKE_REVERSE_POWER);
+        if (currentIntakeLiftState == IntakeLiftState.LOWERED)
+            intake.setIntakePower(INTAKE_REVERSE_POWER);
     }
 
     public synchronized void lowerIntake() {

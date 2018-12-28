@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vis
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
 import org.firstinspires.ftc.teamcode.framework.userHardware.inputs.sensors.vision.vuforia.VuforiaImpl;
 
@@ -115,7 +115,7 @@ public class TensorFlow {
             if (updatedRecognitions != null) {
                 ArrayList<Mineral> minerals = new ArrayList<>();
                 for (Recognition recognition : updatedRecognitions) {
-                    if(recognition.getConfidence()<0.5) continue;
+                    if (recognition.getConfidence() < 0.5) continue;
                     minerals.add(new Mineral(recognition));
                 }
 
@@ -193,14 +193,14 @@ public class TensorFlow {
     private Mineral[] getBottomTwoSilverOneGold(ArrayList<Mineral> minerals) {
 
         ArrayList<Mineral> silverMinerals = new ArrayList<>();
-        for (Mineral mineral:minerals){
-            if(mineral.getType()==MineralType.SILVER)silverMinerals.add(mineral);
+        for (Mineral mineral : minerals) {
+            if (mineral.getType() == MineralType.SILVER) silverMinerals.add(mineral);
         }
 
-        if(silverMinerals.size()<2)return null;
+        if (silverMinerals.size() < 2) return null;
 
         Mineral goldMineral = getBottomGoldMineral(minerals);
-        if(goldMineral==null) return null;
+        if (goldMineral == null) return null;
 
         Mineral[] silverResult = silverMinerals.toArray(new Mineral[silverMinerals.size()]);
 

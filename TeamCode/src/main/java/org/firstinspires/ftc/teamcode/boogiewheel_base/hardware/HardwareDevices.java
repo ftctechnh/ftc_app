@@ -20,9 +20,9 @@ public class HardwareDevices {
     }
 
     public void stop() {
-        if(drive!=null)drive.stop();
-        if(intake!=null)intake.stop();
-        if(mineralLift!=null)mineralLift.stop();
-        if(robotLift!=null)robotLift.stop();
+        if (drive != null) drive.stop();
+        if (intake != null) intake.stop();
+        if (mineralLift != null) mineralLift.stop();
+        if (robotLift != null) robotLift.stop();
     }
 }

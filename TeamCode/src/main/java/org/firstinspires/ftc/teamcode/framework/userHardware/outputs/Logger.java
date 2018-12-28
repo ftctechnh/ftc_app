@@ -22,12 +22,12 @@ public class Logger {
 
     public Logger(String fileName) {
         try {
-            file = new File(path, "FTC RobotController Phone Log "+ fileName +" ["+new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date())+"].txt");
+            file = new File(path, "FTC RobotController Phone Log " + fileName + " [" + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date()) + "].txt");
             int n = 0;
-            while (file.exists()){
-                file = new File(path, "FTC RobotController Phone Log "+ fileName +" ["+new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date())+"]("+n+").txt");
+            while (file.exists()) {
+                file = new File(path, "FTC RobotController Phone Log " + fileName + " [" + new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.sss").format(new Date()) + "](" + n + ").txt");
             }
-            RobotLog.i("ABCD Creating New File: "+file.getName());
+            RobotLog.i("ABCD Creating New File: " + file.getName());
             file.createNewFile();
             fOut = new FileOutputStream(file);
             myOutWriter = new OutputStreamWriter(fOut);

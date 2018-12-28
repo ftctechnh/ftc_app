@@ -48,7 +48,9 @@ public class RobotLift {
         return liftMotor.getTargetPosition();
     }
 
-    public int getCurrentPosition() { return liftMotor.getCurrentPosition(); }
+    public int getCurrentPosition() {
+        return liftMotor.getCurrentPosition();
+    }
 
     public void setServoPosition(double servoPosition) {
         ratchetServo.setPosition(servoPosition);

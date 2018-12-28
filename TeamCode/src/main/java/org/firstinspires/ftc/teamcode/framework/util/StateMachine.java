@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.framework.util;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
-
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -20,7 +17,7 @@ public class StateMachine {
 
     public void prepare() throws StateConfigurationException {
         for (State state : states) {
-            if(state instanceof PathState) continue;
+            if (state instanceof PathState) continue;
 
             boolean noPrevious = true;
 

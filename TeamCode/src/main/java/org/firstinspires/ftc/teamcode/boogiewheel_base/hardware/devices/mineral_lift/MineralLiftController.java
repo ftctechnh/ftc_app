@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.devices.mineral_lift;
 
-import org.firstinspires.ftc.teamcode.framework.opModes.AbstractOpMode;
-import org.firstinspires.ftc.teamcode.framework.userHardware.DoubleTelemetry;
+import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractOpMode;
 import org.firstinspires.ftc.teamcode.framework.util.SubsystemController;
 
 import static org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants.*;
@@ -50,7 +49,7 @@ public class MineralLiftController extends SubsystemController {
         mineralLift.stop();
     }
 
-    public synchronized void autonLowerLiftSequence(){
+    public synchronized void autonLowerLiftSequence() {
         mineralLift.setTargetPosition(300);
         delay(2000);
         mineralLift.setCurrentPosition(600);
@@ -79,7 +78,7 @@ public class MineralLiftController extends SubsystemController {
 
     public synchronized void moveToCollectPosition() {
 
-        if(mineralLift.getDistance() < 20) return;
+        if (mineralLift.getDistance() < 20) return;
         currentMineralLiftState = MineralLiftState.IN_MOTION;
         mineralLift.setTargetPosition(MINERAL_LIFT_COLLECT_POSITION);
         isMovingDown = true;

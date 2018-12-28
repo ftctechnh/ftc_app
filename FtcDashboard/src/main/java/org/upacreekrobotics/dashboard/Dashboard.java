@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
 
 public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecker.BatteryWatcher {
     public static final String TAG = "RobotDashboard";
@@ -171,12 +172,12 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                             data.write(new Message(MessageType.OP_MODES, mode));
                         }
                         try {
-                            if (!dashboard.opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
-                                if (dashboard.activeOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
-                                    data.write(new Message(MessageType.SELECT_OP_MODE, dashboard.opModeManager.getActiveOpModeName()));
+                            if (!opModeManager.getActiveOpModeName().equals("$Stop$Robot$")) {
+                                if (activeOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
+                                    data.write(new Message(MessageType.SELECT_OP_MODE, opModeManager.getActiveOpModeName()));
                                     data.write(new Message(MessageType.ROBOT_STATUS, "INIT"));
                                 } else if (dashboard.activeOpModeStatus.equals(RobotStatus.OpModeStatus.RUNNING)) {
-                                    data.write(new Message(MessageType.SELECT_OP_MODE, dashboard.opModeManager.getActiveOpModeName()));
+                                    data.write(new Message(MessageType.SELECT_OP_MODE, opModeManager.getActiveOpModeName()));
                                     data.write(new Message(MessageType.ROBOT_STATUS, "RUNNING"));
                                 }
                             }
@@ -263,7 +264,7 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
                     if (requestedOpModeStatus.equals(RobotStatus.OpModeStatus.INIT)) {
                         if (data != null && data.isConnected()) {
                             activeOpModeStatus = RobotStatus.OpModeStatus.INIT;
-                            data.write(new Message(MessageType.SELECT_OP_MODE, dashboard.opModeManager.getActiveOpModeName()));
+                            data.write(new Message(MessageType.SELECT_OP_MODE, opModeManager.getActiveOpModeName()));
                             data.write(new Message(MessageType.ROBOT_STATUS, "INIT"));
                         }
                     }
@@ -343,6 +344,20 @@ public class Dashboard implements OpModeManagerImpl.Notifications, BatteryChecke
         } catch (NumberFormatException e) {
         }
         return "";
+    }
+
+    public static void startOpMode(String name){
+        dashboard.internalStartOpMode(name);
+    }
+
+    private void internalStartOpMode(String name){
+        new Thread(() -> {
+            while (!opModeManager.getActiveOpModeName().equals("$Stop$Robot$"));
+            try { Thread.sleep(1000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            opModeManager.initActiveOpMode(name);
+            try { Thread.sleep(4000); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+            opModeManager.startActiveOpMode();
+        }).start();
     }
 
     ////////////////Called by the "RobotRestartChecker" thread in "FtcRobotControllerActivity" to see if the////////////////
