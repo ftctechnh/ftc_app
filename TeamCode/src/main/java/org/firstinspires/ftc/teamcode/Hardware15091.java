@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -68,39 +69,39 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
-public class Hardware15091 {
+class Hardware15091 {
 
     /* Public OpMode members. */
-    public DcMotor leftDrive = null;
-    public DcMotor rightDrive = null;
-    public DcMotor armDrive = null;
-    public Servo armServo = null;
-    public Servo handServo = null;
-    public Servo pickupServo = null;
-    public Servo markerServo = null;
-    public AnalogInput armAngle = null;
-    public AndroidTextToSpeech tts = null;
-    public BNO055IMU imu;
-    public ColorSensor sensorColor = null;
-    public DistanceSensor sensorDistance = null;
+    DcMotor leftDrive = null;
+    DcMotor rightDrive = null;
+    DcMotor armDrive = null;
+    Servo armServo = null;
+    Servo handServo = null;
+    Servo pickupServo = null;
+    Servo markerServo = null;
+    AnalogInput armAngle = null;
+    AndroidTextToSpeech tts = null;
+    BNO055IMU imu;
+    ColorSensor sensorColor = null;
+    DistanceSensor sensorDistance = null;
 
-    public static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
-    public static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
-    public static final double ARM_POWER = 1d;
-    static final double P_ARM_COEFF = 0.0004d;     // Larger is more responsive, but also less stable
+    private static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
+    private static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
+    static final double ARM_POWER = 1d;
+    private static final double P_ARM_COEFF = 0.0004d;     // Larger is more responsive, but also less stable
+    private int beepSoundID;
 
-    public int setArmTarget(double targetToSet) {
+    int setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double voltageDelta = armAngle.getVoltage() - targetToSet;
         int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
         int newTarget = armDrive.getCurrentPosition() + targetDelta;
         armDrive.setTargetPosition(newTarget);
-        int howManyTurnsLeft = Math.abs(armDrive.getCurrentPosition() - newTarget);
 
-        return howManyTurnsLeft;
+        return Math.abs(armDrive.getCurrentPosition() - newTarget);
     }
 
-    public void setArmPower(double powerToSet) {
+    void setArmPower(double powerToSet) {
         if (armAngle.getVoltage() > ARM_MIN && powerToSet > 0d) {
             armDrive.setPower(powerToSet);
         } else if (armAngle.getVoltage() < ARM_MAX && powerToSet < 0d) {
@@ -111,21 +112,20 @@ public class Hardware15091 {
     }
 
     /* local OpMode members. */
-    HardwareMap hwMap = null;
+    private HardwareMap hwMap = null;
 
     /* Constructor */
-    public Hardware15091() {
+    Hardware15091() {
 
     }
 
-    public double getHeading() {
+    double getHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double heading = AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
-        return heading;
+        return (double)AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
     /* Initialize standard Hardware interfaces */
-    public void init(HardwareMap ahwMap) {
+    void init(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -164,25 +164,37 @@ public class Hardware15091 {
         rightDrive.setPower(0);
         armDrive.setPower(0);
 
-        // Set up the parameters with which we will use our IMU. Note that integration
-        // algorithm here just reports accelerations to the logcat log; it doesn't actually
-        // provide positional information.
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = false;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-        // and named "imu".
-        imu = hwMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+            // Set up the parameters with which we will use our IMU. Note that integration
+            // algorithm here just reports accelerations to the logcat log; it doesn't actually
+            // provide positional information.
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+            parameters.loggingEnabled = false;
+            parameters.loggingTag = "IMU";
+            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+            // and named "imu".
+            imu = hwMap.get(BNO055IMU.class, "imu");
+            imu.initialize(parameters);
+
+
+        beepSoundID = hwMap.appContext.getResources().getIdentifier("beep", "raw", hwMap.appContext.getPackageName());
     }
 
-    public double getArmPower(int turnsLeft) {
+    final void beep() {
+        new Thread() {
+            public void run() {
+                SoundPlayer.getInstance().startPlaying(hwMap.appContext, beepSoundID);
+            }
+        }.start();
+    }
+
+    double getArmPower(int turnsLeft) {
         double error = Range.clip(turnsLeft * P_ARM_COEFF, 0, 1);
         return ARM_POWER * error;
     }

@@ -29,25 +29,11 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
-
-import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
-import java.util.Locale;
 
 
 /**
@@ -69,7 +55,7 @@ public class Gamepad extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    Hardware15091 robot = new Hardware15091();
+    private Hardware15091 robot = new Hardware15091();
     private ElapsedTime armTime = new ElapsedTime();
     private ElapsedTime handTime = new ElapsedTime();
     private final double SERVO_CYCLE = 50d;
@@ -77,11 +63,10 @@ public class Gamepad extends LinearOpMode {
     private final double SERVO_INCREMENT_MAX = 0.01d;
 
     // Setup a variable for each drive wheel to save power level for telemetry
-    double leftPower;
-    double rightPower;
-    double drive, turn;
-    int armSequence = 0;
-    double lastRuntime = 0d;
+    private double leftPower, rightPower;
+    private double drive, turn;
+    private int armSequence = 0;
+    private double lastRuntime = 0d;
 
     @Override
     public void runOpMode() {
@@ -89,10 +74,42 @@ public class Gamepad extends LinearOpMode {
 
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+        robot.beep();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+
+        new Thread() {
+            public void run() {
+                while (opModeIsActive()) {// Show the elapsed game time and wheel power.
+                    double elapsed = runtime.milliseconds() - lastRuntime;
+                    lastRuntime = runtime.milliseconds();
+                    telemetry.addData("Status", "Run Time: %s (%.1f ms)",
+                            runtime.toString(), elapsed);
+                    telemetry.addData("Motors", "left (%.4f), right (%.4f), arm (%.4f)",
+                            robot.leftDrive.getPower(), robot.rightDrive.getPower(), robot.armDrive.getPower());
+                    telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)",
+                            robot.armServo.getPosition(), robot.handServo.getPosition());
+                    telemetry.addData("Arm", "pos (%.4f)",
+                            robot.armAngle.getVoltage());
+                    /*
+                    telemetry.addData("Heading", "%.4f", robot.getHeading());
+                    telemetry.addData("Distance (inch)",
+                            String.format(Locale.US, "%.2f", robot.sensorDistance.getDistance(DistanceUnit.INCH)));
+                    */
+                    telemetry.update();
+                }
+            }
+        }.start();
+
+        new Thread() {
+            public void run() {
+                while (opModeIsActive()) {
+                    ArmControl();
+                }
+            }
+        }.start();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -116,27 +133,10 @@ public class Gamepad extends LinearOpMode {
             // Send calculated power to wheels
             robot.leftDrive.setPower(leftPower);
             robot.rightDrive.setPower(rightPower);
-
-            ArmControl();
-
-            // Show the elapsed game time and wheel power.
-            double elapsed = runtime.milliseconds() - lastRuntime;
-            lastRuntime = runtime.milliseconds();
-            telemetry.addData("Status", "Run Time: " + runtime.toString() + String.format("(%.1f ms)", elapsed));
-            telemetry.addData("Motors", "left (%.4f), right (%.4f)",
-                    robot.leftDrive.getPower(), robot.rightDrive.getPower());
-            telemetry.addData("Servo", "Arm (%.4f) Hand (%.4f)",
-                    robot.armServo.getPosition(), robot.handServo.getPosition());
-            telemetry.addData("Arm", "pos (%.4f) pow (%.4f) enc (%d)",
-                    robot.armAngle.getVoltage(), robot.armDrive.getPower(), robot.armDrive.getCurrentPosition());
-            /*telemetry.addData("Heading", "%.4f", robot.getHeading());
-            telemetry.addData("Distance (inch)",
-                    String.format(Locale.US, "%.2f", robot.sensorDistance.getDistance(DistanceUnit.INCH)));*/
-            telemetry.update();
         }
     }
 
-    void ArmControl() {
+    private void ArmControl() {
         double armPower = 0d;
         double armPosition = robot.armServo.getPosition();
         double handPosition = robot.handServo.getPosition();
@@ -163,7 +163,7 @@ public class Gamepad extends LinearOpMode {
         } else if (gamepad2.x || gamepad1.x) { //retract arm
             if (armSequence == 0) {
                 int turnsLeft = robot.setArmTarget(0.9800d);
-                armPower = robot.ARM_POWER;
+                armPower = Hardware15091.ARM_POWER;
                 if (turnsLeft <= 100) {
                     handPosition = 0d;
                     armPosition = 0d;

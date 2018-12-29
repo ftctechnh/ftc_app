@@ -32,6 +32,7 @@ package org.firstinspires.ftc.teamcode;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
+import com.qualcomm.ftccommon.SoundPlayer;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -88,7 +89,8 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
         }
 
         Telemetry.Item headingItem = telemetry.addData("Heading: ", "%.4f", robot.getHeading());
-        robot.tts.speak("Hello Aztec, make sure heading is zero.");
+
+        robot.beep();
 
         // Wait for the game to start (driver presses PLAY)
         while (!isStarted()) {
@@ -116,11 +118,17 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
                     break;
                 case 3:
                     gyroDrive(DRIVE_SPEED, 15d, targetHeading);
-                    gyroDrive(DRIVE_SPEED, 10d, 150d);
+                    gyroDrive(DRIVE_SPEED, 10d, 155d);
                     break;
             }
 
             detector.disable();
+        }
+
+        robot.beep();
+
+        while(opModeIsActive()) {
+            idle();
         }
     }
 }

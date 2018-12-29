@@ -56,7 +56,7 @@ public class GetReady extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    Hardware15091 robot = new Hardware15091();
+    private Hardware15091 robot = new Hardware15091();
 
     @Override
     public void runOpMode() {
@@ -66,41 +66,44 @@ public class GetReady extends LinearOpMode {
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        runtime.reset();
 
-        int turnsLeft = robot.setArmTarget(1.125d);
-        double armPower = robot.getArmPower(turnsLeft);
-        robot.armDrive.setPower(armPower);
+        if (opModeIsActive()) {
+            runtime.reset();
 
-        while (opModeIsActive() &&
-                (runtime.seconds() < 10d) &&
-                (robot.armDrive.isBusy())) {
-            turnsLeft = robot.setArmTarget(1.125d);
-            armPower = robot.getArmPower(turnsLeft);
+            int turnsLeft = robot.setArmTarget(1.125d);
+            double armPower = robot.getArmPower(turnsLeft);
             robot.armDrive.setPower(armPower);
-        }
 
-        robot.armDrive.setPower(0d);
-        robot.armServo.setPosition(0d);
-        robot.handServo.setPosition(0d);
-        robot.markerServo.setPosition(0.1d);
+            while (opModeIsActive() &&
+                    (runtime.seconds() < 10d) &&
+                    (robot.armDrive.isBusy())) {
+                turnsLeft = robot.setArmTarget(1.125d);
+                armPower = robot.getArmPower(turnsLeft);
+                robot.armDrive.setPower(armPower);
+            }
 
-        sleep(2000L);
+            robot.armDrive.setPower(0d);
+            robot.armServo.setPosition(0d);
+            robot.handServo.setPosition(0d);
+            robot.markerServo.setPosition(0.1d);
 
-        runtime.reset();
-        turnsLeft = robot.setArmTarget(0.725d);
-        armPower = robot.getArmPower(turnsLeft);
-        robot.armDrive.setPower(armPower);
+            sleep(2000L);
 
-        while (opModeIsActive() &&
-                (runtime.seconds() < 10d) &&
-                (robot.armDrive.isBusy())) {
+            runtime.reset();
             turnsLeft = robot.setArmTarget(0.725d);
             armPower = robot.getArmPower(turnsLeft);
             robot.armDrive.setPower(armPower);
-        }
 
-        robot.tts.speak("Hello Aztec, make sure heading is zero and don't forget Team Marker.");
-        sleep(3000L);
+            while (opModeIsActive() &&
+                    (runtime.seconds() < 10d) &&
+                    (robot.armDrive.isBusy())) {
+                turnsLeft = robot.setArmTarget(0.725d);
+                armPower = robot.getArmPower(turnsLeft);
+                robot.armDrive.setPower(armPower);
+            }
+
+            robot.tts.speak("Hello Aztec, make sure heading is zero and don't forget Team Marker.");
+            sleep(3000L);
+        }
     }
 }
