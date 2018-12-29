@@ -11,6 +11,7 @@ public class Auto {
     Telemetry telemetry;
     private ElapsedTime timer = null;
     private int iSP = -1; //initialSlopePositivity
+    private double slide2distance = 34;
 
     Auto(Bogg robot, Telemetry telemetry)
     {
@@ -109,11 +110,12 @@ public class Auto {
         {
             case 0:
                 if(robot.driveEngine.moveOnPath("pushGold",
-                        new double[]{-34,0},
+                        new double[]{-17,0},
                         new double[]{0,12},
-                        new double[]{0,-12},
-                        new double[]{34,0}))
+                        new double[]{0,-12})) {
+                    slide2distance = 17;
                     return Mode.Slide2;
+                }
                 break;
             case 1:
                 if(robot.driveEngine.moveOnPath("pushGold",
@@ -122,10 +124,10 @@ public class Auto {
                 break;
             case 2:
                 if(robot.driveEngine.moveOnPath("pushGold",
-                        new double[]{34,0},
+                        new double[]{17,0},
                         new double[]{0,12},
                         new double[]{0,-12},
-                        new double[]{-34,0}))
+                        new double[]{-17,0}))
                     return Mode.Slide2;
                 break;
         }
@@ -136,7 +138,7 @@ public class Auto {
     Mode pushGoldNoCamera()
     {
         if (robot.driveEngine.moveOnPath("driveRight",
-                new double[]{34, 0})) {
+                new double[]{17, 0})) {
             if (i < 3) {
                 if (robot.driveEngine.moveOnPath("pushAll" + i,
                         new double[]{0, 12})) {
@@ -144,15 +146,16 @@ public class Auto {
 
                     if (robot.driveEngine.moveOnPath("pullSilver" + i,
                             new double[]{0, -12},
-                            new double[]{-34, 0})) {
+                            new double[]{-17, 0})) {
                         robot.push(Bogg.Direction.Up);
                         i++;
                     }
                 }
             }
-            else if (robot.driveEngine.moveOnPath("driveRight",
-                    new double[]{68, 0}))
+            else {
+                slide2distance = 0;
                 return Mode.Slide2;
+            }
         }
         return Mode.PushGold;
     }
@@ -161,8 +164,8 @@ public class Auto {
     {
         robot.lift(0);
         if (robot.driveEngine.moveOnPath("slide2",
-                new double[]{Math.PI / 4},
-                new double[]{-24, 24}))
+                new double[]{-slide2distance, 0},
+                new double[]{Math.PI / 4}))
         {
             robot.driveEngine.drive(0,0);
             return Mode.TurnByCamera;
