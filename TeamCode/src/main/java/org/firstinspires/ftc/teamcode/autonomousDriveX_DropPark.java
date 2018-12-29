@@ -32,16 +32,10 @@ public class autonomousDriveX_DropPark extends LinearOpMode
                     action = auto.slide1();
                     break;
                 case PushGold: // ==Park
-                    double inchesMovedX = robot.driveEngine.xDist();
-                    double inchesMovedY = robot.driveEngine.yDist();
-                    if(inchesMovedY < 4 * 12) {
-                        robot.driveEngine.drive(0, .3);
-                        robot.driveEngine.resetDistances();
-                    }
-                    else if(inchesMovedX < Math.PI * 1 /2){
-                        robot.driveEngine.rotate(.2);
-                    }
-                    else{
+                    if(robot.driveEngine.moveOnPath("drive and drop",
+                            new double[]{0,36},
+                            new double[]{Math.PI / 2}))
+                    {
                         robot.dropMarker(Bogg.Direction.Right);
                         robot.driveEngine.drive(0, 0);
                         action = Auto.Mode.Stop;
@@ -58,8 +52,5 @@ public class autonomousDriveX_DropPark extends LinearOpMode
             idle();
         }
     }
-
-
-
 }
 
