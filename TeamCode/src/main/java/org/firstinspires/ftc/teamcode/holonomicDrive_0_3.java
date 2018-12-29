@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
-@Disabled
 @TeleOp(name="holonomicDrive Experimental Two Gamepads", group="Testing")
 public class holonomicDrive_0_3 extends LinearOpMode
 {

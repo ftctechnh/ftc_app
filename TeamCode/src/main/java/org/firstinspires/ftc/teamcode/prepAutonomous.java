@@ -24,7 +24,7 @@ public class prepAutonomous extends LinearOpMode
         waitForStart();
         action = Mode.Drop;
 
-        robot.dropMarker(Bogg.Direction.Up);
+        robot.dropMarker(Bogg.Direction.Straight);
         timer = new ElapsedTime();
 
         while (opModeIsActive())
@@ -36,7 +36,7 @@ public class prepAutonomous extends LinearOpMode
                     if(t < 3) //for the three seconds
                     {
                         robot.lift(-.3); //pull up
-                        robot.sensors.dServo.setPosition(0);
+                        robot.dServo.setPosition(0);
                     }
                     else if (t < 5)
                     {
