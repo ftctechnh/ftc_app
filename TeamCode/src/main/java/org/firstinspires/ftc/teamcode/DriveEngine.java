@@ -146,14 +146,14 @@ public class DriveEngine {
     private ArrayList<Boolean> checkpoint = new ArrayList<>();
     boolean moveOnPath(String commandKey, double[] ... args)
     {
+        telemetry.addLine(commandKey);
         addCommands(args.length, commandKey);
 
         int c = 0;
         for(boolean b: checkpoint)
-        {
-            if(b == true)
+            if(b)
                 c++;
-        }
+
         telemetry.addData("checkpoint count", c);
 
         if(c == checkpoint.size())
@@ -164,12 +164,13 @@ public class DriveEngine {
                 double targetAngle = args[c][0];
                 double currentAngle = spinAngle();
                 telemetry.addData("current angle", spinAngle());
+                double deltaAngle = targetAngle - currentAngle;
 
-                if(Math.abs(targetAngle) - Math.abs(currentAngle) > .1 ) {
-                    rotate(Math.signum(targetAngle) * .15);
+                if(Math.abs(deltaAngle) > .1 ) {
+                    rotate(Math.signum(deltaAngle) * .15);
                 }
                 else if(Math.abs(targetAngle) - Math.abs(currentAngle) > 0 )
-                    rotate(Math.signum(targetAngle) * .05);
+                    rotate(Math.signum(deltaAngle) * .05);
                 else{
                     checkpoint.set(c, true);
                     resetDistances();
@@ -177,11 +178,11 @@ public class DriveEngine {
                 break;
             case 2:
                 double[] point = args[c];
-                double x = xDist();
-                double y = yDist();
-                double deltaX = point[0] - x;
-                double deltaY = point[1] - y;
+
+                double deltaX = point[0] - xDist();
+                double deltaY = point[1] - yDist();
                 double r = Math.hypot(deltaX, deltaY);
+
                 telemetry.addData("targetX", point[0]);
                 telemetry.addData("targetY", point[1]);
                 telemetry.addData("radius", r);
@@ -214,12 +215,12 @@ public class DriveEngine {
 
     double xDist()
     {
-        return Math.abs(back.getCurrentPosition() * DriveEngine.inPerTicks);
+        return back.getCurrentPosition() * DriveEngine.inPerTicks;
     }
 
     double yDist()
     {
-        return Math.abs(right.getCurrentPosition() - left.getCurrentPosition()) /2 * DriveEngine.inPerTicks;
+        return (right.getCurrentPosition() - left.getCurrentPosition()) /(Math.sqrt(3)/2) * DriveEngine.inPerTicks;
     }
 
     /**
@@ -228,7 +229,7 @@ public class DriveEngine {
      */
     double spinAngle()
     {
-        double averagePosition = (back.getCurrentPosition() + left.getCurrentPosition() + right.getCurrentPosition()) / 3;
+        double averagePosition = -left.getCurrentPosition() - right.getCurrentPosition();
         return Math.abs(averagePosition * DriveEngine.inPerTicks) /robotRadius; //TODO: Find radius
     }
 }
