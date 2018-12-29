@@ -31,8 +31,8 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
 
-//@Autonomous(name = "DropRobotAutonomous")
-@TeleOp(name = "DropRobotTeleop")
+@Autonomous(name = "DropRobotAutonomous")
+//@TeleOp(name = "DropRobotTeleop")
 public class DropRobotAutonomous extends LinearOpMode {
 
 
@@ -60,14 +60,14 @@ public class DropRobotAutonomous extends LinearOpMode {
     private boolean targetVisible = false;
     private String targetName = null;
     private ElapsedTime runtime = new ElapsedTime();
-    private boolean isAll3ObjDetected = false;
+    private boolean isGoldDetected = false;
     private VuforiaTrackables targetsRoverRuckus = null;
     private List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
 
     @Override
     public void runOpMode() throws InterruptedException {
 
-        //robot = new AnimatornicsRobot(hardwareMap, telemetry);
+        robot = new AnimatornicsRobot(hardwareMap, telemetry);
 
         initVuforia();
         loadNavigationTragets();
@@ -82,7 +82,6 @@ public class DropRobotAutonomous extends LinearOpMode {
         targetVisible = false;
         lookForNavigationTarget(allTrackables, 5.0);
         targetsRoverRuckus.deactivate();
-        Thread.sleep(1000);
 
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
@@ -93,10 +92,10 @@ public class DropRobotAutonomous extends LinearOpMode {
 
         if (tfod != null) {
             tfod.activate();
-            checkForGoldAndSilverMinerals(15.0);
+            checkForGoldAndSilverMinerals(5.0);
 
-            if (isAll3ObjDetected) {
-                trackGoldMineral(15.0);
+            if (isGoldDetected) {
+                trackGoldMineral(10.0);
             }
         } else {
             telemetry.addData("Sorry!!!", "This device is not compatible with TFOD");
@@ -106,6 +105,8 @@ public class DropRobotAutonomous extends LinearOpMode {
         if (tfod != null) {
             tfod.shutdown();
         }
+
+        Thread.sleep(30000);
         //robot.moveLift(this, 2.0, "Down", 0.7);
         //robot.moveLift(this, 2.0, "Down", 1.0);
         //robot.moveRobot(this, 3.0, "LateralRight", -1.0, 1.0, -1.0, 1.0);
@@ -200,9 +201,11 @@ public class DropRobotAutonomous extends LinearOpMode {
             if(targetVisible) {
                 telemetry.addData("Visible Target", targetName);
                 // TODO: Stop robot
+                robot.setWheelPower(0.0, 0.0, 0.0, 0.0);
             } else {
                 telemetry.addData("Visible Target", "none");
-                // TODO: turn robot to left until you see any target
+                // TODO: turn robot to right until you see any target
+                robot.setWheelPower(-0.2, -0.2, -0.2, -0.2);
             }
             telemetry.update();
         }
@@ -210,43 +213,27 @@ public class DropRobotAutonomous extends LinearOpMode {
 
     private void checkForGoldAndSilverMinerals(double time) {
         runtime.reset();
-        while(opModeIsActive() && !isAll3ObjDetected && runtime.seconds() < time) {
+        while(opModeIsActive() && !isGoldDetected && runtime.seconds() < time) {
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
-                if (updatedRecognitions.size() == 3) {
-                    isAll3ObjDetected = true;
-                    int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
-                    for (Recognition recognition : updatedRecognitions) {
-                        if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
-                            goldMineralX = (int) recognition.getLeft();
-                        } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                        } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                        }
-                    }
-                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                        } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                        }
+                for (Recognition recognition : updatedRecognitions) {
+                    if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                        isGoldDetected = true;
+                        telemetry.addData("# Object Detected", "GOLD");
                     }
                 }
             }
-
-            if(isAll3ObjDetected) {
-                // TODO: Stop Robot and try moving forward to hit Gold minaral
-            } else {
-                // TODO: turn robot to right until you see all 3 minerals
-            }
-            telemetry.update();
         }
+
+        if(isGoldDetected) {
+            // TODO: Stop Robot and try moving forward to hit Gold minaral
+            robot.setWheelPower(0.0, 0.0, 0.0, 0.0);
+        } else {
+            // TODO: turn robot to right until you see all 3 minerals
+            robot.setWheelPower(0.2, 0.2, 0.2, 0.2);
+        }
+        telemetry.update();
     }
 
     private void trackGoldMineral(double time) {
@@ -271,14 +258,18 @@ public class DropRobotAutonomous extends LinearOpMode {
 
                 if(angle > 1) {
                     //TODO: trun right slowly
+                    robot.setWheelPower(-0.3, -0.3, -0.3, -0.3);
                 } else if (angle < -1) {
                     // TODO: turn left slowly
+                    robot.setWheelPower(0.3, 0.3, 0.3, 0.3);
                 } else {
                     if(goldMineralSizeInCamera < goldRecognition.getImageWidth()) {
                         // TODO: Move straight
+                        robot.setWheelPower(-0.3, -0.3, 0.3, 0.3);
                     } else {
                         // TODO: Stop?
                         isDone = true;
+                        telemetry.addData("Gold Mineral Position", "HIT.....");
                     }
                 }
             } else {

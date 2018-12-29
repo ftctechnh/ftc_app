@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -20,13 +21,24 @@ public class AnimatornicsRobot {
     private DcMotor liftMotor_2;
     private DcMotor slideMotor;
 
-    private Servo leftServo;
-    private Servo rightServo;
+    //private Servo leftServo;
+    //private Servo rightServo;
+    private CRServo leftServo;
+    private CRServo rightServo;
 
     private Telemetry telemetry;
 
     private boolean holdLift = false;
     private ElapsedTime runtime = new ElapsedTime();
+
+    /*
+     * Going forward: lb:-1, lf:-1, rf:1, rb:1
+     * Going reverse: lb:1, lf:1, rf:-1, rb:-1
+     * Going turn right: lb:-1, lf:-1, rf:-1, rb:-1
+     * Going turn left: lb:1, lf:1, rf:1, rb:1
+     * Going lateral right: lb:-1, lf:1, rf:-1, rb:1
+     * Going lateral left: lb:1, lf:-1, rf:1, rb:-1
+     */
 
     public AnimatornicsRobot(HardwareMap hardwareMap, Telemetry telemetry) {
 
@@ -40,8 +52,13 @@ public class AnimatornicsRobot {
         liftMotor_1 = hardwareMap.get(DcMotor.class, "lift_motor_1");
         liftMotor_2 = hardwareMap.get(DcMotor.class, "lift_motor_2");
 
-        leftServo = hardwareMap.get(Servo.class, "leftServo");
-        rightServo = hardwareMap.get(Servo.class, "rightServo");
+        //leftServo = hardwareMap.get(Servo.class, "leftServo");
+        //rightServo = hardwareMap.get(Servo.class, "rightServo");
+        leftServo = hardwareMap.get(CRServo.class, "leftServo");
+        rightServo = hardwareMap.get(CRServo.class, "rightServo");
+
+        liftMotor_1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftMotor_2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         telemetry.addData("Status", "DC motor variables initialized");
     }
@@ -63,7 +80,7 @@ public class AnimatornicsRobot {
         rfMotor.setPower(rfPower);
         rbMotor.setPower(rbPower);
 
-        telemetry.addData("Status", "Changed Wheels powers");
+        telemetry.addData("Status", "lfPower:"+lfPower+", lbPower:"+lbPower+", rfPower:"+rfPower+", rbPower:"+rbPower);
 
         if(op.gamepad1.y) {
             holdLift = true;
@@ -73,13 +90,13 @@ public class AnimatornicsRobot {
         }
 
         if(!holdLift) {
-            double liftPower = op.gamepad1.right_trigger - op.gamepad1.left_trigger;
+            double liftPower =  op.gamepad1.left_trigger - op.gamepad1.right_trigger;
             liftPower = liftPower; // full power is too fast.
             liftMotor_1.setPower(liftPower);
             liftMotor_2.setPower(-liftPower);
             telemetry.addData("Status", "liftPower: " + liftPower);
         } else {
-            double liftPower = -0.25;
+            double liftPower = 0.5;
             liftMotor_1.setPower(liftPower);
             liftMotor_2.setPower(-liftPower);
             telemetry.addData("Status", "liftPower: " + liftPower);
@@ -91,7 +108,7 @@ public class AnimatornicsRobot {
         slideMotor.setPower(slidePower);
         telemetry.addData("Status", "slidePower: " + slidePower);
 
-        double leftServoPower = op.gamepad2.left_trigger;
+        /*double leftServoPower = op.gamepad2.left_trigger;
         double rightServoPower = op.gamepad2.right_trigger;
         if(leftServoPower < 0.75) {
             leftServo.setPosition(1.0);
@@ -103,7 +120,10 @@ public class AnimatornicsRobot {
             rightServo.setPosition(1.0);
         } else {
             rightServo.setPosition(0.0);
-        }
+        }*/
+        double crServoPower = op.gamepad2.left_trigger - op.gamepad2.right_trigger;
+        leftServo.setPower(crServoPower);
+        rightServo.setPower(-crServoPower);
     }
 
     public void moveLift(LinearOpMode op, double time, String direction, double liftPower) {
@@ -134,6 +154,14 @@ public class AnimatornicsRobot {
         lbMotor.setPower(0.0);
         rfMotor.setPower(0.0);
         rbMotor.setPower(0.0);
+    }
+
+    public void setWheelPower(double lfPower, double lbPower, double rfPower, double rbPower) {
+
+        lfMotor.setPower(lfPower);
+        lbMotor.setPower(lbPower);
+        rfMotor.setPower(rfPower);
+        rbMotor.setPower(rbPower);
     }
 
     public void moveSlide(LinearOpMode op, double time, String direction, double slidePower) {
