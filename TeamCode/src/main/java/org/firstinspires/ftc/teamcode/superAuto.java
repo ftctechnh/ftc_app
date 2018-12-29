@@ -315,7 +315,7 @@ abstract public class superAuto extends LinearOpMode {
             Boolean targetVisible = false;
             for (VuforiaTrackable trackable : allTrackables) {
                 if (((VuforiaTrackableDefaultListener) trackable.getListener()).isVisible()) {
-                    telemetry.addData("Visible Target", trackable.getName());
+                    //telemetry.addData("Visible Target", trackable.getName());
                     targetVisible = true;
 
                     // getUpdatedRobotLocation() will return null if no new information is available since
@@ -332,12 +332,12 @@ abstract public class superAuto extends LinearOpMode {
             if (targetVisible) {
                 // express position (translation) of robot in inches.
                 VectorF translation = lastLocation.getTranslation();
-                telemetry.addData("Pos (mm)", "{X, Y, Z} = %.1f, %.1f, %.1f",
-                        translation.get(0), translation.get(1), translation.get(2));
+                //telemetry.addData("Pos (mm)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                //        translation.get(0), translation.get(1), translation.get(2));
 
                 // express the rotation of the robot in degrees.
                 Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, DEGREES);
-                telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
+                //telemetry.addData("Rot (deg)", "{Roll, Pitch, Heading} = %.0f, %.0f, %.0f", rotation.firstAngle, rotation.secondAngle, rotation.thirdAngle);
                 location.setPositionValues(translation.get(0), translation.get(1), rotation.thirdAngle);
                 break;
             } else if (!targetVisible) {
@@ -565,14 +565,14 @@ abstract public class superAuto extends LinearOpMode {
         updateLocation();
         double currentHeading = location.getHeading();
         double wheelPower = .2;
-        telemetry.addData("target: ", target);
+        telemetry.addData("Pivot target: ", target);
         telemetry.update();
 
         while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
             updateLocation();
             currentHeading = location.getHeading();
-            telemetry.addData("current heading: ", currentHeading);
-            telemetry.update();
+            //telemetry.addData("current heading: ", currentHeading);
+            //telemetry.update();
             if (target - currentHeading > 0) {
                 motorFL.setPower(-wheelPower);
                 motorBL.setPower(-wheelPower);
@@ -587,11 +587,11 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
+
     void pivotTo(int target) {
         //Pivot to counterclockwise is positive.
         //Pivot to clockwise is negative.
         float fudgeFactor = .5f;
-
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double currentHeading = angles.firstAngle;

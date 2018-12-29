@@ -2,6 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
+import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
+
 /**
  * Created by Josie on 10/5/2018.
  */
@@ -15,13 +21,6 @@ public class auto extends superAuto {
         //Lower
         lowerRobot(6.6);
         sR();
-        //pivotToVuforia();
-
-
-
-
-
-
 
         getQuadrant();
 
@@ -35,14 +34,22 @@ public class auto extends superAuto {
         final double diagonalHalfField = Math.sqrt(Math.pow(halfFieldWidth,2)*2);
         final double stopInFrontOfMineral= diagonalHalfField-centerMineralLocation-(robotSize/2);
 
-        final double xStopinFrontofMineral = stopInFrontOfMineral* Math.cos(45);
-        final double yStopinFrontofMineral = xStopinFrontofMineral;
+        double xStopinFrontofMineral = stopInFrontOfMineral* Math.cos(45);
+        double yStopinFrontofMineral = xStopinFrontofMineral;
 
+        xStopinFrontofMineral =  1200;
+        yStopinFrontofMineral = -1200;
         //Triangle from vector and base-- Arc Tangent of y/x (CurrentVector) - Tangent(TargetVector) = pivotAngle
+        int thetaTarget = (int)Math.round( Math.toDegrees(
+                Math.atan( (yStopinFrontofMineral - location.getY()) /
+                           (xStopinFrontofMineral - location.getX()) ) ) );
 
+        pivotToVuforia(thetaTarget);
 
         goToPoint(xStopinFrontofMineral,yStopinFrontofMineral);
 
+        pivotToVuforia(90);
+        goToPoint(1200,1200);
         /*
         //ALL AUTOS DO:
         //Drop down
