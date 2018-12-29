@@ -29,12 +29,18 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
                     action = auto.drop();
                     break;
                 case LookForMinerals:
-                    action = auto.lookForMinerals();
+                    if(robot.camera.canUseTFOD) {
+                        action = auto.lookForMinerals();
+                        break;
+                    }
                 case Slide1:
                     action = auto.slide1();
                     break;
                 case PushGold:
-                    action = auto.pushGold();
+                    if(robot.camera.canUseTFOD)
+                        action = auto.pushGold();
+                    else
+                        action = auto.pushGoldNoCamera();
                     break;
                 case Slide2:
                     action = auto.slide2();

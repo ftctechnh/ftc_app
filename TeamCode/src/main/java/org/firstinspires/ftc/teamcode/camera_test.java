@@ -24,10 +24,10 @@ public class camera_test extends LinearOpMode
         while (opModeIsActive())
         {
             Double wallHeading = camera.headingToWall();
-            telemetry.addData("wall heading", wallHeading);
 
             if(wallHeading != null)
             {
+                telemetry.addData("wall heading", wallHeading);
                 if(Math.abs(wallHeading) < 2)
                     telemetry.addLine("Done!");
                 else
@@ -38,6 +38,7 @@ public class camera_test extends LinearOpMode
                         telemetry.addData("rotate", -.08);
                 }
             }
+            telemetry.update();
             idle();
         }
     }

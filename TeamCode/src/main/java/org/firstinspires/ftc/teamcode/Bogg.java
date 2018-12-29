@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.icu.lang.UProperty;
-
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -20,12 +18,12 @@ public class Bogg
     Camera camera = null;
     Sensors sensors;
     Servo brake;
-    Servo push;
+    Servo drop;
     Servo dServo;
 
     double alpha = 0.5;
     double liftAlpha = .12;
-    double alphaInc = 0.000001;
+    double alphaInc = 0.001;
     double xAve = 0;
     double yAve = 0;
     double spinAve = 0;
@@ -38,7 +36,9 @@ public class Bogg
     {
         Left,
         Straight,
-        Right
+        Right,
+        Down,
+        Up
     }
 
     public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
@@ -50,7 +50,7 @@ public class Bogg
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
-        push = hardwareMap.servo.get("dropMarker");
+        drop = hardwareMap.servo.get("drop");
         dServo = hardwareMap.get(Servo.class, "dServo");
     }
 
@@ -64,7 +64,7 @@ public class Bogg
         lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
-        push = hardwareMap.servo.get("dropMarker");
+        drop = hardwareMap.servo.get("drop");
         dServo = hardwareMap.get(Servo.class, "dServo");
     }
 
@@ -168,13 +168,24 @@ public class Bogg
         switch (direction)
         {
             case Left:
-                push.setPosition(-.4);
+                drop.setPosition(-.4);
                 break;
-            case Straight:
-                push.setPosition(0);
+            case Up:
+                drop.setPosition(0);
                 break;
             case Right:
-                push.setPosition(.4);
+                drop.setPosition(.4);
+                break;
+        }
+    }
+
+    void push(Direction direction)
+    {
+        switch (direction)
+        {
+            case Up:
+                break;
+            case Down:
                 break;
         }
     }

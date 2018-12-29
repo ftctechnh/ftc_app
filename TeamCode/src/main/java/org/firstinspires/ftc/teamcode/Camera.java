@@ -147,6 +147,7 @@ public class Camera{
      * Detection engine.
      */
     private TFObjectDetector tfod;
+    boolean canUseTFOD = true;
 
 
     public Camera(HardwareMap hardwareMap, Telemetry telemetry){
@@ -308,9 +309,8 @@ public class Camera{
             tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
             tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
         } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+            canUseTFOD = false;
         }
-
     }
 
     boolean targetVisible(int whichTarget)
@@ -401,14 +401,13 @@ public class Camera{
     
     Double headingToWall()
     {
-        double[] location = getLocation();
-        double targetHeading;
-        if(location != null)
+        getLocation();
+        Double heading = getHeading();
+        if(heading != null)
         {
-
-            //the direction a compass would tell us
-            double currentHeading = getHeading() * 180 / Math.PI;
-            targetHeading = Math.round(currentHeading / 90) * 90;
+            telemetry.addData("heading", heading);
+            double currentHeading = heading * 180 / Math.PI;
+            double targetHeading = Math.round(currentHeading / 90) * 90;
 
             return targetHeading - currentHeading;
         }

@@ -46,7 +46,8 @@ public class Auto {
         if (getTime() < 2) //for the first 2 seconds
         {
             telemetry.addData("time", getTime());
-            robot.lift(-1); //pull while we
+            if (!robot.sensors.touchTop.isPressed()) //helps with testing
+                robot.lift(-1); //pull while we
             robot.setBrake(false); //disengage the brake
         } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
         {
@@ -59,7 +60,7 @@ public class Auto {
             robot.lift(0);
             robot.driveEngine.resetDistances();
 
-            return Mode.Slide1;
+            return Mode.LookForMinerals;
         }
         return Mode.Drop;
     }
@@ -96,7 +97,7 @@ public class Auto {
                 new double[]{0, 24}))
         {
             robot.driveEngine.drive(0,0);
-            return Mode.Slide2;
+            return Mode.PushGold;
         }
         return Mode.Slide1;
     }
@@ -127,6 +128,31 @@ public class Auto {
                         new double[]{-34,0}))
                     return Mode.Slide2;
                 break;
+        }
+        return Mode.PushGold;
+    }
+
+    int i = 0;
+    Mode pushGoldNoCamera()
+    {
+        if (robot.driveEngine.moveOnPath("driveRight",
+                new double[]{34, 0})) {
+            if (i < 3) {
+                if (robot.driveEngine.moveOnPath("pushAll" + i,
+                        new double[]{0, 12})) {
+                    robot.push(Bogg.Direction.Down);
+
+                    if (robot.driveEngine.moveOnPath("pullSilver" + i,
+                            new double[]{0, -12},
+                            new double[]{-34, 0})) {
+                        robot.push(Bogg.Direction.Up);
+                        i++;
+                    }
+                }
+            }
+            else if (robot.driveEngine.moveOnPath("driveRight",
+                    new double[]{68, 0}))
+                return Mode.Slide2;
         }
         return Mode.PushGold;
     }
@@ -231,7 +257,7 @@ public class Auto {
     void stop()
     {
         robot.driveEngine.drive(0,0);
-        robot.dropMarker(Bogg.Direction.Straight);
+        robot.dropMarker(Bogg.Direction.Up);
         robot.lift(0);
     }
 
