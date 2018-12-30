@@ -90,7 +90,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         }
 
         //double goldMineralDistance = robot.sensorDistance.getDistance(DistanceUnit.INCH);
-        robot.tts.speak("Gold on position " + goldMineralLocation);
+        robot.speak("Gold on position " + goldMineralLocation);
     }
 
     final void landing() {
@@ -116,7 +116,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.leftDrive.setPower(0d);
         robot.rightDrive.setPower(0d);
 
-        robot.tts.speak("Landing complete");
+        robot.speak("Landing complete");
 
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

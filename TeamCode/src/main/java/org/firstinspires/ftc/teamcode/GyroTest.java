@@ -91,6 +91,9 @@ public class GyroTest extends LinearOpMode
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
         // Set up our telemetry dashboard
         composeTelemetry();
 

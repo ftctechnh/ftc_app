@@ -73,7 +73,7 @@ class Hardware15091 {
     Servo pickupServo = null;
     Servo markerServo = null;
     AnalogInput armAngle = null;
-    AndroidTextToSpeech tts = null;
+    private AndroidTextToSpeech tts = null;
     BNO055IMU imu;
     ColorSensor sensorColor = null;
     DistanceSensor sensorDistance = null;
@@ -83,6 +83,10 @@ class Hardware15091 {
     static final double ARM_POWER = 1d;
     private static final double P_ARM_COEFF = 0.0004d;     // Larger is more responsive, but also less stable
     private int beepSoundID;
+
+    void speak(String stuff) {
+        tts.speak(stuff);
+    }
 
     int setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -114,7 +118,7 @@ class Hardware15091 {
 
     double getHeading() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return (double)AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
+        return (double) AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
     /* Initialize standard Hardware interfaces */
@@ -142,7 +146,6 @@ class Hardware15091 {
 
         tts = new AndroidTextToSpeech();
         tts.initialize();
-        tts.setLanguage("eng");
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -157,24 +160,22 @@ class Hardware15091 {
         rightDrive.setPower(0);
         armDrive.setPower(0);
 
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = false;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-            // Set up the parameters with which we will use our IMU. Note that integration
-            // algorithm here just reports accelerations to the logcat log; it doesn't actually
-            // provide positional information.
-            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-            parameters.loggingEnabled = false;
-            parameters.loggingTag = "IMU";
-            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-            // and named "imu".
-            imu = hwMap.get(BNO055IMU.class, "imu");
-            imu.initialize(parameters);
-
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hwMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
 
         beepSoundID = hwMap.appContext.getResources().getIdentifier("beep", "raw", hwMap.appContext.getPackageName());
     }

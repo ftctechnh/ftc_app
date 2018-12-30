@@ -57,9 +57,10 @@ public class GetReady extends LinearOpMode {
 
     @Override
     public void runOpMode() {
+        robot.init(hardwareMap);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-        robot.init(hardwareMap);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -99,7 +100,7 @@ public class GetReady extends LinearOpMode {
                 robot.armDrive.setPower(armPower);
             }
 
-            robot.tts.speak("Hello Aztec, make sure heading is zero and don't forget Team Marker.");
+            robot.speak("Hello Aztec, make sure heading is zero and don't forget Team Marker.");
             sleep(3000L);
         }
     }
