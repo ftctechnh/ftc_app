@@ -63,11 +63,11 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    void sampling() {
+    void sampling(double startingAngle) {
         robot.beep();
 
-        // turn robot 180 degree to the right
-        gyroTurn(0.8d, -111d);
+        // turn robot -111 degree to the right
+        gyroTurn(0.8d, startingAngle);
 
         //scan gold mineral for position 1,2,3
         targetHeading = robot.getHeading();

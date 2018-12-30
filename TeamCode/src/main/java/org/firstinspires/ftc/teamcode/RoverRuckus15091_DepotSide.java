@@ -98,7 +98,7 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
             landing();
 
             // Then turn and stop at gold mineral
-            sampling();
+            sampling(-111d);
 
             //base on gold mineral position, continue path for 1,2,3
             switch (goldMineralLocation) {

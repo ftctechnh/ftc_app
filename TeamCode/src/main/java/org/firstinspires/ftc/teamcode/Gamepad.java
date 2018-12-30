@@ -53,18 +53,14 @@ import com.qualcomm.robotcore.util.Range;
 //@Disabled
 public class Gamepad extends LinearOpMode {
 
+    private final double SERVO_CYCLE = 50d;
+    private final double SERVO_INCREMENT_MIN = 0.005d;
+    private final double SERVO_INCREMENT_MAX = 0.01d;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     private Hardware15091 robot = new Hardware15091();
     private ElapsedTime armTime = new ElapsedTime();
     private ElapsedTime handTime = new ElapsedTime();
-    private final double SERVO_CYCLE = 50d;
-    private final double SERVO_INCREMENT_MIN = 0.005d;
-    private final double SERVO_INCREMENT_MAX = 0.01d;
-
-    // Setup a variable for each drive wheel to save power level for telemetry
-    private double leftPower, rightPower;
-    private double drive, turn;
     private int armSequence = 0;
     private double lastRuntime = 0d;
 
@@ -103,37 +99,35 @@ public class Gamepad extends LinearOpMode {
             }
         }.start();
 
-        new Thread() {
-            public void run() {
-                while (opModeIsActive()) {
-                    ArmControl();
-                }
-            }
-        }.start();
-
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
-            drive = 0d;
-            turn = 0d;
-            if (gamepad1.dpad_down || gamepad2.dpad_down) {
-                drive = -1d;
-            } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
-                drive = 1d;
-            }
+            ArmControl();
 
-            if (gamepad1.dpad_right || gamepad2.dpad_right) {
-                turn = -0.7d;
-            } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
-                turn = 0.7d;
-            }
-
-            leftPower = Range.clip(drive - turn, -1d, 1d);
-            rightPower = Range.clip(drive + turn, -1d, 1d);
-
-            // Send calculated power to wheels
-            robot.leftDrive.setPower(leftPower);
-            robot.rightDrive.setPower(rightPower);
+            DriveControl();
         }
+    }
+
+    private void DriveControl() {
+        double drive = 0d;
+        double turn = 0d;
+        if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            drive = -1d;
+        } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            drive = 1d;
+        }
+
+        if (gamepad1.dpad_right || gamepad2.dpad_right) {
+            turn = -0.7d;
+        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
+            turn = 0.7d;
+        }
+
+        double leftPower = Range.clip(drive - turn, -1d, 1d);
+        double rightPower = Range.clip(drive + turn, -1d, 1d);
+
+        // Send calculated power to wheels
+        robot.leftDrive.setPower(leftPower);
+        robot.rightDrive.setPower(rightPower);
     }
 
     private void ArmControl() {
