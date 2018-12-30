@@ -118,8 +118,6 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
 
             this.robot.markerServo.setPosition(1d);
             sleep(500L);
-            detector.disable();
-
             robot.beep();
 
             /*gyroTurn(TURN_SPEED, 90d);
@@ -128,5 +126,7 @@ public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
             gyroDrive(DRIVE_SPEED, -24d, 50d);
             gyroDrive(DRIVE_SPEED, -24d, 45d);*/
         }
+
+        detector.disable();
     }
 }

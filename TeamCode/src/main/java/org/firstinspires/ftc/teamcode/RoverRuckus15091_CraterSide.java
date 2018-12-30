@@ -113,10 +113,10 @@ public class RoverRuckus15091_CraterSide extends RoverRuckus15091 {
                     break;
             }
 
-            detector.disable();
+            robot.beep();
         }
 
-        robot.beep();
+        detector.disable();
 
         while(opModeIsActive()) {
             idle();
