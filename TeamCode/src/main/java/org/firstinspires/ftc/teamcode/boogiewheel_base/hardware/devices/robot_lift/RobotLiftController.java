@@ -60,8 +60,7 @@ public class RobotLiftController extends SubsystemController {
         delay(1000);
         robotLift.setLiftNoEncoderPower(ROBOT_LIFT_LOWER_POWER);
 
-        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION))
-            ;
+        while (AbstractOpMode.isOpModeActive() && (robotLift.getCurrentPosition() >= ROBOT_LIFT_LOWERED_POSITION));
 
         robotLift.setPosition(ROBOT_LIFT_LOWERED_POSITION);
         //so the mineral lift doesn't hit the pawl on the way down

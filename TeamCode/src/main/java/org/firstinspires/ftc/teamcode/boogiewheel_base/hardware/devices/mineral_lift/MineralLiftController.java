@@ -34,7 +34,7 @@ public class MineralLiftController extends SubsystemController {
             liftValues[2] = liftValues[1];
             liftValues[1] = liftValues[0];
             liftValues[0] = currentValue;
-            if (atPosition(liftValues[0], liftValues[1], 2) && atPosition(liftValues[1], liftValues[2], 2) && mineralLift.getCurrentPosition() < 500) {
+            if (atPosition(liftValues[0], liftValues[1], 2) && atPosition(liftValues[1], liftValues[2], 2) && mineralLift.getCurrentPosition() < 1000) {
                 mineralLift.resetPosition();
                 liftValues[0] = -1;
                 liftValues[1] = -1;

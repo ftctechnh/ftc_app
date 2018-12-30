@@ -191,7 +191,7 @@ public class DriveController extends SubsystemController {
 
     public synchronized void runDrivePath(Path path) {
         currentPath = path;
-        currentPath.reset();
+        path.reset();
         while (!path.isDone() && AbstractOpMode.isOpModeActive()) {
             if (path.getNextSegment() == null) break;
             if (path.getCurrentSegment().getType() == Segment.SegmentType.TURN) {
@@ -204,7 +204,7 @@ public class DriveController extends SubsystemController {
 
     //Autonomous Methods
     public synchronized void turnToSegment(TurnSegment segment) {
-        AbstractOpMode.delay(100);
+        //AbstractOpMode.delay(100);
 
         double angle = segment.getAngle(), speed = segment.getSpeed(), error = segment.getError(), period = segment.getPeriod();
 
@@ -255,7 +255,7 @@ public class DriveController extends SubsystemController {
 
     public synchronized void driveToSegment(DriveSegment segment) {
 
-        AbstractOpMode.delay(100);
+       //AbstractOpMode.delay(100);
 
         double distance = segment.getDistance(), speed = segment.getSpeed(), angle = baseHeading;
         if (segment.getAngle() != null) angle = segment.getAngle();
@@ -312,26 +312,6 @@ public class DriveController extends SubsystemController {
 
             drive.setPower(leftPower, rightPower);
         }
-
-        for (int i = 0; i < 5; i++) {
-
-            currentHeading = getHeading();
-
-            power = range(distancePID.output(position, (drive.getRightPosition() + drive.getLeftPosition()) / 2));
-
-            turn = straightPID.output(startHeading, currentHeading);
-
-            if (power > 0) {
-                leftPower = range(power * (speed - turn));
-                rightPower = range(power * (speed + turn));
-            } else {
-                leftPower = range(power * (speed + turn));
-                rightPower = range(power * (speed - turn));
-            }
-
-            drive.setPower(leftPower, rightPower);
-        }
-
         drive.setPower(0, 0);
         drive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
@@ -350,8 +330,8 @@ public class DriveController extends SubsystemController {
     }
 
     public void autonDriveToWallSequence() {
-        while (!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") && drive.getDistance() >= 4 && AbstractOpMode.isOpModeActive())
-            ;
+        while ((!RobotState.currentPath.getCurrentSegment().getName().equals("drive to wall") || drive.getDistance() >= DISTANCE_TO_WALL) && AbstractOpMode.isOpModeActive()) telemetry.addData(INFO,drive.getDistance());
+        telemetry.addData(INFO,drive.getDistance());
         RobotState.currentPath.nextSegment();
     }
 
@@ -504,6 +484,7 @@ public class DriveController extends SubsystemController {
     }
 
     public void dropTeamMarker() {
+        while (!currentPath.getCurrentSegment().getName().equals("drive to crater"));
         currentPath.pause();
         drive.setMarkerServo(DRIVE_TEAM_MARKER_EXTENDED);
         delay(1000);

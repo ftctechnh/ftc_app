@@ -43,7 +43,6 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
 
         if (currentPosition != SamplePosition.UNKNOWN)
             RobotState.currentSamplePosition = currentPosition;
-
         telemetry.addData(DoubleTelemetry.LogMode.INFO, currentPosition.toString());
         telemetry.update();
     }
@@ -51,7 +50,6 @@ public class BoogieAutonDoubleSample extends AbstractAutonNew {
     @Override
     public void Run() {
         tensorFlow.stop();
-
         robot.moveRobotLiftToBottom();
     }
 

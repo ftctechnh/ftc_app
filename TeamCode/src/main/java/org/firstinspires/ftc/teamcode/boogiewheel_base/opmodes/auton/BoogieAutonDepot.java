@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.boogiewheel_base.opmodes.auton;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Constants;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.Robot;
 import org.firstinspires.ftc.teamcode.boogiewheel_base.hardware.RobotState;
 import org.firstinspires.ftc.teamcode.framework.abstractopmodes.AbstractAutonNew;
@@ -43,7 +44,6 @@ public class BoogieAutonDepot extends AbstractAutonNew {
 
         if (currentPosition != SamplePosition.UNKNOWN)
             RobotState.currentSamplePosition = currentPosition;
-
         telemetry.addData(DoubleTelemetry.LogMode.INFO, currentPosition.toString());
         telemetry.update();
     }
@@ -51,8 +51,22 @@ public class BoogieAutonDepot extends AbstractAutonNew {
     @Override
     public void Run() {
         tensorFlow.stop();
-
         robot.moveRobotLiftToBottom();
+        switch (RobotState.currentSamplePosition) {
+            case RIGHT:
+                robot.runDrivePath(Constants.collectRightMineral);
+                break;
+            case LEFT:
+                robot.runDrivePath(Constants.collectLeftMineral);
+                break;
+            case CENTER:
+                robot.runDrivePath(Constants.collectCenterMineral);
+                break;
+            default:
+                robot.runDrivePath(Constants.collectCenterMineral);
+                break;
+        }
+        robot.runDrivePath(Constants.depotSideToCrater);
     }
 
     @Override
