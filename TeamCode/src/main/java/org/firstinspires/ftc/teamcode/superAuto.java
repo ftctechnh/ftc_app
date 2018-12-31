@@ -376,10 +376,12 @@ abstract public class superAuto extends LinearOpMode {
     }
 
     void goToPoint(double DestinationX, double DestinationY){
-        double Theta = Math.toRadians(getHeading());
+        telemetry.addData("goToPoint destX,Y:",
+                    "%f %f",DestinationX, DestinationY);
+
         double CurrentX, CurrentY,X,Y;//X and Y JOYstick coordinates
+
         boolean go = true;
-        int i = 0;
 
         // While not at desired location
         while (go) {
@@ -388,31 +390,22 @@ abstract public class superAuto extends LinearOpMode {
             CurrentY = location.getY();
             X = (DestinationX - CurrentX);
             Y = (DestinationY - CurrentY);
-            telemetry.addData("DestinationX ",DestinationX);
-            telemetry.addData("DestinationY ",DestinationY );
-            telemetry.addData("X ",X );
-            telemetry.addData("Y ",Y );
+            telemetry.addData("Diff:  ","%f %f", X, Y);
             double divBy = Math.max(Math.abs(X), Math.abs(Y));
             double chgDistance = Math.sqrt((X*X) + (Y*Y));
             X= X/divBy;
             Y= Y/divBy;
-            telemetry.addData("Max Divisor: ", divBy );
-            telemetry.addData("X Normalized:  ",X );
-            telemetry.addData("Y Normalized: ",Y );
+            telemetry.addData("  Power: ","%f %f", X, Y);
 
-            if (Math.abs(chgDistance) >= 2) {
+            if (Math.abs(chgDistance) >= 300) {
                 //double posx = Vuforia_JoystickX(X,Y, Theta);
                 //double posy = Vuforia_JoystickY(X,Y, Theta);
                 double posx = X;
                 double posy = Y;
-                telemetry.addData("chgDistance ", chgDistance);
-                telemetry.addData("CurrentX ", CurrentX);
-                telemetry.addData("CurrentY ",CurrentY );
-                telemetry.addData("posx ",posx );
-                telemetry.addData("posy ",posy );
-                telemetry.addData("i", i);
+                telemetry.addData("  Pos  :", "%f %f", CurrentX, CurrentY);
+                telemetry.addData("  Chg  :", "%f", chgDistance);
                 telemetry.update();
-                Wait(5);
+                Wait(.25);
 
                 //Power the motors
                 if ( ( posy != 0) || ( posx != 0 ) ) {
@@ -422,9 +415,7 @@ abstract public class superAuto extends LinearOpMode {
                     motorFL.setPower( FLBRPower );
                     motorBR.setPower( FLBRPower );
                     motorBL.setPower( FRBLPower );
-
                 }
-
             } else
             {
                 motorFR.setPower(0);
@@ -433,8 +424,6 @@ abstract public class superAuto extends LinearOpMode {
                 motorBL.setPower(0);
                 go = false;
             }
-            i++;
-
         }
         sR();
     }
@@ -565,7 +554,7 @@ abstract public class superAuto extends LinearOpMode {
         updateLocation();
         double currentHeading = location.getHeading();
         double wheelPower = .2;
-        telemetry.addData("Pivot target: ", target);
+        telemetry.addData("pivotToVuforia target: ", target);
         telemetry.update();
 
         while ((currentHeading < (target - fudgeFactor)) || (currentHeading > (target + fudgeFactor))) {
@@ -585,6 +574,8 @@ abstract public class superAuto extends LinearOpMode {
                 motorBR.setPower(-wheelPower);
             }
         }
+        telemetry.addData("  Final heading: ", currentHeading);
+        telemetry.update();
         sR();
     }
 

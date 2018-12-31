@@ -16,7 +16,7 @@ public class autoTest extends superAuto {
 
         setUp();
         configVuforiaRoverRuckus();
-        goToPoint(-850,-850);
+        goToPoint(1200,-1200);
 
     }
 }
