@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 /**
  * Created by Josie on 10/5/2018.
  */
-@Autonomous(name="Preciousss: autoTest", group="Preciousss")
+@Autonomous(name="Preciousss: lower", group="Preciousss")
 
-public class autoTest extends superAuto {
+public class lower extends superAuto {
 
     public void runOpMode() {
 
@@ -16,10 +16,6 @@ public class autoTest extends superAuto {
 
         setUp();
         configVuforiaRoverRuckus();
-        lowerRobot(6.9, 1);
-        translate(-1,0,.5, 0.5);
-        pivotToVuforia(-45);
-        //translate(0,-1,2, 0.5);
-        goToPoint(1200,-1200);
+        lowerRobot(6.9, -1);
     }
 }

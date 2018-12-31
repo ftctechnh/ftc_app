@@ -19,7 +19,7 @@ public class auto extends superAuto {
         setUp();
         configVuforiaRoverRuckus();
         //Lower
-        lowerRobot(6.6);
+        lowerRobot(6.9, 1);
         sR();
 
         getQuadrant();
