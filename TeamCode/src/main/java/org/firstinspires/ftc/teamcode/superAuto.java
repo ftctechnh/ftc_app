@@ -40,6 +40,7 @@ import java.util.Locale;
 import static com.sun.tools.javac.util.Constants.format;
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
+import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YXZ;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.mmPerInch;
@@ -227,9 +228,9 @@ abstract public class superAuto extends LinearOpMode {
     }
 
 
-    void lowerRobot(double seconds) {
+    void lowerRobot(double seconds, double UpOrDown) {
         //drop down
-        robotLift.setPower(1);
+        robotLift.setPower(UpOrDown);
         Wait(seconds);
         robotLift.setPower(0);
 
@@ -292,14 +293,14 @@ abstract public class superAuto extends LinearOpMode {
         backSpace.setLocation(backSpaceLocationOnField);
 
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = -95;   // eg: Camera is 110 mm in front of robot center
-        final int CAMERA_VERTICAL_DISPLACEMENT = 432;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = -76;     // eg: Camera is ON the robot's center line
+        final int CAMERA_FORWARD_DISPLACEMENT  = 171;   // eg: Camera is 110 mm in front of robot center
+        final int CAMERA_VERTICAL_DISPLACEMENT = 324;   // eg: Camera is 200 mm above ground
+        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YZX, DEGREES,
-                        0, 180, -90));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, YXZ, DEGREES,
+                        -90, 90, -75));
 
         /**  Let all the trackable listeners know where the phone is.  */
         for (VuforiaTrackable trackable : allTrackables)
@@ -436,8 +437,7 @@ abstract public class superAuto extends LinearOpMode {
         return JoystickX;
     }
 
-    public double Vuforia_JoystickY(double X, double Y, double Theta)
-    {
+    public double Vuforia_JoystickY(double X, double Y, double Theta) {
         double JoystickY = (X*Math.sin(Theta))+(Y*Math.cos(Theta));
         telemetry.addData("JoystickY", "%f", JoystickY);
         return JoystickY;
@@ -471,6 +471,19 @@ abstract public class superAuto extends LinearOpMode {
         }
     }
 
+    void translate(double posx, double posy, double seconds, double power){
+        double FRBLPower = ((-posy) - posx)*power;
+        double FLBRPower = ((-posy) + posx)*power;
+        motorFR.setPower( FRBLPower );
+        motorFL.setPower( FLBRPower );
+        motorBR.setPower( FLBRPower );
+        motorBL.setPower( FRBLPower );
+        Wait(seconds);
+        motorFR.setPower(0);
+        motorFL.setPower(0);
+        motorBR.setPower(0);
+        motorBL.setPower(0);
+    }
     void fancyGyroPivot (double target) {
 
         //First set up variables
