@@ -39,6 +39,16 @@ public class holonomicDrive_0_1 extends LinearOpMode
                 robot.setBrake(false);
             }
 
+            if(gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0)
+                if(gamepad1.dpad_left )
+                {
+                    robot.driveEngine.orbit(48,0, -.3);
+                }
+                else if(gamepad1.dpad_right)
+                {
+                    robot.driveEngine.orbit(48,0, .3);
+                }
+
 
             if(gamepad1.left_bumper)
             {
