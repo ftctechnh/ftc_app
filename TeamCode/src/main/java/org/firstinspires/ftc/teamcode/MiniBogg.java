@@ -131,9 +131,9 @@ public class MiniBogg
     public void manualDrive()
     {
         if(gamepad.left_stick_button)
-            driveEngine.drive(gamepad.left_stick_x/2, gamepad.left_stick_y/2,true);
+            driveEngine.drive(true,gamepad.left_stick_x/2, gamepad.left_stick_y/2);
         else
-            driveEngine.drive(smoothX(gamepad.left_stick_x)/2, smoothY(gamepad.left_stick_y)/2);
+            driveEngine.drive(false,smoothX(gamepad.left_stick_x)/2, smoothY(gamepad.left_stick_y)/2);
     }
     public void manualRotate()
     {
