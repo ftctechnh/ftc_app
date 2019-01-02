@@ -32,7 +32,7 @@ public class autonomousDriveX_DropPark extends LinearOpMode
                     action = auto.slide1();
                     break;
                 case PushGold: // ==Park
-                    if(robot.driveEngine.moveOnPath("drive and drop",
+                    if(robot.driveEngine.moveOnPath(
                             new double[]{0,36},
                             new double[]{Math.PI / 2}))
                     {

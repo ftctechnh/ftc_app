@@ -16,7 +16,7 @@ public class Auto {
     Auto(Bogg robot, Telemetry telemetry)
     {
         this.robot = robot;
-        robot.dropMarker(Bogg.Direction.Straight);
+        robot.dropMarker(Bogg.Direction.Up);
         this.telemetry = telemetry;
         robot.camera = new Camera(robot.hardwareMap, telemetry);
         telemetry.addLine("Wait for start");
@@ -53,7 +53,7 @@ public class Auto {
         } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
         {
             telemetry.addData("touchTop", robot.sensors.touchTop.isPressed());
-            robot.lift(.2); //dropMarker up, which drops the robot
+            robot.lift(.2); //push up, which drops the robot
         }
         else {
             timer.reset();
@@ -91,7 +91,7 @@ public class Auto {
     Mode slide1()
     {
         robot.lift(0);
-        if (robot.driveEngine.moveOnPath("slide1",
+        if (robot.driveEngine.moveOnPath(
                 new double[]{-6, 0},
                 new double[]{0, 4},
                 new double[]{6, 0},
@@ -109,7 +109,7 @@ public class Auto {
         switch (goldPosition)
         {
             case 0:
-                if(robot.driveEngine.moveOnPath("pushGold",
+                if(robot.driveEngine.moveOnPath(
                         new double[]{-17,0},
                         new double[]{0,12},
                         new double[]{0,-12})) {
@@ -118,12 +118,12 @@ public class Auto {
                 }
                 break;
             case 1:
-                if(robot.driveEngine.moveOnPath("pushGold",
+                if(robot.driveEngine.moveOnPath(
                         new double[]{0,12}))
                     return Mode.Slide2;
                 break;
             case 2:
-                if(robot.driveEngine.moveOnPath("pushGold",
+                if(robot.driveEngine.moveOnPath(
                         new double[]{17,0},
                         new double[]{0,12},
                         new double[]{0,-12},
@@ -134,17 +134,17 @@ public class Auto {
         return Mode.PushGold;
     }
 
-    int i = 0;
+    private int i = 0;
     Mode pushGoldNoCamera()
     {
-        if (robot.driveEngine.moveOnPath("driveRight",
+        if (robot.driveEngine.moveOnPath(
                 new double[]{17, 0})) {
             if (i < 3) {
-                if (robot.driveEngine.moveOnPath("pushAll" + i,
+                if (robot.driveEngine.moveOnPath(
                         new double[]{0, 12})) {
                     robot.push(Bogg.Direction.Down);
 
-                    if (robot.driveEngine.moveOnPath("pullSilver" + i,
+                    if (robot.driveEngine.moveOnPath(
                             new double[]{0, -12},
                             new double[]{-17, 0})) {
                         robot.push(Bogg.Direction.Up);
@@ -163,7 +163,7 @@ public class Auto {
     Mode slide2()
     {
         robot.lift(0);
-        if (robot.driveEngine.moveOnPath("slide2",
+        if (robot.driveEngine.moveOnPath(
                 new double[]{-slide2distance, 0},
                 new double[]{Math.PI / 4}))
         {

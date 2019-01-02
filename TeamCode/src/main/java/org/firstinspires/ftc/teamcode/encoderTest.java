@@ -16,7 +16,7 @@ public class encoderTest extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if (robot.driveEngine.moveOnPath("encoder test",
+            if (robot.driveEngine.moveOnPath(
                     new double[]{-6, 0},
                     new double[]{0, 4},
                     new double[]{6, 0},

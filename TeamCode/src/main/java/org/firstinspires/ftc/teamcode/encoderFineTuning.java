@@ -43,11 +43,11 @@ public class encoderFineTuning extends LinearOpMode
 
             if(deltaS != 0)
             {
-                robot.driveEngine.moveOnPath("fineTuning", new double[]{deltaS});
+                robot.driveEngine.moveOnPath(new double[]{deltaS});
             }
             else
             {
-                robot.driveEngine.moveOnPath("fineTuning", new double[]{deltaX, deltaY});
+                robot.driveEngine.moveOnPath(new double[]{deltaX, deltaY});
             }
 
             if(robot.gamepad.left_bumper || robot.gamepad.right_bumper)
