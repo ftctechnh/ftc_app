@@ -13,7 +13,6 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
         boolean rotating = false;
@@ -21,7 +20,6 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
 
         while (opModeIsActive())
         {
-
             if(gamepad1.right_stick_x != 0 )
             {
                 robot.manualRotate(gamepad1);

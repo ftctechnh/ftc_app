@@ -60,6 +60,10 @@ class DriveEngine {
         drive(false, spin);
     }
 
+    void stop(){
+        drive(0);
+    }
+
     void drive(boolean op, double ... args) {
         double x = 0,y = 0,spin = 0;
         switch (args.length)
@@ -74,6 +78,7 @@ class DriveEngine {
                 spin = args[0];
                 break;
             default:
+                stop();
                 return;
         }
         double xprime = x * Math.cos(theta) - y * Math.sin(theta);
@@ -157,6 +162,7 @@ class DriveEngine {
         if(c == checkpoint.size())
         {
             checkpoint.clear();
+            stop();
             return true;
         }
 
@@ -193,6 +199,73 @@ class DriveEngine {
                 else if(r <= .5){
                     checkpoint.set(c, true);
                     resetDistances();
+                }
+                break;
+        }
+        return false;
+    }
+
+    private double[] cumulativeCheckpoints = new double[3];
+
+    boolean moveOnCumulativePath(double[] ... args)
+    {
+        if(checkpoint.size() == 0){
+            for (int i = 0; i < args.length; i++)
+                checkpoint.add(false);
+
+            resetDistances();
+        }
+
+        int c = 0;
+        for(boolean b: checkpoint)
+            if(b)
+                c++;
+
+        telemetry.addData("checkpoint count", c);
+        if(c == checkpoint.size())
+        {
+            checkpoint.clear();
+            stop();
+            return true;
+        }
+
+        double spin;
+        switch (args[c].length)
+        {
+            case 1:
+                spin = spinToTarget(cumulativeCheckpoints[2] + args[c][0]);
+                rotate(spin);
+                if(Math.abs(spin) -.02 < 1 * Math.PI /180) {
+                    cumulativeCheckpoints[2] += args[c][0];
+                    cumulativeSpin -= args[c][0];
+                    checkpoint.set(c, true);
+                }
+                break;
+            case 2:
+                double[] point = args[c];
+                point[0] += cumulativeCheckpoints[0];
+                point[1] += cumulativeCheckpoints[1];
+                spin = spinToTarget(point[2]);
+
+                double deltaX = point[0] - xDist();
+                double deltaY = point[1] - yDist();
+                double r = Math.hypot(deltaX, deltaY);
+
+                telemetry.addData("targetX", point[0]);
+                telemetry.addData("targetY", point[1]);
+                telemetry.addData("radius", r);
+                telemetry.addData("error correctability", cumulativeSpin);
+
+                if(r > 4) {
+                    drive(false, deltaX / r * .2, deltaY / r * .2, spin);
+                }
+                else if(r > .5) {
+                    drive(false, deltaX / r * .1, deltaY / r * .1, spin);
+                }
+                else if(r <= .5){
+                    cumulativeCheckpoints[0] += args[c][0];
+                    cumulativeCheckpoints[1] += args[c][1];
+                    checkpoint.set(c, true);
                 }
                 break;
         }

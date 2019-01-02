@@ -21,16 +21,15 @@ public class fauxbotDrive extends LinearOpMode {
         left = hardwareMap.dcMotor.get("left");
         left.setDirection(DcMotorSimple.Direction.FORWARD);
         right = hardwareMap.dcMotor.get("right");
-        right.setDirection(DcMotorSimple.Direction.REVERSE);
+        right.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        double temp = 0;
 
         waitForStart();
         while (opModeIsActive()) {
 
 
             left.setPower(gamepad1.left_stick_y);
-            right.setPower(gamepad1.right_stick_y);
+            right.setPower(-gamepad1.right_stick_y);
 
             telemetry.update();
             idle();

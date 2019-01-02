@@ -97,7 +97,6 @@ public class Auto {
                 new double[]{6, 0},
                 new double[]{0, 24}))
         {
-            robot.driveEngine.drive(0,0);
             return Mode.PushGold;
         }
         return Mode.Slide1;
@@ -167,7 +166,6 @@ public class Auto {
                 new double[]{-slide2distance, 0},
                 new double[]{Math.PI / 4}))
         {
-            robot.driveEngine.drive(0,0);
             return Mode.TurnByCamera;
         }
         return Mode.Slide2;
@@ -259,7 +257,7 @@ public class Auto {
 
     void stop()
     {
-        robot.driveEngine.drive(0,0);
+        robot.driveEngine.stop();
         robot.dropMarker(Bogg.Direction.Up);
         robot.lift(0);
     }

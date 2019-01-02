@@ -21,8 +21,18 @@ public class encoderTest extends LinearOpMode
                     new double[]{0, 4},
                     new double[]{6, 0},
                     new double[]{0, 24},
-                    new double[]{Math.PI / 4},
-                    new double[]{-24, 24}))
+                    new double[]{-24, 24},
+                    new double[]{17, 0},
+                    new double[]{0, 12},
+                    new double[]{0, -12},
+                    new double[]{-17, 0},
+                    new double[]{0, 12},
+                    new double[]{0, -12},
+                    new double[]{-17, 0},
+                    new double[]{0, 12},
+                    new double[]{0, -12},
+                    new double[]{-17, 0},
+                    new double[]{Math.PI / 4}))
             {
                 robot.driveEngine.drive(0,0);
             }
