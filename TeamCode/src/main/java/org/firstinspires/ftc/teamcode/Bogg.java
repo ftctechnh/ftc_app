@@ -170,11 +170,12 @@ public class Bogg
             case Left:
                 drop.setPosition(-.4);
                 break;
-            case Up:
-                drop.setPosition(0);
-                break;
             case Right:
                 drop.setPosition(.4);
+                break;
+            case Up:
+            default:
+                drop.setPosition(0);
                 break;
         }
     }
@@ -193,9 +194,20 @@ public class Bogg
     void manualDrive(Gamepad g)
     {
         if(g.left_stick_button)
-            driveEngine.drive(smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5),true);
+            driveEngine.drive(true, smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5));
         else
-            driveEngine.drive(smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1));
+            driveEngine.drive(false, smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1));
+        telemetry.addData("gamepad x", g.left_stick_x);
+        telemetry.addData("gamepad y", g.left_stick_y);
+        telemetry.addLine("Note: y is negated");
+    }
+
+    void manualDriveAutoCorrect(Gamepad g)
+    {
+        if(g.left_stick_button)
+            driveEngine.drive(true, smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5), driveEngine.spinToZero());
+        else
+            driveEngine.drive(false, smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1), driveEngine.spinToZero());
         telemetry.addData("gamepad x", g.left_stick_x);
         telemetry.addData("gamepad y", g.left_stick_y);
         telemetry.addLine("Note: y is negated");
@@ -212,8 +224,7 @@ public class Bogg
         telemetry.addData("gamepad spin", gRotate.right_stick_x);
         telemetry.addLine("Note: y and spin are negated");
 
-        driveEngine.driveCurvy(leftX, leftY, spin);
-
+        driveEngine.drive(leftX, leftY, spin);
     }
 
     void manualRotate(Gamepad g)
@@ -225,35 +236,6 @@ public class Bogg
 
         telemetry.addData("gamepad spin", g.right_stick_x);
         telemetry.addLine("Note: spin is negated");
-    }
-
-
-    boolean driveToTarget(double target_x, double target_y, double speed, double target_radius)
-    {
-        double[] location = camera.getLocation();
-        if(location != null)
-        {
-            double target_heading = camera.headingToTarget(location,target_x,target_y);
-
-            driveEngine.drive(Math.sin(target_heading) * speed, Math.cos(target_heading) * speed);
-        }
-         return false;
-    }
-
-    boolean rotateToTarget(double target_x, double target_y, double accuracy_angle)
-    {
-        double[] location = camera.getLocation();
-        if(location != null) {
-            double target_heading = camera.headingToTarget(location,target_x,target_y);
-
-            if (Math.abs(target_heading) < accuracy_angle * Math.PI/180) {
-                driveEngine.rotate(0);
-                return true;
-            }
-
-            driveEngine.rotate(.08 * Math.signum(target_heading)); //if target is more counterclockwise, we want to move counterclockwise.
-        }
-        return false;
     }
 
     boolean rotateToWall(double accuracy_angle)
@@ -280,29 +262,17 @@ public class Bogg
     boolean driveCurvyToWall()
     {
         double[] location = camera.getLocation();
-        double targetHeading;
 
         double wallTargetX, wallTargetY = 0;
         double[] unitTargetLocation = new double[2];
-        double target_x, target_y;
         if(location != null)
         {
             VuforiaTrackable target = null;
-            if (camera.targetVisible(0))
-                target = camera.allTrackables.get(0);
-            else if (camera.targetVisible(1))
-                target = camera.allTrackables.get(1);
-            else if (camera.targetVisible(2))
-                target = camera.allTrackables.get(2);
-            else // if (camera.targetVisible(3))
-                target = camera.allTrackables.get(3);
+            for(int i = 0; i < 4; i++)
+                if(camera.targetVisible(i))
+                    target = camera.allTrackables.get(i);
 
-
-            //the direction a compass would tell us
-            double currentHeading = camera.getHeading() * 180 / Math.PI;
-            targetHeading = Math.round(currentHeading / 90) * 90;
-
-            double headingDifference =  currentHeading - targetHeading;
+            double headingDifference =  camera.headingToTarget(location);
 
             wallTargetX = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
             wallTargetY = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
@@ -310,21 +280,18 @@ public class Bogg
             unitTargetLocation[0] = Math.signum(wallTargetX);
             unitTargetLocation[1] = Math.signum(wallTargetY);
             double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
-            target_x = driveTarget[0];
-            target_y = driveTarget[1];
+            double r = Math.hypot(driveTarget[0],driveTarget[1]);
 
-            double headingToTarget = camera.headingToTarget(location, target_x, target_y);
+            double headingToTarget = camera.headingToTarget(location, driveTarget[0], driveTarget[0]);
 
-            if(Math.abs(headingDifference) < 5 && Math.hypot(target_x, target_y) < .5)
+            if(Math.abs(headingDifference) < 5 && r < .5)
                 return true;
             else
             {
-                driveEngine.driveCurvy(Math.sin(headingToTarget) * .05, Math.cos(headingToTarget) * .05, headingDifference / 100);
+                driveEngine.drive(Math.sin(headingToTarget) * .05, Math.cos(headingToTarget) * .05, headingDifference / 100);
             }
-
-            return false;
         }
-        return true;
+        return false;
     }
 
 
