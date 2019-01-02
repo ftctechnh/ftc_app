@@ -348,22 +348,13 @@ public class Camera{
 
     Double getHeading()
     {
-        // check all the trackable target to see which one (if any) is visible.
-        for (VuforiaTrackable trackable : allTrackables) {
-            if (((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible()) {
-                targetVisible = true;
+        getLocation();
+        if(lastLocation != null) {
+            Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, RADIANS);
 
-                // getUpdatedRobotLocation() will return null if no new information is available since
-                // the last time that call was made, or if the trackable is not currently visible.
-                if(lastLocation != null) {
-                    Orientation rotation = Orientation.getOrientation(lastLocation, EXTRINSIC, XYZ, RADIANS);
-
-                    if (rotation != null) {
-                        lastOrientation = rotation;
-                        return (double)lastOrientation.thirdAngle;
-                    }
-                    break;
-                }
+            if (rotation != null) {
+                lastOrientation = rotation;
+                return (double)lastOrientation.thirdAngle;
             }
         }
         return null;
@@ -401,7 +392,6 @@ public class Camera{
     
     Double headingToWall()
     {
-        getLocation();
         Double heading = getHeading();
         if(heading != null)
         {
