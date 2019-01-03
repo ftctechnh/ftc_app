@@ -43,6 +43,10 @@ class DriveEngine {
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         back.setDirection(DcMotor.Direction.FORWARD);
         right.setDirection(DcMotor.Direction.FORWARD);
         left.setDirection(DcMotor.Direction.FORWARD);
@@ -124,6 +128,51 @@ class DriveEngine {
         left.setPower (leftPower);
     }
 
+    void driveTrue(double ... args) {
+        double x = 0,y = 0,spin = 0;
+        switch (args.length)
+        {
+            case 3:
+                spin = args[2];
+            case 2:
+                x = args[0];
+                y = args[1];
+                break;
+            case 1:
+                spin = args[0];
+                break;
+            default:
+                stop();
+                return;
+        }
+        double xprime = x * Math.cos(theta) - y * Math.sin(theta);
+        double yprime = x * Math.sin(theta) + y * Math.cos(theta);
+
+        x = xprime;
+        y = yprime;
+
+        double root3 = Math.sqrt(3);
+        double backPower  = 2*x              + spin;
+        double rightPower = -x + y*root3*2/3 + spin;
+        double leftPower  = -x - y*root3*2/3 + spin;
+
+        double max = Math.max(Math.max(Math.abs(backPower),Math.abs(rightPower)),Math.abs(leftPower));
+        if(max > 1)
+        {
+            backPower  /= max;
+            rightPower /= max;
+            leftPower  /= max;
+        }
+
+        telemetry.addData("driveE x", x);
+        telemetry.addData("driveE y", y);
+        telemetry.addData("driveE rotate", spin);
+
+        back.setPower(backPower);
+        right.setPower(rightPower);
+        left.setPower (leftPower);
+    }
+
     void driveAtAngle(double theta)
     {
         this.theta = theta;
@@ -191,10 +240,10 @@ class DriveEngine {
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
-                    drive(false, deltaX / r * .2, deltaY / r * .2, spin);
+                    driveTrue(deltaX / r * .2, deltaY / r * .2, spin);
                 }
                 else if(r > .5) {
-                    drive(false, deltaX / r * .1, deltaY / r * .1, spin);
+                    driveTrue(deltaX / r * .1, deltaY / r * .1, spin);
                 }
                 else if(r <= .5){
                     checkpoint.set(c, true);
@@ -331,11 +380,15 @@ class DriveEngine {
 //    Y = (R*√3/2—L*√3/2) /2   These are the distance equations
 //    S = (B+R+L) /3
 
+//    B = X*2 + S
+//    R = Y*2/3*√3 – X + S  These are solved for the motor distances
+//    L = -Y*2/3*√3 – X + S
+
 
     double getDistance(double angle)
     {
         double[] coefficients = new double[]
-                {Math.cos(angle), Math.cos(angle + 2*pi/3), Math.cos(angle + 4*pi/3)};
+                {Math.cos(angle), Math.cos(angle + motorSpacing), Math.cos(angle - motorSpacing)};
         double motors = 0;
         for (double c: coefficients) {
             motors += c==0 ? 0 : 1;

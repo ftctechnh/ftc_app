@@ -204,10 +204,9 @@ public class Bogg
 
     void manualDriveAutoCorrect(Gamepad g)
     {
-        if(g.left_stick_button)
-            driveEngine.drive(true, smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5), driveEngine.spinToZero());
-        else
-            driveEngine.drive(false, smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1), driveEngine.spinToZero());
+        boolean op = g.left_stick_button;
+        driveEngine.drive(op, smoothX(g.left_stick_x, op? 1.5:1), smoothY(g.left_stick_y, op? 1.5:1), driveEngine.spinToZero());
+
         telemetry.addData("gamepad x", g.left_stick_x);
         telemetry.addData("gamepad y", g.left_stick_y);
         telemetry.addLine("Note: y is negated");
@@ -215,16 +214,31 @@ public class Bogg
 
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
     {
-        double leftX = smoothX(gDrive.left_stick_x, 1);
-        double leftY = smoothY(-gDrive.left_stick_y, 1);
-        double spin = smoothSpin(-gRotate.right_stick_x);
+        boolean op = gDrive.left_stick_button;
+        double leftX = smoothX(gDrive.left_stick_x, op? 1.5:1);
+        double leftY = smoothY(-gDrive.left_stick_y, op? 1.5:1);
+        double spin = smoothSpin(-gRotate.right_stick_x/3);
 
         telemetry.addData("gamepad x", gDrive.left_stick_x);
         telemetry.addData("gamepad y", gDrive.left_stick_y);
         telemetry.addData("gamepad spin", gRotate.right_stick_x);
         telemetry.addLine("Note: y and spin are negated");
 
-        driveEngine.drive(leftX, leftY, spin);
+        driveEngine.drive(op, leftX, leftY, spin);
+    }
+    
+    void manualDriveVarOrbit(Gamepad gDrive, Gamepad gRotate, boolean orbit)
+    {
+        double max = Math.max(Math.abs(gDrive.left_stick_x), Math.abs(gDrive.left_stick_y));
+
+        if(orbit) {
+            if (max == gDrive.left_stick_y)
+                driveEngine.orbit(48 + driveEngine.xDist(), 0, gDrive.left_stick_y);
+            else
+                driveEngine.drive(gDrive.left_stick_x, 0);
+        }
+        else
+            manualCurvy(gDrive, gRotate);
     }
 
     void manualRotate(Gamepad g)
