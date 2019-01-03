@@ -18,13 +18,41 @@ public class auto extends superAuto {
     public void runOpMode() {
         setUp();
         configVuforiaRoverRuckus();
+
         //Lower
         lowerRobot(6.9, 1);
+
         sR();
 
         getQuadrant();
 
-        final double mmPerInch       = 25.4f;
+        if (startingQuadrant == 1){
+
+        }
+        else if (startingQuadrant == 2){
+
+        }
+
+        else if (startingQuadrant == 3){
+
+        }
+
+        else{
+            translate(-1,0,.5, 0.5);
+            pivotToVuforia(-45);
+            goToPoint(1200,-1200);
+        }
+
+
+
+
+
+
+
+
+
+
+        /*final double mmPerInch       = 25.4f;
         final double halfFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
         final double squareSize = 23.5*mmPerInch;
         final double robotSize = 18*mmPerInch;
@@ -50,7 +78,7 @@ public class auto extends superAuto {
 
         pivotToVuforia(90);
         goToPoint(1200,1200);
-        /*
+
         //ALL AUTOS DO:
         //Drop down
         //Go straight

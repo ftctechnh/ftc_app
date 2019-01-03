@@ -80,8 +80,7 @@ abstract public class superAuto extends LinearOpMode {
 
     boolean iAmRed;
     boolean iAmBlue = !iAmRed;
-    boolean quadrantOdd;
-    boolean quadrantEven = !quadrantOdd;
+    int startingQuadrant;
     RobotLocation location = new RobotLocation();
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -217,14 +216,17 @@ abstract public class superAuto extends LinearOpMode {
 
         updateLocation();
 
-        if(( location.getX()*location.getY())>0)
-            quadrantOdd = true;
-        else
-            quadrantOdd = false;
+        double x = location.getX();
+        double y = location.getY();
 
-        quadrantEven = ! quadrantOdd;
-        telemetry.addData("quadrantOdd: ", quadrantOdd);
-        telemetry.update();
+        if (x > 0 && y > 0)
+            startingQuadrant = 1;
+        else if (x < 0 && y > 0)
+            startingQuadrant = 2;
+        else if (x < 0 &&y < 0)
+            startingQuadrant = 3;
+        else
+            startingQuadrant = 4;
     }
 
 
