@@ -89,7 +89,7 @@ public class HardwareMap
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        armMotor.setPower(0);
+        //armMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -97,6 +97,7 @@ public class HardwareMap
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       //  armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setTargetPosition(3355);
 
         // Define and initialize ALL installed servos.
        // arm  = hwMap.get(Servo.class, "arm");

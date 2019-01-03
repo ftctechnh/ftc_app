@@ -129,13 +129,14 @@ public class TeleopTank_Drive extends LinearOpMode {
                     telemetry.addData("arm",   "%.2f", armPosition);
                     telemetry.addData("claw",  "%.2f", clawPosition);
                     */
-            telemetry.addData("left", "%.2f", left);
-            telemetry.addData("right", "%.2f", right);
-            telemetry.addData("Working",  "Encoder at:%7d",
-                    // robot.leftDrive.getCurrentPosition(),
-                    //robot.rightDrive.getCurrentPosition()),
+            //telemetry.addData("left", "%.2f", left);
+            //telemetry.addData("right", "%.2f", right);
+            telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
+                    robot.leftDrive.getCurrentPosition(),
+                    robot.rightDrive.getCurrentPosition(),
                     robot.armMotor.getCurrentPosition());
             telemetry.update();
+
 
             //Pause for 40 mS each cycle = update 25 times a second.
 

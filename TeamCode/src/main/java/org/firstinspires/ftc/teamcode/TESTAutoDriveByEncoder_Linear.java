@@ -65,7 +65,7 @@ import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Test: Auto Drive By Encoder", group="Pushbot")
+@Autonomous(name="Test: Lowering to ground", group="Pushbot")
 //@Disabled
 public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
@@ -96,9 +96,10 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
 
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         // Send telemetry message to indicate successful Encoder reset
 
@@ -111,15 +112,22 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
        // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
        // robot.rightClaw.setPosition(0.0);
-        robot.armMotor.setTargetPosition(1440);
+        robot.armMotor.setTargetPosition(-5500);
+
+        telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition(),
+                robot.armMotor.getCurrentPosition());
+        telemetry.update();
 
         // Turn On RUN_TO_POSITION
         //robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.armMotor.setPower(Math.abs(1));
-        sleep(1000);     // pause for servos to move
+        robot.armMotor.setPower(1);
 
-        telemetry.addData("Working",  "Starting at:%7d",
+        sleep(3000);     // pause for servos to move
+
+        telemetry.addData("Working",  "Ending at:%7d",
                 // robot.leftDrive.getCurrentPosition(),
                 //robot.rightDrive.getCurrentPosition()),
                 robot.armMotor.getCurrentPosition());
@@ -128,6 +136,30 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
 
         telemetry.update();
+
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightDrive.setTargetPosition(1000);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftDrive.setTargetPosition(-1000);
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.rightDrive.setPower(-.2);
+        robot.leftDrive.setPower(.2);
+        sleep(5000);
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.leftDrive.setPower(0);
+        //robot.rightDrive.setPower(0);
+
+        telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition(),
+                robot.armMotor.getCurrentPosition());
+        telemetry.update();
+
+        sleep(1000);
     }
 
     /*
