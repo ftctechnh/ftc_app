@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class MiniBogg
 {
@@ -91,10 +90,10 @@ public class MiniBogg
         {
             lift.setPower(smoothLift(1));
         }
-        else if(gamepad.a  && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8)
+        else if(gamepad.a  && this.sensors.getMobile() < 8)
         {
             goingUp = false;
-            if (sensors.touchBottom.isPressed())
+            if (sensors.touchBottomIsPressed())
             {
                 lift.setPower(smoothLift(-.02));
             } else {
@@ -107,9 +106,9 @@ public class MiniBogg
 
     public void lift(double power)
     {
-        if(power > 0  && !sensors.touchTop.isPressed())
+        if(power > 0  && !sensors.touchTopIsPressed())
             lift.setPower(smoothLift(power));
-        else if(power < 0 && this.sensors.dMobile.getDistance(DistanceUnit.INCH) < 8 && !sensors.touchBottom.isPressed())
+        else if(power < 0 && this.sensors.getMobile() < 8 && !sensors.touchBottomIsPressed())
             lift.setPower(smoothLift(power));
         else
             lift.setPower(smoothLift(0));

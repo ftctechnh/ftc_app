@@ -66,8 +66,7 @@ public class prepAutonomous extends LinearOpMode
             telemetry.addLine("Position block so the servo will hold it (9s)");
             telemetry.addLine("Don't let it catch your fingers!");
             telemetry.addData("time: ", t);
-            telemetry.addData("brake position: ", robot.brake.getPosition());
-            telemetry.addData("touch ", robot.sensors.touchBottom.isPressed());
+            telemetry.addData("touch ", robot.sensors.touchBottomIsPressed());
             telemetry.addData("mode", action);
             telemetry.update();
             idle();

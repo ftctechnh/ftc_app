@@ -4,7 +4,6 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
@@ -14,14 +13,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-public class Sensors {
+class Sensors {
     HardwareMap hardwareMap;
 
-    TouchSensor touchTop;
-    TouchSensor touchBottom;
+    private TouchSensor touchTop;
+    private TouchSensor touchBottom;
 
-    DistanceSensor dFixed;
-    DistanceSensor dMobile;
+    private DistanceSensor dFixed;
+    private DistanceSensor dMobile;
 
     BNO055IMU imu = null;
 
@@ -39,6 +38,22 @@ public class Sensors {
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
 
+    }
+
+    double getFixed() {
+        return dFixed.getDistance(DistanceUnit.INCH);
+    }
+
+    double getMobile() {
+        return dMobile.getDistance(DistanceUnit.INCH);
+    }
+
+    boolean touchTopIsPressed() {
+        return touchTop.isPressed();
+    }
+
+    boolean touchBottomIsPressed() {
+        return touchBottom.isPressed();
     }
 
     private boolean usingImu = false;

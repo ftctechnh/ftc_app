@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-
 @TeleOp(name="holonomicKids", group="Testing")
 public class holonomicKids extends LinearOpMode
 {
@@ -31,8 +29,8 @@ public class holonomicKids extends LinearOpMode
             }
 
             // Display the current value
-            telemetry.addData("fixed distance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
-            telemetry.addData("mobile distance", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
+            telemetry.addData("fixed distance", robot.sensors.getFixed());
+            telemetry.addData("mobile distance", robot.sensors.getMobile());
 
             telemetry.update();
             idle();

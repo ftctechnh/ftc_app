@@ -40,8 +40,6 @@ public class holonomicDrive_test_alpha extends LinearOpMode
 
             // Display the current value
             telemetry.addData("alpha: ", robot.getAlpha());
-            telemetry.addData("x Power: ", robot.xAve);
-            telemetry.addData("y Power: ", robot.yAve);
             telemetry.addData("gamepad x: ", gamepad1.left_stick_x);
             telemetry.addData("gamepad y", gamepad1.left_stick_y);
             telemetry.update();

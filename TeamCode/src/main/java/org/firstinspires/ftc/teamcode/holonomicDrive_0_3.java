@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @TeleOp(name="holonomicDrive Experimental Two Gamepads", group="Testing")
 public class holonomicDrive_0_3 extends LinearOpMode
 {
     Bogg robot;
-    double time;
 
     @Override
     public void runOpMode()
@@ -59,11 +55,10 @@ public class holonomicDrive_0_3 extends LinearOpMode
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
-            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine.inPerTicks);
-            telemetry.addData("touchBottom", robot.sensors.touchBottom.isPressed());
-            telemetry.addData("touchTop", robot.sensors.touchTop.isPressed());
-            telemetry.addData("fixed distance", robot.sensors.dFixed.getDistance(DistanceUnit.INCH));
-            telemetry.addData("mobile distance", robot.sensors.dMobile.getDistance(DistanceUnit.INCH));
+            telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
+            telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
+            telemetry.addData("fixed distance", robot.sensors.getFixed());
+            telemetry.addData("mobile distance", robot.sensors.getMobile());
 
             telemetry.update();
             idle();

@@ -4,12 +4,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Vector;
 
 class DriveEngine {
     DcMotor back;
@@ -19,9 +15,8 @@ class DriveEngine {
     static double wheelDiameter = 5;
     static double robotRadius = 8;
 
-    double motorSpacing = 2 * Math.PI /3;
-    double root3 = Math.sqrt(3);
-    double pi = Math.PI;
+    private double motorSpacing = 2 * Math.PI /3;
+    private double root3 = Math.sqrt(3);
 
     private static final double ticksPerRev = 1120;
     private static double inPerRev = Math.PI * wheelDiameter;
@@ -70,7 +65,7 @@ class DriveEngine {
 
     void drive(boolean op, double ... args) {
         double x = 0,y = 0,spin = 0;
-        switch (args.length)
+        switch (args.length)    //assign x, y and spin
         {
             case 3:
                 spin = args[2];
@@ -85,38 +80,22 @@ class DriveEngine {
                 stop();
                 return;
         }
-        double xprime = x * Math.cos(theta) - y * Math.sin(theta);
-        double yprime = x * Math.sin(theta) + y * Math.cos(theta);
+        double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
+        double yPrime = x * Math.sin(theta) + y * Math.cos(theta);
 
-        x = xprime;
-        y = yprime;
+        x = xPrime;
+        y = yPrime;
 
-        double r = Math.hypot(x,y);
-        if(r > 1)
-        {
-            x /= r;
-            y /= r;
-            r = 1;
-        }
-
-        double root3 = Math.sqrt(3);
         double backPower  = x                + spin;
         double rightPower = -x/2 + y*root3/2 + spin;
         double leftPower  = -x/2 - y*root3/2 + spin;
 
         double max = Math.max(Math.max(Math.abs(backPower),Math.abs(rightPower)),Math.abs(leftPower));
-        if(max > 1)
+        if(max > 1 || (op && Math.hypot(x,y) > .90))
         {
-            backPower  /= max;
-            rightPower /= max;
+            backPower  /= max;    // Adjust all motors to less than one
+            rightPower /= max;    // Or maximize a motor to one
             leftPower  /= max;
-        }
-
-        if(op && r > .90)
-        {
-            backPower  *= 1 / max;
-            rightPower *= 1 / max;
-            leftPower  *= 1 / max;
         }
 
         telemetry.addData("driveE x", x);
@@ -284,7 +263,7 @@ class DriveEngine {
             case 1:
                 spin = spinToTarget(cumulativeCheckpoints[2] + args[c][0]);
                 rotate(spin);
-                if(Math.abs(spin) -.02 < 1 * Math.PI /180) {
+                if(Math.abs(spin) -.02 < 1/2 * (2) * Math.PI /180) { //the two is in degrees, the rest is formula
                     cumulativeCheckpoints[2] += args[c][0];
                     cumulativeSpin -= args[c][0];
                     checkpoint.set(c, true);
@@ -306,10 +285,10 @@ class DriveEngine {
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
-                    drive(false, deltaX / r * .2, deltaY / r * .2, spin);
+                    driveTrue( deltaX / r * .2, deltaY / r * .2, spin);
                 }
                 else if(r > .5) {
-                    drive(false, deltaX / r * .1, deltaY / r * .1, spin);
+                    driveTrue(deltaX / r * .1, deltaY / r * .1, spin);
                 }
                 else if(r <= .5){
                     cumulativeCheckpoints[0] += args[c][0];
@@ -331,14 +310,12 @@ class DriveEngine {
 
     double spinToZero()
     {
-        telemetry.addData("current angle", spinAngle());
-        double deltaAngle = 0 - spinAngle();
-
-        return Math.signum(deltaAngle) * Math.max(Math.abs(deltaAngle)/2, .3);
+        return spinToTarget(0);
     }
 
     void orbit(double radius, double angle, double speed)
     {
+        telemetry.addData("orbit radius", radius);
         radius /= robotRadius;
         double backPower = 1 + radius * Math.sin(angle);
         double rightPower = 1 + radius * Math.sin(angle + motorSpacing);
@@ -403,7 +380,8 @@ class DriveEngine {
 
     double yDist()
     {
-        return getDistance(theta - pi/2); // sin(theta) == cos(theta - pi/2)
+        double pi = Math.PI;
+        return getDistance(theta - pi /2); // sin(theta) == cos(theta - pi/2)
     }
 
     double spinAngle()

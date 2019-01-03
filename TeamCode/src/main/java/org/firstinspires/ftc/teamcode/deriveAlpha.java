@@ -4,8 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.Bogg;
-
 @TeleOp(name="  find alpha values", group="Testing")
 public class deriveAlpha extends LinearOpMode
 {
@@ -40,10 +38,6 @@ public class deriveAlpha extends LinearOpMode
             telemetry.addData("derivedAlpha5: ", alpha5);
             telemetry.addData("derivedAlpha2: ", alpha2);
             telemetry.addData("alpha: ", robot.getAlpha());
-            telemetry.addData("x Power: ", robot.xAve);
-            telemetry.addData("y Power: ", robot.yAve);
-            telemetry.addData("gamepad x: ", gamepad1.left_stick_x);
-            telemetry.addData("gamepad y", gamepad1.left_stick_y);
             telemetry.update();
             idle();
         }

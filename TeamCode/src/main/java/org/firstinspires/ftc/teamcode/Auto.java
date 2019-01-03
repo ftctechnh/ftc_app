@@ -1,10 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 public class Auto {
     Bogg robot;
@@ -16,6 +14,7 @@ public class Auto {
     Auto(Bogg robot, Telemetry telemetry)
     {
         this.robot = robot;
+        robot.driveEngine.driveAtAngle(0);
         robot.dropMarker(Bogg.Direction.Up);
         this.telemetry = telemetry;
         robot.camera = new Camera(robot.hardwareMap, telemetry);
@@ -47,17 +46,16 @@ public class Auto {
         if (getTime() < 2) //for the first 2 seconds
         {
             telemetry.addData("time", getTime());
-            if (!robot.sensors.touchTop.isPressed()) //helps with testing
+            if (!robot.sensors.touchTopIsPressed()) //helps with testing
                 robot.lift(-1); //pull while we
             robot.setBrake(false); //disengage the brake
-        } else if (!robot.sensors.touchTop.isPressed()) //if the robot is still off the ground
+        } else if (!robot.sensors.touchTopIsPressed()) //if the robot is still off the ground
         {
-            telemetry.addData("touchTop", robot.sensors.touchTop.isPressed());
+            telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
             robot.lift(.2); //push up, which drops the robot
         }
         else {
             timer.reset();
-            robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.lift(0);
             robot.driveEngine.resetDistances();
 
@@ -203,12 +201,12 @@ public class Auto {
         if(getTime() < 1.5) {
             return Mode.MoveToDepot;  //time to move the sensor
         }
-        double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
-        double mobileDistance = robot.sensors.dMobile.getDistance(DistanceUnit.INCH);
+        double fixedDistance = robot.sensors.getFixed();
+        double mobileDistance = robot.sensors.getMobile();
         telemetry.addData("fixedDistance", fixedDistance);
         telemetry.addData("mobileDistance", mobileDistance);
 
-        robot.driveEngine.drive(-iSP * .2,(4 - fixedDistance)/10.0);
+        robot.driveEngine.driveTrue(-iSP * .2,(4 - fixedDistance)/10.0);
 
         if(mobileDistance < 18) {
             if(iSP == -1)
@@ -243,8 +241,8 @@ public class Auto {
 
     Mode moveToCrater()
     {
-        double fixedDistance = robot.sensors.dFixed.getDistance(DistanceUnit.INCH);
-        robot.driveEngine.drive(iSP * .2,(6 - fixedDistance)/10);
+        double fixedDistance = robot.sensors.getFixed();
+        robot.driveEngine.driveTrue(iSP * .2,(6 - fixedDistance)/10);
 
         if(robot.sensors.isTilted())
         {

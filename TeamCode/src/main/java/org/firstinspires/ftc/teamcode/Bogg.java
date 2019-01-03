@@ -12,8 +12,9 @@ public class Bogg
 {
     Gamepad gamepad = null;
     Gamepad gamepad2 = null;
-    HardwareMap hardwareMap = null;
-    DriveEngine driveEngine = null;
+    HardwareMap hardwareMap;
+    DriveEngine driveEngine;
+    EndEffector endEffector;
     DcMotor lift = null;
     Camera camera = null;
     Sensors sensors;
@@ -47,7 +48,9 @@ public class Bogg
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         driveEngine = new DriveEngine(hardwareMap, telemetry);
+        //endEffector = new EndEffector(hardwareMap, telemetry);
         lift  = hardwareMap.dcMotor.get("lift");
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
         drop = hardwareMap.servo.get("drop");
@@ -62,6 +65,7 @@ public class Bogg
         this.telemetry = telemetry;
         driveEngine = new DriveEngine(hardwareMap, telemetry);
         lift  = hardwareMap.dcMotor.get("lift");
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
         drop = hardwareMap.servo.get("drop");
@@ -112,13 +116,13 @@ public class Bogg
 
     void manualLift()
     {
-        if(gamepad.y && !sensors.touchTop.isPressed())
+        if(gamepad.y && !sensors.touchTopIsPressed())
         {
             lift.setPower(smoothLift(1));
         }
         else if(gamepad.a)
         {
-            if (sensors.touchBottom.isPressed())
+            if (sensors.touchBottomIsPressed())
             {
                 lift.setPower(smoothLift(-.02));
             } else {
@@ -131,9 +135,9 @@ public class Bogg
 
     void lift(double power)
     {
-        if(power > 0  && !sensors.touchTop.isPressed())
+        if(power > 0  && !sensors.touchTopIsPressed())
             lift.setPower(smoothLift(power));
-        else if(power < 0 && !sensors.touchBottom.isPressed())
+        else if(power < 0 && !sensors.touchBottomIsPressed())
             lift.setPower(smoothLift(power));
         else
             lift.setPower(smoothLift(0));
@@ -202,11 +206,14 @@ public class Bogg
         telemetry.addLine("Note: y is negated");
     }
 
+    private double cumulativeCorrection;
     void manualDriveAutoCorrect(Gamepad g)
     {
         boolean op = g.left_stick_button;
         driveEngine.drive(op, smoothX(g.left_stick_x, op? 1.5:1), smoothY(g.left_stick_y, op? 1.5:1), driveEngine.spinToZero());
+        cumulativeCorrection += driveEngine.spinToZero();
 
+        telemetry.addData("cumulative correction", cumulativeCorrection);
         telemetry.addData("gamepad x", g.left_stick_x);
         telemetry.addData("gamepad y", g.left_stick_y);
         telemetry.addLine("Note: y is negated");
@@ -277,7 +284,7 @@ public class Bogg
     {
         double[] location = camera.getLocation();
 
-        double wallTargetX, wallTargetY = 0;
+        double wallTargetX, wallTargetY;
         double[] unitTargetLocation = new double[2];
         if(location != null)
         {
