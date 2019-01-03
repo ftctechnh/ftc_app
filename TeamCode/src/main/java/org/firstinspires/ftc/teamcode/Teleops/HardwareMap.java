@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Teleops;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -57,7 +58,9 @@ public class HardwareMap
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor armMotor = null;
-    public Servo    arm         = null;
+    public Servo    csServo       = null;
+    public ColorSensor color1 = null;
+
     public Servo    claw        = null;
 
     public final static double ARM_HOME = 0.2;
@@ -84,6 +87,8 @@ public class HardwareMap
         leftDrive  = hwMap.get(DcMotor.class, "l");
         rightDrive = hwMap.get(DcMotor.class, "r");
         armMotor = hwMap.get(DcMotor.class, "arm");
+        csServo = hwMap.servo.get("cs");
+        color1 = hwMap.colorSensor.get("c1");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power

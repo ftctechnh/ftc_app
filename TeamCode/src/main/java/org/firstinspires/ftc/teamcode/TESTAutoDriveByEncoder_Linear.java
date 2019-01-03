@@ -176,6 +176,14 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
         GO(16);
 
+        TurnRight(18);
+        sleep(500);
+
+        telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
+        telemetry.update();
+        robot.csServo.setPosition(90);
+
+        //TurnRight(45);
 
         sleep(10000);
     }
@@ -192,12 +200,72 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
                 robot.rightDrive.getCurrentPosition(),
                 robot.armMotor.getCurrentPosition());
         telemetry.update();
-        sleep(2000);
+        sleep(1000);
 
         robot.rightDrive.setPower(.1);
         robot.leftDrive.setPower(.1);
 
         while (robot.leftDrive.getCurrentPosition() > -inches*47.619) {
+            telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
+                    robot.leftDrive.getCurrentPosition(),
+                    robot.rightDrive.getCurrentPosition(),
+                    robot.armMotor.getCurrentPosition());
+            telemetry.update();
+        }
+        robot.rightDrive.setPower(0);
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void TurnRight(int degrees)
+    {
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition(),
+                robot.armMotor.getCurrentPosition());
+        telemetry.update();
+        sleep(1000);
+
+        robot.rightDrive.setPower(-.1);
+        robot.leftDrive.setPower(.1);
+
+        while (robot.leftDrive.getCurrentPosition() > -degrees*24.444) {
+            telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
+                    robot.leftDrive.getCurrentPosition(),
+                    robot.rightDrive.getCurrentPosition(),
+                    robot.armMotor.getCurrentPosition());
+            telemetry.update();
+        }
+        robot.rightDrive.setPower(0);
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    public void TurnLeft(int degrees)
+    {
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
+                robot.leftDrive.getCurrentPosition(),
+                robot.rightDrive.getCurrentPosition(),
+                robot.armMotor.getCurrentPosition());
+        telemetry.update();
+        sleep(1000);
+
+        robot.rightDrive.setPower(.1);
+        robot.leftDrive.setPower(-.1);
+
+        while (robot.leftDrive.getCurrentPosition() > degrees*24.444) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
                     robot.leftDrive.getCurrentPosition(),
                     robot.rightDrive.getCurrentPosition(),
