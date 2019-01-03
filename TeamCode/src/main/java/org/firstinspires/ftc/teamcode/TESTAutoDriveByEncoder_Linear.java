@@ -42,36 +42,36 @@ import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
  * This file illustrates the concept of driving a path based on encoder counts.
  * It uses the common Pushbot hardware class to define the drive on the robot.
  * The code is structured as a LinearOpMode
- *
+ * <p>
  * The code REQUIRES that you DO have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByTime;
- *
- *  This code ALSO requires that the drive Motors have been configured such that a positive
- *  power command moves them forwards, and causes the encoders to count UP.
- *
- *   The desired path in this example is:
- *   - Drive forward for 48 inches
- *   - Spin right for 12 Inches
- *   - Drive Backwards for 24 inches
- *   - Stop and close the claw.
- *
- *  The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
- *  that performs the actual movement.
- *  This methods assumes that each movement is relative to the last stopping place.
- *  There are other ways to perform encoder based moves, but this method is probably the simplest.
- *  This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
- *
+ * otherwise you would use: PushbotAutoDriveByTime;
+ * <p>
+ * This code ALSO requires that the drive Motors have been configured such that a positive
+ * power command moves them forwards, and causes the encoders to count UP.
+ * <p>
+ * The desired path in this example is:
+ * - Drive forward for 48 inches
+ * - Spin right for 12 Inches
+ * - Drive Backwards for 24 inches
+ * - Stop and close the claw.
+ * <p>
+ * The code is written using a method called: encoderDrive(speed, leftInches, rightInches, timeoutS)
+ * that performs the actual movement.
+ * This methods assumes that each movement is relative to the last stopping place.
+ * There are other ways to perform encoder based moves, but this method is probably the simplest.
+ * This code uses the RUN_TO_POSITION mode to enable the Motor controllers to generate the run profile
+ * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Test: Lowering to ground", group="Pushbot")
+@Autonomous(name = "Test: Lowering to ground", group = "Pushbot")
 //@Disabled
 public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap robot = new HardwareMap();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    private ElapsedTime runtime = new ElapsedTime();
 
    /* static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 2.0 ;     // This is < 1.0 if geared UP
@@ -96,6 +96,13 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
 
         robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        telemetry.addData("Status", "Encoders Reset");    //
+        telemetry.update();
+
+        sleep(500);
         robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -106,15 +113,15 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         waitForStart();
         // Step through each leg of the path,
         // Note: Reverse movement is obtained by setting a negative distance (not speed)
-      //  encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
+        //  encoderDrive(DRIVE_SPEED,  48,  48, 5.0);  // S1: Forward 47 Inches with 5 Sec timeout
         //encoderDrive(TURN_SPEED,   12, -12, 4.0);  // S2: Turn Right 12 Inches with 4 Sec timeout
         //encoderDrive(DRIVE_SPEED, -24, -24, 4.0);  // S3: Reverse 24 Inches with 4 Sec timeout
 
-       // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
-       // robot.rightClaw.setPosition(0.0);
+        // robot.leftClaw.setPosition(1.0);            // S4: Stop and close the claw.
+        // robot.rightClaw.setPosition(0.0);
         robot.armMotor.setTargetPosition(-5500);
 
-        telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
+        telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
                 robot.leftDrive.getCurrentPosition(),
                 robot.rightDrive.getCurrentPosition(),
                 robot.armMotor.getCurrentPosition());
@@ -127,39 +134,80 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
         sleep(3000);     // pause for servos to move
 
-        telemetry.addData("Working",  "Ending at:%7d",
-                // robot.leftDrive.getCurrentPosition(),
-                //robot.rightDrive.getCurrentPosition()),
-                robot.armMotor.getCurrentPosition());
-
         // Wait for the game to start (driver presses PLAY)
 
 
         telemetry.update();
 
-        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightDrive.setTargetPosition(1000);
+        robot.leftDrive.setPower(.4);
+        sleep(500);
+        robot.leftDrive.setPower(0);
+
+/*
+        robot.rightDrive.setTargetPosition(-20000);
+        robot.leftDrive.setTargetPosition(20000);
+        sleep(500);
+
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        robot.leftDrive.setTargetPosition(-1000);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sleep(500);
 
-        robot.rightDrive.setPower(-.2);
-        robot.leftDrive.setPower(.2);
-        sleep(5000);
-        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightDrive.setPower(-1);
+        robot.leftDrive.setPower(-1);
+       // robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //robot.leftDrive.setPower(0);
         //robot.rightDrive.setPower(0);
+        while (robot.leftDrive.isBusy() || robot.rightDrive.isBusy()) {
+            telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
+                robot.leftDrive.getCurrentPosition(),
+               robot.rightDrive.getCurrentPosition(),
+               robot.armMotor.getCurrentPosition());
+              telemetry.update();
+             }
+  */
+        robot.rightDrive.setPower(0);
+        robot.leftDrive.setPower(0);
 
-        telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
+        telemetry.addData("waiting", "waiting");
+        telemetry.update();
+        sleep(1000);
+
+
+        GO(16);
+
+
+        sleep(10000);
+    }
+
+    public void GO(int inches)
+    {
+        robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
                 robot.leftDrive.getCurrentPosition(),
                 robot.rightDrive.getCurrentPosition(),
                 robot.armMotor.getCurrentPosition());
         telemetry.update();
+        sleep(2000);
 
-        sleep(1000);
+        robot.rightDrive.setPower(.1);
+        robot.leftDrive.setPower(.1);
+
+        while (robot.leftDrive.getCurrentPosition() > -inches*47.619) {
+            telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
+                    robot.leftDrive.getCurrentPosition(),
+                    robot.rightDrive.getCurrentPosition(),
+                    robot.armMotor.getCurrentPosition());
+            telemetry.update();
+        }
+        robot.rightDrive.setPower(0);
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     /*
@@ -171,5 +219,5 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
      *  3) Driver stops the opmode running.
      */
 
-    }
+}
 

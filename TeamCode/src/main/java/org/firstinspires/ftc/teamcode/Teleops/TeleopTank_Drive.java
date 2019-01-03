@@ -80,12 +80,16 @@ public class TeleopTank_Drive extends LinearOpMode {
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");
         telemetry.update();
-        robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //robot.armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         //robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
@@ -131,7 +135,7 @@ public class TeleopTank_Drive extends LinearOpMode {
                     */
             //telemetry.addData("left", "%.2f", left);
             //telemetry.addData("right", "%.2f", right);
-            telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
+ /*           telemetry.addData("Working",  "Left: %7d Right: %7d Arm: %7d",
                     robot.leftDrive.getCurrentPosition(),
                     robot.rightDrive.getCurrentPosition(),
                     robot.armMotor.getCurrentPosition());
@@ -139,7 +143,7 @@ public class TeleopTank_Drive extends LinearOpMode {
 
 
             //Pause for 40 mS each cycle = update 25 times a second.
-
+*/
             sleep(40);
         }
     }
