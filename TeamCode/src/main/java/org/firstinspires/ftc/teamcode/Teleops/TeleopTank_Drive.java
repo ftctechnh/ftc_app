@@ -102,7 +102,7 @@ public class TeleopTank_Drive extends LinearOpMode {
             robot.leftDrive.setPower(left);
             robot.rightDrive.setPower(right);
 
-            if (gamepad1.a)
+            if (gamepad1.x)
             {
                 robot.leftDrive.setDirection(DcMotor.Direction.FORWARD);
                 robot.rightDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -119,6 +119,8 @@ public class TeleopTank_Drive extends LinearOpMode {
                 robot.armMotor.setPower(.5);
             else
                 robot.armMotor.setPower(0);
+
+
                // robot.rightDrive.setPower(0);
 
            /* if (gamepad1.right_bumper)
