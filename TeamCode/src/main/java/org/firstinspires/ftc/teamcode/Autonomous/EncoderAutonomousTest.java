@@ -65,19 +65,19 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 @Autonomous(name="Pushbot: Auto Drive By Encoder", group="Pushbot")
 //@Disabled
-public class TestAutonomousEncoderDrive extends LinearOpMode {
+public class EncoderAutonomousTest extends LinearOpMode {
 
     /* Declare OpMode members. */
-    HardwarePushbot         robot   = new HardwarePushbot();   // Use a Pushbot's hardware
-    private ElapsedTime     runtime = new ElapsedTime();
+    HardwarePushbot robot = new HardwarePushbot();   // Use a Pushbot's hardware
+    private ElapsedTime runtime = new ElapsedTime();
 
-    static final double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-    static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-    static final double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    static final double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
+    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
+    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
+    static final double WHEEL_DIAMETER_INCHES = 4.0;     // For figuring circumference
+    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * 3.1415);
-    static final double     DRIVE_SPEED             = 0.6;
-    static final double     TURN_SPEED              = 0.5;
+    static final double DRIVE_SPEED = 0.6;
+    static final double TURN_SPEED = 0.5;
 
     int target = 6000; // Change this
     int qturn = 2000;
@@ -121,7 +121,7 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         // 90 degree turn before checking the blocks/balls
@@ -135,12 +135,12 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         // forward to check further object
-        robot.leftDrive.setTargetPosition(target/2);
-        robot.rightDrive.setTargetPosition(target/2);
+        robot.leftDrive.setTargetPosition(target / 2);
+        robot.rightDrive.setTargetPosition(target / 2);
 
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -149,12 +149,12 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         //back towards the crater/corner
-        robot.leftDrive.setTargetPosition(-2*target);
-        robot.rightDrive.setTargetPosition(-2*target);
+        robot.leftDrive.setTargetPosition(-2 * target);
+        robot.rightDrive.setTargetPosition(-2 * target);
 
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -163,12 +163,12 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         //turn towards corner
-        robot.leftDrive.setTargetPosition(qturn/3);
-        robot.rightDrive.setTargetPosition(-qturn/3);
+        robot.leftDrive.setTargetPosition(qturn / 3);
+        robot.rightDrive.setTargetPosition(-qturn / 3);
 
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -177,12 +177,12 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         //drive towards corner
-        robot.leftDrive.setTargetPosition(3*target/2);
-        robot.rightDrive.setTargetPosition(3*target/2);
+        robot.leftDrive.setTargetPosition(3 * target / 2);
+        robot.rightDrive.setTargetPosition(3 * target / 2);
 
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -191,12 +191,12 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         //turn towards crater
-        robot.leftDrive.setTargetPosition(-qturn/10);
-        robot.rightDrive.setTargetPosition(qturn/10);
+        robot.leftDrive.setTargetPosition(-qturn / 10);
+        robot.rightDrive.setTargetPosition(qturn / 10);
 
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -205,12 +205,12 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         //drive towards crater
-        robot.leftDrive.setTargetPosition(2*target);
-        robot.rightDrive.setTargetPosition(2*target);
+        robot.leftDrive.setTargetPosition(2 * target);
+        robot.rightDrive.setTargetPosition(2 * target);
 
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -219,8 +219,7 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         robot.rightDrive.setPower(Math.abs(1));
         sleep(1000);
 
-        telemetry.addData("Working",  "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
-
+        telemetry.addData("Working", "Starting at:%7d", robot.leftDrive.getCurrentPosition(), robot.rightDrive.getCurrentPosition());
 
 
         // Step through each leg of the path,
@@ -237,11 +236,7 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
         telemetry.update();
     }
 
-
-
-
-
-
+}
 
 
     /*

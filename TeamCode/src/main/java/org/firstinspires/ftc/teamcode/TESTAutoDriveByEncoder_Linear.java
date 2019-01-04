@@ -65,7 +65,7 @@ import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Test: Lowering to ground", group = "Pushbot")
+@Autonomous(name = "Auto facing crater", group = "Pushbot")
 //@Disabled
 public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
@@ -171,24 +171,34 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 */
         telemetry.addData("waiting", "waiting");
         telemetry.update();
-        sleep(1000);
+        sleep(500);
 
 
-        GO(15);
+        GO(13);
 
         TurnRight(18);
         sleep(500);
 
+//        GoBack(4);
+
+        GoBack(3);
 
         robot.csServo.setPosition(1);
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
-        robot.csServo.setPosition(0.2);
+        robot.csServo.setPosition(0.25);
         sleep(500);
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
 
+        GoBack(16.971);
+        sleep(500);
+        GoBack(16.971);
+        robot.csServo.setPosition(1);
+        sleep(500);
 
+
+        /*
         if (robot.color1.blue() < 17)
         {
             robot.csServo.setPosition(0);
@@ -216,18 +226,17 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
             sleep(500);
             GO(2*16.971);
         }
+*/
 
+        GO(2*16.971+5);
 
+        TurnRight(20);
 
-        GO(24);
-
-        TurnRight(45);
-
-        GO(48);
+//        GO(48);
 
 //-----------Add Marker Dump Here-------------
 
-        GoBack(74);
+//        GoBack(74);
 
         sleep(10000);
     }
@@ -246,8 +255,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(.1);
-        robot.leftDrive.setPower(.1);
+        robot.rightDrive.setPower(.05;
+        robot.leftDrive.setPower(.05);
 
         while (robot.leftDrive.getCurrentPosition() > -inches*47.619) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
@@ -276,8 +285,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(-.1);
-        robot.leftDrive.setPower(-.1);
+        robot.rightDrive.setPower(-.05);
+        robot.leftDrive.setPower(-.05);
 
         while (robot.leftDrive.getCurrentPosition() < inches*47.619) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
@@ -307,8 +316,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(-.1);
-        robot.leftDrive.setPower(.1);
+        robot.rightDrive.setPower(-.05);
+        robot.leftDrive.setPower(.05);
 
         while (robot.leftDrive.getCurrentPosition() > -degrees*24.444) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
@@ -337,8 +346,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(.1);
-        robot.leftDrive.setPower(-.1);
+        robot.rightDrive.setPower(.05);
+        robot.leftDrive.setPower(-.05);
 
         while (robot.leftDrive.getCurrentPosition() > degrees*24.444) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
