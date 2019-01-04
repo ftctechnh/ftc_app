@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.Teleops;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -57,7 +58,9 @@ public class HardwareMap
     public DcMotor  leftDrive   = null;
     public DcMotor  rightDrive  = null;
     public DcMotor armMotor = null;
-    public Servo    arm         = null;
+    public Servo    csServo       = null;
+    public ColorSensor color1 = null;
+
     public Servo    claw        = null;
 
     public final static double ARM_HOME = 0.2;
@@ -84,12 +87,14 @@ public class HardwareMap
         leftDrive  = hwMap.get(DcMotor.class, "l");
         rightDrive = hwMap.get(DcMotor.class, "r");
         armMotor = hwMap.get(DcMotor.class, "arm");
+        csServo = hwMap.servo.get("cs");
+        color1 = hwMap.colorSensor.get("c1");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
         leftDrive.setPower(0);
         rightDrive.setPower(0);
-        armMotor.setPower(0);
+        //armMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -97,6 +102,7 @@ public class HardwareMap
         rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
       //  armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setTargetPosition(3355);
 
         // Define and initialize ALL installed servos.
        // arm  = hwMap.get(Servo.class, "arm");
