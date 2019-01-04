@@ -188,17 +188,47 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
 
-        GoBack(16.971);
-        sleep(250);
-/*        GoBack(16.971);
-        sleep(250);
 
-        GO(46);
+        if (robot.color1.blue() < 17)
+        {
+            robot.csServo.setPosition(0);
+            sleep(250);
+            robot.csServo.setPosition(1);
+        }
+        else
+        {
+            GoBack(16.971);
+            sleep(250);
+        }
 
-        TurnRight(-45);
+        if (robot.color1.blue() < 17)
+        {
+            robot.csServo.setPosition(0);
+            sleep(250);
+            robot.csServo.setPosition(1);
+            GO(16.971);
+        }
+        else
+        {
+            GoBack(16.971);
+            sleep(250);
+            robot.csServo.setPosition(0);
+            sleep(500);
+            GO(2*16.971);
+        }
 
-        GO(-48);
-*/
+
+
+        GO(24);
+
+        TurnRight(45);
+
+        GO(48);
+
+//-----------Add Marker Dump Here-------------
+
+        GoBack(74);
+
         sleep(10000);
     }
 

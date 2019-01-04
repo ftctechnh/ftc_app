@@ -27,15 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
 
 /**
@@ -65,9 +63,9 @@ import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Test: Lowering to ground", group = "Pushbot")
+@Autonomous(name = "Auto facing marker", group = "Pushbot")
 //@Disabled
-public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
+public class AutoFacingCorner extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap robot = new HardwareMap();   // Use a Pushbot's hardware
@@ -223,11 +221,11 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
         TurnRight(45);
 
-        GO(48);
+        GoBack(36);
 
 //-----------Add Marker Dump Here-------------
 
-        GoBack(74);
+        GO(74);
 
         sleep(10000);
     }

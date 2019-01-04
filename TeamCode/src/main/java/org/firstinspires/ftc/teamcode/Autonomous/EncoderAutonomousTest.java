@@ -79,7 +79,7 @@ public class TestAutonomousEncoderDrive extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.6;
     static final double     TURN_SPEED              = 0.5;
 
-    int target = 6000;
+    int target = 6000; // Change this
     int qturn = 2000;
 
     @Override
