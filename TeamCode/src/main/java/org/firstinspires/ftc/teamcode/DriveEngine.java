@@ -7,6 +7,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 
+import Jama.Matrix;
+
 class DriveEngine {
     DcMotor back;
     DcMotor right;
@@ -107,50 +109,6 @@ class DriveEngine {
         left.setPower (leftPower);
     }
 
-    void driveTrue(double ... args) {
-        double x = 0,y = 0,spin = 0;
-        switch (args.length)
-        {
-            case 3:
-                spin = args[2];
-            case 2:
-                x = args[0];
-                y = args[1];
-                break;
-            case 1:
-                spin = args[0];
-                break;
-            default:
-                stop();
-                return;
-        }
-        double xprime = x * Math.cos(theta) - y * Math.sin(theta);
-        double yprime = x * Math.sin(theta) + y * Math.cos(theta);
-
-        x = xprime;
-        y = yprime;
-
-        double root3 = Math.sqrt(3);
-        double backPower  = 2*x              + spin;
-        double rightPower = -x + y*root3*2/3 + spin;
-        double leftPower  = -x - y*root3*2/3 + spin;
-
-        double max = Math.max(Math.max(Math.abs(backPower),Math.abs(rightPower)),Math.abs(leftPower));
-        if(max > 1)
-        {
-            backPower  /= max;
-            rightPower /= max;
-            leftPower  /= max;
-        }
-
-        telemetry.addData("driveE x", x);
-        telemetry.addData("driveE y", y);
-        telemetry.addData("driveE rotate", spin);
-
-        back.setPower(backPower);
-        right.setPower(rightPower);
-        left.setPower (leftPower);
-    }
 
     void driveAtAngle(double theta)
     {
@@ -219,10 +177,10 @@ class DriveEngine {
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
-                    driveTrue(deltaX / r * .2, deltaY / r * .2, spin);
+                    drive(deltaX / r * .2, deltaY / r * .2, spin);
                 }
                 else if(r > .5) {
-                    driveTrue(deltaX / r * .1, deltaY / r * .1, spin);
+                    drive(deltaX / r * .1, deltaY / r * .1, spin);
                 }
                 else if(r <= .5){
                     checkpoint.set(c, true);
@@ -285,10 +243,10 @@ class DriveEngine {
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
-                    driveTrue( deltaX / r * .2, deltaY / r * .2, spin);
+                    drive( deltaX / r * .2, deltaY / r * .2, spin);
                 }
                 else if(r > .5) {
-                    driveTrue(deltaX / r * .1, deltaY / r * .1, spin);
+                    drive(deltaX / r * .1, deltaY / r * .1, spin);
                 }
                 else if(r <= .5){
                     cumulativeCheckpoints[0] += args[c][0];
@@ -338,56 +296,59 @@ class DriveEngine {
 //    L = -Y*√3/3 – X/3 + S/3
 
 
-    //No matter how we changed the power to the motors,
-    // the distances will still follow these equations, divided by a certain magnitude.
-    //For example, if there were two motors pointed one direction, we could add them and divide by two.
-    //If they were pointing opposite direction, we would add one, subtract one, and divide by two.
-    //So this magnitude is the "number of motors" pointed in that direction.
 
-    // Say that we want to move the robot a distance of 1 in the direction of x.
-    // Find the distance each motor must move to reach x==1, call it d.
-    // 1 divided by d is the fraction of the distance in the direction of x.
+    // Say that the robot moves a distance of 1 in the direction of x.
+    // Find the distance each motor moved, call it d.
     // Assign this as a coefficient to each motor.
-    // Create a constant equal to the sum of the terms, multiplying each coefficient by one.
+    // Create a constant equal to the sum of the terms,
+    // multiplying each coefficient by the distance each motor moved
     // Call this constant k.
-    // k is therefore equal to the number of motors involved, and dividing by k will give 1.
-    // For any distance x, dividing the total x-distance by the number of motors will give x.
+    // Divide the equation by k to give 1 when x = 1.
 
-//    X = (B—L/2—R/2) /3
-//    Y = (R*√3/2—L*√3/2) /2   These are the distance equations
+//    B = X + S
+//    R = Y*√3/2 – X/2 + S  These are the motor distances
+//    L = -Y*√3/2 – X/2 + S
+
+//    X = (B—R/2—L/2) * 2/3
+//    Y = (R*√3/2—L*√3/2) * 2/3  These are solved for the directional distances
 //    S = (B+R+L) /3
-
-//    B = X*2 + S
-//    R = Y*2/3*√3 – X + S  These are solved for the motor distances
-//    L = -Y*2/3*√3 – X + S
 
 
     double getDistance(double angle)
     {
-        double[] coefficients = new double[]
-                {Math.cos(angle), Math.cos(angle + motorSpacing), Math.cos(angle - motorSpacing)};
-        double motors = 0;
-        for (double c: coefficients) {
-            motors += c==0 ? 0 : 1;
+        DcMotor[] motors = new DcMotor[]{back,right,left};
+        Matrix powers = new Matrix(motors.length,3);
+        for (int i = 0; i < motors.length; i++) {                   //for each motor
+            powers.set(i, 0, Math.cos(theta + i* motorSpacing)); //sets x
+            powers.set(i, 1, Math.sin(theta + i* motorSpacing)); //sets y
+            powers.set(i, 2, 1);                              //sets spin
         }
-        return dotProduct(distances(), coefficients) / motors * DriveEngine.inPerTicks;
+
+        Matrix realDistances = new Matrix(distances(),1);
+
+        Matrix directional = powers.solve(realDistances);   //solves for x y and spin
+        double x = directional.get(0,0);
+        double y = directional.get(0,1);
+        double[] vectorA = new double[]{x,y};
+        double[] vectorB = new double[]{Math.cos(angle), Math.sin(angle)};
+
+        //finds the projection onto angle
+        return dotProduct(vectorA, vectorB) / Math.hypot(x,y) * DriveEngine.inPerTicks;
     }
 
     double xDist()
     {
-        return getDistance(theta);
+        return dotProduct(distances(),new double[]{2/3,-1/3,-1/3}) * DriveEngine.inPerTicks;
     }
 
     double yDist()
     {
-        double pi = Math.PI;
-        return getDistance(theta - pi /2); // sin(theta) == cos(theta - pi/2)
+        return dotProduct(distances(),new double[]{0,root3/3,-root3/3}) * DriveEngine.inPerTicks;
     }
 
     double spinAngle()
     {
-        double distance = dotProduct(distances(),new double[]{1,1,1})
-                /3 * DriveEngine.inPerTicks;
+        double distance = dotProduct(distances(),new double[]{1/3,1/3,1/3}) * DriveEngine.inPerTicks;
         return distance / robotRadius; //TODO: Find radius
     }
 
