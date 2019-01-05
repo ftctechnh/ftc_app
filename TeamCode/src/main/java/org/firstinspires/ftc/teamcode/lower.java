@@ -16,6 +16,6 @@ public class lower extends superAuto {
 
         setUp();
         configVuforiaRoverRuckus();
-        lowerRobot(6.9, -1);
+        lowerRobot(7.2, -1);
     }
 }

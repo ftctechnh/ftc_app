@@ -20,7 +20,7 @@ public class auto extends superAuto {
         configVuforiaRoverRuckus();
 
         //Lower
-        lowerRobot(6.9, 1);
+        lowerRobot(7.1, 1);
 
         //Translate
         translate(-1,0,.5, 0.5);
@@ -30,21 +30,25 @@ public class auto extends superAuto {
         getQuadrant();
 
         //Pivot to face pt
-        pivotToVuforia(45 + 90*(startingQuadrant-1));
+        //pivotToVuforia(45 + 90*(startingQuadrant-1));
 
 
         if (startingQuadrant == 1){
+            pivotToVuforia(45);
             goToPoint(1200,1200);
         }
         else if (startingQuadrant == 2){
+            pivotToVuforia(135);
             goToPoint(-1200,1200);
         }
 
         else if (startingQuadrant == 3){
+            pivotToVuforia(-135);
             goToPoint(-1200,-1200);
         }
 
         else{
+            pivotToVuforia(-45);
             goToPoint(1200,-1200);
         }
 
