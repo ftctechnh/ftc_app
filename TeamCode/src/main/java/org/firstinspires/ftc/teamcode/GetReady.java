@@ -68,15 +68,13 @@ public class GetReady extends LinearOpMode {
         if (opModeIsActive()) {
             runtime.reset();
 
-            int turnsLeft = robot.setArmTarget(1.125d);
-            double armPower = robot.getArmPower(turnsLeft);
+            double armPower = robot.setArmTarget(1.125d).PowerToSet;
             robot.armDrive.setPower(armPower);
 
             while (opModeIsActive() &&
                     (runtime.seconds() < 10d) &&
                     (robot.armDrive.isBusy())) {
-                turnsLeft = robot.setArmTarget(1.125d);
-                armPower = robot.getArmPower(turnsLeft);
+                armPower = robot.setArmTarget(1.125d).PowerToSet;
                 robot.armDrive.setPower(armPower);
             }
 
@@ -88,15 +86,13 @@ public class GetReady extends LinearOpMode {
             sleep(2000L);
 
             runtime.reset();
-            turnsLeft = robot.setArmTarget(0.725d);
-            armPower = robot.getArmPower(turnsLeft);
+            armPower = robot.setArmTarget(0.725d).PowerToSet;
             robot.armDrive.setPower(armPower);
 
             while (opModeIsActive() &&
                     (runtime.seconds() < 10d) &&
                     (robot.armDrive.isBusy())) {
-                turnsLeft = robot.setArmTarget(0.725d);
-                armPower = robot.getArmPower(turnsLeft);
+                armPower = robot.setArmTarget(0.725d).PowerToSet;
                 robot.armDrive.setPower(armPower);
             }
 

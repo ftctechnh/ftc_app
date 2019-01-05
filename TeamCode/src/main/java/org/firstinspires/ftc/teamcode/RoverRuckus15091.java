@@ -102,7 +102,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        robot.setArmTarget(1.2470d);
+        robot.setArmTarget(1.247d);
         robot.armDrive.setPower(1d);
         sleep(15L);
         robot.leftDrive.setPower(0.315d);

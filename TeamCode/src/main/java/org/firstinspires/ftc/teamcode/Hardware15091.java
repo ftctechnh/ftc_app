@@ -64,6 +64,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 class Hardware15091 {
 
+    static final double ARM_POWER = 1d;
+    private static final double ARM_MIN = 0.709d, ARM_MAX = 2.4d;
+    private static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
+    private static final double P_ARM_COEFF = 0.0004d;     // Larger is more responsive, but also less stable
     /* Public OpMode members. */
     DcMotor leftDrive = null;
     DcMotor rightDrive = null;
@@ -73,29 +77,33 @@ class Hardware15091 {
     Servo pickupServo = null;
     Servo markerServo = null;
     AnalogInput armAngle = null;
-    private AndroidTextToSpeech tts = null;
     BNO055IMU imu;
     ColorSensor sensorColor = null;
     DistanceSensor sensorDistance = null;
-
-    private static final double ARM_MIN = 0.7090d, ARM_MAX = 2.3456d;
-    private static final double ARM_ANGLE_ENCODER_RATIO = 15161.0738d;
-    static final double ARM_POWER = 1d;
-    private static final double P_ARM_COEFF = 0.0004d;     // Larger is more responsive, but also less stable
+    private AndroidTextToSpeech tts = null;
     private int beepSoundID;
+    /* local OpMode members. */
+    private HardwareMap hwMap = null;
+
+    /* Constructor */
+    Hardware15091() {
+
+    }
 
     void speak(String stuff) {
         tts.speak(stuff);
     }
 
-    int setArmTarget(double targetToSet) {
+    ArmInfo setArmTarget(double targetToSet) {
         armDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         double voltageDelta = armAngle.getVoltage() - targetToSet;
         int targetDelta = (int) Math.round(voltageDelta * ARM_ANGLE_ENCODER_RATIO);
         int newTarget = armDrive.getCurrentPosition() + targetDelta;
         armDrive.setTargetPosition(newTarget);
 
-        return Math.abs(armDrive.getCurrentPosition() - newTarget);
+        int turnsLeft = Math.abs(armDrive.getCurrentPosition() - newTarget);
+        double error = Range.clip(turnsLeft * P_ARM_COEFF, 0, 1);
+        return new ArmInfo(turnsLeft <= 100, ARM_POWER * error);
     }
 
     void setArmPower(double powerToSet) {
@@ -106,14 +114,6 @@ class Hardware15091 {
         } else {
             armDrive.setPower(0d);
         }
-    }
-
-    /* local OpMode members. */
-    private HardwareMap hwMap = null;
-
-    /* Constructor */
-    Hardware15091() {
-
     }
 
     double getHeading() {
@@ -188,9 +188,14 @@ class Hardware15091 {
         }.start();
     }
 
-    double getArmPower(int turnsLeft) {
-        double error = Range.clip(turnsLeft * P_ARM_COEFF, 0, 1);
-        return ARM_POWER * error;
+    class ArmInfo {
+        boolean Done;
+        double PowerToSet;
+
+        ArmInfo(boolean done, double powerToSet) {
+            Done = done;
+            PowerToSet = powerToSet;
+        }
     }
 }
 
