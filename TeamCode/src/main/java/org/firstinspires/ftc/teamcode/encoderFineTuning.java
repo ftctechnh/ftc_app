@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-
 @TeleOp(name="  encoderFineTuning", group="Testing")
 public class encoderFineTuning extends LinearOpMode
 {
@@ -25,9 +23,9 @@ public class encoderFineTuning extends LinearOpMode
 
         while (opModeIsActive())
         {
-            deltaX += Math.round(robot.gamepad.left_stick_x * 10) /20;
-            deltaY += Math.round(robot.gamepad.left_stick_y * 10) /20;
-            deltaS += Math.round(robot.gamepad.right_stick_x * 10) * Math.PI/200;
+            deltaX += Math.round(gamepad1.left_stick_x * 10) /20;
+            deltaY += Math.round(gamepad1.left_stick_y * 10) /20;
+            deltaS += Math.round(gamepad1.right_stick_x * 10) * Math.PI/200;
 
             telemetry.addData("wheel diameter", DriveEngine.wheelDiameter);
             telemetry.addData("robot radius", DriveEngine.robotRadius);
@@ -41,44 +39,37 @@ public class encoderFineTuning extends LinearOpMode
             telemetry.addData("spin angle", robot.driveEngine.spinAngle());
             telemetry.addData("spin angle divided by pi", robot.driveEngine.spinAngle() / Math.PI);
 
-            if(deltaS != 0)
-            {
-                robot.driveEngine.moveOnPath(new double[]{deltaS});
-            }
-            else
-            {
-                robot.driveEngine.moveOnPath(new double[]{deltaX, deltaY});
-            }
+            robot.driveEngine.moveOnPath(true, new double[]{deltaX, deltaY, deltaS});
 
-            if(robot.gamepad.left_bumper || robot.gamepad.right_bumper)
+            if(gamepad1.left_bumper || gamepad1.right_bumper)
             {
                 robot.driveEngine.resetDistances();
                 deltaX = deltaY = deltaS = 0;
             }
 
-            if(robot.gamepad.dpad_up){
+            if(gamepad1.dpad_up){
                 DriveEngine.wheelDiameter += .01;
             }
-            else if(robot.gamepad.dpad_down){
+            else if(gamepad1.dpad_down){
                 DriveEngine.wheelDiameter -= .01;
             }
-            else if(robot.gamepad.dpad_right){
+            else if(gamepad1.dpad_right){
                 savedDiameter = DriveEngine.wheelDiameter;
             }
-            else if(robot.gamepad.dpad_left){
+            else if(gamepad1.dpad_left){
                 DriveEngine.wheelDiameter = savedDiameter;
             }
 
-            if(robot.gamepad.y){
+            if(gamepad1.y){
                 DriveEngine.robotRadius += .01;
             }
-            else if(robot.gamepad.a){
+            else if(gamepad1.a){
                 DriveEngine.robotRadius -= .01;
             }
-            else if(robot.gamepad.b){
+            else if(gamepad1.b){
                 savedRadius = DriveEngine.robotRadius;
             }
-            else if(robot.gamepad.x) {
+            else if(gamepad1.x) {
                 DriveEngine.robotRadius = savedRadius;
             }
 

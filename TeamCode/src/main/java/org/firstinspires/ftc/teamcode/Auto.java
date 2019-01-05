@@ -206,7 +206,7 @@ public class Auto {
         telemetry.addData("fixedDistance", fixedDistance);
         telemetry.addData("mobileDistance", mobileDistance);
 
-        robot.driveEngine.driveTrue(-iSP * .2,(4 - fixedDistance)/10.0);
+        robot.driveEngine.drive(-iSP * .2,(4 - fixedDistance)/10.0);
 
         if(mobileDistance < 18) {
             if(iSP == -1)
@@ -242,7 +242,7 @@ public class Auto {
     Mode moveToCrater()
     {
         double fixedDistance = robot.sensors.getFixed();
-        robot.driveEngine.driveTrue(iSP * .2,(6 - fixedDistance)/10);
+        robot.driveEngine.drive(iSP * .2,(6 - fixedDistance)/10);
 
         if(robot.sensors.isTilted())
         {
