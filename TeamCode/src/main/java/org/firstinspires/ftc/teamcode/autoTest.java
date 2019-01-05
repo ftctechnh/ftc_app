@@ -19,7 +19,7 @@ public class autoTest extends superAuto {
         lowerRobot(6.9, 1);
         translate(-1,0,.5, 0.5);
         pivotToVuforia(-45);
-        //translate(0,-1,2, 0.5);
+
         goToPoint(1200,-1200);
     }
 }

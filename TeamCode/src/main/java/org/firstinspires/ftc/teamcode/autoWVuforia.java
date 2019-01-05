@@ -2,18 +2,12 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-
-import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.XYZ;
-import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
-
 /**
  * Created by Josie on 10/5/2018.
  */
-@Autonomous(name="Preciousss: auto", group="Preciousss")
+@Autonomous(name="Preciousss: autoWVuforia", group="Preciousss")
 
-public class auto extends superAuto {
+public class autoWVuforia extends superAuto {
 
     public void runOpMode() {
         setUp();
@@ -27,31 +21,31 @@ public class auto extends superAuto {
         sR();
 
         //Determine what quadrant
-       // getQuadrant();
+        getQuadrant();
 
         //Pivot to face pt
         //pivotToVuforia(45 + 90*(startingQuadrant-1));
 
 
         if (startingQuadrant == 1){
-            //pivotToVuforia(45);
-            //goToPoint(1200,1200);
+            pivotToVuforia(45);
+            goToPoint(1200,1200);
         }
         else if (startingQuadrant == 2){
-            //pivotToVuforia(135);
-            //goToPoint(-1200,1200);
+            pivotToVuforia(135);
+            goToPoint(-1200,1200);
         }
 
         else if (startingQuadrant == 3){
-            //pivotToVuforia(-135);
-            //(-1200,-1200);
+            pivotToVuforia(-135);
+            goToPoint(-1200,-1200);
         }
 
         else{
-            //pivotToVuforia(-45);
-            //goToPoint(1200,-1200);
+            pivotToVuforia(-45);
+            goToPoint(1200,-1200);
         }
-        translate(0,-1,3.5, 0.5);
+        //translate(0,-1,3, 0.5);
 
 
 
