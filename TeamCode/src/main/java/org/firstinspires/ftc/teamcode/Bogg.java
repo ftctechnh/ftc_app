@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
@@ -15,7 +16,8 @@ public class Bogg
     HardwareMap hardwareMap;
     DriveEngine driveEngine;
     EndEffector endEffector;
-    DcMotor lift = null;
+    ElapsedTime timer;
+    DcMotor lift;
     Camera camera = null;
     Sensors sensors;
     Servo brake;
@@ -29,6 +31,9 @@ public class Bogg
     double yAve = 0;
     double spinAve = 0;
     double liftAve = 0;
+    double raisePosition;
+
+    boolean goingUp = true;
 
 
     Telemetry telemetry;
@@ -48,7 +53,8 @@ public class Bogg
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         driveEngine = new DriveEngine(hardwareMap, telemetry);
-        //endEffector = new EndEffector(hardwareMap, telemetry);
+        endEffector = new EndEffector(hardwareMap, telemetry);
+        timer = new ElapsedTime();
         lift  = hardwareMap.dcMotor.get("lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sensors = new Sensors(hardwareMap);
@@ -64,6 +70,8 @@ public class Bogg
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         driveEngine = new DriveEngine(hardwareMap, telemetry);
+        endEffector = new EndEffector(hardwareMap, telemetry);
+        timer = new ElapsedTime();
         lift  = hardwareMap.dcMotor.get("lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sensors = new Sensors(hardwareMap);
@@ -233,19 +241,81 @@ public class Bogg
 
         driveEngine.drive(op, leftX, leftY, spin);
     }
-    
+
+    private double derivedRadius = 48;
+    void updateRadius()
+    {
+        derivedRadius = endEffector.getRadius();
+    }
+
+    void spinEffector()
+    {
+        endEffector.spin(.5);
+    }
+
     void manualDriveVarOrbit(Gamepad gDrive, Gamepad gRotate, boolean orbit)
     {
         double max = Math.max(Math.abs(gDrive.left_stick_x), Math.abs(gDrive.left_stick_y));
 
         if(orbit) {
             if (max == gDrive.left_stick_y)
-                driveEngine.orbit(48 + driveEngine.xDist(), 0, gDrive.left_stick_y);
+                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, gDrive.left_stick_y);
             else
                 driveEngine.drive(gDrive.left_stick_x, 0);
         }
         else
             manualCurvy(gDrive, gRotate);
+    }
+    
+    void autoEffect()
+    {
+        endEffector.moveToLength(); //we want to keep the arm at a fixed length
+        if(goingUp)
+        {
+            if(endEffector.raise(raisePosition))
+            {
+                if(timer.seconds() < 1)
+                    endEffector.open();
+                else
+                    goingUp = false;
+            }
+            else
+                timer.reset(); //keep the timer at zero while we're still moving
+        }
+        else //if going down
+        {
+            endEffector.close();
+            if(endEffector.lowerAllTheWay())
+            {
+                if(timer.seconds() > 2)
+                    goingUp = true;
+            }
+            else
+                timer.reset(); //keep the timer at zero while we're still moving
+        }
+    }
+    
+    void manualEffect()
+    {
+        //deals with the length of the arm
+        endEffector.extend(gamepad2.right_stick_x);
+
+        //deals with the servos to release the minerals
+        if(gamepad2.y || gamepad2.b || gamepad2.right_bumper)
+            endEffector.open();
+        else
+            endEffector.close();
+
+        //deals with the angle of the arm
+        raisePosition += (gamepad2.left_stick_x + gamepad2.left_stick_y) * 5 * endEffector.getAngleInDegrees();
+        if(Math.hypot(gamepad2.left_stick_x,gamepad2.left_stick_y) > 0.01)
+            endEffector.raise(raisePosition);
+
+        if(gamepad2.dpad_down)
+            endEffector.lowerAllTheWay();
+        if(gamepad2.dpad_up)
+            endEffector.raise(raisePosition);
+
     }
 
     void manualRotate(Gamepad g)
