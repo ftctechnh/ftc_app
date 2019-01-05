@@ -22,31 +22,31 @@ public class auto extends superAuto {
         //Lower
         lowerRobot(6.9, 1);
 
+        //Translate
+        translate(-1,0,.5, 0.5);
         sR();
 
+        //Determine what quadrant
         getQuadrant();
 
-        if (startingQuadrant == 1){
+        //Pivot to face pt
+        pivotToVuforia(45 + 90*(startingQuadrant-1));
 
+
+        if (startingQuadrant == 1){
+            goToPoint(1200,1200);
         }
         else if (startingQuadrant == 2){
-
+            goToPoint(-1200,1200);
         }
 
         else if (startingQuadrant == 3){
-
+            goToPoint(-1200,-1200);
         }
 
         else{
-            translate(-1,0,.5, 0.5);
-            pivotToVuforia(-45);
             goToPoint(1200,-1200);
         }
-
-
-
-
-
 
 
 
