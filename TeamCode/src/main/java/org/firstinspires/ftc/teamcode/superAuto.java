@@ -223,7 +223,7 @@ abstract public class superAuto extends LinearOpMode {
             startingQuadrant = 1;
         else if (x < 0 && y > 0)
             startingQuadrant = 2;
-        else if (x < 0 &&y < 0)
+        else if (x < 0 && y < 0)
             startingQuadrant = 3;
         else
             startingQuadrant = 4;
