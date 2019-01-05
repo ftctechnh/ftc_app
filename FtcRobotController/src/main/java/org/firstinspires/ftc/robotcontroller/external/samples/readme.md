@@ -17,7 +17,7 @@ To summarize: A range of different samples classes will reside in the java/exter
 The class names will follow a naming convention which indicates the purpose of each class.
 The prefix of the name will be one of the following:
 
-Template:	This is a minimally functional OpMode used to illustrate the skeleton/structure
+Basic:  	This is a minimally functional OpMode used to illustrate the skeleton/structure
             of a particular style of OpMode.  These are bare bones examples.
 
 Sensor:    	This is a Sample OpMode that shows how to use a specific sensor.
@@ -49,7 +49,6 @@ After the prefix, other conventions will apply:
 * Sensor class names are constructed as:    Sensor - Company - Type
 * Hardware class names are constructed as:  Hardware - Robot type
 * Pushbot class names are constructed as:   Pushbot - Mode - Action - OpModetype
-* K9bot class names are constructed as:     K9bot - Mode - Action - OpModetype
 * Concept class names are constructed as:   Concept - Topic - OpModetype
 * Library class names are constructed as:   Library - Topic - OpModetype
 
