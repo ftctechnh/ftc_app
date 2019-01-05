@@ -129,8 +129,10 @@ class DriveEngine {
     }
 
     private ArrayList<Boolean> checkpoint = new ArrayList<>();
-
-    boolean moveOnPath(double[] ... args)
+    boolean moveOnPath(double[] ... args){
+        return moveOnPath(false, args);
+    }
+    boolean moveOnPath(boolean continuous, double[] ... args)
     {
         if(checkpoint.size() == 0){
             for (int i = 0; i < args.length; i++)
@@ -152,6 +154,7 @@ class DriveEngine {
             return true;
         }
 
+        double spinAngle = 0;
         double spin;
         switch (args[c].length)
         {
@@ -163,9 +166,11 @@ class DriveEngine {
                     resetDistances();
                 }
                 break;
+            case 3:
+                spinAngle = args[c][2];
             case 2:
                 double[] point = args[c];
-                spin = spinToTarget(point[2]);
+                spin = spinToTarget(spinAngle);
 
                 double deltaX = point[0] - xDist();
                 double deltaY = point[1] - yDist();
@@ -183,8 +188,13 @@ class DriveEngine {
                     drive(deltaX / r * .1, deltaY / r * .1, spin);
                 }
                 else if(r <= .5){
-                    checkpoint.set(c, true);
-                    resetDistances();
+                    stop();
+                    if(continuous)
+                        drive(deltaX, deltaY, spin);
+                    else {
+                        checkpoint.set(c, true);
+                        resetDistances();
+                    }
                 }
                 break;
         }
@@ -231,7 +241,7 @@ class DriveEngine {
                 double[] point = args[c];
                 point[0] += cumulativeCheckpoints[0];
                 point[1] += cumulativeCheckpoints[1];
-                spin = spinToTarget(point[2]);
+                spin = spinToZero();
 
                 double deltaX = point[0] - xDist();
                 double deltaY = point[1] - yDist();
