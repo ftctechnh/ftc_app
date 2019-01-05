@@ -100,4 +100,28 @@ public class UserControl {
         while ((dpad == null) && !opmode.isStopRequested());
         return dpad;
     }
+
+    public int getInt(String prompt) {
+        int Integer = 0;
+
+        telemetry.addData("[A = confirm, B = 0, Up = +1, Down = -1] ", prompt);
+        telemetry.update();
+        egamepad1.updateEdge();
+        do {
+            do {
+                egamepad1.updateEdge();
+            }
+            while (!egamepad1.a.pressed && !egamepad1.b.pressed && !egamepad1.dpad_up.released && !egamepad1.dpad_down.released && !opmode.isStopRequested());
+            if (!egamepad1.dpad_up.released)
+                Integer ++;
+            if (egamepad1.dpad_down.released)
+                Integer --;
+            telemetry.addData(prompt, " = ", Integer);
+            telemetry.update();
+        } while (!egamepad1.a.pressed && !egamepad1.b.pressed && !opmode.isStopRequested());
+        if (egamepad1.b.pressed)
+            Integer = 0;
+        egamepad1.updateEdge();
+        return Integer;
+    }
 }

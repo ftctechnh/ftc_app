@@ -71,6 +71,7 @@ public class Auto4Variations extends LinearOpMode {
     private Start orientation;
     private boolean doubleSample;
     private boolean allianceCrater;
+    private int timeDelay = 0;
 
 
 
@@ -107,6 +108,15 @@ public class Auto4Variations extends LinearOpMode {
             allianceCrater = false;
             telemetry.addLine("Opponent Crater");
         }
+
+        timeDelay = User.getInt("Time Delay");
+        if (timeDelay < 1) {
+            telemetry.addLine("No time delay");
+        } else {
+            telemetry.addData("Time Delay set to ", timeDelay);
+        }
+
+
 
     }
 
@@ -170,7 +180,8 @@ public class Auto4Variations extends LinearOpMode {
                     Led.white();
                     telemetry.addLine("Initial");
                     telemetry.update();
-                    newState(State.Deploy);
+                    if (now > timeDelay)
+                        newState(State.Deploy);
                     break;
 
                 case Deploy:
