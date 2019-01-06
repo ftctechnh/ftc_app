@@ -103,7 +103,7 @@ class Hardware15091 {
 
         int turnsLeft = Math.abs(armDrive.getCurrentPosition() - newTarget);
         double error = Range.clip(turnsLeft * P_ARM_COEFF, 0, 1);
-        return new ArmInfo(turnsLeft <= 100, ARM_POWER * error);
+        return new ArmInfo(turnsLeft <= 120, ARM_POWER * error);
     }
 
     void setArmPower(double powerToSet) {
