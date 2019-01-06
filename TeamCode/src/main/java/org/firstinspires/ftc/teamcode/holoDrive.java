@@ -19,6 +19,8 @@ public class holoDrive extends OpMode {
     DcMotor m3;
     DcMotor m4;
     DcMotor plow;
+    DcMotor lift;
+
 
     @Override
     public void init() {
@@ -27,6 +29,7 @@ public class holoDrive extends OpMode {
         m3 = hardwareMap.dcMotor.get("m3");
         m4 = hardwareMap.dcMotor.get("m4");
         plow = hardwareMap.dcMotor.get("plow");
+        lift = hardwareMap.dcMotor.get("lift");
     }
 
     @Override
@@ -34,6 +37,7 @@ public class holoDrive extends OpMode {
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
         double xPower = gamepad1.left_stick_x;  //power to spin holonomic
         double spinPower = -gamepad1.right_stick_x; //power to spin holonomic
+        double liftPower = gamepad2.left_stick_y; //power for lift
 
         float rightStick = gamepad2.left_stick_y;   //plow power
 
@@ -95,13 +99,15 @@ public class holoDrive extends OpMode {
             m3.setPower(0);
             m4.setPower(0);
         }
-
-
+        lift.setPower(liftPower);
 
         plow.setPower(-rightStick * 0.1);
 
         telemetry.addData("xPower", "%.2f",  gamepad1.left_stick_x);
         telemetry.addData("yPower", "%.2f",  gamepad1.left_stick_y);
+        telemetry.addData("liftPower", "%.2f",  gamepad2.left_stick_y);
+
 
     }
 }
+
