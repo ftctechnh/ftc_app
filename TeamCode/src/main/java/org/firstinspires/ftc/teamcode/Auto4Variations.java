@@ -168,6 +168,8 @@ public class Auto4Variations extends LinearOpMode {
 
             Drive.imu.update();
 
+            //if (mCurrentState != State.Deploy)
+
 //            telemetry.addData("startAngle", Drive.imu.startAngle);
 //            telemetry.addData("currentAngle", Drive.imu.currentAngle);
 //            telemetry.addData("trueAngle", Drive.imu.trueAngle);

@@ -111,7 +111,7 @@ public class Auto3imu extends LinearOpMode {
         /* initialize sub-assemblies
          */
         User.init(this);
-        Vucam.init(this);
+        Vucam.init(this, true);
         Drive.init(this);
         Claimer.init(this);
         Lift.init(this);
