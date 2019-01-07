@@ -27,15 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
 
 /**
@@ -65,9 +63,9 @@ import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Auto facing crater", group = "Pushbot")
+@Autonomous(name = "Auto facing marker", group = "Pushbot")
 //@Disabled
-public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
+public class AutoFacingCorner extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap robot = new HardwareMap();   // Use a Pushbot's hardware
@@ -139,11 +137,9 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 
         telemetry.update();
 
-        robot.leftDrive.setPower(.5);
+        robot.leftDrive.setPower(.4);
         sleep(500);
         robot.leftDrive.setPower(0);
-
-        sleep(3000);
 
 /*
         robot.rightDrive.setTargetPosition(-20000);
@@ -173,83 +169,81 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
 */
         telemetry.addData("waiting", "waiting");
         telemetry.update();
-        sleep(250);
+        sleep(100);
 
 
-        GO(26); //14
+        GO(15);
 
         TurnRight(24);
-        sleep(500);
+        sleep(550);
 
-
-
-   //     GoBack(3);
+        //GoBack(1);
 
         robot.csServo.setPosition(1);
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
-      //  robot.csServo.setPosition(0.25);
-        sleep(250);
+//      robot.csServo.setPosition(0.25);
+        sleep(500);
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
 
-
-        /*
+/*
         if (robot.color1.blue() < 15)
         {
-            robot.csServo.setPosition(.25);
-            sleep(250);
+            robot.csServo.setPosition(0);
+            sleep(300);
             robot.csServo.setPosition(1);
         }
         else
         {
             GoBack(16.971);
-            sleep(250);
+            sleep(300);
         }
 
         if (robot.color1.blue() < 15)
         {
-            robot.csServo.setPosition(.25);
-            sleep(250);
+            robot.csServo.setPosition(0);
+            sleep(300);
             robot.csServo.setPosition(1);
             GO(16.971);
         }
         else
         {
             GoBack(16.971);
-            sleep(250);
-            robot.csServo.setPosition(.25);
             sleep(500);
+            robot.csServo.setPosition(0);
+            sleep(300);
+            robot.csServo.setPosition(1);
+            sleep(300);
             GO(2*16.971+5);
         }
 */
-/*
-        GoBack(16.971);
-        sleep(250);
-        GoBack(16.971);
-        sleep(250);
-        GO(2*16.971+5);
-*/
 
-        TurnRight(22); //25
+      //  TurnLeft(25);
 
-        GO(73);
+        GO(26);
 
+        TurnRight(35);
 
+        GoBack(50);
+
+        //TurnRight(-5);
+
+        TurnRight(61);
 
         robot.mServo.setPosition(0.1);
 
-        TurnRight(17); //17
+        GoBack(80);
 
-        GoBack(90); //85
+//-----        GoBack(85);
 
-        robot.leftDrive.setPower(.25);
-        sleep(100);
-        robot.leftDrive.setPower(0);
+//        TurnRight(45);
+
+//        GoBack(36);
+
+//        GO(74);
 
         sleep(15000);
-
-
     }
 
     public void GO(double inches)
@@ -282,7 +276,6 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-
     public void GoBack(double inches)
     {
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -297,21 +290,20 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(-.02);
-        robot.leftDrive.setPower(-.02);
+        robot.rightDrive.setPower(-.05);
+        robot.leftDrive.setPower(-.05);
 
-        while (robot.rightDrive.getCurrentPosition() < inches*47.619 && robot.leftDrive.getCurrentPosition() < inches*47.619) {
+        while (robot.leftDrive.getCurrentPosition() < inches*47.619) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
                     robot.leftDrive.getCurrentPosition(),
                     robot.rightDrive.getCurrentPosition(),
                     robot.armMotor.getCurrentPosition());
             telemetry.update();
         }
-
         robot.rightDrive.setPower(0);
         robot.leftDrive.setPower(0);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 
@@ -329,8 +321,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(-.1);
-        robot.leftDrive.setPower(.1);
+        robot.rightDrive.setPower(-.05);
+        robot.leftDrive.setPower(.05);
 
         while (robot.leftDrive.getCurrentPosition() > -degrees*24.444) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",
@@ -345,8 +337,7 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void TurnLeft(int degrees)
-    {
+    public void TurnLeft(int degrees) {
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -359,8 +350,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         telemetry.update();
         sleep(1000);
 
-        robot.rightDrive.setPower(.05);
-        robot.leftDrive.setPower(-.05);
+        robot.rightDrive.setPower(.1);
+        robot.leftDrive.setPower(-.1);
 
         while (robot.leftDrive.getCurrentPosition() > degrees*24.444) {
             telemetry.addData("Working", "Left: %7d Right: %7d Arm: %7d",

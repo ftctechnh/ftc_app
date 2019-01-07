@@ -30,12 +30,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
 
 /**
@@ -65,9 +63,9 @@ import org.firstinspires.ftc.teamcode.Teleops.HardwareMap;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Auto facing crater", group = "Pushbot")
+@Autonomous(name = "TEST Auto facing crater", group = "Pushbot")
 //@Disabled
-public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
+public class TESTAutoFacingCrater extends LinearOpMode {
 
     /* Declare OpMode members. */
     HardwareMap robot = new HardwareMap();   // Use a Pushbot's hardware
