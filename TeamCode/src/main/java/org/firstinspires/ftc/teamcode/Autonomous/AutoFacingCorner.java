@@ -172,7 +172,7 @@ public class AutoFacingCorner extends LinearOpMode {
         sleep(100);
 
 
-        GO(13);
+        GO(15);
 
         TurnRight(24);
         sleep(550);
@@ -182,7 +182,7 @@ public class AutoFacingCorner extends LinearOpMode {
         robot.csServo.setPosition(1);
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
-        robot.csServo.setPosition(0.25);
+//      robot.csServo.setPosition(0.25);
         sleep(500);
         telemetry.addData("Servo", "Servo: %7f", robot.csServo.getPosition());
         telemetry.update();
@@ -219,20 +219,31 @@ public class AutoFacingCorner extends LinearOpMode {
         }
 */
 
-        TurnLeft(25);
+      //  TurnLeft(25);
 
-        GO(24);
+        GO(26);
+
+        TurnRight(35);
+
+        GoBack(50);
+
+        //TurnRight(-5);
+
+        TurnRight(61);
+
+        robot.mServo.setPosition(0.1);
+
+        GoBack(80);
+
+//-----        GoBack(85);
 
 //        TurnRight(45);
 
 //        GoBack(36);
 
-
-//-----------Add Marker Dump Here-------------
-
 //        GO(74);
 
-        sleep(10000);
+        sleep(15000);
     }
 
     public void GO(double inches)
