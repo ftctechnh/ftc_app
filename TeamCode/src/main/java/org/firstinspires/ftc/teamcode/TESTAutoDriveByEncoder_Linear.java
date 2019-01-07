@@ -143,6 +143,8 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         sleep(500);
         robot.leftDrive.setPower(0);
 
+        sleep(3000);
+
 /*
         robot.rightDrive.setTargetPosition(-20000);
         robot.leftDrive.setTargetPosition(20000);
@@ -174,7 +176,7 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
         sleep(250);
 
 
-        GO(14);
+        GO(26); //14
 
         TurnRight(24);
         sleep(500);
@@ -221,22 +223,25 @@ public class TESTAutoDriveByEncoder_Linear extends LinearOpMode {
             GO(2*16.971+5);
         }
 */
+/*
+        GoBack(16.971);
+        sleep(250);
+        GoBack(16.971);
+        sleep(250);
+        GO(2*16.971+5);
+*/
 
- //       GO(2*16.971+5);
+        TurnRight(22); //25
 
-        TurnRight(15);
-
-        GO(75);
+        GO(73);
 
 
 
-        robot.mServo.setPosition(0);
-        sleep(500);
-        robot.mServo.setPosition(0.5);
+        robot.mServo.setPosition(0.1);
 
-        TurnRight(10);
+        TurnRight(17); //17
 
-        GoBack(85);
+        GoBack(90); //85
 
         robot.leftDrive.setPower(.25);
         sleep(100);
