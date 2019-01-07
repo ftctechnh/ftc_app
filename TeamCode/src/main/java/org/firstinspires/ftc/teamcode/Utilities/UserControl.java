@@ -112,11 +112,11 @@ public class UserControl {
                 egamepad1.updateEdge();
             }
             while (!egamepad1.a.pressed && !egamepad1.b.pressed && !egamepad1.dpad_up.released && !egamepad1.dpad_down.released && !opmode.isStopRequested());
-            if (!egamepad1.dpad_up.released)
+            if (egamepad1.dpad_up.released)
                 Integer ++;
             if (egamepad1.dpad_down.released)
                 Integer --;
-            telemetry.addData(prompt, " = ", Integer);
+            telemetry.addData(prompt, /*" = ", */Integer);
             telemetry.update();
         } while (!egamepad1.a.pressed && !egamepad1.b.pressed && !opmode.isStopRequested());
         if (egamepad1.b.pressed)

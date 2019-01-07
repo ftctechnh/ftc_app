@@ -168,7 +168,9 @@ public class Auto4Variations extends LinearOpMode {
 
             Drive.imu.update();
 
-            //if (mCurrentState != State.Deploy)
+            /*if (mCurrentState != State.Deploy && Lift.LifterButtonB.isPressed()) {
+                Lift.Stop();
+            }*/
 
 //            telemetry.addData("startAngle", Drive.imu.startAngle);
 //            telemetry.addData("currentAngle", Drive.imu.currentAngle);
@@ -217,7 +219,7 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.moveForward(0.5, 0.9);
                         newState(State.Claim);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 2.2);
+                        Drive.moveForward(0.5, 2.0);
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.05);
                         newState(State.Claim);
@@ -268,11 +270,11 @@ public class Auto4Variations extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -45.0);
                     Claimer.drop();
-                  /* while (!Lift.LifterButtonB.isPressed()){
+                    while (!Lift.LifterButtonB.isPressed()){
                         Lift.Retract();
                     }
-                    Lift.Stop();*/
-                    Drive.TimeDelay(2.0);
+                    Lift.Stop();
+                    //Drive.TimeDelay(2.0);
                     Claimer.reset();
                     if (doubleSample == true) {
                         newState(State.Double_Sample);
