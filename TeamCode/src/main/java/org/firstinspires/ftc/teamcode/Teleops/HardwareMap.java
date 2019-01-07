@@ -89,8 +89,9 @@ public class HardwareMap
         rightDrive = hwMap.get(DcMotor.class, "r");
         armMotor = hwMap.get(DcMotor.class, "arm");
         csServo = hwMap.servo.get("cs");
+        csServo.setPosition(.9);
         mServo = hwMap.servo.get("ms");
-        mServo.setPosition(1);
+        mServo.setPosition(.8);
         color1 = hwMap.colorSensor.get("c1");
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
 
