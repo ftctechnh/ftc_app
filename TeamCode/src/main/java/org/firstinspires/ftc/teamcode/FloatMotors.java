@@ -21,12 +21,16 @@ public class floatMotors extends LinearOpMode
             robot.driveEngine.right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.driveEngine.left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.endEffector.contract.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.driveEngine.stop();
 
             telemetry.addData("back", robot.driveEngine.back.getCurrentPosition());
             telemetry.addData("right", robot.driveEngine.right.getCurrentPosition());
             telemetry.addData("left", robot.driveEngine.left.getCurrentPosition());
             telemetry.addData("lift", robot.lift.getCurrentPosition());
+            telemetry.addData("pivot", robot.endEffector.pivot.getCurrentPosition());
+            telemetry.addData("contract", robot.endEffector.contract.getCurrentPosition());
             telemetry.update();
             idle();
         }
