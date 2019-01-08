@@ -23,7 +23,11 @@ public class holonomicDrive_derive_alpha extends LinearOpMode
         double lastTime = 0;
         double averageClockTime = 0;
         double n = 0;
+        double i = 0;
+        boolean over1 = false;
         ElapsedTime timer = new ElapsedTime();
+        ElapsedTime overTime = new ElapsedTime();
+        double averageOverTime = 0;
 
         while (opModeIsActive())
         {
@@ -33,6 +37,19 @@ public class holonomicDrive_derive_alpha extends LinearOpMode
             double t = timer.seconds();
             double clockTime = .5 * lastClockTime + .5 * (t - lastTime); // exponential average
             lastTime = t;
+
+            if(clockTime >.1 && !over1) {
+                over1 = true;
+                overTime.reset();
+                i++;
+            }
+            if(clockTime <=.1 && over1) {
+                over1 = false;
+                if(averageOverTime == 0)
+                    averageOverTime = overTime.seconds();
+                averageOverTime = (overTime.seconds() + i * averageOverTime) / (i+1);
+            }
+
 
             if(averageClockTime == 0)
                 averageClockTime = clockTime;
@@ -48,6 +65,8 @@ public class holonomicDrive_derive_alpha extends LinearOpMode
             // Display the current value
             telemetry.addData("clockTime: ", clockTime);
             telemetry.addData("averageClockTime: ", averageClockTime);
+            telemetry.addData("number of overTimes", i);
+            telemetry.addData("averageOverTime: ", averageOverTime);
             telemetry.addData("derivedAlpha1.5: ", alpha15);
             telemetry.addData("derivedAlpha2: ", alpha2);
             telemetry.addData("derivedAlpha3: ", alpha3);
