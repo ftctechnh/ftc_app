@@ -275,7 +275,7 @@ class DriveEngine {
         telemetry.addData("current angle", spinAngle());
         double deltaAngle = targetAngle - spinAngle();
 
-        return Math.signum(deltaAngle) * Math.max(Math.abs(deltaAngle)/2, .3);
+        return deltaAngle/2;
     }
 
     double spinToZero()
