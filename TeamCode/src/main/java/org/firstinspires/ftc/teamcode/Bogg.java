@@ -24,10 +24,7 @@ public class Bogg
     Servo drop;
     Servo dServo;
 
-    //This should give us the alpha needed to reach 95% in 1.5 seconds.
-    double averageClockTime = 2 * Math.pow(10, -4);
-    double numberOfSecondsTo95 = 1.5;
-    double alpha = 1 - Math.pow(.05, averageClockTime/numberOfSecondsTo95);
+    double alpha = .002;
 
     double liftAlpha = .12;
     double alphaInc = 0.001;
@@ -216,15 +213,18 @@ public class Bogg
         }
     }
 
-    void manualDrive(boolean button, double x, double y)
+    void manualDrive(boolean op, double x, double y)
     {
-        if(button)
-            driveEngine.drive(true, smoothX(x, 1.5), smoothY(-y, 1.5));
-        else
-            driveEngine.drive(false, smoothX(x, 1), smoothY(-y, 1));
+        double leftX = smoothX(x, op? 1.5:1);
+        double leftY = smoothY(-y, op? 1.5:1);
+        double spin = 0;
+
         telemetry.addData("gamepad x", x);
         telemetry.addData("gamepad y", y);
+        telemetry.addData("gamepad spin", spin);
         telemetry.addLine("Note: y is negated");
+
+        driveEngine.drive(op, leftX, leftY, spin);
     }
 
     private double cumulativeCorrection;
@@ -245,7 +245,7 @@ public class Bogg
         boolean op = gDrive.left_stick_button;
         double leftX = smoothX(gDrive.left_stick_x, op? 1.5:1);
         double leftY = smoothY(-gDrive.left_stick_y, op? 1.5:1);
-        double spin = smoothSpin(-gRotate.right_stick_x/3);
+        double spin = smoothSpin(-gRotate.right_stick_x/2);
 
         telemetry.addData("gamepad x", gDrive.left_stick_x);
         telemetry.addData("gamepad y", gDrive.left_stick_y);
@@ -287,7 +287,7 @@ public class Bogg
 
         if(orbit) {
             if (max == gDrive.left_stick_y)
-                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, gDrive.left_stick_y);
+                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, -gDrive.left_stick_y);
             else
                 driveEngine.drive(gDrive.left_stick_x, 0);
         }
@@ -348,6 +348,9 @@ public class Bogg
 
     boolean manualRotate(boolean button, double stick)
     {
+        if(stick == 0)
+            return false;
+
         if(button)
             driveEngine.rotate(-stick);
         else
@@ -355,7 +358,7 @@ public class Bogg
 
         telemetry.addData("gamepad spin", stick);
         telemetry.addLine("Note: spin is negated");
-        return stick != 0;
+        return true;
     }
 
     boolean rotateToWall(double accuracy_angle)
