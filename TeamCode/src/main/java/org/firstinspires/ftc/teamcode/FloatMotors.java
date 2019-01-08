@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(name="  encoderTest", group="Testing")
+@TeleOp(name="  float motors", group="Testing")
 public class floatMotors extends LinearOpMode
 {
     Bogg robot;
