@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -32,14 +33,15 @@ class EndEffector {
 //        spin.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        balls = hardwareMap.servo.get("balls");
 //        blocks = hardwareMap.servo.get("blocks");
-//        pivot = hardwareMap.dcMotor.get("pivot");
-//        pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        pivot.setDirection(DcMotorSimple.Direction.FORWARD);
-//        pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        contract = hardwareMap.dcMotor.get("contract");
-//        contract.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        contract.setDirection(DcMotorSimple.Direction.FORWARD);
-//        contract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivot = hardwareMap.dcMotor.get("pivot");
+        pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        pivot.setDirection(DcMotorSimple.Direction.FORWARD);
+        pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        contract = hardwareMap.dcMotor.get("contract");
+        contract.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        contract.setDirection(DcMotorSimple.Direction.FORWARD);
+        contract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     void open()
@@ -55,17 +57,16 @@ class EndEffector {
 
     boolean raise(double raisePosition)
     {
-//        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        pivot.setTargetPosition(300);
-//        return pivot.getCurrentPosition() > 250; //open before we reach the lander
-        return true;
+        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivot.setTargetPosition(300);
+        return pivot.getCurrentPosition() > 250; //open before we reach the lander
+
     }
     boolean lowerAllTheWay()
     {
-//        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        pivot.setTargetPosition(0);
-//        return pivot.getCurrentPosition() < 10;
-        return true;
+        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivot.setTargetPosition(0);
+        return pivot.getCurrentPosition() < 10;
     }
 
     void spin(double power)
@@ -75,36 +76,33 @@ class EndEffector {
 
     void extend(double l)
     {
-//        length += l;
-//        contract.setTargetPosition((int)Math.round(length * inPerTicks));
+        length += l;
+        contract.setTargetPosition((int)Math.round(length * inPerTicks));
     }
 
     void moveToLength(double length)
     {
-//        this.length = length;
-//        contract.setTargetPosition((int)Math.round(length * inPerTicks));
+        this.length = length;
+        contract.setTargetPosition((int)Math.round(length * inPerTicks));
     }
 
     void moveToLength()
     {
-//        contract.setTargetPosition((int)Math.round(length * inPerTicks));
+        contract.setTargetPosition((int)Math.round(length * inPerTicks));
     }
     
     double getRadius()
     {
-        //return Math.cos(getAngle()) * length;
-        return 36;
+        return Math.cos(getAngle()) * length;
     }
 
     double getAngle()
     {
-        return 0;
-//        return pivot.getCurrentPosition() * radiansPerTicks;
+        return pivot.getCurrentPosition() * radiansPerTicks;
     }
 
     double getAngleInDegrees()
     {
-        return 0;
-//        return pivot.getCurrentPosition() * degreesPerTicks;
+        return pivot.getCurrentPosition() * degreesPerTicks;
     }
 }

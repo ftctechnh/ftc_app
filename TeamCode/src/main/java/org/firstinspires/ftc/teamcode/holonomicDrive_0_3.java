@@ -2,54 +2,43 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="holonomicDrive Experimental Two Gamepads", group="Testing")
 public class holonomicDrive_0_3 extends LinearOpMode
 {
     Bogg robot;
 
+    Gamepad g1;
+    Gamepad g2;
+
     @Override
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, gamepad1, gamepad2, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
+        g1 = gamepad1;
+        g2 = gamepad2;
         waitForStart();
 
         while (opModeIsActive())
         {
-            robot.manualCurvy(gamepad1, gamepad2);
+            if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if not orbiting
+                robot.manualCurvy(g1, g2);
 
-            if(gamepad1.dpad_up)
-            {
-                robot.setBrake(true);
-            }
-            else if(gamepad1.dpad_down)
-            {
-                robot.setBrake(false);
-            }
+            robot.manualBrake(g1.dpad_down, g1.dpad_up);
 
-            if(gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0)
-                if(gamepad1.dpad_left )
-                {
-                    robot.driveEngine.orbit(48,0, -.3);
-                }
-                else if(gamepad1.dpad_right)
-                {
-                    robot.driveEngine.orbit(48,0, .3);
-                }
-
-
-            if(gamepad1.left_bumper)
+            if(g1.left_bumper)
             {
                 robot.dropMarker(Bogg.Direction.Left);
             }
-            else if(gamepad1.right_bumper)
+            else if(g1.right_bumper)
             {
                 robot.dropMarker(Bogg.Direction.Right);
             }
 
 
-            robot.manualLift();
+            robot.manualLift(g1.y, g1.a);
 
             // Display the current value
             // Display the current value
@@ -57,8 +46,6 @@ public class holonomicDrive_0_3 extends LinearOpMode
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
             telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
             telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
-            telemetry.addData("fixed distance", robot.sensors.getFixed());
-            telemetry.addData("mobile distance", robot.sensors.getMobile());
 
             telemetry.update();
             idle();

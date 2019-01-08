@@ -29,8 +29,6 @@ public class holonomicKids extends LinearOpMode
             }
 
             // Display the current value
-            telemetry.addData("fixed distance", robot.sensors.getFixed());
-            telemetry.addData("mobile distance", robot.sensors.getMobile());
 
             telemetry.update();
             idle();

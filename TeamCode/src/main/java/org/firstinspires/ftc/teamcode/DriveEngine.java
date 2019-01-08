@@ -24,7 +24,7 @@ class DriveEngine {
     private static double inPerRev = Math.PI * wheelDiameter;
     static final double inPerTicks = inPerRev / ticksPerRev;
 
-    private double theta;
+    private double theta = 0;
     private double cumulativeSpin = 0;
     Telemetry telemetry;
 
@@ -34,7 +34,6 @@ class DriveEngine {
         back = hardwareMap.dcMotor.get("back");
         right = hardwareMap.dcMotor.get("right");
         left = hardwareMap.dcMotor.get("left");
-        theta = 0;
 
         back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -51,6 +50,9 @@ class DriveEngine {
         back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    DriveEngine() {
     }
 
     void drive(double... args) {
@@ -182,10 +184,10 @@ class DriveEngine {
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
-                    drive(deltaX / r * .2, deltaY / r * .2, spin);
+                    drive(deltaX / r * .15, deltaY / r * .15, spin);
                 }
                 else if(r > .5) {
-                    drive(deltaX / r * .1, deltaY / r * .1, spin);
+                    drive(deltaX / r * .05, deltaY / r * .05, spin);
                 }
                 else if(r <= .5){
                     stop();
@@ -268,7 +270,7 @@ class DriveEngine {
         return false;
     }
 
-    private double spinToTarget(double targetAngle)
+    double spinToTarget(double targetAngle)
     {
         telemetry.addData("current angle", spinAngle());
         double deltaAngle = targetAngle - spinAngle();
@@ -362,7 +364,7 @@ class DriveEngine {
         return distance / robotRadius; //TODO: Find radius
     }
 
-    private double[] distances()
+    double[] distances()
     {
         return new double[]{
                 back.getCurrentPosition(),

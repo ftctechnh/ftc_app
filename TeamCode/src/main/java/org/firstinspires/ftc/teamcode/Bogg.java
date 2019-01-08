@@ -24,7 +24,11 @@ public class Bogg
     Servo drop;
     Servo dServo;
 
-    double alpha = 0.5;
+    //This should give us the alpha needed to reach 95% in 1.5 seconds.
+    double averageClockTime = 2 * Math.pow(10, -4);
+    double numberOfSecondsTo95 = 1.5;
+    double alpha = 1 - Math.pow(.05, averageClockTime/numberOfSecondsTo95);
+
     double liftAlpha = .12;
     double alphaInc = 0.001;
     double xAve = 0;
@@ -122,13 +126,13 @@ public class Bogg
         return spinAve;
     }
 
-    void manualLift()
+    void manualLift(boolean up, boolean down)
     {
-        if(gamepad.y && !sensors.touchTopIsPressed())
+        if(up && !sensors.touchTopIsPressed())
         {
             lift.setPower(smoothLift(1));
         }
-        else if(gamepad.a)
+        else if(down)
         {
             if (sensors.touchBottomIsPressed())
             {
@@ -159,6 +163,14 @@ public class Bogg
             brake.setPosition(.6);
     }
 
+    void manualBrake(boolean trueG, boolean falseG)
+    {
+        if(trueG)
+            setBrake(true);
+        if(falseG)
+            setBrake(false);
+    }
+
     void rotateMobile(Direction direction)
     {
         switch (direction)
@@ -174,6 +186,7 @@ public class Bogg
                 break;
         }
     }
+
 
     void dropMarker(Direction direction)
     {
@@ -203,14 +216,14 @@ public class Bogg
         }
     }
 
-    void manualDrive(Gamepad g)
+    void manualDrive(boolean button, double x, double y)
     {
-        if(g.left_stick_button)
-            driveEngine.drive(true, smoothX(g.left_stick_x, 1.5), smoothY(-g.left_stick_y, 1.5));
+        if(button)
+            driveEngine.drive(true, smoothX(x, 1.5), smoothY(-y, 1.5));
         else
-            driveEngine.drive(false, smoothX(g.left_stick_x, 1), smoothY(-g.left_stick_y, 1));
-        telemetry.addData("gamepad x", g.left_stick_x);
-        telemetry.addData("gamepad y", g.left_stick_y);
+            driveEngine.drive(false, smoothX(x, 1), smoothY(-y, 1));
+        telemetry.addData("gamepad x", x);
+        telemetry.addData("gamepad y", y);
         telemetry.addLine("Note: y is negated");
     }
 
@@ -246,6 +259,21 @@ public class Bogg
     void updateRadius()
     {
         derivedRadius = endEffector.getRadius();
+    }
+
+    boolean dPadOrbit(boolean left, boolean right)
+    {
+        if(left )
+        {
+            driveEngine.orbit(48,0, -.3);
+            return true;
+        }
+        else if(right)
+        {
+            driveEngine.orbit(48,0, .3);
+            return true;
+        }
+        return false;
     }
 
     void spinEffector()
@@ -318,15 +346,16 @@ public class Bogg
 
     }
 
-    void manualRotate(Gamepad g)
+    boolean manualRotate(boolean button, double stick)
     {
-        if(g.right_stick_button)
-            driveEngine.rotate(-g.right_stick_x);
+        if(button)
+            driveEngine.rotate(-stick);
         else
-            driveEngine.rotate(smoothSpin(-g.right_stick_x));
+            driveEngine.rotate(smoothSpin(-stick));
 
-        telemetry.addData("gamepad spin", g.right_stick_x);
+        telemetry.addData("gamepad spin", stick);
         telemetry.addLine("Note: spin is negated");
+        return stick != 0;
     }
 
     boolean rotateToWall(double accuracy_angle)

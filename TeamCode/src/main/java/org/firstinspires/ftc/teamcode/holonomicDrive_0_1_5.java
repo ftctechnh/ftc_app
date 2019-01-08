@@ -2,11 +2,14 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="holonomicDrive AutoCorrect", group="Testing")
 public class holonomicDrive_0_1_5 extends LinearOpMode
 {
     Bogg robot;
+
+    Gamepad g1;
 
     @Override
     public void runOpMode()
@@ -14,55 +17,38 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
         robot = new Bogg(hardwareMap, gamepad1, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
         boolean rotating = false;
+        g1 = gamepad1;
         waitForStart();
 
         while (opModeIsActive())
         {
-            if(gamepad1.right_stick_x != 0 )
+            if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if we're not orbiting
             {
-                robot.manualRotate(gamepad1);
-                rotating = true;
-            }
-            else if(rotating){
-                rotating = false;
-                robot.driveEngine.resetDistances();
-            }
-            else
-            {
-                robot.manualDriveAutoCorrect(gamepad1);
-            }
-
-            if(gamepad1.dpad_up)
-            {
-                robot.setBrake(true);
-            }
-            else if(gamepad1.dpad_down)
-            {
-                robot.setBrake(false);
-            }
-
-            if(gamepad1.right_stick_x == 0 && gamepad1.left_stick_x == 0 && gamepad1.left_stick_y == 0)
-                if(gamepad1.dpad_left )
+                if(g1.right_stick_x != 0 ) //if we are rotating
                 {
-                    robot.driveEngine.orbit(48,0, -.3);
+                    robot.manualRotate(g1.right_stick_button, g1.right_stick_x);
+                    rotating = true;
                 }
-                else if(gamepad1.dpad_right)
+                else if(rotating){  //if we're not rotating, but the boolean says so
+                    rotating = false;
+                    robot.driveEngine.resetDistances(); // we start auto correcting again
+                }
+                else
                 {
-                    robot.driveEngine.orbit(48,0, .3);
+                    robot.manualDriveAutoCorrect(g1);
                 }
+            }
 
 
-            if(gamepad1.left_bumper)
-            {
+            robot.manualBrake(g1.dpad_down, g1.dpad_up);
+
+            if(g1.left_bumper)
                 robot.dropMarker(Bogg.Direction.Left);
-            }
-            else if(gamepad1.right_bumper)
-            {
+            else if(g1.right_bumper)
                 robot.dropMarker(Bogg.Direction.Right);
-            }
 
 
-            robot.manualLift();
+            robot.manualLift(g1.y, g1.a);
 
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");

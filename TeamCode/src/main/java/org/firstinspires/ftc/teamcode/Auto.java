@@ -201,14 +201,9 @@ public class Auto {
         if(getTime() < 1.5) {
             return Mode.MoveToDepot;  //time to move the sensor
         }
-        double fixedDistance = robot.sensors.getFixed();
-        double mobileDistance = robot.sensors.getMobile();
-        telemetry.addData("fixedDistance", fixedDistance);
-        telemetry.addData("mobileDistance", mobileDistance);
 
-        robot.driveEngine.drive(-iSP * .2,(4 - fixedDistance)/10.0);
 
-        if(mobileDistance < 18) {
+        if(6 < 18) {
             if(iSP == -1)
                 robot.rotateMobile(Bogg.Direction.Left);
             else
@@ -241,7 +236,7 @@ public class Auto {
 
     Mode moveToCrater()
     {
-        double fixedDistance = robot.sensors.getFixed();
+        double fixedDistance = 6;
         robot.driveEngine.drive(iSP * .2,(6 - fixedDistance)/10);
 
         if(robot.sensors.isTilted())

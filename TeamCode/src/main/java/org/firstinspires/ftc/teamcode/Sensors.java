@@ -33,15 +33,9 @@ class Sensors {
     {
         this.hardwareMap = hardwareMap;
 
-        dFixed = hardwareMap.get(DistanceSensor.class, "dFixed");
-        dMobile = hardwareMap.get(DistanceSensor.class, "dMobile");
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
 
-    }
-
-    double getFixed() {
-        return dFixed.getDistance(DistanceUnit.INCH);
     }
 
     double getMobile() {
