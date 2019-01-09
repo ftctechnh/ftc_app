@@ -18,7 +18,7 @@ public class holonomicDrive_0_4 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, gamepad2, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
         g1 = gamepad1;
         g2 = gamepad2;
@@ -53,7 +53,7 @@ public class holonomicDrive_0_4 extends LinearOpMode
             else if(g2.left_stick_button || g2.right_stick_button)
                 auto = false;
 
-            robot.manualEffect(); //we can always change the arm manually
+            robot.manualEffect(g2); //we can always change the arm manually
             if(auto)
                 robot.autoEffect(); //we only do it autonomously when auto == true
 
@@ -68,6 +68,7 @@ public class holonomicDrive_0_4 extends LinearOpMode
             telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 
             telemetry.update();
+            robot.update();
             idle();
         }
     }

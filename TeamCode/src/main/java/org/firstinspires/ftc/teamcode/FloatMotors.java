@@ -12,7 +12,7 @@ public class floatMotors extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         waitForStart();
 
         while (opModeIsActive())
@@ -32,6 +32,7 @@ public class floatMotors extends LinearOpMode
             telemetry.addData("pivot", robot.endEffector.pivot.getCurrentPosition());
             telemetry.addData("contract", robot.endEffector.contract.getCurrentPosition());
             telemetry.update();
+            robot.update();
             idle();
         }
     }

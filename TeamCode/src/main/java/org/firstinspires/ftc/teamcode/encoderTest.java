@@ -11,7 +11,7 @@ public class encoderTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         waitForStart();
 
         while (opModeIsActive())
@@ -37,6 +37,7 @@ public class encoderTest extends LinearOpMode
                 robot.driveEngine.drive(0,0);
             }
             telemetry.update();
+            robot.update();
             idle();
         }
     }

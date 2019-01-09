@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 @Autonomous(name="2: Drop and slide", group = "Testing")
 public class autonomousDrive2_DropSlide extends LinearOpMode
@@ -16,7 +13,7 @@ public class autonomousDrive2_DropSlide extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         auto = new Auto(robot, telemetry);
 
         waitForStart();
@@ -40,6 +37,7 @@ public class autonomousDrive2_DropSlide extends LinearOpMode
             // Display the current values
             telemetry.addData("mode", action);
             telemetry.update();
+            robot.update();
             idle();
         }
     }

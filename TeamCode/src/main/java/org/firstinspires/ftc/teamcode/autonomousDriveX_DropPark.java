@@ -14,7 +14,7 @@ public class autonomousDriveX_DropPark extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         auto = new Auto(robot, telemetry);
 
         waitForStart();
@@ -49,6 +49,7 @@ public class autonomousDriveX_DropPark extends LinearOpMode
             // Display the current values
             telemetry.addData("mode", action);
             telemetry.update();
+            robot.update();
             idle();
         }
     }

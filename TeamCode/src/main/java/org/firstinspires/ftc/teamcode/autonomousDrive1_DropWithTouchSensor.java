@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="1: Drop with touch sensor", group = "Testing")
 public class autonomousDrive1_DropWithTouchSensor extends LinearOpMode
@@ -15,7 +14,7 @@ public class autonomousDrive1_DropWithTouchSensor extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         auto = new Auto(robot, telemetry);
         action = Auto.Mode.Drop;
 
@@ -36,6 +35,7 @@ public class autonomousDrive1_DropWithTouchSensor extends LinearOpMode
             // Display the current values
             telemetry.addData("mode", action);
             telemetry.update();
+            robot.update();
             idle();
         }
         auto.stop();

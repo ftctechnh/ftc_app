@@ -12,7 +12,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
         waitForStart();
 
@@ -44,6 +44,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
             telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 
             telemetry.update();
+            robot.update();
             idle();
         }
     }

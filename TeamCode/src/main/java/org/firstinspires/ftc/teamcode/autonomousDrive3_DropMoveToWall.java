@@ -14,7 +14,7 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         auto = new Auto(robot, telemetry);
 
         waitForStart();
@@ -45,6 +45,7 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
             // Display the current values
             telemetry.addData("mode", action);         //put this before the things that break
             telemetry.update();
+            robot.update();
             idle();
         }
         auto.stop();

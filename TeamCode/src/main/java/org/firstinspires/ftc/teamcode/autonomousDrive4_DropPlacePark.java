@@ -1,9 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name="4: Competition", group = "Testing")
 public class autonomousDrive4_DropPlacePark extends LinearOpMode
@@ -16,7 +14,7 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         auto = new Auto(robot, telemetry);
         action = Auto.Mode.Drop;
         waitForStart();
@@ -53,6 +51,7 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
             // Display the current values
             telemetry.addData("mode:", action);
             telemetry.update();
+            robot.update();
             idle();
         }
         auto.stop();

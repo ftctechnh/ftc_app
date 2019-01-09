@@ -15,7 +15,7 @@ public class holonomicDrive_derive_alpha extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         waitForStart();
         g1 = gamepad1;
 
@@ -70,8 +70,9 @@ public class holonomicDrive_derive_alpha extends LinearOpMode
             telemetry.addData("derivedAlpha1.5: ", alpha15);
             telemetry.addData("derivedAlpha2: ", alpha2);
             telemetry.addData("derivedAlpha3: ", alpha3);
-            telemetry.addData("alpha: ", robot.getAlpha());
+            telemetry.addData("alpha: ", robot.getAlpha(1));
             telemetry.update();
+            robot.update();
             lastClockTime = clockTime;
 
             idle();

@@ -11,7 +11,7 @@ public class encoderFineTuning extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         waitForStart();
         double deltaX = 0;
         double deltaY = 0;
@@ -23,7 +23,7 @@ public class encoderFineTuning extends LinearOpMode
 
         while (opModeIsActive())
         {
-            deltaX += (double)Math.round(gamepad1.left_stick_x * 10) /20.0;
+            deltaX += (double)Math.round(gamepad1.left_stick_x * robot.averageClockTime) /20.0;
             deltaY += (double)Math.round(gamepad1.left_stick_y * 10) /20.0;
             deltaS += (double)Math.round(gamepad1.right_stick_x * 10) * Math.PI/200.0;
 
@@ -74,6 +74,7 @@ public class encoderFineTuning extends LinearOpMode
             }
 
             telemetry.update();
+            robot.update();
             idle();
         }
     }

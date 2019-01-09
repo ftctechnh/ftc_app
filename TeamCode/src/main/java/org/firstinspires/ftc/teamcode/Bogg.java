@@ -11,28 +11,26 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 public class Bogg
 {
-    Gamepad gamepad = null;
-    Gamepad gamepad2 = null;
-    HardwareMap hardwareMap;
     DriveEngine driveEngine;
     EndEffector endEffector;
-    ElapsedTime timer;
     DcMotor lift;
     Camera camera = null;
     Sensors sensors;
+    ElapsedTime timer;
     Servo brake;
     Servo drop;
     Servo dServo;
 
-    double alpha = .002;
-
     double liftAlpha = .12;
-    double alphaInc = 0.001;
     double xAve = 0;
     double yAve = 0;
     double spinAve = 0;
     double liftAve = 0;
     double raisePosition;
+    double lastClockTime = 0;
+    double lastTime = 0;
+    double averageClockTime = 0;
+    double n = 0;
 
     boolean goingUp = true;
 
@@ -48,43 +46,23 @@ public class Bogg
         Up
     }
 
-    public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
+    public Bogg(HardwareMap hardwareMap, Telemetry telemetry)
     {
-        this.gamepad = gamepad;
-        this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
         driveEngine = new DriveEngine(hardwareMap, telemetry);
         endEffector = new EndEffector(hardwareMap, telemetry);
-        timer = new ElapsedTime();
         lift  = hardwareMap.dcMotor.get("lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
         drop = hardwareMap.servo.get("drop");
         dServo = hardwareMap.get(Servo.class, "dServo");
-    }
-
-    public Bogg(HardwareMap hardwareMap, Gamepad gamepad, Gamepad gamepad2, Telemetry telemetry)
-    {
-        this.gamepad = gamepad;
-        this.gamepad2 = gamepad2;
-        this.hardwareMap = hardwareMap;
-        this.telemetry = telemetry;
-        driveEngine = new DriveEngine(hardwareMap, telemetry);
-        endEffector = new EndEffector(hardwareMap, telemetry);
         timer = new ElapsedTime();
-        lift  = hardwareMap.dcMotor.get("lift");
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        sensors = new Sensors(hardwareMap);
-        brake = hardwareMap.servo.get("brake");
-        drop = hardwareMap.servo.get("drop");
-        dServo = hardwareMap.get(Servo.class, "dServo");
     }
-
-
 
     private double smoothX(double x, double multiplier)
     {
+        double alpha = getAlpha(1);
         if(x * xAve < 0 || x == 0)
             xAve = 0;
         else
@@ -94,6 +72,7 @@ public class Bogg
 
     private double smoothY(double y, double multiplier)
     {
+        double alpha = getAlpha(1);
         if(y * yAve < 0 || y == 0)
             yAve = 0;
         else
@@ -116,6 +95,7 @@ public class Bogg
 
     private double smoothSpin(double spin)
     {
+        double alpha = getAlpha(1.5);
         if(spin * spinAve < 0 || spin == 0)
             spinAve = 0;
         else
@@ -323,25 +303,25 @@ public class Bogg
         }
     }
     
-    void manualEffect()
+    void manualEffect(Gamepad g)
     {
         //deals with the length of the arm
-        endEffector.extend(gamepad2.right_stick_x);
+        endEffector.extend(g.right_stick_x);
 
         //deals with the servos to release the minerals
-        if(gamepad2.y || gamepad2.b || gamepad2.right_bumper)
+        if(g.y || g.b || g.right_bumper)
             endEffector.open();
         else
             endEffector.close();
 
         //deals with the angle of the arm
-        raisePosition += (gamepad2.left_stick_x + gamepad2.left_stick_y) * 5 * endEffector.getAngleInDegrees();
-        if(Math.hypot(gamepad2.left_stick_x,gamepad2.left_stick_y) > 0.01)
+        raisePosition += (g.left_stick_x + g.left_stick_y) * 5 * endEffector.getAngleInDegrees();
+        if(Math.hypot(g.left_stick_x,g.left_stick_y) > 0.01)
             endEffector.raise(raisePosition);
 
-        if(gamepad2.dpad_down)
+        if(g.dpad_down)
             endEffector.lowerAllTheWay();
-        if(gamepad2.dpad_up)
+        if(g.dpad_up)
             endEffector.raise(raisePosition);
 
     }
@@ -405,7 +385,7 @@ public class Bogg
             double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
             double r = Math.hypot(driveTarget[0],driveTarget[1]);
 
-            double headingToTarget = camera.headingToTarget(location, driveTarget[0], driveTarget[0]);
+            double headingToTarget = camera.headingToTarget(location, driveTarget[0], driveTarget[1]);
 
             if(Math.abs(headingDifference) < 5 && r < .5)
                 return true;
@@ -417,21 +397,24 @@ public class Bogg
         return false;
     }
 
-
-    void incAlpha()
+    /**
+     * Should only be called once per loop
+     * @return the average time for one loop
+     */
+    void update()
     {
-        if(alpha + alphaInc<1)
-            alpha += alphaInc;
+        double t = timer.seconds();
+        double clockTime = .5 * lastClockTime + .5 * (t - lastTime); // exponential average
+        lastTime = t;
+
+        if(averageClockTime == 0)
+            averageClockTime = clockTime;
+        averageClockTime = (clockTime + n * averageClockTime) / (n+1); //cumulative average
+
     }
 
-    void decAlpha()
+    double getAlpha(double seconds)
     {
-        if(alpha - alphaInc>0)
-            alpha -= alphaInc;
-    }
-
-    double getAlpha()
-    {
-        return alpha;
+        return 1 - Math.pow(.05, averageClockTime/seconds); //reaches 95% in this many seconds
     }
 }

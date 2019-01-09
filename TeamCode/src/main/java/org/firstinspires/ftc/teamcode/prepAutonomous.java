@@ -20,7 +20,7 @@ public class prepAutonomous extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, gamepad1, telemetry);
+        robot = new Bogg(hardwareMap, telemetry);
         waitForStart();
         action = Mode.Drop;
 
@@ -56,7 +56,7 @@ public class prepAutonomous extends LinearOpMode
 
 
                 default: //if action !Drop e.g. Stop
-                    robot.driveEngine.drive(0,0); //Stop driving
+                    robot.driveEngine.stop(); //Stop driving
                     robot.lift(0); //Stop Lifting
 
             }
@@ -69,6 +69,7 @@ public class prepAutonomous extends LinearOpMode
             telemetry.addData("touch ", robot.sensors.touchBottomIsPressed());
             telemetry.addData("mode", action);
             telemetry.update();
+            robot.update();
             idle();
         }
     }
