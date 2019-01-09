@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 public class Bogg
 {
@@ -268,7 +267,7 @@ public class Bogg
         double max = Math.max(Math.abs(gDrive.left_stick_x), Math.abs(gDrive.left_stick_y));
 
         if(orbit) {
-            if (max == gDrive.left_stick_y)
+            if (max == Math.abs(gDrive.left_stick_y))
                 driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, -gDrive.left_stick_y);
             else
                 driveEngine.drive(gDrive.left_stick_x, 0);
