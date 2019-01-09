@@ -1,23 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 
 public class Auto {
     Bogg robot;
+    Camera camera;
     Telemetry telemetry;
     private ElapsedTime timer = null;
     private int iSP = -1; //initialSlopePositivity
     private double slide2distance = 34;
 
-    Auto(Bogg robot, Telemetry telemetry)
+    Auto(Bogg robot, HardwareMap hardwareMap, Telemetry telemetry)
     {
         this.robot = robot;
         robot.driveEngine.driveAtAngle(0);
         robot.dropMarker(Bogg.Direction.Up);
         this.telemetry = telemetry;
-        robot.camera = new Camera(robot.hardwareMap, telemetry);
+        camera = new Camera(hardwareMap, telemetry);
         telemetry.addLine("Wait for start");
         telemetry.update();
     }
@@ -69,7 +72,7 @@ public class Auto {
     Mode lookForMinerals()
     {
         telemetry.addLine("Looking for minerals");
-        switch(robot.camera.getGoldPosition())
+        switch(camera.getGoldPosition())
         {
             case 0:
                 goldPosition = 0;
@@ -178,8 +181,8 @@ public class Auto {
 
     Mode turnByCamera()
     {
-        if(robot.rotateToWall(2)) {
-            double[] location = robot.camera.getLocation();
+        if(rotateToWall(2)) {
+            double[] location = camera.getLocation();
             double max = Math.max(Math.abs(location[0]), Math.abs(location[1]));
             if(max == Math.abs(location[0])) {
                 iSP = -1;
@@ -258,5 +261,61 @@ public class Auto {
     private double getTime()
     {
         return timer.seconds();
+    }
+
+    boolean rotateToWall(double accuracy_angle)
+    {
+        Double wallHeading = camera.headingToWall();
+        telemetry.addData("wall heading", wallHeading);
+        if(wallHeading != null)
+        {
+            if(Math.abs(wallHeading) < accuracy_angle)
+                return true;
+            else
+            {
+                if(wallHeading > 0)
+                    robot.driveEngine.rotate(.08);
+                else
+                    robot.driveEngine.rotate(-.08);
+            }
+
+            return false;
+        }
+        return false;
+    }
+
+    boolean driveCurvyToWall()
+    {
+        double[] location = camera.getLocation();
+
+        double wallTargetX, wallTargetY;
+        double[] unitTargetLocation = new double[2];
+        if(location != null)
+        {
+            VuforiaTrackable target = null;
+            for(int i = 0; i < 4; i++)
+                if(camera.targetVisible(i))
+                    target = camera.allTrackables.get(i);
+
+            double headingDifference =  camera.headingToTarget(location);
+
+            wallTargetX = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+            wallTargetY = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
+
+            unitTargetLocation[0] = Math.signum(wallTargetX);
+            unitTargetLocation[1] = Math.signum(wallTargetY);
+            double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
+            double r = Math.hypot(driveTarget[0],driveTarget[1]);
+
+            double headingToTarget = camera.headingToTarget(location, driveTarget[0], driveTarget[1]);
+
+            if(Math.abs(headingDifference) < 5 && r < .5)
+                return true;
+            else
+            {
+                robot.driveEngine.drive(Math.sin(headingToTarget) * .05, Math.cos(headingToTarget) * .05, headingDifference / 100);
+            }
+        }
+        return false;
     }
 }

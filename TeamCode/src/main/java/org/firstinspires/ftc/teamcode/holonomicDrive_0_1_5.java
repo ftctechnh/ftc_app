@@ -35,7 +35,7 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
                 }
                 else
                 {
-                    robot.manualDriveAutoCorrect(g1);
+                    robot.manualDriveAutoCorrect(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
                 }
             }
 

@@ -14,7 +14,6 @@ public class Bogg
     DriveEngine driveEngine;
     EndEffector endEffector;
     DcMotor lift;
-    Camera camera = null;
     Sensors sensors;
     ElapsedTime timer;
     Servo brake;
@@ -344,61 +343,7 @@ public class Bogg
         return true;
     }
 
-    boolean rotateToWall(double accuracy_angle)
-    {
-        Double wallHeading = camera.headingToWall();
-        telemetry.addData("wall heading", wallHeading);
-        if(wallHeading != null)
-        {
-            if(Math.abs(wallHeading) < accuracy_angle)
-                return true;
-            else
-            {
-                if(wallHeading > 0)
-                    driveEngine.rotate(.08);
-                else
-                    driveEngine.rotate(-.08);
-            }
 
-            return false;
-        }
-        return false;
-    }
-
-    boolean driveCurvyToWall()
-    {
-        double[] location = camera.getLocation();
-
-        double wallTargetX, wallTargetY;
-        double[] unitTargetLocation = new double[2];
-        if(location != null)
-        {
-            VuforiaTrackable target = null;
-            for(int i = 0; i < 4; i++)
-                if(camera.targetVisible(i))
-                    target = camera.allTrackables.get(i);
-
-            double headingDifference =  camera.headingToTarget(location);
-
-            wallTargetX = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
-            wallTargetY = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
-
-            unitTargetLocation[0] = Math.signum(wallTargetX);
-            unitTargetLocation[1] = Math.signum(wallTargetY);
-            double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
-            double r = Math.hypot(driveTarget[0],driveTarget[1]);
-
-            double headingToTarget = camera.headingToTarget(location, driveTarget[0], driveTarget[1]);
-
-            if(Math.abs(headingDifference) < 5 && r < .5)
-                return true;
-            else
-            {
-                driveEngine.drive(Math.sin(headingToTarget) * .05, Math.cos(headingToTarget) * .05, headingDifference / 100);
-            }
-        }
-        return false;
-    }
 
     /**
      * Should only be called once per loop

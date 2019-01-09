@@ -15,7 +15,7 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, telemetry);
-        auto = new Auto(robot, telemetry);
+        auto = new Auto(robot, hardwareMap, telemetry);
 
         waitForStart();
         action = Auto.Mode.Drop;

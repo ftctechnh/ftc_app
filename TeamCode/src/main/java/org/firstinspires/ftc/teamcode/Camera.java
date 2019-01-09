@@ -29,8 +29,6 @@
 
 
 package org.firstinspires.ftc.teamcode;
-import android.net.MacAddress;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -465,13 +463,6 @@ public class Camera{
         }
     }
 
-    double[] getOrbit(double[] location, double target_x, double target_y, boolean CounterClockwise)
-    {
-        double counterClockwise = CounterClockwise ? 1 : -1;
-        double headingToTarget = headingToTarget(location, target_x, target_y);
-        double driveHeading = headingToTarget + counterClockwise * Math.PI / 2;
-        return new double[]{1 * Math.sin(driveHeading), 1 * Math.cos(driveHeading)};
-    }
 
     int getGoldPosition()
     {

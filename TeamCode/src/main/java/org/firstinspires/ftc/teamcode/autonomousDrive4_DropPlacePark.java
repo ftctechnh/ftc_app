@@ -15,7 +15,7 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, telemetry);
-        auto = new Auto(robot, telemetry);
+        auto = new Auto(robot, hardwareMap, telemetry);
         action = Auto.Mode.Drop;
         waitForStart();
 

@@ -15,7 +15,7 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, telemetry);
-        auto = new Auto(robot, telemetry);
+        auto = new Auto(robot, hardwareMap, telemetry);
         action = Auto.Mode.Drop;
         waitForStart();
 
@@ -27,7 +27,7 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
                     action = auto.drop();
                     break;
                 case LookForMinerals:
-                    if(robot.camera.canUseTFOD) {
+                    if(auto.camera.canUseTFOD) {
                         action = auto.lookForMinerals();
                         break;
                     }
@@ -35,7 +35,7 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
                     action = auto.slide1();
                     break;
                 case PushGold:
-                    if(robot.camera.canUseTFOD)
+                    if(auto.camera.canUseTFOD)
                         action = auto.pushGold();
                     else
                         action = auto.pushGoldNoCamera();
