@@ -23,9 +23,10 @@ public class encoderFineTuning extends LinearOpMode
 
         while (opModeIsActive())
         {
-            deltaX += (double)Math.round(gamepad1.left_stick_x * robot.averageClockTime) /20.0;
-            deltaY += (double)Math.round(gamepad1.left_stick_y * 10) /20.0;
-            deltaS += (double)Math.round(gamepad1.right_stick_x * 10) * Math.PI/200.0;
+            double clockTime = robot.averageClockTime;
+            deltaX += gamepad1.left_stick_x * clockTime * 6; //6 inches per second
+            deltaY -= gamepad1.left_stick_y * clockTime * 6;
+            deltaS -= gamepad1.right_stick_x * clockTime /4 * Math.PI;
 
             telemetry.addData("wheel diameter", DriveEngine.wheelDiameter);
             telemetry.addData("robot radius", DriveEngine.robotRadius);
@@ -73,10 +74,18 @@ public class encoderFineTuning extends LinearOpMode
                 DriveEngine.robotRadius = savedRadius;
             }
 
+            if(gamepad1.start)
+            {
+                deltaX = Math.round(deltaX);
+                deltaY = Math.round(deltaY);
+                deltaS = Math.round(deltaS);
+            }
+
             telemetry.update();
             robot.update();
             idle();
         }
     }
+
 }
 
