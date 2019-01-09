@@ -249,6 +249,8 @@ public class Auto4Variations extends LinearOpMode {
                         newState(State.Stop);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.moveForward(0.5, 0.6);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveBackward(0.5, 0.6);
                         newState(State.Stop);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 35);
@@ -261,6 +263,15 @@ public class Auto4Variations extends LinearOpMode {
                     break;
 
                 case Sample_to_Depot:
+                    telemetry.addLine("Move to depot");
+                    telemetry.update();
+                    Drive.turn2Angle(TURN_SPEED, -90);
+                    Drive.TimeDelay(0.15);
+                    Drive.moveForward(0.5, 1.3);
+                    Drive.TimeDelay(0.15);
+                    Drive.turn2Angle(TURN_SPEED, -135);
+                    Drive.TimeDelay(0.15);
+                    Drive.moveForward(0.5, 1.5);
 
                     break;
 
