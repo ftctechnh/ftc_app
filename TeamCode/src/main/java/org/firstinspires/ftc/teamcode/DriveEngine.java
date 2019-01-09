@@ -183,7 +183,6 @@ class DriveEngine {
                 telemetry.addData("currentX", xDist());
                 telemetry.addData("targetY", yDist());
                 telemetry.addData("radius", r);
-                telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
                     drive(deltaX / r * .15, deltaY / r * .15, spin);
@@ -192,10 +191,10 @@ class DriveEngine {
                     drive(deltaX * .15 / 2, deltaY * .15 /2, spin);
                 }
                 else if(r <= .5){
-                    stop();
                     if(continuous)
                         drive(deltaX, deltaY, spin);
                     else {
+                        stop();
                         checkpoint.set(c, true);
                         resetDistances();
                     }
