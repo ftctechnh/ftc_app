@@ -136,9 +136,8 @@ class DriveEngine {
     }
     boolean moveOnPath(boolean continuous, double[] ... args)
     {
-        if(checkpoint.size() == 0){
-            for (int i = 0; i < args.length; i++)
-                checkpoint.add(false);
+        if(checkpoint.isEmpty()){
+            for (double[] arg : args) checkpoint.add(false);
 
             resetDistances();
         }
@@ -163,7 +162,8 @@ class DriveEngine {
             case 1:
                 spin = spinToTarget(args[c][0]);
                 rotate(spin);
-                if(Math.abs(spin) -.02 < 1 * Math.PI /180) {
+                if(Math.abs(spin) < 1 * Math.PI /180) {
+                    stop();
                     checkpoint.set(c, true);
                     resetDistances();
                 }
@@ -180,14 +180,16 @@ class DriveEngine {
 
                 telemetry.addData("targetX", point[0]);
                 telemetry.addData("targetY", point[1]);
+                telemetry.addData("currentX", xDist());
+                telemetry.addData("targetY", yDist());
                 telemetry.addData("radius", r);
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
                     drive(deltaX / r * .15, deltaY / r * .15, spin);
                 }
-                else if(r > .5) {
-                    drive(deltaX / r * .05, deltaY / r * .05, spin);
+                else if(r > 2){
+                    drive(deltaX * .15 / 2, deltaY * .15 /2, spin);
                 }
                 else if(r <= .5){
                     stop();
@@ -233,7 +235,7 @@ class DriveEngine {
             case 1:
                 spin = spinToTarget(cumulativeCheckpoints[2] + args[c][0]);
                 rotate(spin);
-                if(Math.abs(spin) -.02 < 1/2 * (2) * Math.PI /180) { //the two is in degrees, the rest is formula
+                if(Math.abs(spin) < 1 * Math.PI /180) { //the two is in degrees, the rest is formula
                     cumulativeCheckpoints[2] += args[c][0];
                     cumulativeSpin -= args[c][0];
                     checkpoint.set(c, true);
