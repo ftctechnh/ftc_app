@@ -21,6 +21,7 @@ public class Bogg
     Servo drop;
     Servo dServo;
 
+    double averageClockTime = 0;
     double liftAlpha = .12;
     double xAve = 0;
     double yAve = 0;
@@ -29,7 +30,6 @@ public class Bogg
     double raisePosition;
     double lastClockTime = 0;
     double lastTime = 0;
-    double averageClockTime = 0;
     double n = 0;
 
     boolean goingUp = true;
@@ -62,21 +62,21 @@ public class Bogg
 
     private double smoothX(double x, double multiplier)
     {
-        double alpha = getAlpha(1);
+        double alpha = getAlpha(1 / multiplier);
         if(x * xAve < 0 || x == 0)
             xAve = 0;
         else
-            xAve = alpha * multiplier * x + (1- alpha * multiplier) * xAve;
+            xAve = alpha * x + (1- alpha) * xAve;
         return xAve;
     }
 
     private double smoothY(double y, double multiplier)
     {
-        double alpha = getAlpha(1);
+        double alpha = getAlpha(1 / multiplier);
         if(y * yAve < 0 || y == 0)
             yAve = 0;
         else
-            yAve = alpha * multiplier * y + (1-alpha * multiplier) * yAve;
+            yAve = alpha * y + (1-alpha) * yAve;
         return yAve;
     }
 
@@ -195,8 +195,8 @@ public class Bogg
 
     void manualDrive(boolean op, double x, double y)
     {
-        double leftX = smoothX(x, op? 1.5:1);
-        double leftY = smoothY(-y, op? 1.5:1);
+        double leftX = smoothX(x, op? 4:1);
+        double leftY = smoothY(-y, op? 4:1);
         double spin = 0;
 
         telemetry.addData("gamepad x", x);
@@ -208,23 +208,26 @@ public class Bogg
     }
 
     private double cumulativeCorrection;
-    void manualDriveAutoCorrect(Gamepad g)
+    void manualDriveAutoCorrect(boolean op, double x, double y)
     {
-        boolean op = g.left_stick_button;
-        driveEngine.drive(op, smoothX(g.left_stick_x, op? 1.5:1), smoothY(g.left_stick_y, op? 1.5:1), driveEngine.spinToZero());
+        double leftX = smoothX(x, op? 4:1);
+        double leftY = smoothY(-y, op? 4:1);
+        double spin = driveEngine.spinToZero();
+        driveEngine.drive(op, leftX, leftY, spin);
+
         cumulativeCorrection += driveEngine.spinToZero();
 
         telemetry.addData("cumulative correction", cumulativeCorrection);
-        telemetry.addData("gamepad x", g.left_stick_x);
-        telemetry.addData("gamepad y", g.left_stick_y);
+        telemetry.addData("gamepad x", x);
+        telemetry.addData("gamepad y", y);
         telemetry.addLine("Note: y is negated");
     }
 
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
     {
         boolean op = gDrive.left_stick_button;
-        double leftX = smoothX(gDrive.left_stick_x, op? 1.5:1);
-        double leftY = smoothY(-gDrive.left_stick_y, op? 1.5:1);
+        double leftX = smoothX(gDrive.left_stick_x, op? 4:1);
+        double leftY = smoothY(-gDrive.left_stick_y, op? 4:1);
         double spin = smoothSpin(-gRotate.right_stick_x/2);
 
         telemetry.addData("gamepad x", gDrive.left_stick_x);
