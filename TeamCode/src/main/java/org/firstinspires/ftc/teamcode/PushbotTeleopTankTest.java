@@ -102,9 +102,9 @@ public class PushbotTeleopTankTest extends OpMode{
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = gamepad1.left_stick_y;
+        left = (-gamepad1.left_stick_y)/2;
         //left = 0.0;
-        right =-gamepad1.right_stick_y;
+        right =(gamepad1.right_stick_y)/2;
 
         robot.top_left.setPower(right);
         robot.bot_left.setPower(right);
@@ -116,24 +116,25 @@ public class PushbotTeleopTankTest extends OpMode{
         // Move both servos to new position.  Assume servos are mirror image of each other.
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-
+/*
         if (gamepad1.y) {
             telemetry.addData("set", "set");
-            robot.intake_left.setPosition(0.70);
+            //robot.sweeper.setPower(1);
         }
 
         else if (gamepad1.a)
-            robot.intake_left.setPosition(0.0);
-        /*
+       //     robot.sweeper.setPower(-1);
         else
-            robot.leftArm.setPower(0.0);
-        if (gamepad1.x)
-            robot.sweeper.setPower(1);
-        else if (gamepad1.b)
-            robot.sweeper.setPower(-1);
-        else
-            robot.sweeper.setPower(0.0);
-            */
+         //   robot.sweeper.setPower(0.0);
+        if(gamepad1.x){
+           // robot.lifter.setPower(0.5);
+        }
+        else if(gamepad1.b){
+            robot.lifter.setPower(-0.5);
+        }
+        else{
+            robot.lifter.setPower(0);
+        }
         // Send telemetry message to signify robot running;
         /*telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);

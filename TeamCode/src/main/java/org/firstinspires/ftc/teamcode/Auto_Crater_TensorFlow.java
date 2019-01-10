@@ -28,7 +28,16 @@
  */
 
 package org.firstinspires.ftc.teamcode;
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.util.List;
+import org.firstinspires.ftc.teamcode.ConceptTensorFlowObjectDetection;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,38 +46,23 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwarePushbotdemo;
 import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
-import org.firstinspires.ftc.teamcode.ConceptTensorFlowObjectDetection;
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-/**
- * This file illustrates the concept of driving a path based on time.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
-@Autonomous(name="Pushbot: Auto Facing Crater", group="Pushbot")
+
+@Autonomous(name="Pushbot: Auto Facing Crater With TensorFlow", group="Pushbot")
 //@Disabled
-public class Auto_Facing_Depot extends LinearOpMode {
+public class Auto_Crater_TensorFlow extends LinearOpMode {
 
     /* Declare OpMode members. */
     DriveBaseHardwareMap robot       = new DriveBaseHardwareMap();
     private ElapsedTime     runtime = new ElapsedTime();
-
+    private static final String VUFORIA_KEY = "ASr8vlr/////AAABmQLvbOpFkkU9uYwJWNx5o2Antqe3VGKoedUKq3jObB/CKqlUQVEt/vJFkLrOinRFu+wKPJJx1LZe8vYwTUNhYX0/ygb2Oukz3sgnh3k0TMAWBL0gJXnlaw2JzGzwXMy7kL4K1EUdIoWKJgyMSDkWDeNa9JXMelIkU0mgPhQ1PpSqfDiFWcIpalRHVDMF+lR7wR67jJjt7sUWe3TPc2RoUZI9Ratv22wKzXGZTWUEHcvPIkJRyZjjXzzWper4e7gVhJBLEtZA/0U5Nqlasyl0A39AzatrIkCAa16P3J8Z0KKtza1YSKZRYc/Sz022CaSqCtgtG1jq5oK14I2JjQZIufdNLNc9uaXz3qN08jRaxujJ";
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
     static final double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
     static final double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
     static final double     WHEEL_DIAMETER_INCHES   = 4.5 ;     // For figuring circumference
@@ -104,26 +98,69 @@ public class Auto_Facing_Depot extends LinearOpMode {
         robot.top_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bot_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.top_left.getCurrentPosition(),
-                robot.top_right.getCurrentPosition(),
-                robot.bot_left.getCurrentPosition(),
-                robot.bot_right.getCurrentPosition(),
+        initVuforia();
 
-                telemetry.update());
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
 
-        // Wait for the game to start (driver presses PLAY)
+        /** Wait for the game to begin */
+        telemetry.addData(">", "Press Play to start tracking");
+        telemetry.update();
         waitForStart();
-        encoderDrive(DRIVE_SPEED, 10, -10, 5.0);
-        encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
-        encoderDrive(DRIVE_SPEED, -20,20,5.0 );
-        encoderDrive(DRIVE_SPEED, -60,-60,5.0 );
-        robot.marker.setPosition(-0.5);
-        sleep(1000);
-        robot.marker.setPosition(0.5);
-        sleep(500);
-        encoderDrive(DRIVE_SPEED, 87, 87, 5.0);
+        telemetry.addData(">", "started");
+        if (opModeIsActive()) {
+            /** Activate Tensor Flow Object Detection. */
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() == 3) {
+                        int goldMineralX = -1;
+                        int silverMineral1X = -1;
+                        int silverMineral2X = -1;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                goldMineralX = (int) recognition.getLeft();
+                            } else if (silverMineral1X == -1) {
+                                silverMineral1X = (int) recognition.getLeft();
+                            } else {
+                                silverMineral2X = (int) recognition.getLeft();
+                            }
+                        }
+                        if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                            if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                                telemetry.addData("Gold Mineral Position", "Left");
+                            } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                                telemetry.addData("Gold Mineral Position", "Right");
+                            } else {
+                                telemetry.addData("Gold Mineral Position", "Center");
+                            }
+                        }
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+        sleep(5000);
+
+
+
+
+
+        //encoderDrive(DRIVE_SPEED, -8.75, 8.75, 5.0);
+        //encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
+        //encoderDrive(DRIVE_SPEED, -16,16,5.0 );
+        //encoderDrive(DRIVE_SPEED, 60,60,5.0 );
+        //robot.intake_left.setPosition(0.0);
+        //sleep(1000);
+        //robot.intake_left.setPosition(0.70);
+        //sleep(500);
+        //encoderDrive(DRIVE_SPEED, -87, -87, 5.0);
 
 
     }
@@ -151,15 +188,15 @@ public class Auto_Facing_Depot extends LinearOpMode {
             robot.top_right.setTargetPosition(newTopRightTarget);
             robot.bot_right.setTargetPosition(newBotRightTarget);
 
-            telemetry.addData( "Start encoderDrive leftInches:", leftInches );
-            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
-            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
-            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
-            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
-            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
-            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
-            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
-            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+            //  telemetry.addData( "Start encoderDrive leftInches:", leftInches );
+            //telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            //telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            //telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            //telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            //telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            //telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            //telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            //telemetry.addData("TopRightBusy",robot.top_right.isBusy());
 
             //robot.leftDrive.getCurrentPosition(),
             telemetry.update();
@@ -195,15 +232,15 @@ public class Auto_Facing_Depot extends LinearOpMode {
                 //telemetry.addData("Path2", "Running ");
 
             }
-            telemetry.addData( "After while leftInches:", leftInches );
-            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
-            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
-            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
-            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
-            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
-            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
-            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
-            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+            //telemetry.addData( "After while leftInches:", leftInches );
+            //telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            //telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            //telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            //telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            //telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            //telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            //telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            //telemetry.addData("TopRightBusy",robot.top_right.isBusy());
 
             //robot.leftDrive.getCurrentPosition(),
             telemetry.update();
@@ -226,5 +263,25 @@ public class Auto_Facing_Depot extends LinearOpMode {
             sleep(500);   // optional pause after each move
         }
     }
+    private void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
+    private void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
 }

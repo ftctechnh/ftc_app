@@ -48,28 +48,9 @@ import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-/**
- * This file illustrates the concept of driving a path based on time.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
-@Autonomous(name="Pushbot: Auto Facing Crater", group="Pushbot")
+
+@Autonomous(name="Pushbot: Auto Facing Depot", group="Pushbot")
 //@Disabled
 public class Auto_Facing_Crater extends LinearOpMode {
 
@@ -112,28 +93,18 @@ public class Auto_Facing_Crater extends LinearOpMode {
         robot.top_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bot_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful Encoder reset
-        //telemetry.addData("Path0", "Starting at %7d :%7d",
-                //robot.top_left.getCurrentPosition(),
-                //robot.top_right.getCurrentPosition(),
-                //robot.bot_left.getCurrentPosition(),
-                //robot.bot_right.getCurrentPosition(),
 
-                //telemetry.update();
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
 
         encoderDrive(DRIVE_SPEED, -8.75, 8.75, 5.0);
-        //ConceptTensorFlowObjectDetection TensorTime = new ConceptTensorFlowObjectDetection();
-        //TensorTime.runTensorFlow();
         encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
-        encoderDrive(DRIVE_SPEED, -16,16,5.0 );
-        encoderDrive(DRIVE_SPEED, 60,60,5.0 );
-        robot.intake_left.setPosition(0.0);
+        encoderDrive(DRIVE_SPEED, -20,20,5.0 );
+        encoderDrive(DRIVE_SPEED, -40,-40,5.0 );
+        robot.marker.setPosition(-0.5);
         sleep(1000);
-        robot.intake_left.setPosition(0.70);
+        robot.marker.setPosition(0.5);
         sleep(500);
-        encoderDrive(DRIVE_SPEED, -87, -87, 5.0);
+        encoderDrive(DRIVE_SPEED, 87, 87, 5.0);
 
 
     }
