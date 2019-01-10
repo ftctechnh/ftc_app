@@ -14,7 +14,10 @@ class EndEffector {
     static final double inPerTicks = inPerRev / ticksPerRev;
     private static double degreesPerRev = 360;
     static final double degreesPerTicks = degreesPerRev / ticksPerRev;
+    static final double ticksPerDegree = 1 / degreesPerTicks;
     static final double radiansPerTicks = 2*Math.PI / ticksPerRev;
+    static final double ticksPerRadian = 1 / radiansPerTicks;
+    static final double gearRatio = 125/15;
 
     DcMotor pivot;
     DcMotor contract;
@@ -24,6 +27,7 @@ class EndEffector {
     Telemetry telemetry;
 
     double length;
+    int pivotTicks = 0;
 
     EndEffector(HardwareMap hardwareMap, Telemetry telemetry)
     {
@@ -55,18 +59,17 @@ class EndEffector {
 //        blocks.setPosition(0);
     }
 
-    boolean raise(double raisePosition)
+    boolean isUp()
     {
         pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot.setTargetPosition(300);
-        return pivot.getCurrentPosition() > 250; //open before we reach the lander
+        return pivot.getCurrentPosition() > pivotTicks - 100; //open before we reach the lander
 
     }
-    boolean lowerAllTheWay()
+    boolean isDown()
     {
         pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         pivot.setTargetPosition(0);
-        return pivot.getCurrentPosition() < 10;
+        return pivot.getCurrentPosition() < 100;
     }
 
     void spin(double power)
@@ -86,10 +89,19 @@ class EndEffector {
         contract.setTargetPosition((int)Math.round(length * inPerTicks));
     }
 
-    void moveToLength()
+    void moveToPosition(double x, double z)
     {
-        contract.setTargetPosition((int)Math.round(length * inPerTicks));
+        moveToLength(Math.hypot(x,z));
+        double radians = Math.atan2(z,x);
+        pivotTicks = (int) (radians * ticksPerRadian * gearRatio);
+        pivot.setTargetPosition(pivotTicks);
     }
+
+    void pivot(int position)
+    {
+        pivot.setTargetPosition((int)(position * ticksPerDegree * gearRatio));
+    }
+
     
     double getRadius()
     {
@@ -98,11 +110,11 @@ class EndEffector {
 
     double getAngle()
     {
-        return pivot.getCurrentPosition() * radiansPerTicks;
+        return pivot.getCurrentPosition() * radiansPerTicks / gearRatio;
     }
 
     double getAngleInDegrees()
     {
-        return pivot.getCurrentPosition() * degreesPerTicks;
+        return pivot.getCurrentPosition() * degreesPerTicks / gearRatio;
     }
 }
