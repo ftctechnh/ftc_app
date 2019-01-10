@@ -130,7 +130,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
     }
 
     public double getControllerDir() {
-        double controllerAngle = Math.atan2(controller.driveStickY(), controller.driveStickX()) + Math.PI / 2;
+        double controllerAngle = Math.atan2(controller.driveStickY(), -controller.driveStickX()) + Math.PI / 2;
         controllerAngle = Math.round(controllerAngle / HEADING_INTERVAL) * HEADING_INTERVAL;
 
         if (fieldCentric) {
