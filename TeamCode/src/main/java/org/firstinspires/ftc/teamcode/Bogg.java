@@ -264,10 +264,12 @@ public class Bogg
 
     void manualDriveVarOrbit(Gamepad gDrive, Gamepad gRotate, boolean orbit)
     {
-        double max = Math.max(Math.abs(gDrive.left_stick_x), Math.abs(gDrive.left_stick_y));
+        double y = gDrive.left_stick_y;
+        double x = gDrive.left_stick_x;
+        double max = Math.max(Math.abs(x), Math.abs(y));
 
         if(orbit) {
-            if (max == Math.abs(gDrive.left_stick_y))
+            if (max == Math.abs(y))
                 driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, -gDrive.left_stick_y);
             else
                 driveEngine.drive(gDrive.left_stick_x, 0);
@@ -278,10 +280,14 @@ public class Bogg
     
     void autoEffect()
     {
-        endEffector.moveToLength(); //we want to keep the arm at a fixed length
+        double x = derivedRadius + driveEngine.xDist();
+        double z = goingUp? 33 : 0;
+
+        endEffector.moveToPosition(x, z);
+
         if(goingUp)
         {
-            if(endEffector.raise(raisePosition))
+            if(endEffector.isUp())
             {
                 if(timer.seconds() < 1)
                     endEffector.open();
@@ -294,7 +300,7 @@ public class Bogg
         else //if going down
         {
             endEffector.close();
-            if(endEffector.lowerAllTheWay())
+            if(endEffector.isDown())
             {
                 if(timer.seconds() > 2)
                     goingUp = true;
@@ -316,14 +322,18 @@ public class Bogg
             endEffector.close();
 
         //deals with the angle of the arm
-        raisePosition += (g.left_stick_x + g.left_stick_y) * 5 * endEffector.getAngleInDegrees();
-        if(Math.hypot(g.left_stick_x,g.left_stick_y) > 0.01)
-            endEffector.raise(raisePosition);
+        raisePosition += (g.left_stick_x + g.left_stick_y) * 5 * endEffector.getAngleInDegrees()
+                * averageClockTime * EndEffector.gearRatio;
+
+        if(Math.hypot(g.left_stick_x,g.left_stick_y) > 0)
+        {
+            endEffector.pivot((int) raisePosition);
+        }
 
         if(g.dpad_down)
-            endEffector.lowerAllTheWay();
+            endEffector.pivot(0);
         if(g.dpad_up)
-            endEffector.raise(raisePosition);
+            endEffector.pivot((int)raisePosition);
 
     }
 
