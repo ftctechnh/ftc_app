@@ -138,7 +138,6 @@ class DriveEngine {
     {
         if(checkpoint.isEmpty()){
             for (double[] arg : args) checkpoint.add(false);
-
             resetDistances();
         }
 
@@ -208,10 +207,8 @@ class DriveEngine {
 
     boolean moveOnCumulativePath(double[] ... args)
     {
-        if(checkpoint.size() == 0){
-            for (int i = 0; i < args.length; i++)
-                checkpoint.add(false);
-
+        if(checkpoint.isEmpty()){
+            for (double[] arg : args) checkpoint.add(false);
             resetDistances();
         }
 
@@ -234,7 +231,8 @@ class DriveEngine {
             case 1:
                 spin = spinToTarget(cumulativeCheckpoints[2] + args[c][0]);
                 rotate(spin);
-                if(Math.abs(spin) < 1 * Math.PI /180) { //the two is in degrees, the rest is formula
+                if(Math.abs(spin) < 1 * Math.PI /180) {
+                    stop();
                     cumulativeCheckpoints[2] += args[c][0];
                     cumulativeSpin -= args[c][0];
                     checkpoint.set(c, true);
@@ -256,10 +254,10 @@ class DriveEngine {
                 telemetry.addData("error correctability", cumulativeSpin);
 
                 if(r > 4) {
-                    drive( deltaX / r * .2, deltaY / r * .2, spin);
+                    drive(deltaX / r * .15, deltaY / r * .15, spin);
                 }
-                else if(r > .5) {
-                    drive(deltaX / r * .1, deltaY / r * .1, spin);
+                else if(r > 2){
+                    drive(deltaX * .15 / 2, deltaY * .15 /2, spin);
                 }
                 else if(r <= .5){
                     cumulativeCheckpoints[0] += args[c][0];

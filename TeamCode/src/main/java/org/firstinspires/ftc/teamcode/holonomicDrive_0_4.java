@@ -35,7 +35,10 @@ public class holonomicDrive_0_4 extends LinearOpMode
 
             robot.manualDriveVarOrbit(g1, g1, orbit);
 
-            robot.manualBrake(g1.dpad_down, g1.dpad_up);
+            if(g1.dpad_down)
+                robot.setBrake(Bogg.Direction.On);
+            else if(g1.dpad_up)
+                robot.setBrake(Bogg.Direction.Off);
 
             if(g1.left_bumper)
                 robot.dropMarker(Bogg.Direction.Left);
@@ -53,7 +56,8 @@ public class holonomicDrive_0_4 extends LinearOpMode
             else if(g2.left_stick_button || g2.right_stick_button)
                 auto = false;
 
-            robot.manualEffect(g2); //we can always change the arm manually
+            if(robot.manualEffect(g2)) //we can always change the arm manually
+                auto = false;
             if(auto)
                 robot.autoEffect(); //we only do it autonomously when auto == true
 

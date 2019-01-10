@@ -31,6 +31,7 @@ public class Bogg
     double n = 0;
 
     boolean goingUp = true;
+    boolean rotating = false;
 
 
     Telemetry telemetry;
@@ -41,7 +42,9 @@ public class Bogg
         Straight,
         Right,
         Down,
-        Up
+        Up,
+        On,
+        Off
     }
 
     public Bogg(HardwareMap hardwareMap, Telemetry telemetry)
@@ -130,20 +133,15 @@ public class Bogg
             lift.setPower(smoothLift(0));
     }
 
-    void setBrake(boolean on)
+    void setBrake(Direction d)
     {
-        if(on)
-            brake.setPosition(.5);
-        else //off
-            brake.setPosition(.6);
-    }
-
-    void manualBrake(boolean trueG, boolean falseG)
-    {
-        if(trueG)
-            setBrake(true);
-        if(falseG)
-            setBrake(false);
+        switch (d) {
+            case On:
+                brake.setPosition(.5);
+                break;
+            case Off:
+                brake.setPosition(.6);
+        }
     }
 
     void rotateMobile(Direction direction)
@@ -236,6 +234,27 @@ public class Bogg
         driveEngine.drive(op, leftX, leftY, spin);
     }
 
+    boolean manualRotate(boolean button, double stick)
+    {
+        if(stick == 0) {  //if we're not rotating
+            if(rotating){  //but if the boolean says we are
+                rotating = false;
+                driveEngine.resetDistances(); //resets the distances after rotating so we can auto-correct
+            }
+            return false;
+        }
+        rotating = true;
+
+        if(button)
+            driveEngine.rotate(-stick);
+        else
+            driveEngine.rotate(smoothSpin(-stick));
+
+        telemetry.addData("gamepad spin", stick);
+        telemetry.addLine("Note: spin is negated");
+        return true;
+    }
+
     private double derivedRadius = 12;
     void updateRadius()
     {
@@ -310,7 +329,7 @@ public class Bogg
         }
     }
     
-    void manualEffect(Gamepad g)
+    boolean manualEffect(Gamepad g)
     {
         //deals with the length of the arm
         endEffector.extend(g.right_stick_x);
@@ -335,22 +354,10 @@ public class Bogg
         if(g.dpad_up)
             endEffector.pivot((int)raisePosition);
 
+        return Math.abs(g.right_stick_x) != 0 || g.y || g.b || g.right_bumper || g.dpad_down || g.dpad_up ||
+                Math.hypot(g.left_stick_x, g.left_stick_y) > 0;
     }
 
-    boolean manualRotate(boolean button, double stick)
-    {
-        if(stick == 0)
-            return false;
-
-        if(button)
-            driveEngine.rotate(-stick);
-        else
-            driveEngine.rotate(smoothSpin(-stick));
-
-        telemetry.addData("gamepad spin", stick);
-        telemetry.addLine("Note: spin is negated");
-        return true;
-    }
 
 
 

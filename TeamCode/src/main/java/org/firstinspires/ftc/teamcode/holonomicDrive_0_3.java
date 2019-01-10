@@ -26,7 +26,10 @@ public class holonomicDrive_0_3 extends LinearOpMode
             if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if not orbiting
                 robot.manualCurvy(g1, g2);
 
-            robot.manualBrake(g1.dpad_down, g1.dpad_up);
+            if(g1.dpad_down)
+                robot.setBrake(Bogg.Direction.On);
+            else if(g1.dpad_up)
+                robot.setBrake(Bogg.Direction.Off);
 
             if(g1.left_bumper)
             {

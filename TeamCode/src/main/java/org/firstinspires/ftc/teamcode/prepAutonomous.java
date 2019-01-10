@@ -44,7 +44,7 @@ public class prepAutonomous extends LinearOpMode
                     }
                     else if(t < 7)
                     {
-                        robot.setBrake(true);
+                        robot.setBrake(Bogg.Direction.On);
                     }
                     else if(t < 9) //wait for brake to engage
                     {

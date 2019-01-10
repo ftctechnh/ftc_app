@@ -51,7 +51,7 @@ public class Auto {
             telemetry.addData("time", getTime());
             if (!robot.sensors.touchTopIsPressed()) //helps with testing
                 robot.lift(-1); //pull while we
-            robot.setBrake(false); //disengage the brake
+            robot.setBrake(Bogg.Direction.Off); //disengage the brake
         } else if (!robot.sensors.touchTopIsPressed()) //if the robot is still off the ground
         {
             telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());

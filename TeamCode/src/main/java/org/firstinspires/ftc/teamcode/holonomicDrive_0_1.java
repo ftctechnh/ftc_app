@@ -30,7 +30,10 @@ public class holonomicDrive_0_1 extends LinearOpMode
                 }
             }
 
-            robot.manualBrake(g1.dpad_down, g1.dpad_up);
+            if(g1.dpad_down)
+                robot.setBrake(Bogg.Direction.On);
+            else if(g1.dpad_up)
+                robot.setBrake(Bogg.Direction.Off);
 
 
             if(g1.left_bumper)

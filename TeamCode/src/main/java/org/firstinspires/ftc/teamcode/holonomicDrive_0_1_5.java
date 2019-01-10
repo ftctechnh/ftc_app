@@ -24,23 +24,17 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
         {
             if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if we're not orbiting
             {
-                if(g1.right_stick_x != 0 ) //if we are rotating
-                {
-                    robot.manualRotate(g1.right_stick_button, g1.right_stick_x);
-                    rotating = true;
-                }
-                else if(rotating){  //if we're not rotating, but the boolean says so
-                    rotating = false;
-                    robot.driveEngine.resetDistances(); // we start auto correcting again
-                }
-                else
+                if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
                 {
                     robot.manualDriveAutoCorrect(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
                 }
             }
 
 
-            robot.manualBrake(g1.dpad_down, g1.dpad_up);
+            if(g1.dpad_down)
+                robot.setBrake(Bogg.Direction.On);
+            else if(g1.dpad_up)
+                robot.setBrake(Bogg.Direction.Off);
 
             if(g1.left_bumper)
                 robot.dropMarker(Bogg.Direction.Left);
