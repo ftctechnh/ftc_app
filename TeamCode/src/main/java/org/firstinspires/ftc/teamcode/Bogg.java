@@ -236,7 +236,7 @@ public class Bogg
         driveEngine.drive(op, leftX, leftY, spin);
     }
 
-    private double derivedRadius = 48;
+    private double derivedRadius = 12;
     void updateRadius()
     {
         derivedRadius = endEffector.getRadius();

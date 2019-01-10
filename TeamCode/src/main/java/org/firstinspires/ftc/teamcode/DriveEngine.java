@@ -192,10 +192,10 @@ class DriveEngine {
                 }
                 else if(r <= .5){
                     if(continuous)
-                        drive(deltaX, deltaY, spin);
+                        drive(deltaX * .15/2, deltaY * .15/2, spin);
                     else {
                         stop();
-                        checkpoint.set(c, true);
+                        this.checkpoint.set(c, true);
                         resetDistances();
                     }
                 }
@@ -378,7 +378,7 @@ class DriveEngine {
         double sum = 0;
         for(int i = 0; i < distances.length; i++)
         {
-            sum += distances[i] + coefficients[i];
+            sum += distances[i] * coefficients[i];
         }
         return sum;
     }
