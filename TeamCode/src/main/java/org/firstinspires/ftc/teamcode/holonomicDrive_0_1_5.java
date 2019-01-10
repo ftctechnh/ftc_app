@@ -16,7 +16,6 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
     {
         robot = new Bogg(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
-        boolean rotating = false;
         g1 = gamepad1;
         waitForStart();
 

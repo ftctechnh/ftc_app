@@ -206,7 +206,7 @@ public class Auto {
         }
 
 
-        if(6 < 18) {
+        if(robot.driveEngine.moveOnPath(new double[]{-iSP * 48})) {
             if(iSP == -1)
                 robot.rotateMobile(Bogg.Direction.Left);
             else
@@ -239,8 +239,7 @@ public class Auto {
 
     Mode moveToCrater()
     {
-        double fixedDistance = 6;
-        robot.driveEngine.drive(iSP * .2,(6 - fixedDistance)/10);
+        robot.driveEngine.drive(iSP * .2,0);
 
         if(robot.sensors.isTilted())
         {

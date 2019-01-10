@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -10,7 +9,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 class Sensors {
@@ -18,9 +16,6 @@ class Sensors {
 
     private TouchSensor touchTop;
     private TouchSensor touchBottom;
-
-    private DistanceSensor dFixed;
-    private DistanceSensor dMobile;
 
     BNO055IMU imu = null;
 
@@ -38,9 +33,6 @@ class Sensors {
 
     }
 
-    double getMobile() {
-        return dMobile.getDistance(DistanceUnit.INCH);
-    }
 
     boolean touchTopIsPressed() {
         return touchTop.isPressed();
@@ -84,14 +76,7 @@ class Sensors {
         }
         else
         {
-            if(gotMobile)
-                return dMobile.getDistance(DistanceUnit.INCH) > 12 * 5.5; //Tilted up so far that it sees air
-            else
-            {
-                if(dMobile.getDistance(DistanceUnit.INCH) < 12.0 * 5)
-                    gotMobile = true;
-                return false;
-            }
+            return Math.random() < .0001;
         }
     }
 }
