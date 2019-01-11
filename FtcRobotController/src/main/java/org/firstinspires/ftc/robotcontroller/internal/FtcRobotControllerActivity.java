@@ -254,7 +254,6 @@ public class FtcRobotControllerActivity extends Activity
         DragonboardLynxDragonboardIsPresentPin.getInstance().setState(true);
       }
     }
-    Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler(this, context));
 
     context = this;
     utility = new Utility(this);
