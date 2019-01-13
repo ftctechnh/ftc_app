@@ -90,7 +90,7 @@ public class MiniBogg
         {
             lift.setPower(smoothLift(1));
         }
-        else if(gamepad.a  && this.sensors.getMobile() < 8)
+        else if(gamepad.a )
         {
             goingUp = false;
             if (sensors.touchBottomIsPressed())
@@ -108,7 +108,7 @@ public class MiniBogg
     {
         if(power > 0  && !sensors.touchTopIsPressed())
             lift.setPower(smoothLift(power));
-        else if(power < 0 && this.sensors.getMobile() < 8 && !sensors.touchBottomIsPressed())
+        else if(power < 0  && !sensors.touchBottomIsPressed())
             lift.setPower(smoothLift(power));
         else
             lift.setPower(smoothLift(0));
