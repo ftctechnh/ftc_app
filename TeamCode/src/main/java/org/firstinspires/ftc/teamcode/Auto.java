@@ -137,10 +137,10 @@ public class Auto {
     private int i = 0;
     Mode pushGoldNoCamera()
     {
-        if (robot.driveEngine.moveOnPath(
+        if (robot.driveEngine.moveOnPath( "Push gold forward",
                 new double[]{17, 0})) {
             if (i < 3) {
-                if (robot.driveEngine.moveOnPath(
+                if (robot.driveEngine.moveOnPath( "Move Right" + i,
                         new double[]{0, 12})) {
                     robot.push(Bogg.Direction.Down);
 

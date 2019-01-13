@@ -61,20 +61,20 @@ public class Bogg
         timer = new ElapsedTime();
     }
 
-    private double smoothX(double x, double multiplier)
+    private double smoothX(double x, double seconds)
     {
-        double alpha = getAlpha(1 / multiplier);
-        if(x * xAve < 0 || x == 0)
+        double alpha = getAlpha(seconds);
+        if(x * xAve < -0.1 || x == 0)
             xAve = 0;
         else
             xAve = alpha * x + (1- alpha) * xAve;
         return xAve;
     }
 
-    private double smoothY(double y, double multiplier)
+    private double smoothY(double y, double seconds)
     {
-        double alpha = getAlpha(1 / multiplier);
-        if(y * yAve < 0 || y == 0)
+        double alpha = getAlpha(seconds);
+        if(y * yAve < -0.1 || y == 0)
             yAve = 0;
         else
             yAve = alpha * y + (1-alpha) * yAve;
@@ -96,8 +96,8 @@ public class Bogg
 
     private double smoothSpin(double spin)
     {
-        double alpha = getAlpha(1.5);
-        if(spin * spinAve < 0 || spin == 0)
+        double alpha = getAlpha(3);
+        if(spin * spinAve < -0.1 || spin == 0)
             spinAve = 0;
         else
             spinAve = alpha * spin + (1-alpha ) * spinAve;
@@ -191,8 +191,8 @@ public class Bogg
 
     void manualDrive(boolean op, double x, double y)
     {
-        double leftX = smoothX(x, op? 4:1);
-        double leftY = smoothY(-y, op? 4:1);
+        double leftX = smoothX(x, op? 1:2.5);
+        double leftY = smoothY(-y, op? 1:2.5);
         double spin = 0;
 
         telemetry.addData("gamepad x", x);
@@ -206,8 +206,8 @@ public class Bogg
     private double cumulativeCorrection;
     void manualDriveAutoCorrect(boolean op, double x, double y)
     {
-        double leftX = smoothX(x, op? 4:1);
-        double leftY = smoothY(-y, op? 4:1);
+        double leftX = smoothX(x, op? 1:2.5);
+        double leftY = smoothY(-y, op? 1:2.5);
         double spin = driveEngine.spinToZero();
         driveEngine.drive(op, leftX, leftY, spin);
 
@@ -222,8 +222,8 @@ public class Bogg
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
     {
         boolean op = gDrive.left_stick_button;
-        double leftX = smoothX(gDrive.left_stick_x, op? 4:1);
-        double leftY = smoothY(-gDrive.left_stick_y, op? 4:1);
+        double leftX = smoothX(gDrive.left_stick_x, op? 1:2.5);
+        double leftY = smoothY(-gDrive.left_stick_y, op? 1:2.5);
         double spin = smoothSpin(-gRotate.right_stick_x/2);
 
         telemetry.addData("gamepad x", gDrive.left_stick_x);

@@ -15,7 +15,7 @@ class DriveEngine {
     DcMotor left;
 
     static double wheelDiameter = 5;
-    static double robotRadius = 8;
+    static double robotRadius = 7.15;
 
     private double motorSpacing = 2 * Math.PI /3;
     private double root3 = Math.sqrt(3);
@@ -131,11 +131,24 @@ class DriveEngine {
     }
 
     private ArrayList<Boolean> checkpoint = new ArrayList<>();
+    private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
         return moveOnPath(false, args);
     }
+    boolean moveOnPath(String key, double[] ... args){
+        if(keyList.contains(key))
+            return true;
+        if(moveOnPath(false, args)){
+            keyList.add(key);
+            return true;
+        }
+        return false;
+    }
     boolean moveOnPath(boolean continuous, double[] ... args)
     {
+        telemetry.addData("back", back.getCurrentPosition());
+        telemetry.addData("left", left.getCurrentPosition());
+        telemetry.addData("right", right.getCurrentPosition());
         if(checkpoint.isEmpty()){
             for (double[] arg : args) checkpoint.add(false);
             resetDistances();
@@ -180,7 +193,7 @@ class DriveEngine {
                 telemetry.addData("targetX", point[0]);
                 telemetry.addData("targetY", point[1]);
                 telemetry.addData("currentX", xDist());
-                telemetry.addData("targetY", yDist());
+                telemetry.addData("currentY", yDist());
                 telemetry.addData("radius", r);
 
                 if(r > 4) {
@@ -349,18 +362,31 @@ class DriveEngine {
 
     double xDist()
     {
-        return dotProduct(distances(),new double[]{2/3,-1/3,-1/3}) * DriveEngine.inPerTicks;
+        double sum = 0;
+        sum += back.getCurrentPosition() * 2/3 * DriveEngine.inPerTicks;
+        sum += right.getCurrentPosition() * -1/3 * DriveEngine.inPerTicks;
+        sum += left.getCurrentPosition() * -1/3 * DriveEngine.inPerTicks;
+        telemetry.addData("xDist", sum);
+        return sum;
     }
 
     double yDist()
     {
-        return dotProduct(distances(),new double[]{0,root3/3,-root3/3}) * DriveEngine.inPerTicks;
+        double sum = 0;
+        sum += back.getCurrentPosition() * 0 * DriveEngine.inPerTicks;
+        sum += right.getCurrentPosition() * root3/3 * DriveEngine.inPerTicks;
+        sum += left.getCurrentPosition() * -root3/3 * DriveEngine.inPerTicks;
+        telemetry.addData("yDist", sum);
+        return sum;
     }
 
     double spinAngle()
     {
-        double distance = dotProduct(distances(),new double[]{1/3,1/3,1/3}) * DriveEngine.inPerTicks;
-        return distance / robotRadius; //TODO: Find radius
+        double sum = 0;
+        sum += back.getCurrentPosition() /3 * DriveEngine.inPerTicks;
+        sum += right.getCurrentPosition() /3 * DriveEngine.inPerTicks;
+        sum += left.getCurrentPosition() /3 * DriveEngine.inPerTicks;
+        return sum / robotRadius; //TODO: Find radius
     }
 
     double[] distances()
