@@ -32,6 +32,11 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +67,7 @@ abstract public class superAuto extends LinearOpMode {
     CRServo outake2;
 
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
-    static final int gyroFlipped = -1;
+    static final int gyroFlipped = 1;
     RelicRecoveryVuMark[] boxOrder = new RelicRecoveryVuMark[4];
 
     BNO055IMU imu;
@@ -312,6 +317,45 @@ abstract public class superAuto extends LinearOpMode {
         targetsRoverRuckus.activate();
     }
 
+    void configureTensorFlow() {
+
+        final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+        final String LABEL_GOLD_MINERAL = "Gold Mineral";
+        final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
+        /*
+         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
+         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+         * web site at https://developer.vuforia.com/license-manager.
+         *
+         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+         * random data. As an example, here is a example of a fragment of a valid key:
+         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
+         * Once you've obtained a license key, copy the string from the Vuforia web site
+         * and paste it in to your code on the next line, between the double quotes.
+         */
+        final String VUFORIA_KEY = "AYhHUgX/////AAABmTO0g2PsdUqpg5xo" +
+                "96O7OkOB7qrwOjE24wV71lIm/MF9g96awd677rj7LrgQKUJAewgWkAAxn1MUJtUyiq" +
+                "9iesjKF+QNXlKr5qCAb69hI268sYjjCJ+PqVBtMrlcIG1F4l2osl9zIk9tYAYfLXKl" +
+                "T351h1yRW1AqAdHJaHwt861ztrh4EW/1WjOV3/yT4SDtrJivhfmU0c51IqPUEJ0xqbWFr2saxvS/cSkH4e+hFIImM/jIw5JkaizeznuFTA" +
+                "TnWTq9Spp/EhPPaQXJtScNP3DDaNDdfiqT9opwsxuQlEe1YF19sHjtenGD7/PcUlQXVS+VKbxaSqd/Cnq4+/3bOuhNzFoTVbBKZ16DQ9EZeCJM";
+
+        /**
+         * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+         * localization engine.
+         */
+        VuforiaLocalizer vuforia;
+
+        /**
+         * {@link #tfod} is the variable we will use to store our instance of the Tensor Flow Object
+         * Detection engine.
+         */
+        TFObjectDetector tfod;
+
+
+    }
+
     void updateLocation() {
         while (opModeIsActive()) {
             // check all the trackable target to see which one (if any) is visible.
@@ -493,7 +537,7 @@ abstract public class superAuto extends LinearOpMode {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double raw =  (gyroFlipped) * angles.firstAngle;
         float fudgeFactor = .25f;
-        double wheelPower = .3;
+        double wheelPower = .4;
         double convert = raw;
         double dflt = (target - raw);
         double alt = (360 - Math.abs(dflt));
