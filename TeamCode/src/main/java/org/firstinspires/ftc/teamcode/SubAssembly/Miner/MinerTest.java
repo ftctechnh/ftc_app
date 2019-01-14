@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.SubAssembly.Lift;
+package org.firstinspires.ftc.teamcode.SubAssembly.Miner;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
