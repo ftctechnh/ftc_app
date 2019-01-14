@@ -49,6 +49,8 @@ public class MinerControl {
         MinerButtonO = hwMap.touchSensor.get("MinerButtonO");
 
         LinearMinerM.setPower(0);
+        IntakeM.setPower(0);
+        DeployerS.setPosition(1);
     }
 
     public void Extend() {
@@ -67,12 +69,12 @@ public class MinerControl {
         IntakeM.setPower(INTAKE_SPEED);
     }
 
-    public void Untake() {
-        IntakeM.setPower(-INTAKE_SPEED);
+    public void Stoptake()  {
+        IntakeM.setPower(0);
     }
 
-    public void IntakeStop() {
-        IntakeM.setPower(0);
+    public void Untake() {
+        IntakeM.setPower(-INTAKE_SPEED);
     }
 
     public void Dump() {
