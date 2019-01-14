@@ -272,7 +272,7 @@ public class Auto4Variations extends LinearOpMode {
                     Drive.turn2Angle(TURN_SPEED, -135);
                     Drive.TimeDelay(0.15);
                     Drive.moveForward(0.5, 1.5);
-
+                    newState (State.Claim);
                     break;
 
                 case Claim:
@@ -322,6 +322,7 @@ public class Auto4Variations extends LinearOpMode {
                     }
                     newState(State.Stop);
                     break;
+
 
                 case Stop:
                     telemetry.addLine("Stop");
