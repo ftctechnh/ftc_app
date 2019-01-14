@@ -44,6 +44,27 @@ public class MinerTest extends LinearOpMode {
                 Miner.MinerStop();
             }
 
+            if (gamepad2.right_stick_y < -0.4) {
+                Miner.Untake();
+            } else if (gamepad2.right_stick_y > 0.4) {
+                Miner.Intake();
+            } else  {
+                Miner.Stoptake();
+            }
+
+            if (egamepad2.left_trigger.released) {
+                Miner.Undump();
+            } else if (egamepad2.left_bumper.released) {
+                Miner.Dump();
+            }
+
+            if (egamepad2.y.released) {
+                Miner.IntakeLower();
+            } else if (egamepad2.x.released) {
+                Miner.IntakeRaise();
+            }
+
+
             telemetry.update();
 
             //let the robot have a little rest, sleep is healthy
