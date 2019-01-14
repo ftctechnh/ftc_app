@@ -246,19 +246,19 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.moveForward(0.5, 0.9);
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.9);
-                        newState(State.Stop);
+                        newState(State.Sample_to_Depot);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 0.6);
+                        Drive.moveForward(0.5, 0.5);
                         Drive.TimeDelay(0.15);
-                        Drive.moveBackward(0.5, 0.6);
-                        newState(State.Stop);
+                        Drive.moveBackward(0.5, 0.5);
+                        newState(State.Sample_to_Depot);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 35);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 0.9);
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.9);
-                        newState(State.Stop);
+                        newState(State.Sample_to_Depot);
                     }
                     break;
 
