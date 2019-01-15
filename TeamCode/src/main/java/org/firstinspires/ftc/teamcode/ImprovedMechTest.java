@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name="mech2h", group="Linear Opmode")
+@TeleOp(name="mech", group="Linear Opmode")
 public class ImprovedMechTest extends LinearOpMode {
     private DcMotor FR = null;
     private DcMotor FL = null;
@@ -29,18 +29,20 @@ public class ImprovedMechTest extends LinearOpMode {
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
         pivot = hardwareMap.get(DcMotor.class, "pivot");
-        //nom = hardwareMap.get(DcMotor.class, "nom");
+        nom = hardwareMap.get(DcMotor.class, "nom");
         hook = hardwareMap.get(DcMotor.class, "hook");
         extend = hardwareMap.get(DcMotor.class, "extend");
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
+        hook.setDirection(DcMotor.Direction.REVERSE);
+        pivot.setDirection(DcMotor.Direction.REVERSE);
 
         FL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         BR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //nom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        nom.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         hook.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         extend.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
@@ -56,8 +58,8 @@ public class ImprovedMechTest extends LinearOpMode {
     }
 
     public void moveRobot() {
-        double drive = -gamepad1.left_stick_y;
-        double strafe = -gamepad1.left_stick_x;
+        double drive = -gamepad1.left_stick_y / 2;
+        double strafe = -gamepad1.left_stick_x / 2;
         double turn = (-gamepad1.right_stick_x / 1.2) / turnConstant;
 
         if (drive > 0.1 && (previousDrive == controllerPos.DRIVE_FOWARD || previousDrive == controllerPos.ZERO)) {
@@ -66,10 +68,10 @@ public class ImprovedMechTest extends LinearOpMode {
         } else if (drive < -0.1 && (previousDrive == controllerPos.DRIVE_BACK || previousDrive == controllerPos.ZERO)) {
             previousDrive = controllerPos.DRIVE_BACK;
             Drive(drive);
-        } else if ((strafe < -.4 || gamepad1.dpad_right) && (previousDrive == controllerPos.STRAFE_RIGHT || previousDrive == controllerPos.ZERO)) {
+        } else if (strafe < -.4 && (previousDrive == controllerPos.STRAFE_RIGHT || previousDrive == controllerPos.ZERO)) {
             previousDrive = controllerPos.STRAFE_RIGHT;
             Strafe(-1);
-        } else if ((strafe > .4 || gamepad1.dpad_left) && (previousDrive == controllerPos.STRAFE_LEFT || previousDrive == controllerPos.ZERO)) {
+        } else if (strafe > .4 && (previousDrive == controllerPos.STRAFE_LEFT || previousDrive == controllerPos.ZERO)) {
             previousDrive = controllerPos.STRAFE_LEFT;
             Strafe(1);
         } else if (turn > 0.25 && (previousDrive == controllerPos.TURN_RIGHT || previousDrive == controllerPos.ZERO)) {
@@ -152,36 +154,35 @@ public class ImprovedMechTest extends LinearOpMode {
     }
 
     public void intake() {
-        if(gamepad1.a) {
-            pivot.setPower(.6);
-        } else if(gamepad1.b) {
+        if(gamepad2.dpad_up) {
+            pivot.setPower(.9);
+        } else if(gamepad2.dpad_down) {
             pivot.setPower(-.6);
         } else {
             pivot.setPower(0);
         }
 
+        if (gamepad2.right_bumper) {
+            nom.setPower(.6);
+        } else if (gamepad2.left_bumper) {
+            nom.setPower(-.6);
+        } else {
+            nom.setPower(0);
+        }
 
-//        if(gamepad1.x) {
-//            nom.setPower(.8);
-//        } else if(gamepad1.y) {
-//            nom.setPower(-.8);
-//        } else {
-//            nom.setPower(0);
-//        }
-
-        if(gamepad2.dpad_up) {
-            extend.setPower(1);
-        } else if(gamepad2.dpad_down) {
-            extend.setPower(-1);
+        if(gamepad2.left_stick_y > .3) {
+            extend.setPower(-.8);
+        } else if(gamepad2.left_stick_y < -.3) {
+            extend.setPower(.8);
         } else {
             extend.setPower(0);
         }
     }
 
     public void hook() {
-        if(gamepad1.dpad_up) {
+        if(gamepad2.right_stick_y < -.3) {
             hook.setPower(1);
-        } else if(gamepad1.dpad_down) {
+        } else if(gamepad2.right_stick_y > .3) {
             hook.setPower(-1);
         } else {
             hook.setPower(0);

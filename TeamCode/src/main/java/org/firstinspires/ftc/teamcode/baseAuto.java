@@ -29,7 +29,7 @@ abstract class baseAuto extends LinearOpMode {
     BNO055IMU imu;
     GradientDrawable.Orientation angles;
     public double start;
-    public static long timeDown = 7800;
+    public static long timeDown = 6000;
 
     public void dec(HardwareMap hwmap) {
         frontLeft = hwmap.get(DcMotor.class, "fl");
@@ -40,12 +40,11 @@ abstract class baseAuto extends LinearOpMode {
         hook = hwmap.get(DcMotor.class, "hook");
         nom = hwmap.get(DcMotor.class, "nom");
         extend = hwmap.get(DcMotor.class, "extend");
-        pivot = hwmap.get(DcMotor.class, "piv");
+        pivot = hwmap.get(DcMotor.class, "pivot");
 
         frontLeft.setDirection(DcMotor.Direction.REVERSE);
-        frontRight.setDirection(DcMotor.Direction.REVERSE);
         backLeft.setDirection(DcMotor.Direction.REVERSE);
-        backRight.setDirection(DcMotor.Direction.REVERSE);
+        hook.setDirection(DcMotor.Direction.REVERSE);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -69,7 +68,7 @@ abstract class baseAuto extends LinearOpMode {
     }
 
     double currentAngle() {
-        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
         return AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle);
     }
 
@@ -81,11 +80,11 @@ abstract class baseAuto extends LinearOpMode {
         frontLeft.setPower(drivePower);
         frontRight.setPower(drivePower);
 
-        backLeft.setPower(drivePower);
-        backRight.setPower(drivePower);
+        backLeft.setPower(-drivePower);
+        backRight.setPower(-drivePower);
     }
 
-    public void clock(double drivePower) {
+    public void counter(double drivePower) {
         frontLeft.setPower(drivePower);
         frontRight.setPower(-drivePower);
 
@@ -93,7 +92,7 @@ abstract class baseAuto extends LinearOpMode {
         backRight.setPower(-drivePower);
     }
 
-    public void counter(double drivePower) {
+    public void clock(double drivePower) {
         frontLeft.setPower(-drivePower);
         frontRight.setPower(drivePower);
 
@@ -101,69 +100,61 @@ abstract class baseAuto extends LinearOpMode {
         backRight.setPower(drivePower);
     }
 
-    public void pullUp(int power) {
+    public void pullUp(double power) {
         hook.setPower(power);
     }
 
-    public void pullDown(int power) {
+    public void pullDown(double power) {
         hook.setPower(power);
     }
 
-    public void nomIn(int power) {
+    public void nomIn(double power) {
         nom.setPower(power);
     }
 
-    public void nomOut(int power) {
+    public void nomOut(double power) {
         nom.setPower(power);
     }
 
-    public void pivOut(int power) {
-        pivot.setPower(power);
-    }
-
-    public void pivIn(int power) {
+    public void pivOut(double power) {
         pivot.setPower(-power);
     }
 
-    public void extend (int power) {
+    public void pivIn(double power) {
+        pivot.setPower(power);
+    }
+
+    public void extend (double power) {
         extend.setPower(power);
     }
 
-    public void retract (int power) {
+    public void retract (double power) {
         extend.setPower(-power);
     }
 
-    public void strafeLeft(int power) {
+    public void strafeLeft(double power) {
         frontLeft.setPower(power);
         frontRight.setPower(-power);
 
-        backLeft.setPower(-power);
-        backRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(-power);
     }
 
-    public void strafeRight(int power) {
+    public void strafeRight(double power) {
         frontLeft.setPower(-power);
         frontRight.setPower(power);
 
-        backLeft.setPower(power);
-        backRight.setPower(-power);
+        backLeft.setPower(-power);
+        backRight.setPower(power);
     }
 
     public void downSeq() {
         pullUp(1);
         sleep(timeDown);
         pullUp(0);
-        forwards(.7);
+        counter(.7);
         sleep(500);
-        forwards(.5);
-        sleep(200);
-        forwards(.8);
-        sleep(500);
-        forwards(0);
-        pullUp(-1);
-        sleep(2000);
-        pullUp(0);
-
+        counter(0);
     }
 }
 
