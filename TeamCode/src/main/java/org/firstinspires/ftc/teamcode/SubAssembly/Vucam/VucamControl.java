@@ -65,6 +65,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class VucamControl {
     /* Declare private class object */
+    private boolean debugcode = false;
     private LinearOpMode opmode = null;     /* local copy of opmode class */
 
     private GoldAlignDetector detector;
@@ -84,7 +85,13 @@ public class VucamControl {
     }
 
     public void init(LinearOpMode opMode) {
+        init(opMode, false);
+    }
+
+    public void init(LinearOpMode opMode, boolean debug) {
         HardwareMap hwMap;
+
+        debugcode = debug;
 
         opMode.telemetry.addLine("Vucam Control" + " initialize");
         opMode.telemetry.update();
@@ -92,6 +99,9 @@ public class VucamControl {
         /* Set local copies from opmode class */
         opmode = opMode;
         hwMap = opMode.hardwareMap;
+
+        if (debugcode)
+            return;
 
         webcamName = hwMap.get(WebcamName.class, "Webcam 1");
 
@@ -134,6 +144,9 @@ public class VucamControl {
 
     /* Only works once and must wait a while after init before calling */
     public void setSamplePos() {
+        if (debugcode)
+            return;
+
         if (detector.getXPosition() > 0 && detector.getXPosition() < 250) {
             sample = Sample.LEFT;
         } else if (detector.getXPosition() > 250 && detector.getXPosition() < 450) {
@@ -147,6 +160,9 @@ public class VucamControl {
      * Code to run ONCE after the driver hits STOP
      */
     public void Stop() {
+        if (debugcode)
+            return;
+
         vuforia.stop();
     }
 

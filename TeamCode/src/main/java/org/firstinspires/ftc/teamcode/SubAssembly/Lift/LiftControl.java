@@ -6,10 +6,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-
 /* Sub Assembly Class
  */
 public class LiftControl {
+    /* Constants */
+    final double LIFT_SPEED = 1.0;
+
     /* Declare private class object */
     private LinearOpMode opmode = null;     /* local copy of opmode class */
 
@@ -17,6 +19,7 @@ public class LiftControl {
     private DcMotor LifterLeftM;
     private Servo LockRightS;
     private Servo LockLeftS;
+    private boolean locked;
 
     /* Declare public class object */
     public TouchSensor LifterButtonT;
@@ -44,21 +47,24 @@ public class LiftControl {
         LifterButtonB = hwMap.touchSensor.get("LifterButtonB");
         LifterButtonT = hwMap.touchSensor.get("LifterButtonT");
 
-        LockRightS.setPosition(0.77);
-        LockLeftS.setPosition(0.1);
+        Unlock();
         LifterRightM.setPower(0);
         LifterLeftM.setPower(0);
         LifterRightM.setDirection(DcMotor.Direction.REVERSE);
     }
 
     public void Extend() {
-        LifterLeftM.setPower(0.75);
-        LifterRightM.setPower(0.75);
+        if (!locked) {
+            LifterLeftM.setPower(LIFT_SPEED);
+            LifterRightM.setPower(LIFT_SPEED);
+        }
     }
 
     public void Retract() {
-        LifterLeftM.setPower(-0.75);
-        LifterRightM.setPower(-0.75);
+        if (!locked) {
+            LifterLeftM.setPower(-LIFT_SPEED);
+            LifterRightM.setPower(-LIFT_SPEED);
+        }
     }
 
     public void Stop() {
@@ -70,12 +76,13 @@ public class LiftControl {
     public void Lock() {
         LockRightS.setPosition(0.44);
         LockLeftS.setPosition(0.4);
+        locked = true;
     }
 
     //unlocking the servos
     public void Unlock() {
         LockRightS.setPosition(0.77);
         LockLeftS.setPosition(0.1);
-
+        locked = false;
     }
 }
