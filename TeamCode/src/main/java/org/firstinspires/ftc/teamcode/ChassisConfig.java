@@ -10,7 +10,7 @@ public class ChassisConfig {
     private boolean leftMotorsReversed;
     private boolean rightMotorsReversed;
     private boolean hasWalle;
-    private boolean teamMarkersReversed;
+    private boolean teamMarkersReversed; 
     private boolean lyftStrategy;
 
     protected ChassisConfig(float rearDiameter, boolean useFourWheelDrive, float rearWheelSpeed,

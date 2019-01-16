@@ -552,9 +552,11 @@ public abstract class StandardChassis extends OpMode {
     protected void descendFromLander() {
         if(!config.getlyftStrategy()) {
             // go down.
-            lyftDownWalle(-4956);
+            //lyftDownWalle(-4956);
+            lyftDownWalle(-4856);
             //existing Quiksilver descend stragety
-            strafeRight(450);
+            strafeRight(1000);
+            turnLeft(10); // HACK BABY
         } else {
             lyftDownWalle(-1449);
             //write new phatswipe descend strategy

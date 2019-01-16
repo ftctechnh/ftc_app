@@ -208,6 +208,8 @@ public class QuickSilverController extends OpMode {
             }else if(pullOutOne && pullUpTwo){
                 pullPower = -0.8;
             }
+            shoulder.setPower(pullPower);
+
             if (pullPower != 0.0 || armState == 0) {
                 // if anyone uses manual reset presets and turn everything off
                 if (armState != 0) {

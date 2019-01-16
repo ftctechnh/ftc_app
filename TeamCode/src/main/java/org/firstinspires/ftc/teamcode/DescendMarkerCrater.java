@@ -58,8 +58,8 @@ public abstract class DescendMarkerCrater extends StandardChassis {
             encoderDrive(15, 15);
             turnLeft(68);
             encoderDrive(24, 24);
-            turnLeft(48);
-            encoderDrive(60, 60);
+            turnLeft(55);
+            encoderDrive(80, 80);
 
             dropFlag();
             sleep(3000);
