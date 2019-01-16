@@ -47,6 +47,7 @@ public class MinerControl {
         MinerRightS = hwMap.servo.get("MinerRightS");
         MinerButtonI = hwMap.touchSensor.get("MinerButtonI");
         MinerButtonO = hwMap.touchSensor.get("MinerButtonO");
+        DeployerS = hwMap.servo.get("DeployerS");
 
         LinearMinerM.setPower(0);
         IntakeM.setPower(0);
