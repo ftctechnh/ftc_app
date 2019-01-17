@@ -61,6 +61,7 @@ public class PushbotTeleopTankTest extends OpMode{
     /* Declare OpMode members. */
     DriveBaseHardwareMap robot       = new DriveBaseHardwareMap(); // use the class created to define a Pushbot's hardware
     // could also use HardwarePushbotMatrix class.
+    double speed=0;
     double          clawOffset  = 0.0 ;                  // Servo mid position
     final double    CLAW_SPEED  = 0.02 ;                 // sets rate to move servo
 
@@ -91,6 +92,7 @@ public class PushbotTeleopTankTest extends OpMode{
      */
     @Override
     public void start() {
+
     }
 
     /*
@@ -98,13 +100,14 @@ public class PushbotTeleopTankTest extends OpMode{
      */
     @Override
     public void loop() {
+
         double left;
         double right;
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = (-gamepad1.left_stick_y)/2;
+        left = -(((gamepad1.left_stick_y)/2)+speed);
         //left = 0.0;
-        right =(gamepad1.right_stick_y)/2;
+        right =((gamepad1.right_stick_y)/2)+speed;
 
         robot.top_left.setPower(right);
         robot.bot_left.setPower(right);
@@ -116,16 +119,21 @@ public class PushbotTeleopTankTest extends OpMode{
         // Move both servos to new position.  Assume servos are mirror image of each other.
 
         // Use gamepad buttons to move the arm up (Y) and down (A)
-/*
-        if (gamepad1.y) {
-            telemetry.addData("set", "set");
-            //robot.sweeper.setPower(1);
+
+        if (gamepad1.right_bumper) {
+            speed = -0.5;
+        }
+        else {
+            speed = 0;
         }
 
-        else if (gamepad1.a)
-       //     robot.sweeper.setPower(-1);
-        else
+        //.else if (gamepad1.a){
+
+        //}/*
+       //    robot.sweeper.setPower(-1);
+       // else
          //   robot.sweeper.setPower(0.0);
+        /*
         if(gamepad1.x){
            // robot.lifter.setPower(0.5);
         }

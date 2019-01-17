@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class DriveBaseHardwareMap {
@@ -13,7 +14,7 @@ public class DriveBaseHardwareMap {
     public DcMotor  bot_right  = null;
    // public DcMotor  sweeper = null;
     //public DcMotor  lifter  = null;
-    public Servo    dropper = null;
+    public CRServo    dropper = null;
     public Servo    marker  = null;
 
     //public static final double MID_SERVO       =  0.5 ;
@@ -65,10 +66,12 @@ public class DriveBaseHardwareMap {
         //sweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
-        dropper  = hwMap.get(Servo.class, "dropper");
+        dropper  = hwMap.get(CRServo.class, "dropper");
         marker = hwMap.get(Servo.class, "marker");
         //intake_right = hwMap.get(Servo.class, "intake_right")
         marker.setPosition(0.5);
+        //dropper.setDirection(CRServo.Direction.FORWARD);
+        dropper.setPower(0.0);
         //intake_right.setPosition(0);
     }
 }
