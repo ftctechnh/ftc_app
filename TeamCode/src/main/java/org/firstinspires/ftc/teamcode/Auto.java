@@ -46,7 +46,7 @@ public class Auto {
         {
             timer = new ElapsedTime();
         }
-        if (getTime() < 2) //for the first 2 seconds
+        if (getTime() < 1.5) //for the first 1.5 seconds
         {
             telemetry.addData("time", getTime());
             if (!robot.sensors.touchTopIsPressed()) //helps with testing
@@ -137,18 +137,23 @@ public class Auto {
     private int i = 0;
     Mode pushGoldNoCamera()
     {
-        if (robot.driveEngine.moveOnPath( "Push gold forward",
+        if (robot.driveEngine.moveOnPath( "Move Right",
                 new double[]{17, 0})) {
             if (i < 3) {
-                if (robot.driveEngine.moveOnPath( "Move Right" + i,
-                        new double[]{0, 12})) {
+                if (robot.driveEngine.moveOnPath( "Push gold forward" + i,
+                        new double[]{0, 12}))
+                {
                     robot.push(Bogg.Direction.Down);
 
-                    if (robot.driveEngine.moveOnPath(
-                            new double[]{0, -12},
-                            new double[]{-17, 0})) {
+                    if (robot.driveEngine.moveOnPath("pull" + i,
+                            new double[]{0, -6}))
+                    {
                         robot.push(Bogg.Direction.Up);
-                        i++;
+                        if (robot.driveEngine.moveOnPath("moveLeft" + i,
+                                new double[]{0, -6},
+                                new double[]{-17, 0})) {
+                            i++;
+                        }
                     }
                 }
             }
@@ -182,18 +187,16 @@ public class Auto {
     Mode turnByCamera()
     {
         if(rotateToWall(2)) {
+            robot.driveEngine.stop();
             double[] location = camera.getLocation();
-            double max = Math.max(Math.abs(location[0]), Math.abs(location[1]));
-            if(max == Math.abs(location[0])) {
-                iSP = -1;
-                robot.rotateMobile(Bogg.Direction.Right);
+            if(location != null)
+            {
+                double max = Math.max(Math.abs(location[0]), Math.abs(location[1]));
+                iSP = max == Math.abs(location[1])? 1 : -1;
+                return Mode.MoveToDepot;
+
             }
-            else {
-                iSP = 1;
-                robot.rotateMobile(Bogg.Direction.Left);
-            }
-            timer.reset();
-            return Mode.MoveToDepot;
+            return Mode.TurnByCamera;
         }
         return Mode.TurnByCamera;
     }
@@ -201,16 +204,8 @@ public class Auto {
 
     Mode moveToDepot()
     {
-        if(getTime() < 1.5) {
-            return Mode.MoveToDepot;  //time to move the sensor
-        }
-
-
-        if(robot.driveEngine.moveOnPath(new double[]{-iSP * 48})) {
-            if(iSP == -1)
-                robot.rotateMobile(Bogg.Direction.Left);
-            else
-                robot.rotateMobile(Bogg.Direction.Right);
+        if(robot.driveEngine.moveOnPath(new double[]{-iSP * 48,0},
+                                        new double[]{iSP * Math.PI/2})) {
             timer.reset();
             robot.driveEngine.resetDistances();
             return Mode.DropMarker;
@@ -221,17 +216,10 @@ public class Auto {
 
     Mode dropMarker()
     {
-        switch (iSP)
-        {
-            case -1: //drop on right side
-                robot.dropMarker(Bogg.Direction.Right);
-                break;
-            case 1:  //drop on left side
-                robot.dropMarker(Bogg.Direction.Left);
-                break;
-        }
-        if(getTime() > 4)
-            return Mode.MoveToCrater;
+        robot.dropMarker(Bogg.Direction.Down);
+        if(getTime() > 2)  //time to drop marker
+            if(robot.driveEngine.moveOnPath(new double[]{-iSP * Math.PI})) //turn around
+                return Mode.MoveToCrater;
 
         return Mode.DropMarker;
     }
@@ -239,7 +227,8 @@ public class Auto {
 
     Mode moveToCrater()
     {
-        robot.driveEngine.drive(iSP * .2,0);
+        robot.driveEngine.drive(0,.2);
+        robot.endEffector.extend(12);
 
         if(robot.sensors.isTilted())
         {
@@ -268,14 +257,16 @@ public class Auto {
         telemetry.addData("wall heading", wallHeading);
         if(wallHeading != null)
         {
-            if(Math.abs(wallHeading) < accuracy_angle)
+            if(Math.abs(wallHeading) < accuracy_angle) {
+                robot.driveEngine.resetDistances();
                 return true;
+            }
             else
             {
                 if(wallHeading > 0)
-                    robot.driveEngine.rotate(.08);
+                    robot.driveEngine.rotate(.02);
                 else
-                    robot.driveEngine.rotate(-.08);
+                    robot.driveEngine.rotate(-.02);
             }
 
             return false;
