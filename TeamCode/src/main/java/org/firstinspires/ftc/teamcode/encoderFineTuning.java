@@ -40,7 +40,7 @@ public class encoderFineTuning extends LinearOpMode
             telemetry.addData("spin angle", robot.driveEngine.spinAngle());
             telemetry.addData("spin angle divided by pi", robot.driveEngine.spinAngle() / Math.PI);
 
-            robot.driveEngine.moveOnPath(true, new double[]{deltaX, deltaY, deltaS});
+            robot.driveEngine.moveOnPath(true, false, new double[]{deltaX, deltaY, deltaS});
 
             if(gamepad1.left_bumper || gamepad1.right_bumper)
             {

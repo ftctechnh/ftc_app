@@ -16,7 +16,7 @@ public class encoderTestCumulative extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if (robot.driveEngine.moveOnCumulativePath(
+            if (robot.driveEngine.moveOnPath(true, true,
                     new double[]{-6, 0},
                     new double[]{0, 4},
                     new double[]{6, 0},

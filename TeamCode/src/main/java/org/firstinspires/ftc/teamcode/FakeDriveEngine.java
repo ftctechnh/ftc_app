@@ -90,14 +90,10 @@ public class FakeDriveEngine extends DriveEngine{
         sDistance = 0;
     }
 
-    @Override
-    double spinToTarget(double targetAngle) {
-        return super.spinToTarget(targetAngle);
-    }
 
     @Override
-    double spinToZero() {
-        return super.spinToZero();
+    double faceForward() {
+        return super.faceForward();
     }
 
     @Override

@@ -28,9 +28,9 @@ public class MiniBogg
     {
         this.gamepad = gamepad;
         this.hardwareMap = hardwareMap;
-        driveEngine = new DriveEngine(hardwareMap, telemetry);
-        lift  = hardwareMap.dcMotor.get("lift");
         sensors = new Sensors(hardwareMap);
+        driveEngine = new DriveEngine(hardwareMap, telemetry, sensors.imu);
+        lift  = hardwareMap.dcMotor.get("lift");
         brake = hardwareMap.servo.get("brake");
     }
 
