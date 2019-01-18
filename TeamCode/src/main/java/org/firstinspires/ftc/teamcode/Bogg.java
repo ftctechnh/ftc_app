@@ -50,11 +50,11 @@ public class Bogg
     public Bogg(HardwareMap hardwareMap, Telemetry telemetry)
     {
         this.telemetry = telemetry;
-        driveEngine = new DriveEngine(hardwareMap, telemetry);
+        sensors = new Sensors(hardwareMap);
+        driveEngine = new DriveEngine(hardwareMap, telemetry, sensors.imu);
         endEffector = new EndEffector(hardwareMap, telemetry);
         lift  = hardwareMap.dcMotor.get("lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        sensors = new Sensors(hardwareMap);
         brake = hardwareMap.servo.get("brake");
         drop = hardwareMap.servo.get("drop");
         dServo = hardwareMap.get(Servo.class, "dServo");
@@ -165,11 +165,8 @@ public class Bogg
     {
         switch (direction)
         {
-            case Left:
-                drop.setPosition(-.4);
-                break;
-            case Right:
-                drop.setPosition(.4);
+            case Down:
+                drop.setPosition(.6);
                 break;
             case Up:
             default:
@@ -208,10 +205,10 @@ public class Bogg
     {
         double leftX = smoothX(x, op? 1:2.5);
         double leftY = smoothY(-y, op? 1:2.5);
-        double spin = driveEngine.spinToZero();
+        double spin = driveEngine.faceForward();
         driveEngine.drive(op, leftX, leftY, spin);
 
-        cumulativeCorrection += driveEngine.spinToZero();
+        cumulativeCorrection += driveEngine.faceForward();
 
         telemetry.addData("cumulative correction", cumulativeCorrection);
         telemetry.addData("gamepad x", x);
