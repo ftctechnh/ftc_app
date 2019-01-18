@@ -23,6 +23,8 @@ public class Bogg
     double liftAlpha = .12;
     double xAve = 0;
     double yAve = 0;
+    double rAve = 0;
+    double thetaAve = 0;
     double spinAve = 0;
     double liftAve = 0;
     double raisePosition;
@@ -61,25 +63,29 @@ public class Bogg
         timer = new ElapsedTime();
     }
 
-    private double smoothX(double x, double seconds)
+    private double[] smoothDrive(double x, double y, double rSeconds)
     {
-        double alpha = getAlpha(seconds);
-        if(x * xAve < -0.1 || x == 0)
-            xAve = 0;
+        double alpha = getAlpha(rSeconds);
+        double thetaAlpha = getAlpha(4);
+        double r = Math.hypot(x,y);
+        double theta = Math.atan2(y, x);
+
+        if(r > 1)
+            r = 1;
+        if(r == 0)
+            rAve = 0;
         else
-            xAve = alpha * x + (1- alpha) * xAve;
-        return xAve;
+            rAve = alpha * r + (1-alpha) * rAve;
+
+        //find the nearest value: must be within pi
+        if(theta - thetaAve > Math.PI) theta -= 2 * Math.PI;
+        if(thetaAve - theta > Math.PI) theta += 2 * Math.PI;
+
+        thetaAve = thetaAlpha * theta + (1-thetaAlpha) * thetaAve;
+
+        return new double[]{Math.cos(thetaAve) * r, Math.sin(thetaAve) * rAve};
     }
 
-    private double smoothY(double y, double seconds)
-    {
-        double alpha = getAlpha(seconds);
-        if(y * yAve < -0.1 || y == 0)
-            yAve = 0;
-        else
-            yAve = alpha * y + (1-alpha) * yAve;
-        return yAve;
-    }
 
     private double smoothLift(double l)
     {
@@ -97,7 +103,7 @@ public class Bogg
     private double smoothSpin(double spin)
     {
         double alpha = getAlpha(3);
-        if(spin * spinAve < -0.1 || spin == 0)
+        if(spin * spinAve < 0 || spin == 0)
             spinAve = 0;
         else
             spinAve = alpha * spin + (1-alpha ) * spinAve;
@@ -188,23 +194,23 @@ public class Bogg
 
     void manualDrive(boolean op, double x, double y)
     {
-        double leftX = smoothX(x, op? 1:2.5);
-        double leftY = smoothY(-y, op? 1:2.5);
-        double spin = 0;
+        double[] drive = smoothDrive(x, y, op? 1:2.5);
+        double leftX = drive[0];
+        double leftY = drive[1];
 
         telemetry.addData("gamepad x", x);
         telemetry.addData("gamepad y", y);
-        telemetry.addData("gamepad spin", spin);
         telemetry.addLine("Note: y is negated");
 
-        driveEngine.drive(op, leftX, leftY, spin);
+        driveEngine.drive(op, leftX, leftY);
     }
 
     private double cumulativeCorrection;
     void manualDriveAutoCorrect(boolean op, double x, double y)
     {
-        double leftX = smoothX(x, op? 1:2.5);
-        double leftY = smoothY(-y, op? 1:2.5);
+        double[] drive = smoothDrive(x, y, op? 1:2.5);
+        double leftX = drive[0];
+        double leftY = drive[1];
         double spin = driveEngine.faceForward();
         driveEngine.drive(op, leftX, leftY, spin);
 
@@ -219,9 +225,10 @@ public class Bogg
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
     {
         boolean op = gDrive.left_stick_button;
-        double leftX = smoothX(gDrive.left_stick_x, op? 1:2.5);
-        double leftY = smoothY(-gDrive.left_stick_y, op? 1:2.5);
-        double spin = smoothSpin(-gRotate.right_stick_x/2);
+        double[] drive = smoothDrive(gDrive.left_stick_x, -gDrive.left_stick_y, op? 1:2.5);
+        double leftX = drive[0];
+        double leftY = drive[1];
+        double spin = smoothSpin(-gRotate.right_stick_x/3);
 
         telemetry.addData("gamepad x", gDrive.left_stick_x);
         telemetry.addData("gamepad y", gDrive.left_stick_y);
@@ -236,7 +243,7 @@ public class Bogg
         if(stick == 0) {  //if we're not rotating
             if(rotating){  //but if the boolean says we are
                 rotating = false;
-                driveEngine.resetDistances(); //resets the distances after rotating so we can auto-correct
+                driveEngine.resetForward(); //resets forward after rotating so we can auto-correct
             }
             return false;
         }
@@ -294,36 +301,23 @@ public class Bogg
             manualCurvy(gDrive, gRotate);
     }
     
-    void autoEffect()
+    void flipUp()
     {
+        endEffector.close();
         double x = derivedRadius + driveEngine.xDist();
-        double z = goingUp? 33 : 0;
+        double z = goingUp ? 33 : 0;
 
         endEffector.moveToPosition(x, z);
+    }
 
-        if(goingUp)
-        {
-            if(endEffector.isUp())
-            {
-                if(timer.seconds() < 1)
-                    endEffector.open();
-                else
-                    goingUp = false;
-            }
-            else
-                timer.reset(); //keep the timer at zero while we're still moving
-        }
-        else //if going down
-        {
-            endEffector.close();
-            if(endEffector.isDown())
-            {
-                if(timer.seconds() > 2)
-                    goingUp = true;
-            }
-            else
-                timer.reset(); //keep the timer at zero while we're still moving
-        }
+    void flipDown()
+    {
+        endEffector.open();
+        double x = derivedRadius + driveEngine.xDist();
+        double z = goingUp ? 33 : 0;
+
+        endEffector.moveToPosition(x, z);
+        endEffector.pivot(0);
     }
     
     boolean manualEffect(Gamepad g)
