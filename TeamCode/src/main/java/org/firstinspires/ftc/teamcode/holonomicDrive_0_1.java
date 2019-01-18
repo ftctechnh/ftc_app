@@ -41,11 +41,6 @@ public class holonomicDrive_0_1 extends LinearOpMode
 
             robot.manualLift(g1.y, g1.a);
 
-            // Display the current value
-            double [] angles = robot.sensors.getAngles();
-            telemetry.addData("a1", angles[0]);
-            telemetry.addData("a2", angles[1]);
-            telemetry.addData("a3", angles[2]);
 
             telemetry.update();
             robot.update();

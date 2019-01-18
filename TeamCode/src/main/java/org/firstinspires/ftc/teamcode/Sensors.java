@@ -58,15 +58,9 @@ class Sensors {
         }
     }
 
-    double[] getAngles()
-    {
-        Orientation o = imu.getAngularOrientation();
-        return new double[]{o.firstAngle, o.secondAngle, o.thirdAngle};
-    }
-
     double getImuHeading()
     {
-        return imu.getAngularOrientation().firstAngle;
+        return imu.getAngularOrientation().firstAngle * Math.PI / 180;
     }
 
     boolean touchTopIsPressed() {

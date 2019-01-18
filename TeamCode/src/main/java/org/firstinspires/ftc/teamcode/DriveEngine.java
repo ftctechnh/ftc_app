@@ -230,7 +230,6 @@ class DriveEngine {
         return false;
     }
 
-    ArrayList<String> angleList = new ArrayList<>();
     double face(double angle)
     {
         telemetry.addData("current angle", spinAngle());
@@ -336,7 +335,7 @@ class DriveEngine {
 
     double spinAngle()
     {
-        return imu.getAngularOrientation().firstAngle;
+        return imu.getAngularOrientation().firstAngle * Math.PI / 180;
 //        double sum = 0;
 //        sum += back.getCurrentPosition() /3 * DriveEngine.inPerTicks;
 //        sum += right.getCurrentPosition() /3 * DriveEngine.inPerTicks;
