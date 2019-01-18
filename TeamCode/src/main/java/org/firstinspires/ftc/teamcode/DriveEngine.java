@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -14,6 +15,8 @@ class DriveEngine {
     DcMotor right;
     DcMotor left;
 
+    BNO055IMU imu;
+
     static double wheelDiameter = 5;
     static double robotRadius = 7.15;
 
@@ -25,11 +28,13 @@ class DriveEngine {
     static final double inPerTicks = inPerRev / ticksPerRev;
 
     private double theta = 0;
+    private double forward = 0;
     private double cumulativeSpin = 0;
     Telemetry telemetry;
 
-    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry) {
+    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, BNO055IMU imu) {
         this.telemetry = telemetry;
+        this.imu = imu;
 
         back = hardwareMap.dcMotor.get("back");
         right = hardwareMap.dcMotor.get("right");
@@ -133,18 +138,18 @@ class DriveEngine {
     private ArrayList<Boolean> checkpoint = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
-        return moveOnPath(false, args);
+        return moveOnPath(false, true, args);
     }
     boolean moveOnPath(String key, double[] ... args){
         if(keyList.contains(key))
             return true;
-        if(moveOnPath(false, args)){
+        if(moveOnPath(false, false, args)){
             keyList.add(key);
             return true;
         }
         return false;
     }
-    boolean moveOnPath(boolean continuous, double[] ... args)
+    boolean moveOnPath(boolean continuous, boolean correctSpin, double[] ... args)
     {
         telemetry.addData("back", back.getCurrentPosition());
         telemetry.addData("left", left.getCurrentPosition());
@@ -172,19 +177,21 @@ class DriveEngine {
         switch (args[c].length)
         {
             case 1:
-                spin = spinToTarget(args[c][0]);
+                spinAngle = forward + args[c][0];
+                spin = face(spinAngle);
                 rotate(spin);
-                if(Math.abs(spin) < 1 * Math.PI /180) {
+                if(Math.abs(spin) < 2 * Math.PI /180) {
                     stop();
+                    forward += spinAngle;
                     checkpoint.set(c, true);
                     resetDistances();
                 }
                 break;
             case 3:
-                spinAngle = args[c][2];
+                spinAngle = forward + args[c][2];
             case 2:
                 double[] point = args[c];
-                spin = spinToTarget(spinAngle);
+                spin = correctSpin? face(spinAngle) : 0;
 
                 double deltaX = point[0] - xDist();
                 double deltaY = point[1] - yDist();
@@ -196,17 +203,24 @@ class DriveEngine {
                 telemetry.addData("currentY", yDist());
                 telemetry.addData("radius", r);
 
-                if(r > 4) {
-                    drive(deltaX / r * .15, deltaY / r * .15, spin);
+                if(r > 9) {
+                    drive(deltaX / r * .25, deltaY / r * .25, spin); //drive at .25
+                }
+                else if(r > 5){
+                    drive(deltaX / r * .1, deltaY / r * .1, spin); //drive at .1
                 }
                 else if(r > 2){
-                    drive(deltaX * .15 / 2, deltaY * .15 /2, spin);
+                    drive(deltaX * .1 / 5, deltaY * .1 / 5, spin); //proportional to .1 at 5
                 }
-                else if(r <= .5){
+                else if(r > .25){
+                    drive(deltaX * .1 / 10, deltaY * .1 / 10, spin); //proportional to .05 at 5, == .0025 at .25
+                }
+                else if(r <= .25){
                     if(continuous)
-                        drive(deltaX * .15/2, deltaY * .15/2, spin);
+                        drive(deltaX * .1/10, deltaY * .1/10, spin);
                     else {
                         stop();
+                        forward += spinAngle;
                         this.checkpoint.set(c, true);
                         resetDistances();
                     }
@@ -216,84 +230,24 @@ class DriveEngine {
         return false;
     }
 
-    private double[] cumulativeCheckpoints = new double[3];
-
-    boolean moveOnCumulativePath(double[] ... args)
-    {
-        if(checkpoint.isEmpty()){
-            for (double[] arg : args) checkpoint.add(false);
-            resetDistances();
-        }
-
-        int c = 0;
-        for(boolean b: checkpoint)
-            if(b)
-                c++;
-
-        telemetry.addData("checkpoint count", c);
-        if(c == checkpoint.size())
-        {
-            checkpoint.clear();
-            stop();
-            return true;
-        }
-
-        double spin;
-        switch (args[c].length)
-        {
-            case 1:
-                spin = spinToTarget(cumulativeCheckpoints[2] + args[c][0]);
-                rotate(spin);
-                if(Math.abs(spin) < 1 * Math.PI /180) {
-                    stop();
-                    cumulativeCheckpoints[2] += args[c][0];
-                    cumulativeSpin -= args[c][0];
-                    checkpoint.set(c, true);
-                }
-                break;
-            case 2:
-                double[] point = args[c];
-                point[0] += cumulativeCheckpoints[0];
-                point[1] += cumulativeCheckpoints[1];
-                spin = spinToZero();
-
-                double deltaX = point[0] - xDist();
-                double deltaY = point[1] - yDist();
-                double r = Math.hypot(deltaX, deltaY);
-
-                telemetry.addData("targetX", point[0]);
-                telemetry.addData("targetY", point[1]);
-                telemetry.addData("radius", r);
-                telemetry.addData("error correctability", cumulativeSpin);
-
-                if(r > 4) {
-                    drive(deltaX / r * .15, deltaY / r * .15, spin);
-                }
-                else if(r > 2){
-                    drive(deltaX * .15 / 2, deltaY * .15 /2, spin);
-                }
-                else if(r <= .5){
-                    cumulativeCheckpoints[0] += args[c][0];
-                    cumulativeCheckpoints[1] += args[c][1];
-                    checkpoint.set(c, true);
-                }
-                break;
-        }
-        return false;
-    }
-
-    double spinToTarget(double targetAngle)
+    ArrayList<String> angleList = new ArrayList<>();
+    double face(double angle)
     {
         telemetry.addData("current angle", spinAngle());
-        double deltaAngle = targetAngle - spinAngle();
+        double deltaAngle = (forward - spinAngle()) % 360;
 
-        return deltaAngle/2;
+
+        return Math.min(.2, Math.abs(deltaAngle /2)) * Math.signum(deltaAngle);
     }
-
-    double spinToZero()
+    double faceForward()
     {
-        return spinToTarget(0);
+        return face(forward);
     }
+    void resetForward()
+    {
+        forward = spinAngle();
+    }
+    
 
     void orbit(double radius, double angle, double speed)
     {
@@ -382,11 +336,12 @@ class DriveEngine {
 
     double spinAngle()
     {
-        double sum = 0;
-        sum += back.getCurrentPosition() /3 * DriveEngine.inPerTicks;
-        sum += right.getCurrentPosition() /3 * DriveEngine.inPerTicks;
-        sum += left.getCurrentPosition() /3 * DriveEngine.inPerTicks;
-        return sum / robotRadius; //TODO: Find radius
+        return imu.getAngularOrientation().firstAngle;
+//        double sum = 0;
+//        sum += back.getCurrentPosition() /3 * DriveEngine.inPerTicks;
+//        sum += right.getCurrentPosition() /3 * DriveEngine.inPerTicks;
+//        sum += left.getCurrentPosition() /3 * DriveEngine.inPerTicks;
+//        return sum / robotRadius;
     }
 
     double[] distances()
