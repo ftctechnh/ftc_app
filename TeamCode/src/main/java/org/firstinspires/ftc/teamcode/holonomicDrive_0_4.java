@@ -26,8 +26,6 @@ public class holonomicDrive_0_4 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            robot.spinEffector();
-
             if(g1.x)
                 orbit = true;
             else if(g1.b)
@@ -53,13 +51,14 @@ public class holonomicDrive_0_4 extends LinearOpMode
                 if(g2.start)    //gamepad 2 starts the auto movement
                     auto = true;
             }
-            else if(g2.left_stick_button || g2.right_stick_button)
+            else if(g2.left_stick_button)
                 auto = false;
+            if(g2.right_stick_button)
 
             if(robot.manualEffect(g2)) //we can always change the arm manually
                 auto = false;
             if(auto)
-                robot.autoEffect(); //we only do it autonomously when auto == true
+                robot.flipUp(); //we only do it autonomously when auto == true
 
 
             robot.manualLift(g1.y, g1.a);

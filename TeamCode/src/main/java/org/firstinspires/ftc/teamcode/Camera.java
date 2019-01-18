@@ -377,7 +377,7 @@ public class Camera{
     }
 
     
-    double headingToTarget(double[] location, double heading, double target_x, double target_y)
+    private double headingToTarget(double[] location, double heading, double target_x, double target_y)
     {
         if(location != null) {
             double robot_x = location[0];
