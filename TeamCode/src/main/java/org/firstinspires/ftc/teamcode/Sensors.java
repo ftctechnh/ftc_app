@@ -19,6 +19,8 @@ class Sensors {
 
     BNO055IMU imu = null;
 
+    private boolean usingImu = true;
+
     // State used for updating telemetry
     Orientation angles;
     Acceleration gravity;
@@ -31,21 +33,7 @@ class Sensors {
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
 
-    }
 
-
-    boolean touchTopIsPressed() {
-        return touchTop.isPressed();
-    }
-
-    boolean touchBottomIsPressed() {
-        return touchBottom.isPressed();
-    }
-
-    private boolean usingImu = false;
-    private boolean gotMobile = false;
-    boolean isTilted()
-    {
         if(usingImu && imu == null)
         {
             BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -68,11 +56,34 @@ class Sensors {
                 usingImu = false;
             }
         }
+    }
 
+    double[] getAngles()
+    {
+        Orientation o = imu.getAngularOrientation();
+        return new double[]{o.firstAngle, o.secondAngle, o.thirdAngle};
+    }
+
+    double getImuHeading()
+    {
+        return imu.getAngularOrientation().firstAngle;
+    }
+
+    boolean touchTopIsPressed() {
+        return touchTop.isPressed();
+    }
+
+    boolean touchBottomIsPressed() {
+        return touchBottom.isPressed();
+    }
+
+    private boolean gotMobile = false;
+    boolean isTilted()
+    {
         if(usingImu)
         {
             Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            return Math.hypot(orientation.secondAngle, orientation.thirdAngle) > 5;
+            return Math.hypot(orientation.secondAngle, orientation.thirdAngle) > 10;
         }
         else
         {
