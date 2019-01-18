@@ -377,10 +377,9 @@ public class Camera{
     }
 
     
-    double headingToTarget(double[] location, double target_x, double target_y)
+    double headingToTarget(double[] location, double heading, double target_x, double target_y)
     {
         if(location != null) {
-            double heading =  getHeading();
             double robot_x = location[0];
             double robot_y = location[1];
             return heading - Math.atan2(target_y - robot_y, target_x - robot_x);
@@ -404,63 +403,51 @@ public class Camera{
 
     double[] getMoveToWall(double[] location, double heading, VuforiaTrackable target)
     {
-        double wallTargetX, wallTargetY = 0;
         double[] unitTargetLocation = new double[2];
-        double target_x, target_y;
+        double[] wallTargetLocation = new double[2];
 
+        wallTargetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+        wallTargetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
 
-        wallTargetX = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
-        wallTargetY = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
-
-        unitTargetLocation[0] = Math.signum(wallTargetX);
-        unitTargetLocation[1] = Math.signum(wallTargetY);
+        unitTargetLocation[0] = Math.signum(wallTargetLocation[0]);
+        unitTargetLocation[1] = Math.signum(wallTargetLocation[1]);
         double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
-        target_x = driveTarget[0];
-        target_y = driveTarget[1];
+
+        return getMoveToPosition(location, heading, driveTarget, wallTargetLocation);
+    }
+
+    double[] getMoveToPosition(double[] location, double heading, double[] driveTarget, double[] wallTarget)
+    {
+        double target_x = driveTarget[0];
+        double target_y = driveTarget[1];
 
         double robot_x = location[0];
         double robot_y = location[1];
 
         double delta_x = target_x - robot_x;
         double delta_y = target_y - robot_y;
+        double r = Math.hypot(delta_x, delta_y);
 
-        double heading_of_target_from_robot_location = Math.atan2(delta_y, delta_x);
+        double target_heading = headingToTarget(location, heading, target_x,target_y);
 
-        double target_heading = headingToTarget(location,target_x,target_y);
+        delta_x = Math.sin(target_heading) * r;
+        delta_y = Math.cos(target_heading) * r;
 
-        double wall_target_heading = headingToTarget(location);
+        double wall_target_heading = headingToTarget(location, heading, wallTarget[0], wallTarget[1]);
 
-        double wall_heading = heading - Math.round(heading / (Math.PI / 2)) * Math.PI / 2;
 
         telemetry.addData("Loc. x", location[0]);
         telemetry.addData("Loc. y", location[1]);
         telemetry.addData("Loc. z", location[2]);
         telemetry.addData("heading", heading * 180 / Math.PI);
 
-        telemetry.addData("wall target x:", wallTargetX);
-        telemetry.addData("wall target y:", wallTargetY);
-        telemetry.addData("wall target heading", wall_target_heading);
-        telemetry.addData("wall heading", wall_heading);
+        telemetry.addData("delta x:", delta_x);
+        telemetry.addData("delta y:", delta_y);
         telemetry.addData("destination x:", driveTarget[0]);
         telemetry.addData("destination y:", driveTarget[1]);
-        telemetry.addData("heading from location", heading_of_target_from_robot_location);
         telemetry.addData("target heading", target_heading * 180 / Math.PI);
 
-        if (Math.hypot(delta_x,delta_y) > 4)
-        {
-            telemetry.addData("drive x", Math.sin(target_heading) * .10);
-            telemetry.addData("drive y", Math.cos(target_heading) * .10);
-            return new double[]{Math.sin(target_heading) * .10, Math.cos(target_heading) * .10};
-        }
-        else if (Math.hypot(delta_x,delta_y) > .5) {
-            telemetry.addData("drive x2", Math.sin(target_heading) * .05);
-            telemetry.addData("drive y2", Math.cos(target_heading) * .05);
-            return new double[]{Math.sin(target_heading) * .05, Math.cos(target_heading) * .05};
-        }
-        else {
-            telemetry.addLine("Move to wall complete!");
-            return new double[]{0, 0, 0};
-        }
+        return new double[]{delta_x, delta_y, wall_target_heading};
     }
 
 

@@ -33,16 +33,9 @@ public class NavigationTest extends LinearOpMode
             if(location != null && heading != null && target != null)
             {
                 double[] drive = camera.getMoveToWall(location, heading, target);
-                switch (drive.length)
-                {
-                    case 1:
-                        telemetry.addData("rotate", drive[0]);
-                        break;
-                    case 2:
-                        telemetry.addData("driveX", drive[0]);
-                        telemetry.addData("driveY", drive[1]);
-                        break;
-                }
+                telemetry.addData("deltaX", drive[0]);
+                telemetry.addData("deltaY", drive[1]);
+                telemetry.addData("rotate", drive[2]);
             }
 
             telemetry.update();

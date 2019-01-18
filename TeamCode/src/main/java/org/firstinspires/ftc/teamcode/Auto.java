@@ -264,9 +264,9 @@ public class Auto {
             else
             {
                 if(wallHeading > 0)
-                    robot.driveEngine.rotate(.02);
+                    robot.driveEngine.rotate(.01);
                 else
-                    robot.driveEngine.rotate(-.02);
+                    robot.driveEngine.rotate(-.01);
             }
 
             return false;
@@ -278,8 +278,6 @@ public class Auto {
     {
         double[] location = camera.getLocation();
 
-        double wallTargetX, wallTargetY;
-        double[] unitTargetLocation = new double[2];
         if(location != null)
         {
             VuforiaTrackable target = null;
@@ -287,23 +285,48 @@ public class Auto {
                 if(camera.targetVisible(i))
                     target = camera.allTrackables.get(i);
 
-            double headingDifference =  camera.headingToTarget(location);
+            double[] drive = camera.getMoveToWall(location, camera.getHeading(), target);
+            double delta_x = drive[0];
+            double delta_y = drive[1];
+            double headingToTarget = drive[2];
+            double r = Math.hypot(delta_x, delta_y);
 
-            wallTargetX = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
-            wallTargetY = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
-
-            unitTargetLocation[0] = Math.signum(wallTargetX);
-            unitTargetLocation[1] = Math.signum(wallTargetY);
-            double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
-            double r = Math.hypot(driveTarget[0],driveTarget[1]);
-
-            double headingToTarget = camera.headingToTarget(location, driveTarget[0], driveTarget[1]);
-
-            if(Math.abs(headingDifference) < 5 && r < .5)
+            if(Math.abs(headingToTarget) < 5 && r < .5)
                 return true;
             else
             {
-                robot.driveEngine.drive(Math.sin(headingToTarget) * .05, Math.cos(headingToTarget) * .05, headingDifference / 100);
+                robot.driveEngine.moveOnPath(true, false, drive);
+            }
+        }
+        return false;
+    }
+
+    boolean driveCurvyToTarget(double[] driveTarget)
+    {
+        double[] location = camera.getLocation();
+
+        if(location != null)
+        {
+            VuforiaTrackable target = null;
+            for(int i = 0; i < 4; i++)
+                if(camera.targetVisible(i))
+                    target = camera.allTrackables.get(i);
+            double[] wallTargetLocation = new double[2];
+
+            wallTargetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
+            wallTargetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
+
+            double[] drive = camera.getMoveToPosition(location, camera.getHeading(), driveTarget, wallTargetLocation);
+            double delta_x = drive[0];
+            double delta_y = drive[1];
+            double headingToTarget = drive[2];
+            double r = Math.hypot(delta_x, delta_y);
+
+            if(Math.abs(headingToTarget) < 5 && r < .5)
+                return true;
+            else
+            {
+                robot.driveEngine.moveOnPath(true, false, drive);
             }
         }
         return false;
