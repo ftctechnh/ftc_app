@@ -21,13 +21,12 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if we're not orbiting
+            if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
             {
-                if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
-                {
-                    robot.manualDriveAutoCorrect(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
-                }
+                robot.manualDriveAutoCorrect(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
             }
+            else
+                robot.driveEngine.resetForward();
 
 
             if(g1.dpad_down)

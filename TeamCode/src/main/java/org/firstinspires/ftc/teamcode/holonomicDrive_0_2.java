@@ -17,13 +17,11 @@ public class holonomicDrive_0_2 extends LinearOpMode
         waitForStart();
 
         Gamepad g1 = gamepad1;
+        Gamepad g2 = gamepad2;
 
         while (opModeIsActive())
         {
-            if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if we're not orbiting
-            {
-                robot.manualCurvy(g1, g1);
-            }
+            robot.manualCurvy(g1, g1);
 
             if(g1.dpad_down)
                 robot.setBrake(Bogg.Direction.On);
@@ -38,6 +36,8 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
 
             robot.manualLift(g1.y, g1.a);
+
+            robot.manualEffect(g2); //we can always change the arm manually
 
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");

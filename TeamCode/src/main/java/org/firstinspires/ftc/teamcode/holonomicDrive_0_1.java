@@ -22,12 +22,9 @@ public class holonomicDrive_0_1 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if we're not orbiting
+            if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
             {
-                if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
-                {
-                    robot.manualDrive(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
-                }
+                robot.manualDrive(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
             }
 
             if(g1.dpad_down)
@@ -45,6 +42,10 @@ public class holonomicDrive_0_1 extends LinearOpMode
             robot.manualLift(g1.y, g1.a);
 
             // Display the current value
+            double [] angles = robot.sensors.getAngles();
+            telemetry.addData("a1", angles[0]);
+            telemetry.addData("a2", angles[1]);
+            telemetry.addData("a3", angles[2]);
 
             telemetry.update();
             robot.update();
