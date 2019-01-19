@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
@@ -29,7 +30,7 @@ class DriveEngine {
 
     private double theta = 0;
     private double forward = 0;
-    private double cumulativeSpin = 0;
+    private ElapsedTime timer;
     Telemetry telemetry;
 
     DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, BNO055IMU imu) {
@@ -55,6 +56,8 @@ class DriveEngine {
         back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        timer = new ElapsedTime();
     }
 
     DriveEngine() {
@@ -124,8 +127,6 @@ class DriveEngine {
 
     void resetDistances()
     {
-        cumulativeSpin += spinAngle();
-
         back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -172,7 +173,7 @@ class DriveEngine {
             return true;
         }
 
-        double spinAngle = 0;
+        double spinAngle = forward;
         double spin;
         switch (args[c].length)
         {
@@ -182,7 +183,8 @@ class DriveEngine {
                 rotate(spin);
                 if(Math.abs(spin) < 2 * Math.PI /180) {
                     stop();
-                    forward += spinAngle;
+                    forward += args[c][0];
+                    sumSE = 0;
                     checkpoint.set(c, true);
                     resetDistances();
                 }
@@ -220,7 +222,10 @@ class DriveEngine {
                         drive(deltaX * .1/10, deltaY * .1/10, spin);
                     else {
                         stop();
-                        forward += spinAngle;
+                        if(args[c].length == 3) {
+                            forward += args[c][2];
+                            sumSE = 0;
+                        }
                         this.checkpoint.set(c, true);
                         resetDistances();
                     }
@@ -233,18 +238,49 @@ class DriveEngine {
     double face(double angle)
     {
         telemetry.addData("current angle", spinAngle());
-        double deltaAngle = (forward - spinAngle()) % 360;
+        if(angle == forward)
+            return faceForward();
 
+        double deltaAngle = (forward - spinAngle()) % (2 * Math.PI);
 
         return Math.min(.2, Math.abs(deltaAngle /2)) * Math.signum(deltaAngle);
     }
-    double faceForward()
+
+    private double sumSE = 0;
+    private double lastSE = 0;
+    private double lastSt = 0;
+    private double faceForward()
     {
-        return face(forward);
+        //    u(t) = MV(t) = P *( e(t) + 1/I* integral(0,t) (e(tau) *dtau) + 1/D *de(t)/dt )
+        //    where
+        //    P is the proportional gain, a tuning parameter,
+        //    I is the time to correct past error, a tuning parameter,
+        //    D is the time the equation predicts to correct for future error, a tuning parameter,
+        //    e(t) = set point - current point
+        //    t is the time or instantaneous time
+        //    tau is the variable of integration (takes on values from time zero to the present t).
+        //power per degree
+        double p = 180 / Math.PI * .003;
+        double i = 4;
+        double d = 2;
+
+        double e = (forward - spinAngle()) % (2 * Math.PI);
+        double de = e - lastSE;
+        double t = timer.seconds();
+        double dt = t - lastSt;
+        sumSE += e * dt;
+
+        double power = p * (e  +  1/ i * sumSE +  d * de/dt);
+        //e is current error, sumSE is the integral, de/dt is the derivative
+
+        lastSE = e;
+        lastSt = t;
+        return power;
     }
     void resetForward()
     {
         forward = spinAngle();
+        sumSE = 0;
     }
     
 
@@ -335,7 +371,7 @@ class DriveEngine {
 
     double spinAngle()
     {
-        return imu.getAngularOrientation().firstAngle * Math.PI / 180;
+        return Sensors.getImuHeading(imu);
 //        double sum = 0;
 //        sum += back.getCurrentPosition() /3 * DriveEngine.inPerTicks;
 //        sum += right.getCurrentPosition() /3 * DriveEngine.inPerTicks;
