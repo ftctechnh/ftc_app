@@ -19,10 +19,8 @@ public class Bogg
     Servo drop;
     Servo dServo;
 
-    double averageClockTime = 0;
+    static double averageClockTime = 0;
     double liftAlpha = .12;
-    double xAve = 0;
-    double yAve = 0;
     double rAve = 0;
     double thetaAve = 0;
     double spinAve = 0;
@@ -54,7 +52,7 @@ public class Bogg
         this.telemetry = telemetry;
         sensors = new Sensors(hardwareMap);
         driveEngine = new DriveEngine(hardwareMap, telemetry, sensors.imu);
-        endEffector = new EndEffector(hardwareMap, telemetry);
+        endEffector = new EndEffector(hardwareMap, telemetry, sensors);
         lift  = hardwareMap.dcMotor.get("lift");
         lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         brake = hardwareMap.servo.get("brake");
@@ -76,6 +74,9 @@ public class Bogg
             rAve = 0;
         else
             rAve = alpha * r + (1-alpha) * rAve;
+
+        if(thetaAve > Math.PI)  thetaAve -= 2 * Math.PI;
+        if(thetaAve < -Math.PI) thetaAve += 2 * Math.PI;
 
         //find the nearest value: must be within pi
         if(theta - thetaAve > Math.PI) theta -= 2 * Math.PI;
@@ -265,25 +266,6 @@ public class Bogg
         derivedRadius = endEffector.getRadius();
     }
 
-    boolean dPadOrbit(boolean left, boolean right)
-    {
-        if(left )
-        {
-            driveEngine.orbit(48,0, -.3);
-            return true;
-        }
-        else if(right)
-        {
-            driveEngine.orbit(48,0, .3);
-            return true;
-        }
-        return false;
-    }
-
-    void spinEffector()
-    {
-        endEffector.spin(.5);
-    }
 
     void manualDriveVarOrbit(Gamepad gDrive, Gamepad gRotate, boolean orbit)
     {
@@ -300,25 +282,7 @@ public class Bogg
         else
             manualCurvy(gDrive, gRotate);
     }
-    
-    void flipUp()
-    {
-        endEffector.close();
-        double x = derivedRadius + driveEngine.xDist();
-        double z = goingUp ? 33 : 0;
 
-        endEffector.moveToPosition(x, z);
-    }
-
-    void flipDown()
-    {
-        endEffector.open();
-        double x = derivedRadius + driveEngine.xDist();
-        double z = goingUp ? 33 : 0;
-
-        endEffector.moveToPosition(x, z);
-        endEffector.pivot(0);
-    }
     
     boolean manualEffect(Gamepad g)
     {
