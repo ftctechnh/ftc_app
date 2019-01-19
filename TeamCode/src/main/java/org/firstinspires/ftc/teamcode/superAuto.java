@@ -51,6 +51,34 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.
 import static org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit.mmPerInch;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
+
+//Tensor flow test
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+
+import java.util.List;
 
 abstract public class superAuto extends LinearOpMode {
     //FR = Front Right, FL = Front Left, BR = Back Right, BL = Back Left.
@@ -87,6 +115,12 @@ abstract public class superAuto extends LinearOpMode {
     boolean iAmBlue = !iAmRed;
     int startingQuadrant;
     RobotLocation location = new RobotLocation();
+    VuforiaLocalizer vuforia;
+    TFObjectDetector tfod;
+    final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
 
     private ElapsedTime runtime = new ElapsedTime();
 
@@ -316,44 +350,23 @@ abstract public class superAuto extends LinearOpMode {
         }
         targetsRoverRuckus.activate();
     }
+    void initTfod() {
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-    void configureTensorFlow() {
-
-        final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
-        final String LABEL_GOLD_MINERAL = "Gold Mineral";
-        final String LABEL_SILVER_MINERAL = "Silver Mineral";
-
-        /*
-         * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-         * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-         * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-         * web site at https://developer.vuforia.com/license-manager.
-         *
-         * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-         * random data. As an example, here is a example of a fragment of a valid key:
-         *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-         * Once you've obtained a license key, copy the string from the Vuforia web site
-         * and paste it in to your code on the next line, between the double quotes.
-         */
-        final String VUFORIA_KEY = "AYhHUgX/////AAABmTO0g2PsdUqpg5xo" +
+        parameters.vuforiaLicenseKey = "AYhHUgX/////AAABmTO0g2PsdUqpg5xo" +
                 "96O7OkOB7qrwOjE24wV71lIm/MF9g96awd677rj7LrgQKUJAewgWkAAxn1MUJtUyiq" +
                 "9iesjKF+QNXlKr5qCAb69hI268sYjjCJ+PqVBtMrlcIG1F4l2osl9zIk9tYAYfLXKl" +
                 "T351h1yRW1AqAdHJaHwt861ztrh4EW/1WjOV3/yT4SDtrJivhfmU0c51IqPUEJ0xqbWFr2saxvS/cSkH4e+hFIImM/jIw5JkaizeznuFTA" +
                 "TnWTq9Spp/EhPPaQXJtScNP3DDaNDdfiqT9opwsxuQlEe1YF19sHjtenGD7/PcUlQXVS+VKbxaSqd/Cnq4+/3bOuhNzFoTVbBKZ16DQ9EZeCJM";
+        parameters.cameraDirection = CameraDirection.BACK;
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        /**
-         * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-         * localization engine.
-         */
-        VuforiaLocalizer vuforia;
-
-        /**
-         * {@link #tfod} is the variable we will use to store our instance of the Tensor Flow Object
-         * Detection engine.
-         */
-        TFObjectDetector tfod;
-
-
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+        tfod.activate();
     }
 
     void updateLocation() {
@@ -502,11 +515,11 @@ abstract public class superAuto extends LinearOpMode {
 
     void adjustHeading(int targetHeading, float basePosx, float basePosy) {
         angles =(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
-        telemetry.addData("First Angle", angles.firstAngle);
+        //telemetry.addData("First Angle", angles.firstAngle);
         if (angles != null) {
-            double currentHeading =  gyroFlipped * angles.firstAngle;
+            double currentHeading =  gyroFlipped * angles.firstAngle;//y = 2nd angle
             double addPower = (targetHeading - currentHeading) * .025;
-            telemetry.addData("add power", addPower);
+            //telemetry.addData("add power", addPower);
 
             double FRBLPower = (-basePosy) - basePosx;
             double FLBRPower = (-basePosy) + basePosx;
@@ -765,4 +778,47 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 */
+void tensorFlowTest() {
+    initTfod();
+
+    telemetry.setAutoClear(true);
+        while (true) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made.
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() >= 1) {
+                        //int goldMineralX = -1;
+                        //int silverMineral1X = -1;
+                        //int silverMineral2X = -1;
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                telemetry.addData("Gold Mineral Position", "Visible");
+                            } else {
+                                telemetry.addData("Gold Mineral Position", "Not Visible");
+                            }
+                          /*  goldMineralX = (int) recognition.getLeft();
+                          } else if (silverMineral1X == -1) {
+                            silverMineral1X = (int) recognition.getLeft();
+                          } else {
+                            silverMineral2X = (int) recognition.getLeft();
+                          }*/
+                        }
+                        /*if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
+                          if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Left");
+                          } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
+                            telemetry.addData("Gold Mineral Position", "Right");
+                          } else {
+                            telemetry.addData("Gold Mineral Position", "Center");
+                          }
+                        }*/
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+    }
 }

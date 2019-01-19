@@ -25,7 +25,7 @@ public class auto1819 extends superAuto {
     public void runOpMode() {
         setUp();
         configVuforiaRoverRuckus();
-        configureTensorFlow();
+
 /*
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
