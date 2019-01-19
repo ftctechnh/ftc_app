@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="holonomicDrive Variable Orbit", group="Testing")
 public class holonomicDrive_0_4 extends LinearOpMode
@@ -15,6 +16,8 @@ public class holonomicDrive_0_4 extends LinearOpMode
     private boolean auto = false;
     private boolean orbit = false;
 
+    ElapsedTime timer;
+
     @Override
     public void runOpMode()
     {
@@ -23,6 +26,7 @@ public class holonomicDrive_0_4 extends LinearOpMode
         g1 = gamepad1;
         g2 = gamepad2;
         waitForStart();
+        timer = new ElapsedTime();
 
         while (opModeIsActive())
         {
@@ -48,8 +52,10 @@ public class holonomicDrive_0_4 extends LinearOpMode
                 robot.updateRadius();
                 robot.driveEngine.resetDistances();
 
-                if(g2.start)    //gamepad 2 starts the auto movement
+                if(g2.start) {    //gamepad 2 starts the auto movement
                     auto = true;
+                    timer.reset();
+                }
             }
             else if(g2.left_stick_button)
                 auto = false;
@@ -58,7 +64,7 @@ public class holonomicDrive_0_4 extends LinearOpMode
             if(robot.manualEffect(g2)) //we can always change the arm manually
                 auto = false;
             if(auto)
-                robot.flipUp(); //we only do it autonomously when auto == true
+                robot.endEffector.flipUp(timer.seconds()); //we only do it autonomously when auto == true
 
 
             robot.manualLift(g1.y, g1.a);

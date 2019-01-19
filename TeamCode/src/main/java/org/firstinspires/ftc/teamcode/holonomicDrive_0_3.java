@@ -23,8 +23,7 @@ public class holonomicDrive_0_3 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if(!robot.dPadOrbit(g1.dpad_left, g1.dpad_right)) //if not orbiting
-                robot.manualCurvy(g1, g2);
+            robot.manualCurvy(g1, g2);
 
             if(g1.dpad_down)
                 robot.setBrake(Bogg.Direction.On);
@@ -40,8 +39,8 @@ public class holonomicDrive_0_3 extends LinearOpMode
                 robot.dropMarker(Bogg.Direction.Right);
             }
 
-
             robot.manualLift(g1.y, g1.a);
+
 
             // Display the current value
             // Display the current value
