@@ -281,11 +281,10 @@ public class Auto4Variations extends LinearOpMode {
                     Drive.TimeDelay(0.5);
                     //Drive.TimeDelay(2.0);
                     Claimer.reset();
-                    if (doubleSample == true) {
-                        newState(State.Double_Sample);
-                    } else {
-                        newState(State.Depot_to_Crater);
+                    if (orientation == Start.Depot) {
+                        Drive.turn2Angle(TURN_SPEED, -45.0);
                     }
+                    newState(State.Depot_to_Crater);
                     break;
 
                 case Double_Sample:
@@ -313,13 +312,13 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.moveBackward(0.5, 0.9);
                     } else {
                         Drive.moveBackward(0.5, 2.2);
-                        Drive.turn2Angle(TURN_SPEED, -160);
+                        Drive.turnAngle(TURN_SPEED, -30);
                         Drive.moveBackward(0.5, 1.0);
-                        while (!Lift.LifterButtonB.isPressed()) {
-                            Lift.Retract();
-                        }
-                        Lift.Stop();
                     }
+                    while (!Lift.LifterButtonB.isPressed()) {
+                        Lift.Retract();
+                    }
+                    Lift.Stop();
                     newState(State.Stop);
                     break;
 
