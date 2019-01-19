@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
@@ -16,6 +17,8 @@ class Sensors {
 
     private TouchSensor touchTop;
     private TouchSensor touchBottom;
+    private DistanceSensor dLow;
+    private DistanceSensor dHigh;
 
     BNO055IMU imu = null;
 
@@ -32,7 +35,8 @@ class Sensors {
 
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
-
+        dLow = hardwareMap.get(DistanceSensor.class, "dLow");
+        dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
 
         if(usingImu && imu == null)
         {
@@ -58,7 +62,11 @@ class Sensors {
         }
     }
 
-    double getImuHeading()
+    /**
+     * @param imu
+     * @return angle in radians
+     */
+    static double getImuHeading(BNO055IMU imu)
     {
         return imu.getAngularOrientation().firstAngle * Math.PI / 180;
     }
@@ -71,7 +79,18 @@ class Sensors {
         return touchBottom.isPressed();
     }
 
-    private boolean gotMobile = false;
+    double getLowDistance()
+    {
+        return 36;
+//        return dLow.getDistance(DistanceUnit.INCH);
+    }
+
+    double getHighDistance()
+    {
+        return 36;
+//        return dHigh.getDistance(DistanceUnit.INCH);
+    }
+
     boolean isTilted()
     {
         if(usingImu)
