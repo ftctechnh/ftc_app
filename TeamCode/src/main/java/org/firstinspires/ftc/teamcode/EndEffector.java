@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 class EndEffector {
+    static final double grabberLength = 7;
     static double wheelDiameter = 2;
     private static final double ticksPerRev = 1120;
     private static double inPerRev = Math.PI * wheelDiameter;
@@ -24,12 +25,13 @@ class EndEffector {
     DcMotor spin;
     Servo balls;
     Servo blocks;
+    Sensors sensors;
     Telemetry telemetry;
 
     double length;
     int pivotTicks = 0;
 
-    EndEffector(HardwareMap hardwareMap, Telemetry telemetry)
+    EndEffector(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors)
     {
 //        spin = hardwareMap.dcMotor.get("spin");
 //        spin.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -37,15 +39,19 @@ class EndEffector {
 //        spin.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 //        balls = hardwareMap.servo.get("balls");
 //        blocks = hardwareMap.servo.get("blocks");
+        this.sensors = sensors;
+        this.telemetry = telemetry;
         pivot = hardwareMap.dcMotor.get("pivot");
         pivot.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         pivot.setDirection(DcMotorSimple.Direction.FORWARD);
-        pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivot.setPower(1);
 
         contract = hardwareMap.dcMotor.get("contract");
         contract.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         contract.setDirection(DcMotorSimple.Direction.FORWARD);
         contract.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        contract.setPower(1);
     }
 
     void open()
@@ -59,27 +65,9 @@ class EndEffector {
 //        blocks.setPosition(0);
     }
 
-    boolean isUp()
+    void extend(double inchesPerSecond)
     {
-        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        return pivot.getCurrentPosition() > pivotTicks - 100; //open before we reach the lander
-
-    }
-    boolean isDown()
-    {
-        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        pivot.setTargetPosition(0);
-        return pivot.getCurrentPosition() < 100;
-    }
-
-    void spin(double power)
-    {
-        //this.spin.setPower(power);
-    }
-
-    void extend(double l)
-    {
-        length += l;
+        length += inchesPerSecond * Bogg.averageClockTime;
         contract.setTargetPosition((int)Math.round(length * inPerTicks));
     }
 
@@ -91,15 +79,55 @@ class EndEffector {
 
     void moveToPosition(double x, double z)
     {
-        moveToLength(Math.hypot(x,z));
-        double radians = Math.atan2(z,x);
-        pivotTicks = (int) (radians * ticksPerRadian * gearRatio);
+        double angle = Math.atan2(z,x);
+        //subtract grabber
+        z += Math.abs(grabberLength * Math.cos(angle));
+        x -= Math.abs(grabberLength * Math.sin(angle));
+
+        length = Math.hypot(x,z);
+        angle = Math.atan2(z,x);
+
+        moveToLength(length);
+        pivotTicks = (int) (angle * ticksPerRadian * gearRatio);
         pivot.setTargetPosition(pivotTicks);
     }
 
     void pivot(int position)
     {
         pivot.setTargetPosition((int)(position * ticksPerDegree * gearRatio));
+    }
+
+    void flipUp(double t)
+    {
+        close();
+        if(t > .5)
+        {
+            double x = Math.min(sensors.getHighDistance() + 3, 48);
+            double z = 33;
+            moveToPosition(x, z);
+            pickleUp();
+        }
+    }
+
+    void flipDown(double t)
+    {
+        if(t > .5)
+        {
+            open();
+            moveToPosition(length, 0);
+        }
+        if(t > 1)
+            pickleDown();
+    }
+
+    void pickleUp()
+    {
+
+    }
+
+    void pickleDown()
+    {
+
     }
 
     
