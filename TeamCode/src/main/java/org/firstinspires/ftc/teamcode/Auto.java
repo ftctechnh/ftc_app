@@ -28,8 +28,8 @@ public class Auto {
     public enum Mode
     {
         Drop,
-        LookForMinerals,
         Slide1,
+        LookForMinerals,
         PushGold,
         Slide2,
         TurnByCamera,
@@ -134,32 +134,33 @@ public class Auto {
         return Mode.PushGold;
     }
 
+
+    double approachGold = 5;
     private int i = 0;
     Mode pushGoldNoCamera()
     {
         if (robot.driveEngine.moveOnPath( "Move Right",
-                new double[]{17, 0})) {
-            if (i < 3) {
-                if (robot.driveEngine.moveOnPath( "Push gold forward" + i,
-                        new double[]{0, 12}))
-                {
-                    robot.push(Bogg.Direction.Down);
+                new double[]{17, approachGold})) {
 
-                    if (robot.driveEngine.moveOnPath("pull" + i,
-                            new double[]{0, -6}))
-                    {
-                        robot.push(Bogg.Direction.Up);
-                        if (robot.driveEngine.moveOnPath("moveLeft" + i,
-                                new double[]{0, -6},
-                                new double[]{-17, 0})) {
-                            i++;
-                        }
+            if (i < 3) {
+                if(robot.sensors.getLowDistance() > 6)
+                    if (robot.driveEngine.moveOnPath( "Push gold" + i,
+                            new double[]{0, 12},
+                            new double[]{0, -(12 + approachGold)})){
+                        slide2distance = 51 - 17 * (i);
+                        return Mode.Slide2;
                     }
-                }
+                else
+                    if(robot.driveEngine.moveOnPath("moveLeft" + i,
+                            new double[]{-17,0}))
+                        i++;
             }
             else {
+                // i==3: shouldn't happen
                 slide2distance = 0;
-                return Mode.Slide2;
+                if(robot.driveEngine.moveOnPath(
+                        new double[]{0, -approachGold}))
+                    return Mode.Slide2;
             }
         }
         return Mode.PushGold;
