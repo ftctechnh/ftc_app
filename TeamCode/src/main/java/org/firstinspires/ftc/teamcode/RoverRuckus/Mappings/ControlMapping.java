@@ -22,7 +22,8 @@ public abstract class ControlMapping {
     public abstract double driveStickY();
     public abstract double turnSpeed();
 
-    public abstract double moveSpeedScale();
+    public abstract double translateSpeedScale();
+    public abstract double turnSpeedScale();
     public abstract double armSpeed();
 
     public abstract boolean flipOut();

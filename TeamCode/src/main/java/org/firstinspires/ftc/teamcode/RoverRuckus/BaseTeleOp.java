@@ -11,16 +11,16 @@ import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.AutoUtils;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.ControlMapping;
 import org.firstinspires.ftc.teamcode.Utilities.Control.FeedbackController;
 import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
+import org.firstinspires.ftc.teamcode.Utilities.Control.WheelDriveVector;
 
 import java.util.Arrays;
 
 @Config
 public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
-    public static double MAX_EXTEND_POWER = 1.0;
-
-    public static double TRANSLATE_POWER = 2.0;
-    public static double TURN_POWER = 2.0;
+    public static int MAX_EXTENDER_POS = 1060;
+    public static int MIN_EXTENDER_POS = 0;
+    public static double EXTEND_MAXED_DRIVE_POWER = 0.3;
 
     public ControlMapping controller;
     public boolean fieldCentric;
@@ -90,43 +90,35 @@ public abstract class BaseTeleOp extends LinearOpMode {
             }
 
             winch.setPower(winchPower);
-            robot.linearSlide.setPower(controller.getExtendSpeed() * MAX_EXTEND_POWER);
-
             if (controller.flipOut()) {robot.intake.collect();}
             else if (controller.flipBack()) {robot.intake.deposit();}
             else if (controller.armSpeed() < 0) {robot.intake.collect();}
-            // QUINN TODO IF DIRECTION IS WRONG CHANGE THIS TO "> 0"
 
-            // Get base mecanum values
-            double turnSpeed = -controller.turnSpeed(); // Negated because of heading
-            double[] unscaledPowers = robot.getDrivePowersFromAngle(getControllerDir());
-            if (getDist() == 0) {unscaledPowers = new double[4];}
+            WheelDriveVector speeds = new WheelDriveVector(controller.driveStickY(), controller.driveStickX(), controller.turnSpeed());
+            speeds.scale(controller.translateSpeedScale(), controller.turnSpeedScale());
 
-            for (int i = 0; i < unscaledPowers.length; i++) {
-                if (i % 2 == 0) {
-                    unscaledPowers[i] += turnSpeed;
-                } else {
-                    unscaledPowers[i] -= turnSpeed;
-                }
+            // Control linear slide extend retract and drive robot if necessary
+            double slidePower = controller.getExtendSpeed();
+            robot.linearSlide.setPower(slidePower);
+            int linearSlidePos = robot.linearSlide.getCurrentPosition();
+            if ((linearSlidePos < MIN_EXTENDER_POS && slidePower > 0) ||
+                    (linearSlidePos > MAX_EXTENDER_POS && slidePower < 0)) {
+                speeds.forwardSpeed -= slidePower * EXTEND_MAXED_DRIVE_POWER;
             }
-            telemetry.addData("Turn speed", turnSpeed);
-            telemetry.addData("Motor powers pre-scaled", Arrays.toString(unscaledPowers));
-            // Scale them appropriately
-            double greatest = 0;
-            for (double d : unscaledPowers) {
-                greatest = Math.max(greatest, Math.abs(d));
-            }
-            double factor = (controller.moveSpeedScale() * Math.max(getDist() + controller.turnSpeed(), 1)) / greatest;
-            for (int i = 0; i < 4; i++) {
-                robot.motorArr[i].setPower(clamp(unscaledPowers[i] * factor));
-            }
+
+            // Slew drive mapped to GP2 left/right
+
+
+            robot.setMotorSpeeds(speeds.getDrivePowers());
 
             // Telemetry
             //feedback.updateTelemetry(telemetry);
             int pos = (robot.leftFlipper.getCurrentPosition() + robot.rightFlipper.getCurrentPosition()) / 2;
             telemetry.addData("Arm position", pos);
-            telemetry.addData("Left flipper velo", robot.leftFlipper.getVelocity());
-            telemetry.addData("Right flipper velo", robot.rightFlipper.getVelocity());
+            telemetry.addData("Drive stick y", controller.driveStickY());
+            telemetry.addData("Drive stick actual y", gamepad1.left_stick_y);
+            telemetry.addData("Extender position", robot.linearSlide.getCurrentPosition());
+
             telemetry.addData("Winch pos", robot.winch.getCurrentPosition());
             telemetry.addData("Loop time", loopTime.milliseconds());
             loopTime.reset();
@@ -146,14 +138,6 @@ public abstract class BaseTeleOp extends LinearOpMode {
         return controllerAngle;
     }
 
-    public double getDist() {
-        double d = Math.sqrt(Math.pow(controller.driveStickY(), 2) + Math.pow(controller.driveStickX(), 2));
-        // QUINN TODO HERE ARE THE DEAD ZONES
-        /*if (d < 0.2) {return 0;}
-        else if (d > 0.8) {return 1;}
-        else {return d;}*/
-        return Math.pow(d, TRANSLATE_POWER);
-    }
 
     public double clamp(double d) {return Math.max(-1, Math.min(1, d));}
 }

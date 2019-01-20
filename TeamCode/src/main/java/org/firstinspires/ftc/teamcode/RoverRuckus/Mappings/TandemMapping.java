@@ -10,7 +10,9 @@ public class TandemMapping extends ControlMapping {
     public static double FLIP_LEFT_FACTOR = 0.65;
     public static double FLIP_RIGHT_FACTOR = 0.6;
 
-    public static double MIN_SLOW_MOVE_SPEED = 0.6;
+    public static double MAX_TURN_SPEED = 0.5;
+    public static double MIN_TURN_SPEED = 0.1;
+    public static double MIN_MOVE_SPEED = 0.6;
 
     public static double EXPONENT = 1.5;
     public static double TURN_SPEED_FACTOR = 0.8;
@@ -44,6 +46,16 @@ public class TandemMapping extends ControlMapping {
     }
 
     @Override
+    public double translateSpeedScale() {
+        return scaleControl(1 - gamepad1.left_trigger, MIN_MOVE_SPEED, 1);
+    }
+
+    @Override
+    public double turnSpeedScale() {
+        return scaleControl(1 - gamepad1.left_trigger, MIN_TURN_SPEED, MAX_TURN_SPEED);
+    }
+
+    @Override
     public double armSpeed() {
         return removeLowVals(gamepad2.left_trigger * FLIP_LEFT_FACTOR
                 - gamepad2.right_trigger * FLIP_RIGHT_FACTOR, 0.05);
@@ -65,11 +77,6 @@ public class TandemMapping extends ControlMapping {
         }
         return gamepad2.dpad_right;
 
-    }
-
-    @Override
-    public double moveSpeedScale() {
-        return scaleControl(1 - gamepad1.left_trigger, MIN_SLOW_MOVE_SPEED, 1);
     }
 
     @Override
