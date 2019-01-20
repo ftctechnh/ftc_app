@@ -101,8 +101,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
             double slidePower = controller.getExtendSpeed();
             robot.linearSlide.setPower(slidePower);
             int linearSlidePos = robot.linearSlide.getCurrentPosition();
-            if ((linearSlidePos < MIN_EXTENDER_POS && slidePower > 0) ||
-                    (linearSlidePos > MAX_EXTENDER_POS && slidePower < 0)) {
+            if ((linearSlidePos < MIN_EXTENDER_POS && slidePower < 0) ||
+                    (linearSlidePos > MAX_EXTENDER_POS && slidePower > 0)) {
                 speeds.forwardSpeed -= slidePower * EXTEND_MAXED_DRIVE_POWER;
             }
 
