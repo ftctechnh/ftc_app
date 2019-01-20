@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.RoverRuckus.Deployers;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.RoverRuckus.BaseTeleOp;
-import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.ComputerMapping;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.SetupMapping;
 
 @TeleOp(name="Sparky Setup")
