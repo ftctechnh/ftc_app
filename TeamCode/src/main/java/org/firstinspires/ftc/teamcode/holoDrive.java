@@ -1,5 +1,6 @@
 //Razzle Dazzle of Fantazzmagazzles Code
-
+//This was a collective effort by team 13383
+//The code was worked on by: Aniketh Kolla, and Vasudev Menon
 
 package org.firstinspires.ftc.teamcode;
 
@@ -20,7 +21,8 @@ public class holoDrive extends OpMode {
     DcMotor plow;
     DcMotor lift;
     DcMotor armIntake;
-
+    DcMotor extendIntake;
+    DcMotor moveIntake;
 
     @Override
     public void init() {
@@ -29,8 +31,10 @@ public class holoDrive extends OpMode {
         m3 = hardwareMap.dcMotor.get("m3");
         m4 = hardwareMap.dcMotor.get("m4");
         plow = hardwareMap.dcMotor.get("plow");
-        lift = hardwareMap.dcMotor.get("lift");
+     //   lift = hardwareMap.dcMotor.get("lift");
         armIntake = hardwareMap.dcMotor.get("arm_Intake");
+        extendIntake = hardwareMap.dcMotor.get("extend_Intake");
+        moveIntake = hardwareMap.dcMotor.get("move_intake");
     }
 
     @Override
@@ -38,7 +42,13 @@ public class holoDrive extends OpMode {
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
         double xPower = gamepad1.left_stick_x;  //power to spin holonomic
         double spinPower = -gamepad1.right_stick_x; //power to spin holonomic
-        double liftPower = gamepad2.right_stick_y; //power for lift
+       // double liftPower = gamepad2.left_stick_x/2; //power for lift
+        double armPower = -gamepad2.left_stick_y/2; //power for arm
+        double extendPower = gamepad2.right_stick_y/2; //power for intake extension
+        double movePower = gamepad2.right_stick_x/2; //power to move arm
+
+
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -103,18 +113,26 @@ public class holoDrive extends OpMode {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        lift.setPower(liftPower/2);
+        //lift.setPower(liftPower);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        armIntake.setPower((-gamepad2.left_stick_y/2));
+        armIntake.setPower(armPower);
+
+        extendIntake.setPower(extendPower);
+
+        moveIntake.setPower(movePower);
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        telemetry.addData("xPower", "%.2f",  gamepad1.left_stick_x);
-        telemetry.addData("yPower", "%.2f",  gamepad1.left_stick_y);
-        telemetry.addData("liftPower", "%.2f",  gamepad2.right_stick_y/2);
-        telemetry.addData("armPower", "%.2f",  -gamepad2.left_stick_y/2);
+        telemetry.addData("xPower", "%.2f",  xPower);
+        telemetry.addData("yPower", "%.2f",  yPower);
+        //telemetry.addData("liftPower", "%.2f",  liftPower);
+        telemetry.addData("armPower", "%.2f",  armPower);
+        telemetry.addData("extendPower", "%.2f",  extendPower);
+        telemetry.addData("movePower", "%.2f",  movePower);
+
+
 
     }
 }
