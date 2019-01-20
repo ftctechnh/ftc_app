@@ -31,8 +31,7 @@
             telemetry.update();
        }*/
 
-       followHeading(0,1.6,0,0.5f);
+       //followHeading(0,1.5, (-16/17)*.6f,.6f);
        tensorFlowTest();
-
     }
     }

@@ -133,6 +133,8 @@ abstract public class superAuto extends LinearOpMode {
         composeTelemetry();
 
         waitForStart();
+
+        initTfod();
     }
 
 
@@ -543,6 +545,14 @@ abstract public class superAuto extends LinearOpMode {
         motorBR.setPower(0);
         motorBL.setPower(0);
     }
+    void translateForever(double posx, double posy,double power){
+        double FRBLPower = ((-posy) - posx)*power;
+        double FLBRPower = ((-posy) + posx)*power;
+        motorFR.setPower( FRBLPower );
+        motorFL.setPower( FLBRPower );
+        motorBR.setPower( FLBRPower );
+        motorBL.setPower( FRBLPower );
+    }
     void fancyGyroPivot (double target) {
 
         //First set up variables
@@ -779,9 +789,8 @@ abstract public class superAuto extends LinearOpMode {
     }
 */
 void tensorFlowTest() {
-    initTfod();
-
     telemetry.setAutoClear(true);
+    translateForever( 1,0,0.5);
         while (true) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -796,6 +805,8 @@ void tensorFlowTest() {
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                 telemetry.addData("Gold Mineral Position", "Visible");
+                                sR();
+                                break;
                             } else {
                                 telemetry.addData("Gold Mineral Position", "Not Visible");
                             }
