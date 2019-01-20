@@ -1,3 +1,5 @@
+//Razzle Dazzle of Fantazzmagazzles Code
+
 
 package org.firstinspires.ftc.teamcode;
 
@@ -6,9 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import java.lang.Math.*;
 
-/**
- * Created by Wake Robotics Member on 11/2/2017.
- */
 
 
 @TeleOp(name = "holoDrive", group = "Tank")
@@ -20,6 +19,7 @@ public class holoDrive extends OpMode {
     DcMotor m4;
     DcMotor plow;
     DcMotor lift;
+    DcMotor armIntake;
 
 
     @Override
@@ -30,6 +30,7 @@ public class holoDrive extends OpMode {
         m4 = hardwareMap.dcMotor.get("m4");
         plow = hardwareMap.dcMotor.get("plow");
         lift = hardwareMap.dcMotor.get("lift");
+        armIntake = hardwareMap.dcMotor.get("arm_Intake");
     }
 
     @Override
@@ -37,9 +38,9 @@ public class holoDrive extends OpMode {
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
         double xPower = gamepad1.left_stick_x;  //power to spin holonomic
         double spinPower = -gamepad1.right_stick_x; //power to spin holonomic
-        double liftPower = gamepad2.left_stick_y; //power for lift
+        double liftPower = gamepad2.right_stick_y; //power for lift
 
-        float rightStick = gamepad2.left_stick_y;   //plow power
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         if(Math.abs(spinPower)>0.1) {    //spin holonomic
             m1.setPower(spinPower);
@@ -47,7 +48,7 @@ public class holoDrive extends OpMode {
             m3.setPower(spinPower);
             m4.setPower(spinPower);
         }
-        else if(Math.abs(yPower)>0.1 && (xPower<0.2 && xPower>-0.2)){
+        else if(Math.abs(yPower)>0.1 && (xPower<0.2 && xPower>-0.2)){ //drive holonomic
             m1.setPower(yPower);
             m2.setPower(-yPower);
             m3.setPower(-yPower);
@@ -99,14 +100,21 @@ public class holoDrive extends OpMode {
             m3.setPower(0);
             m4.setPower(0);
         }
-        lift.setPower(liftPower);
 
-        plow.setPower(-rightStick * 0.1);
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        lift.setPower(liftPower/2);
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        armIntake.setPower((-gamepad2.left_stick_y/2));
+
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         telemetry.addData("xPower", "%.2f",  gamepad1.left_stick_x);
         telemetry.addData("yPower", "%.2f",  gamepad1.left_stick_y);
-        telemetry.addData("liftPower", "%.2f",  gamepad2.left_stick_y);
-
+        telemetry.addData("liftPower", "%.2f",  gamepad2.right_stick_y/2);
+        telemetry.addData("armPower", "%.2f",  -gamepad2.left_stick_y/2);
 
     }
 }
