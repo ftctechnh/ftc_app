@@ -1,7 +1,23 @@
 package org.firstinspires.ftc.teamcode.RoverRuckus.Mappings;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Gamepad;
-public class TandemMapping extends SoloMapping {
+@Config
+public class TandemMapping extends ControlMapping {
+    public static double INTAKE_SPEED = 0.85;
+    public static double INTAKE_SLOW_SPEED = 0.2;
+
+    public static double FLIP_LEFT_FACTOR = 0.65;
+    public static double FLIP_RIGHT_FACTOR = 0.6;
+
+    public static double MIN_SLOW_MOVE_SPEED = 0.6;
+
+    public static double EXPONENT = 1.5;
+    public static double TURN_SPEED_FACTOR = 0.8;
+
+    public int spinDir;
+    private boolean x_down, b_down;
+
     public TandemMapping(Gamepad gamepad1, Gamepad gamepad2) {
         super(gamepad1, gamepad2);
     }
@@ -9,14 +25,22 @@ public class TandemMapping extends SoloMapping {
     private boolean invert() {return gamepad1.right_trigger > 0.2;}
     private int invFact() {return invert() ? -1 : 1; }
 
+    private double exp(double d) {
+        return Math.copySign(Math.pow(Math.abs(d), EXPONENT), d);
+    }
     @Override
     public double driveStickX() {
-        return gamepad1.left_stick_x * invFact();
+        return invFact() * exp(gamepad1.left_stick_x);
     }
 
     @Override
     public double driveStickY() {
-        return gamepad1.left_stick_y;
+        return exp(gamepad1.left_stick_y);
+    }
+
+    @Override
+    public double turnSpeed() {
+        return removeLowVals(exp(gamepad1.right_stick_x), 0.1) * TURN_SPEED_FACTOR;
     }
 
     @Override
@@ -51,6 +75,33 @@ public class TandemMapping extends SoloMapping {
     @Override
     public boolean shakeCamera() {
         return gamepad1.a ^ gamepad2.a;
+    }
+
+    @Override
+    public double getSpinSpeed() {
+        if (gamepad1.x && !x_down) {
+
+            // X was just pressed
+            spinDir = (spinDir == -1) ? 0 : -1;
+            x_down = true;
+        } else if (!gamepad1.x && x_down) {
+            x_down = false;
+        }
+
+        if (gamepad1.b && !b_down) {
+            // B was just pressed
+            spinDir = (spinDir == 1) ? 0 : 1;
+            b_down = true;
+        } else if (!gamepad1.b && b_down) {
+            b_down = false;
+        }
+        return spinDir * INTAKE_SPEED;
+    }
+
+
+    @Override
+    public boolean override() {
+        return gamepad1.start;
     }
 
     @Override
