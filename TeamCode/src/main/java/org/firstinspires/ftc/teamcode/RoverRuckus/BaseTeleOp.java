@@ -21,6 +21,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public static int MAX_EXTENDER_POS = 1060;
     public static int MIN_EXTENDER_POS = 0;
     public static double EXTEND_MAXED_DRIVE_POWER = 0.3;
+    public static double TURN_MAX_SPEED = 1.0;
+    public static double TURN_SPEED_CUTOFF = 0.03;
 
     public ControlMapping controller;
     public boolean fieldCentric;
@@ -34,7 +36,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public void runOpMode() {
 
         robot = new SparkyTheRobot(this);
-        robot.calibrate(fieldCentric);
+        robot.calibrate(true);
 
         loopTime = new ElapsedTime();
 
@@ -103,10 +105,24 @@ public abstract class BaseTeleOp extends LinearOpMode {
             int linearSlidePos = robot.linearSlide.getCurrentPosition();
             if ((linearSlidePos < MIN_EXTENDER_POS && slidePower < 0) ||
                     (linearSlidePos > MAX_EXTENDER_POS && slidePower > 0)) {
-                speeds.forwardSpeed -= slidePower * EXTEND_MAXED_DRIVE_POWER;
+                speeds.forwardSpeed += slidePower * EXTEND_MAXED_DRIVE_POWER;
             }
 
             // Slew drive mapped to GP2 left/right
+
+            // Control heading locking
+            if (controller.lockTo45() || controller.lockTo225()) {
+                // Pressing y overrides lock to 45
+                double targetAngle = Math.PI * 1.75;
+                if (controller.lockTo225()) {
+                    targetAngle = Math.PI * 0.75;
+                }
+
+                double difference = robot.getSignedAngleDifference(targetAngle, robot.getHeading());
+                double turnSpeed = Math.max(-TURN_MAX_SPEED, Math.min(TURN_MAX_SPEED, difference));
+                turnSpeed = Math.copySign(Math.max(TURN_SPEED_CUTOFF, Math.abs(turnSpeed)), turnSpeed);
+                speeds.turnSpeed = -turnSpeed;
+            }
 
 
             robot.setMotorSpeeds(speeds.getDrivePowers());

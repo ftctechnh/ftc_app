@@ -26,6 +26,9 @@ public abstract class ControlMapping {
     public abstract double turnSpeedScale();
     public abstract double armSpeed();
 
+    public abstract boolean lockTo45();
+    public abstract boolean lockTo225();
+
     public abstract boolean flipOut();
     public abstract boolean flipBack();
     public abstract double getExtendSpeed();

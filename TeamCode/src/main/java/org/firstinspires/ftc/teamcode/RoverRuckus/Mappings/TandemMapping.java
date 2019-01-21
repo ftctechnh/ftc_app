@@ -56,6 +56,15 @@ public class TandemMapping extends ControlMapping {
     }
 
     @Override
+    public boolean lockTo45() {
+        return gamepad1.a || gamepad2.a;
+    }
+
+    public boolean lockTo225() {
+        return gamepad1.y;
+    }
+
+    @Override
     public double armSpeed() {
         return removeLowVals(gamepad2.left_trigger * FLIP_LEFT_FACTOR
                 - gamepad2.right_trigger * FLIP_RIGHT_FACTOR, 0.05);
