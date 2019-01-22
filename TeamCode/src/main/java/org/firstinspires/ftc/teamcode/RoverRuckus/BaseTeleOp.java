@@ -23,9 +23,13 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public static double EXTEND_MAXED_DRIVE_POWER = 0.3;
     public static double TURN_MAX_SPEED = 1.0;
     public static double TURN_SPEED_CUTOFF = 0.03;
+    public static double SLEW_TURN_FACTOR = 0.2;
+    public static int WINCH_MAX_POS = 6700;
 
     public ControlMapping controller;
     public boolean fieldCentric;
+
+    private boolean wasTurningTo255;
 
     SparkyTheRobot robot;
     FeedbackController feedback;
@@ -39,6 +43,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
         robot.calibrate(true);
 
         loopTime = new ElapsedTime();
+        wasTurningTo255 = false;
 
         feedback = new FeedbackController(robot.leftHub, robot.rightHub);
         winch = new HoldingPIDMotor(robot.winch, 1);
@@ -109,6 +114,9 @@ public abstract class BaseTeleOp extends LinearOpMode {
             }
 
             // Slew drive mapped to GP2 left/right
+            speeds.translateSpeed += controller.getSlewSpeed();
+            speeds.turnSpeed += controller.getSlewSpeed() * SLEW_TURN_FACTOR;
+            speeds.turnSpeed += controller.getGP2TurnSpeed();
 
             // Control heading locking
             if (controller.lockTo45() || controller.lockTo225()) {
@@ -124,6 +132,12 @@ public abstract class BaseTeleOp extends LinearOpMode {
                 speeds.turnSpeed = -turnSpeed;
             }
 
+            if (controller.lockTo225() && !wasTurningTo255) {
+                wasTurningTo255 = true;
+                winch.setTargetPos(WINCH_MAX_POS);
+            } else if (wasTurningTo255 && !controller.lockTo225()) {
+                wasTurningTo255 = false;
+            }
 
             robot.setMotorSpeeds(speeds.getDrivePowers());
 

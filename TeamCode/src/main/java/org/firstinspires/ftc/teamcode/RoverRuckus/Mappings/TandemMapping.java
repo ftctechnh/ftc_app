@@ -5,14 +5,15 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 @Config
 public class TandemMapping extends ControlMapping {
     public static double INTAKE_SPEED = 0.85;
-    public static double INTAKE_SLOW_SPEED = 0.2;
 
     public static double FLIP_LEFT_FACTOR = 0.65;
     public static double FLIP_RIGHT_FACTOR = 0.6;
 
-    public static double MAX_TURN_SPEED = 0.5;
-    public static double MIN_TURN_SPEED = 0.1;
+    public static double MAX_TURN_SPEED_F = 1;
+    public static double MIN_TURN_SPEED_F = 0.2;
     public static double MIN_MOVE_SPEED = 0.6;
+
+    public static double MAX_GP2_TURN_SPEED = 0.3;
 
     public static double EXPONENT = 1.5;
     public static double TURN_SPEED_FACTOR = 0.8;
@@ -24,15 +25,12 @@ public class TandemMapping extends ControlMapping {
         super(gamepad1, gamepad2);
     }
 
-    private boolean invert() {return gamepad1.right_trigger > 0.2;}
-    private int invFact() {return invert() ? -1 : 1; }
-
     private double exp(double d) {
         return Math.copySign(Math.pow(Math.abs(d), EXPONENT), d);
     }
     @Override
     public double driveStickX() {
-        return invFact() * exp(gamepad1.left_stick_x);
+        return exp(gamepad1.left_stick_x);
     }
 
     @Override
@@ -52,7 +50,7 @@ public class TandemMapping extends ControlMapping {
 
     @Override
     public double turnSpeedScale() {
-        return scaleControl(1 - gamepad1.left_trigger, MIN_TURN_SPEED, MAX_TURN_SPEED);
+        return scaleControl(1 - gamepad1.left_trigger, MIN_TURN_SPEED_F, MAX_TURN_SPEED_F);
     }
 
     @Override
@@ -71,7 +69,15 @@ public class TandemMapping extends ControlMapping {
     }
 
     public double getExtendSpeed() {
-        return -clamp(gamepad2.left_stick_y + gamepad2.right_stick_y);
+        return -clamp(gamepad2.left_stick_y);
+    }
+
+    public double getSlewSpeed() {
+        return gamepad2.left_stick_x;
+    }
+
+    public double getGP2TurnSpeed() {
+        return gamepad2.right_stick_x * MAX_GP2_TURN_SPEED;
     }
 
     @Override
@@ -90,7 +96,7 @@ public class TandemMapping extends ControlMapping {
 
     @Override
     public boolean shakeCamera() {
-        return gamepad1.a ^ gamepad2.a;
+        return gamepad1.back ^ gamepad2.back;
     }
 
     @Override

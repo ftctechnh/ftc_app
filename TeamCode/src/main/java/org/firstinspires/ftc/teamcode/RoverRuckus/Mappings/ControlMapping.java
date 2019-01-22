@@ -32,6 +32,8 @@ public abstract class ControlMapping {
     public abstract boolean flipOut();
     public abstract boolean flipBack();
     public abstract double getExtendSpeed();
+    public abstract double getSlewSpeed();
+    public abstract double getGP2TurnSpeed();
     public abstract int getHangDir();
 
     public abstract boolean shakeCamera();

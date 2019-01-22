@@ -31,4 +31,11 @@ public class HoldingPIDMotor {
             dir = p;
         }
     }
+
+    public void setTargetPos(int p) {
+        m.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        m.setTargetPosition(p);
+        m.setPower(MAX_POWER);
+        dir = 0;
+    }
 }
