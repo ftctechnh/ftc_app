@@ -45,9 +45,9 @@ public class Gamepad extends LinearOpMode {
             telemetry.addData("Status", "Runtime: "+ runtime.toString());
             telemetry.update();
             motorA1.setPower(-gamepad1.left_stick_y);
-            motorA2.setPower(-gamepad1.left_stick_y);
-            motorB1.setPower(-gamepad1.right_stick_y);
-            motorB2.setPower(-gamepad1.right_stick_y);
+            motorA2.setPower(-gamepad1.right_stick_y);
+            motorB1.setPower(-gamepad1.left_stick_x);
+            motorB2.setPower(-gamepad1.right_stick_x);
 
         }
     }
