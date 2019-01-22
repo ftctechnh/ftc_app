@@ -18,18 +18,22 @@ public class Gamepad extends LinearOpMode {
     //private DcMotor leftDrive = null;
     //private DcMotor rightDrive = null;
 
-    DcMotor leftMotor;
-    DcMotor rightMotor;
+    DcMotor motorA1;
+    DcMotor motorA2;
+    DcMotor motorB1;
+    DcMotor motorB2;
 
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        leftMotor = hardwareMap.dcMotor.get("Left_Motor");
-        rightMotor = hardwareMap.dcMotor.get("Right_Motor");
-
-        leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorA1 = hardwareMap.dcMotor.get("Motor1");
+        motorA2 = hardwareMap.dcMotor.get("Motor2");
+        motorB1 = hardwareMap.dcMotor.get("Motor3");
+        motorB2 = hardwareMap.dcMotor.get("Motor4");
+        motorA2.setDirection(DcMotorSimple.Direction.REVERSE);
+        motorB2.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         waitForStart();
@@ -40,8 +44,10 @@ public class Gamepad extends LinearOpMode {
 
             telemetry.addData("Status", "Runtime: "+ runtime.toString());
             telemetry.update();
-            leftMotor.setPower(-gamepad1.left_stick_y);
-            rightMotor.setPower(-gamepad1.right_stick_y);
+            motorA1.setPower(-gamepad1.left_stick_y);
+            motorA2.setPower(-gamepad1.left_stick_y);
+            motorB1.setPower(-gamepad1.right_stick_y);
+            motorB2.setPower(-gamepad1.right_stick_y);
 
         }
     }
