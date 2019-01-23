@@ -56,6 +56,7 @@ public abstract class BullRunCrater extends StandardChassis {
     public void init() {
         initMotors();
         initTimeouts();
+        initBulldDozer();
     }
 
 
@@ -90,6 +91,7 @@ public abstract class BullRunCrater extends StandardChassis {
 
         if (madeTheRun == false) {
             // forward 46 inches
+            bullDozerUp();
             encoderDrive(46, 46);
             madeTheRun = true;
         }

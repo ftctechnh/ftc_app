@@ -19,6 +19,7 @@ public abstract class TeamMarkerDepot extends StandardChassis {
         initMotors();
         initGyroscope();
         initTimeouts();
+        initBulldDozer();
     }
 
     /**
@@ -58,8 +59,10 @@ public abstract class TeamMarkerDepot extends StandardChassis {
             sleep(3000);
             resetFlag();
 
-            turnRight(125);
-            encoderDrive(90, 90);
+            bullDozerUp();
+
+            turnRight(135);
+            encoderDrive(95, 95);
 
             madeTheRun = true;
         }

@@ -20,6 +20,7 @@ public abstract class BullRunDepot extends StandardChassis {
         initArm();
         initGyroscope();
         initTimeouts();
+        initBulldDozer();
     }
 
     /**

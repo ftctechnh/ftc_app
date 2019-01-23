@@ -19,6 +19,7 @@ public abstract class TeamMarkerCrater extends StandardChassis {
         initMotors();
         initGyroscope();
         initTimeouts();
+        initBulldDozer();
     }
 
     /**
@@ -54,16 +55,18 @@ public abstract class TeamMarkerCrater extends StandardChassis {
 
             // forward 35 inches, turn 90degrees, forward 40 inches
             encoderDrive(15, 15);
-            turnLeft(68);
+            turnLeft(63);
             encoderDrive(24, 24);
-            turnLeft(62);
-            encoderDrive(64, 64);
+            turnLeft(50);
+            encoderDrive(55, 55);
 
             dropFlag();
             sleep(3000);
             resetFlag();
 
-            turnRight(165);
+            bullDozerUp();
+
+            turnRight(127);
             encoderDrive(103 , 110);
 
 
