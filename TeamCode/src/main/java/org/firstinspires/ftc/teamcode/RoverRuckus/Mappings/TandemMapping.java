@@ -19,7 +19,7 @@ public class TandemMapping extends ControlMapping {
     public static double TURN_SPEED_FACTOR = 0.8;
 
     public int spinDir;
-    private boolean x_down, b_down;
+    private boolean g1x_down, g1b_down, g2x_down, g2b_down;
     private boolean up_down, down_down;
 
     public TandemMapping(Gamepad gamepad1, Gamepad gamepad2) {
@@ -126,25 +126,41 @@ public class TandemMapping extends ControlMapping {
 
     @Override
     public double getSpinSpeed() {
-        if (gamepad2.x && !x_down) {
+        if ((gamepad2.x && !g2x_down) || (gamepad1.x && !g1x_down)) {
+
+            spinDir = (spinDir == -1) ? 0 : -1;
+            if (gamepad2.x && !g2x_down) {
+                g2x_down = true;
+            } else {
+                g1x_down = true;
+            }
+        }
+
+        if (!gamepad2.x && g2x_down) {
+            g2x_down = false;
+        }
+        if (!gamepad1.x && g1x_down) {
+            g1x_down = false;
+        }
+
+        if ((gamepad2.b && !g2b_down) || (gamepad1.b && !g1b_down)) {
 
             // X was just pressed
-            spinDir = (spinDir == -1) ? 0 : -1;
-            x_down = true;
-        } else if (!gamepad2.x && x_down) {
-            x_down = false;
+            spinDir = (spinDir == 1) ? 0 : 1;
+            if (gamepad2.b && !g2b_down) {
+                g2b_down = true;
+            } else {
+                g1b_down = true;
+            }
         }
 
-        if (gamepad2.b && !b_down) {
-            // B was just pressed
-            spinDir = (spinDir == 1) ? 0 : 1;
-            b_down = true;
-        } else if (!gamepad2.b && b_down) {
-            b_down = false;
+        if (!gamepad2.b && g2b_down) {
+            g2b_down = false;
         }
-        if (gamepad1.b) {
-            spinDir = 0;
+        if (!gamepad1.b && g1b_down) {
+            g1b_down = false;
         }
+
         return spinDir * INTAKE_SPEED;
     }
 
