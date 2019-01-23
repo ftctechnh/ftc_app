@@ -149,7 +149,7 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
      */
     private void camera_init() {
         // TODO: there is no way to get camera from hardware map?
-        camera = ((FtcRobotControllerActivity)hardwareMap.appContext).camera;
+       /* camera = ((FtcRobotControllerActivity)hardwareMap.appContext).camera;
         camera.setPreviewCallback(previewCallback);
 
         Camera.Parameters parameters = camera.getParameters();
@@ -158,7 +158,7 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
         cameraHeight = parameters.getPreviewSize().height;
 
         // Build a little window on the app to display the image.
-        ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
+        ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback); */
     }
 
     @Override
