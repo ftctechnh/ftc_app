@@ -20,6 +20,7 @@ public class TandemMapping extends ControlMapping {
 
     public int spinDir;
     private boolean x_down, b_down;
+    private boolean up_down, down_down;
 
     public TandemMapping(Gamepad gamepad1, Gamepad gamepad2) {
         super(gamepad1, gamepad2);
@@ -68,12 +69,36 @@ public class TandemMapping extends ControlMapping {
                 - gamepad2.right_trigger * FLIP_RIGHT_FACTOR, 0.05);
     }
 
+    @Override
+    public boolean collectWithArm() {
+        if (!down_down && gamepad2.dpad_down) {
+            down_down = true;
+            return true;
+        }
+        if (!gamepad2.dpad_down && down_down) {
+            down_down = false;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean depositWithArm() {
+        if (!up_down && gamepad2.dpad_up) {
+            up_down = true;
+            return true;
+        }
+        if (!gamepad2.dpad_up && up_down) {
+            up_down = false;
+        }
+        return false;
+    }
+
     public double getExtendSpeed() {
         return -clamp(gamepad2.left_stick_y);
     }
 
     public double getSlewSpeed() {
-        return gamepad2.left_stick_x;
+        return -gamepad2.left_stick_x;
     }
 
     public double getGP2TurnSpeed() {
@@ -96,26 +121,29 @@ public class TandemMapping extends ControlMapping {
 
     @Override
     public boolean shakeCamera() {
-        return gamepad1.back ^ gamepad2.back;
+        return gamepad1.back ^ gamepad2.a;
     }
 
     @Override
     public double getSpinSpeed() {
-        if (gamepad1.x && !x_down) {
+        if (gamepad2.x && !x_down) {
 
             // X was just pressed
             spinDir = (spinDir == -1) ? 0 : -1;
             x_down = true;
-        } else if (!gamepad1.x && x_down) {
+        } else if (!gamepad2.x && x_down) {
             x_down = false;
         }
 
-        if (gamepad1.b && !b_down) {
+        if (gamepad2.b && !b_down) {
             // B was just pressed
             spinDir = (spinDir == 1) ? 0 : 1;
             b_down = true;
-        } else if (!gamepad1.b && b_down) {
+        } else if (!gamepad2.b && b_down) {
             b_down = false;
+        }
+        if (gamepad1.b) {
+            spinDir = 0;
         }
         return spinDir * INTAKE_SPEED;
     }

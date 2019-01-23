@@ -36,6 +36,9 @@ public abstract class ControlMapping {
     public abstract double getGP2TurnSpeed();
     public abstract int getHangDir();
 
+    public abstract boolean collectWithArm();
+    public abstract boolean depositWithArm();
+
     public abstract boolean shakeCamera();
     public abstract double getSpinSpeed();
 

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Mechanisms.Arm;
 import org.firstinspires.ftc.teamcode.Mechanisms.SparkyTheRobot;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Auto.AutoUtils;
 import org.firstinspires.ftc.teamcode.RoverRuckus.Mappings.ControlMapping;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 @Config
 public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
-    public static int MAX_EXTENDER_POS = 1060;
+    public static int MAX_EXTENDER_POS = 950;
     public static int MIN_EXTENDER_POS = 0;
     public static double EXTEND_MAXED_DRIVE_POWER = 0.3;
     public static double TURN_MAX_SPEED = 1.0;
@@ -36,6 +37,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
     ElapsedTime loopTime;
     HoldingPIDMotor winch;
 
+    Arm arm;
+
     @Override
     public void runOpMode() {
 
@@ -47,6 +50,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         feedback = new FeedbackController(robot.leftHub, robot.rightHub);
         winch = new HoldingPIDMotor(robot.winch, 1);
+
+        arm = new Arm(robot.leftFlipper, robot.rightFlipper);
 
         // Enable PID control on these motors
         robot.leftFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -78,8 +83,13 @@ public abstract class BaseTeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             controller.update();
 
-            robot.leftFlipper.setPower(controller.armSpeed());
-            robot.rightFlipper.setPower(controller.armSpeed());
+            if (controller.collectWithArm()) {
+                arm.collect();
+            } else if (controller.depositWithArm()) {
+                arm.deposit();
+            } else {
+                arm.setPower(controller.armSpeed());
+            }
 
             robot.intake.setIntakeSpeed(controller.getSpinSpeed());
 

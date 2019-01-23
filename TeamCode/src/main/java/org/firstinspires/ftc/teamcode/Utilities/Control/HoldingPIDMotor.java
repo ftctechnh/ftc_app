@@ -38,4 +38,8 @@ public class HoldingPIDMotor {
         m.setPower(MAX_POWER);
         dir = 0;
     }
+
+    public int getCurrentPosition() {
+        return m.getCurrentPosition();
+    }
 }
