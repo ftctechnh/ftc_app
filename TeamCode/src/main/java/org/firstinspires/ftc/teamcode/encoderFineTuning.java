@@ -17,69 +17,61 @@ public class encoderFineTuning extends LinearOpMode
         double deltaY = 0;
         double deltaS = 0;
 
-        double savedRadius = DriveEngine.robotRadius;
-        double savedDiameter = DriveEngine.wheelDiameter;
-
 
         while (opModeIsActive())
         {
-            double clockTime = robot.averageClockTime;
-            deltaX += gamepad1.left_stick_x * clockTime * 6; //6 inches per second
-            deltaY -= gamepad1.left_stick_y * clockTime * 6;
-            deltaS -= gamepad1.right_stick_x * clockTime /4 * Math.PI;
+            robot.driveEngine.n = 0;
+            if(Math.abs(gamepad1.left_stick_x) > .5){
+                deltaX = 36 * Math.signum(gamepad1.left_stick_x);
+                deltaY = 0;
+                deltaS = 0;
+            }
+            if(Math.abs(gamepad1.left_stick_y) > .5){
+                deltaX = 0;
+                deltaY = 36 * Math.signum(gamepad1.left_stick_y);
+                deltaS = 0;
+            }
+            if(gamepad1.right_stick_x > .5){
+                deltaX = 0;
+                deltaY = 0;
+                deltaS = Math.PI;
+            }
 
-            telemetry.addData("wheel diameter", DriveEngine.wheelDiameter);
-            telemetry.addData("robot radius", DriveEngine.robotRadius);
 
             telemetry.addData("deltaX", deltaX);
             telemetry.addData("deltaY", deltaY);
             telemetry.addData("deltaS", deltaS);
 
-            telemetry.addData("x inches", robot.driveEngine.xDist());
-            telemetry.addData("y inches", robot.driveEngine.yDist());
-            telemetry.addData("spin angle", robot.driveEngine.spinAngle());
-            telemetry.addData("spin angle divided by pi", robot.driveEngine.spinAngle() / Math.PI);
+            telemetry.addData("P", robot.driveEngine.mP);
+            telemetry.addData("D", robot.driveEngine.mD);
 
-            robot.driveEngine.moveOnPath(true, false, new double[]{deltaX, deltaY, deltaS});
+            robot.driveEngine.moveOnPath(true, true, new double[]{deltaX, deltaY, deltaS});
 
-            if(gamepad1.left_bumper || gamepad1.right_bumper)
+
+            if(gamepad1.dpad_right)
             {
-                robot.driveEngine.resetDistances();
+                robot.driveEngine.mP += .002 * Bogg.averageClockTime;
+            }
+            else if(gamepad1.dpad_left)
+            {
+                robot.driveEngine.mP -= .002 * Bogg.averageClockTime;
+            }
+
+            if(gamepad1.b)
+            {
+                robot.driveEngine.mD += .2 * Bogg.averageClockTime;
+            }
+            else if(gamepad1.x)
+            {
+                robot.driveEngine.mD -= .2 * Bogg.averageClockTime;
+            }
+
+            if(gamepad1.start || gamepad1.left_stick_button || gamepad1.right_stick_button)
+            {
                 deltaX = deltaY = deltaS = 0;
             }
 
-            if(gamepad1.dpad_up){
-                DriveEngine.wheelDiameter += .01;
-            }
-            else if(gamepad1.dpad_down){
-                DriveEngine.wheelDiameter -= .01;
-            }
-            else if(gamepad1.dpad_right){
-                savedDiameter = DriveEngine.wheelDiameter;
-            }
-            else if(gamepad1.dpad_left){
-                DriveEngine.wheelDiameter = savedDiameter;
-            }
-
-            if(gamepad1.y){
-                DriveEngine.robotRadius += .01;
-            }
-            else if(gamepad1.a){
-                DriveEngine.robotRadius -= .01;
-            }
-            else if(gamepad1.b){
-                savedRadius = DriveEngine.robotRadius;
-            }
-            else if(gamepad1.x) {
-                DriveEngine.robotRadius = savedRadius;
-            }
-
-            if(gamepad1.start)
-            {
-                deltaX = Math.round(deltaX);
-                deltaY = Math.round(deltaY);
-                deltaS = Math.round(deltaS);
-            }
+            telemetry.addData("n",robot.driveEngine.n);
 
             telemetry.update();
             robot.update();
