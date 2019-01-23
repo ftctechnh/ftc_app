@@ -7,31 +7,25 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class MiniBogg
+public class MiniBogg extends Bogg
 {
     Gamepad gamepad;
     HardwareMap hardwareMap;
-    DriveEngine driveEngine;
+    DriveEngine3Wheels driveEngine3Wheels;
     DcMotor lift;
     Sensors sensors;
     Servo brake;
 
     double alpha = 0.039;
-    double alphaInc = 0.000001;
     double xAve = 0;
     double yAve = 0;
     double spinAve = 0;
     double liftAve = 0;
     boolean goingUp;
 
-    public MiniBogg(HardwareMap hardwareMap, Gamepad gamepad, Telemetry telemetry)
+    public MiniBogg(HardwareMap hardwareMap, Telemetry telemetry)
     {
-        this.gamepad = gamepad;
-        this.hardwareMap = hardwareMap;
-        sensors = new Sensors(hardwareMap);
-        driveEngine = new DriveEngine(hardwareMap, telemetry, sensors.imu);
-        lift  = hardwareMap.dcMotor.get("lift");
-        brake = hardwareMap.servo.get("brake");
+        super(hardwareMap, telemetry, Name.MiniBogg);
     }
 
     public double smoothX(double x)
@@ -130,15 +124,15 @@ public class MiniBogg
     public void manualDrive()
     {
         if(gamepad.left_stick_button)
-            driveEngine.drive(true,gamepad.left_stick_x/2, gamepad.left_stick_y/2);
+            driveEngine3Wheels.drive(true,gamepad.left_stick_x/2, gamepad.left_stick_y/2);
         else
-            driveEngine.drive(false,smoothX(gamepad.left_stick_x)/2, smoothY(gamepad.left_stick_y)/2);
+            driveEngine3Wheels.drive(false,smoothX(gamepad.left_stick_x)/2, smoothY(gamepad.left_stick_y)/2);
     }
     public void manualRotate()
     {
         if(gamepad.right_stick_button)
-            driveEngine.rotate(gamepad.right_stick_x);
+            driveEngine3Wheels.rotate(gamepad.right_stick_x);
         else
-            driveEngine.rotate(smoothSpin(gamepad.right_stick_x));
+            driveEngine3Wheels.rotate(smoothSpin(gamepad.right_stick_x));
     }
 }
