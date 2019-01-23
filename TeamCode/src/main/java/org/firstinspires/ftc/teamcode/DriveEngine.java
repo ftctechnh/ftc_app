@@ -143,6 +143,14 @@ class DriveEngine {
         this.theta = theta;
     }
 
+
+    void floatMotors()
+    {
+        for (DcMotor motor: motors) {
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        }
+    }
+
     void resetDistances()
     {
         for (DcMotor motor: motors) {
@@ -169,9 +177,7 @@ class DriveEngine {
     }
     boolean moveOnPath(boolean continuous, boolean correctSpin, double[] ... args)
     {
-        for (int i = 0; i < motors.size(); i++) {
-            telemetry.addData("motor" + i, motors.get(i).getCurrentPosition());
-        }
+        reportPositionsToScreen();
 
         if(checkpoint.isEmpty()){
             for (double[] arg : args) checkpoint.add(false);
@@ -519,5 +525,11 @@ class DriveEngine {
         return distances;
     }
 
+    void reportPositionsToScreen()
+    {
+        for (int i = 0; i < motors.size(); i++) {
+            telemetry.addData("motor " + i + " position", motors.get(i).getCurrentPosition());
+        }
+    }
 
 }

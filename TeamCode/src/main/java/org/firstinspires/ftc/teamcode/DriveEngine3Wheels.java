@@ -140,6 +140,13 @@ class DriveEngine3Wheels extends DriveEngine{
         left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    void floatMotors()
+    {
+        back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+    }
+
     private double[] cumulativeDistance = new double[]{0,0};
 
     private ArrayList<Boolean> checkpoint = new ArrayList<>();
