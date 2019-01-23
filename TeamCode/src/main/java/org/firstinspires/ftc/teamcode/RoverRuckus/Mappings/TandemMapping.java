@@ -29,9 +29,14 @@ public class TandemMapping extends ControlMapping {
     private double exp(double d) {
         return Math.copySign(Math.pow(Math.abs(d), EXPONENT), d);
     }
+
+    private int inv() {
+        return gamepad1.y ? -1 : 1;
+    }
+
     @Override
     public double driveStickX() {
-        return exp(gamepad1.left_stick_x);
+        return inv() * exp(gamepad1.left_stick_x);
     }
 
     @Override
