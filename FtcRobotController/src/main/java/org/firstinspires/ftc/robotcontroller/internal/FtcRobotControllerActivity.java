@@ -339,6 +339,7 @@ public class FtcRobotControllerActivity extends Activity
     if (preferencesHelper.readBoolean(getString(R.string.pref_wifi_automute), false)) {
       initWifiMute(true);
     }
+      //camera=openFrontFacingCamera();
   }
 
   protected UpdateUI createUpdateUI() {

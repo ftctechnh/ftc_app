@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.DogeCV;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,6 +29,9 @@ public abstract class StandardChassis extends OpMode {
     private DcMotor extender;
     private DcMotor shoulder;
 
+    // Detector object
+    private GoldMineralDetector detector;
+
     // Team Marker Servo
     private Servo flagHolder;
     private double angleHand;
@@ -43,10 +48,47 @@ public abstract class StandardChassis extends OpMode {
     protected boolean useTeamMarker = true;
     protected boolean hackTimeouts = true;
     protected boolean useArm = true;
-
+    protected boolean useSampling = true;
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
+    }
+
+    protected void initSampling() {
+        if (useSampling) {
+
+            telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+
+            // Set up detector
+            detector = new GoldMineralDetector(); // Create detector
+            detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
+            detector.useDefaults(); // Set detector to use default settings
+
+            // Optional tuning
+            detector.downscale = 0.4; // How much to downscale the input frames
+
+            detector.areaScoringMethod = DogeCV.AreaScoringMethod.MAX_AREA; // Can also be PERFECT_AREA
+            //detector.perfectAreaScorer.perfectArea = 10000; // if using PERFECT_AREA scoring
+            detector.maxAreaScorer.weight = 0.005; //
+
+            detector.ratioScorer.weight = 5; //
+            detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
+
+            detector.enable(); // Start the detector!
+        }
+    }
+    protected void loopSampling() {
+      if (useSampling) {
+          if (detector.isFound()) {
+              telemetry.addData("sampler", "FOUND, x=" + String.valueOf(detector.getScreenPosition().x)); // Gold X position.
+          } else {
+              telemetry.addData("sampler", "NOT FOUND"); // Gold X position.
+          }
+      }
+    }
+    protected void stopSampling() {
+        // Disable the detector
+        detector.disable();
     }
 
     protected void initMotors() {
@@ -552,9 +594,11 @@ public abstract class StandardChassis extends OpMode {
     protected void descendFromLander() {
         if(!config.getlyftStrategy()) {
             // go down.
-            lyftDownWalle(-4956);
+            //lyftDownWalle(-4956);
+            lyftDownWalle(-4856);
             //existing Quiksilver descend stragety
-            strafeRight(450);
+            strafeRight(1000);
+            turnLeft(10); // HACK BABY
         } else {
             lyftDownWalle(-1449);
             //write new phatswipe descend strategy
