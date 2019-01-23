@@ -33,7 +33,6 @@ public abstract class BaseTeleOp extends LinearOpMode {
     private boolean wasTurningTo255;
 
     SparkyTheRobot robot;
-    FeedbackController feedback;
     ElapsedTime loopTime;
     HoldingPIDMotor winch;
 
@@ -48,7 +47,6 @@ public abstract class BaseTeleOp extends LinearOpMode {
         loopTime = new ElapsedTime();
         wasTurningTo255 = false;
 
-        feedback = new FeedbackController(robot.leftHub, robot.rightHub);
         winch = new HoldingPIDMotor(robot.winch, 1);
 
         arm = new Arm(robot.leftFlipper, robot.rightFlipper);
