@@ -14,8 +14,6 @@ import org.firstinspires.ftc.teamcode.Utilities.Control.FeedbackController;
 import org.firstinspires.ftc.teamcode.Utilities.Control.HoldingPIDMotor;
 import org.firstinspires.ftc.teamcode.Utilities.Control.WheelDriveVector;
 
-import java.util.Arrays;
-
 @Config
 public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
@@ -26,6 +24,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public static double TURN_SPEED_CUTOFF = 0.03;
     public static double SLEW_TURN_FACTOR = 0.2;
     public static int WINCH_MAX_POS = 6700;
+    public static double TURN_CORRECT_FACTOR = 0.5;
 
     public ControlMapping controller;
     public boolean fieldCentric;
@@ -136,7 +135,8 @@ public abstract class BaseTeleOp extends LinearOpMode {
                 }
 
                 double difference = robot.getSignedAngleDifference(targetAngle, robot.getHeading());
-                double turnSpeed = Math.max(-TURN_MAX_SPEED, Math.min(TURN_MAX_SPEED, difference));
+                double turnSpeed = Math.max(-TURN_MAX_SPEED, Math.min(TURN_MAX_SPEED,
+                        difference * TURN_CORRECT_FACTOR));
                 turnSpeed = Math.copySign(Math.max(TURN_SPEED_CUTOFF, Math.abs(turnSpeed)), turnSpeed);
                 speeds.turnSpeed = -turnSpeed;
             }
