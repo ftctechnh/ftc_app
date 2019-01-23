@@ -108,7 +108,8 @@ public class VucamControl {
         int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
-        parameters.vuforiaLicenseKey = "AWbfTmn/////AAABmY0xuIe3C0RHvL3XuzRxyEmOT2OekXBSbqN2jot1si3OGBObwWadfitJR/D6Vk8VEBiW0HG2Q8UAEd0//OliF9aWCRmyDJ1mMqKCJZxpZemfT5ELFuWnJIZWUkKyjQfDNe2RIaAh0ermSxF4Bq77IDFirgggdYJoRIyi2Ys7Gl9lD/tSonV8OnldIN/Ove4/MtEBJTKHqjUEjC5U2khV+26AqkeqbxhFTNiIMl0LcmSSfugGhmWFGFtuPtp/+flPBRGoBO+tSl9P2sV4mSUBE/WrpHqB0Jd/tAmeNvbtgQXtZEGYc/9NszwRLVNl9k13vrBcgsiNxs2UY5xAvA4Wb6LN7Yu+tChwc+qBiVKAQe09\n";
+//old key        parameters.vuforiaLicenseKey = "AWbfTmn/////AAABmY0xuIe3C0RHvL3XuzRxyEmOT2OekXBSbqN2jot1si3OGBObwWadfitJR/D6Vk8VEBiW0HG2Q8UAEd0//OliF9aWCRmyDJ1mMqKCJZxpZemfT5ELFuWnJIZWUkKyjQfDNe2RIaAh0ermSxF4Bq77IDFirgggdYJoRIyi2Ys7Gl9lD/tSonV8OnldIN/Ove4/MtEBJTKHqjUEjC5U2khV+26AqkeqbxhFTNiIMl0LcmSSfugGhmWFGFtuPtp/+flPBRGoBO+tSl9P2sV4mSUBE/WrpHqB0Jd/tAmeNvbtgQXtZEGYc/9NszwRLVNl9k13vrBcgsiNxs2UY5xAvA4Wb6LN7Yu+tChwc+qBiVKAQe09\n";
+        parameters.vuforiaLicenseKey = "AQy6nxn/////AAABmQBF/tPNoUwZoQmUYh68ueowSwnwkqLP2k9a/WengoKipAM9h77S3+zD6eYuVyXHT4Knbjb4bxyYriu4rsrcoUmhMdo67nEv73sXpW6pddRA1LTsbIAh7lpT+jKMVa/Rne5gBZ+t9pgUve7dO+YLSCnrA7oaGidbVX9dKOwkTaM0FN7xvkcqMTZrMAPCAO4roXrOSEjE/AwvQ1WrnBNFVmau51X796recKkiXl28vk32xf/uXxN7PfJjmHUbAwGHk98q99XF1waff11U+xgu3DOMHtxHfOCxZcSZFLRVZ3Z/ruQKmjNCz/5OJP2lFCcRvH4bZnpAMkZfaiIpXzsCrsSQX2i8FyaYbHHiv3rXiGSs\n";
         parameters.fillCameraMonitorViewParent = true;
 
         parameters.cameraName = webcamName;
