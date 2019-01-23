@@ -33,14 +33,8 @@ import org.firstinspires.ftc.robotcore.external.Consumer;
 @TeleOp(name="CameraRover", group="MonsieurMallah")
 public class CameraRover extends OpMode implements Consumer<CameraPreview> {
 
-    static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 1.0;     // This is < 1.0 if geared UP
-    static final double WHEEL_DIAMETER_INCHES = 4.9375;     // For figuring circumference
-    static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * 3.1415);
-
     // Elapsed time since the opmode started.
-    private ElapsedTime runtime = new ElapsedTime();
+
 
     // Motors connected to the hub.
     private DcMotor motorBackLeft;
@@ -48,27 +42,27 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
     private DcMotor motorFrontLeft;
     private DcMotor motorFrontRight;
     private DcMotor extender;
-    //private DcMotor tacVac;
     private DcMotor shoulder;
-
-   // Servos on the arm.
-    private Servo rightGate;
-    private Servo leftGate;
 
     // Camera Stuff
     public Camera camera;
     public CameraPreview preview;
-    public Bitmap image;
+
     private Object imageLock = new Object();
-    private int width;
-    private int height;
-    private YuvImage yuvImage;
-    private int looped;
-    private String data;
+    //private ElapsedTime imageTime = new ElapsedTime();
+    private ElapsedTime imageSampleTime = new ElapsedTime();
+    private ElapsedTime imageCompressTime = new ElapsedTime();
+    private YuvImage imageSample = null;
+    private int imageSampleCount = 0;
+
+    private int cameraWidth;
+    private int cameraHeight;
+
+    private String data; // probably unnecessary
 
     // Hack stuff.
-    private boolean useMotors = true;
-    private boolean useEncoders = true;
+    private boolean useMotors = false;
+    private boolean useEncoders = false;
     private boolean useArm = false;
     private boolean useCamera = true;
     private boolean hackTimeouts = true;
@@ -77,11 +71,22 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
     private Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
         public void onPreviewFrame(byte[] data, Camera camera)
         {
-            Camera.Parameters parameters = camera.getParameters();
-                width = parameters.getPreviewSize().width;
-                height = parameters.getPreviewSize().height;
-                yuvImage = new YuvImage(data, ImageFormat.NV21, width, height, null);
-                looped += 1;
+            // meter the sampling
+            synchronized(imageLock) {
+                if (imageSampleTime.milliseconds() < 1000) {
+                    return;
+                }
+            }
+
+            // extract the image from the camera.
+            YuvImage yuvImage = new YuvImage(data, ImageFormat.NV21, cameraWidth, cameraHeight, null);
+
+            // UI thread and event thread will access this at same time.
+            synchronized(imageLock) {
+                imageSample = yuvImage;
+                imageSampleCount++;
+                imageSampleTime.reset();
+            }
         }
     };
 
@@ -143,11 +148,14 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
      * @see com.qualcomm.robotcore.eventloop.opmode.OpMode#start()
      */
     private void camera_init() {
+        // TODO: there is no way to get camera from hardware map?
         camera = ((FtcRobotControllerActivity)hardwareMap.appContext).camera;
         camera.setPreviewCallback(previewCallback);
 
         Camera.Parameters parameters = camera.getParameters();
-        data = parameters.flatten();
+        data = parameters.flatten(); // TODO: what is this doing? no one reads from data.
+        cameraWidth = parameters.getPreviewSize().width;
+        cameraHeight = parameters.getPreviewSize().height;
 
         // Build a little window on the app to display the image.
         ((FtcRobotControllerActivity) hardwareMap.appContext).initPreview(camera, this, previewCallback);
@@ -255,15 +263,15 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
 
 
 
-        private static int red(int pixel) {
-            return (pixel >> 16) & 0xff;
-        }
+    private static int red(int pixel) {
+        return (pixel >> 16) & 0xff;
+    }
 
-        private static int green(int pixel) {
-            return (pixel >> 8) & 0xff;
-        }
+    private static int green(int pixel) {
+        return (pixel >> 8) & 0xff;
+    }
 
-        private static int blue(int pixel) {
+    private static int blue(int pixel) {
             return pixel & 0xff;
         }
 
@@ -283,47 +291,54 @@ public class CameraRover extends OpMode implements Consumer<CameraPreview> {
     }
 
 
-    private void convertImage() {
+    private Bitmap convertImage(YuvImage yuvImage) {
+        // TODO: use different params to get different subrects
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        yuvImage.compressToJpeg(new Rect(0, 0, width, height), 0, out);
+        yuvImage.compressToJpeg(new Rect(0, 0, cameraWidth, cameraHeight), 0, out);
         byte[] imageBytes = out.toByteArray();
-        image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+
+        Bitmap image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+        return image;
     }
 
+    private void camera_loop() {
 
-
-
-
-
-        private void camera_loop() {
-            if (yuvImage != null) {
-                int redValue = 0;
-                int blueValue = 0;
-                int greenValue = 0;
-                convertImage();
-                for (int x = 0; x < width; x++) {
-                    for (int y = 0; y < height; y++) {
-                        int pixel = image.getPixel(x, y);
-                        redValue += red(pixel);
-                        blueValue += blue(pixel);
-                        greenValue += green(pixel);
-                    }
-                }
-                int color = highestColor(redValue, greenValue, blueValue);
-                String colorString = "";
-                switch (color) {
-                    case 0:
-                        colorString = "RED";
-                        break;
-                    case 1:
-                        colorString = "GREEN";
-                        break;
-                    case 2:
-                        colorString = "BLUE";
-                }
-                telemetry.addData("Color:", "Color detected is: " + colorString);
+        YuvImage yuvImage = null;
+        synchronized (imageLock) {
+            if (imageSample != null) {
+                yuvImage = imageSample;
+                imageSample = null;
             }
-            telemetry.addData("Looped","Looped " + Integer.toString(looped) + " times");
-            Log.d("DEBUG:",data);
         }
+
+        if (yuvImage != null) {
+            int redValue = 0;
+            int blueValue = 0;
+            int greenValue = 0;
+            Bitmap image = convertImage(yuvImage);
+            for (int x = 0; x < cameraWidth; x++) {
+                for (int y = 0; y < cameraHeight; y++) {
+                    int pixel = image.getPixel(x, y);
+                    redValue += red(pixel);
+                    blueValue += blue(pixel);
+                    greenValue += green(pixel);
+                }
+            }
+            int color = highestColor(redValue, greenValue, blueValue);
+            String colorString = "";
+            switch (color) {
+                case 0:
+                    colorString = "RED";
+                    break;
+                case 1:
+                    colorString = "GREEN";
+                    break;
+                case 2:
+                    colorString = "BLUE";
+            }
+            telemetry.addData("Color:", "Color detected is: " + colorString);
+        }
+        telemetry.addData("Looped","Looped " + Integer.toString(imageSampleCount) + " times");
+        Log.d("DEBUG:",data);
+    }
 }
