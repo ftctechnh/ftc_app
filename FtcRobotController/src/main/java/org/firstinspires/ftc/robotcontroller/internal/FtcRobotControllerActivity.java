@@ -31,8 +31,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
 
-import android.widget.FrameLayout;
-import android.hardware.Camera;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -59,6 +57,7 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -101,7 +100,6 @@ import com.qualcomm.robotcore.wifi.NetworkType;
 import org.firstinspires.ftc.ftccommon.external.SoundPlayingRobotMonitor;
 import org.firstinspires.ftc.ftccommon.internal.FtcRobotControllerWatchdogService;
 import org.firstinspires.ftc.ftccommon.internal.ProgramAndManageActivity;
-import org.firstinspires.ftc.robotcore.external.Consumer;
 import org.firstinspires.ftc.robotcore.external.navigation.MotionDetection;
 import org.firstinspires.ftc.robotcore.internal.hardware.DragonboardLynxDragonboardIsPresentPin;
 import org.firstinspires.ftc.robotcore.internal.network.DeviceNameManager;
@@ -124,7 +122,6 @@ import org.firstinspires.inspection.RcInspectionActivity;
 
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
 
 @SuppressWarnings("WeakerAccess")
 public class FtcRobotControllerActivity extends Activity
@@ -170,8 +167,6 @@ public class FtcRobotControllerActivity extends Activity
 
   protected WifiMuteStateMachine wifiMuteStateMachine;
   protected MotionDetection motionDetection;
-
-  public Camera camera;
 
   protected class RobotRestarter implements Restarter {
 
@@ -292,6 +287,8 @@ public class FtcRobotControllerActivity extends Activity
       }
     });
 
+    updateMonitorLayout(getResources().getConfiguration());
+
     BlocksOpMode.setActivityAndWebView(this, (WebView) findViewById(R.id.webViewBlocksRuntime));
 
     ClassManagerFactory.registerFilters();
@@ -342,8 +339,7 @@ public class FtcRobotControllerActivity extends Activity
     if (preferencesHelper.readBoolean(getString(R.string.pref_wifi_automute), false)) {
       initWifiMute(true);
     }
-
-      camera=openFrontFacingCamera();
+      //camera=openFrontFacingCamera();
   }
 
   protected UpdateUI createUpdateUI() {
@@ -564,6 +560,31 @@ public class FtcRobotControllerActivity extends Activity
   public void onConfigurationChanged(Configuration newConfig) {
     super.onConfigurationChanged(newConfig);
     // don't destroy assets on screen rotation
+    updateMonitorLayout(newConfig);
+  }
+
+  /**
+   * Updates the orientation of monitorContainer (which contains cameraMonitorView and
+   * tfodMonitorView) based on the given configuration. Makes the children split the space.
+   */
+  private void updateMonitorLayout(Configuration configuration) {
+    LinearLayout monitorContainer = (LinearLayout) findViewById(R.id.monitorContainer);
+    if (configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+      // When the phone is landscape, lay out the monitor views horizontally.
+      monitorContainer.setOrientation(LinearLayout.HORIZONTAL);
+      for (int i = 0; i < monitorContainer.getChildCount(); i++) {
+        View view = monitorContainer.getChildAt(i);
+        view.setLayoutParams(new LayoutParams(0, LayoutParams.MATCH_PARENT, 1 /* weight */));
+      }
+    } else {
+      // When the phone is portrait, lay out the monitor views vertically.
+      monitorContainer.setOrientation(LinearLayout.VERTICAL);
+      for (int i = 0; i < monitorContainer.getChildCount(); i++) {
+        View view = monitorContainer.getChildAt(i);
+        view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, 0, 1 /* weight */));
+      }
+    }
+    monitorContainer.requestLayout();
   }
 
   @Override
@@ -721,38 +742,4 @@ public class FtcRobotControllerActivity extends Activity
       wifiMuteStateMachine.consumeEvent(WifiMuteEvent.USER_ACTIVITY);
     }
   }
-
-
-    private Camera openFrontFacingCamera() {
-      int cameraId = -1;
-      Camera cam = null;
-      int numberOfCameras = Camera.getNumberOfCameras();
-      for (int i = 0; i < numberOfCameras; i++) {
-        Camera.CameraInfo info = new Camera.CameraInfo();
-        Camera.getCameraInfo(i, info);
-        if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-          cameraId = i;
-          break;
-        }
-      }
-      try {
-        cam = Camera.open(cameraId);
-      } catch (Exception e) {
-
-      }
-      return cam;
-    }
-
-
-    public void initPreview(final Camera camera, final Consumer<CameraPreview> context, final Camera.PreviewCallback previewCallback) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                CameraPreview cp = new CameraPreview(FtcRobotControllerActivity.this, camera, previewCallback);
-                context.accept(cp);
-                FrameLayout previewLayout = (FrameLayout) findViewById(com.qualcomm.ftcrobotcontroller.R.id.previewLayout);
-                previewLayout.addView(cp);
-            }
-        });
-    }
 }
