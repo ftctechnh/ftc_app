@@ -12,22 +12,18 @@ public class floatMotors extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         waitForStart();
 
         while (opModeIsActive())
         {
-            robot.driveEngine.back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.driveEngine.right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-            robot.driveEngine.left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            robot.driveEngine.floatMotors();
             robot.lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.endEffector.contract.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
             robot.driveEngine.stop();
 
-            telemetry.addData("back", robot.driveEngine.back.getCurrentPosition());
-            telemetry.addData("right", robot.driveEngine.right.getCurrentPosition());
-            telemetry.addData("left", robot.driveEngine.left.getCurrentPosition());
+            robot.driveEngine.reportPositionsToScreen();
             telemetry.addData("lift", robot.lift.getCurrentPosition());
             telemetry.addData("pivot", robot.endEffector.pivot.getCurrentPosition());
             telemetry.addData("contract", robot.endEffector.contract.getCurrentPosition());

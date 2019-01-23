@@ -23,7 +23,7 @@ public class holonomicDrive_0_4 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         robot.driveEngine.driveAtAngle(Math.PI);
         g1 = gamepad1;
         g2 = gamepad2;

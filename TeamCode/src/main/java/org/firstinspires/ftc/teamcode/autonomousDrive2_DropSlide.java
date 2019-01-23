@@ -15,7 +15,7 @@ public class autonomousDrive2_DropSlide extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         auto = new Auto(robot, hardwareMap, telemetry);
 
         waitForStart();

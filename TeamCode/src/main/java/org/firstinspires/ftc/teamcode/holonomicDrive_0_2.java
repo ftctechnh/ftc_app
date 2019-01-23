@@ -18,7 +18,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         robot.driveEngine.driveAtAngle(Math.PI);
         waitForStart();
 
@@ -73,7 +73,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
-            telemetry.addData("back encoder inches", robot.driveEngine.back.getCurrentPosition() * DriveEngine3Wheels.inPerTicks);
+            robot.driveEngine.reportPositionsToScreen();
             telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
             telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 

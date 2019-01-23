@@ -16,7 +16,7 @@ public class autonomousDrive1_DropWithTouchSensor extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         auto = new Auto(robot, hardwareMap, telemetry);
         action = Auto.Mode.Drop;
 

@@ -235,7 +235,7 @@ public class Auto {
 
     Mode moveToCrater()
     {
-        double[] drive = robot.smoothDrive(0, -1, 2, false);
+        double[] drive = robot.driveEngine.smoothDrive(0, -1, 2, false);
         robot.driveEngine.drive(drive[0], drive[1]);
         robot.endEffector.moveToPosition(-30, 0);
 

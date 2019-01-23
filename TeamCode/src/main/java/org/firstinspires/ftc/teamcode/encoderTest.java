@@ -13,7 +13,7 @@ public class encoderTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         waitForStart();
 
         while (opModeIsActive())
