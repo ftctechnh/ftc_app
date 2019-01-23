@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -9,16 +8,22 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 
-class DriveEngine {
-    ArrayList<DcMotor> motors = new ArrayList<>();
+import Jama.Matrix;
+
+class DriveEngine3Wheels extends DriveEngine{
+    DcMotor back;
+    DcMotor right;
+    DcMotor left;
 
     Sensors sensors;
 
     static double wheelDiameter = 5;
     static double robotRadius = 7.15;
 
-    private double initialAngle = 0;
-    private double motorSpacing;
+    int n = 0;
+
+    private double motorSpacing = 2 * Math.PI /3;
+    private double root3 = Math.sqrt(3);
 
     private static final double ticksPerRev = 1120;
     private static double inPerRev = Math.PI * wheelDiameter;
@@ -32,47 +37,34 @@ class DriveEngine {
     private ElapsedTime timer;
     Telemetry telemetry;
 
-    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, int numMotors) {
+    DriveEngine3Wheels(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors) {
         this.telemetry = telemetry;
         this.sensors = sensors;
 
-        switch (numMotors) //order matters, we go counterclockwise
-        {
-            case 4:
-                motors.add(hardwareMap.dcMotor.get("back"));
-                motors.add(hardwareMap.dcMotor.get("right"));
-                motors.add(hardwareMap.dcMotor.get("front"));
-                motors.add(hardwareMap.dcMotor.get("left"));
-                motorSpacing = Math.PI / 2;
-                break;
-            case 3:
-                motors.add(hardwareMap.dcMotor.get("back"));
-                motors.add(hardwareMap.dcMotor.get("right"));
-                motors.add(hardwareMap.dcMotor.get("left"));
-                motorSpacing = Math.PI * 2/3;
-                break;
-            case 2:
-                motors.add(hardwareMap.dcMotor.get("right"));
-                motors.add(hardwareMap.dcMotor.get("left"));
-                motorSpacing = Math.PI;
-                initialAngle = Math.PI / 2;
-                break;
-            default:
+        back = hardwareMap.dcMotor.get("back");
+        right = hardwareMap.dcMotor.get("right");
+        left = hardwareMap.dcMotor.get("left");
 
-        }
+        back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        for(DcMotor motor: motors)
-        {
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor.setDirection(DcMotorSimple.Direction.FORWARD);
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+        back.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        back.setDirection(DcMotor.Direction.FORWARD);
+        right.setDirection(DcMotor.Direction.FORWARD);
+        left.setDirection(DcMotor.Direction.FORWARD);
+
+        back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         timer = new ElapsedTime();
     }
 
-    DriveEngine() {
+    DriveEngine3Wheels() {
     }
 
     void drive(double... args) {
@@ -110,31 +102,25 @@ class DriveEngine {
         x = xPrime;
         y = yPrime;
 
-        double[] powers = new double[motors.size()];
+        double backPower  = x                + spin;
+        double rightPower = -x/2 + y*root3/2 + spin;
+        double leftPower  = -x/2 - y*root3/2 + spin;
 
-        for (int i = 0; i < motors.size(); i++) {
-            powers[i] = x * Math.sin(initialAngle + i * motorSpacing)
-                    +   y * Math.cos(initialAngle + i * motorSpacing)
-                    +   spin;
-        }
-
-        double max = MyMath.absoluteMax(powers);
-
+        double max = Math.max(Math.max(Math.abs(backPower),Math.abs(rightPower)),Math.abs(leftPower));
         if(max > 1 || (op && Math.hypot(x,y) > .90))
         {
-            for (int i = 0; i < powers.length; i++) {  // Adjust all motors to less than one
-                powers[i] /= max;            // Or maximize a motor to one
-            }
+            backPower  /= max;    // Adjust all motors to less than one
+            rightPower /= max;    // Or maximize a motor to one
+            leftPower  /= max;
         }
 
         telemetry.addData("driveE x", x);
         telemetry.addData("driveE y", y);
         telemetry.addData("driveE rotate", spin);
 
-        for (int i = 0; i < motors.size(); i++)
-        {
-            motors.get(i).setPower(powers[i]);
-        }
+        back.setPower(backPower);
+        right.setPower(rightPower);
+        left.setPower (leftPower);
     }
 
 
@@ -145,10 +131,13 @@ class DriveEngine {
 
     void resetDistances()
     {
-        for (DcMotor motor: motors) {
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
+        back.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left.setMode (DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        back.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
+        right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left.setMode (DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     private double[] cumulativeDistance = new double[]{0,0};
@@ -169,10 +158,9 @@ class DriveEngine {
     }
     boolean moveOnPath(boolean continuous, boolean correctSpin, double[] ... args)
     {
-        for (int i = 0; i < motors.size(); i++) {
-            telemetry.addData("motor" + i, motors.get(i).getCurrentPosition());
-        }
-
+        telemetry.addData("back", back.getCurrentPosition());
+        telemetry.addData("left", left.getCurrentPosition());
+        telemetry.addData("right", right.getCurrentPosition());
         if(checkpoint.isEmpty()){
             for (double[] arg : args) checkpoint.add(false);
             resetDistances();
@@ -197,7 +185,7 @@ class DriveEngine {
             case 1:
                 targetAngle = forward + args[c][0];
                 rotate(face(targetAngle));
-                if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < 2 * Math.PI /180) {
+                if(Math.abs(loopAngle(targetAngle, spinAngle())) < 2 * Math.PI /180) {
                     stop();
                     forward += args[c][0];
                     sumSE = 0;
@@ -218,7 +206,6 @@ class DriveEngine {
 
                 double[] drive = move(deltaX, deltaY);
                 drive = smoothDrive(drive[0], drive[1], 2, false);
-
                 double driveX = drive[0];
                 double driveY = drive[1];
 
@@ -298,7 +285,7 @@ class DriveEngine {
         if(target == forward)
             return face(forward, true);
 
-        double deltaAngle = Math.abs(MyMath.loopAngle(target, current));
+        double deltaAngle = Math.abs(loopAngle(target, current));
 
         if(deltaAngle < Math.PI * 5 / 180) //if we are in the controllable zone
             return face(target, true);
@@ -311,9 +298,9 @@ class DriveEngine {
     private double lastSE = 0;
     private double lastSt = 0;
 
-    double sP = .25; // .25 per radian
+    double sP = .25; // ==2.8 == .005 per degree
     double sI = 8; //Time to correct past error
-    double sD = .05; //fully account for this much time in the future at current error decreasing rate
+    double sD = .06; //fully account for this much time in the future at current error decreasing rate
 
     private double face(double angle, boolean Integral)
     {
@@ -328,7 +315,7 @@ class DriveEngine {
         //power per degree
         double i = Integral? sI : 10000;
 
-        double e = MyMath.loopAngle(angle, spinAngle());
+        double e = loopAngle(angle, spinAngle());
         double de = e - lastSE;
         double t = timer.seconds();
         double dt = t - lastSt;
@@ -359,9 +346,12 @@ class DriveEngine {
         //    u(t) = MV(t) = P *( r(t) + 1/D *dr(t)/dt )
         //    where
         //    P is the proportional gain, a tuning parameter,
+        //    I is the time to correct past error, a tuning parameter,
         //    D is the time the equation predicts to correct for future error, a tuning parameter,
-        //    r(t) = set point - current point
+        //    e(t) = set point - current point
         //    t is the time or instantaneous time
+        //    tau is the variable of integration (takes on values from time zero to the present t).
+        //power per degree
 
         double r = Math.hypot(deltaX, deltaY);
         double theta = Math.atan2(deltaY, deltaX) * .25 + lastTheta * .75;
@@ -399,18 +389,15 @@ class DriveEngine {
     {
         telemetry.addData("orbit radius", radius);
         radius /= robotRadius;
+        double backPower = 1 + radius * Math.sin(angle);
+        double rightPower = 1 + radius * Math.sin(angle + motorSpacing);
+        double leftPower = 1 + radius * Math.sin(angle - motorSpacing);
 
-        double[] powers = new double[motors.size()];
+        double max = Math.max(Math.abs(backPower),Math.max(Math.abs(rightPower),Math.abs(leftPower)));
 
-        for (int i = 0; i < powers.length; i++) {
-            powers[i] = 1 + radius * Math.sin(angle + i * motorSpacing);
-        }
-
-        double max = MyMath.absoluteMax(powers);
-
-        for (int i = 0; i < motors.size(); i++) {
-            motors.get(i).setPower(powers[i] * speed / max);
-        }
+        back.setPower(backPower * speed / max);
+        right.setPower(rightPower * speed / max);
+        left.setPower(leftPower * speed / max);
     }
 
 
@@ -440,84 +427,82 @@ class DriveEngine {
 //    Y = (R*√3/2—L*√3/2) * 2/3  These are solved for the directional distances
 //    S = (B+R+L) /3
 
-    /**
-     *
-     * @param angle
-     * @return
-     */
+
     double getDistance(double angle)
     {
-        return (xDist() * Math.cos(angle) + yDist() * Math.sin(angle)) * inPerTicks;
+        DcMotor[] motors = new DcMotor[]{back,right,left};
+        Matrix powers = new Matrix(motors.length,3);
+        for (int i = 0; i < motors.length; i++) {                   //for each motor
+            powers.set(i, 0, Math.cos(theta + i* motorSpacing)); //sets x
+            powers.set(i, 1, Math.sin(theta + i* motorSpacing)); //sets y
+            powers.set(i, 2, 1);                              //sets spin
+        }
+
+        Matrix realDistances = new Matrix(distances(),1);
+
+        Matrix directional = powers.solve(realDistances);   //solves for x y and spin
+        double x = directional.get(0,0);
+        double y = directional.get(0,1);
+        double[] vectorA = new double[]{x,y};
+        double[] vectorB = new double[]{Math.cos(angle), Math.sin(angle)};
+
+        //finds the projection onto angle
+        return dotProduct(vectorA, vectorB) / Math.hypot(x,y) * DriveEngine3Wheels.inPerTicks;
     }
 
-    ArrayList<Double> xDistances = new ArrayList<>();
     double xDist()
     {
-        double smallSum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            smallSum += Math.abs(Math.cos(i));
-        }
-
         double sum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            sum += motors.get(i).getCurrentPosition() * Math.cos(i);
-        }
-
-        telemetry.addData("xDist", sum / smallSum);
-        xDistances.add(sum / smallSum);
-
-        if(xDistances.size() > 5) //keep the size to 5
-            xDistances.remove(0);
-
-        return MyMath.median(xDistances);
+        sum += back.getCurrentPosition() * 2/3 * DriveEngine3Wheels.inPerTicks;
+        sum += right.getCurrentPosition() * -1/3 * DriveEngine3Wheels.inPerTicks;
+        sum += left.getCurrentPosition() * -1/3 * DriveEngine3Wheels.inPerTicks;
+        telemetry.addData("xDist", sum);
+        return sum;
     }
 
-    ArrayList<Double> yDistances = new ArrayList<>();
     double yDist()
     {
-        double smallSum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            smallSum += Math.abs(Math.sin(i));
-        }
-
         double sum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            sum += motors.get(i).getCurrentPosition() * Math.sin(i);
-        }
-
-        double yDistance = sum / smallSum;
-        telemetry.addData("yDist", yDistance);
-
-        yDistances.add(yDistance);
-        if(yDistances.size() > 5) //keep the size to 5
-            yDistances.remove(0);
-
-        return MyMath.median(yDistances);
+        sum += back.getCurrentPosition() * 0 * DriveEngine3Wheels.inPerTicks;
+        sum += right.getCurrentPosition() * root3/3 * DriveEngine3Wheels.inPerTicks;
+        sum += left.getCurrentPosition() * -root3/3 * DriveEngine3Wheels.inPerTicks;
+        telemetry.addData("yDist", sum);
+        return sum;
     }
 
     double spinAngle()
     {
-        if(sensors.usingImu)
-            return sensors.getImuHeading();
-
-        else
-        {
-            double sum = 0;
-            for (int i = 0; i < motors.size(); i++)
-                sum += motors.get(i).getCurrentPosition();
-
-            return sum / motors.size();
-        }
+        return sensors.getImuHeading();
+//        double sum = 0;
+//        sum += back.getCurrentPosition() /3 * DriveEngine3Wheels.inPerTicks;
+//        sum += right.getCurrentPosition() /3 * DriveEngine3Wheels.inPerTicks;
+//        sum += left.getCurrentPosition() /3 * DriveEngine3Wheels.inPerTicks;
+//        return sum / robotRadius;
     }
 
     double[] distances()
     {
-        double[] distances = new double[motors.size()];
-        for (int i = 0; i < motors.size(); i++) {
-            distances[i] = motors.get(i).getCurrentPosition();
-        }
-        return distances;
+        return new double[]{
+                back.getCurrentPosition(),
+                right.getCurrentPosition(),
+                left.getCurrentPosition()};
     }
 
+    private double dotProduct(double[] distances, double[] coefficients)
+    {
+        double sum = 0;
+        for(int i = 0; i < distances.length; i++)
+        {
+            sum += distances[i] * coefficients[i];
+        }
+        return sum;
+    }
 
+    private double loopAngle(double target, double current)
+    {
+        double d = target - current;
+        if(d < -Math.PI) d += 2 * Math.PI; //keeps it between -pi and pi
+        if(d >  Math.PI) d -= 2 * Math.PI;
+        return d;
+    }
 }
