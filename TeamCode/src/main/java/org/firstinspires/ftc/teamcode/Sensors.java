@@ -22,7 +22,7 @@ class Sensors {
 
     BNO055IMU imu = null;
 
-    private boolean usingImu = true;
+    boolean usingImu = true;
 
     // State used for updating telemetry
     Orientation angles;
@@ -35,8 +35,8 @@ class Sensors {
 
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
-        dLow = hardwareMap.get(DistanceSensor.class, "dLow");
-        dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
+        //dLow = hardwareMap.get(DistanceSensor.class, "dLow");
+        //dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
 
         if(usingImu && imu == null)
         {
@@ -63,10 +63,10 @@ class Sensors {
     }
 
     /**
-     * @param imu
+     *
      * @return angle in radians
      */
-    static double getImuHeading(BNO055IMU imu)
+    double getImuHeading()
     {
         return imu.getAngularOrientation().firstAngle * Math.PI / 180;
     }
@@ -85,10 +85,13 @@ class Sensors {
 //        return dLow.getDistance(DistanceUnit.INCH);
     }
 
+    double highAverage = 0;
+    double highAlpha = .25;
     double getHighDistance()
     {
         return 36;
-//        return dHigh.getDistance(DistanceUnit.INCH);
+//        double d = dHigh.getDistance(DistanceUnit.INCH); //a
+//        return d * highAlpha + highAverage * (1 - highAlpha);
     }
 
     boolean isTilted()
