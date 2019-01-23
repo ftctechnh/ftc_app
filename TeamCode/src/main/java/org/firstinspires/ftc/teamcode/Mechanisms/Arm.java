@@ -10,17 +10,15 @@ public class Arm {
     public static double MAX_POWER = 0.5;
 
     public static int POS_DIFFERENCE = 1520;
+    public static int COLLECT_THRESHOLD = 2500;
 
     private HoldingPIDMotor leftFlipper, rightFlipper;
+    private DcMotorEx extender;
 
-    public Arm (DcMotorEx leftMotor, DcMotorEx rightMotor) {
+    public Arm (DcMotorEx leftMotor, DcMotorEx rightMotor, DcMotorEx extender) {
         leftFlipper  = new HoldingPIDMotor(leftMotor, MAX_POWER);
         rightFlipper = new HoldingPIDMotor(rightMotor, MAX_POWER);
-    }
-
-    public int getCurrentPosition() {
-        return (leftFlipper.getCurrentPosition() +
-                rightFlipper.getCurrentPosition()) / 2;
+        this.extender = extender;
     }
 
     public void setPower(double p) {
@@ -28,9 +26,13 @@ public class Arm {
         rightFlipper.setPower(p);
     }
 
-    public void goToPosition(int position) {
-        leftFlipper.setTargetPos(position);
-        rightFlipper.setTargetPos(position);
+    public int getCurrentPosition() {
+        return (leftFlipper.getCurrentPosition() +
+                rightFlipper.getCurrentPosition()) / 2;
+    }
+
+    public boolean isCollecting() {
+        return getCurrentPosition() > COLLECT_THRESHOLD;
     }
 
     public void collect() {
@@ -42,6 +44,7 @@ public class Arm {
         leftFlipper.setTargetPos(leftFlipper.getCurrentPosition() - POS_DIFFERENCE);
         rightFlipper.setTargetPos(rightFlipper.getCurrentPosition() - POS_DIFFERENCE);
     }
+
 
 
 }

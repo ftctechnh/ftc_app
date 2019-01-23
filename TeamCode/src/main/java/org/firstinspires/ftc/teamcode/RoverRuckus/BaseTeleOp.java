@@ -21,7 +21,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
     public static double HEADING_INTERVAL = Math.PI / 4;
     public static int MAX_EXTENDER_POS = 950;
     public static int MIN_EXTENDER_POS = 0;
-    public static double EXTEND_MAXED_DRIVE_POWER = 0.3;
+    public static double EXTEND_MAXED_DRIVE_POWER = 0.4;
     public static double TURN_MAX_SPEED = 1.0;
     public static double TURN_SPEED_CUTOFF = 0.03;
     public static double SLEW_TURN_FACTOR = 0.2;
@@ -49,7 +49,7 @@ public abstract class BaseTeleOp extends LinearOpMode {
 
         winch = new HoldingPIDMotor(robot.winch, 1);
 
-        arm = new Arm(robot.leftFlipper, robot.rightFlipper);
+        arm = new Arm(robot.leftFlipper, robot.rightFlipper, robot.linearSlide);
 
         // Enable PID control on these motors
         robot.leftFlipper.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -116,8 +116,9 @@ public abstract class BaseTeleOp extends LinearOpMode {
             double slidePower = controller.getExtendSpeed();
             robot.linearSlide.setPower(slidePower);
             int linearSlidePos = robot.linearSlide.getCurrentPosition();
-            if ((linearSlidePos < MIN_EXTENDER_POS && slidePower < 0) ||
-                    (linearSlidePos > MAX_EXTENDER_POS && slidePower > 0)) {
+            if (((linearSlidePos < MIN_EXTENDER_POS && slidePower < 0) ||
+                    (linearSlidePos > MAX_EXTENDER_POS && slidePower > 0)) &&
+                    arm.isCollecting()) { // Don't move robot if we're not collecting
                 speeds.forwardSpeed += slidePower * EXTEND_MAXED_DRIVE_POWER;
             }
 
