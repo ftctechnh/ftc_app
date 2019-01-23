@@ -21,16 +21,12 @@ public class Bogg
 
     static double averageClockTime = 0;
     double liftAlpha = .12;
-    double rAve = 0;
-    double thetaAve = 0;
-    double spinAve = 0;
     double liftAve = 0;
     double raisePosition;
     double lastClockTime = 0;
     double lastTime = 0;
     double n = 0;
 
-    boolean goingUp = true;
     boolean rotating = false;
 
 
@@ -47,44 +43,41 @@ public class Bogg
         Off
     }
 
-    public Bogg(HardwareMap hardwareMap, Telemetry telemetry)
+    enum Name
     {
-        this.telemetry = telemetry;
-        sensors = new Sensors(hardwareMap);
-        driveEngine = new DriveEngine(hardwareMap, telemetry, sensors.imu);
-        endEffector = new EndEffector(hardwareMap, telemetry, sensors);
-        lift  = hardwareMap.dcMotor.get("lift");
-        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        brake = hardwareMap.servo.get("brake");
-        drop = hardwareMap.servo.get("drop");
-        dServo = hardwareMap.get(Servo.class, "dServo");
-        timer = new ElapsedTime();
+        Bogg,
+        MiniBogg,
+        Fauxbot
     }
 
-    private double[] smoothDrive(double x, double y, double rSeconds)
+    public Bogg(HardwareMap hardwareMap, Telemetry telemetry, Name whichRobot)
     {
-        double alpha = getAlpha(rSeconds);
-        double thetaAlpha = getAlpha(4);
-        double r = Math.hypot(x,y);
-        double theta = Math.atan2(y, x);
+        this.telemetry = telemetry;
+        timer = new ElapsedTime();
+        sensors = new Sensors(hardwareMap);
 
-        if(r > 1)
-            r = 1;
-        if(r == 0)
-            rAve = 0;
-        else
-            rAve = alpha * r + (1-alpha) * rAve;
+        switch (whichRobot)
+        {
+            case Bogg:
+                driveEngine = new DriveEngine3Wheels(hardwareMap, telemetry, sensors);
+                endEffector = new EndEffector(hardwareMap, telemetry, sensors);
+                lift  = hardwareMap.dcMotor.get("lift");
+                lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                brake = hardwareMap.servo.get("brake");
+                drop = hardwareMap.servo.get("drop");
+                dServo = hardwareMap.get(Servo.class, "dServo");
+                break;
 
-        if(thetaAve > Math.PI)  thetaAve -= 2 * Math.PI;
-        if(thetaAve < -Math.PI) thetaAve += 2 * Math.PI;
+            case MiniBogg:
+                driveEngine = new DriveEngine3Wheels(hardwareMap, telemetry, sensors);
+                lift  = hardwareMap.dcMotor.get("lift");
+                lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                break;
 
-        //find the nearest value: must be within pi
-        if(theta - thetaAve > Math.PI) theta -= 2 * Math.PI;
-        if(thetaAve - theta > Math.PI) theta += 2 * Math.PI;
-
-        thetaAve = thetaAlpha * theta + (1-thetaAlpha) * thetaAve;
-
-        return new double[]{Math.cos(thetaAve) * r, Math.sin(thetaAve) * rAve};
+            case Fauxbot:
+                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 2);
+                break;
+        }
     }
 
 
@@ -99,16 +92,6 @@ public class Bogg
         else
             liftAve = liftAlpha/3 * l + (1-liftAlpha/3) * liftAve;
         return liftAve;
-    }
-
-    private double smoothSpin(double spin)
-    {
-        double alpha = getAlpha(3);
-        if(spin * spinAve < 0 || spin == 0)
-            spinAve = 0;
-        else
-            spinAve = alpha * spin + (1-alpha ) * spinAve;
-        return spinAve;
     }
 
     void manualLift(boolean up, boolean down)
@@ -182,20 +165,9 @@ public class Bogg
         }
     }
 
-    void push(Direction direction)
-    {
-        switch (direction)
-        {
-            case Up:
-                break;
-            case Down:
-                break;
-        }
-    }
-
     void manualDrive(boolean op, double x, double y)
     {
-        double[] drive = smoothDrive(x, y, op? 1:2.5);
+        double[] drive = driveEngine.smoothDrive(x, y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
 
@@ -206,18 +178,14 @@ public class Bogg
         driveEngine.drive(op, leftX, leftY);
     }
 
-    private double cumulativeCorrection;
     void manualDriveAutoCorrect(boolean op, double x, double y)
     {
-        double[] drive = smoothDrive(x, y, op? 1:2.5);
+        double[] drive = driveEngine.smoothDrive(x, y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
         double spin = driveEngine.faceForward();
         driveEngine.drive(op, leftX, leftY, spin);
 
-        cumulativeCorrection += driveEngine.faceForward();
-
-        telemetry.addData("cumulative correction", cumulativeCorrection);
         telemetry.addData("gamepad x", x);
         telemetry.addData("gamepad y", y);
         telemetry.addLine("Note: y is negated");
@@ -226,10 +194,10 @@ public class Bogg
     void manualCurvy(Gamepad gDrive, Gamepad gRotate)
     {
         boolean op = gDrive.left_stick_button;
-        double[] drive = smoothDrive(gDrive.left_stick_x, -gDrive.left_stick_y, op? 1:2.5);
+        double[] drive = driveEngine.smoothDrive(gDrive.left_stick_x, -gDrive.left_stick_y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
-        double spin = smoothSpin(-gRotate.right_stick_x/3);
+        double spin = driveEngine.smoothSpin(-gRotate.right_stick_x/3);
 
         telemetry.addData("gamepad x", gDrive.left_stick_x);
         telemetry.addData("gamepad y", gDrive.left_stick_y);
@@ -251,9 +219,9 @@ public class Bogg
         rotating = true;
 
         if(button)
-            driveEngine.rotate(-stick);
+            driveEngine.rotate(-stick/3);
         else
-            driveEngine.rotate(smoothSpin(-stick));
+            driveEngine.rotate(driveEngine.smoothSpin(-stick/3));
 
         telemetry.addData("gamepad spin", stick);
         telemetry.addLine("Note: spin is negated");
@@ -332,7 +300,7 @@ public class Bogg
 
     }
 
-    double getAlpha(double seconds)
+    static double getAlpha(double seconds)
     {
         return 1 - Math.pow(.05, averageClockTime/seconds); //reaches 95% in this many seconds
     }
