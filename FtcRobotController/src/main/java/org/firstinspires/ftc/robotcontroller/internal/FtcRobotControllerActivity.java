@@ -343,7 +343,7 @@ public class FtcRobotControllerActivity extends Activity
       initWifiMute(true);
     }
 
-      camera=openFrontFacingCamera();
+      //camera=openFrontFacingCamera();
   }
 
   protected UpdateUI createUpdateUI() {
