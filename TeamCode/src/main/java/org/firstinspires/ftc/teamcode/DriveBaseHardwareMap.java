@@ -12,8 +12,8 @@ public class DriveBaseHardwareMap {
     public DcMotor  bot_left   = null;
     public DcMotor  top_right  = null;
     public DcMotor  bot_right  = null;
-   // public DcMotor  sweeper = null;
-    //public DcMotor  lifter  = null;
+    public DcMotor  sweeper = null;
+    public DcMotor  lifter  = null;
     public CRServo    dropper = null;
     public Servo    marker  = null;
 
@@ -40,10 +40,10 @@ public class DriveBaseHardwareMap {
         bot_left  = hwMap.get(DcMotor.class, "bot_left");
         top_right = hwMap.get(DcMotor.class, "top_right");
         bot_right = hwMap.get(DcMotor.class, "bot_right");
-        //sweeper = hwMap.get(DcMotor.class, "sweeper");
-        //lifter = hwMap.get(DcMotor.class, "lifter");
-        //sweeper.setDirection(DcMotor.Direction.FORWARD);
-        //lifter.setDirection(DcMotor.Direction.FORWARD);
+        sweeper = hwMap.get(DcMotor.class, "sweeper");
+        lifter = hwMap.get(DcMotor.class, "lifter");
+        sweeper.setDirection(DcMotor.Direction.FORWARD);
+        lifter.setDirection(DcMotor.Direction.FORWARD);
         top_left.setDirection(DcMotor.Direction.FORWARD);
         bot_left.setDirection(DcMotor.Direction.FORWARD);
         top_right.setDirection(DcMotor.Direction.FORWARD);
@@ -62,16 +62,16 @@ public class DriveBaseHardwareMap {
         bot_left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         top_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bot_right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        //sweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        sweeper.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Define and initialize ALL installed servos.
         dropper  = hwMap.get(CRServo.class, "dropper");
         marker = hwMap.get(Servo.class, "marker");
         //intake_right = hwMap.get(Servo.class, "intake_right")
         marker.setPosition(0.5);
-        //dropper.setDirection(CRServo.Direction.FORWARD);
-        dropper.setPower(0.0);
+        dropper.setDirection(CRServo.Direction.FORWARD);
+        dropper.setPower(0);
         //intake_right.setPosition(0);
     }
 }

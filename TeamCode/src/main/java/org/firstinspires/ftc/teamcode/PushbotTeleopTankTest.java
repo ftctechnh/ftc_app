@@ -127,22 +127,38 @@ public class PushbotTeleopTankTest extends OpMode{
             speed = 0;
         }
 
-        //.else if (gamepad1.a){
-
-        //}/*
-       //    robot.sweeper.setPower(-1);
-       // else
-         //   robot.sweeper.setPower(0.0);
-        /*
-        if(gamepad1.x){
-           // robot.lifter.setPower(0.5);
+        if (gamepad1.a){
+            robot.sweeper.setPower(0.5);
         }
-        else if(gamepad1.b){
+        else if(gamepad1.y){
+            robot.sweeper.setPower(-0.5);
+        }
+        else{
+            robot.sweeper.setPower(0);
+        }
+        if(gamepad1.dpad_up){
             robot.lifter.setPower(-0.5);
+        }
+        else if(gamepad1.dpad_down){
+            robot.lifter.setPower(0.75);
         }
         else{
             robot.lifter.setPower(0);
         }
+        if(gamepad1.b){
+            robot.dropper.setPower(0.5);
+            telemetry.addData("CRServo",robot.dropper.getPower());
+            telemetry.update();
+        }
+        else if(gamepad1.x){
+            robot.dropper.setPower(-0.5);
+            telemetry.addData("CRServo",robot.dropper.getPower());
+            telemetry.update();
+        }
+        else{
+            robot.dropper.setPower(0);
+        }
+
         // Send telemetry message to signify robot running;
         /*telemetry.addData("claw",  "Offset = %.2f", clawOffset);
         telemetry.addData("left",  "%.2f", left);

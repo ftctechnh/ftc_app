@@ -103,23 +103,48 @@ public class Auto_Depot_TensorFlow extends LinearOpMode {
 
 
         waitForStart();
+        robot.dropper.setPower(0.5);
+        sleep(5000);
+        robot.dropper.setPower(0);
+        encoderDrive(DRIVE_SPEED,-18,18,5.0);
         switch (direction = TFlow()) {
             case 0: telemetry.addData("Dirction","left");
                 telemetry.update();
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
+                encoderDrive(DRIVE_SPEED, -5,5,5.0);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
                 encoderDrive(DRIVE_SPEED, 5,-5,5.0);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
+                robot.marker.setPosition(-0.5);
+                sleep(1000);
+                robot.marker.setPosition(0.5);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
                 break;
             case 1: telemetry.addData("Dirction","center");
                 telemetry.update();
-                encoderDrive(DRIVE_SPEED, 10,10,5.0);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
+                robot.marker.setPosition(-0.5);
+                sleep(1000);
+                robot.marker.setPosition(0.5);
+                encoderDrive(DRIVE_SPEED, 1,-1,5.0);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
                 break;
             case 2: telemetry.addData("Dirction","right");
-                encoderDrive(DRIVE_SPEED, -5,5,5.0);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
+                encoderDrive(DRIVE_SPEED, 1,-1,5.0);
+                encoderDrive(DRIVE_SPEED, 1,1,5.0);
+                encoderDrive(DRIVE_SPEED, -1,1,5.0);
+                robot.marker.setPosition(-0.5);
+                sleep(1000);
+                robot.marker.setPosition(0.5);
+                encoderDrive(DRIVE_SPEED, -1,-1,5.0);
+
                 telemetry.update();
                 break;
         }
-        //robot.dropper.setPower(0.5);
-        //sleep(5000);
-        //robot.dropper.setPower(0);
+        robot.dropper.setPower(0.5);
+        sleep(5000);
+        robot.dropper.setPower(0);
 
         //encoderDrive(DRIVE_SPEED, -8.75, 8.75, 5.0);
         //encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
