@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Junk;
+package org.firstinspires.ftc.teamcode.Trash;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -9,7 +9,6 @@ import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
-import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.IMUcontrol;
 
 @Autonomous(name = "Auto2", group = "Drive")
 @Disabled
