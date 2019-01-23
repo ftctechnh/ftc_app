@@ -69,6 +69,13 @@ public class GoldMineralDetectorTest extends OpMode
 
     }
 
+    public enum GoldStatus {
+        Unknown,
+        Left,
+        Right,
+        Center
+
+    }
     /*
      * Code to run REPEATEDLY when the driver hits INIT
      */
@@ -84,15 +91,48 @@ public class GoldMineralDetectorTest extends OpMode
 
     }
 
+
     /*
      * Code to run REPEATEDLY when the driver hits PLAY
      */
     @Override
     public void loop() {
-        telemetry.addData("X Pos" , detector.getScreenPosition().x); // Gold X position.
+        if (detector.isFound()) {
+            telemetry.addData("sampler" , "FOUND, x=" + String.valueOf(detector.getScreenPosition().x)); // Gold X position.
+            telemetry.addData("sampler" , "FOUND, y=" + String.valueOf(detector.getScreenPosition().y)); // Gold X position.
+
+
+            GoldStatus gStatus = GoldStatus.Unknown;
+
+            int gX = (int) detector.getScreenPosition().x;
+            int gY = (int) detector.getScreenPosition().y;
+
+
+            if (gY < 150){
+                gStatus = GoldStatus.Left;
+            }
+            else if (gY > 300){
+                gStatus = GoldStatus.Right;
+            }
+            else {
+                gStatus = GoldStatus.Center;
+            }
+            telemetry.addData("Gold Status" , "gStatus =" + String.valueOf(gStatus));
+
+
+        } else {
+            telemetry.addData("sampler" , "NOT FOUND"); // Gold X position.
+        }
+
+
+
+
     }
 
-    /*
+        /*
+
+    0.3
+    2
      * Code to run ONCE after the driver hits STOP
      */
     @Override

@@ -56,6 +56,7 @@ public abstract class BullRunCrater extends StandardChassis {
     public void init() {
         initMotors();
         initTimeouts();
+        initSampling();
     }
 
 
@@ -64,6 +65,7 @@ public abstract class BullRunCrater extends StandardChassis {
      */
     @Override
     public void init_loop () {
+
     }
 
     /**
@@ -80,6 +82,7 @@ public abstract class BullRunCrater extends StandardChassis {
      */
     @Override
     public void stop () {
+        stopSampling();
     }
 
     /**
@@ -90,9 +93,14 @@ public abstract class BullRunCrater extends StandardChassis {
 
         if (madeTheRun == false) {
             // forward 46 inches
-            encoderDrive(46, 46);
+           // HACKED OUT TEMPORARILY encoderDrive(46, 46);
+
+            // add code to do sampling
+
             madeTheRun = true;
         }
+
+        loopSampling();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());

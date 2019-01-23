@@ -65,7 +65,7 @@ public class GoldMineralDetector extends DogeCVDetector {
 
         //Preprocess the working Mat (blur it then apply a color filter)
         Imgproc.GaussianBlur(workingMat,workingMat,new Size(5,5),0);
-        colorFilter.process(workingMat.clone(),mask      );
+        colorFilter.process(workingMat.clone(), mask);
 
         //Find contours of the yellow mask and draw them to the display mat for viewing
 
@@ -106,11 +106,13 @@ public class GoldMineralDetector extends DogeCVDetector {
 
 
         //Print result
-        Imgproc.putText(displayMat,"Result: " + screenPosition.x +"/"+screenPosition.y,new Point(10,getAdjustedSize().height - 30),0,1, new Scalar(255,255,0),1);
+        Imgproc.putText(displayMat,"Result: " +
+                screenPosition.x +"/"+screenPosition.y,
+                new Point(10,getAdjustedSize().height - 30),0,1,
+                new Scalar(255,255,0),1);
 
 
         return displayMat;
-
     }
 
     @Override
@@ -125,7 +127,6 @@ public class GoldMineralDetector extends DogeCVDetector {
         if (areaScoringMethod == DogeCV.AreaScoringMethod.PERFECT_AREA){
             addScorer(perfectAreaScorer);
         }
-
     }
 
     /**

@@ -144,7 +144,7 @@ public class QuickSilverController extends OpMode {
 
         if (useMotors) {
             // Switch the directions for driving!
-            if (gamepad1.start){
+            if (gamepad1.back){
                 switchFront = !switchFront;
                 sleep(500);
             }
