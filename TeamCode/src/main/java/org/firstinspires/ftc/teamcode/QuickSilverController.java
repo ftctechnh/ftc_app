@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  *
  */
-@TeleOp(name="QuickSilver TeleOp", group="AAA")
+@TeleOp(name="QuickSilver TeleOp", group="ZZZZ")
 public class QuickSilverController extends OpMode {
 
     // Motors connected to the hub.
