@@ -28,9 +28,13 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if(!robot.manualRotate(true, g2.right_stick_x / 3))
-                if(!robot.manualRotate(true, -g2.left_stick_x /3))
-                    robot.manualCurvy(g1, g1);
+            if(!robot.manualRotate(true, -g2.right_stick_x / 3))
+                if(!robot.manualRotate(true, g2.left_stick_x /3))
+                    robot.manualCurvy(
+                            g1.left_stick_button,
+                            g1.left_stick_x,
+                            robot.sensors.touchLanderIsPressed()? 0 : g1.left_stick_y,
+                            g1.right_stick_x);
 
             if(g1.dpad_down)
                 robot.setBrake(Bogg.Direction.On);

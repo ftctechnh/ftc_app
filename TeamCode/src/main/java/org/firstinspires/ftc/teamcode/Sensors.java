@@ -17,6 +17,7 @@ class Sensors {
 
     private TouchSensor touchTop;
     private TouchSensor touchBottom;
+    private TouchSensor touchLander;
     private DistanceSensor dLow;
     private DistanceSensor dHigh;
 
@@ -35,6 +36,7 @@ class Sensors {
 
         touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
         touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
+        touchLander = hardwareMap.get(TouchSensor.class, "touchLander");
         //dLow = hardwareMap.get(DistanceSensor.class, "dLow");
         //dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
 
@@ -78,6 +80,8 @@ class Sensors {
     boolean touchBottomIsPressed() {
         return touchBottom.isPressed();
     }
+
+    boolean touchLanderIsPressed(){return touchLander.isPressed();}
 
     double getLowDistance()
     {
