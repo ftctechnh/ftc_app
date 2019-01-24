@@ -58,8 +58,47 @@ class DriveEngine {
                 initialAngle = Math.PI / 2;
                 break;
             default:
-
+                //starts at zero, motor0 is on x-axis.
+                for (int i = 0; i < numMotors; i++) {
+                    motors.add(hardwareMap.dcMotor.get("motor" + i));
+                }
         }
+
+        for(DcMotor motor: motors)
+        {
+            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            motor.setDirection(DcMotorSimple.Direction.FORWARD);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
+
+        timer = new ElapsedTime();
+    }
+
+    //If we ever use collinear motors
+    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, int[] numMotors) {
+        this.telemetry = telemetry;
+        this.sensors = sensors;
+
+        int n = 0;
+        for (int numMotor : numMotors) {
+            if (numMotor == 0)
+                ;
+
+            else if (numMotor == 1)
+                motors.add(hardwareMap.dcMotor.get("motor" + n));
+
+            else {
+                ArrayList<DcMotor> motorGroup = new ArrayList<>();
+                for (int j = 0; j < numMotor; j++) {
+                    motorGroup.add(hardwareMap.dcMotor.get("motor" + n));
+                    n++;
+                }
+                motors.add(new CollinearMotorGroup(motorGroup));
+            }
+            n++;
+        }
+
 
         for(DcMotor motor: motors)
         {
@@ -514,15 +553,6 @@ class DriveEngine {
 
             return sum / motors.size();
         }
-    }
-
-    double[] distances()
-    {
-        double[] distances = new double[motors.size()];
-        for (int i = 0; i < motors.size(); i++) {
-            distances[i] = motors.get(i).getCurrentPosition();
-        }
-        return distances;
     }
 
     void reportPositionsToScreen()
