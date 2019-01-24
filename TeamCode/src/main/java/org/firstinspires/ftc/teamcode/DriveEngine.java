@@ -17,7 +17,6 @@ class DriveEngine {
     static double wheelDiameter = 5;
     static double robotRadius = 7.15;
 
-    private double initialAngle = 0;
     private double motorSpacing;
 
     private static final double ticksPerRev = 1120;
@@ -55,7 +54,6 @@ class DriveEngine {
                 motors.add(hardwareMap.dcMotor.get("right"));
                 motors.add(hardwareMap.dcMotor.get("left"));
                 motorSpacing = Math.PI;
-                initialAngle = Math.PI / 2;
                 break;
             default:
                 //starts at zero, motor0 is on x-axis.
@@ -104,7 +102,7 @@ class DriveEngine {
         {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor.setDirection(DcMotorSimple.Direction.FORWARD);
+            motor.setDirection(DcMotor.Direction.FORWARD);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
@@ -151,29 +149,26 @@ class DriveEngine {
 
         double[] powers = new double[motors.size()];
 
-        for (int i = 0; i < motors.size(); i++) {
-            powers[i] = x * Math.sin(initialAngle + i * motorSpacing)
-                    +   y * Math.cos(initialAngle + i * motorSpacing)
+        for (int i = 0; i < motors.size(); i++)
+            powers[i] = x * Math.sin(i * motorSpacing)
+                    +   y * Math.cos(i * motorSpacing)
                     +   spin;
-        }
+
 
         double max = MyMath.absoluteMax(powers);
 
         if(max > 1 || (op && Math.hypot(x,y) > .90))
-        {
-            for (int i = 0; i < powers.length; i++) {  // Adjust all motors to less than one
+            for (int i = 0; i < powers.length; i++)   // Adjust all motors to less than one
                 powers[i] /= max;            // Or maximize a motor to one
-            }
-        }
+
+
 
         telemetry.addData("driveE x", x);
         telemetry.addData("driveE y", y);
         telemetry.addData("driveE rotate", spin);
 
         for (int i = 0; i < motors.size(); i++)
-        {
             motors.get(i).setPower(powers[i]);
-        }
     }
 
 
@@ -245,7 +240,7 @@ class DriveEngine {
                 if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < 2 * Math.PI /180) {
                     stop();
                     forward += args[c][0];
-                    sumSE = 0;
+                    sumSpinError = 0;
                     checkpoint.set(c, true);
                     cumulativeDistance = new double[]{0,0};
                     resetDistances();
@@ -279,7 +274,7 @@ class DriveEngine {
                         stop();
                         if(args[c].length == 3) {
                             forward += args[c][2];
-                            sumSE = 0;
+                            sumSpinError = 0;
                         }
                         this.checkpoint.set(c, true);
                         cumulativeDistance[0] += args[c][0];
@@ -348,13 +343,14 @@ class DriveEngine {
         if(deltaAngle < Math.PI * 5 / 180) //if we are in the controllable zone
             return face(target, true);
 
-        sumSE = 0;  //if we need to catch up
-        return face(target,false);
+        else
+            sumSpinError = 0;  //if we need to catch up
+            return face(target,false);
     }
 
-    private double sumSE = 0;
-    private double lastSE = 0;
-    private double lastSt = 0;
+    private double sumSpinError = 0;
+    private double lastSpinError = 0;
+    private double lastSpinTime = 0;
 
     double sP = .25; // .25 per radian
     double sI = 8; //Time to correct past error
@@ -374,30 +370,30 @@ class DriveEngine {
         double i = Integral? sI : 10000;
 
         double e = MyMath.loopAngle(angle, spinAngle());
-        double de = e - lastSE;
+        double de = e - lastSpinError; //change in angle
         double t = timer.seconds();
-        double dt = t - lastSt;
-        sumSE += e * dt;
+        double dt = t - lastSpinTime;  //change in t
+        sumSpinError += e * dt;        //cumulative error
 
-        double power = sP * (e  +  1/ i * sumSE +  sD * de/dt);
-        //e is current error, sumSE is the integral, de/dt is the derivative
+        double power = sP * (e  +  1/ i * sumSpinError +  sD * de/dt);
+        //e is current error, sumSpinError is the integral, de/dt is the derivative
 
-        lastSE = e;
-        lastSt = t;
+        lastSpinError = e;
+        lastSpinTime = t;
         return power;
     }
     void resetForward()
     {
         forward = spinAngle();
-        sumSE = 0;
+        sumSpinError = 0;
     }
 
 
     private double lastR = 0;
     private double lastTheta = 0;
     private double lastT = 0;
-    double mP = .01; //power per inch
-    double mD = 2;  //fully account for this much time in the future at current error decreasing rate
+    double mP = .02; //power per inch
+    double mD = .5;  //fully account for this much time in the future at current error decreasing rate
 
     double[] move(double deltaX, double deltaY)
     {
@@ -418,7 +414,7 @@ class DriveEngine {
         telemetry.addData("theta", theta);
         telemetry.addData("dTheta", dTheta);
 
-//        if(Math.abs(dTheta / dr) > 2){ //Only possible when there is a significant circle-tangent movement
+//        if(Math.abs(dTheta / dt) > 2){ //2 rad per second
 //            telemetry.addData("dtheta/dr", dTheta/dr);
 //            return new double[]{0,0};
 //        }
@@ -426,9 +422,9 @@ class DriveEngine {
         double power = mP * (r +  mD * dr/dt);
         telemetry.addData("moveD term", mD * dr/dt);
         telemetry.addData("power", power);
-        //r is current error, dr/dt is the derivative
-        if(power > .7) power = .7;
 
+        if(power > .7) power = .7;
+        //Don't worry, it's smoothed
 
         lastR = r;
         lastT = t;

@@ -76,6 +76,7 @@ public class Bogg
 
             case Fauxbot:
                 driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 2);
+                driveEngine.driveAtAngle(-Math.PI / 2);
                 break;
         }
     }
