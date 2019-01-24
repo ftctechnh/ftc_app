@@ -11,7 +11,7 @@ public class MiniBogg extends Bogg
 {
     Gamepad gamepad;
     HardwareMap hardwareMap;
-    DriveEngine3Wheels driveEngine3Wheels;
+    DriveEngine3Wheels driveEngine;
     DcMotor lift;
     Sensors sensors;
     Servo brake;
@@ -124,15 +124,15 @@ public class MiniBogg extends Bogg
     public void manualDrive()
     {
         if(gamepad.left_stick_button)
-            driveEngine3Wheels.drive(true,gamepad.left_stick_x/2, gamepad.left_stick_y/2);
+            driveEngine.drive(true,gamepad.left_stick_x/2, gamepad.left_stick_y/2);
         else
-            driveEngine3Wheels.drive(false,smoothX(gamepad.left_stick_x)/2, smoothY(gamepad.left_stick_y)/2);
+            driveEngine.drive(false,smoothX(gamepad.left_stick_x)/2, smoothY(gamepad.left_stick_y)/2);
     }
     public void manualRotate()
     {
         if(gamepad.right_stick_button)
-            driveEngine3Wheels.rotate(gamepad.right_stick_x);
+            driveEngine.rotate(gamepad.right_stick_x);
         else
-            driveEngine3Wheels.rotate(smoothSpin(gamepad.right_stick_x));
+            driveEngine.rotate(smoothSpin(gamepad.right_stick_x));
     }
 }

@@ -101,8 +101,4 @@ public class FakeDriveEngine extends DriveEngine{
         super.orbit(radius, angle, speed);
     }
 
-    @Override
-    double[] distances() {
-        return super.distances();
-    }
 }
