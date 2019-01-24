@@ -59,7 +59,7 @@ public class Bogg
         switch (whichRobot)
         {
             case Bogg:
-                driveEngine = new DriveEngine3Wheels(hardwareMap, telemetry, sensors);
+                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
                 endEffector = new EndEffector(hardwareMap, telemetry, sensors);
                 lift  = hardwareMap.dcMotor.get("lift");
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -69,7 +69,7 @@ public class Bogg
                 break;
 
             case MiniBogg:
-                driveEngine = new DriveEngine3Wheels(hardwareMap, telemetry, sensors);
+                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
                 lift  = hardwareMap.dcMotor.get("lift");
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
@@ -156,18 +156,18 @@ public class Bogg
         switch (direction)
         {
             case Down:
-                drop.setPosition(.6);
+                drop.setPosition(0);
                 break;
             case Up:
             default:
-                drop.setPosition(0);
+                drop.setPosition(-.6);
                 break;
         }
     }
 
     void manualDrive(boolean op, double x, double y)
     {
-        double[] drive = driveEngine.smoothDrive(x, y, op? 1:3, true);
+        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
 
@@ -178,9 +178,14 @@ public class Bogg
         driveEngine.drive(op, leftX, leftY);
     }
 
-    void manualDriveAutoCorrect(boolean op, double x, double y)
+    void manualDriveAutoCorrect(boolean op, double x, double y, double t)
     {
-        double[] drive = driveEngine.smoothDrive(x, y, op? 1:3, true);
+        if(t < 1){
+            driveEngine.resetForward();
+            manualDrive(op, x, y);
+        }
+
+        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
         double spin = driveEngine.faceForward();
@@ -191,25 +196,24 @@ public class Bogg
         telemetry.addLine("Note: y is negated");
     }
 
-    void manualCurvy(Gamepad gDrive, Gamepad gRotate)
+    void manualCurvy(boolean op, double x, double y, double s)
     {
-        boolean op = gDrive.left_stick_button;
-        double[] drive = driveEngine.smoothDrive(gDrive.left_stick_x, -gDrive.left_stick_y, op? 1:3, true);
+        double[] drive = driveEngine.smoothDrive(x, y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
-        double spin = driveEngine.smoothSpin(-gRotate.right_stick_x/3);
+        double spin = driveEngine.smoothSpin(-s/3);
 
-        telemetry.addData("gamepad x", gDrive.left_stick_x);
-        telemetry.addData("gamepad y", gDrive.left_stick_y);
-        telemetry.addData("gamepad spin", gRotate.right_stick_x);
+        telemetry.addData("gamepad x", x);
+        telemetry.addData("gamepad y", y);
+        telemetry.addData("gamepad spin", s);
         telemetry.addLine("Note: y and spin are negated");
 
         driveEngine.drive(op, leftX, leftY, spin);
     }
 
-    boolean manualRotate(boolean button, double stick)
+    boolean manualRotate(boolean button, double spin)
     {
-        if(stick == 0) {  //if we're not rotating
+        if(spin == 0) {  //if we're not rotating
             if(rotating){  //but if the boolean says we are
                 rotating = false;
                 driveEngine.resetForward(); //resets forward after rotating so we can auto-correct
@@ -219,11 +223,11 @@ public class Bogg
         rotating = true;
 
         if(button)
-            driveEngine.rotate(-stick/3);
+            driveEngine.rotate(-spin/3);
         else
-            driveEngine.rotate(driveEngine.smoothSpin(-stick/3));
+            driveEngine.rotate(driveEngine.smoothSpin(-spin/3));
 
-        telemetry.addData("gamepad spin", stick);
+        telemetry.addData("gamepad spin", spin);
         telemetry.addLine("Note: spin is negated");
         return true;
     }
@@ -234,7 +238,6 @@ public class Bogg
         derivedRadius = endEffector.getRadius();
     }
 
-
     void manualDriveVarOrbit(Gamepad gDrive, Gamepad gRotate, boolean orbit)
     {
         double y = gDrive.left_stick_y;
@@ -243,12 +246,12 @@ public class Bogg
 
         if(orbit) {
             if (max == Math.abs(y))
-                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, -gDrive.left_stick_y);
+                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, gDrive.left_stick_y);
             else
                 driveEngine.drive(gDrive.left_stick_x, 0);
         }
         else
-            manualCurvy(gDrive, gRotate);
+            manualCurvy(gDrive.left_stick_button, gDrive.left_stick_x, gDrive.left_stick_y, gRotate.right_stick_x);
     }
 
     
