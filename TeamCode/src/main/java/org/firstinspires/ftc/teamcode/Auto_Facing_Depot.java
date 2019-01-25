@@ -28,7 +28,15 @@
  */
 
 package org.firstinspires.ftc.teamcode;
-
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import java.util.List;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -37,31 +45,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.HardwarePushbotdemo;
 import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
-import org.firstinspires.ftc.teamcode.ConceptTensorFlowObjectDetection;
+
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
-/**
- * This file illustrates the concept of driving a path based on time.
- * It uses the common Pushbot hardware class to define the drive on the robot.
- * The code is structured as a LinearOpMode
- *
- * The code assumes that you do NOT have encoders on the wheels,
- *   otherwise you would use: PushbotAutoDriveByEncoder;
- *
- *   The desired path in this example is:
- *   - Drive forward for 3 seconds
- *   - Spin right for 1.3 seconds
- *   - Drive Backwards for 1 Second
- *   - Stop and close the claw.
- *
- *  The code is written in a simple form with no optimizations.
- *  However, there are several ways that this type of sequence could be streamlined,
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 
-@Autonomous(name="Pushbot: Auto Facing Crater", group="Pushbot")
+
+@Autonomous(name="Pushbot: Auto Facing Depot", group="Pushbot")
 //@Disabled
 public class Auto_Facing_Depot extends LinearOpMode {
 
@@ -104,21 +93,15 @@ public class Auto_Facing_Depot extends LinearOpMode {
         robot.top_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.bot_right.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // Send telemetry message to indicate successful Encoder reset
-        telemetry.addData("Path0", "Starting at %7d :%7d",
-                robot.top_left.getCurrentPosition(),
-                robot.top_right.getCurrentPosition(),
-                robot.bot_left.getCurrentPosition(),
-                robot.bot_right.getCurrentPosition(),
 
-                telemetry.update());
-
-        // Wait for the game to start (driver presses PLAY)
         waitForStart();
-        encoderDrive(DRIVE_SPEED, 10, -10, 5.0);
-        encoderDrive(DRIVE_SPEED, 40, 40, 5.0);
-        encoderDrive(DRIVE_SPEED, -20,20,5.0 );
-        encoderDrive(DRIVE_SPEED, -60,-60,5.0 );
+        robot.dropper.setPower(0.5);
+        sleep(5000);
+        robot.dropper.setPower(0);
+        encoderDrive(DRIVE_SPEED, -27, 27, 5.0);
+        encoderDrive(DRIVE_SPEED, -40, -40, 5.0);
+        encoderDrive(DRIVE_SPEED, 20,-20,5.0 );
+        encoderDrive(DRIVE_SPEED, -50,-50,5.0 );
         robot.marker.setPosition(-0.5);
         sleep(1000);
         robot.marker.setPosition(0.5);
@@ -151,15 +134,15 @@ public class Auto_Facing_Depot extends LinearOpMode {
             robot.top_right.setTargetPosition(newTopRightTarget);
             robot.bot_right.setTargetPosition(newBotRightTarget);
 
-            telemetry.addData( "Start encoderDrive leftInches:", leftInches );
-            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
-            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
-            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
-            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
-            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
-            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
-            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
-            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+            //  telemetry.addData( "Start encoderDrive leftInches:", leftInches );
+            //telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            //telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            //telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            //telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            //telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            //telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            //telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            //telemetry.addData("TopRightBusy",robot.top_right.isBusy());
 
             //robot.leftDrive.getCurrentPosition(),
             telemetry.update();
@@ -195,15 +178,15 @@ public class Auto_Facing_Depot extends LinearOpMode {
                 //telemetry.addData("Path2", "Running ");
 
             }
-            telemetry.addData( "After while leftInches:", leftInches );
-            telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
-            telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
-            telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
-            telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
-            telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
-            telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
-            telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
-            telemetry.addData("TopRightBusy",robot.top_right.isBusy());
+            //telemetry.addData( "After while leftInches:", leftInches );
+            //telemetry.addData("BottomLeft",robot.bot_left.getCurrentPosition());
+            //telemetry.addData("BottomLeftBusy",robot.bot_left.isBusy());
+            //telemetry.addData("TopLeft",robot.top_left.getCurrentPosition());
+            //telemetry.addData("TopLeftBusy",robot.top_left.isBusy());
+            //telemetry.addData("BottomRight",robot.bot_right.getCurrentPosition());
+            //telemetry.addData("BottomRightBusy",robot.bot_right.isBusy());
+            //telemetry.addData("TopRight",robot.top_right.getCurrentPosition());
+            //telemetry.addData("TopRightBusy",robot.top_right.isBusy());
 
             //robot.leftDrive.getCurrentPosition(),
             telemetry.update();
