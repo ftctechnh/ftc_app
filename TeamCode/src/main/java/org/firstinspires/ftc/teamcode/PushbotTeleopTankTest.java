@@ -111,7 +111,7 @@ public class PushbotTeleopTankTest extends OpMode{
         intleft=gamepad2.left_stick_y;
         //left = 0.0;
         right =((gamepad1.right_stick_y)/2)+speed;
-        robot.dropper.setPower(intleft);
+        robot.lifter.setPower(intleft);
         robot.top_left.setPower(right);
         robot.bot_left.setPower(right);
         robot.top_right.setPower(left);
