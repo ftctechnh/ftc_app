@@ -15,6 +15,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public abstract class StandardChassis extends OpMode {
 
+    public enum GoldStatus {
+        Unknown,
+        Left,
+        Right,
+        Center
+    }
+
     protected ChassisConfig config;
 
     // Elapsed time since the opmode started.
@@ -29,8 +36,9 @@ public abstract class StandardChassis extends OpMode {
     private DcMotor extender;
     private DcMotor shoulder;
 
-    // Detector object
+    // Sampler
     private GoldMineralDetector detector;
+    private GoldStatus goldStatus;
 
     // Team Marker Servo
     private Servo flagHolder;
@@ -53,6 +61,13 @@ public abstract class StandardChassis extends OpMode {
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
     }
+
+
+    /*
+     *  SAMPLING SUBSYSTEM
+     */
+
+
 
     protected void initSampling() {
         if (useSampling) {
@@ -77,19 +92,42 @@ public abstract class StandardChassis extends OpMode {
             detector.enable(); // Start the detector!
         }
     }
-    protected void loopSampling() {
+
+    protected GoldStatus loopSampling() {
       if (useSampling) {
           if (detector.isFound()) {
-              telemetry.addData("sampler", "FOUND, x=" + String.valueOf(detector.getScreenPosition().x)); // Gold X position.
+
+              int gY = (int) detector.getScreenPosition().y;
+              if (gY < 150) {
+                  goldStatus = GoldStatus.Left;
+              } else if (gY > 300) {
+                  goldStatus = GoldStatus.Right;
+              } else {
+                  goldStatus = GoldStatus.Center;
+              }
+
+              telemetry.addData("sampler", "FOUND, pos=" +
+                      String.valueOf(detector.getScreenPosition()) + "gStatus =" + String.valueOf(goldStatus));
+
           } else {
-              telemetry.addData("sampler", "NOT FOUND"); // Gold X position.
+              // We could not find the gold jewel at all!
+              telemetry.addData("sampler", "NOT FOUND");
+              goldStatus = GoldStatus.Unknown;
           }
       }
+
+      return goldStatus;
     }
+
+
     protected void stopSampling() {
         // Disable the detector
         detector.disable();
     }
+
+    /*
+        MOTOR SUBSYTEM
+     */
 
     protected void initMotors() {
 
@@ -191,6 +229,9 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
+    protected void encoderDrive(double inches) {
+        encoderDrive(inches, inches);
+    }
 
     protected void encoderDrive(double leftInches, double rightInches) {
         double speed = config.getMoveSpeed();
