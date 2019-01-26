@@ -22,6 +22,7 @@ public class IMUTest extends LinearOpMode {
     private ElapsedTime runtime = new ElapsedTime();
     private double lastReset = 0;
     private double now = 0;
+    private int interval = 0;
 
     /* Constants */
     final double TURN_SPEED = 0.3;
@@ -61,7 +62,15 @@ public class IMUTest extends LinearOpMode {
 
             Drive.imu.update();
 
-            Drive.turnRight(TURN_SPEED, );
+            Drive.turnRight(TURN_SPEED);
+            while (now < 5) {
+                if (now - interval >= 0.1) {
+                    telemetry.addData(Drive.imu.trueAngle);
+                    telemetry.update();
+                }
+            }
+
+
 
             sleep(40);
         }
