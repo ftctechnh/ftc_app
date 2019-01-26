@@ -14,7 +14,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.SwitchableLight;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.RobotLog;
-
+import java.util.Timer;
+import java.util.TimerTask;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
@@ -368,7 +369,6 @@ abstract public class superAuto extends LinearOpMode {
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
-        tfod.activate();
     }
 
     void updateLocation() {
@@ -788,44 +788,32 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 */
+
 void tensorFlowTest() {
+    tfod.activate();
+    runtime.reset();
     telemetry.setAutoClear(true);
     translateForever( 1,0,0.5);
         while (true) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
-                // the last time that call was made.
+                // the last time that call was made
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
                     telemetry.addData("# Object Detected", updatedRecognitions.size());
                     if (updatedRecognitions.size() >= 1) {
-                        //int goldMineralX = -1;
-                        //int silverMineral1X = -1;
-                        //int silverMineral2X = -1;
                         for (Recognition recognition : updatedRecognitions) {
                             if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                 telemetry.addData("Gold Mineral Position", "Visible");
                                 sR();
-                                break;
+                                double timePast = runtime.seconds();
+                                telemetry.addData("Seconds Past: ", timePast);
+                                tfod.deactivate();
+                                return;
                             } else {
                                 telemetry.addData("Gold Mineral Position", "Not Visible");
                             }
-                          /*  goldMineralX = (int) recognition.getLeft();
-                          } else if (silverMineral1X == -1) {
-                            silverMineral1X = (int) recognition.getLeft();
-                          } else {
-                            silverMineral2X = (int) recognition.getLeft();
-                          }*/
                         }
-                        /*if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                          if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                          } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                          } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                          }
-                        }*/
                     }
                     telemetry.update();
                 }

@@ -31,7 +31,13 @@
             telemetry.update();
        }*/
 
-       //followHeading(0,1.5, (-16/17)*.6f,.6f);
-       tensorFlowTest();
+
+        followHeading(0,2.2, -.5f,.4f);
+        tensorFlowTest();
+        followHeading(0,1.7, .8f,0);
+        fancyGyroPivot(45);
+        followHeading(45,1, .8f,0);
+        fancyGyroPivot(90);
+        tensorFlowTest();
     }
     }
