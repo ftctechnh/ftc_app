@@ -17,10 +17,10 @@ public class DriveControl {
     private ElapsedTime runtime = new ElapsedTime();
 
     //initializing motors
-    private DcMotor FrontRightM = null;
-    private DcMotor FrontLeftM = null;
-    private DcMotor BackRightM = null;
-    private DcMotor BackLeftM = null;
+    public DcMotor FrontRightM = null;
+    public DcMotor FrontLeftM = null;
+    public DcMotor BackRightM = null;
+    public DcMotor BackLeftM = null;
 
     /* Declare public class object */
     public IMUcontrol imu = new IMUcontrol();
@@ -182,9 +182,18 @@ public class DriveControl {
     public void TimeDelay(double time) {
         double start = 0;
         double now = 0;
+        double interval = 0;
         start = runtime.seconds();
         do {
             now = runtime.seconds() - start;
+
+            imu.update();
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addData("trueAngle", imu.trueAngle);
+                opmode.telemetry.update();
+            }
         } while ((now < time) && !opmode.isStopRequested() );
     }
 

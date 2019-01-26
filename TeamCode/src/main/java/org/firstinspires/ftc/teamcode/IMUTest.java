@@ -62,29 +62,12 @@ public class IMUTest extends LinearOpMode {
 
             Drive.imu.update();
 
-            Drive.turnRight(TURN_SPEED);
-            do {
-                if (now - interval >= 0.1) {
-                    Drive.imu.update();
-                    now = runtime.seconds() - lastReset;
-
-                    telemetry.addData("trueAngle", Drive.imu.trueAngle);
-                    telemetry.update();
-                }
-            } while (now < 5);
-            Drive.stop();
-
-            if (now - interval >= 0.1) {
-                Drive.imu.update();
-                now = runtime.seconds() - lastReset;
-
-                telemetry.addData("trueAngle", Drive.imu.trueAngle);
-                telemetry.update();
-            }
+            Drive.turnRight(TURN_SPEED, 5);
+            Drive.TimeDelay(5);
 
             sleep(40);
         }
 
-        telemetry.setAutoClear(true);
+        //telemetry.setAutoClear(true);
     }
 }
