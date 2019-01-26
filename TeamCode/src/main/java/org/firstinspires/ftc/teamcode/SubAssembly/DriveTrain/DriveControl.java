@@ -24,6 +24,7 @@ public class DriveControl {
 
     /* Declare public class object */
     public IMUcontrol imu = new IMUcontrol();
+    public TofControl Tof = new TofControl();
 
 
     /* Subassembly constructor */
@@ -41,6 +42,7 @@ public class DriveControl {
         hwMap = opMode.hardwareMap;
 
         imu.init(opMode);
+        Tof.init(opMode);
 
 
         /* Map hardware devices */
@@ -135,7 +137,7 @@ public class DriveControl {
             } else if (angle2turn < -15) {
                 turnLeft(speed);
             }
-        } while ( (angle2turn > 15 || angle2turn < -15) && !opmode.isStopRequested() );
+        } while ((angle2turn > 15 || angle2turn < -15) && !opmode.isStopRequested());
         stop();
     }
 
@@ -179,13 +181,22 @@ public class DriveControl {
         BackLeftM.setPower(-speed);
     }
 
+    public void forwardUntilDistance(double speed, double distance) {
+        if (Tof.getDistance3() >= distance + 10) {
+            moveForward(speed);
+        } else {
+            stop();
+        }
+    }
+
+
+
     public void TimeDelay(double time) {
         double start = 0;
         double now = 0;
         start = runtime.seconds();
         do {
             now = runtime.seconds() - start;
-        } while ((now < time) && !opmode.isStopRequested() );
+        } while ((now < time) && !opmode.isStopRequested());
     }
-
-   }
+}

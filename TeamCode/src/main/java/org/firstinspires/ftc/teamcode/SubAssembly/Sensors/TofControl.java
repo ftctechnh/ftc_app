@@ -17,10 +17,7 @@ public class TofControl {
     private Rev2mDistanceSensor Tof1 = null;
     private Rev2mDistanceSensor Tof2 = null;
     private Rev2mDistanceSensor Tof3 = null;
-
-    public double distance1;
-    public double distance2;
-    public double distance3;
+    public double wallAngle;
 
     /* Subassembly constructor */
     public TofControl() {
@@ -48,9 +45,21 @@ public class TofControl {
         opmode.telemetry.update();
     }
 
-    public void CompareDistance() {
-        distance1 = Tof1.getDistance(DistanceUnit.CM);
-        distance2 = Tof2.getDistance(DistanceUnit.CM);
-        distance3 = Tof3.getDistance(DistanceUnit.CM);
+    public double getDistance1() {
+        return Tof1.getDistance(DistanceUnit.CM);
     }
+
+    public double getDistance2() {
+        return Tof2.getDistance(DistanceUnit.CM);
+    }
+
+    public double getDistance3() {
+        return Tof3.getDistance(DistanceUnit.CM);
+    }
+
+    public double wallFollow() {
+        wallAngle = java.lang.Math.atan((getDistance1() - getDistance2()) / 25);
+        return wallAngle;
+    }
+
 }
