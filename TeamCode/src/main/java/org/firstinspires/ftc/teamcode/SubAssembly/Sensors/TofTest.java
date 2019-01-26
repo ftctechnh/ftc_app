@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
  * This TeleOp OpMode is used to test the functionality of the specific sub assembly
  */
 // Assign OpMode type (TeleOp or Autonomous), name, and grouping
-@TeleOp(name = "TofTest Test", group = "Test")
+@TeleOp(name = "Tof Test", group = "Test")
 public class TofTest extends LinearOpMode {
 
     @Override
@@ -36,9 +36,9 @@ public class TofTest extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-
            Tof.GetDistance();
 
+           Tof.CompareDistance();
 
             //SubAssembly.test();
             telemetry.update();
@@ -46,6 +46,5 @@ public class TofTest extends LinearOpMode {
             //let the robot have a little rest, sleep is healthy
             sleep(40);
         }
-
     }
 }
