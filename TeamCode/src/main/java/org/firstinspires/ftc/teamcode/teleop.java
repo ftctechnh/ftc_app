@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
+import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.TofControl;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 
 /* Sub Assembly Test OpMode
@@ -29,12 +30,14 @@ public class teleop extends LinearOpMode {
          */
         DriveControl Drive = new DriveControl();
         LiftControl Lift = new LiftControl();
+        TofControl Tof = new TofControl();
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
         Drive.init(this);
         Lift.init(this);
+        Tof.init(this);
 
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");

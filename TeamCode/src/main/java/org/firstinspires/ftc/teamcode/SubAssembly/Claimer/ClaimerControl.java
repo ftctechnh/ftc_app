@@ -30,20 +30,15 @@ public class ClaimerControl {
         /* Map hardware devices */
         ClaimerS = hwMap.servo.get("ClaimerS");
 
-        ClaimerS.setPosition(0.075);
+        ClaimerS.setPosition(0.94);
     }
-
 
     public void drop() {
-        ClaimerS.setPosition(0.925);
-    }
-
-
-    public void reset() {
         ClaimerS.setPosition(0.5);
     }
 
+    public void reset() {
+        ClaimerS.setPosition(0.94);
+    }
 
 }
-
-
