@@ -793,7 +793,7 @@ void tensorFlowTest() {
     tfod.activate();
     runtime.reset();
     telemetry.setAutoClear(true);
-    translateForever( 1,0,0.5);
+    translateForever( 1,0,0.7);
         while (true) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -807,7 +807,11 @@ void tensorFlowTest() {
                                 telemetry.addData("Gold Mineral Position", "Visible");
                                 sR();
                                 double timePast = runtime.seconds();
+                                if(3.8-timePast > 0.1){
+                                    followHeading(0, 3.8 - timePast, 1, 0);
+                                }
                                 telemetry.addData("Seconds Past: ", timePast);
+                                telemetry.update();
                                 tfod.deactivate();
                                 return;
                             } else {

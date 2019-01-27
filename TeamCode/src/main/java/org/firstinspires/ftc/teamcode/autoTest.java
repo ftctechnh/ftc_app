@@ -34,10 +34,10 @@
 
         followHeading(0,2.2, -.5f,.4f);
         tensorFlowTest();
-        followHeading(0,1.7, .8f,0);
+        /*followHeading(0,1.4, .8f,0);
         fancyGyroPivot(45);
-        followHeading(45,1, .8f,0);
+        followHeading(45,0.5, .8f,0);
         fancyGyroPivot(90);
-        tensorFlowTest();
+        tensorFlowTest();*/
     }
     }
