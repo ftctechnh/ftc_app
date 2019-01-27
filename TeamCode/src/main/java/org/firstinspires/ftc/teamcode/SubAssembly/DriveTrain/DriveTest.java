@@ -55,8 +55,7 @@ public class DriveTest extends LinearOpMode {
             } else if (-gamepad1.left_stick_y < -0.4) {
                 Drive.moveBackward(speed);
             } else if (-gamepad1.left_stick_y > 0.4) {
-                //Drive.moveForward(speed);
-                //Drive.forwardUntilDistance(speed);
+                Drive.moveForward(speed);
             } else if (gamepad1.left_stick_x > 0.4) {
                 Drive.turnRight(speed / 2);
             } else if (gamepad1.left_stick_x < -0.4) {
