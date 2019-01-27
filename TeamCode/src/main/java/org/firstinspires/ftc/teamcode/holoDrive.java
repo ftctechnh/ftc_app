@@ -51,12 +51,14 @@ public class holoDrive extends OpMode {
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+// the first 5 lines are for spinning the robot
         if(Math.abs(spinPower)>0.1) {    //spin holonomic
             m1.setPower(spinPower);
             m2.setPower(spinPower);
             m3.setPower(spinPower);
             m4.setPower(spinPower);
+            // these next lines are for the regular driving
+            // this next set of else statements drives the robot side to side
         }
         else if(Math.abs(yPower)>0.1 && (xPower<0.2 && xPower>-0.2)){ //drive holonomic
             m1.setPower(yPower);
