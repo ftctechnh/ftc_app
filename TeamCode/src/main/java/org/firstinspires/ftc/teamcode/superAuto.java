@@ -824,4 +824,59 @@ void tensorFlowTest() {
             }
         }
     }
+
+    void tensorFlowCount() {
+        tfod.activate();
+        runtime.reset();
+        telemetry.setAutoClear(true);
+        translateForever( 1,0,0.7);
+        int counter = 0;
+        boolean space = true;
+        int gold = 0;
+
+        while (true) {
+            if (tfod != null) {
+                // getUpdatedRecognitions() will return null if no new information is available since
+                // the last time that call was made
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    if (updatedRecognitions.size() >= 1) {
+                        for (Recognition recognition : updatedRecognitions) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) || recognition.getLabel().equals(LABEL_SILVER_MINERAL) ){
+                                if(space)
+                                {
+                                    counter++;
+                                    space = false;
+                                    telemetry.addData("Counter: ", counter);
+                                    telemetry.addData("Space: ", space);
+                                }
+                               if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    gold++;
+                                    if (gold == 1) {
+                                        telemetry.addData("Gold Mineral/Silver Mineral ", "Visible");
+                                        sR();
+                                        followHeading(0,0.1, 0, 1);
+                                        followHeading(0,0.1, 0, -1);
+
+                                        //Pick up mineral
+                                        translateForever(1, 0, 0.7);
+                                    }
+                               }
+                                if(counter == 3){
+                                    sR();
+                                    tfod.deactivate();
+                                    return;
+                                }
+                            } else {
+                                space = true;
+                                telemetry.addData("Gold Mineral/Silver Mineral ", "Not Visible");
+                            }
+                        }
+                    }
+                    telemetry.update();
+                }
+            }
+        }
+    }
 }
