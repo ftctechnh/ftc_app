@@ -118,8 +118,23 @@ public class DriveControl {
     public void turn2Angle(double speed, double angle) {
         double angle2turn;
 
+        double start = 0;
+        double now = 0;
+        double interval = 0;
+        start = runtime.seconds();
+
         do {
             imu.update();
+
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addData("trueAngle", imu.trueAngle);
+                opmode.telemetry.update();
+            }
+            //
 
             angle2turn = (angle - imu.trueAngle);
 
@@ -136,6 +151,35 @@ public class DriveControl {
                 turnLeft(speed);
             }
         } while ( (angle2turn > 15 || angle2turn < -15) && !opmode.isStopRequested() );
+
+        stop();
+
+        TimeDelay(0.05);
+
+        now = 0;
+
+        do {
+            imu.update();
+
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addData("trueAngle", imu.trueAngle);
+                opmode.telemetry.update();
+            }
+            //
+
+            angle2turn = (angle - imu.trueAngle);
+
+            if (angle2turn > 0) {
+                turnRight(speed*angle2turn/17 + speed/3);
+            } else if (angle2turn < 0) {
+                turnLeft(speed*angle2turn/17 + speed/3);
+            }
+        } while ( now < 1 && !opmode.isStopRequested() );
+
         stop();
     }
 
@@ -182,19 +226,17 @@ public class DriveControl {
     public void TimeDelay(double time) {
         double start = 0;
         double now = 0;
-        double interval = 0;
         start = runtime.seconds();
         do {
             now = runtime.seconds() - start;
 
             imu.update();
 
-            if (now >= interval){
-                interval += 0.1;
-                opmode.telemetry.addData("trueAngle", imu.trueAngle);
-                opmode.telemetry.update();
-            }
         } while ((now < time) && !opmode.isStopRequested() );
+
+        opmode.telemetry.addData("trueAngle", imu.trueAngle);
+        opmode.telemetry.update();
+
     }
 
    }
