@@ -1,6 +1,6 @@
 //Razzle Dazzle of Fantazzmagazzles Code
 //This was a collective effort by team 13383
-//The code was worked on by: Aniketh Kolla, and Vasudev Menon
+//The code was worked on by: Aniketh Kolla, Vasudev Menon, and Vedang Singhal
 
 package org.firstinspires.ftc.teamcode;
 
@@ -18,7 +18,6 @@ public class holoDrive extends OpMode {
     DcMotor m2;
     DcMotor m3;
     DcMotor m4;
-    DcMotor plow;
     DcMotor lift;
     DcMotor armIntake;
     DcMotor extendIntake;
@@ -30,7 +29,6 @@ public class holoDrive extends OpMode {
         m2 = hardwareMap.dcMotor.get("m2");
         m3 = hardwareMap.dcMotor.get("m3");
         m4 = hardwareMap.dcMotor.get("m4");
-        plow = hardwareMap.dcMotor.get("plow");
      //   lift = hardwareMap.dcMotor.get("lift");
         armIntake = hardwareMap.dcMotor.get("arm_Intake");
         extendIntake = hardwareMap.dcMotor.get("extend_Intake");
