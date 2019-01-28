@@ -7,41 +7,45 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import java.lang.Math.*;
+import java.lang.Math;
 
 
 
 @TeleOp(name = "holoDrive", group = "Tank")
 public class holoDrive extends OpMode {
 
+    //this declares the motors
     DcMotor m1;
     DcMotor m2;
     DcMotor m3;
     DcMotor m4;
     DcMotor lift;
-    DcMotor armIntake;
+    DcMotor dustbinIntake;
     DcMotor extendIntake;
     DcMotor moveIntake;
 
     @Override
     public void init() {
+        //this defines what the motors will be named in the robot configuration on the phones
         m1 = hardwareMap.dcMotor.get("m1");
         m2 = hardwareMap.dcMotor.get("m2");
         m3 = hardwareMap.dcMotor.get("m3");
         m4 = hardwareMap.dcMotor.get("m4");
-     //   lift = hardwareMap.dcMotor.get("lift");
-        armIntake = hardwareMap.dcMotor.get("arm_Intake");
+        lift = hardwareMap.dcMotor.get("lift");
+        dustbinIntake = hardwareMap.dcMotor.get("arm_Intake");
         extendIntake = hardwareMap.dcMotor.get("extend_Intake");
         moveIntake = hardwareMap.dcMotor.get("move_intake");
     }
 
     @Override
     public void loop() {
+        //the doubles are variables that are the gamepad control values
+        //this was done so we don't have to change it in every place
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
-        double xPower = gamepad1.left_stick_x;  //power to spin holonomic
-        double spinPower = -gamepad1.right_stick_x; //power to spin holonomic
-       // double liftPower = gamepad2.left_stick_x/2; //power for lift
-        double armPower = -gamepad2.left_stick_y/2; //power for arm
+        double xPower = gamepad1.left_stick_x;  //power to drive holonomic
+        double spinPower = -gamepad1.right_stick_x; //power to drive holonomic
+        double liftPower = gamepad2.left_stick_x/2; //power for lift
+        double dustbinPower = -gamepad2.left_stick_y/2; //power for intake dustbin
         double extendPower = gamepad2.right_stick_y/2; //power for intake extension
         double movePower = gamepad2.right_stick_x/2; //power to move arm
 
@@ -49,16 +53,15 @@ public class holoDrive extends OpMode {
 
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// the first 5 lines are for spinning the robot
-        if(Math.abs(spinPower)>0.1) {    //spin holonomic
+        //the first if statement spins the robot
+        if(Math.abs(spinPower)>0.1) {
             m1.setPower(spinPower);
             m2.setPower(spinPower);
             m3.setPower(spinPower);
             m4.setPower(spinPower);
-            // these next lines are for the regular driving
-            // this next set of else statements drives the robot side to side
         }
-        else if(Math.abs(yPower)>0.1 && (xPower<0.2 && xPower>-0.2)){ //drive holonomic
+        //the rest of the else if and else statements drive the robot around
+        else if(Math.abs(yPower)>0.1 && (xPower<0.2 && xPower>-0.2)){
             m1.setPower(yPower);
             m2.setPower(-yPower);
             m3.setPower(-yPower);
@@ -113,27 +116,28 @@ public class holoDrive extends OpMode {
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        //lift.setPower(liftPower);
+        lift.setPower(liftPower);
+        //this controls the lift
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        //these are the intake controls
 
-        armIntake.setPower(armPower);
+        dustbinIntake.setPower(dustbinPower);
+        //controls dustbin
 
         extendIntake.setPower(extendPower);
+        //controls the intake extention
 
         moveIntake.setPower(movePower);
-
+        //controls intake moving up and down
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+        //this lets us see the power the motors are being set to
         telemetry.addData("xPower", "%.2f",  xPower);
         telemetry.addData("yPower", "%.2f",  yPower);
-        //telemetry.addData("liftPower", "%.2f",  liftPower);
-        telemetry.addData("armPower", "%.2f",  armPower);
+        telemetry.addData("liftPower", "%.2f",  liftPower);
+        telemetry.addData("dustbinPower", "%.2f",  dustbinPower);
         telemetry.addData("extendPower", "%.2f",  extendPower);
         telemetry.addData("movePower", "%.2f",  movePower);
-// what does this code do
-
-
     }
 }
 
