@@ -38,10 +38,11 @@ public class TofControl {
         Tof3 = hwMap.get(Rev2mDistanceSensor.class, "Tof3");
     }
 
-    public void GetDistance() {
+    public void Telemetry() {
         opmode.telemetry.addData("range1", String.format("%.01f cm", Tof1.getDistance(DistanceUnit.CM)));
         opmode.telemetry.addData("range2", String.format("%.01f cm", Tof2.getDistance(DistanceUnit.CM)));
-        opmode.telemetry.addData("range2", String.format("%.01f cm", Tof3.getDistance(DistanceUnit.CM)));
+        opmode.telemetry.addData("range3", String.format("%.01f cm", Tof3.getDistance(DistanceUnit.CM)));
+        opmode.telemetry.addLine("Angle: " +wallAngle);
         opmode.telemetry.update();
     }
 
@@ -57,9 +58,10 @@ public class TofControl {
         return Tof3.getDistance(DistanceUnit.CM);
     }
 
-    public double wallFollow() {
-        wallAngle = java.lang.Math.atan((getDistance1() - getDistance2()) / 25);
-        return wallAngle;
-    }
-
+   /* public void getWallAngle() {
+        double distanceDifference = getDistance1() - getDistance2();
+        double divided = distanceDifference / 25.0;
+        wallAngle = java.lang.Math.atan(divided);
+        wallAngle = java.lang.Math.toDegrees(wallAngle);
+    }*/
 }

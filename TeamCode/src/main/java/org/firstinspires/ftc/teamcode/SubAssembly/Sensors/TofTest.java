@@ -36,7 +36,7 @@ public class TofTest extends LinearOpMode {
             egamepad1.updateEdge();
             egamepad2.updateEdge();
 
-           Tof.GetDistance();
+           Tof.Telemetry();
 
             //SubAssembly.test();
             telemetry.update();

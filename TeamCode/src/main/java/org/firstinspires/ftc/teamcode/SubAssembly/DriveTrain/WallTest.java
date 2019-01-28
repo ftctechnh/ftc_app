@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.IMUcontrol;
 import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.TofControl;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 
@@ -23,21 +24,36 @@ public class WallTest extends LinearOpMode {
          */
         DriveControl Drive = new DriveControl();
         TofControl Tof = new TofControl();
+        IMUcontrol imu = new IMUcontrol();
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
         Drive.init(this);
         Tof.init(this);
+        imu.init(this);
         telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC
         waitForStart();
 
+
         while (opModeIsActive()) {
-            Tof.wallFollow();
-            if (Tof.wallAngle > 0) {
-                
+            /*
+        while (Tof.getDistance3() > 20) {
+                Drive.moveForward(speed / 5.0, 150);
+                Tof.getWallAngle();
+                Tof.Telemetry();
+                if (Tof.wallAngle != 0) {
+                    Drive.turnAngle(speed / 5.0, Tof.wallAngle);
+                }
+            }
+        }
+        */
+            if (Tof.getDistance1() > Tof.getDistance2()) {
+                Drive.turnAngle(speed / 3, 10);
+            } else if (Tof.getDistance2() > Tof.getDistance1()) {
+                Drive.turnAngle(speed / 3, -10);
             }
         }
     }
