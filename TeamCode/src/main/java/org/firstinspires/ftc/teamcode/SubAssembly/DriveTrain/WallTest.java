@@ -51,9 +51,9 @@ public class WallTest extends LinearOpMode {
         }
         */
             if (Tof.getDistance1() > Tof.getDistance2()) {
-                Drive.turnAngle(speed / 3, 10);
+                Drive.turnAngle(speed / 3, 15);
             } else if (Tof.getDistance2() > Tof.getDistance1()) {
-                Drive.turnAngle(speed / 3, -10);
+                Drive.turnAngle(speed / 3, -15);
             }
         }
     }
