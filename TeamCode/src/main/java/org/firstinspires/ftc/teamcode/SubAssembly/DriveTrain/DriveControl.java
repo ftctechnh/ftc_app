@@ -41,6 +41,7 @@ public class DriveControl {
         hwMap = opMode.hardwareMap;
 
         imu.init(opMode);
+        Tof.init(opMode);
 
 
         /* Map hardware devices */
@@ -223,6 +224,13 @@ public class DriveControl {
         BackLeftM.setPower(-speed);
     }
 
+        } else {
+            stop();
+        }
+    }
+
+
+
     public void TimeDelay(double time) {
         double start = 0;
         double now = 0;
@@ -237,6 +245,6 @@ public class DriveControl {
         opmode.telemetry.addData("trueAngle", imu.trueAngle);
         opmode.telemetry.update();
 
-    }
 
-   }
+    }
+}

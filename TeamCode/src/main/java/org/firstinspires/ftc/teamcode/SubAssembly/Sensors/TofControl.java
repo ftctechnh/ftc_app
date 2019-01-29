@@ -17,10 +17,7 @@ public class TofControl {
     private Rev2mDistanceSensor Tof1 = null;
     private Rev2mDistanceSensor Tof2 = null;
     private Rev2mDistanceSensor Tof3 = null;
-
-    public double distance1;
-    public double distance2;
-    public double distance3;
+    public double wallAngle;
 
     /* Subassembly constructor */
     public TofControl() {
@@ -41,16 +38,30 @@ public class TofControl {
         Tof3 = hwMap.get(Rev2mDistanceSensor.class, "Tof3");
     }
 
-    public void GetDistance() {
+    public void Telemetry() {
         opmode.telemetry.addData("range1", String.format("%.01f cm", Tof1.getDistance(DistanceUnit.CM)));
         opmode.telemetry.addData("range2", String.format("%.01f cm", Tof2.getDistance(DistanceUnit.CM)));
-        opmode.telemetry.addData("range2", String.format("%.01f cm", Tof3.getDistance(DistanceUnit.CM)));
+        opmode.telemetry.addData("range3", String.format("%.01f cm", Tof3.getDistance(DistanceUnit.CM)));
+        opmode.telemetry.addLine("Angle: " +wallAngle);
         opmode.telemetry.update();
     }
 
-    public void CompareDistance() {
-        distance1 = Tof1.getDistance(DistanceUnit.CM);
-        distance2 = Tof2.getDistance(DistanceUnit.CM);
-        distance3 = Tof3.getDistance(DistanceUnit.CM);
+    public double getDistance1() {
+        return Tof1.getDistance(DistanceUnit.CM);
     }
+
+    public double getDistance2() {
+        return Tof2.getDistance(DistanceUnit.CM);
+    }
+
+    public double getDistance3() {
+        return Tof3.getDistance(DistanceUnit.CM);
+    }
+
+   /* public void getWallAngle() {
+        double distanceDifference = getDistance1() - getDistance2();
+        double divided = distanceDifference / 25.0;
+        wallAngle = java.lang.Math.atan(divided);
+        wallAngle = java.lang.Math.toDegrees(wallAngle);
+    }*/
 }
