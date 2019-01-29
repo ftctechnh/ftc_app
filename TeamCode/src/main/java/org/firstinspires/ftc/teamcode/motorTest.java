@@ -14,18 +14,18 @@ import java.lang.Math.*;
 @TeleOp(name = "MotorTest", group = "Tank")
 public class motorTest extends OpMode {
 
-    DcMotor m1;
-    DcMotor m2;
-    DcMotor m3;
-    DcMotor m4;
+    DcMotor back_right;
+    DcMotor back_left;
+    DcMotor front_left;
+    DcMotor front_right;
     DcMotor plow;
 
     @Override
     public void init() {
-        m1 = hardwareMap.dcMotor.get("m1");
-        m2 = hardwareMap.dcMotor.get("m2");
-        m3 = hardwareMap.dcMotor.get("m3");
-        m4 = hardwareMap.dcMotor.get("m4");
+        back_right = hardwareMap.dcMotor.get("back_right");
+        back_left = hardwareMap.dcMotor.get("back_left");
+        front_left = hardwareMap.dcMotor.get("front_left");
+        front_right = hardwareMap.dcMotor.get("front_right");
         plow = hardwareMap.dcMotor.get("plow");
     }
 
@@ -37,15 +37,15 @@ public class motorTest extends OpMode {
 
         float rightStick = gamepad2.left_stick_y;   //plow power
 
-        m1.setPower(gamepad1.left_stick_y);
-        m2.setPower(gamepad1.left_stick_x);
-        m3.setPower(gamepad2.left_stick_x);
-        m4.setPower(gamepad2.left_stick_y);
+        back_right.setPower(gamepad1.left_stick_y);
+        back_left.setPower(gamepad1.left_stick_x);
+        front_left.setPower(gamepad2.left_stick_x);
+        front_right.setPower(gamepad2.left_stick_y);
 
-        telemetry.addData("m1", "%.2f",  gamepad1.left_stick_y);
-        telemetry.addData("m2", "%.2f",  gamepad1.left_stick_x);
-        telemetry.addData("m3", "%.2f",  gamepad2.left_stick_x);
-        telemetry.addData("m4", "%.2f",  gamepad2.left_stick_y);
+        telemetry.addData("back_right", "%.2f",  gamepad1.left_stick_y);
+        telemetry.addData("back_left", "%.2f",  gamepad1.left_stick_x);
+        telemetry.addData("front_left", "%.2f",  gamepad2.left_stick_x);
+        telemetry.addData("front_right", "%.2f",  gamepad2.left_stick_y);
 
     }
 }

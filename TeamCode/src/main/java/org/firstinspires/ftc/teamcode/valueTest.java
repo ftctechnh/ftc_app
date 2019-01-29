@@ -14,18 +14,18 @@ import java.lang.Math.*;
 @TeleOp(name = "valueTest", group = "Tank")
 public class valueTest extends OpMode {
 
-    DcMotor m1;
-    DcMotor m2;
-    DcMotor m3;
-    DcMotor m4;
+    DcMotor back_right;
+    DcMotor back_left;
+    DcMotor front_left;
+    DcMotor front_right;
     DcMotor plow;
 
     @Override
     public void init() {
-        m1 = hardwareMap.dcMotor.get("m1");
-        m2 = hardwareMap.dcMotor.get("m2");
-        m3 = hardwareMap.dcMotor.get("m3");
-        m4 = hardwareMap.dcMotor.get("m4");
+        back_right = hardwareMap.dcMotor.get("back_right");
+        back_left = hardwareMap.dcMotor.get("back_left");
+        front_left = hardwareMap.dcMotor.get("front_left");
+        front_right = hardwareMap.dcMotor.get("front_right");
         plow = hardwareMap.dcMotor.get("plow");
     }
 
