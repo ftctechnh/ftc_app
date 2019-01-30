@@ -17,10 +17,10 @@ public class DriveControl {
     private ElapsedTime runtime = new ElapsedTime();
 
     //initializing motors
-    public DcMotor FrontRightM = null;
-    public DcMotor FrontLeftM = null;
-    public DcMotor BackRightM = null;
-    public DcMotor BackLeftM = null;
+    private DcMotor FrontRightM = null;
+    private  DcMotor FrontLeftM = null;
+    private  DcMotor BackRightM = null;
+    private  DcMotor BackLeftM = null;
 
     /* Declare public class object */
     public IMUcontrol imu = new IMUcontrol();
