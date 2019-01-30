@@ -62,7 +62,7 @@ public class IMUTest extends LinearOpMode {
 
             Drive.imu.update();
 
-            Drive.forwardUntilDistance(0.5, 10);
+            Drive.turn2Angle(TURN_SPEED, 45);
             Drive.TimeDelay(3);
 
             Drive.imu.setStartAngle();

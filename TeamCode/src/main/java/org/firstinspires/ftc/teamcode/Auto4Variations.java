@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.UserControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
@@ -167,6 +168,8 @@ public class Auto4Variations extends LinearOpMode {
 
             Drive.imu.update();
 
+            Drive.Tof.Telemetry();
+
             /*if (mCurrentState != State.Deploy && Lift.LifterButtonB.isPressed()) {
                 Lift.Stop();
             }*/
@@ -218,12 +221,12 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.moveForward(0.5, 0.9);
                         newState(State.Claim);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 1.8);
+                        Drive.moveForward(0.5, 1.4);
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.05);
                         newState(State.Claim);
                     } else {
-                        Drive.turn2Angle(TURN_SPEED, 40);
+                        Drive.turn2Angle(TURN_SPEED, 45);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.0);
                         Drive.TimeDelay(0.15);
@@ -244,19 +247,19 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.TimeDelay(0.5);
                         Drive.moveForward(0.5, 0.7);
                         Drive.TimeDelay(0.5);
-                        Drive.moveBackward(0.5, 0.7);
+                        Drive.moveBackward(0.5, 0.5);
                         newState(State.Crater_to_Depot);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 0.5);
+                        Drive.moveForward(0.5, 0.4);
                         Drive.TimeDelay(0.15);
-                        Drive.moveBackward(0.5, 0.5);
+                        Drive.moveBackward(0.5, 0.3);
                         newState(State.Crater_to_Depot);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 40);
                         Drive.TimeDelay(0.5);
                         Drive.moveForward(0.5, 0.7);
                         Drive.TimeDelay(0.5);
-                        Drive.moveBackward(0.5, 0.7);
+                        Drive.moveBackward(0.5, 0.5);
                         newState(State.Crater_to_Depot);
                     }
                     break;
@@ -265,23 +268,23 @@ public class Auto4Variations extends LinearOpMode {
                     telemetry.addLine("Move to depot");
                     telemetry.update();
                     if (Vucam.sample == Vucam.sample.CENTER){
-                        Drive.turn2Angle(TURN_SPEED, -85);
+                        Drive.turn2Angle(TURN_SPEED, -70);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.6);
                         Drive.TimeDelay(0.15);
                         Drive.turn2Angle(TURN_SPEED, -135);
                         Drive.TimeDelay(0.15);
-                        Drive.moveForward(0.5, 1.3);
+                        Drive.moveForward(0.5, 1.5);
                         newState(State.Claim);
                     }
-                    else{
-                        Drive.turn2Angle(TURN_SPEED, -80);
+                    else{ //left and right
+                        Drive.turn2Angle(TURN_SPEED, -60);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.6);
                         Drive.TimeDelay(0.15);
                         Drive.turn2Angle(TURN_SPEED, -135);
                         Drive.TimeDelay(0.15);
-                        Drive.moveForward(0.5, 1.3);
+                        Drive.moveForward(0.5, 1.7);
                         newState(State.Claim);
                     }
 
@@ -326,9 +329,7 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.5);
                     } else {
-                        Drive.moveBackward(0.5, 2.0);
-                        Drive.turnAngle(TURN_SPEED, -20);
-                        Drive.moveBackward(0.5, 0.8);
+                        Drive.moveBackward(0.5, 2.8);
                     }
                     while (!Lift.LifterButtonB.isPressed()) {
                         Lift.Retract();
@@ -351,9 +352,7 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.9);
                     } else {
-                        Drive.moveBackward(0.5, 2.2);
-                        Drive.turnAngle(TURN_SPEED, -30);
-                        Drive.moveBackward(0.5, 1.0);
+                        Drive.moveBackward(0.5, 3.2);
                     }
                     while (!Lift.LifterButtonB.isPressed()) {
                         Lift.Retract();

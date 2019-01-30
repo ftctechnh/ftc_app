@@ -34,14 +34,11 @@ public class SeekTest extends LinearOpMode {
         //waits for that giant PLAY button to be pressed on RC
         waitForStart();
 
+        telemetry.setAutoClear(false);
+
         while (opModeIsActive()) {
-            if (Tof.getDistance3() >= 20) {
-                Drive.moveForward(speed / 5);
-            } else if (Tof.getDistance3() < 20) {
-                Drive.moveBackward(speed / 5);
-            } else {
-                Drive.stop();
-            }
+            Drive.forwardUntilDistance(speed/3, 15);
+            Drive.TimeDelay(5.0);
         }
     }
 }
