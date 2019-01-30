@@ -13,6 +13,7 @@ class EndEffector {
     private static final double ticksPerRev = 1120;
     private static double inPerRev = Math.PI * wheelDiameter;
     static final double inPerTicks = inPerRev / ticksPerRev;
+    static final double ticksPerIn = ticksPerRev / inPerRev;
     private static double degreesPerRev = 360;
     static final double degreesPerTicks = degreesPerRev / ticksPerRev;
     static final double ticksPerDegree = 1 / degreesPerTicks;
@@ -22,23 +23,19 @@ class EndEffector {
 
     DcMotor pivot;
     DcMotor contract;
-    DcMotor spin;
-    Servo balls;
-    Servo blocks;
+    Servo pinch;
+    Servo swing;
     Sensors sensors;
     Telemetry telemetry;
 
+    double initialPivotAngle = 0;
+
     double length;
-    int pivotTicks = 0;
 
     EndEffector(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors)
     {
-//        spin = hardwareMap.dcMotor.get("spin");
-//        spin.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        spin.setDirection(DcMotorSimple.Direction.FORWARD);
-//        spin.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        balls = hardwareMap.servo.get("balls");
-//        blocks = hardwareMap.servo.get("blocks");
+        pinch = hardwareMap.servo.get("pinch");
+        swing = hardwareMap.servo.get("swing");
         this.sensors = sensors;
         this.telemetry = telemetry;
         pivot = hardwareMap.dcMotor.get("pivot");
@@ -56,19 +53,18 @@ class EndEffector {
 
     void open()
     {
-//        balls.setPosition(.5);
-//        blocks.setPosition(.5);
+        pinch.setPosition(.1);
     }
     void close()
     {
-//        balls.setPosition(0);
-//        blocks.setPosition(0);
+        pinch.setPosition(-.1);
     }
 
-    void extend(double inchesPerSecond)
+    boolean extend(double inchesPerSecond)
     {
         length += inchesPerSecond * Bogg.averageClockTime;
         contract.setTargetPosition((int)Math.round(length * inPerTicks));
+        return  inchesPerSecond == 0;
     }
 
     void moveToLength(double length)
@@ -81,20 +77,19 @@ class EndEffector {
     {
         double angle = Math.atan2(z,x);
         //subtract grabber
-        z += Math.abs(grabberLength * Math.cos(angle));
-        x -= Math.abs(grabberLength * Math.sin(angle));
+        z += grabberLength * Math.cos(angle);
+        x += Math.signum(x) * grabberLength * Math.sin(angle);
 
         length = Math.hypot(x,z);
         angle = Math.atan2(z,x);
 
         moveToLength(length);
-        pivotTicks = (int) (angle * ticksPerRadian * gearRatio);
-        pivot.setTargetPosition(pivotTicks);
+        pivot(angle);
     }
 
-    void pivot(int position)
+    void pivot(double angle)
     {
-        pivot.setTargetPosition((int)(position * ticksPerDegree * gearRatio));
+        pivot.setTargetPosition((int)(angle * ticksPerRadian * gearRatio));
     }
 
     void flipUp(double t)
@@ -102,7 +97,7 @@ class EndEffector {
         close();
         if(t > .5)
         {
-            double x = Math.min(sensors.getHighDistance() + 3, 48);
+            double x = MyMath.closestToZero(sensors.getHighDistance() + 3, 48);
             double z = 33;
             moveToPosition(x, z);
             pickleUp();
@@ -111,10 +106,10 @@ class EndEffector {
 
     void flipDown(double t)
     {
+        open();
         if(t > .5)
         {
-            open();
-            moveToPosition(length, 0);
+            moveToPosition(-length, 0);
         }
         if(t > 1)
             pickleDown();
@@ -122,12 +117,12 @@ class EndEffector {
 
     void pickleUp()
     {
-
+        swing.setPosition(.5);
     }
 
     void pickleDown()
     {
-
+        swing.setPosition(-.5);
     }
 
     
@@ -138,7 +133,7 @@ class EndEffector {
 
     double getAngle()
     {
-        return pivot.getCurrentPosition() * radiansPerTicks / gearRatio;
+        return pivot.getCurrentPosition() * radiansPerTicks / gearRatio - initialPivotAngle;
     }
 
     double getAngleInDegrees()
