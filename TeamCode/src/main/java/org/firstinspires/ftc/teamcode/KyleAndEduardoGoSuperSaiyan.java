@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "THIS ISN'T EVEN MY FINAL FORM", group = "xd")
+@TeleOp(name = "SOLJABOY TOLD YA", group = "xd")
 public class KyleAndEduardoGoSuperSaiyan extends LinearOpMode {
 
     private DcMotor leftWheel;
