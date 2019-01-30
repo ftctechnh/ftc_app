@@ -219,11 +219,48 @@ public class DriveControl {
     }
 
     public void forwardUntilDistance(double speed, double distance) {
-        if (Tof.getDistance3() >= distance + 10) {
+        double distance2drive;
+
+        double start = 0;
+        double now = 0;
+        double interval = 0;
+        start = runtime.seconds();
+
+        do {
+            distance2drive = (distance - Tof.getDistance3());
+
             moveForward(speed);
-        } else {
-            stop();
-        }
+
+        } while (distance2drive > 12 && !opmode.isStopRequested() );
+
+        stop();
+
+        TimeDelay(0.05);
+
+        now = 0;
+
+        do {
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addData("trueAngle", imu.trueAngle);
+                opmode.telemetry.update();
+            }
+            //
+
+            distance2drive = (distance - Tof.getDistance3());
+
+            if (distance2drive > 0.0625) {
+                moveForward(speed*distance2drive/17 + speed/3);
+            } else if (distance2drive < -0.0625) {
+                moveBackward(speed*distance2drive/17 + speed/3);
+            } else {
+                moveBackward(distance2drive);
+            }
+        } while ( now < 1.5 && !opmode.isStopRequested() );
+
     }
 
 
