@@ -92,14 +92,14 @@ public class Auto4Variations extends LinearOpMode {
         }
         telemetry.update();
 
-        if (User.getYesNo("Double Sample?")) {
+        /*if (User.getYesNo("Double Sample?")) {
             doubleSample = true;
             telemetry.addLine("Double sample");
         } else {
             doubleSample = false;
             telemetry.addLine("Single sample");
         }
-        telemetry.update();
+        telemetry.update();*/
 
         if (User.getLeftRight("Left or Right Crater?")) {
             allianceCrater = true;
