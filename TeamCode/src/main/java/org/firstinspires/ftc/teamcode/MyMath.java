@@ -17,7 +17,7 @@ public class MyMath {
         if(size % 2 == 1) //if the size is odd
             return copy[half]; //return the middle value
 
-        return (copy[half] + copy[half + 1]) / 2;
+        return (copy[half-1] + copy[half]) / 2;
 
     }
 
@@ -63,5 +63,36 @@ public class MyMath {
             if(Math.abs(n) > max)
                 max = Math.abs(n);
         return max;
+    }
+
+    static double farthestFromZero(double... numbers)
+    {
+        double max = 0;
+        for (double n: numbers)
+            if(Math.abs(n) > Math.abs(max))
+                max = n;
+        return max;
+    }
+
+    static double closestToZero(double... numbers)
+    {
+        double min = 0;
+        if(numbers.length > 0)
+            min = numbers[0];
+
+        for (double n: numbers)
+            if(Math.abs(n) < Math.abs(min))
+                min = n;
+        return min;
+    }
+
+    static double radians(double degrees)
+    {
+        return degrees * Math.PI / 180;
+    }
+
+    static double degrees(double radians)
+    {
+        return radians * 180 / Math.PI;
     }
 }
