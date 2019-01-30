@@ -11,7 +11,7 @@ public class MiniBogg extends Bogg
 {
     Gamepad gamepad;
     HardwareMap hardwareMap;
-    DriveEngine3Wheels driveEngine;
+    DriveEngine driveEngine;
     DcMotor lift;
     Sensors sensors;
     Servo brake;

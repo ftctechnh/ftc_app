@@ -13,7 +13,7 @@ public class encoderFineTuning extends LinearOpMode
     {
         robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         waitForStart();
-        double deltaX = 0;
+        double deltaX = 36;
         double deltaY = 0;
         double deltaS = 0;
 

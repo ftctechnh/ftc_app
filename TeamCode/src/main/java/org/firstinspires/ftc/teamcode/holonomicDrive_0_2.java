@@ -28,6 +28,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
         while (opModeIsActive())
         {
+            telemetry.addData("touchLander", robot.sensors.touchLanderIsPressed());
             if(!robot.manualRotate(true, -g2.right_stick_x / 3))
                 if(!robot.manualRotate(true, g2.left_stick_x /3))
                     robot.manualCurvy(
@@ -51,26 +52,29 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
             //When down
             if(g2.left_stick_button) {
-                if(!leftButtonPressed)
+                if(!leftButtonPressed) {
                     timer.reset();
+                    leftButtonPressed = true;
+                }
                 robot.endEffector.flipUp(timer.seconds());
             }
             else
                 leftButtonPressed = false;
 
-            robot.endEffector.extend(-g2.left_stick_y * 4);
-
+            if(!robot.endEffector.extend(-g2.left_stick_y * 4));
+                robot.endEffector.extend(g2.right_stick_y * 3);
 
             //When up
             if(g2.right_stick_button) {
-                if(!rightButtonPressed)
+                if(!rightButtonPressed) {
                     timer.reset();
+                    rightButtonPressed = true;
+                }
                 robot.endEffector.flipDown(timer.seconds());
             }
             else
                 rightButtonPressed = false;
 
-            robot.endEffector.extend(g2.right_stick_y * 3);
 
 
 

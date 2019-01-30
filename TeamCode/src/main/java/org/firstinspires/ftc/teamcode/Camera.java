@@ -56,7 +56,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 
 /**
- * This 2018-2019 OpMode illustrates the basics of using the Vuforia localizer to determine
+ * This class uses a Vuforia localizer to determine
  * positioning and orientation of robot on the FTC field.
  * The code is structured as a LinearOpMode
  *
@@ -156,6 +156,10 @@ public class Camera{
         }
     }
 
+    /**
+     * Run to initialize camera parameters
+     * @param hardwareMap
+     */
     public void startCamera(HardwareMap hardwareMap) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
@@ -163,8 +167,8 @@ public class Camera{
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        // VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY ;
         parameters.cameraDirection   = CAMERA_CHOICE;
@@ -311,12 +315,21 @@ public class Camera{
         }
     }
 
+    /**
+     *
+     * @param whichTarget, an integer less than 4.
+     * @return If the target is seen by the camera
+     */
     boolean targetVisible(int whichTarget)
     {
         VuforiaTrackable trackable = allTrackables.get(whichTarget);
         return ((VuforiaTrackableDefaultListener)trackable.getListener()).isVisible();
     }
 
+    /**
+     *
+     * @return the location of the camera in x, y coordinates
+     */
     double[] getLocation()
     {
         // check all the trackable target to see which one (if any) is visible.
@@ -344,6 +357,10 @@ public class Camera{
         return null;
     }
 
+    /**
+     *
+     * @return the camera's heading between -pi and pi.
+     */
     Double getHeading()
     {
         getLocation();
@@ -357,11 +374,16 @@ public class Camera{
         }
         return null;
     }
-    
-    double headingToTarget(double[] location)
+
+    /**
+     *
+     * @param location
+     * @param heading
+     * @return target - current heading, between -pi and pi
+     */
+    double headingToWallTarget(double[] location, double heading)
     {
         VuforiaTrackable target = null;
-        double heading =  getHeading();
 
         for (int i = 0; i<4; i++ ) {
             if(targetVisible(i))
@@ -371,9 +393,7 @@ public class Camera{
         double target_x = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
         double target_y = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
 
-        double robot_x = location[0];
-        double robot_y = location[1];
-        return heading - Math.atan2(target_y - robot_y, target_x - robot_x);
+        return headingToTarget(location, heading, target_x, target_y);
     }
 
     
@@ -382,7 +402,11 @@ public class Camera{
         if(location != null) {
             double robot_x = location[0];
             double robot_y = location[1];
-            return heading - Math.atan2(target_y - robot_y, target_x - robot_x);
+
+            double delta_x = target_x - robot_x;
+            double delta_y = target_y - robot_y;
+
+            return MyMath.loopAngle(Math.atan2(delta_y, delta_x), heading);
         }
         return 0;
     }
@@ -396,7 +420,7 @@ public class Camera{
             double currentHeading = heading * 180 / Math.PI;
             double targetHeading = Math.round(currentHeading / 90) * 90;
 
-            return targetHeading - currentHeading;
+            return MyMath.loopAngle(targetHeading, currentHeading);
         }
         return null;
     }
@@ -413,10 +437,10 @@ public class Camera{
         unitTargetLocation[1] = Math.signum(wallTargetLocation[1]);
         double[] driveTarget = new double[]{(6*12 - 9) * unitTargetLocation[0], (6*12 - 9) * unitTargetLocation[1]};
 
-        return getMoveToPosition(location, heading, driveTarget, wallTargetLocation);
+        return getMoveToPosition(location, heading, driveTarget);
     }
 
-    double[] getMoveToPosition(double[] location, double heading, double[] driveTarget, double[] wallTarget)
+    double[] getMoveToPosition(double[] location, double heading, double[] driveTarget)
     {
         double target_x = driveTarget[0];
         double target_y = driveTarget[1];
@@ -433,19 +457,19 @@ public class Camera{
         delta_x = Math.sin(target_heading) * r;
         delta_y = Math.cos(target_heading) * r;
 
-        double wall_target_heading = headingToTarget(location, heading, wallTarget[0], wallTarget[1]);
+        double wall_target_heading = headingToWallTarget(location, heading);
 
 
         telemetry.addData("Loc. x", location[0]);
         telemetry.addData("Loc. y", location[1]);
         telemetry.addData("Loc. z", location[2]);
-        telemetry.addData("heading", heading * 180 / Math.PI);
+        telemetry.addData("heading", MyMath.degrees(heading));
 
         telemetry.addData("delta x:", delta_x);
         telemetry.addData("delta y:", delta_y);
         telemetry.addData("destination x:", driveTarget[0]);
         telemetry.addData("destination y:", driveTarget[1]);
-        telemetry.addData("target heading", target_heading * 180 / Math.PI);
+        telemetry.addData("target heading", MyMath.degrees(heading));
 
         return new double[]{delta_x, delta_y, wall_target_heading};
     }
