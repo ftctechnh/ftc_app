@@ -128,16 +128,6 @@ public class DriveControl {
         do {
             imu.update();
 
-            //
-            now = runtime.seconds() - start;
-
-            if (now >= interval){
-                interval += 0.1;
-                opmode.telemetry.addData("trueAngle", imu.trueAngle);
-                opmode.telemetry.update();
-            }
-            //
-
             angle2turn = (angle - imu.trueAngle);
 
             if (angle2turn > 180) {
@@ -153,7 +143,7 @@ public class DriveControl {
                 turnLeft(speed);
             }
 
-        } while ( (angle2turn > 15 || angle2turn < -15) && !opmode.isStopRequested() );
+        } while ( (angle2turn > 12 || angle2turn < -12) && !opmode.isStopRequested() );
 
         stop();
 
@@ -176,12 +166,14 @@ public class DriveControl {
 
             angle2turn = (angle - imu.trueAngle);
 
-            if (angle2turn > 0) {
+            if (angle2turn > 0.0625) {
                 turnRight(speed*angle2turn/17 + speed/3);
-            } else if (angle2turn < 0) {
+            } else if (angle2turn < -0.0625) {
                 turnLeft(speed*angle2turn/17 + speed/3);
+            } else {
+                turnLeft(angle2turn);
             }
-        } while ( now < 1 && !opmode.isStopRequested() );
+        } while ( now < 1.5 && !opmode.isStopRequested() );
 
         stop();
     }
