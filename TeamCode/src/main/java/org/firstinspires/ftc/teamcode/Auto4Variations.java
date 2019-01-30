@@ -56,6 +56,7 @@ public class Auto4Variations extends LinearOpMode {
         Claim,
         Double_Sample,
         Depot_to_Crater,
+        Start_Depot_to_Crater,
         Stop
     }
 
@@ -217,7 +218,7 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.moveForward(0.5, 0.9);
                         newState(State.Claim);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 2.0);
+                        Drive.moveForward(0.5, 1.8);
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.05);
                         newState(State.Claim);
@@ -283,17 +284,16 @@ public class Auto4Variations extends LinearOpMode {
                     Claimer.reset();
                     if (orientation == Start.Depot) {
                         Drive.turn2Angle(TURN_SPEED, -45.0);
+                        newState(State.Start_Depot_to_Crater);
                     }
-                    newState(State.Depot_to_Crater);
+                    else{
+                        newState(State.Depot_to_Crater);
+                    }
                     break;
 
                 case Double_Sample:
                     telemetry.addLine("Double sample");
-                    telemetry.update();
-                    Drive.turnAngle(TURN_SPEED, 90);
-                    Drive.turnAngle(TURN_SPEED, 100);
-                    Drive.moveForward(0.5, 2.0);
-                    newState(State.Stop);
+
                     break;
 
                 case Depot_to_Crater:
@@ -321,7 +321,31 @@ public class Auto4Variations extends LinearOpMode {
                     Lift.Stop();
                     newState(State.Stop);
                     break;
-
+                case Start_Depot_to_Crater:
+                    Led.lawnGreen();
+                    telemetry.addLine("Start at Depot, to crater");
+                    telemetry.update();
+                    if (Vucam.sample == Vucam.sample.LEFT && orientation == Start.Depot) {
+                        Drive.moveBackward(0.5, 1.7);
+                        Drive.TimeDelay(0.15);
+                        Drive.turn2Angle(TURN_SPEED, -20);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveBackward(0.4, 0.6);
+                        Drive.TimeDelay(0.15);
+                        Drive.turn2Angle(TURN_SPEED, -50);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveBackward(0.5, 0.9);
+                    } else {
+                        Drive.moveBackward(0.5, 2.2);
+                        Drive.turnAngle(TURN_SPEED, -30);
+                        Drive.moveBackward(0.5, 1.0);
+                    }
+                    while (!Lift.LifterButtonB.isPressed()) {
+                        Lift.Retract();
+                    }
+                    Lift.Stop();
+                    newState(State.Stop);
+                    break;
 
                 case Stop:
                     telemetry.addLine("Stop");
