@@ -8,15 +8,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="2: Drop and slide", group = "Testing")
 public class autonomousDrive2_DropSlide extends LinearOpMode
 {
-    Bogg robot;
     Auto auto;
     Auto.Mode action;
 
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
-        auto = new Auto(robot, hardwareMap, telemetry);
+        auto = new Auto(Bogg.Name.Bogg, hardwareMap, telemetry);
 
         waitForStart();
         action = Auto.Mode.Drop;
@@ -39,7 +37,7 @@ public class autonomousDrive2_DropSlide extends LinearOpMode
             // Display the current values
             telemetry.addData("mode", action);
             telemetry.update();
-            robot.update();
+            auto.update();
             idle();
         }
     }

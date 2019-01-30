@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="3: Drop and move to wall", group = "Testing")
 public class autonomousDrive3_DropMoveToWall extends LinearOpMode
 {
-    Bogg robot;
     private Auto auto;
     private Auto.Mode action;
 
@@ -14,8 +13,7 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
-        auto = new Auto(robot, hardwareMap, telemetry);
+        auto = new Auto(Bogg.Name.Bogg, hardwareMap, telemetry);
 
         waitForStart();
         action = Auto.Mode.Drop;
@@ -45,7 +43,7 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
             // Display the current values
             telemetry.addData("mode", action);         //put this before the things that break
             telemetry.update();
-            robot.update();
+            auto.update();
             idle();
         }
         auto.stop();

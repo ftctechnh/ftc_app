@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 @Autonomous(name="4: Competition", group = "Testing")
 public class autonomousDrive4_DropPlacePark extends LinearOpMode
 {
-    Bogg robot;
     Auto auto;
     Auto.Mode action;
 
@@ -14,8 +13,7 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
-        auto = new Auto(robot, hardwareMap, telemetry);
+        auto = new Auto(Bogg.Name.Bogg, hardwareMap, telemetry);
         action = Auto.Mode.Drop;
         waitForStart();
 
@@ -51,7 +49,7 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
             // Display the current values
             telemetry.addData("mode:", action);
             telemetry.update();
-            robot.update();
+            auto.update();
             idle();
         }
         auto.stop();

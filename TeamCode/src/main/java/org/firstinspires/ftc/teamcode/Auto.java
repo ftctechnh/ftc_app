@@ -15,15 +15,17 @@ public class Auto {
     private double slide2X = 28;
     private double slide2Y = 28;
 
-    Auto(Bogg robot, HardwareMap hardwareMap, Telemetry telemetry)
+    Auto(Bogg.Name name, HardwareMap hardwareMap, Telemetry telemetry)
     {
-        this.robot = robot;
+        this.robot = new Bogg(hardwareMap, telemetry, name);
         robot.driveEngine.driveAtAngle(0);
-        robot.dropMarker(Bogg.Direction.Up);
         this.telemetry = telemetry;
-        camera = new Camera(hardwareMap, telemetry);
+        if(name != Bogg.Name.Fakebot)
+            camera = new Camera(hardwareMap, telemetry);
+        telemetry.addLine("Camera Loaded");
         telemetry.addLine("Wait for start");
         telemetry.update();
+        timer = new ElapsedTime();
     }
 
     public enum Mode
@@ -92,7 +94,6 @@ public class Auto {
 
     Mode slide1()
     {
-        robot.lift(0);
         if (robot.driveEngine.moveOnPath(
                 new double[]{-4, 0}))
         {
@@ -104,39 +105,36 @@ public class Auto {
     Mode pushGold()
     {
         telemetry.addData("gold position", goldPosition);
-        if (robot.driveEngine.moveOnPath("Move Forward in push gold",
-                new double[]{0, 28}))
-        {
-            switch (goldPosition) {
-                case 0:
-                    if (robot.driveEngine.moveOnPath(
-                            new double[]{-17, 0},
-                            new double[]{0, 12},
-                            new double[]{0, -12})) {
-                        slide2X = 17;
-                        slide2Y = 0;
-                        return Mode.Slide2;
-                    }
-                    break;
-                case 1:
-                    if (robot.driveEngine.moveOnPath(
-                            new double[]{0, 12})) {
-                        slide2Y = 0;
-                        return Mode.Slide2;
-                    }
-                    break;
-                case 2:
-                    if (robot.driveEngine.moveOnPath(
-                            new double[]{17, 0},
-                            new double[]{0, 12},
-                            new double[]{0, -12})) {
-                        slide2X = 51;
-                        slide2Y = 0;
-                        return Mode.Slide2;
-                    }
-                    break;
-            }
+        switch (goldPosition) {
+            case 0:
+                if (robot.driveEngine.moveOnPath(
+                        new double[]{0, 28},
+                        new double[]{-17,0},
+                        new double[]{0, 12})) {
+                    slide2X = 17;
+                    slide2Y = -12;
+                    return Mode.Slide2;
+                }
+                break;
+            case 1:
+                if (robot.driveEngine.moveOnPath(
+                        new double[]{0, 40},
+                        new double[]{0, -12})) {
+                    slide2Y = 0;
+                    return Mode.Slide2;
+                }
+                break;
+            case 2:
+                if (robot.driveEngine.moveOnPath(
+                        new double[]{17,40},
+                        new double[]{0, -12})) {
+                    slide2X = 51;
+                    slide2Y = 0;
+                    return Mode.Slide2;
+                }
+                break;
         }
+
         return Mode.PushGold;
     }
 
@@ -174,7 +172,6 @@ public class Auto {
 
     Mode slide2()
     {
-        robot.lift(0);
         if (robot.driveEngine.moveOnPath(
                 new double[]{0, slide2Y},
                 new double[]{-slide2X, 0},
@@ -215,8 +212,6 @@ public class Auto {
         if(robot.driveEngine.moveOnPath(new double[]{-iSP * 48,0},
                                         new double[]{iSP * Math.PI/2})) {
             timer.reset();
-            robot.driveEngine.resetForward();
-            robot.driveEngine.resetDistances();
             return Mode.DropMarker;
         }
         return Mode.MoveToDepot;
@@ -226,7 +221,9 @@ public class Auto {
     Mode dropMarker()
     {
         robot.dropMarker(Bogg.Direction.Down);
-        if(getTime() > 2)  //time to drop marker
+        robot.endEffector.moveToPosition(30, 0);
+
+        if(getTime() > .5)  //time to drop marker
             return Mode.MoveToCrater;
 
         return Mode.DropMarker;
@@ -237,22 +234,23 @@ public class Auto {
     {
         double[] drive = robot.driveEngine.smoothDrive(0, -1, 2, false);
         robot.driveEngine.drive(drive[0], drive[1]);
-        robot.endEffector.moveToPosition(-30, 0);
+        telemetry.addData("yDist", robot.driveEngine.yDist());
 
-        if(robot.sensors.isTilted())
-        {
-            return Mode.Stop;
-        }
+        if(robot.sensors.usingImu)
+            if(robot.sensors.isTilted())
+                return Mode.Stop;
         else
-            return Mode.MoveToCrater;
+            if (robot.driveEngine.yDist() < -12 * 9)
+                return Mode.Stop;
+
+        return Mode.MoveToCrater;
     }
 
 
     void stop()
     {
         robot.driveEngine.stop();
-        robot.dropMarker(Bogg.Direction.Up);
-        robot.lift(0);
+        telemetry.addLine("Done!!!");
     }
 
     private double getTime()
@@ -262,6 +260,7 @@ public class Auto {
 
     boolean rotateToWall(double accuracy_angle)
     {
+        accuracy_angle = MyMath.radians(accuracy_angle);
         Double wallHeading = camera.headingToWall();
         telemetry.addData("wall heading", wallHeading);
         if(wallHeading != null)
@@ -325,7 +324,7 @@ public class Auto {
             wallTargetLocation[0] = Math.round(target.getLocation().getTranslation().get(0) / 25.4);
             wallTargetLocation[1] = Math.round(target.getLocation().getTranslation().get(1) / 25.4);
 
-            double[] drive = camera.getMoveToPosition(location, camera.getHeading(), driveTarget, wallTargetLocation);
+            double[] drive = camera.getMoveToPosition(location, camera.getHeading(), driveTarget);
             double delta_x = drive[0];
             double delta_y = drive[1];
             double headingToTarget = drive[2];
@@ -339,5 +338,10 @@ public class Auto {
             }
         }
         return false;
+    }
+
+    void update()
+    {
+        robot.update();
     }
 }

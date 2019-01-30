@@ -12,6 +12,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
+import java.util.ArrayList;
+
 class Sensors {
     HardwareMap hardwareMap;
 
@@ -23,44 +25,52 @@ class Sensors {
 
     BNO055IMU imu = null;
 
-    boolean usingImu = true;
+    boolean usingImu = false;
 
     // State used for updating telemetry
     Orientation angles;
     Acceleration gravity;
 
+    Bogg.Name name;
 
-    Sensors(HardwareMap hardwareMap)
+
+    Sensors(HardwareMap hardwareMap, Bogg.Name whichRobot)
     {
         this.hardwareMap = hardwareMap;
 
-        touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
-        touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
-        touchLander = hardwareMap.get(TouchSensor.class, "touchLander");
-        //dLow = hardwareMap.get(DistanceSensor.class, "dLow");
-        //dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
+        this.name = whichRobot;
 
-        if(usingImu && imu == null)
+        switch (name)
         {
-            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-            parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-            parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-            parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-            parameters.loggingEnabled      = true;
-            parameters.loggingTag          = "IMU";
-            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+            case Bogg:
+                touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
+                touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
+                touchLander = hardwareMap.get(TouchSensor.class, "touchLander");
+                //dLow = hardwareMap.get(DistanceSensor.class, "dLow");
+                //dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
+            case MiniBogg:
+                usingImu = true;
+                if(usingImu && imu == null) {
+                    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+                    parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+                    parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+                    parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+                    parameters.loggingEnabled = true;
+                    parameters.loggingTag = "IMU";
+                    parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
-            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
-            // and named "imu".
-            try
-            {
-                imu = hardwareMap.get(BNO055IMU.class, "imu");
-                imu.initialize(parameters);
-            }catch (IllegalArgumentException i)
-            {
-                usingImu = false;
-            }
+                    // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+                    // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+                    // and named "imu".
+                    try {
+                        imu = hardwareMap.get(BNO055IMU.class, "imu");
+                        imu.initialize(parameters);
+                    } catch (IllegalArgumentException i) {
+                        usingImu = false;
+                    }
+                }
+            case Fauxbot:
+            case Fakebot:
         }
     }
 
@@ -81,21 +91,37 @@ class Sensors {
         return touchBottom.isPressed();
     }
 
-    boolean touchLanderIsPressed(){return touchLander.isPressed();}
+    boolean touchLanderIsPressed(){
+        return touchLander.isPressed();
+    }
 
+    ArrayList<Double> lowDistances = new ArrayList<>();
     double getLowDistance()
     {
-        return 36;
-//        return dLow.getDistance(DistanceUnit.INCH);
+//        highDistances.add(dLow.getDistance(DistanceUnit.INCH));
+//
+//        if(lowDistances.size() > 3)
+//            lowDistances.remove(0);
+//
+//        return MyMath.median(lowDistances);
+
+        return 10;
     }
 
     double highAverage = 0;
-    double highAlpha = .25;
+    double highAlpha = .4;
+    ArrayList<Double> highDistances = new ArrayList<>();
     double getHighDistance()
     {
-        return 36;
-//        double d = dHigh.getDistance(DistanceUnit.INCH); //a
+        double d = 36;
+//        double d = dHigh.getDistance(DistanceUnit.INCH);
 //        return d * highAlpha + highAverage * (1 - highAlpha);
+        highDistances.add(d);
+        if(highDistances.size() > 5)
+            highDistances.remove(0);
+
+        highAverage = MyMath.median(highDistances) * highAlpha + highAverage * (1 - highAlpha);
+        return highAverage;
     }
 
     boolean isTilted()

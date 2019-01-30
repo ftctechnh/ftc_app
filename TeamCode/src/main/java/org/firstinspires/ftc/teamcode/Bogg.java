@@ -47,14 +47,15 @@ public class Bogg
     {
         Bogg,
         MiniBogg,
-        Fauxbot
+        Fauxbot,
+        Fakebot
     }
 
     public Bogg(HardwareMap hardwareMap, Telemetry telemetry, Name whichRobot)
     {
         this.telemetry = telemetry;
         timer = new ElapsedTime();
-        sensors = new Sensors(hardwareMap);
+        sensors = new Sensors(hardwareMap, whichRobot);
 
         switch (whichRobot)
         {
@@ -77,6 +78,10 @@ public class Bogg
             case Fauxbot:
                 driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 2);
                 driveEngine.driveAtAngle(-Math.PI / 2);
+                break;
+
+            case Fakebot:
+                driveEngine = new FakeDriveEngine(hardwareMap, telemetry);
                 break;
         }
     }
@@ -199,7 +204,7 @@ public class Bogg
 
     void manualCurvy(boolean op, double x, double y, double s)
     {
-        double[] drive = driveEngine.smoothDrive(x, y, op? 1:3, true);
+        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3, true);
         double leftX = drive[0];
         double leftY = drive[1];
         double spin = driveEngine.smoothSpin(-s/3);
@@ -247,7 +252,7 @@ public class Bogg
 
         if(orbit) {
             if (max == Math.abs(y))
-                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, gDrive.left_stick_y);
+                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, gDrive.left_stick_y / 2);
             else
                 driveEngine.drive(gDrive.left_stick_x, 0);
         }
@@ -268,8 +273,7 @@ public class Bogg
             endEffector.close();
 
         //deals with the angle of the arm
-        raisePosition += (g.left_stick_x + g.left_stick_y) * 5 * endEffector.getAngleInDegrees()
-                * averageClockTime * EndEffector.gearRatio;
+        raisePosition += (g.left_stick_x + g.left_stick_y) * MyMath.radians(5) * averageClockTime;
 
         if(Math.hypot(g.left_stick_x,g.left_stick_y) > 0)
         {
