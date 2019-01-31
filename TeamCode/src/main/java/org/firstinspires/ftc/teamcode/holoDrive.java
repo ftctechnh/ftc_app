@@ -48,10 +48,11 @@ public class holoDrive extends OpMode {
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
         double xPower = gamepad1.left_stick_x;  //power to drive holonomic
         double spinPower = -gamepad1.right_stick_x; //power to drive holonomic
-        double liftPower = gamepad2.left_stick_x; //power for lift
-        double dustbinPower = -gamepad2.left_stick_y/6; //power for intake dustbin
+        double liftPower = gamepad2.left_stick_y; //power for lift
+        boolean collect = gamepad2.a; //power for intake dustbin
+        boolean score = gamepad2.b; //power for intake dustbin
         double extendPower = gamepad2.right_stick_y/4; //power for intake extension
-        double movePower = gamepad2.right_stick_x/2; //power to move arm
+        double movePower = gamepad2.left_stick_x/2; //power to move arm
 
 
 
@@ -121,11 +122,9 @@ public class holoDrive extends OpMode {
 
         lift.setPower(liftPower);
         //this controls the lift
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //these are the intake controls
 
-        dustbinIntake.setPower(dustbinPower);
         //controls dustbin
 
         extendIntake.setPower(extendPower);
@@ -133,20 +132,27 @@ public class holoDrive extends OpMode {
 
         moveIntake.setPower(movePower);
         //controls intake moving up and down
-
-        if (gamepad2.y) {
+        if (collect = true) {
+            dustbinIntake.setPower(1);
+        }
+        if (score = true) {
+            dustbinIntake.setPower(-1);
+        }
+        if (gamepad2.y = true) {
             dustBin.setPosition(0);
         }
-        if (gamepad2.a) {
+        if (gamepad2.x = true) {
             dustBin.setPosition(0.35);
+        }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //this lets us see the power the motors are being set to
         telemetry.addData("xPower", "%.2f",  xPower);
         telemetry.addData("yPower", "%.2f",  yPower);
         telemetry.addData("liftPower", "%.2f",  liftPower);
-        telemetry.addData("dustBinPower", "%.2f",  dustbinPower);
+        telemetry.addData("collect", "%.2f",  collect);
+        telemetry.addData("score", "%.2f",  score);
         telemetry.addData("extendPower", "%.2f",  extendPower);
         telemetry.addData("movePower", "%.2f",  movePower);
     }
-}}
+}
 
