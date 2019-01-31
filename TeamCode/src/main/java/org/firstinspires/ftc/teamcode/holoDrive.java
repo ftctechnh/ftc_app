@@ -39,6 +39,8 @@ public class holoDrive extends OpMode {
         moveIntake = hardwareMap.dcMotor.get("move_intake");
         dustBin = hardwareMap.servo.get("dust_bin");
 
+        dustBin.setPosition(0);
+
     }
 
     @Override
