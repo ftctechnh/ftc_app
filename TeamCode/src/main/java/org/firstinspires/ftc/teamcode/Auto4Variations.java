@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.UserControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
@@ -52,10 +53,11 @@ public class Auto4Variations extends LinearOpMode {
         Deploy,
         Lander_to_Depot,
         Sample_Crater,
-        Sample_to_Depot,
+        Crater_to_Depot,
         Claim,
         Double_Sample,
         Depot_to_Crater,
+        Start_Depot_to_Crater,
         Stop
     }
 
@@ -91,14 +93,14 @@ public class Auto4Variations extends LinearOpMode {
         }
         telemetry.update();
 
-        if (User.getYesNo("Double Sample?")) {
+        /*if (User.getYesNo("Double Sample?")) {
             doubleSample = true;
             telemetry.addLine("Double sample");
         } else {
             doubleSample = false;
             telemetry.addLine("Single sample");
         }
-        telemetry.update();
+        telemetry.update();*/
 
         if (User.getLeftRight("Left or Right Crater?")) {
             allianceCrater = true;
@@ -166,6 +168,8 @@ public class Auto4Variations extends LinearOpMode {
 
             Drive.imu.update();
 
+            Drive.Tof.Telemetry();
+
             /*if (mCurrentState != State.Deploy && Lift.LifterButtonB.isPressed()) {
                 Lift.Stop();
             }*/
@@ -210,19 +214,19 @@ public class Auto4Variations extends LinearOpMode {
                     if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turn2Angle(TURN_SPEED, -40);
                         Drive.TimeDelay(0.15);
-                        Drive.moveForward(0.5, 1.0);
+                        Drive.moveForward(0.5, 0.9);
                         Drive.TimeDelay(0.15);
                         Drive.turn2Angle(TURN_SPEED, 45);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 0.9);
                         newState(State.Claim);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 2.0);
+                        Drive.moveForward(0.5, 1.4);
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.05);
                         newState(State.Claim);
                     } else {
-                        Drive.turn2Angle(TURN_SPEED, 40);
+                        Drive.turn2Angle(TURN_SPEED, 45);
                         Drive.TimeDelay(0.15);
                         Drive.moveForward(0.5, 1.0);
                         Drive.TimeDelay(0.15);
@@ -243,62 +247,99 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.TimeDelay(0.5);
                         Drive.moveForward(0.5, 0.7);
                         Drive.TimeDelay(0.5);
-                        Drive.moveBackward(0.5, 0.7);
-                        newState(State.Sample_to_Depot);
-                    } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.moveForward(0.5, 0.5);
-                        Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.5);
-                        newState(State.Sample_to_Depot);
+                        newState(State.Crater_to_Depot);
+                    } else if (Vucam.sample == Vucam.sample.CENTER) {
+                        Drive.moveForward(0.5, 0.4);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveBackward(0.5, 0.3);
+                        newState(State.Crater_to_Depot);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 40);
                         Drive.TimeDelay(0.5);
                         Drive.moveForward(0.5, 0.7);
                         Drive.TimeDelay(0.5);
-                        Drive.moveBackward(0.5, 0.7);
-                        newState(State.Sample_to_Depot);
+                        Drive.moveBackward(0.5, 0.5);
+                        newState(State.Crater_to_Depot);
                     }
                     break;
 
-                case Sample_to_Depot:
+                case Crater_to_Depot:
                     telemetry.addLine("Move to depot");
                     telemetry.update();
-                    Drive.turn2Angle(TURN_SPEED, -85);
-                    Drive.TimeDelay(0.15);
-                    Drive.moveForward(0.5, 1.6);
-                    Drive.TimeDelay(0.15);
-                    Drive.turn2Angle(TURN_SPEED, -135);
-                    Drive.TimeDelay(0.15);
-                    Drive.moveForward(0.5, 1.3);
-                    newState(State.Claim);
+                    if (Vucam.sample == Vucam.sample.CENTER){
+                        Drive.turn2Angle(TURN_SPEED, -70);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveForward(0.5, 1.6);
+                        Drive.TimeDelay(0.15);
+                        Drive.turn2Angle(TURN_SPEED, -135);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveForward(0.5, 1.5);
+                        newState(State.Claim);
+                    }
+                    else{ //left and right
+                        Drive.turn2Angle(TURN_SPEED, -60);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveForward(0.5, 1.6);
+                        Drive.TimeDelay(0.15);
+                        Drive.turn2Angle(TURN_SPEED, -135);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveForward(0.5, 1.7);
+                        newState(State.Claim);
+                    }
+
                     break;
 
                 case Claim:
                     Led.lawnGreen();
                     telemetry.addLine("Claim");
                     telemetry.update();
-                    Claimer.drop();
-                    Drive.TimeDelay(0.5);
-                    //Drive.TimeDelay(2.0);
-                    Claimer.reset();
                     if (orientation == Start.Depot) {
                         Drive.turn2Angle(TURN_SPEED, -45.0);
+                        Claimer.drop();
+                        Drive.TimeDelay(0.5);
+                        Claimer.reset();
+                        newState(State.Start_Depot_to_Crater);
                     }
-                    newState(State.Depot_to_Crater);
+                    else{
+                        Claimer.drop();
+                        Drive.TimeDelay(0.5);
+                        Claimer.reset();
+                        newState(State.Depot_to_Crater);
+                    }
                     break;
 
                 case Double_Sample:
                     telemetry.addLine("Double sample");
-                    telemetry.update();
-                    Drive.turnAngle(TURN_SPEED, 90);
-                    Drive.turnAngle(TURN_SPEED, 100);
-                    Drive.moveForward(0.5, 2.0);
-                    newState(State.Stop);
+
                     break;
 
                 case Depot_to_Crater:
                     Led.darkBlue();
                     telemetry.addLine("Depot to crater");
+                    telemetry.update();
+                    if (Vucam.sample == Vucam.sample.LEFT && orientation == Start.Depot) {
+                        Drive.moveBackward(0.5, 1.7);
+                        Drive.TimeDelay(0.15);
+                        Drive.turn2Angle(TURN_SPEED, -18);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveBackward(0.4, 0.4);
+                        Drive.TimeDelay(0.15);
+                        Drive.turn2Angle(TURN_SPEED, -48);
+                        Drive.TimeDelay(0.15);
+                        Drive.moveBackward(0.5, 0.5);
+                    } else {
+                        Drive.moveBackward(0.5, 2.8);
+                    }
+                    while (!Lift.LifterButtonB.isPressed()) {
+                        Lift.Retract();
+                    }
+                    Lift.Stop();
+                    newState(State.Stop);
+                    break;
+                case Start_Depot_to_Crater:
+                    Led.lawnGreen();
+                    telemetry.addLine("Start at Depot, to crater");
                     telemetry.update();
                     if (Vucam.sample == Vucam.sample.LEFT && orientation == Start.Depot) {
                         Drive.moveBackward(0.5, 1.7);
@@ -311,9 +352,7 @@ public class Auto4Variations extends LinearOpMode {
                         Drive.TimeDelay(0.15);
                         Drive.moveBackward(0.5, 0.9);
                     } else {
-                        Drive.moveBackward(0.5, 2.2);
-                        Drive.turnAngle(TURN_SPEED, -30);
-                        Drive.moveBackward(0.5, 1.0);
+                        Drive.moveBackward(0.5, 3.2);
                     }
                     while (!Lift.LifterButtonB.isPressed()) {
                         Lift.Retract();
@@ -321,7 +360,6 @@ public class Auto4Variations extends LinearOpMode {
                     Lift.Stop();
                     newState(State.Stop);
                     break;
-
 
                 case Stop:
                     telemetry.addLine("Stop");

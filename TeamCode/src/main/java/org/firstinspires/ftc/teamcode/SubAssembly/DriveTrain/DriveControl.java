@@ -169,11 +169,11 @@ public class DriveControl {
             if (angle2turn > 0.0625) {
                 turnRight(speed*angle2turn/17 + speed/3);
             } else if (angle2turn < -0.0625) {
-                turnLeft(speed*angle2turn/17 + speed/3);
+                turnLeft(-speed*angle2turn/17 + speed/3);
             } else {
                 turnLeft(angle2turn);
             }
-        } while ( now < 1.5 && !opmode.isStopRequested() );
+        } while ( now < 1.2 && !opmode.isStopRequested() );
 
         stop();
     }
@@ -219,11 +219,60 @@ public class DriveControl {
     }
 
     public void forwardUntilDistance(double speed, double distance) {
-        if (Tof.getDistance3() >= distance + 10) {
+        double distance2drive;
+
+        double start = 0;
+        double now = 0;
+        double interval = 0;
+        start = runtime.seconds();
+
+        do {
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addLine("Distance3: " + Tof.getDistance3());
+                opmode.telemetry.update();
+            }
+            //
+
+            distance2drive = (Tof.getDistance3() - distance);
+
             moveForward(speed);
-        } else {
-            stop();
-        }
+
+        } while (distance2drive > 20 && !opmode.isStopRequested() );
+
+        stop();
+
+        TimeDelay(0.07);
+
+        now = 0;
+
+        do {
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addLine("Distance3: " + Tof.getDistance3());
+                opmode.telemetry.update();
+            }
+            //
+
+            distance2drive = (Tof.getDistance3() - distance);
+
+            if (distance2drive > 1.0) {
+                moveForward(speed*distance2drive/18 + speed/5.5);
+            } else if (distance2drive < -1.0) {
+                moveBackward(-speed*distance2drive/18 + speed/5.5);
+            } else {
+                moveBackward(distance2drive/100);
+            }
+        } while ( now < 1.5 && !opmode.isStopRequested() );
+
+        stop();
+
     }
 
 
@@ -239,7 +288,8 @@ public class DriveControl {
 
         } while ((now < time) && !opmode.isStopRequested() );
 
-        opmode.telemetry.addData("trueAngle", imu.trueAngle);
+        opmode.telemetry.addLine("trueAngle: " + imu.trueAngle);
+        opmode.telemetry.addLine("Distance: " + Tof.getDistance3());
         opmode.telemetry.update();
 
 
