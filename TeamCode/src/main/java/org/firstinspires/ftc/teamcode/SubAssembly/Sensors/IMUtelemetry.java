@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "IMU Test", group = "Test")
-public class ImuTest extends LinearOpMode {
+public class IMUtelemetry extends LinearOpMode {
     private double runTimes = 0;
 
     @Override
