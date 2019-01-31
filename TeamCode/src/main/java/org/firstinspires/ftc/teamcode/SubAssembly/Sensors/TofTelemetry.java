@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
  */
 // Assign OpMode type (TeleOp or Autonomous), name, and grouping
 @TeleOp(name = "Tof Test", group = "Test")
-public class TofTest extends LinearOpMode {
+public class TofTelemetry extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
