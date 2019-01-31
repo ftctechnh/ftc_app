@@ -1,40 +1,23 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
-import java.util.ArrayList;
 
 public class FakeDriveEngine extends DriveEngine{
 
     private double theta = 0;
-    private double cumulativeSpin = 0;
-    private double motorSpacing = 2 * Math.PI /3;
     private double root3 = Math.sqrt(3);
-    private ArrayList<Boolean> checkpoint = new ArrayList<>();
 
     double xDistance = 0, yDistance = 0, sDistance = 0;
 
     FakeDriveEngine(HardwareMap hardwareMap, Telemetry telemetry)
     {
         this.telemetry = telemetry;
+        timer = new ElapsedTime();
     }
 
-    @Override
-    void drive(double... args) {
-        drive(false, args);
-    }
-
-    @Override
-    void rotate(double spin) {
-        drive(false, spin);
-    }
-
-    @Override
-    void stop() {
-        drive(0);
-    }
 
     @Override
     void drive(boolean op, double... args) {
@@ -54,6 +37,7 @@ public class FakeDriveEngine extends DriveEngine{
                 stop();
                 return;
         }
+
         double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
         double yPrime = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -72,6 +56,16 @@ public class FakeDriveEngine extends DriveEngine{
             leftPower  /= max;
         }
 
+        //Estimated 4 feet per second at full power
+        double dX = (4 * 12 * (Math.random() + 4) / 4.5) * x * Bogg.averageClockTime;
+        double dY = (4 * 12 * (Math.random() + 4) / 4.5) * y * Bogg.averageClockTime;
+        double dS = (4 * 12 * (Math.random() + 4) / 4.5) * spin * Bogg.averageClockTime;
+        xDistance += dX;
+        yDistance += dY;
+        sDistance += dS;
+
+        reportPositionsToScreen();
+
         telemetry.addData("driveE x", x);
         telemetry.addData("driveE y", y);
         telemetry.addData("driveE rotate", spin);
@@ -81,24 +75,61 @@ public class FakeDriveEngine extends DriveEngine{
         telemetry.addData("leftPower", leftPower);
     }
 
-
     @Override
     void resetDistances() {
-        cumulativeSpin += spinAngle();
         xDistance = 0;
         yDistance = 0;
-        sDistance = 0;
+        justRestarted = true;
     }
-
 
     @Override
-    double faceForward() {
-        return super.faceForward();
+    void floatMotors() {
+        ;
     }
+
+    @Override
+    double spinAngle() {
+        return sDistance / robotRadius;
+    }
+
 
     @Override
     void orbit(double radius, double angle, double speed) {
-        super.orbit(radius, angle, speed);
+        ;
+    }
+
+    @Override
+    double xDist() {
+        return xDistance;
+    }
+
+    @Override
+    double yDist() {
+        return yDistance;
+    }
+
+    @Override
+    void reportPositionsToScreen() {
+        double dX = xDist() - lastX;
+        double dY = yDist() - lastY;
+
+        if(justRestarted){
+            justRestarted = false;
+            dX = 0;
+            dY = 0;
+        }
+
+        double spin = spinAngle();
+        double xPrime = dX * Math.cos(spin) - dY * Math.sin(spin);
+        double yPrime = dX * Math.sin(spin) + dY * Math.cos(spin);
+
+        trueX += xPrime;
+        trueY += yPrime;
+
+        moveRobotOnScreen();
+
+        lastX = xDist();
+        lastY = yDist();
     }
 
 }

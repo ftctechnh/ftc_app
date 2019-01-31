@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
@@ -28,8 +29,11 @@ class DriveEngine {
     double thetaAve = 0;
     private double theta = 0;
     private double forward = 0;
-    private ElapsedTime timer;
+    ElapsedTime timer;
     Telemetry telemetry;
+
+    double trueX;
+    double trueY;
 
     DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, int numMotors) {
         this.telemetry = telemetry;
@@ -73,28 +77,17 @@ class DriveEngine {
         timer = new ElapsedTime();
     }
 
-    //If we ever use collinear motors
-    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, int[] numMotors) {
+    //If we ever use weirdly placed wheels
+    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, double[]... motorParams) {
         this.telemetry = telemetry;
         this.sensors = sensors;
 
         int n = 0;
-        for (int numMotor : numMotors) {
-            if (numMotor == 0)
-                ;
+        for (double[] motorParam : motorParams) {
+            double radius = motorParam[0];
+            double angle = motorParam[1];
 
-            else if (numMotor == 1)
-                motors.add(hardwareMap.dcMotor.get("motor" + n));
-
-            else {
-                ArrayList<DcMotor> motorGroup = new ArrayList<>();
-                for (int j = 0; j < numMotor; j++) {
-                    motorGroup.add(hardwareMap.dcMotor.get("motor" + n));
-                    n++;
-                }
-                motors.add(new CollinearMotorGroup(motorGroup));
-            }
-            n++;
+            motors.add(hardwareMap.dcMotor.get("motor" + n));
         }
 
 
@@ -150,8 +143,8 @@ class DriveEngine {
         double[] powers = new double[motors.size()];
 
         for (int i = 0; i < motors.size(); i++)
-            powers[i] = x * Math.sin(i * motorSpacing)
-                    +   y * Math.cos(i * motorSpacing)
+            powers[i] = x * Math.cos(i * motorSpacing)
+                    +   y * Math.sin(i * motorSpacing)
                     +   spin;
 
 
@@ -169,6 +162,8 @@ class DriveEngine {
 
         for (int i = 0; i < motors.size(); i++)
             motors.get(i).setPower(powers[i]);
+
+        reportPositionsToScreen();
     }
 
 
@@ -185,12 +180,14 @@ class DriveEngine {
         }
     }
 
+    boolean justRestarted;
     void resetDistances()
     {
         for (DcMotor motor: motors) {
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+        justRestarted = true;
     }
 
     private double[] cumulativeDistance = new double[]{0,0};
@@ -211,11 +208,8 @@ class DriveEngine {
     }
     boolean moveOnPath(boolean continuous, boolean correctSpin, double[] ... args)
     {
-        reportPositionsToScreen();
-
         if(checkpoint.isEmpty()){
             for (double[] arg : args) checkpoint.add(false);
-            resetDistances();
         }
 
         int c = 0;
@@ -237,7 +231,7 @@ class DriveEngine {
             case 1:
                 targetAngle = forward + args[c][0];
                 rotate(face(targetAngle));
-                if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < 2 * Math.PI /180) {
+                if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < MyMath.radians(2)) {
                     stop();
                     forward += args[c][0];
                     sumSpinError = 0;
@@ -247,13 +241,20 @@ class DriveEngine {
                 }
                 break;
             case 3:
-                targetAngle = forward + args[c][2];
+                try {
+                    targetAngle = forward + args[c][2];
+                }
+                catch (ArrayIndexOutOfBoundsException i)
+                {
+                    telemetry.addLine("InCase 3");
+                }
+
             case 2:
                 double[] point = args[c];
                 double spin = correctSpin? face(targetAngle) : 0;
 
-                double deltaX = point[0] - xDist();
-                double deltaY = point[1] - yDist();
+                double deltaX = point[0] + cumulativeDistance[0] - xDist();
+                double deltaY = point[1] + cumulativeDistance[1] - yDist();
                 double r = Math.hypot(deltaX, deltaY);
 
                 double[] drive = move(deltaX, deltaY);
@@ -273,7 +274,12 @@ class DriveEngine {
                     else {
                         stop();
                         if(args[c].length == 3) {
-                            forward += args[c][2];
+                            try {
+                                forward += args[c][2];
+                            }
+                            catch (ArrayIndexOutOfBoundsException i){
+                                telemetry.addLine("In case 2");
+                            }
                             sumSpinError = 0;
                         }
                         this.checkpoint.set(c, true);
@@ -313,7 +319,8 @@ class DriveEngine {
         telemetry.addData("Math.cos(smoothTheta? thetaAve : theta) * rAve", Math.cos(smoothTheta? thetaAve : theta) * rAve);
         telemetry.addData("Math.sin(smoothTheta? thetaAve : theta) * rAve", Math.sin(smoothTheta? thetaAve : theta) * rAve);
 
-        return new double[]{Math.cos(smoothTheta? thetaAve : theta) * rAve, Math.sin(smoothTheta? thetaAve : theta) * rAve};
+        return new double[]{Math.cos(smoothTheta? thetaAve : theta) * rAve,
+                            Math.sin(smoothTheta? thetaAve : theta) * rAve};
     }
 
 
@@ -340,7 +347,7 @@ class DriveEngine {
 
         double deltaAngle = Math.abs(MyMath.loopAngle(target, current));
 
-        if(deltaAngle < Math.PI * 5 / 180) //if we are in the controllable zone
+        if(deltaAngle < MyMath.radians(5)) //if we are in the controllable zone
             return face(target, true);
 
         else
@@ -392,8 +399,8 @@ class DriveEngine {
     private double lastR = 0;
     private double lastTheta = 0;
     private double lastT = 0;
-    double mP = .02; //power per inch
-    double mD = .5;  //fully account for this much time in the future at current error decreasing rate
+    double mP = .03; //power per inch
+    double mD = .1;  //fully account for this much time in the future at current error decreasing rate
 
     double[] move(double deltaX, double deltaY)
     {
@@ -405,17 +412,17 @@ class DriveEngine {
         //    t is the time or instantaneous time
 
         double r = Math.hypot(deltaX, deltaY);
-        double theta = Math.atan2(deltaY, deltaX) * .25 + lastTheta * .75;
+        double theta = Math.atan2(deltaY, deltaX);
         telemetry.addData("radius", r);
         double dr = r - lastR;
         double t = timer.seconds();
         double dt = t - lastT;
-        double dTheta = theta - lastTheta;
+        double dTheta = MyMath.loopAngle(theta, lastTheta);
         telemetry.addData("theta", theta);
         telemetry.addData("dTheta", dTheta);
 
 //        if(Math.abs(dTheta / dt) > 2){ //2 rad per second
-//            telemetry.addData("dtheta/dr", dTheta/dr);
+//            telemetry.addData("dtheta/dt", dTheta/dt);
 //            return new double[]{0,0};
 //        }
 
@@ -504,8 +511,9 @@ class DriveEngine {
             sum += motors.get(i).getCurrentPosition() * Math.cos(i);
         }
 
-        telemetry.addData("xDist", sum / smallSum);
-        xDistances.add(sum / smallSum);
+        double xDistance = sum / smallSum * inPerTicks;
+        telemetry.addData("xDist", xDistance);
+        xDistances.add(xDistance);
 
         if(xDistances.size() > 5) //keep the size to 5
             xDistances.remove(0);
@@ -526,7 +534,7 @@ class DriveEngine {
             sum += motors.get(i).getCurrentPosition() * Math.sin(i);
         }
 
-        double yDistance = sum / smallSum;
+        double yDistance = sum / smallSum * inPerTicks;
         telemetry.addData("yDist", yDistance);
 
         yDistances.add(yDistance);
@@ -551,11 +559,40 @@ class DriveEngine {
         }
     }
 
+    double lastX = 0;
+    double lastY = 0;
     void reportPositionsToScreen()
     {
         for (int i = 0; i < motors.size(); i++) {
             telemetry.addData("motor " + i + " position", motors.get(i).getCurrentPosition());
         }
+
+        double x = xDist();
+        double y = yDist();
+        double spin = spinAngle();
+        double dX = x - lastX;
+        double dY = y - lastY;
+
+        if(justRestarted){
+            justRestarted = false;
+            dX = 0;
+            dY = 0;
+        }
+
+        double xPrime = dX * Math.cos(spin) - dY * Math.sin(spinAngle());
+        double yPrime = dX * Math.sin(spin) + dY * Math.cos(spinAngle());
+
+        trueX += xPrime;
+        trueY += yPrime;
+
+        moveRobotOnScreen();
+
+        lastX = x;
+        lastY = y;
     }
 
+    void moveRobotOnScreen()
+    {
+        FtcRobotControllerActivity.moveRobot(trueX * 4.5, -trueY * 5.5, MyMath.degrees(spinAngle()));
+    }
 }

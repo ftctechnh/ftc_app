@@ -235,22 +235,26 @@ public class Auto {
         double[] drive = robot.driveEngine.smoothDrive(0, -1, 2, false);
         robot.driveEngine.drive(drive[0], drive[1]);
         telemetry.addData("yDist", robot.driveEngine.yDist());
+        telemetry.addData("usingImu", robot.sensors.usingImu);
 
-        if(robot.sensors.usingImu)
-            if(robot.sensors.isTilted())
+        if(robot.sensors.usingImu) {
+            if (robot.sensors.isTilted())
                 return Mode.Stop;
-        else
-            if (robot.driveEngine.yDist() < -12 * 9)
-                return Mode.Stop;
+        }
+        else if (robot.driveEngine.yDist() < -12 * 5.5)
+        {
+            return Mode.Stop;
+        }
 
         return Mode.MoveToCrater;
     }
 
 
-    void stop()
+    Mode stop()
     {
         robot.driveEngine.stop();
         telemetry.addLine("Done!!!");
+        return Mode.Stop;
     }
 
     private double getTime()
