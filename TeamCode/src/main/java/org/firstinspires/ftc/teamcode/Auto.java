@@ -17,7 +17,7 @@ public class Auto {
 
     Auto(Bogg.Name name, HardwareMap hardwareMap, Telemetry telemetry)
     {
-        this.robot = new Bogg(hardwareMap, telemetry, name);
+        this.robot = Bogg.determineRobot(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(0);
         this.telemetry = telemetry;
         if(name != Bogg.Name.Fakebot)
@@ -191,6 +191,8 @@ public class Auto {
 
     Mode turnByCamera()
     {
+        if(robot.name == Bogg.Name.Fakebot)
+            return Mode.MoveToDepot;
         if(rotateToWall(2)) {
             robot.driveEngine.stop();
             double[] location = camera.getLocation();

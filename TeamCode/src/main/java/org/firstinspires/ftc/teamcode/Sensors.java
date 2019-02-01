@@ -84,7 +84,7 @@ class Sensors {
     }
 
     boolean touchTopIsPressed() {
-        return touchTop.isPressed();
+        return name != Bogg.Name.Bogg || touchTop.isPressed();
     }
 
     boolean touchBottomIsPressed() {
