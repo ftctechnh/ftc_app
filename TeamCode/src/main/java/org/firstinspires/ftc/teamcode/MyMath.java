@@ -21,6 +21,15 @@ public class MyMath {
 
     }
 
+    static double ave(ArrayList<Double> values)
+    {
+        double sum = 0;
+        for (double v:values) {
+            sum += v;
+        }
+        return sum / values.size();
+    }
+
     static double dotProduct(double[] distances, double[] coefficients)
     {
         double sum = 0;
