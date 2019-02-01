@@ -20,9 +20,9 @@ class DriveEngine {
 
     private double motorSpacing;
 
-    private static final double ticksPerRev = 1120;
-    private static double inPerRev = Math.PI * wheelDiameter;
-    static final double inPerTicks = inPerRev / ticksPerRev;
+    static double ticksPerRev = 1120;
+    static double inPerRev(){return Math.PI * wheelDiameter;}
+    static double inPerTicks(){return inPerRev() / ticksPerRev;}
 
     double spinAve = 0;
     double rAve = 0;
@@ -160,8 +160,10 @@ class DriveEngine {
         telemetry.addData("driveE y", y);
         telemetry.addData("driveE rotate", spin);
 
-        for (int i = 0; i < motors.size(); i++)
+        for (int i = 0; i < motors.size(); i++) {
             motors.get(i).setPower(powers[i]);
+            telemetry.addData("motor" + i + " power", powers[i]);
+        }
 
         reportPositionsToScreen();
     }
@@ -176,6 +178,7 @@ class DriveEngine {
     void floatMotors()
     {
         for (DcMotor motor: motors) {
+            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
     }
@@ -241,13 +244,7 @@ class DriveEngine {
                 }
                 break;
             case 3:
-                try {
-                    targetAngle = forward + args[c][2];
-                }
-                catch (ArrayIndexOutOfBoundsException i)
-                {
-                    telemetry.addLine("InCase 3");
-                }
+                targetAngle = forward + args[c][2];
 
             case 2:
                 double[] point = args[c];
@@ -258,15 +255,13 @@ class DriveEngine {
                 double r = Math.hypot(deltaX, deltaY);
 
                 double[] drive = move(deltaX, deltaY);
-                drive = smoothDrive(drive[0], drive[1], 2, false);
+                drive = smoothDrive(drive[0], drive[1], .2, false);
 
                 double driveX = drive[0];
                 double driveY = drive[1];
 
-                telemetry.addData("targetX", point[0]);
-                telemetry.addData("targetY", point[1]);
-                telemetry.addData("currentX", xDist());
-                telemetry.addData("currentY", yDist());
+                telemetry.addData("deltaX", deltaX);
+                telemetry.addData("deltaY", deltaY);
 
                 if(r <= .5 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
                     if(continuous)
@@ -316,8 +311,6 @@ class DriveEngine {
         if(thetaAve - theta > Math.PI) theta += 2 * Math.PI;
 
         thetaAve = thetaAlpha * theta + (1-thetaAlpha) * thetaAve;
-        telemetry.addData("Math.cos(smoothTheta? thetaAve : theta) * rAve", Math.cos(smoothTheta? thetaAve : theta) * rAve);
-        telemetry.addData("Math.sin(smoothTheta? thetaAve : theta) * rAve", Math.sin(smoothTheta? thetaAve : theta) * rAve);
 
         return new double[]{Math.cos(smoothTheta? thetaAve : theta) * rAve,
                             Math.sin(smoothTheta? thetaAve : theta) * rAve};
@@ -359,7 +352,7 @@ class DriveEngine {
     private double lastSpinError = 0;
     private double lastSpinTime = 0;
 
-    double sP = .25; // .25 per radian
+    double sP = .20; // .25 per radian
     double sI = 8; //Time to correct past error
     double sD = .05; //fully account for this much time in the future at current error decreasing rate
 
@@ -399,9 +392,10 @@ class DriveEngine {
     private double lastR = 0;
     private double lastTheta = 0;
     private double lastT = 0;
-    double mP = .03; //power per inch
-    double mD = .1;  //fully account for this much time in the future at current error decreasing rate
+    double mP = .015; //power per inch
+    double mD = 0.04;  //fully account for this much time in the future at current error decreasing rate
 
+    ArrayList<Double> drdtArray = new ArrayList<>();
     double[] move(double deltaX, double deltaY)
     {
         //    u(t) = MV(t) = P *( r(t) + 1/D *dr(t)/dt )
@@ -417,6 +411,13 @@ class DriveEngine {
         double dr = r - lastR;
         double t = timer.seconds();
         double dt = t - lastT;
+
+        double drdt = dr / dt;
+        drdtArray.add(drdt);
+
+        if(drdtArray.size() > 7) //keep the size to 7
+            drdtArray.remove(0);
+
         double dTheta = MyMath.loopAngle(theta, lastTheta);
         telemetry.addData("theta", theta);
         telemetry.addData("dTheta", dTheta);
@@ -426,17 +427,16 @@ class DriveEngine {
 //            return new double[]{0,0};
 //        }
 
-        double power = mP * (r +  mD * dr/dt);
-        telemetry.addData("moveD term", mD * dr/dt);
+        double power = mP * (r +  mD * MyMath.ave(drdtArray));
+        telemetry.addData("moveD term", mD * MyMath.ave(drdtArray));
         telemetry.addData("power", power);
+        telemetry.addData("moveD / power",mD * MyMath.ave(drdtArray) / power);
 
-        if(power > .7) power = .7;
+        if(power > .4) power = .4;
         //Don't worry, it's smoothed
 
         lastR = r;
         lastT = t;
-        telemetry.addData("cos(theta) * power", Math.cos(theta) * power);
-        telemetry.addData("sin(theta) * power", Math.sin(theta) * power);
 
         return new double[]{Math.cos(theta) * power, Math.sin(theta) *  power};
     }
@@ -495,7 +495,7 @@ class DriveEngine {
      */
     double getDistance(double angle)
     {
-        return (xDist() * Math.cos(angle) + yDist() * Math.sin(angle)) * inPerTicks;
+        return (xDist() * Math.cos(angle) + yDist() * Math.sin(angle)) * inPerTicks();
     }
 
     ArrayList<Double> xDistances = new ArrayList<>();
@@ -503,15 +503,15 @@ class DriveEngine {
     {
         double smallSum = 0;
         for (int i = 0; i < motors.size(); i++) {
-            smallSum += Math.abs(Math.cos(i));
+            smallSum += Math.abs(Math.cos(i * motorSpacing));
         }
 
         double sum = 0;
         for (int i = 0; i < motors.size(); i++) {
-            sum += motors.get(i).getCurrentPosition() * Math.cos(i);
+            sum += motors.get(i).getCurrentPosition() * Math.cos(i * motorSpacing);
         }
 
-        double xDistance = sum / smallSum * inPerTicks;
+        double xDistance = sum / smallSum * inPerTicks();
         telemetry.addData("xDist", xDistance);
         xDistances.add(xDistance);
 
@@ -526,15 +526,15 @@ class DriveEngine {
     {
         double smallSum = 0;
         for (int i = 0; i < motors.size(); i++) {
-            smallSum += Math.abs(Math.sin(i));
+            smallSum += Math.abs(Math.sin(i * motorSpacing));
         }
 
         double sum = 0;
         for (int i = 0; i < motors.size(); i++) {
-            sum += motors.get(i).getCurrentPosition() * Math.sin(i);
+            sum += motors.get(i).getCurrentPosition() * Math.sin(i * motorSpacing);
         }
 
-        double yDistance = sum / smallSum * inPerTicks;
+        double yDistance = sum / smallSum * inPerTicks();
         telemetry.addData("yDist", yDistance);
 
         yDistances.add(yDistance);
