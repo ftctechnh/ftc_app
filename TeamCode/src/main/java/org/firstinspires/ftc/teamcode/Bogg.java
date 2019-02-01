@@ -18,6 +18,7 @@ public class Bogg
     Servo brake;
     Servo drop;
     Servo dServo;
+    Name name;
 
     static double averageClockTime = 0;
     double liftAlpha = .12;
@@ -54,14 +55,12 @@ public class Bogg
     public Bogg(HardwareMap hardwareMap, Telemetry telemetry, Name whichRobot)
     {
         this.telemetry = telemetry;
+        this.name = whichRobot;
         timer = new ElapsedTime();
-        sensors = new Sensors(hardwareMap, whichRobot);
 
         switch (whichRobot)
         {
             case Bogg:
-                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
-                endEffector = new EndEffector(hardwareMap, telemetry, sensors);
                 lift  = hardwareMap.dcMotor.get("lift");
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 brake = hardwareMap.servo.get("brake");
@@ -70,13 +69,11 @@ public class Bogg
                 break;
 
             case MiniBogg:
-                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
                 lift  = hardwareMap.dcMotor.get("lift");
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 break;
 
             case Fauxbot:
-                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 2);
                 driveEngine.driveAtAngle(-Math.PI / 2);
                 break;
 
@@ -84,6 +81,50 @@ public class Bogg
                 driveEngine = new FakeDriveEngine(hardwareMap, telemetry);
                 break;
         }
+
+        sensors = new Sensors(hardwareMap, whichRobot);
+
+        switch (whichRobot)
+        {
+            case Bogg:
+                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
+                endEffector = new EndEffector(hardwareMap, telemetry, sensors);
+                break;
+
+            case MiniBogg:
+                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
+                driveEngine.mP *= 5;
+                driveEngine.ticksPerRev = 290;
+                driveEngine.wheelDiameter = 3.5;
+                break;
+
+            case Fauxbot:
+                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 2);
+                break;
+        }
+    }
+
+    public static Bogg determineRobot(HardwareMap hardwareMap, Telemetry telemetry)
+    {
+        Bogg robot;
+        try {
+            robot = new Bogg(hardwareMap, telemetry, Name.Bogg);
+        } catch (Exception e) {
+            telemetry.addLine(e.toString());
+            try {
+                robot = new Bogg(hardwareMap, telemetry, Name.MiniBogg);
+            } catch (Exception e1) {
+                telemetry.addLine(e1.toString());
+                try {
+                    robot = new Bogg(hardwareMap, telemetry, Name.Fauxbot);
+                } catch (Exception e2) {
+                    telemetry.addLine(e2.toString());
+                    robot = new Bogg(hardwareMap, telemetry, Name.Fakebot);
+                }
+            }
+        }
+        telemetry.addData("Name", robot.name);
+        return robot;
     }
 
 
@@ -102,6 +143,7 @@ public class Bogg
 
     void manualLift(boolean up, boolean down)
     {
+        if(name == Name.Bogg)
         if(up && !sensors.touchTopIsPressed())
         {
             lift.setPower(smoothLift(1));
@@ -117,10 +159,20 @@ public class Bogg
         }
         else
             lift.setPower(smoothLift(0));
+
+        if(name == Name.MiniBogg)
+            if(up) {
+                lift.setPower(smoothLift(1));
+            }
+            else if(down){
+                lift.setPower(smoothLift(-1));
+            }
+
     }
 
     void lift(double power)
     {
+        if(name == Name.Bogg)
         if(power > 0  && !sensors.touchTopIsPressed())
             lift.setPower(smoothLift(power));
         else if(power < 0 && !sensors.touchBottomIsPressed())
@@ -131,6 +183,7 @@ public class Bogg
 
     void setBrake(Direction d)
     {
+        if(name == Name.Bogg)
         switch (d) {
             case On:
                 brake.setPosition(.5);
@@ -159,6 +212,7 @@ public class Bogg
 
     void dropMarker(Direction direction)
     {
+        if(name == Name.Bogg)
         switch (direction)
         {
             case Down:
@@ -306,6 +360,9 @@ public class Bogg
             averageClockTime = clockTime;
         averageClockTime = (clockTime + n * averageClockTime) / (n+1); //cumulative average
 
+        n++;
+
+        telemetry.addData("clockTime", averageClockTime);
     }
 
     static double getAlpha(double seconds)
