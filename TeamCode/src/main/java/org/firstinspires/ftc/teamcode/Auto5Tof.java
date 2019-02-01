@@ -284,19 +284,19 @@ public class Auto5Tof extends LinearOpMode {
                     if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turn2Angle(TURN_SPEED, -60);
                         Drive.TimeDelay(0.1);
-                        Drive.moveBackward(0.8, 0.5);
+                        Drive.moveBackward(0.8, 0.45);
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 15);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.turn2Angle(TURN_SPEED, -90);
                         Drive.TimeDelay(0.1);
-                        Drive.moveBackward(0.8, 0.45);
+                        Drive.moveBackward(0.8, 0.4);
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 17.3);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, -120);
                         Drive.TimeDelay(0.1);
-                        Drive.moveBackward(0.8, 0.5);
+                        Drive.moveBackward(0.8, 0.45);
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 15);
                     }
