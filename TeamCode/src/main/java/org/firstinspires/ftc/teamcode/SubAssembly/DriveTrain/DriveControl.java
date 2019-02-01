@@ -137,13 +137,13 @@ public class DriveControl {
                 angle2turn += 360;
             }
 
-            if (angle2turn > 15) {
+            if (angle2turn > 12) {
                 turnRight(speed);
-            } else if (angle2turn < -15) {
+            } else if (angle2turn < -12) {
                 turnLeft(speed);
             }
 
-        } while ( (angle2turn > 12 || angle2turn < -12) && !opmode.isStopRequested() );
+        } while ( (angle2turn > 12 || angle2turn < -12) && !opmode.isStopRequested() && opmode.opModeIsActive() );
 
         stop();
 
@@ -173,7 +173,7 @@ public class DriveControl {
             } else {
                 turnLeft(angle2turn);
             }
-        } while ( now < 1.2 && !opmode.isStopRequested() );
+        } while ( now < 1.2 && !opmode.isStopRequested() && opmode.opModeIsActive() );
 
         stop();
     }
@@ -241,11 +241,11 @@ public class DriveControl {
 
             moveForward(speed);
 
-        } while (distance2drive > 20 && !opmode.isStopRequested() );
+        } while (distance2drive > 20 && !opmode.isStopRequested() && opmode.opModeIsActive() );
 
         stop();
 
-        TimeDelay(0.07);
+        TimeDelay(0.1);
 
         now = 0;
 
@@ -263,13 +263,13 @@ public class DriveControl {
             distance2drive = (Tof.getDistance3() - distance);
 
             if (distance2drive > 1.0) {
-                moveForward(speed*distance2drive/18 + speed/5.5);
+                moveForward(speed*distance2drive/20 + speed/6);
             } else if (distance2drive < -1.0) {
-                moveBackward(-speed*distance2drive/18 + speed/5.5);
+                moveBackward(-speed*distance2drive/20 + speed/6);
             } else {
                 moveBackward(distance2drive/100);
             }
-        } while ( now < 1.5 && !opmode.isStopRequested() );
+        } while ( now < 1.5 && !opmode.isStopRequested() && opmode.opModeIsActive() );
 
         stop();
 

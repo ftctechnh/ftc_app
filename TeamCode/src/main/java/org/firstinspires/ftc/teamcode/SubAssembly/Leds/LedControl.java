@@ -67,6 +67,10 @@ public class LedControl {
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE);
     }
 
+    public void rainbowPartyPalette() {
+        LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_PARTY_PALETTE);
+    }
+
     public void yellow() {
         LedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
     }

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 
-@Autonomous(name = "Auto3imu", group = "Auto")
+//@Autonomous(name = "Auto3imu", group = "Auto")
 public class Auto3imu extends LinearOpMode {
 
     /* Sub assemblies */

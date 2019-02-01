@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
+
 /* Sub Assembly Class
  */
 public class LiftControl {
@@ -38,6 +40,7 @@ public class LiftControl {
         /* Set local copies from opmode class */
         opmode = opMode;
         hwMap = opMode.hardwareMap;
+
 
         /* Map hardware devices */
         LifterRightM = hwMap.dcMotor.get("LifterRightM");

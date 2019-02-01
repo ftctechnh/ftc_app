@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 
+import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Lift.LiftControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Sensors.TofControl;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
@@ -31,6 +32,7 @@ public class teleop extends LinearOpMode {
         DriveControl Drive = new DriveControl();
         LiftControl Lift = new LiftControl();
         TofControl Tof = new TofControl();
+        LedControl Led = new LedControl();
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
@@ -38,6 +40,7 @@ public class teleop extends LinearOpMode {
         Drive.init(this);
         Lift.init(this);
         Tof.init(this);
+        Led.init(this);
 
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");
@@ -107,8 +110,10 @@ public class teleop extends LinearOpMode {
 
             //lift control
             if ((egamepad2.dpad_up.state) && (!Lift.LifterButtonT.isPressed())) {
+                Led.rainbowRainbowPalette();
                 Lift.Extend();
             } else if ((egamepad2.dpad_down.state) && (!Lift.LifterButtonB.isPressed())) {
+                Led.rainbowPartyPalette();
                 Lift.Retract();
             } else {
                 Lift.Stop();
