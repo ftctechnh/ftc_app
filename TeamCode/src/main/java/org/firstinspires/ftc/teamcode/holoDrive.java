@@ -4,12 +4,13 @@
 
 package org.firstinspires.ftc.teamcode;
 
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.lang.Math;
-
+import java.util.concurrent.TimeUnit;
 
 
 @TeleOp(name = "holoDrive", group = "Tank")
@@ -24,7 +25,8 @@ public class holoDrive extends OpMode {
     DcMotor dustbinIntake;
     DcMotor extendIntake;
     DcMotor moveIntake;
-    Servo dustBin;
+    Servo dustBinServo;
+    Servo liftLockServo;
 
     @Override
     public void init() {
@@ -37,10 +39,8 @@ public class holoDrive extends OpMode {
         dustbinIntake = hardwareMap.dcMotor.get("arm_Intake");
         extendIntake = hardwareMap.dcMotor.get("extend_Intake");
         moveIntake = hardwareMap.dcMotor.get("move_intake");
-        dustBin = hardwareMap.servo.get("dust_bin");
-
-        dustBin.setPosition(0);
-
+        dustBinServo = hardwareMap.servo.get("dust_bin");
+        liftLockServo = hardwareMap.servo.get("lift_lock");
     }
 
     @Override
@@ -51,10 +51,14 @@ public class holoDrive extends OpMode {
         double xPower = gamepad1.left_stick_x;  //power to drive holonomic
         double spinPower = -gamepad1.right_stick_x; //power to drive holonomic
         double liftPower = gamepad2.left_stick_y; //power for lift
-        boolean collect = gamepad2.a; //power for intake dustbin
-        boolean score = gamepad2.b; //power for intake dustbin
+        //boolean collect = gamepad2.a; //power for intake dustBinServo
+        //boolean score = gamepad2.b; //power for intake dustBinServo
         double extendPower = gamepad2.right_stick_y/4; //power for intake extension
         double movePower = gamepad2.left_stick_x/2; //power to move arm
+        double dustbinPower = -gamepad2.right_stick_x/6; //power for intake dustbin
+
+        //telemetry.addData("ftcTeam", "razzle %d", 13883);
+        //telemetry.update();
 
 
 
@@ -127,34 +131,44 @@ public class holoDrive extends OpMode {
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //these are the intake controls
 
-        //controls dustbin
+        //controls dustBinServo
+        dustbinIntake.setPower(dustbinPower);
 
         extendIntake.setPower(extendPower);
         //controls the intake extention
 
         moveIntake.setPower(movePower);
         //controls intake moving up and down
-        if (collect = true) {
-            dustbinIntake.setPower(1);
+
+
+        if (gamepad2.y == true) {
+            telemetry.addData("gamepad2 y true", "%f", 0.0 );
+            dustBinServo.setPosition(0);
         }
-        if (score = true) {
-            dustbinIntake.setPower(-1);
+        if (gamepad2.a == true) {
+            telemetry.addData("gamepad2 a true", "%f", 0.35 );
+            dustBinServo.setPosition(0.35);
         }
-        if (gamepad2.y = true) {
-            dustBin.setPosition(0);
+        if (gamepad2.x == true) {
+            telemetry.addData("gamepad2 x true", "%f", 0.0);
+            liftLockServo.setPosition(0);
         }
-        if (gamepad2.x = true) {
-            dustBin.setPosition(0.35);
+        if (gamepad2.b == true) {
+            telemetry.addData("gamepad2 b true", "%f", 1.0);
+            liftLockServo.setPosition(1.0);
+            liftLockServo.setPosition(0.1);
         }
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //this lets us see the power the motors are being set to
         telemetry.addData("xPower", "%.2f",  xPower);
         telemetry.addData("yPower", "%.2f",  yPower);
         telemetry.addData("liftPower", "%.2f",  liftPower);
-        telemetry.addData("collect", "%.2f",  collect);
-        telemetry.addData("score", "%.2f",  score);
+        //telemetry.addData("collect", "%.2f",  collect);
+        //telemetry.addData("score", "%.2f",  score);
         telemetry.addData("extendPower", "%.2f",  extendPower);
         telemetry.addData("movePower", "%.2f",  movePower);
+        //telemetry.addData("Servo connection info : %s", dustBinServo.getConnectionInfo());
     }
 }
 
