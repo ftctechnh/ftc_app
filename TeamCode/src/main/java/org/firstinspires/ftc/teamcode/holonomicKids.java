@@ -27,6 +27,7 @@ public class holonomicKids extends LinearOpMode
 
             // Display the current value
 
+            robot.update();
             telemetry.update();
             idle();
         }

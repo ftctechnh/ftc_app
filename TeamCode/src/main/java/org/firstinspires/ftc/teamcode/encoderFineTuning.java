@@ -11,9 +11,9 @@ public class encoderFineTuning extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
+        robot = Bogg.determineRobot(hardwareMap, telemetry);
         waitForStart();
-        double deltaX = 36;
+        double deltaX = 0;
         double deltaY = 0;
         double deltaS = 0;
 
@@ -49,11 +49,11 @@ public class encoderFineTuning extends LinearOpMode
 
             if(gamepad1.dpad_right)
             {
-                robot.driveEngine.mP += .002 * Bogg.averageClockTime;
+                robot.driveEngine.mP += .005 * Bogg.averageClockTime;
             }
             else if(gamepad1.dpad_left)
             {
-                robot.driveEngine.mP -= .002 * Bogg.averageClockTime;
+                robot.driveEngine.mP -= .005 * Bogg.averageClockTime;
             }
 
             if(gamepad1.b)
@@ -68,6 +68,11 @@ public class encoderFineTuning extends LinearOpMode
             if(gamepad1.start || gamepad1.left_stick_button || gamepad1.right_stick_button)
             {
                 deltaX = deltaY = deltaS = 0;
+            }
+
+            if(gamepad1.back){
+                robot.driveEngine.stop();
+                break;
             }
 
             telemetry.update();

@@ -57,9 +57,9 @@ public class FakeDriveEngine extends DriveEngine{
         }
 
         //Estimated 4 feet per second at full power
-        double dX = (4 * 12 * (Math.random() + 4) / 4.5) * x * Bogg.averageClockTime;
-        double dY = (4 * 12 * (Math.random() + 4) / 4.5) * y * Bogg.averageClockTime;
-        double dS = (4 * 12 * (Math.random() + 4) / 4.5) * spin * Bogg.averageClockTime;
+        double dX = (6 * 12 ) * x * Bogg.averageClockTime;
+        double dY = (6 * 12 ) * y * Bogg.averageClockTime;
+        double dS = (6 * 12 ) * spin * Bogg.averageClockTime;
         xDistance += dX;
         yDistance += dY;
         sDistance += dS;
