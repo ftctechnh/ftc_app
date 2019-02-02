@@ -117,6 +117,7 @@ public class teleop extends LinearOpMode {
                 Lift.Retract();
             } else {
                 Lift.Stop();
+                Led.orange();
             }
 
             //lift lock controls

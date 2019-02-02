@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -13,8 +14,8 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 
-@Autonomous(name = "Auto5Tof", group = "Auto")
-public class Auto5Tof extends LinearOpMode {
+@Autonomous(name = "Auto5ToFree", group = "Auto")
+public class Auto5ToFree extends LinearOpMode {
 
     /* Sub assemblies */
     UserControl User = new UserControl();
@@ -199,7 +200,7 @@ public class Auto5Tof extends LinearOpMode {
                     }
                     telemetry.update();
 
-                    Drive.moveForward(0.5, 0.14);
+                    Drive.moveForward(0.5, 0.2);
                     sleep(100);
                     if (orientation == Start.Crater) {
                         newState(State.Sample_Crater);
@@ -221,7 +222,7 @@ public class Auto5Tof extends LinearOpMode {
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 9);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.forwardUntilDistance4Time(0.3, 17, 6);
+                        Drive.forwardUntilDistance(0.3, 17);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 45);
                         Drive.TimeDelay(0.1);
@@ -264,14 +265,13 @@ public class Auto5Tof extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -80);
                     Drive.TimeDelay(0.1);
-                    Drive.moveForward(0.3, 5);
-                    //Drive.forwardUntilDistance4Time(0.3, 30.5, 5);
+                    Drive.forwardUntilDistance(0.3, 23);
                     Drive.TimeDelay(0.1);
                     Drive.turn2Angle(TURN_SPEED, -135);
                     Drive.TimeDelay(0.1);
-                    Drive.forwardUntilDistance(0.3, 17); // changed for now
+                    Drive.forwardUntilDistance(0.3, 12.5);
+                    Drive.moveForward(0.5, 2.5);
                     if (doubleSample) {
-                        Claimer.drop();
                         newState(State.Double_Sample);
                     } else {
                         newState(State.Claim);
@@ -283,25 +283,22 @@ public class Auto5Tof extends LinearOpMode {
                     telemetry.update();
                     if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turn2Angle(TURN_SPEED, -60);
-                        Claimer.reset();
                         Drive.TimeDelay(0.1);
                         Drive.moveBackward(0.8, 0.45);
                         Drive.TimeDelay(0.1);
-                        Drive.forwardUntilDistance4Time(0.3, 13.5, 5);
+                        Drive.forwardUntilDistance(0.3, 12.5);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.turn2Angle(TURN_SPEED, -90);
-                        Claimer.reset();
                         Drive.TimeDelay(0.1);
                         Drive.moveBackward(0.8, 0.4);
                         Drive.TimeDelay(0.1);
-                        Drive.forwardUntilDistance4Time(0.3, 21,6);
+                        Drive.forwardUntilDistance(0.3, 19);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, -120);
-                        Claimer.reset();
                         Drive.TimeDelay(0.1);
                         Drive.moveBackward(0.8, 0.45);
                         Drive.TimeDelay(0.1);
-                        Drive.forwardUntilDistance4Time(0.3, 13.5, 5);
+                        Drive.forwardUntilDistance(0.3, 12.5);
                     }
                     newState(State.Claim);
                     break;
@@ -332,7 +329,20 @@ public class Auto5Tof extends LinearOpMode {
                     if (!allianceCrater) {
                         Drive.turn2Angle(TURN_SPEED, -45);
                     }
-                    Drive.moveBackward(0.65, 2.7); //dropped for w/ 11454
+
+                    if (Vucam.sample == Vucam.sample.LEFT && orientation == Start.Depot) {
+                        Drive.moveBackward(0.5, 1.7);
+                        Drive.TimeDelay(0.1);
+                        Drive.turn2Angle(TURN_SPEED, -18);
+                        Drive.TimeDelay(0.1);
+                        Drive.moveBackward(0.4, 0.4);
+                        Drive.TimeDelay(0.1);
+                        Drive.turn2Angle(TURN_SPEED, -48);
+                        Drive.TimeDelay(0.1);
+                        Drive.moveBackward(0.5, 0.5);
+                    } else {
+                        Drive.moveBackward(0.5, 3.2);
+                    }
                     newState(State.Stop);
                     break;
 

@@ -276,6 +276,66 @@ public class DriveControl {
     }
 
 
+    public void forwardUntilDistance4Time(double speed, double distance, double time) {
+        double distance2drive;
+
+        double start = 0;
+        double now = 0;
+        double interval = 0;
+        start = runtime.seconds();
+
+        do {
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addLine("Distance3: " + Tof.getDistance3());
+                opmode.telemetry.update();
+            }
+            //
+
+            distance2drive = (Tof.getDistance3() - distance);
+
+            moveForward(speed);
+
+        } while (distance2drive > 20 && now < time && !opmode.isStopRequested() && opmode.opModeIsActive() );
+
+        stop();
+
+        TimeDelay(0.1);
+
+        if (now < time) {
+            now = 0;
+        }
+
+        do {
+            //
+            now = runtime.seconds() - start;
+
+            if (now >= interval){
+                interval += 0.1;
+                opmode.telemetry.addLine("Distance3: " + Tof.getDistance3());
+                opmode.telemetry.update();
+            }
+            //
+
+            distance2drive = (Tof.getDistance3() - distance);
+
+            if (distance2drive > 1.0 && now < time) {
+                moveForward(speed*distance2drive/20 + speed/6);
+            } else if (distance2drive < -1.0 && now < time) {
+                moveBackward(-speed*distance2drive/20 + speed/6);
+            } else {
+                moveBackward(distance2drive/100);
+            }
+        } while ( now < 1.5 && !opmode.isStopRequested() && opmode.opModeIsActive() );
+
+        stop();
+
+    }
+
+
 
     public void TimeDelay(double time) {
         double start = 0;
