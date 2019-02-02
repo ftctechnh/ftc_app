@@ -80,7 +80,7 @@ public class ChassisConfig {
                 4.0f,
                 true,
                 COUNTS_PER_MOTOR_REV_HDHEX_20 * QUICK_SILVER_CHAIN_GEAR,
-                0.5f,
+                0.75f,
                 0.5f,
                 false,
                 true,
