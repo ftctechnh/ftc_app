@@ -41,11 +41,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class ShaggyRunDepot extends StandardChassis {
+public abstract class DescendShaggyRunDepot extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    public ShaggyRunDepot(ChassisConfig config) {
+    public DescendShaggyRunDepot(ChassisConfig config) {
         super(config);
     }
 
@@ -104,6 +104,7 @@ public abstract class ShaggyRunDepot extends StandardChassis {
             }
 
             // we will always have a valid pos here.
+            descendFromLander();
             encoderDrive(15);
             if (pos == GoldStatus.Left) {
                 turnLeft(90);
