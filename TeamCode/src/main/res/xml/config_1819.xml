@@ -7,6 +7,7 @@
             <NeveRest20Gearmotor name="motorFR" port="2" />
             <TetrixMotor name="robotLift" port="3"/>
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
+            <ModernRoboticsI2cRangeSensor name="rangeSensor" port="0" bus="1"/>
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2"><!--DQ2MHRLJ -->
             <NeveRest20Gearmotor name="motorBL" port="0" />

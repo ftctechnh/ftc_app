@@ -55,6 +55,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_GOLD_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.LABEL_SILVER_MINERAL;
 import static org.firstinspires.ftc.robotcore.external.tfod.TfodRoverRuckus.TFOD_MODEL_ASSET;
+import static org.firstinspires.ftc.teamcode.superAuto.states.Gold;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -101,6 +102,7 @@ abstract public class superAuto extends LinearOpMode {
 
     BNO055IMU imu;
     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+    ModernRoboticsI2cRangeSensor rangeSensor;
 
     Orientation angles;
     Acceleration gravity;
@@ -121,6 +123,7 @@ abstract public class superAuto extends LinearOpMode {
     final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     final String LABEL_GOLD_MINERAL = "Gold Mineral";
     final String LABEL_SILVER_MINERAL = "Silver Mineral";
+    enum states {Space, Gold, Gold_Again, Silver, Silver_Again};
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -180,6 +183,7 @@ abstract public class superAuto extends LinearOpMode {
             slide = hardwareMap.servo.get("slide"); //
             outake1 = hardwareMap.crservo.get("outake1");
             outake2 = hardwareMap.crservo.get("outake2");
+            rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         }
     }
 
@@ -824,6 +828,64 @@ void tensorFlowTest() {
             }
         }
     }
+    void tensorFlowCase() {
+    states currentState = states.Space;
+        tfod.activate();
+        telemetry.setAutoClear(true);
+        translateForever( 1,0,0.7);
+        int counter = 0;
+        while (true) {
+            if (tfod != null) {
+                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    if (updatedRecognitions.size() >= 1) {
+                        for (Recognition recognition : updatedRecognitions) {
+                            switch (currentState) {
+                                case Space:
+                                    if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
+                                        currentState = states.Gold;
+                                        counter++;
+                                        //Robot Functions
+                                        sR();
+                                        followHeading(0, 0.1, 0, 1);
+                                        followHeading(0, 0.1, 0, -1);
+                                        translateForever(1, 0, 0.7);
+                                    }
+                                    else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
+                                        currentState = states.Silver;
+                                        counter++;
+                                    }
+                                   break;
+                                case Gold:
+                                    if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
+                                        currentState = states.Gold;
+                                    }
+                                    else
+                                        currentState = states.Space;
+                                    break;
+                                case Silver:
+                                    if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
+                                        currentState = states.Silver;
+                                    }
+                                    else
+                                        currentState = states.Space;
+                                    break;
+                                default:
+                                    break;
+                            }
+                            if(counter == 3)
+                                sR();
+                                tfod.deactivate();
+                                return;
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+
 
     void tensorFlowCount() {
         tfod.activate();
@@ -840,41 +902,41 @@ void tensorFlowTest() {
                 // the last time that call was made
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                    telemetry.addData("# Object Detected", updatedRecognitions.size());
+                   // telemetry.addData("# Object Detected", updatedRecognitions.size());
                     if (updatedRecognitions.size() >= 1) {
                         for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) || recognition.getLabel().equals(LABEL_SILVER_MINERAL) ){
-                                if(space)
-                                {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) || recognition.getLabel().equals(LABEL_SILVER_MINERAL) ) {
+                                if (space) {
                                     counter++;
                                     space = false;
                                     telemetry.addData("Counter: ", counter);
                                     telemetry.addData("Space: ", space);
                                 }
-                               if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                                     gold++;
                                     if (gold == 1) {
-                                        telemetry.addData("Gold Mineral/Silver Mineral ", "Visible");
+                                        telemetry.addData("Gold Mineral ", "Visible");
                                         sR();
-                                        followHeading(0,0.1, 0, 1);
-                                        followHeading(0,0.1, 0, -1);
+                                        followHeading(0, 0.1, 0, 1);
+                                        followHeading(0, 0.1, 0, -1);
 
                                         //Pick up mineral
                                         translateForever(1, 0, 0.7);
                                     }
-                               }
-                                if(counter == 3){
+                                }
+                                if (counter == 3) {
                                     sR();
                                     tfod.deactivate();
                                     return;
                                 }
-                            } else {
+                            }
+                             else {
                                 space = true;
                                 telemetry.addData("Gold Mineral/Silver Mineral ", "Not Visible");
                             }
+                            telemetry.update();
                         }
                     }
-                    telemetry.update();
                 }
             }
         }
