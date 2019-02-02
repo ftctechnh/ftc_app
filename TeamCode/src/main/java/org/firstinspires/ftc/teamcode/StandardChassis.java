@@ -52,6 +52,7 @@ public abstract class StandardChassis extends OpMode {
     private BNO055IMU bosch;
 
     // Hack stuff.
+    protected boolean useGyroScope = true;
     protected boolean useMotors = true;
     protected boolean useTeamMarker = true;
     protected boolean hackTimeouts = true;
@@ -95,24 +96,32 @@ public abstract class StandardChassis extends OpMode {
 
     protected GoldStatus loopSampling() {
       if (useSampling) {
-          if (detector.isFound()) {
+          int numFailures = 0;
+          for (int i = 0 ; i < 10 ; i++) {
+              if (detector.isFound()) {
 
-              int gY = (int) detector.getScreenPosition().y;
-              if (gY < 150) {
-                  goldStatus = GoldStatus.Left;
-              } else if (gY > 300) {
-                  goldStatus = GoldStatus.Right;
-              } else {
-                  goldStatus = GoldStatus.Center;
+                  int gY = (int) detector.getScreenPosition().x;
+                  if (gY < 200) {
+                      goldStatus = GoldStatus.Left;
+                  } else if (gY > 450) {
+                      goldStatus = GoldStatus.Right;
+                  } else {
+                      goldStatus = GoldStatus.Center;
+                  }
+
+                  telemetry.addData("sampler", "FOUND, pos=" +
+                          String.valueOf(detector.getScreenPosition()) + "gStatus =" + String.valueOf(goldStatus));
+                  telemetry.update();
+                  return goldStatus;
               }
 
-              telemetry.addData("sampler", "FOUND, pos=" +
-                      String.valueOf(detector.getScreenPosition()) + "gStatus =" + String.valueOf(goldStatus));
 
-          } else {
               // We could not find the gold jewel at all!
-              telemetry.addData("sampler", "NOT FOUND");
-              goldStatus = GoldStatus.Unknown;
+              numFailures++;
+              telemetry.addData("sampler", "NOT FOUND, failures=" + numFailures);
+              telemetry.update();
+              sleep(500);
+              //goldStatus = GoldStatus.Unknown;
           }
       }
 
@@ -195,18 +204,22 @@ public abstract class StandardChassis extends OpMode {
     }
 
     protected boolean initGyroscope() {
-        bosch = hardwareMap.get(BNO055IMU.class, "imu0");
-        telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
+        if (useGyroScope) {
+            bosch = hardwareMap.get(BNO055IMU.class, "imu0");
+            telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-        parameters.loggingTag = "bosch";
-        //parameters.calibrationDataFile = "MonsieurMallahCalibration.json"; // see the calibration sample opmode
-        boolean boschInit = bosch.initialize(parameters);
-        return boschInit;
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.loggingEnabled = false;
+            parameters.loggingTag = "bosch";
+            //parameters.calibrationDataFile = "MonsieurMallahCalibration.json"; // see the calibration sample opmode
+            boolean boschInit = bosch.initialize(parameters);
+            return boschInit;
+        } else {
+            return true;
+        }
     }
 
 
@@ -358,9 +371,13 @@ public abstract class StandardChassis extends OpMode {
 
     // Always returns a number from 0-359.9999
     protected float getGyroscopeAngle() {
-        Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-        float gyroAngle = exangles.thirdAngle + 50;
-        return CrazyAngle.normalizeAngle(CrazyAngle.reverseAngle(gyroAngle));
+        if (useGyroScope && bosch != null){
+            Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+            float gyroAngle = exangles.thirdAngle + 50;
+            return CrazyAngle.normalizeAngle(CrazyAngle.reverseAngle(gyroAngle));
+        } else {
+            return 0.0f;
+        }
     }
 
 
