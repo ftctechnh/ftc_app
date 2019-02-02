@@ -56,7 +56,6 @@ public class holoDrive extends OpMode {
         double extendPower = gamepad2.right_stick_y/4; //power for intake extension
         double movePower = gamepad2.left_stick_x/2; //power to move arm
         double dustbinPower = -gamepad2.right_stick_x/6; //power for intake dustbin
-
         //telemetry.addData("ftcTeam", "razzle %d", 13883);
         //telemetry.update();
 
@@ -140,24 +139,15 @@ public class holoDrive extends OpMode {
         moveIntake.setPower(movePower);
         //controls intake moving up and down
 
-
         if (gamepad2.y == true) {
-            telemetry.addData("gamepad2 y true", "%f", 0.0 );
-            dustBinServo.setPosition(0);
+            telemetry.addData("gamepad2 y true", "%f", 0.1 );
+            dustBinServo.setPosition(0.1);
         }
-        if (gamepad2.a == true) {
+        else if (gamepad2.a == true) {
             telemetry.addData("gamepad2 a true", "%f", 0.35 );
-            dustBinServo.setPosition(0.35);
+            dustBinServo.setPosition(0.9);
         }
-        if (gamepad2.x == true) {
-            telemetry.addData("gamepad2 x true", "%f", 0.0);
-            liftLockServo.setPosition(0);
-        }
-        if (gamepad2.b == true) {
-            telemetry.addData("gamepad2 b true", "%f", 1.0);
-            liftLockServo.setPosition(1.0);
-            liftLockServo.setPosition(0.1);
-        }
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //this lets us see the power the motors are being set to
