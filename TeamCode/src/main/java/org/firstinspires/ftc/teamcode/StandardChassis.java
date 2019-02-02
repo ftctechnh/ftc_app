@@ -42,6 +42,11 @@ public abstract class StandardChassis extends OpMode {
     int wasteAllocationLoadLifterEarthBegin;
     private DcMotor wasteAllocationLoadLifterEarth;
 
+    //Screw
+    int extraterrestrialVegetationEvaluatorBegin;
+    private DcMotor extraterrestrialVegetationEvaluator;
+
+
     //gyroscope built into hub
     private BNO055IMU bosch;
 
@@ -52,6 +57,7 @@ public abstract class StandardChassis extends OpMode {
     protected boolean hackTimeouts = true;
     protected boolean useArm = true;
     protected boolean useSampling = true;
+    protected boolean useEve = false;
 
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
@@ -134,10 +140,17 @@ public abstract class StandardChassis extends OpMode {
 
         // init the lifter arm,
         if (config.getHasWalle()) {
-            wasteAllocationLoadLifterEarth = hardwareMap.get(DcMotor.class, "motor6");
-            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            wasteAllocationLoadLifterEarthBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+            if (useEve == true) {
+                extraterrestrialVegetationEvaluator = hardwareMap.get(DcMotor.class, "motor6");
+                extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                extraterrestrialVegetationEvaluator.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                extraterrestrialVegetationEvaluatorBegin = extraterrestrialVegetationEvaluator.getCurrentPosition();
+            } else {
+                wasteAllocationLoadLifterEarth = hardwareMap.get(DcMotor.class, "motor6");
+                wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                wasteAllocationLoadLifterEarthBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+            }
         }
     }
 
@@ -627,6 +640,36 @@ public abstract class StandardChassis extends OpMode {
     }
 
     protected void lyftDownWalle(int howManySpins) {
+        double speed = 0.5f;
+
+        // Get the current position.
+        int lyftBegin = wasteAllocationLoadLifterEarth.getCurrentPosition();
+        telemetry.addData("lyftDownWalle", "Starting %7d", lyftBegin);
+
+        // Determine new target position, and pass to motor controller
+        int lyftTarget = lyftBegin + howManySpins;
+        wasteAllocationLoadLifterEarth.setTargetPosition(lyftTarget);
+        telemetry.addData("lyftDownWalle", "Target %7d", lyftTarget);
+
+        // Turn On RUN_TO_POSITION
+        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        wasteAllocationLoadLifterEarth.setPower(speed);
+
+        ElapsedTime motorOnTime = new ElapsedTime();
+        while ((motorOnTime.seconds() < 30) && wasteAllocationLoadLifterEarth.isBusy()) {
+            telemetry.addData("lyftDownWalle", "Running at %7d to %7d", wasteAllocationLoadLifterEarth.getCurrentPosition(), lyftTarget);
+            telemetry.update();
+            sleep(10);
+        }
+
+        // Turn off RUN_TO_POSITION
+        wasteAllocationLoadLifterEarth.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wasteAllocationLoadLifterEarth.setPower(0);
+
+        //sleep(5000);
+    }
+
+    protected void lyftDownEve(int howManySpins) {
         double speed = 0.5f;
 
         // Get the current position.
