@@ -332,7 +332,7 @@ public class Auto5Tof extends LinearOpMode {
                     if (!allianceCrater) {
                         Drive.turn2Angle(TURN_SPEED, -45);
                     }
-                    Drive.moveBackward(0.65, 2.7); //dropped for w/ 11454
+                    Drive.moveBackward(0.65, 2.3); //dropped for w/ 11454
                     newState(State.Stop);
                     break;
 
