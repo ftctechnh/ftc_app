@@ -56,7 +56,6 @@ public abstract class BullRunCrater extends StandardChassis {
     public void init() {
         initMotors();
         initTimeouts();
-        initSampling();
     }
 
 
@@ -81,9 +80,10 @@ public abstract class BullRunCrater extends StandardChassis {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop () {
-        stopSampling();
+    public void stop (){
+
     }
+
 
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -99,8 +99,6 @@ public abstract class BullRunCrater extends StandardChassis {
 
             madeTheRun = true;
         }
-
-        loopSampling();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());
