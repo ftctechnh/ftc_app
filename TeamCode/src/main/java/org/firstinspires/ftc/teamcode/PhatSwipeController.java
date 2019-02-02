@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Temperature;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
-@TeleOp(name="PhatSwipe TeleOp", group="BBB")
+@TeleOp(name="PhatSwipe TeleOp", group="AAAAAAAAAA")
 public class PhatSwipeController extends OpMode {
 
 
