@@ -843,17 +843,21 @@ void tensorFlowTest() {
                             switch (currentState) {
                                 case Space:
                                     if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
-                                        currentState = states.Gold;
                                         counter++;
+                                        telemetry.addData("Counter ", counter);
+                                        telemetry.update();
                                         //Robot Functions
                                         sR();
                                         followHeading(0, 0.1, 0, 1);
                                         followHeading(0, 0.1, 0, -1);
                                         translateForever(1, 0, 0.7);
+                                        currentState = states.Gold;
                                     }
                                     else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
-                                        currentState = states.Silver;
                                         counter++;
+                                        telemetry.addData("Counter ", counter);
+                                        telemetry.update();
+                                        currentState = states.Silver;
                                     }
                                    break;
                                 case Gold:
@@ -875,6 +879,8 @@ void tensorFlowTest() {
                             }
                             if(counter == 3)
                                 sR();
+                                telemetry.addData("WE Stopped Robot Cause Counter =  ", counter);
+                                telemetry.update();
                                 tfod.deactivate();
                                 return;
                         }
