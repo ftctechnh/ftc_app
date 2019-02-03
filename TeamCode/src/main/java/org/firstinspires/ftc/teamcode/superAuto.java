@@ -857,6 +857,7 @@ abstract public class superAuto extends LinearOpMode {
                         }
                         break;
                     case Gold:
+                        updatedRecognitions = tfod.getUpdatedRecognitions();
                         if (updatedRecognitions == null) {
                             currentState = states.Space;
                             telemetry.addData("State: ", "Space");
@@ -864,6 +865,7 @@ abstract public class superAuto extends LinearOpMode {
                         }
                         break;
                     case Silver:
+                        updatedRecognitions = tfod.getUpdatedRecognitions();
                         if (updatedRecognitions == null) {
                             currentState = states.Space;
                             telemetry.addData("State: ", "Space");
