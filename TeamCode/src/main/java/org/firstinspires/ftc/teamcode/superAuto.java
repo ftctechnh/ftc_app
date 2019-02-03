@@ -123,7 +123,10 @@ abstract public class superAuto extends LinearOpMode {
     final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     final String LABEL_GOLD_MINERAL = "Gold Mineral";
     final String LABEL_SILVER_MINERAL = "Silver Mineral";
-    enum states {Space, Gold, Gold_Again, Silver, Silver_Again};
+
+    enum states {Space, Gold, Gold_Again, Silver, Silver_Again}
+
+    ;
 
 
     private ElapsedTime runtime = new ElapsedTime();
@@ -173,7 +176,7 @@ abstract public class superAuto extends LinearOpMode {
         robotLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         if (fullRobot) {
-            mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
+            mineralLiftL = hardwareMap.dcMotor.get("mineralLiftL");
             mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
             mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
             mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
@@ -258,6 +261,7 @@ abstract public class superAuto extends LinearOpMode {
                     }
                 });
     }
+
     void getQuadrant() {
 
         updateLocation();
@@ -315,9 +319,9 @@ abstract public class superAuto extends LinearOpMode {
         allTrackables = new ArrayList<VuforiaTrackable>();
         allTrackables.addAll(targetsRoverRuckus);
 
-        final float mmPerInch       = 25.4f;
-        final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
-        final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
+        final float mmPerInch = 25.4f;
+        final float mmFTCFieldWidth = (12 * 6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
+        final float mmTargetHeight = (6) * mmPerInch;          // the height of the center of the target image above the floor
         final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
 
         OpenGLMatrix blueRoverLocationOnField = OpenGLMatrix
@@ -332,7 +336,7 @@ abstract public class superAuto extends LinearOpMode {
 
         OpenGLMatrix frontCratersLocationOnField = OpenGLMatrix
                 .translation(-mmFTCFieldWidth, 0, mmTargetHeight)
-                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0 , 90));
+                .multiplied(Orientation.getRotationMatrix(EXTRINSIC, XYZ, DEGREES, 90, 0, 90));
         frontCraters.setLocation(frontCratersLocationOnField);
 
         OpenGLMatrix backSpaceLocationOnField = OpenGLMatrix
@@ -341,9 +345,9 @@ abstract public class superAuto extends LinearOpMode {
         backSpace.setLocation(backSpaceLocationOnField);
 
 
-        final int CAMERA_FORWARD_DISPLACEMENT  = 171;   // eg: Camera is 110 mm in front of robot center
+        final int CAMERA_FORWARD_DISPLACEMENT = 171;   // eg: Camera is 110 mm in front of robot center
         final int CAMERA_VERTICAL_DISPLACEMENT = 324;   // eg: Camera is 200 mm above ground
-        final int CAMERA_LEFT_DISPLACEMENT     = 0;     // eg: Camera is ON the robot's center line
+        final int CAMERA_LEFT_DISPLACEMENT = 0;     // eg: Camera is ON the robot's center line
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
                 .translation(CAMERA_FORWARD_DISPLACEMENT, CAMERA_LEFT_DISPLACEMENT, CAMERA_VERTICAL_DISPLACEMENT)
@@ -351,12 +355,12 @@ abstract public class superAuto extends LinearOpMode {
                         -90, 90, -75));
 
         /**  Let all the trackable listeners know where the phone is.  */
-        for (VuforiaTrackable trackable : allTrackables)
-        {
-            ((VuforiaTrackableDefaultListener)trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
+        for (VuforiaTrackable trackable : allTrackables) {
+            ((VuforiaTrackableDefaultListener) trackable.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
         }
         targetsRoverRuckus.activate();
     }
+
     void initTfod() {
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
@@ -441,11 +445,11 @@ abstract public class superAuto extends LinearOpMode {
         }
     }
 
-    void goToPoint(double DestinationX, double DestinationY){
+    void goToPoint(double DestinationX, double DestinationY) {
         telemetry.addData("goToPoint destX,Y:",
-                    "%f %f",DestinationX, DestinationY);
+                "%f %f", DestinationX, DestinationY);
 
-        double CurrentX, CurrentY,X,Y;//X and Y JOYstick coordinates
+        double CurrentX, CurrentY, X, Y;//X and Y JOYstick coordinates
 
         boolean go = true;
 
@@ -456,12 +460,12 @@ abstract public class superAuto extends LinearOpMode {
             CurrentY = location.getY();
             X = (DestinationX - CurrentX);
             Y = (DestinationY - CurrentY);
-            telemetry.addData("Diff:  ","%f %f", X, Y);
+            telemetry.addData("Diff:  ", "%f %f", X, Y);
             double divBy = Math.max(Math.abs(X), Math.abs(Y));
-            double chgDistance = Math.sqrt((X*X) + (Y*Y));
-            X= X/divBy;
-            Y= Y/divBy;
-            telemetry.addData("  Power: ","%f %f", X, Y);
+            double chgDistance = Math.sqrt((X * X) + (Y * Y));
+            X = X / divBy;
+            Y = Y / divBy;
+            telemetry.addData("  Power: ", "%f %f", X, Y);
 
             if (Math.abs(chgDistance) >= 300) {
                 //double posx = Vuforia_JoystickX(X,Y, Theta);
@@ -474,16 +478,15 @@ abstract public class superAuto extends LinearOpMode {
                 Wait(.25);
 
                 //Power the motors
-                if ( ( posy != 0) || ( posx != 0 ) ) {
-                    double FRBLPower = ((-posy) - posx)*0.3;
-                    double FLBRPower = ((-posy) + posx)*0.3;
-                    motorFR.setPower( FRBLPower );
-                    motorFL.setPower( FLBRPower );
-                    motorBR.setPower( FLBRPower );
-                    motorBL.setPower( FRBLPower );
+                if ((posy != 0) || (posx != 0)) {
+                    double FRBLPower = ((-posy) - posx) * 0.3;
+                    double FLBRPower = ((-posy) + posx) * 0.3;
+                    motorFR.setPower(FRBLPower);
+                    motorFL.setPower(FLBRPower);
+                    motorBR.setPower(FLBRPower);
+                    motorBL.setPower(FRBLPower);
                 }
-            } else
-            {
+            } else {
                 motorFR.setPower(0);
                 motorFL.setPower(0);
                 motorBR.setPower(0);
@@ -495,15 +498,14 @@ abstract public class superAuto extends LinearOpMode {
     }
 
 
-    public double Vuforia_JoystickX(double X, double Y, double Theta)
-    {
-        double JoystickX = (X*Math.cos(Theta))- (Y*Math.sin(Theta));
+    public double Vuforia_JoystickX(double X, double Y, double Theta) {
+        double JoystickX = (X * Math.cos(Theta)) - (Y * Math.sin(Theta));
         telemetry.addData("JoystickX", "%f", JoystickX);
         return JoystickX;
     }
 
     public double Vuforia_JoystickY(double X, double Y, double Theta) {
-        double JoystickY = (X*Math.sin(Theta))+(Y*Math.cos(Theta));
+        double JoystickY = (X * Math.sin(Theta)) + (Y * Math.cos(Theta));
         telemetry.addData("JoystickY", "%f", JoystickY);
         return JoystickY;
 
@@ -514,16 +516,16 @@ abstract public class superAuto extends LinearOpMode {
         //double currentHeading = angles.firstAngle;
         runtime.reset();
         while (((runtime.seconds() < time))) {
-            adjustHeading(targetHeading, basePosx, basePosy );
+            adjustHeading(targetHeading, basePosx, basePosy);
         }
         sR();
     }
 
     void adjustHeading(int targetHeading, float basePosx, float basePosy) {
-        angles =(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
+        angles = (imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
         //telemetry.addData("First Angle", angles.firstAngle);
         if (angles != null) {
-            double currentHeading =  gyroFlipped * angles.firstAngle;//y = 2nd angle
+            double currentHeading = gyroFlipped * angles.firstAngle;//y = 2nd angle
             double addPower = (targetHeading - currentHeading) * .025;
             //telemetry.addData("add power", addPower);
 
@@ -536,33 +538,35 @@ abstract public class superAuto extends LinearOpMode {
         }
     }
 
-    void translate(double posx, double posy, double seconds, double power){
-        double FRBLPower = ((-posy) - posx)*power;
-        double FLBRPower = ((-posy) + posx)*power;
-        motorFR.setPower( FRBLPower );
-        motorFL.setPower( FLBRPower );
-        motorBR.setPower( FLBRPower );
-        motorBL.setPower( FRBLPower );
+    void translate(double posx, double posy, double seconds, double power) {
+        double FRBLPower = ((-posy) - posx) * power;
+        double FLBRPower = ((-posy) + posx) * power;
+        motorFR.setPower(FRBLPower);
+        motorFL.setPower(FLBRPower);
+        motorBR.setPower(FLBRPower);
+        motorBL.setPower(FRBLPower);
         Wait(seconds);
         motorFR.setPower(0);
         motorFL.setPower(0);
         motorBR.setPower(0);
         motorBL.setPower(0);
     }
-    void translateForever(double posx, double posy,double power){
-        double FRBLPower = ((-posy) - posx)*power;
-        double FLBRPower = ((-posy) + posx)*power;
-        motorFR.setPower( FRBLPower );
-        motorFL.setPower( FLBRPower );
-        motorBR.setPower( FLBRPower );
-        motorBL.setPower( FRBLPower );
+
+    void translateForever(double posx, double posy, double power) {
+        double FRBLPower = ((-posy) - posx) * power;
+        double FLBRPower = ((-posy) + posx) * power;
+        motorFR.setPower(FRBLPower);
+        motorFL.setPower(FLBRPower);
+        motorBR.setPower(FLBRPower);
+        motorBL.setPower(FRBLPower);
     }
-    void fancyGyroPivot (double target) {
+
+    void fancyGyroPivot(double target) {
 
         //First set up variables
 
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double raw =  (gyroFlipped) * angles.firstAngle;
+        double raw = (gyroFlipped) * angles.firstAngle;
         float fudgeFactor = .25f;
         double wheelPower = .4;
         double convert = raw;
@@ -570,8 +574,7 @@ abstract public class superAuto extends LinearOpMode {
         double alt = (360 - Math.abs(dflt));
         boolean right;
 
-        while ((convert < (target - fudgeFactor)) || (convert > (target + fudgeFactor)))
-        {
+        while ((convert < (target - fudgeFactor)) || (convert > (target + fudgeFactor))) {
             telemetry.clearAll();
             telemetry.addData("Raw: ", raw);
             telemetry.addData("Convert: ", convert);
@@ -580,25 +583,19 @@ abstract public class superAuto extends LinearOpMode {
             telemetry.update();
 
             // determine if we are moving right or left
-            if (alt < dflt || dflt < 0)
-            {
+            if (alt < dflt || dflt < 0) {
                 right = false;
-            }
-            else
-            {
+            } else {
                 right = true;
             }
 
             //set power to motor
-            if (right = false)
-            {
+            if (right = false) {
                 motorFL.setPower(wheelPower);
                 motorBL.setPower(wheelPower);
                 motorFR.setPower(-wheelPower);
                 motorBR.setPower(-wheelPower);
-            }
-            else
-            {
+            } else {
                 motorFL.setPower(-wheelPower);
                 motorBL.setPower(-wheelPower);
                 motorFR.setPower(wheelPower);
@@ -608,7 +605,7 @@ abstract public class superAuto extends LinearOpMode {
             //read the heading and find the shortest path
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             if (angles != null) {
-                raw = (gyroFlipped)* angles.firstAngle;
+                raw = (gyroFlipped) * angles.firstAngle;
                 dflt = (target - raw);
                 alt = (360 - Math.abs(dflt));
 
@@ -624,10 +621,9 @@ abstract public class superAuto extends LinearOpMode {
         sR();
     }
 
-    public double getHeading()
-    {
+    public double getHeading() {
         angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double currentHeading =   (gyroFlipped)* angles.firstAngle;
+        double currentHeading = (gyroFlipped) * angles.firstAngle;
         telemetry.addData("Heading", currentHeading);
         telemetry.update();
         return currentHeading;
@@ -698,19 +694,15 @@ abstract public class superAuto extends LinearOpMode {
         }
         sR();
     }
-    public double compassConverter(double raw)
-    {
-           double compass;
 
-            if (raw < 0)
-            {
-                compass = 360 + raw;
-            }
+    public double compassConverter(double raw) {
+        double compass;
 
-            else
-            {
-                compass = raw;
-            }
+        if (raw < 0) {
+            compass = 360 + raw;
+        } else {
+            compass = raw;
+        }
         return compass;
     }
     //Write convert back from compass
@@ -719,7 +711,7 @@ abstract public class superAuto extends LinearOpMode {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
     }
 
-    String formatDegrees(double degrees){
+    String formatDegrees(double degrees) {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
@@ -739,7 +731,6 @@ abstract public class superAuto extends LinearOpMode {
         motorBR.setPower(0);
     }
 
-/* Commented out until we bring the rangeSensor back
     void distCorrector(double trgDistance) {
 
         double curDistance = rangeSensor.getDistance(DistanceUnit.CM);
@@ -776,28 +767,27 @@ abstract public class superAuto extends LinearOpMode {
                 telemetry.update();
 
                 // Power the motors
-                  motorFL.setPower(adjust);
-                  motorFR.setPower(adjust);
-                  motorBL.setPower(adjust);
-                  motorBR.setPower(adjust);
-            } else
-            {
+                motorFL.setPower(adjust);
+                motorFR.setPower(adjust);
+                motorBL.setPower(adjust);
+                motorBR.setPower(adjust);
+            } else {
                 go = false;
             }
             i++;
-        //    if (i > 30) {
-        //        go = false;
-        //    }
+            //    if (i > 30) {
+            //        go = false;
+            //    }
         }
         sR();
     }
-*/
 
-void tensorFlowTest() {
-    tfod.activate();
-    runtime.reset();
-    telemetry.setAutoClear(true);
-    translateForever( 1,0,0.7);
+
+    void tensorFlowTest() {
+        tfod.activate();
+        runtime.reset();
+        telemetry.setAutoClear(true);
+        translateForever(1, 0, 0.7);
         while (true) {
             if (tfod != null) {
                 // getUpdatedRecognitions() will return null if no new information is available since
@@ -811,7 +801,7 @@ void tensorFlowTest() {
                                 telemetry.addData("Gold Mineral Position", "Visible");
                                 sR();
                                 double timePast = runtime.seconds();
-                                if(3.8-timePast > 0.1){
+                                if (3.8 - timePast > 0.1) {
                                     followHeading(0, 3.8 - timePast, 1, 0);
                                 }
                                 telemetry.addData("Seconds Past: ", timePast);
@@ -828,76 +818,80 @@ void tensorFlowTest() {
             }
         }
     }
+
     void tensorFlowCase() {
-    states currentState = states.Space;
+        states currentState = states.Space;
         tfod.activate();
-        telemetry.setAutoClear(true);
+        //telemetry.setAutoClear(true);
         int counter = 0;
+        List<Recognition> updatedRecognitions;
+
         while (true) {
-            adjustHeading(0,0.6f,0);
+            adjustHeading(0, 0.5f, 0);
             if (tfod != null) {
-                List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-                if (updatedRecognitions != null) {
-                    if (updatedRecognitions.size() >= 1) {
-                        for (Recognition recognition : updatedRecognitions) {
-                            switch (currentState) {
-                                case Space:
-                                    if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
-                                        counter++;
-                                        telemetry.addData("Counter ", counter);
-                                        telemetry.update();
-                                        //Robot Functions
-                                        sR();
-                                        followHeading(0, 0.1, 0, 1);
-                                        followHeading(0, 0.1, 0, -1);
-                                        currentState = states.Gold;
-                                    }
-                                    else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
-                                        counter++;
-                                        telemetry.addData("Counter ", counter);
-                                        telemetry.update();
-                                        currentState = states.Silver;
-                                    }
-                                   break;
-                                case Gold:
-                                    if(recognition.getLabel().equals(LABEL_GOLD_MINERAL)){
-                                        currentState = states.Gold;
-                                    }
-                                    else
-                                        currentState = states.Space;
-                                    break;
-                                case Silver:
-                                    if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
-                                        currentState = states.Silver;
-                                    }
-                                    else
-                                        currentState = states.Space;
-                                    break;
-                                default:
-                                    break;
-                            }
-                            if(counter == 3) {
-                                sR();
-                                telemetry.addData("WE Stopped Robot Cause Counter =  ", counter);
-                                telemetry.update();
-                                tfod.deactivate();
-                                return;
+                updatedRecognitions = tfod.getUpdatedRecognitions();
+
+                switch (currentState) {
+                    case Space:
+                        if (updatedRecognitions != null) {
+                            for (Recognition recognition : updatedRecognitions) {
+                                if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
+                                    counter++;
+                                    currentState = states.Gold;
+                                    telemetry.addData("Counter ", counter);
+                                    telemetry.addData("State: ", "Gold");
+                                    telemetry.update();
+
+                                    //Robot Functions
+                                    sR();
+                                    followHeading(0, 0.1, 0, 1);
+                                    followHeading(0, 0.1, 0, -1);
+                                } else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
+                                    counter++;
+                                    currentState = states.Silver;
+                                    telemetry.addData("Counter ", counter);
+                                    telemetry.addData("State: ", "Silver");
+                                    telemetry.update();
+                                }
                             }
                         }
-                    }
+                        break;
+                    case Gold:
+                        if (updatedRecognitions == null) {
+                            currentState = states.Space;
+                            telemetry.addData("State: ", "Space");
+                            telemetry.update();
+                        }
+                        break;
+                    case Silver:
+                        if (updatedRecognitions == null) {
+                            currentState = states.Space;
+                            telemetry.addData("State: ", "Space");
+                            telemetry.update();
+                        }
+                        break;
+                    default:
+                        telemetry.addData("STATE INCORRECT", " AHHH ");
+                        telemetry.update();
+                        break;
+                }
+                if (counter == 3) {
+                    sR();
+                    telemetry.addData("WE Stopped Robot Cause Counter =  ", counter);
+                    telemetry.update();
+                    tfod.deactivate();
+                    return;
                 }
             }
         }
-
     }
-
 
 
     void tensorFlowCount() {
         tfod.activate();
         runtime.reset();
         telemetry.setAutoClear(true);
-        translateForever( 1,0,0.7);
+        translateForever(1, 0, 0.7);
         int counter = 0;
         boolean space = true;
         int gold = 0;
@@ -908,10 +902,10 @@ void tensorFlowTest() {
                 // the last time that call was made
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
-                   // telemetry.addData("# Object Detected", updatedRecognitions.size());
+                    // telemetry.addData("# Object Detected", updatedRecognitions.size());
                     if (updatedRecognitions.size() >= 1) {
                         for (Recognition recognition : updatedRecognitions) {
-                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) || recognition.getLabel().equals(LABEL_SILVER_MINERAL) ) {
+                            if (recognition.getLabel().equals(LABEL_GOLD_MINERAL) || recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
                                 if (space) {
                                     counter++;
                                     space = false;
@@ -935,8 +929,7 @@ void tensorFlowTest() {
                                     tfod.deactivate();
                                     return;
                                 }
-                            }
-                             else {
+                            } else {
                                 space = true;
                                 telemetry.addData("Gold Mineral/Silver Mineral ", "Not Visible");
                             }

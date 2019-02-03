@@ -20,6 +20,7 @@ public class auto1819 extends superAuto {
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
+    int quad = 1;
 
 
     public void runOpMode() {
@@ -71,16 +72,16 @@ public class auto1819 extends superAuto {
             }
         }
 */
-            if (startingQuadrant == 1){
+            if (quad == 1){
             pivotToVuforia(45);
             goToPoint(1200,1200);
         }
-        else if (startingQuadrant == 2){
+        else if (quad == 2){
             pivotToVuforia(135);
             goToPoint(-1200,1200);
         }
 
-        else if (startingQuadrant == 3){
+        else if (quad == 3){
             //pivotToVuforia(-135);
             //goToPoint(-1200,-1200);
         }
