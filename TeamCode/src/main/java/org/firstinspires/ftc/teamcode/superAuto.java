@@ -877,12 +877,13 @@ void tensorFlowTest() {
                                 default:
                                     break;
                             }
-                            if(counter == 3)
+                            if(counter == 3) {
                                 sR();
                                 telemetry.addData("WE Stopped Robot Cause Counter =  ", counter);
                                 telemetry.update();
                                 tfod.deactivate();
                                 return;
+                            }
                         }
                     }
                 }

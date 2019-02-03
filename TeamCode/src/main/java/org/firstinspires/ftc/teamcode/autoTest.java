@@ -32,7 +32,7 @@
        }*/
 
 
-        followHeading(0,2.4, -.5f,.4f);
+        followHeading(0,2.25, -.5f,.4f);
         tensorFlowCase();
         /*followHeading(0,1.4, .8f,0);
         fancyGyroPivot(45);
