@@ -843,15 +843,18 @@ abstract public class superAuto extends LinearOpMode {
                                     telemetry.update();
 
                                     //Robot Functions
-                                    sR();
-                                    followHeading(0, 0.1, 0, 1);
-                                    followHeading(0, 0.1, 0, -1);
+                                    //sR();
+                                    //followHeading(0, 0.1, 0, 1);
+                                    //followHeading(0, 0.1, 0, -1);
+                                    //adjustHeading(0, 0.5f, 0);
+                                    Wait(0.8);
                                 } else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)) {
                                     counter++;
                                     currentState = states.Silver;
                                     telemetry.addData("Counter ", counter);
                                     telemetry.addData("State: ", "Silver");
                                     telemetry.update();
+                                    Wait(0.8);
                                 }
                             }
                         }
@@ -865,7 +868,6 @@ abstract public class superAuto extends LinearOpMode {
                         }
                         break;
                     case Silver:
-                        updatedRecognitions = tfod.getUpdatedRecognitions();
                         if (updatedRecognitions == null) {
                             currentState = states.Space;
                             telemetry.addData("State: ", "Space");
