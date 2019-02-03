@@ -514,7 +514,7 @@ abstract public class superAuto extends LinearOpMode {
         //double currentHeading = angles.firstAngle;
         runtime.reset();
         while (((runtime.seconds() < time))) {
-            adjustHeading(targetHeading, basePosx, basePosy);
+            adjustHeading(targetHeading, basePosx, basePosy );
         }
         sR();
     }
@@ -832,9 +832,9 @@ void tensorFlowTest() {
     states currentState = states.Space;
         tfod.activate();
         telemetry.setAutoClear(true);
-        translateForever( 1,0,0.7);
         int counter = 0;
         while (true) {
+            adjustHeading(0,0.6f,0);
             if (tfod != null) {
                 List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
                 if (updatedRecognitions != null) {
@@ -850,7 +850,6 @@ void tensorFlowTest() {
                                         sR();
                                         followHeading(0, 0.1, 0, 1);
                                         followHeading(0, 0.1, 0, -1);
-                                        translateForever(1, 0, 0.7);
                                         currentState = states.Gold;
                                     }
                                     else if (recognition.getLabel().equals(LABEL_SILVER_MINERAL)){
