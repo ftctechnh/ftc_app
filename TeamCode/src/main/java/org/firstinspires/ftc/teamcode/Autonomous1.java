@@ -1,6 +1,19 @@
 
 //Autonomous Code
 
+/*
+MAKE SURE U CTRL + S it
+To push it to github do this: (this is for Vasudev)
+1. type in 'git status'
+2. then wait for it to show something in red
+3. then copy whatever was in red
+4. type in 'git add [whatever was in red]'
+5. then type in 'git status' (if it's in green, then u are good!)
+6. then type in 'git commit -m "[type in ur message]"
+7. type in 'git push'
+8. finished
+ */
+
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
