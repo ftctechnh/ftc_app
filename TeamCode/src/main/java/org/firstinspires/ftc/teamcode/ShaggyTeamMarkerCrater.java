@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- *  This is from the position closest to the team depot.
+ * This is from the position closest to the crater.
  */
-public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
+public abstract class ShaggyTeamMarkerCrater extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected ShaggyDescendMarkerDepot(ChassisConfig config) {
+    protected ShaggyTeamMarkerCrater(ChassisConfig config) {
         super(config);
     }
 
@@ -17,10 +17,8 @@ public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
     @Override
     public void init() {
         initMotors();
-        initArm();
         initGyroscope();
         initTimeouts();
-        initSampling();
     }
 
     /**
@@ -44,7 +42,6 @@ public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
      */
     @Override
     public void stop () {
-        stopSampling();
     }
 
     /**
@@ -54,8 +51,8 @@ public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
+            // forward 35 inches, turn 90degrees, forward 40 inches
 
-            descendFromLander();
                 GoldStatus pos = loopSampling();
                 if (pos == GoldStatus.Unknown) {
                     encoderDrive(10);
@@ -66,6 +63,7 @@ public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
                     }
                 }
 
+                // TODO: remove strsfing, use turning.
                 encoderDrive(15);
                 if (pos == GoldStatus.Left) {
                     turnLeft(90);
@@ -74,11 +72,8 @@ public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
                     encoderDrive(10);
                     turnRight(90);
                     encoderDrive(100);
-                    turnLeft(90);
-                    encoderDrive(1);
-                    dropFlag();
-                    sleep(3000);
-                    resetFlag();
+                    encoderDrive(-100);
+
                 } else if (pos == GoldStatus.Right) {
                     turnRight(90);
                     encoderDrive(100);
@@ -86,19 +81,24 @@ public abstract class ShaggyDescendMarkerDepot extends StandardChassis {
                     encoderDrive(10);
                     turnLeft(90);
                     encoderDrive(100);
-                    turnRight(90);
-                    encoderDrive(1);
-                    dropFlag();
-                    sleep(3000);
-                    resetFlag();
+                    encoderDrive(-100);
+
                 } else {
                     encoderDrive(15);
-                    dropFlag();
-                    sleep(3000);
-                    resetFlag();
+                    encoderDrive(-15);
+
                 }
-            turnRight(125);
-            encoderDrive(90, 90);
+                turnLeft(68);
+            encoderDrive(24, 24);
+            turnLeft(62);
+            encoderDrive(64, 64);
+
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+
+            turnRight(165);
+            encoderDrive(103 , 110);
 
 
             madeTheRun = true;

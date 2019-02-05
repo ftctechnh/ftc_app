@@ -69,17 +69,23 @@ public abstract class QuicksilverShaggyDescendDelayMarkerDepot extends StandardC
 
             encoderDrive(15);
             if (pos == GoldStatus.Left) {
-                strafeLeft(100);
+                turnLeft(90);
+                encoderDrive(100);
+                turnRight(90);
                 encoderDrive(10);
-                strafeRight(100);
+                turnRight(90);
+                encoderDrive(100);
+                turnLeft(90);
                 encoderDrive(1);
                 dropFlag();
                 sleep(3000);
                 resetFlag();
             } else if (pos == GoldStatus.Right) {
-                strafeRight(100);
+                turnRight(90);
                 encoderDrive(10);
-                strafeLeft(100);
+                turnLeft(90);
+                encoderDrive(100);
+                turnRight(90);
                 encoderDrive(1);
                 dropFlag();
                 sleep(3000);

@@ -66,18 +66,22 @@ public abstract class ShaggyTeamMarkerDepot extends StandardChassis {
                 // TODO: remove strsfing, use turning.
             encoderDrive(15);
             if (pos == GoldStatus.Left) {
-                strafeLeft(100);
-                encoderDrive(10);
-                strafeRight(100);
-                encoderDrive(1);
+                turnLeft(90);
+                encoderDrive(100);
+                turnRight(90);                encoderDrive(10);
+                turnRight(90);
+                encoderDrive(100);
+                turnLeft(90);                       encoderDrive(1);
                 dropFlag();
                 sleep(3000);
                 resetFlag();
             } else if (pos == GoldStatus.Right) {
-                strafeRight(100);
-                encoderDrive(10);
-                strafeLeft(100);
-                encoderDrive(1);
+                turnRight(90);
+                encoderDrive(100);
+                turnLeft(90);                       encoderDrive(10);
+                turnLeft(90);
+                encoderDrive(100);
+                turnRight(90);                encoderDrive(1);
                 dropFlag();
                 sleep(3000);
                 resetFlag();
