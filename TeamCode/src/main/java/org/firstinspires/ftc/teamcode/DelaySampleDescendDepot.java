@@ -41,11 +41,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class ShaggyRunDepot extends StandardChassis {
+public abstract class DelaySampleDescendDepot extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    public ShaggyRunDepot(ChassisConfig config) {
+    public DelaySampleDescendDepot(ChassisConfig config) {
         super(config);
     }
 
@@ -92,6 +92,9 @@ public abstract class ShaggyRunDepot extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
+            sleep(1000);
+            descendFromLander();
+
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
             GoldStatus pos = loopSampling();
             if (pos == GoldStatus.Unknown) {
