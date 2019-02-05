@@ -1,11 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-
-public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends StandardChassis {
+/**
+ *  This is from the position closest to the crater.
+ */
+public abstract class DelaySampleDescendCrater extends StandardChassis {
 
     private boolean madeTheRun = false;
+    private GoldStatus pos = GoldStatus.Unknown;
 
-    protected SampleTeamMarkerRetreatChickenSquatExtravaganza(ChassisConfig config) {
+    protected DelaySampleDescendCrater(ChassisConfig config) {
         super(config);
     }
 
@@ -18,6 +21,7 @@ public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends St
         initArm();
         initGyroscope();
         initTimeouts();
+        initSampling();
     }
 
     /**
@@ -41,6 +45,7 @@ public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends St
      */
     @Override
     public void stop () {
+        stopSampling();
     }
 
     /**
@@ -50,11 +55,14 @@ public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends St
     public void loop () {
 
         if (madeTheRun == false) {
+            sleep(1000);
+
             descendFromLander();
 
-            //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            GoldStatus pos = loopSampling();
+            pos = loopSampling();
+
             if (pos == GoldStatus.Unknown) {
+                sleep(3000);
                 encoderDrive(10);
                 encoderDrive(-10);
                 if (pos == GoldStatus.Unknown) {
@@ -63,37 +71,22 @@ public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends St
                 }
             }
 
-            // we will always have a valid pos here.
-            encoderDrive(15);
             if (pos == GoldStatus.Left) {
+                encoderDrive(10);
                 turnLeft(90);
                 encoderDrive(10);
                 turnRight(75);
-                encoderDrive(20);
-                turnRight(90);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-                turnLeft(90);
-                encoderDrive(-30);
+                encoderDrive(30);
             } else if (pos == GoldStatus.Right) {
+                encoderDrive(14);
                 turnRight(90);
-                encoderDrive(10);
-                turnLeft(75);
-                encoderDrive(20);
+                encoderDrive(5);
                 turnLeft(90);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-                turnRight(90);
-                encoderDrive(-30);
+                encoderDrive(25);
             } else {
                 encoderDrive(30);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-                encoderDrive(-30);
             }
+
 
             madeTheRun = true;
         }

@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 
-public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends StandardChassis {
+public abstract class DelaySampleTeamMarkerRetreatChickenSquatExtravaganza extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected SampleTeamMarkerRetreatChickenSquatExtravaganza(ChassisConfig config) {
+    protected DelaySampleTeamMarkerRetreatChickenSquatExtravaganza(ChassisConfig config) {
         super(config);
     }
 
@@ -50,6 +50,7 @@ public abstract class SampleTeamMarkerRetreatChickenSquatExtravaganza extends St
     public void loop () {
 
         if (madeTheRun == false) {
+            sleep(1000);
             descendFromLander();
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
