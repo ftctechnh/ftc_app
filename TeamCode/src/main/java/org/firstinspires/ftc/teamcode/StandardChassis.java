@@ -42,6 +42,8 @@ public abstract class StandardChassis extends OpMode {
 
     // Team Marker Servo
     private Servo flagHolder;
+    private Servo bull;
+    private Servo dozer;
     private double angleHand;
 
     // Walle state management
@@ -52,6 +54,7 @@ public abstract class StandardChassis extends OpMode {
     private BNO055IMU bosch;
 
     // Hack stuff.
+    protected boolean useBulldozer =false;
     protected boolean useGyroScope = true;
     protected boolean useMotors = true;
     protected boolean useTeamMarker = true;
@@ -193,6 +196,22 @@ public abstract class StandardChassis extends OpMode {
             this.msStuckDetectStart = 30000;
             this.msStuckDetectLoop = 30000;
             this.msStuckDetectStop = 30000;
+        }
+    }
+
+     protected void initBulldDozer() {
+         if(useBulldozer){
+             bull = hardwareMap.get(Servo.class, "servo3");
+             dozer = hardwareMap.get(Servo.class, "servo2");
+         }
+     }
+
+
+    protected void bullDozerUp() {
+        if (useBulldozer) {
+            //control Bulldozer
+            bull.setPosition(0);
+            dozer.setPosition(1.0);
         }
     }
 
@@ -367,7 +386,6 @@ public abstract class StandardChassis extends OpMode {
 
         }
     }
-
 
     // Always returns a number from 0-359.9999
     protected float getGyroscopeAngle() {

@@ -12,9 +12,10 @@ public class ChassisConfig {
     private boolean hasWalle;
     private boolean teamMarkersReversed; 
     private boolean lyftStrategy;
+    private boolean touchSensorON;
 
     protected ChassisConfig(float rearDiameter, boolean useFourWheelDrive, float rearWheelSpeed,
-                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle, boolean teamMarkersReversed, boolean lyftStrategy) {
+                            float turnSpeed, float moveSpeed, boolean leftMotorsReversed, boolean rightMotorsReversed, boolean hasWalle, boolean teamMarkersReversed, boolean lyftStrategy, boolean touchSensorON) {
         this.rearDiameter = rearDiameter;
         this.useFourWheelDrive = useFourWheelDrive;
         this.rearWheelSpeed = rearWheelSpeed;
@@ -25,6 +26,7 @@ public class ChassisConfig {
         this.hasWalle = hasWalle;
         this.teamMarkersReversed = teamMarkersReversed;
         this.lyftStrategy = lyftStrategy;
+        this.touchSensorON = touchSensorON;
     }
 
     public float getRearWheelDiameter() {
@@ -43,6 +45,7 @@ public class ChassisConfig {
     public boolean getHasWalle() {return hasWalle; }
     public boolean isTeamMarkerReversed() { return teamMarkersReversed; }
     public boolean getlyftStrategy() { return lyftStrategy; }
+    public boolean isTouchSensorON() {return touchSensorON;}
 
 
     // https://www.wikihow.com/Determine-Gear-Ratio
@@ -67,7 +70,8 @@ public class ChassisConfig {
                 false,
                 false,
                 false,
-                false);
+                false,
+                true);
     }
 
     // Note: whole robot is going to run backwards
@@ -82,6 +86,7 @@ public class ChassisConfig {
                 true,
                 true,
                 true,
+                false,
                 false);
     }
 
@@ -90,12 +95,13 @@ public class ChassisConfig {
                 4.0f,
                 true,
                 COUNTS_PER_MOTOR_REV_HDHEX_40,
-                0.3f,
+                0.8f,
                 0.8f,
                 true,
                 false,
                 true,
                 true,
-                true);
+                true,
+                false);
     }
 }

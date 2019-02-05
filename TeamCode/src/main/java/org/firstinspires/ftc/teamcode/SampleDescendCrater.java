@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- *  This is from the position closest to the team depot.
+ *  This is from the position closest to the crater.
  */
-public abstract class BullRunDepot extends StandardChassis {
+public abstract class SampleDescendCrater extends StandardChassis {
 
     private boolean madeTheRun = false;
+    private GoldStatus pos = GoldStatus.Unknown;
 
-    protected BullRunDepot(ChassisConfig config) {
+    protected SampleDescendCrater(ChassisConfig config) {
         super(config);
     }
 
@@ -20,7 +21,7 @@ public abstract class BullRunDepot extends StandardChassis {
         initArm();
         initGyroscope();
         initTimeouts();
-        initBulldDozer();
+        initSampling();
     }
 
     /**
@@ -44,6 +45,7 @@ public abstract class BullRunDepot extends StandardChassis {
      */
     @Override
     public void stop () {
+        stopSampling();
     }
 
     /**
@@ -54,11 +56,35 @@ public abstract class BullRunDepot extends StandardChassis {
 
         if (madeTheRun == false) {
 
-            encoderDrive(52, 52);
+            descendFromLander();
 
-            dropFlag();
-            sleep(1000);
-            resetFlag();
+            pos = loopSampling();
+
+            if (pos == GoldStatus.Unknown) {
+                sleep(3000);
+                encoderDrive(10);
+                encoderDrive(-10);
+                if (pos == GoldStatus.Unknown) {
+                    // take a guess; we have 33% chance of being correct
+                    pos = GoldStatus.Center;
+                }
+            }
+
+            if (pos == GoldStatus.Left) {
+                encoderDrive(10);
+                turnLeft(90);
+                encoderDrive(10);
+                turnRight(75);
+                encoderDrive(30);
+            } else if (pos == GoldStatus.Right) {
+                encoderDrive(14);
+                turnRight(90);
+                encoderDrive(5);
+                turnLeft(90);
+                encoderDrive(25);
+            } else {
+                encoderDrive(30);
+            }
 
 
             madeTheRun = true;
