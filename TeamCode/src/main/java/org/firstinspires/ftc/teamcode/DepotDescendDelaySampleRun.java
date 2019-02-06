@@ -41,11 +41,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class DescendShaggyRunDepot extends StandardChassis {
+public abstract class DepotDescendDelaySampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    public DescendShaggyRunDepot(ChassisConfig config) {
+    public DepotDescendDelaySampleRun(ChassisConfig config) {
         super(config);
     }
 
@@ -92,44 +92,12 @@ public abstract class DescendShaggyRunDepot extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-            //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            GoldStatus pos = loopSampling();
-            if (pos == GoldStatus.Unknown) {
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
-
-            // we will always have a valid pos here.
+            sleep(1000);
             descendFromLander();
-            encoderDrive(15);
-            if (pos == GoldStatus.Left) {
-                turnLeft(90);
-                encoderDrive(10);
-                turnRight(75);
-                encoderDrive(20);
-                turnRight(90);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-            } else if (pos == GoldStatus.Right) {
-                turnRight(90);
-                encoderDrive(10);
-                turnLeft(75);
-                encoderDrive(20);
-                turnLeft(90);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-            } else {
-                encoderDrive(30);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-            }
+
+            //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
+            depotSampleRun();
+
             madeTheRun = true;
         }
 

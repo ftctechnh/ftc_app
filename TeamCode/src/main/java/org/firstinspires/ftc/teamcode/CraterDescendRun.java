@@ -3,12 +3,11 @@ package org.firstinspires.ftc.teamcode;
 /**
  *  This is from the position closest to the crater.
  */
-public abstract class DelaySampleDescendCrater extends StandardChassis {
+public abstract class CraterDescendRun extends StandardChassis {
 
     private boolean madeTheRun = false;
-    private GoldStatus pos = GoldStatus.Unknown;
 
-    protected DelaySampleDescendCrater(ChassisConfig config) {
+    protected CraterDescendRun(ChassisConfig config) {
         super(config);
     }
 
@@ -21,7 +20,6 @@ public abstract class DelaySampleDescendCrater extends StandardChassis {
         initArm();
         initGyroscope();
         initTimeouts();
-        initSampling();
     }
 
     /**
@@ -45,7 +43,6 @@ public abstract class DelaySampleDescendCrater extends StandardChassis {
      */
     @Override
     public void stop () {
-        stopSampling();
     }
 
     /**
@@ -55,38 +52,10 @@ public abstract class DelaySampleDescendCrater extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-            sleep(1000);
 
             descendFromLander();
 
-            pos = loopSampling();
-
-            if (pos == GoldStatus.Unknown) {
-                sleep(3000);
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
-
-            if (pos == GoldStatus.Left) {
-                encoderDrive(10);
-                turnLeft(90);
-                encoderDrive(10);
-                turnRight(75);
-                encoderDrive(30);
-            } else if (pos == GoldStatus.Right) {
-                encoderDrive(14);
-                turnRight(90);
-                encoderDrive(5);
-                turnLeft(90);
-                encoderDrive(25);
-            } else {
-                encoderDrive(30);
-            }
-
+            craterRun();
 
             madeTheRun = true;
         }

@@ -1,13 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- *  This is from the position closest to the crater.
+ *  This is from the position closest to the team depot.
  */
-public abstract class DescendBullCrater extends StandardChassis {
+public abstract class DepotRun extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected DescendBullCrater(ChassisConfig config) {
+    protected DepotRun(ChassisConfig config) {
         super(config);
     }
 
@@ -20,6 +20,7 @@ public abstract class DescendBullCrater extends StandardChassis {
         initArm();
         initGyroscope();
         initTimeouts();
+        initBulldDozer();
     }
 
     /**
@@ -53,10 +54,10 @@ public abstract class DescendBullCrater extends StandardChassis {
 
         if (madeTheRun == false) {
 
-            descendFromLander();
-
-            encoderDrive(46, 46);
-
+            depotRun();
+            dropFlag();
+            sleep(1000);
+            resetFlag();
 
 
             madeTheRun = true;

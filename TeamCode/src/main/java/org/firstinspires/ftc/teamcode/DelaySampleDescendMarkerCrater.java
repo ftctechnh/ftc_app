@@ -60,17 +60,7 @@ public abstract class DelaySampleDescendMarkerCrater extends StandardChassis {
 
             descendFromLander();
 
-            pos = loopSampling();
-
-            if (pos == GoldStatus.Unknown) {
-                sleep(3000);
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
+            GoldStatus pos = sampleProbe();
 
             if (pos == GoldStatus.Left) {
                 encoderDrive(10);

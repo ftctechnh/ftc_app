@@ -96,15 +96,7 @@ public abstract class DelaySampleDescendMarkerDepot extends StandardChassis {
             descendFromLander();
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            GoldStatus pos = loopSampling();
-            if (pos == GoldStatus.Unknown) {
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
+            GoldStatus pos = sampleProbe();
 
             // we will always have a valid pos here.
             encoderDrive(15);

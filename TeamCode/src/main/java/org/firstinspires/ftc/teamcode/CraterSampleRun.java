@@ -41,12 +41,12 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class DelayShaggyRunCrater extends StandardChassis {
+public abstract class CraterSampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
     private GoldStatus pos = GoldStatus.Unknown;
 
-    public DelayShaggyRunCrater(ChassisConfig config) {
+    public CraterSampleRun(ChassisConfig config) {
         super(config);
     }
 
@@ -94,38 +94,13 @@ public abstract class DelayShaggyRunCrater extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-            sleep(1000);
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
 
             sleep(1000);
             pos = loopSampling();
 
-            if (pos == GoldStatus.Unknown) {
-                sleep(3000);
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
-
-            if (pos == GoldStatus.Left) {
-                encoderDrive(10);
-                turnLeft(90);
-                encoderDrive(10);
-                turnRight(75);
-                encoderDrive(30);
-            } else if (pos == GoldStatus.Right) {
-                encoderDrive(14);
-                turnRight(90);
-                encoderDrive(5);
-                turnLeft(90);
-                encoderDrive(25);
-            } else {
-                encoderDrive(30);
-            }
+            craterSampleRun();
 
             madeTheRun = true;
         }
