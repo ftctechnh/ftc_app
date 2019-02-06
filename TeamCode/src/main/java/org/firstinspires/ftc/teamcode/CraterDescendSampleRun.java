@@ -1,13 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- *  This is from the position closest to the team depot.
+ *  This is from the position closest to the crater.
  */
-public abstract class DescendDelayBullDepot extends StandardChassis {
+public abstract class CraterDescendSampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
+    private GoldStatus pos = GoldStatus.Unknown;
 
-    protected DescendDelayBullDepot(ChassisConfig config) {
+    protected CraterDescendSampleRun(ChassisConfig config) {
         super(config);
     }
 
@@ -20,6 +21,7 @@ public abstract class DescendDelayBullDepot extends StandardChassis {
         initArm();
         initGyroscope();
         initTimeouts();
+        initSampling();
     }
 
     /**
@@ -43,6 +45,7 @@ public abstract class DescendDelayBullDepot extends StandardChassis {
      */
     @Override
     public void stop () {
+        stopSampling();
     }
 
     /**
@@ -52,16 +55,12 @@ public abstract class DescendDelayBullDepot extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
+
             descendFromLander();
-            sleep(19000);
 
-            encoderDrive(52, 52);
+            pos = loopSampling();
 
-            dropFlag();
-            sleep(1000);
-            resetFlag();
-
-
+            craterSampleRun();
 
             madeTheRun = true;
         }

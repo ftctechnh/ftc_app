@@ -714,7 +714,74 @@ public abstract class StandardChassis extends OpMode {
         //sleep(5000);
     }
 
+       protected GoldStatus sampleProbe() {
+           GoldStatus pos = loopSampling();
+           if (pos == GoldStatus.Unknown) {
+               encoderDrive(10);
+               encoderDrive(-10);
+               pos = loopSampling();
+               if (pos == GoldStatus.Unknown) {
+                   // take a guess; we have 33% chance of being correct
+                   pos = GoldStatus.Center;
+               }
+           }
 
+           return pos;
+       }
 
+    protected void craterRun(){
+        encoderDrive(46, 46);
+    }
+    protected void depotRun() {
+        encoderDrive(52, 52);
 
-}
+    }
+
+    protected void craterSampleRun(){
+        GoldStatus pos = sampleProbe();
+        if (pos == GoldStatus.Left) {
+            encoderDrive(10);
+            turnLeft(90);
+            encoderDrive(10);
+            turnRight(75);
+            encoderDrive(30);
+        } else if (pos == GoldStatus.Right) {
+            encoderDrive(14);
+            turnRight(90);
+            encoderDrive(5);
+            turnLeft(90);
+            encoderDrive(25);
+        } else {
+            encoderDrive(30);
+        }
+    }
+
+    protected void depotSampleRun() {
+        GoldStatus pos = sampleProbe();
+        if (pos == GoldStatus.Left) {
+            turnLeft(90);
+            encoderDrive(10);
+            turnRight(75);
+            encoderDrive(20);
+            turnRight(90);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        } else if (pos == GoldStatus.Right) {
+            turnRight(90);
+            encoderDrive(10);
+            turnLeft(75);
+            encoderDrive(20);
+            turnLeft(90);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        } else {
+            encoderDrive(30);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        }
+    }
+
+    }

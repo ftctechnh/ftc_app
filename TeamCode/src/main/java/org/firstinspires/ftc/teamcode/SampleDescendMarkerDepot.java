@@ -41,12 +41,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class ShaggyRunCrater extends StandardChassis {
+public abstract class SampleDescendMarkerDepot extends StandardChassis {
 
     private boolean madeTheRun = false;
-    private GoldStatus pos = GoldStatus.Unknown;
 
-    public ShaggyRunCrater(ChassisConfig config) {
+    public SampleDescendMarkerDepot(ChassisConfig config) {
         super(config);
     }
 
@@ -55,7 +54,6 @@ public abstract class ShaggyRunCrater extends StandardChassis {
      */
     @Override
     public void init() {
-        initGyroscope();
         initMotors();
         initTimeouts();
         initSampling();
@@ -94,47 +92,52 @@ public abstract class ShaggyRunCrater extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
+            descendFromLander();
 
             //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
+            GoldStatus pos = sampleProbe();
 
-            sleep(1000);
-            pos = loopSampling();
-
-            if (pos == GoldStatus.Unknown) {
-                sleep(3000);
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
-
+            // we will always have a valid pos here.
+            encoderDrive(15);
             if (pos == GoldStatus.Left) {
-                encoderDrive(10);
                 turnLeft(90);
                 encoderDrive(10);
                 turnRight(75);
-                encoderDrive(30);
-            } else if (pos == GoldStatus.Right) {
-                encoderDrive(14);
+                encoderDrive(20);
                 turnRight(90);
-                encoderDrive(5);
+                dropFlag();
+                sleep(3000);
+                resetFlag();
+                turnRight(125);
+                encoderDrive(90, 90);
+
+            } else if (pos == GoldStatus.Right) {
+                turnRight(90);
+                encoderDrive(10);
+                turnLeft(75);
+                encoderDrive(20);
                 turnLeft(90);
-                encoderDrive(25);
+                dropFlag();
+                sleep(3000);
+                resetFlag();
+                turnRight(125);
+                encoderDrive(90, 90);
+
             } else {
                 encoderDrive(30);
-            }
+                dropFlag();
+                sleep(3000);
+                resetFlag();
+                turnRight(125);
+                encoderDrive(90, 90);
 
+            }
             madeTheRun = true;
         }
-
-
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());
         telemetry.addData("Status", "madeTheRun=%b", madeTheRun);
-        telemetry.addData("Status", "position = " + pos);
     }
 }
 
