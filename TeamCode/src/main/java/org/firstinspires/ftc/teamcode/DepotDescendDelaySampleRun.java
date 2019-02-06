@@ -41,11 +41,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class BullRunCrater extends StandardChassis {
+public abstract class DepotDescendDelaySampleRun extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    public BullRunCrater(ChassisConfig config) {
+    public DepotDescendDelaySampleRun(ChassisConfig config) {
         super(config);
     }
 
@@ -56,7 +56,6 @@ public abstract class BullRunCrater extends StandardChassis {
     public void init() {
         initMotors();
         initTimeouts();
-        initBulldDozer();
         initSampling();
     }
 
@@ -93,16 +92,14 @@ public abstract class BullRunCrater extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-            // forward 46 inches
-            bullDozerUp();
-            encoderDrive(46, 46);
+            sleep(1000);
+            descendFromLander();
 
-            // add code to do sampling
+            //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
+            depotSampleRun();
 
             madeTheRun = true;
         }
-
-        loopSampling();
 
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "time: " + runtime.toString());

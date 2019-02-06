@@ -36,11 +36,16 @@ public class QuickSilverController extends OpMode {
     private Servo servoLeft;
     private Servo servoRight;
 
+    //teammarkerservo
+    private Servo flagHolder;
+    private double angleHand;
+
     // Hack stuff.
     private boolean useMotors = true;
     private boolean useEncoders = true;
     private boolean useArm = true; // HACK
     private boolean useLifter = true; // HACL
+    private boolean useDropper = true;
 
     //Movement State
     private int armState;
@@ -62,10 +67,7 @@ public class QuickSilverController extends OpMode {
     @Override
     public void init() {
 
-        // Init Movement state
-        armState = 0;
-        extenderTarget = 0;
-        shoulderTarget = 0;
+
 
         // Initialize the motors.
         if (useMotors) {
@@ -73,7 +75,6 @@ public class QuickSilverController extends OpMode {
             motorBackRight = hardwareMap.get(DcMotor.class, "motor1");
             motorFrontLeft = hardwareMap.get(DcMotor.class, "motor2");
             motorFrontRight = hardwareMap.get(DcMotor.class, "motor3");
-
 
             // Most robots need the motor on one side to be reversed to drive forward
             // Reverse the motor that runs backwards when connected directly to the battery
@@ -103,12 +104,23 @@ public class QuickSilverController extends OpMode {
             extender = hardwareMap.get(DcMotor.class, "motor5");
             extender.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             extender.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            // Init Movement state
+            armState = 0;
+            extenderTarget = 0;
+            shoulderTarget = 0;
         }
 
         if (useLifter) {
             lifter = hardwareMap.get(DcMotor.class, "motor6");
             lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lifter.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+
+        if (useDropper) {
+            flagHolder = hardwareMap.get(Servo.class, "servo1");
+            flagHolder.setPosition(0.5);
         }
     }
 
@@ -149,6 +161,7 @@ public class QuickSilverController extends OpMode {
                 sleep(500);
             }
 
+            /*
             // Control the wheel motors.
             // POV Mode uses left stick to go forw ard, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
@@ -175,6 +188,38 @@ public class QuickSilverController extends OpMode {
             double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
             double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
             double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
+            */
+
+            // Control the wheel motors.
+            // POV Mode uses left stick to go forw ard, and right stick to turn.
+            // - This uses basic math to combine motions and is easier to drive straight.
+            double driveNormal = -gamepad1.left_stick_y;
+            if (Math.abs(driveNormal) < 0.1)
+                driveNormal = 0.0; // Prevent the output from saying "-0.0".
+
+            double driveStrafe = -gamepad1.right_stick_x;
+            if (Math.abs(driveStrafe) < 0.1)
+                driveStrafe = 0.0; // Prevent the output from saying "-0.0".
+
+            double turn = gamepad1.left_stick_x;
+
+            if (switchFront){
+                driveNormal = -driveNormal;
+                driveStrafe = -driveStrafe;
+            }
+            telemetry.addData("Motor", "n:%02.1f, s:%02.1f, t:%02.1f", driveNormal, driveStrafe, turn);
+
+            float cap = 1.0f;
+            float backScale = 0.5f;
+            double leftBackPower = Range.clip(driveNormal + turn + (driveStrafe * backScale), -cap, cap);
+            double rightBackPower = Range.clip(driveNormal - turn - (driveStrafe * backScale), -cap, cap);
+            double leftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -cap, cap);
+            double rightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -cap, cap);
+
+            double halfLeftBackPower = Range.clip(driveNormal + turn + driveStrafe, -0.25, 0.25);
+            double halfRightBackPower = Range.clip(driveNormal - turn - driveStrafe, -0.25, 0.25);
+            double halfLeftFrontPower = Range.clip(driveNormal + turn - driveStrafe, -0.25, 0.25);
+            double halfRightFrontPower = Range.clip(driveNormal - turn + driveStrafe, -0.25, 0.25);
 
             boolean halfSpeed = gamepad1.left_stick_button || gamepad1.left_bumper;
             if (halfSpeed) {
@@ -182,14 +227,25 @@ public class QuickSilverController extends OpMode {
                 motorBackRight.setPower(halfRightBackPower);
                 motorFrontLeft.setPower(halfLeftFrontPower);
                 motorFrontRight.setPower(halfRightFrontPower);
-                telemetry.addData("HalfSpeed", "active: %d, curr: %d, target: %d", shoulderStartPosition, shoulder.getCurrentPosition(), shoulderTarget);
+                telemetry.addData("Motor", "half lb:%02.1f, rb:%02.1f, lf:%02.1f, rf:%02.1f", halfLeftBackPower, halfRightBackPower, halfLeftFrontPower, halfRightFrontPower);
             } else {
                 motorBackLeft.setPower(leftBackPower);
                 motorBackRight.setPower(rightBackPower);
                 motorFrontLeft.setPower(leftFrontPower);
                 motorFrontRight.setPower(rightFrontPower);
+                telemetry.addData("Motor", "full left-back:%02.1f, %d", leftBackPower,  motorBackLeft.getCurrentPosition());
+                telemetry.addData("Motor", "full rght-back:%02.1f, %d", rightBackPower, motorBackRight.getCurrentPosition());
+                telemetry.addData("Motor", "full left-frnt:%02.1f, %d", leftFrontPower, motorFrontLeft.getCurrentPosition());
+                telemetry.addData("Motor", "full rght-frnt:%02.1f, %d", rightFrontPower, motorFrontRight.getCurrentPosition());
             }
-            telemetry.addData("HalfSpeed", "active: %b", halfSpeed);
+        }
+
+        if (useDropper) {
+            if (gamepad1.b) {
+                flagHolder.setPosition(1.0);
+            } else {
+                flagHolder.setPosition(-1.0);
+            }
         }
 
         if (useArm) {

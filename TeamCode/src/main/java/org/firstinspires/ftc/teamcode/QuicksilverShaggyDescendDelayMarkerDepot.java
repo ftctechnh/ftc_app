@@ -3,11 +3,11 @@ package org.firstinspires.ftc.teamcode;
 /**
  *  This is from the position closest to the team depot.
  */
-public abstract class DescendDelayBullCrater extends StandardChassis {
+public abstract class QuicksilverShaggyDescendDelayMarkerDepot extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    protected DescendDelayBullCrater(ChassisConfig config) {
+    protected QuicksilverShaggyDescendDelayMarkerDepot(ChassisConfig config) {
         super(config);
     }
 
@@ -43,6 +43,7 @@ public abstract class DescendDelayBullCrater extends StandardChassis {
      */
     @Override
     public void stop () {
+        stopSampling();
     }
 
     /**
@@ -53,11 +54,42 @@ public abstract class DescendDelayBullCrater extends StandardChassis {
 
         if (madeTheRun == false) {
             descendFromLander();
-            sleep(23000);
+            sleep(13000);
 
-            encoderDrive(46, 46);
+            descendFromLander();
+            GoldStatus pos = sampleProbe();
 
-
+            encoderDrive(15);
+            if (pos == GoldStatus.Left) {
+                turnLeft(90);
+                encoderDrive(100);
+                turnRight(90);
+                encoderDrive(10);
+                turnRight(90);
+                encoderDrive(100);
+                turnLeft(90);
+                encoderDrive(1);
+                dropFlag();
+                sleep(3000);
+                resetFlag();
+            } else if (pos == GoldStatus.Right) {
+                turnRight(90);
+                encoderDrive(10);
+                turnLeft(90);
+                encoderDrive(100);
+                turnRight(90);
+                encoderDrive(1);
+                dropFlag();
+                sleep(3000);
+                resetFlag();
+            } else {
+                encoderDrive(15);
+                dropFlag();
+                sleep(3000);
+                resetFlag();
+            }
+            turnRight(125);
+            encoderDrive(90, 90);
 
             madeTheRun = true;
         }

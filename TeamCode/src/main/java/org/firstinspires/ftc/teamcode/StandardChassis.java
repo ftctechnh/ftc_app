@@ -15,6 +15,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 public abstract class StandardChassis extends OpMode {
 
+    public enum GoldStatus {
+        Unknown,
+        Left,
+        Right,
+        Center
+    }
+
     protected ChassisConfig config;
 
     // Elapsed time since the opmode started.
@@ -29,8 +36,9 @@ public abstract class StandardChassis extends OpMode {
     private DcMotor extender;
     private DcMotor shoulder;
 
-    // Detector object
+    // Sampler
     private GoldMineralDetector detector;
+    private GoldStatus goldStatus;
 
     // Team Marker Servo
     private Servo flagHolder;
@@ -52,6 +60,7 @@ public abstract class StandardChassis extends OpMode {
 
     // Hack stuff.
     protected boolean useBulldozer =false;
+    protected boolean useGyroScope = true;
     protected boolean useMotors = true;
     protected boolean useTeamMarker = true;
     protected boolean hackTimeouts = true;
@@ -62,6 +71,13 @@ public abstract class StandardChassis extends OpMode {
     protected StandardChassis(ChassisConfig config) {
         this.config = config;
     }
+
+
+    /*
+     *  SAMPLING SUBSYSTEM
+     */
+
+
 
     protected void initSampling() {
         if (useSampling) {
@@ -86,19 +102,50 @@ public abstract class StandardChassis extends OpMode {
             detector.enable(); // Start the detector!
         }
     }
-    protected void loopSampling() {
+
+    protected GoldStatus loopSampling() {
       if (useSampling) {
-          if (detector.isFound()) {
-              telemetry.addData("sampler", "FOUND, x=" + String.valueOf(detector.getScreenPosition().x)); // Gold X position.
-          } else {
-              telemetry.addData("sampler", "NOT FOUND"); // Gold X position.
+          int numFailures = 0;
+          for (int i = 0 ; i < 10 ; i++) {
+              if (detector.isFound()) {
+
+                  int gY = (int) detector.getScreenPosition().x;
+                  if (gY < 200) {
+                      goldStatus = GoldStatus.Left;
+                  } else if (gY > 450) {
+                      goldStatus = GoldStatus.Right;
+                  } else {
+                      goldStatus = GoldStatus.Center;
+                  }
+
+                  telemetry.addData("sampler", "FOUND, pos=" +
+                          String.valueOf(detector.getScreenPosition()) + "gStatus =" + String.valueOf(goldStatus));
+                  telemetry.update();
+                  return goldStatus;
+              }
+
+
+              // We could not find the gold jewel at all!
+              numFailures++;
+              telemetry.addData("sampler", "NOT FOUND, failures=" + numFailures);
+              telemetry.update();
+              sleep(500);
+              //goldStatus = GoldStatus.Unknown;
           }
       }
+
+      return goldStatus;
     }
+
+
     protected void stopSampling() {
         // Disable the detector
         detector.disable();
     }
+
+    /*
+        MOTOR SUBSYTEM
+     */
 
     protected void initMotors() {
 
@@ -189,18 +236,22 @@ public abstract class StandardChassis extends OpMode {
     }
 
     protected boolean initGyroscope() {
-        bosch = hardwareMap.get(BNO055IMU.class, "imu0");
-        telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
+        if (useGyroScope) {
+            bosch = hardwareMap.get(BNO055IMU.class, "imu0");
+            telemetry.addData("Gyro", "class:" + bosch.getClass().getName());
 
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-        parameters.loggingTag = "bosch";
-        //parameters.calibrationDataFile = "MonsieurMallahCalibration.json"; // see the calibration sample opmode
-        boolean boschInit = bosch.initialize(parameters);
-        return boschInit;
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.mode = BNO055IMU.SensorMode.IMU;
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.loggingEnabled = false;
+            parameters.loggingTag = "bosch";
+            //parameters.calibrationDataFile = "MonsieurMallahCalibration.json"; // see the calibration sample opmode
+            boolean boschInit = bosch.initialize(parameters);
+            return boschInit;
+        } else {
+            return true;
+        }
     }
 
 
@@ -223,6 +274,9 @@ public abstract class StandardChassis extends OpMode {
         }
     }
 
+    protected void encoderDrive(double inches) {
+        encoderDrive(inches, inches);
+    }
 
     protected void encoderDrive(double leftInches, double rightInches) {
         double speed = config.getMoveSpeed();
@@ -348,9 +402,13 @@ public abstract class StandardChassis extends OpMode {
 
     // Always returns a number from 0-359.9999
     protected float getGyroscopeAngle() {
-        Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-        float gyroAngle = exangles.thirdAngle + 50;
-        return CrazyAngle.normalizeAngle(CrazyAngle.reverseAngle(gyroAngle));
+        if (useGyroScope && bosch != null){
+            Orientation exangles = bosch.getAngularOrientation(AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+            float gyroAngle = exangles.thirdAngle + 50;
+            return CrazyAngle.normalizeAngle(CrazyAngle.reverseAngle(gyroAngle));
+        } else {
+            return 0.0f;
+        }
     }
 
 
@@ -669,6 +727,7 @@ public abstract class StandardChassis extends OpMode {
         //sleep(5000);
     }
 
+
     protected void lyftDownEve(int howManySpins) {
         double speed = 0.5f;
 
@@ -700,6 +759,75 @@ public abstract class StandardChassis extends OpMode {
     }
 
 
+       protected GoldStatus sampleProbe() {
+           GoldStatus pos = loopSampling();
+           if (pos == GoldStatus.Unknown) {
+               encoderDrive(10);
+               encoderDrive(-10);
+               pos = loopSampling();
+               if (pos == GoldStatus.Unknown) {
+                   // take a guess; we have 33% chance of being correct
+                   pos = GoldStatus.Center;
+               }
+           }
+
+           return pos;
+       }
+
+    protected void craterRun(){
+        encoderDrive(46, 46);
+    }
+
+    protected void depotRun() {
+        encoderDrive(52, 52);
+    }
 
 
-}
+    protected void craterSampleRun(){
+        GoldStatus pos = sampleProbe();
+        if (pos == GoldStatus.Left) {
+            encoderDrive(10);
+            turnLeft(90);
+            encoderDrive(10);
+            turnRight(75);
+            encoderDrive(30);
+        } else if (pos == GoldStatus.Right) {
+            encoderDrive(14);
+            turnRight(90);
+            encoderDrive(5);
+            turnLeft(90);
+            encoderDrive(25);
+        } else {
+            encoderDrive(30);
+        }
+    }
+
+    protected void depotSampleRun() {
+        GoldStatus pos = sampleProbe();
+        if (pos == GoldStatus.Left) {
+            turnLeft(90);
+            encoderDrive(10);
+            turnRight(75);
+            encoderDrive(20);
+            turnRight(90);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        } else if (pos == GoldStatus.Right) {
+            turnRight(90);
+            encoderDrive(10);
+            turnLeft(75);
+            encoderDrive(20);
+            turnLeft(90);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        } else {
+            encoderDrive(30);
+            dropFlag();
+            sleep(3000);
+            resetFlag();
+        }
+    }
+
+  }
