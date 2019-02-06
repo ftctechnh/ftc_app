@@ -8,6 +8,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import java.lang.Math;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,7 @@ public class holoDrive extends OpMode {
     DcMotor moveIntake;
     Servo dustBinServo;
     Servo liftLockServo;
+    DigitalChannel stop;
 
     @Override
     public void init() {
@@ -41,6 +43,7 @@ public class holoDrive extends OpMode {
         moveIntake = hardwareMap.dcMotor.get("move_intake");
         dustBinServo = hardwareMap.servo.get("dust_bin");
         liftLockServo = hardwareMap.servo.get("lift_lock");
+        stop.setMode(DigitalChannel.Mode.INPUT);
     }
 
     @Override
@@ -49,17 +52,11 @@ public class holoDrive extends OpMode {
         //this was done so we don't have to change it in every place
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
         double xPower = gamepad1.left_stick_x;  //power to drive holonomic
-        double spinPower = -gamepad1.right_stick_x; //power to drive holonomic
+        double spinPower = -gamepad1.right_stick_x/2; //power to drive holonomic
         double liftPower = gamepad2.left_stick_y; //power for lift
-        //boolean collect = gamepad2.a; //power for intake dustBinServo
-        //boolean score = gamepad2.b; //power for intake dustBinServo
         double extendPower = gamepad2.right_stick_y/4; //power for intake extension
         double movePower = gamepad2.left_stick_x/2; //power to move arm
         double dustbinPower = -gamepad2.right_stick_x/6; //power for intake dustbin
-        //telemetry.addData("ftcTeam", "razzle %d", 13883);
-        //telemetry.update();
-
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //the first if statement spins the robot
@@ -124,8 +121,12 @@ public class holoDrive extends OpMode {
         }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        lift.setPower(liftPower);
+        if (stop.getState() == true && liftPower>=0) {
+            lift.setPower(liftPower);
+        }
+        else{
+            lift.setPower(0.5);
+        }
         //this controls the lift
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //these are the intake controls
@@ -154,11 +155,15 @@ public class holoDrive extends OpMode {
         telemetry.addData("xPower", "%.2f",  xPower);
         telemetry.addData("yPower", "%.2f",  yPower);
         telemetry.addData("liftPower", "%.2f",  liftPower);
-        //telemetry.addData("collect", "%.2f",  collect);
-        //telemetry.addData("score", "%.2f",  score);
         telemetry.addData("extendPower", "%.2f",  extendPower);
         telemetry.addData("movePower", "%.2f",  movePower);
-        //telemetry.addData("Servo connection info : %s", dustBinServo.getConnectionInfo());
+        if (stop.getState() == true) {
+            telemetry.addData("stop", "Is Not Pressed");
+        }
+        else {
+            telemetry.addData("stop", "Is Pressed");
+        }
+        telemetry.update();
     }
 }
 
