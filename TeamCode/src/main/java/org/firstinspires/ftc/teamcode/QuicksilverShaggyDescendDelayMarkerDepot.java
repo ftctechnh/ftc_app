@@ -57,15 +57,7 @@ public abstract class QuicksilverShaggyDescendDelayMarkerDepot extends StandardC
             sleep(13000);
 
             descendFromLander();
-            GoldStatus pos = loopSampling();
-            if (pos == GoldStatus.Unknown) {
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
+            GoldStatus pos = sampleProbe();
 
             encoderDrive(15);
             if (pos == GoldStatus.Left) {

@@ -53,15 +53,7 @@ public abstract class ShaggyTeamMarkerCrater extends StandardChassis {
         if (madeTheRun == false) {
             // forward 35 inches, turn 90degrees, forward 40 inches
 
-                GoldStatus pos = loopSampling();
-                if (pos == GoldStatus.Unknown) {
-                    encoderDrive(10);
-                    encoderDrive(-10);
-                    if (pos == GoldStatus.Unknown) {
-                        // take a guess; we have 33% chance of being correct
-                        pos = GoldStatus.Center;
-                    }
-                }
+                GoldStatus pos = sampleProbe();
 
                 // TODO: remove strsfing, use turning.
                 encoderDrive(15);

@@ -41,11 +41,11 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 /**
  * This just runs from the position closest to the crater, into the crater.
  */
-public abstract class ShaggyRunDepot extends StandardChassis {
+public abstract class CraterRun extends StandardChassis {
 
     private boolean madeTheRun = false;
 
-    public ShaggyRunDepot(ChassisConfig config) {
+    public CraterRun(ChassisConfig config) {
         super(config);
     }
 
@@ -56,6 +56,7 @@ public abstract class ShaggyRunDepot extends StandardChassis {
     public void init() {
         initMotors();
         initTimeouts();
+        initBulldDozer();
         initSampling();
     }
 
@@ -81,9 +82,10 @@ public abstract class ShaggyRunDepot extends StandardChassis {
      * Code to run ONCE after the driver hits STOP
      */
     @Override
-    public void stop () {
-        stopSampling();
+    public void stop (){
+
     }
+
 
     /**
      * Code to run REPEATEDLY after the driver hits PLAY but before they hit STOP
@@ -92,43 +94,11 @@ public abstract class ShaggyRunDepot extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-            //When gold is detected on the side of the screen it is on, strafe left, right or stay depending on where it is. Then, move forward into the crater.\
-            GoldStatus pos = loopSampling();
-            if (pos == GoldStatus.Unknown) {
-                encoderDrive(10);
-                encoderDrive(-10);
-                if (pos == GoldStatus.Unknown) {
-                    // take a guess; we have 33% chance of being correct
-                    pos = GoldStatus.Center;
-                }
-            }
+            // forward 46 inches
+            bullDozerUp();
+            craterRun();
+            // add code to do sampling
 
-            // we will always have a valid pos here.
-            encoderDrive(15);
-            if (pos == GoldStatus.Left) {
-                turnLeft(90);
-                encoderDrive(10);
-                turnRight(75);
-                encoderDrive(20);
-                turnRight(90);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-            } else if (pos == GoldStatus.Right) {
-                turnRight(90);
-                encoderDrive(10);
-                turnLeft(75);
-                encoderDrive(20);
-                turnLeft(90);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-            } else {
-                encoderDrive(30);
-                dropFlag();
-                sleep(3000);
-                resetFlag();
-            }
             madeTheRun = true;
         }
 

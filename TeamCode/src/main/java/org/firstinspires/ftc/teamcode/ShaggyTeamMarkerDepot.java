@@ -53,17 +53,9 @@ public abstract class ShaggyTeamMarkerDepot extends StandardChassis {
     public void loop () {
 
         if (madeTheRun == false) {
-                GoldStatus pos = loopSampling();
-                if (pos == GoldStatus.Unknown) {
-                    encoderDrive(10);
-                    encoderDrive(-10);
-                    if (pos == GoldStatus.Unknown) {
-                        // take a guess; we have 33% chance of being correct
-                        pos = GoldStatus.Center;
-                    }
-                }
+            GoldStatus pos = sampleProbe();
 
-                // TODO: remove strsfing, use turning.
+            // TODO: remove strsfing, use turning.
             encoderDrive(15);
             if (pos == GoldStatus.Left) {
                 turnLeft(90);
