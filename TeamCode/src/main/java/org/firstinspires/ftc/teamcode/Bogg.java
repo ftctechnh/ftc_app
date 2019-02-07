@@ -65,7 +65,6 @@ public class Bogg
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 brake = hardwareMap.servo.get("brake");
                 drop = hardwareMap.servo.get("drop");
-                dServo = hardwareMap.get(Servo.class, "dServo");
                 break;
 
             case MiniBogg:
@@ -95,7 +94,7 @@ public class Bogg
                 driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
                 driveEngine.mP *= 5;
                 driveEngine.ticksPerRev = 290;
-                driveEngine.wheelDiameter = 3.5;
+                driveEngine.effectiveWheelDiameter = 3.5;
                 break;
 
             case Fauxbot:
@@ -193,22 +192,6 @@ public class Bogg
         }
     }
 
-    void rotateMobile(Direction direction)
-    {
-        switch (direction)
-        {
-            case Left:
-                dServo.setPosition(-.6);
-                break;
-            case Straight:
-                dServo.setPosition(0);
-                break;
-            case Right:
-                dServo.setPosition(.6);
-                break;
-        }
-    }
-
 
     void dropMarker(Direction direction)
     {
@@ -216,11 +199,11 @@ public class Bogg
         switch (direction)
         {
             case Down:
-                drop.setPosition(0);
+                drop.setPosition(-.6);
                 break;
             case Up:
             default:
-                drop.setPosition(-.6);
+                drop.setPosition(0);
                 break;
         }
     }
@@ -318,7 +301,7 @@ public class Bogg
     boolean manualEffect(Gamepad g)
     {
         //deals with the length of the arm
-        endEffector.extend(g.right_stick_x);
+        endEffector.extend(2 * g.right_stick_x);
 
         //deals with the servos to release the minerals
         if(g.y || g.b || g.right_bumper)
@@ -354,10 +337,18 @@ public class Bogg
     {
         double t = timer.seconds();
         double clockTime = .5 * lastClockTime + .5 * (t - lastTime); // exponential average
+        lastClockTime = clockTime;
         lastTime = t;
 
-        if(averageClockTime == 0)
+        if(averageClockTime == 500) {
             averageClockTime = clockTime;
+            return;
+        }
+        if(averageClockTime == 0) {
+            averageClockTime = 500;
+            return;
+        }
+
         averageClockTime = (clockTime + n * averageClockTime) / (n+1); //cumulative average
 
         n++;

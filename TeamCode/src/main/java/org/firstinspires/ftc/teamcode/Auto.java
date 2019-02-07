@@ -95,7 +95,7 @@ public class Auto {
     Mode slide1()
     {
         if (robot.driveEngine.moveOnPath(
-                new double[]{-4, 0}))
+                new double[]{-2.5, 0}))
         {
             return Mode.PushGold;
         }
@@ -143,19 +143,19 @@ public class Auto {
     private int i = 0;
     Mode pushGoldNoCamera()
     {
-        if (robot.driveEngine.moveOnPath( "Move Right",
+        if (robot.driveEngine.moveOnPath( "Move Right", true,
                 new double[]{23, 28 + approachGold})) {
 
             if (i < 3) {
                 if(robot.sensors.getLowDistance() > 6)
-                    if (robot.driveEngine.moveOnPath( "Push gold" + i,
+                    if (robot.driveEngine.moveOnPath( "Push gold" + i, true,
                             new double[]{0, 12},
                             new double[]{0, -(12 + approachGold)})){
                         slide2X = 51 - 17 * (i);
                         return Mode.Slide2;
                     }
                 else
-                    if(robot.driveEngine.moveOnPath("moveLeft" + i,
+                    if(robot.driveEngine.moveOnPath("moveLeft" + i, true,
                             new double[]{-17,0}))
                         i++;
             }
@@ -193,17 +193,13 @@ public class Auto {
     {
         if(robot.name == Bogg.Name.Fakebot)
             return Mode.MoveToDepot;
-        if(rotateToWall(2)) {
-            robot.driveEngine.stop();
             double[] location = camera.getLocation();
-            if(location != null)
-            {
-                double max = Math.max(Math.abs(location[0]), Math.abs(location[1]));
-                iSP = max == Math.abs(location[1])? 1 : -1;
-                return Mode.MoveToDepot;
+        if(location != null)
+        {
+            double max = Math.max(Math.abs(location[0]), Math.abs(location[1]));
+            iSP = max == Math.abs(location[1])? 1 : -1;
+            return Mode.MoveToDepot;
 
-            }
-            return Mode.TurnByCamera;
         }
         return Mode.TurnByCamera;
     }
@@ -223,7 +219,7 @@ public class Auto {
     Mode dropMarker()
     {
         robot.dropMarker(Bogg.Direction.Down);
-        robot.endEffector.moveToPosition(30, 0);
+        //robot.endEffector.moveToPosition(30, 0);
 
         if(getTime() > .5)  //time to drop marker
             return Mode.MoveToCrater;

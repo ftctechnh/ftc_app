@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name="prepAutonomous", group = "Testing")
@@ -35,8 +36,9 @@ public class prepAutonomous extends LinearOpMode
                 case Drop:
                     if(t < 3) //for three seconds
                     {
+                        robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                         robot.lift(-.3); //pull up
-                        robot.rotateMobile(Bogg.Direction.Straight);
+                        robot.dropMarker(Bogg.Direction.Up);
                     }
                     else if (t < 5)
                     {
@@ -44,6 +46,7 @@ public class prepAutonomous extends LinearOpMode
                     }
                     else if(t < 7)
                     {
+                        robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
                         robot.setBrake(Bogg.Direction.On);
                     }
                     else if(t < 9) //wait for brake to engage

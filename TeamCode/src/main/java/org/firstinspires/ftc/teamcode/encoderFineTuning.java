@@ -44,7 +44,7 @@ public class encoderFineTuning extends LinearOpMode
             telemetry.addData("P", robot.driveEngine.mP);
             telemetry.addData("D", robot.driveEngine.mD);
 
-            robot.driveEngine.moveOnPath(true, true, new double[]{deltaX, deltaY, deltaS});
+            robot.driveEngine.moveOnPath(true, false, new double[]{deltaX, deltaY, deltaS});
 
 
             if(gamepad1.dpad_right)

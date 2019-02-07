@@ -89,7 +89,7 @@ public class FakeDriveEngine extends DriveEngine{
 
     @Override
     double spinAngle() {
-        return sDistance / robotRadius;
+        return sDistance / effectiverobotRadius;
     }
 
 

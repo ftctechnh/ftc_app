@@ -113,7 +113,7 @@ class Sensors {
     ArrayList<Double> highDistances = new ArrayList<>();
     double getHighDistance()
     {
-        double d = 36;
+        double d = 30;
 //        double d = dHigh.getDistance(DistanceUnit.INCH);
 //        return d * highAlpha + highAverage * (1 - highAlpha);
         highDistances.add(d);
