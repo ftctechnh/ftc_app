@@ -40,10 +40,12 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
                     break;
                 case DropMarker:
                     action = auto.dropMarker();
+                    break;
                 case MoveToCrater:
                     action = auto.moveToCrater();
+                    break;
                 default:
-                    auto.stop();
+                    action = auto.stop();
             }
 
             // Display the current values
