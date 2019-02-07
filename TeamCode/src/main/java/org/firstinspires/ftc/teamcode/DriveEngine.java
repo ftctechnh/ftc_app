@@ -15,13 +15,13 @@ class DriveEngine {
 
     Sensors sensors;
 
-    static double wheelDiameter = 5;
-    static double robotRadius = 7.15;
+    static double effectiveWheelDiameter = 5.32;
+    static double effectiverobotRadius = 7.15;
 
     private double motorSpacing;
 
     static double ticksPerRev = 1120;
-    static double inPerRev(){return Math.PI * wheelDiameter;}
+    static double inPerRev(){return Math.PI * effectiveWheelDiameter;}
     static double inPerTicks(){return inPerRev() / ticksPerRev;}
 
     double spinAve = 0;
@@ -195,21 +195,39 @@ class DriveEngine {
 
     private double[] cumulativeDistance = new double[]{0,0};
 
-    private ArrayList<Boolean> checkpoint = new ArrayList<>();
+    ArrayList<Boolean> checkpoint = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
-        return moveOnPath(false, true, args);
+        return moveOnPath(false, false, args);
     }
-    boolean moveOnPath(String key, double[] ... args){
+    boolean moveOnPath(String key, boolean flow, double[] ... args){
         if(keyList.contains(key))
             return true;
-        if(moveOnPath(false, true, args)){
+        if(moveOnPath(false, flow, args)){
             keyList.add(key);
             return true;
         }
         return false;
     }
-    boolean moveOnPath(boolean continuous, boolean correctSpin, double[] ... args)
+
+    /*
+        Continuous means that the function will never return true and restart,
+        it will continue to correct for error.
+        Flow means that once within the target radius, the robot will stop giving the
+        driveEngine new values.
+        If flow is enabled, you must start giving the driveEngine new values immediately,
+        else the robot will drift away.
+
+        c: true  f: true  – When the code does not change to a new task based on moveOnPath
+                            and there may be an overriding force in the other method of motion.
+                            Ex: when rotating to a point, but the driver may translate at the same time
+        c: true  f: false – When you continually test moving to different points,
+                            and moveOnPath is the only driving force.
+        c: false f: true  – When using two moveOnPath methods in conjunction?
+        c: false f: false – When the code changes to a new task after completion,
+                            and you want to stop once you reach a point.
+     */
+    boolean moveOnPath(boolean continuous, boolean flow, double[] ... args)
     {
         if(checkpoint.isEmpty()){
             for (double[] arg : args) checkpoint.add(false);
@@ -224,7 +242,8 @@ class DriveEngine {
         if(c == checkpoint.size())
         {
             checkpoint.clear();
-            stop();
+            if(!flow)
+                stop();
             return true;
         }
 
@@ -233,22 +252,31 @@ class DriveEngine {
         {
             case 1:
                 targetAngle = forward + args[c][0];
-                rotate(face(targetAngle));
+
                 if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < MyMath.radians(2)) {
-                    stop();
-                    forward += args[c][0];
-                    sumSpinError = 0;
-                    checkpoint.set(c, true);
-                    cumulativeDistance = new double[]{0,0};
-                    resetDistances();
+                    if(continuous) {
+                        if(!flow)
+                            rotate(face(targetAngle));
+                    }
+                    else{
+                        if(!flow)
+                            stop();
+                        forward += args[c][0];
+                        sumSpinError = 0;
+                        checkpoint.set(c, true);
+                        cumulativeDistance = new double[]{0,0};
+                        resetDistances();
+                    }
                 }
+                else
+                    rotate(face(targetAngle));
                 break;
             case 3:
                 targetAngle = forward + args[c][2];
 
             case 2:
                 double[] point = args[c];
-                double spin = correctSpin? face(targetAngle) : 0;
+                double spin = face(targetAngle);
 
                 double deltaX = point[0] + cumulativeDistance[0] - xDist();
                 double deltaY = point[1] + cumulativeDistance[1] - yDist();
@@ -264,22 +292,23 @@ class DriveEngine {
                 telemetry.addData("deltaY", deltaY);
 
                 if(r <= .5 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
-                    if(continuous)
-                        drive(driveX, driveY, spin);
+                    if(continuous) {
+                        drive(spin);
+                        drdtArray = new ArrayList<>();
+                        dThdtArray = new ArrayList<>();
+                    }
                     else {
-                        stop();
+                        if(!flow)
+                            stop();
                         if(args[c].length == 3) {
-                            try {
-                                forward += args[c][2];
-                            }
-                            catch (ArrayIndexOutOfBoundsException i){
-                                telemetry.addLine("In case 2");
-                            }
+                            forward += args[c][2];
                             sumSpinError = 0;
                         }
                         this.checkpoint.set(c, true);
                         cumulativeDistance[0] += args[c][0];
                         cumulativeDistance[1] += args[c][1];
+                        drdtArray = new ArrayList<>();
+                        dThdtArray = new ArrayList<>();
                     }
                 }
                 else
@@ -393,9 +422,12 @@ class DriveEngine {
     private double lastTheta = 0;
     private double lastT = 0;
     double mP = .015; //power per inch
-    double mD = 0.04;  //fully account for this much time in the future at current error decreasing rate
+    double mD = 0.1;  //fully account for this much time in the future at current error decreasing rate
+    double tD = 0.01;
 
     ArrayList<Double> drdtArray = new ArrayList<>();
+    ArrayList<Double> dThdtArray = new ArrayList<>();
+
     double[] move(double deltaX, double deltaY)
     {
         //    u(t) = MV(t) = P *( r(t) + 1/D *dr(t)/dt )
@@ -411,6 +443,7 @@ class DriveEngine {
         double dr = r - lastR;
         double t = timer.seconds();
         double dt = t - lastT;
+        double dTheta = MyMath.loopAngle(theta, lastTheta);
 
         double drdt = dr / dt;
         drdtArray.add(drdt);
@@ -418,9 +451,21 @@ class DriveEngine {
         if(drdtArray.size() > 7) //keep the size to 7
             drdtArray.remove(0);
 
-        double dTheta = MyMath.loopAngle(theta, lastTheta);
+
+        double dThdt =  dTheta / dt;
+        dThdtArray.add(dThdt);
+
+        if(dThdtArray.size() > 7) //keep the size to 7
+            dThdtArray.remove(0);
+
+
         telemetry.addData("theta", theta);
         telemetry.addData("dTheta", dTheta);
+
+        //negative because our target is zero
+        double tangentPower = MyMath.limitMagnitude(-mP * (tD * MyMath.ave(dThdtArray) * r), .1);
+        //dTheta*r / dt is in inches / sec
+        //therefore tD is in seconds
 
 //        if(Math.abs(dTheta / dt) > 2){ //2 rad per second
 //            telemetry.addData("dtheta/dt", dTheta/dt);
@@ -432,13 +477,15 @@ class DriveEngine {
         telemetry.addData("power", power);
         telemetry.addData("moveD / power",mD * MyMath.ave(drdtArray) / power);
 
+        telemetry.addData("moveT term", tangentPower);
         if(power > .4) power = .4;
         //Don't worry, it's smoothed
 
         lastR = r;
         lastT = t;
 
-        return new double[]{Math.cos(theta) * power, Math.sin(theta) *  power};
+        return new double[]{Math.cos(theta) * power - Math.sin(theta) * tangentPower,
+                            Math.sin(theta) * power + Math.cos(theta) * tangentPower};
     }
 
     
@@ -446,7 +493,7 @@ class DriveEngine {
     void orbit(double radius, double angle, double speed)
     {
         telemetry.addData("orbit radius", radius);
-        radius /= robotRadius;
+        radius /= effectiverobotRadius;
 
         double[] powers = new double[motors.size()];
 
