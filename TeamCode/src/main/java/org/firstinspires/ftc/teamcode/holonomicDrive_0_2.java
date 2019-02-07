@@ -15,10 +15,12 @@ public class holonomicDrive_0_2 extends LinearOpMode
     private boolean leftButtonPressed = false;
     private boolean rightButtonPressed = false;
 
+    private boolean autoOverride = false;
+
     @Override
     public void runOpMode()
     {
-        robot = Bogg.determineRobot(hardwareMap, telemetry);
+        robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
         robot.driveEngine.driveAtAngle(Math.PI);
         waitForStart();
 
@@ -28,15 +30,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            telemetry.addData("touchLander", robot.sensors.touchLanderIsPressed());
-            if(!robot.manualRotate(true, -g2.right_stick_x / 3))
-                if(!robot.manualRotate(true, g2.left_stick_x /3))
-                    robot.manualCurvy(
-                            g1.left_stick_button,
-                            g1.left_stick_x,
-                            robot.sensors.touchLanderIsPressed()? 0 : g1.left_stick_y,
-                            g1.right_stick_x);
-
             if(g1.dpad_down)
                 robot.setBrake(Bogg.Direction.On);
             else if(g1.dpad_up)
@@ -56,12 +49,15 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     timer.reset();
                     leftButtonPressed = true;
                 }
+                if(timer.seconds() > .5)
+                    autoOverride = !robot.driveEngine.moveOnPath(true, false, new double[]{Math.PI});
+
                 robot.endEffector.flipUp(timer.seconds());
             }
             else
                 leftButtonPressed = false;
 
-            if(!robot.endEffector.extend(-g2.left_stick_y * 4));
+            if(!robot.endEffector.extend(-g2.left_stick_y * 4))
                 robot.endEffector.extend(g2.right_stick_y * 3);
 
             //When up
@@ -70,20 +66,38 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     timer.reset();
                     rightButtonPressed = true;
                 }
+                if(timer.seconds() > .5)
+                    autoOverride = !robot.driveEngine.moveOnPath(true, false, new double[]{Math.PI});
+
                 robot.endEffector.flipDown(timer.seconds());
             }
             else
                 rightButtonPressed = false;
 
 
+            //If we are not turning autonomously
+            if(!autoOverride) {
+                if (!robot.manualRotate(true, -g2.right_stick_x / 3))
+                    if (!robot.manualRotate(true, g2.left_stick_x / 3))
+                        robot.manualCurvy(
+                                g1.left_stick_button,
+                                g1.left_stick_x,
+                                g1.left_stick_y,
+                                g1.right_stick_x);
+
+                //if the moveOnPaths have finished
+                robot.driveEngine.checkpoint.clear();
+            }
+
+            //even if we never finish the turn, enable manual driving
+            autoOverride = false;
 
 
-            // Display the current value
+
+            // Display the current values
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
             robot.driveEngine.reportPositionsToScreen();
-            telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
-            telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 
             telemetry.update();
             robot.update();
