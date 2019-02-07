@@ -95,6 +95,11 @@ public class MyMath {
         return min;
     }
 
+    static double limitMagnitude(double value, double limit)
+    {
+        return closestToZero(value, limit * Math.signum(value));
+    }
+
     static double radians(double degrees)
     {
         return degrees * Math.PI / 180;
