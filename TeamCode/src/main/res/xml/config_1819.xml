@@ -11,12 +11,12 @@
         </LynxModule>
         <LynxModule name="Expansion Hub 2" port="2"><!--DQ2MHRLJ -->
             <NeveRest20Gearmotor name="motorBL" port="0" />
-            <NeveRest20Gearmotor name="mineralLiftL" port="1" />
+            <NeveRest20Gearmotor name="slideMotor" port="1" />
             <NeveRest20Gearmotor name="motorFL" port="2" />
-            <Servo name="servo" port="1"/>
-            <Servo name ="slide" port="2"/>
-            <ContinuousRotationServo name ="outake1" port="3"/>
-            <ContinuousRotationServo name ="outake2" port="4"/>
+            <Servo name="binLeveler" port="1"/>
+            <Servo name="binLifter" port="0"/>
+            <Servo name="servo_U" port="4"/>
+            <Servo name="servo_V" port="5"/>
         </LynxModule>
     </LynxUsbDevice>
  </Robot>

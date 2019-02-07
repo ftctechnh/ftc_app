@@ -88,13 +88,15 @@ abstract public class superAuto extends LinearOpMode {
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor mineralLiftL;
+    DcMotor slideMotor;
     DcMotor mineralLiftR;
     DcMotor robotLift;
-    Servo servo;
-    Servo slide;
-    CRServo outake1;
-    CRServo outake2;
+    Servo binLeveler;
+    Servo binLifter;
+    Servo servo_U;
+    Servo servo_V;
+    /*CRServo outake1;
+    CRServo outake2;*/
 
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
     static final int gyroFlipped = 1;
@@ -176,16 +178,19 @@ abstract public class superAuto extends LinearOpMode {
         robotLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         if (fullRobot) {
-            mineralLiftL = hardwareMap.dcMotor.get("mineralLiftL");
-            mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
+            slideMotor = hardwareMap.dcMotor.get("slideMotor");
+            slideMotor.setDirection(DcMotor.Direction.FORWARD);
             mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
             mineralLiftR.setDirection(DcMotor.Direction.FORWARD);
             robotLift = hardwareMap.dcMotor.get("robotLift");
             robotLift.setDirection(DcMotor.Direction.FORWARD);
-            servo = hardwareMap.servo.get("servo");
-            slide = hardwareMap.servo.get("slide"); //
+            binLeveler = hardwareMap.servo.get("binLeveler");
+            binLifter = hardwareMap.servo.get("binLifter");
+            servo_U = hardwareMap.servo.get("servo_U");
+            servo_V = hardwareMap.servo.get("servo_V");
+            /*slide = hardwareMap.servo.get("slide"); //
             outake1 = hardwareMap.crservo.get("outake1");
-            outake2 = hardwareMap.crservo.get("outake2");
+            outake2 = hardwareMap.crservo.get("outake2");*/
             rangeSensor = hardwareMap.get(ModernRoboticsI2cRangeSensor.class, "rangeSensor");
         }
     }

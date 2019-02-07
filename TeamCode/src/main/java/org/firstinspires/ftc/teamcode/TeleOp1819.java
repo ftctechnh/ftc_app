@@ -24,13 +24,16 @@ public class TeleOp1819 extends OpMode
     DcMotor motorFL;
     DcMotor motorBR;
     DcMotor motorBL;
-    DcMotor mineralLiftL;
+    DcMotor slideMotor;
     DcMotor mineralLiftR;
     DcMotor robotLift;
-    Servo servo;
-    Servo slide;
+    Servo binLeveler;
+    Servo binLifter;
+    Servo servo_U;
+    Servo servo_V;
+    /*Servo slide;
     CRServo outake1;
-    CRServo outake2;
+    CRServo outake2;*/
 
 
    /* IntegratingGyroscope gyro;
@@ -59,17 +62,21 @@ public class TeleOp1819 extends OpMode
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
-        mineralLiftL= hardwareMap.dcMotor.get("mineralLiftL");
-        mineralLiftL.setDirection(DcMotor.Direction.FORWARD);
+        slideMotor= hardwareMap.dcMotor.get("slideMotor");
+        slideMotor.setDirection(DcMotor.Direction.FORWARD);
         mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
         mineralLiftR.setDirection(DcMotor.Direction.REVERSE);
         robotLift = hardwareMap.dcMotor.get("robotLift");
         robotLift.setDirection(DcMotor.Direction.FORWARD);
         robotLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        servo = hardwareMap.servo.get("servo");
+        binLeveler = hardwareMap.servo.get("binLeveler");
+        binLifter = hardwareMap.servo.get("binLifter");
+        servo_U = hardwareMap.servo.get("servo_U");
+        servo_V = hardwareMap.servo.get("servo_V");
+        /*servo = hardwareMap.servo.get("servo");
         slide = hardwareMap.servo.get("slide"); //
         outake1 = hardwareMap.crservo.get("outake1");
-        outake2 = hardwareMap.crservo.get("outake2");
+        outake2 = hardwareMap.crservo.get("outake2");*/
 
     }
 
@@ -130,59 +137,41 @@ public class TeleOp1819 extends OpMode
         posxFlip = (float) pCurve(posxFlip);
         posyFlip = (float) pCurve(posyFlip);
 
-
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
 
-        //Moves slide servo back and forth
-        if(rightPad && !leftPad){
 
-            slide.setPosition(1);
-        }
-
-        else if(leftPad && !rightPad ){
-            slide.setPosition(0);
-        }
-
-        //Moves outake servos
-        if(x && !a) {
-            outake1.setPower(1);
-            outake2.setPower(1);
-        }
-        else if(x && a) {
-            outake1.setPower(-1);
-            outake2.setPower(-1);
-        }
-        else{
-            outake1.setPower(0);
-            outake2.setPower(0);
-        }
-
-
+        if(b)
+            binLeveler.setPosition(1);
+        if(x)
+            binLifter.setPosition(1);
+        /*if()
+            servo_U.setPosition(1);
+        if()
+            servo_V.setPosition(1);*/
         //Robot Lifting
         if(y) {
             robotLift.setPower(1);//up
         }
-        else if (a && !x)
+        else if (a)
             robotLift.setPower(-1);//down
         else
             robotLift.setPower(0);
 
-        double mineralLiftPower = 0;
         if(dpad_up)
-            mineralLiftPower = 1;
+           mineralLiftR.setPower(1);
         else if(dpad_down)
-            mineralLiftPower = -1;
+            mineralLiftR.setPower(-1);
 
-        mineralLiftL.setPower(mineralLiftPower);
-        mineralLiftR.setPower(mineralLiftPower);
+        if(leftPad)
+            slideMotor.setPower(1);
+        else if(rightPad)
+            slideMotor.setPower(-1);
+        else
+            slideMotor.setPower(0);
 
-       if(b)
-           servo.setPosition(1);
-       else
-           servo.setPosition(0);
 
-        //  pivot left
+        // pivot left
         if (LT != 0)  {
 
             motorFL.setPower(1);
@@ -279,13 +268,13 @@ public class TeleOp1819 extends OpMode
        double dead = .2;
 
        // Regular
-       double max = .5;
-       if (LB == true && RB == false){
+       double max = 1;
+       /*if (LB == true && RB == false){
            // Turbo with left bumper
            max = 1;
-       } else if (LB == false && RB == true){
+       } else */if (LB == false && RB == true){
            // Turtle with right bumper
-           max = .3;
+           max = .6;
        }
 
        int direction = 1;
@@ -303,6 +292,7 @@ public class TeleOp1819 extends OpMode
        return (dScale);
    }
 
+   //NOT USED
     double pCurve ( float dVal ) {
     /*
      * This method adjusts the joystick input to apply a power curve that

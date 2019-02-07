@@ -19,21 +19,20 @@
         iAmBlue = true;
 
         setUp();
-       /*lowerRobot(6.9, 1);
-        translate(-1,0,.5, 0.5);
-        pivotToVuforia(-45);
-        goToPoint(1200,-1200);
-       for(int x=0; x<10000; x++){
-            angles =(imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES));
-            telemetry.addData("Z: ", angles.firstAngle);
-            telemetry.addData("Y: ", angles.secondAngle);
-            telemetry.addData("X: ", angles.thirdAngle);
-            telemetry.update();
-       }*/
+        lowerRobot(7.2, 1);
+        translate(-1,0,.75, 0.5);
+        followHeading(0,1.3, 0f,1f);
 
 
-        followHeading(0,2.2, -.5f,.4f);
-        tensorFlowCase();
+
+
+        // followHeading(0,2.2, -.5f,.4f); Translate on side to in front of first mineral
+        //tensorFlowCase();
+
+
+
+
+
         /*followHeading(0,1.4, .8f,0);
         fancyGyroPivot(45);
         followHeading(45,0.5, .8f,0);

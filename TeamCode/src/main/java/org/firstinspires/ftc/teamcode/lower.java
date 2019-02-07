@@ -15,7 +15,6 @@ public class lower extends superAuto {
         iAmBlue = true;
 
         setUp();
-        configVuforiaRoverRuckus();
         lowerRobot(7.2, -1);
     }
 }
