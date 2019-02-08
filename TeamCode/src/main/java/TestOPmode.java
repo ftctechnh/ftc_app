@@ -20,7 +20,7 @@ public class TestOPmode extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive()){
-            telemetry.addData("cyka blyat", "cyka blyat");  //moto
+            telemetry.addData("cyka blyat", "cyka blyat");  //motto
 
             //getting input from controller for setting motor power
             expectedLeft = -this.gamepad1.left_stick_y;
