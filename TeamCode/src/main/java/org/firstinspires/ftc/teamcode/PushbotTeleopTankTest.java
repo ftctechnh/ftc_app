@@ -107,10 +107,10 @@ public class PushbotTeleopTankTest extends OpMode{
 
 
         // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -(((gamepad1.left_stick_y)/2)+speed);
+        left = -(((gamepad1.left_stick_y)/1.3)+speed);
         intleft=gamepad2.left_stick_y;
         //left = 0.0;
-        right =((gamepad1.right_stick_y)/2)+speed;
+        right =((gamepad1.right_stick_y)/1.3)+speed;
         robot.lifter.setPower(intleft);
         robot.top_left.setPower(right);
         robot.bot_left.setPower(right);
@@ -126,7 +126,10 @@ public class PushbotTeleopTankTest extends OpMode{
         if (gamepad1.right_bumper) {
             speed = -0.5;
         }
-        else {
+        else if(gamepad1.left_bumper) {
+            speed = 0.5;
+        }
+        else{
             speed = 0;
         }
 
