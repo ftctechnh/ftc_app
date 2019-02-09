@@ -27,6 +27,7 @@ public class TeleOp1819 extends OpMode
     DcMotor slideMotor;
     DcMotor mineralLiftR;
     DcMotor robotLift;
+    DcMotor sweeperMotor;
     Servo binLeveler;
     Servo binLifter;
     Servo servo_U;
@@ -62,6 +63,8 @@ public class TeleOp1819 extends OpMode
         motorBL.setDirection(DcMotor.Direction.FORWARD);
         motorBR = hardwareMap.dcMotor.get("motorBR");
         motorBR.setDirection(DcMotor.Direction.FORWARD);
+        sweeperMotor = hardwareMap.dcMotor.get("sweeperMotor");
+        sweeperMotor.setDirection(DcMotor.Direction.FORWARD);
         slideMotor= hardwareMap.dcMotor.get("slideMotor");
         slideMotor.setDirection(DcMotor.Direction.FORWARD);
         mineralLiftR = hardwareMap.dcMotor.get("mineralLiftR");
@@ -111,7 +114,8 @@ public class TeleOp1819 extends OpMode
         float FRBLPower = 0.f;
         float posx = gamepad1.left_stick_x;
         float posy = gamepad1.left_stick_y;
-        float posyFlip = gamepad1.right_stick_y;
+        float intake = gamepad1.right_stick_y;
+        float posyFlip = 0;
         float posxFlip = gamepad1.right_stick_x;
         float LT = gamepad1.left_trigger;
         float RT = gamepad1.right_trigger;
@@ -142,9 +146,11 @@ public class TeleOp1819 extends OpMode
 
 
         if(b)
-            binLeveler.setPosition(1);
+            servo_U.setPosition(0);
+            servo_V.setPosition(1);
         if(x)
-            binLifter.setPosition(1);
+            servo_U.setPosition(1);
+            servo_V.setPosition(0);
         /*if()
             servo_U.setPosition(1);
         if()
@@ -193,7 +199,13 @@ public class TeleOp1819 extends OpMode
         }
 
 
-        //  Driving
+        //  Intake
+        if ( ( intake != 0) ) {
+            sweeperMotor.setPower(intake);
+        }
+
+
+            //  Driving
         if ( ( posy != 0) || ( posx != 0 ) ) {
 
             FRBLPower = -posy - posx;
