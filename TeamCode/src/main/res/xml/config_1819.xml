@@ -4,7 +4,7 @@
     <LynxUsbDevice name="Expansion Hub 2" serialNumber="DQ2MHRLJ" parentModuleAddress="2">
         <LynxModule name="Expansion Hub 3" port="3">
             <!--<REVRoboticsCoreHexMotor name="motorBR" port="0" />-->
-            <RevRoboticsCoreHexMotor name="motorBR" port="0"
+            <RevRoboticsCoreHexMotor name="motorBR" port="0" />
             <NeveRest20Gearmotor name="mineralLiftR" port="1" />
             <RevRoboticsCoreHexMotor name="motorFR" port="2" />
             <TetrixMotor name="robotLift" port="3"/>
