@@ -79,7 +79,7 @@ public class GetReady extends LinearOpMode {
             }
 
             robot.armDrive.setPower(0d);
-            robot.armServo.setPosition(0d);
+            robot.armServo.setPosition(1d);
             robot.handServo.setPosition(0d);
             robot.markerServo.setPosition(0.1d);
 

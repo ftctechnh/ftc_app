@@ -96,7 +96,7 @@ public abstract class RoverRuckus15091 extends LinearOpMode {
     final void landing() {
         robot.beep();
 
-        robot.armServo.setPosition(0d);
+        robot.armServo.setPosition(1d);
         robot.handServo.setPosition(0d);
         robot.markerServo.setPosition(0.1d);
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

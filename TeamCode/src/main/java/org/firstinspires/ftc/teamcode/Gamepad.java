@@ -148,7 +148,8 @@ public class Gamepad extends LinearOpMode {
             Hardware15091.ArmInfo armInfo = robot.setArmTarget(1.305d);
             armPower = armInfo.PowerToSet;
             if (armInfo.Done) {
-                armPosition = 0.7139d; //0.3489d;
+                //armPosition = 0.7139d;
+                armPosition = 0.3778d;
                 handPosition = 0.3539d;
                 if (!wasBeep) {
                     robot.beep();
@@ -157,14 +158,15 @@ public class Gamepad extends LinearOpMode {
             }
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
             armPower = robot.setArmTarget(2.329d).PowerToSet;
-            armPosition = 0.9394d; //0.1528d;
+            //armPosition = 0.9394d;
+            armPosition = 0.1528d;
             handPosition = 0.8261d;
         } else if (gamepad2.y || gamepad1.y) { //End game
             Hardware15091.ArmInfo armInfo = robot.setArmTarget(1.305d);
             armPower = armInfo.PowerToSet;
             if (armInfo.Done) {
                 handPosition = 0d;
-                armPosition = 0d;
+                armPosition = 1d;
                 if (!wasBeep) {
                     robot.beep();
                     wasBeep = true;
@@ -176,7 +178,7 @@ public class Gamepad extends LinearOpMode {
                 armPower = armInfo.PowerToSet;
                 if (armInfo.Done) {
                     handPosition = 0d;
-                    armPosition = 0d;
+                    armPosition = 1d;
                     armSequence = 1;
                 }
             }
