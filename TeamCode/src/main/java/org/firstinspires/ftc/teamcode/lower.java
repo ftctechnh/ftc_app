@@ -15,6 +15,6 @@ public class lower extends superAuto {
         iAmBlue = true;
 
         setUp();
-        lowerRobot(7.2, -1);
+        lowerRobot(7.4, -1);
     }
 }

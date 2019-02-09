@@ -17,7 +17,7 @@
             <RevRoboticsCoreHexMotor name="motorFL" port="2" />
             <RevRoboticsCoreHexMotor name="sweeperMotor" port="3" />
             <Servo name="binLeveler" port="1"/>
-            <Servo name="binLifter" port="0"/>
+            <ContinuousRotationServo name="binLifter" port="0"/>
             <Servo name="servo_U" port="4"/>
             <Servo name="servo_V" port="5"/>
         </LynxModule>

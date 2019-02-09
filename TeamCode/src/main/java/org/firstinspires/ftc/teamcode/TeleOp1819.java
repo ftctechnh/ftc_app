@@ -29,7 +29,7 @@ public class TeleOp1819 extends OpMode
     DcMotor robotLift;
     DcMotor sweeperMotor;
     Servo binLeveler;
-    Servo binLifter;
+    CRServo binLifter;
     Servo servo_U;
     Servo servo_V;
     /*Servo slide;
@@ -73,7 +73,7 @@ public class TeleOp1819 extends OpMode
         robotLift.setDirection(DcMotor.Direction.FORWARD);
         robotLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         binLeveler = hardwareMap.servo.get("binLeveler");
-        binLifter = hardwareMap.servo.get("binLifter");
+        binLifter = hardwareMap.crservo.get("binLifter");
         servo_U = hardwareMap.servo.get("servo_U");
         servo_V = hardwareMap.servo.get("servo_V");
         /*servo = hardwareMap.servo.get("servo");
@@ -144,22 +144,29 @@ public class TeleOp1819 extends OpMode
         LT = (float) powerCurve(LT);
         RT = (float) powerCurve(RT);
 
-
-        if(b)
-            servo_U.setPosition(0);
-            servo_V.setPosition(1);
-        if(x)
+        if(x&&b)
+            binLifter.setPower(1);
+        else if(y&&a)
+            binLifter.setPower(-1);
+        else
+            binLifter.setPower(0);
+        if(b && (!x)) {
             servo_U.setPosition(1);
+            servo_V.setPosition(1);
+        }
+        if(x && (!b)){
+            servo_U.setPosition(0);
             servo_V.setPosition(0);
+        }
         /*if()
             servo_U.setPosition(1);
         if()
             servo_V.setPosition(1);*/
         //Robot Lifting
-        if(y) {
+        if(y && !a) {
             robotLift.setPower(1);//up
         }
-        else if (a)
+        else if (a &&!y)
             robotLift.setPower(-1);//down
         else
             robotLift.setPower(0);
@@ -201,7 +208,7 @@ public class TeleOp1819 extends OpMode
 
         //  Intake
         if ( ( intake != 0) ) {
-            sweeperMotor.setPower(intake);
+            //sweeperMotor.setPower(powerCurve(intake));
         }
 
 

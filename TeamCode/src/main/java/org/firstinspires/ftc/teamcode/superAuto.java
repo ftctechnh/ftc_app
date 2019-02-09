@@ -92,11 +92,9 @@ abstract public class superAuto extends LinearOpMode {
     DcMotor mineralLiftR;
     DcMotor robotLift;
     Servo binLeveler;
-    Servo binLifter;
+    CRServo binLifter;
     Servo servo_U;
     Servo servo_V;
-    /*CRServo outake1;
-    CRServo outake2;*/
 
     //gyro flipped is -1 is the gyro is inverted, otherwise it is 1.
     static final int gyroFlipped = 1;
@@ -185,7 +183,7 @@ abstract public class superAuto extends LinearOpMode {
             robotLift = hardwareMap.dcMotor.get("robotLift");
             robotLift.setDirection(DcMotor.Direction.FORWARD);
             binLeveler = hardwareMap.servo.get("binLeveler");
-            binLifter = hardwareMap.servo.get("binLifter");
+            binLifter = hardwareMap.crservo.get("binLifter");
             servo_U = hardwareMap.servo.get("servo_U");
             servo_V = hardwareMap.servo.get("servo_V");
             /*slide = hardwareMap.servo.get("slide"); //
@@ -536,16 +534,16 @@ abstract public class superAuto extends LinearOpMode {
 
             double FRBLPower = (-basePosy) - basePosx;
             double FLBRPower = (-basePosy) + basePosx;
-            motorFR.setPower(FRBLPower + addPower);
-            motorFL.setPower(FLBRPower - addPower);
-            motorBR.setPower(FLBRPower + addPower);
-            motorBL.setPower(FRBLPower - addPower);
+            motorFR.setPower(-(FRBLPower + addPower));
+            motorFL.setPower(-(FLBRPower - addPower));
+            motorBR.setPower(-(FLBRPower + addPower));
+            motorBL.setPower(-(FRBLPower - addPower));
         }
     }
 
     void translate(double posx, double posy, double seconds, double power) {
-        double FRBLPower = ((-posy) - posx) * power;
-        double FLBRPower = ((-posy) + posx) * power;
+        double FRBLPower = -((-posy) - posx) * power;
+        double FLBRPower = -((-posy) + posx) * power;
         motorFR.setPower(FRBLPower);
         motorFL.setPower(FLBRPower);
         motorBR.setPower(FLBRPower);
