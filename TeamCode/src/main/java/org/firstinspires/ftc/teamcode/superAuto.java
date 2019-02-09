@@ -520,7 +520,7 @@ abstract public class superAuto extends LinearOpMode {
         //angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         //double currentHeading = angles.firstAngle;
         runtime.reset();
-        while (((runtime.seconds() < time))) {
+        while (((runtime.seconds() < time) && (opModeIsActive()))) {
             adjustHeading(targetHeading, basePosx, basePosy);
         }
         sR();
@@ -722,7 +722,7 @@ abstract public class superAuto extends LinearOpMode {
 
     void Wait(double WaitTime) {
         runtime.reset();
-        while (runtime.seconds() < WaitTime) {
+        while ((runtime.seconds() < WaitTime) && (opModeIsActive())) {
             //Comment this out to avoid it overwriting other telemetry
             //telemetry.addData("5", " %2.5f S Elapsed", runtime.seconds());
             //telemetry.update();
@@ -889,6 +889,31 @@ abstract public class superAuto extends LinearOpMode {
                     telemetry.addData("WE Stopped Robot Cause Counter =  ", counter);
                     telemetry.update();
                     tfod.deactivate();
+                    return;
+                }
+            }
+        }
+    }
+
+    void tensorFlowJeffrey() {
+        tfod.activate();
+        List<Recognition> updatedRecognitions;
+        int counter = 0;
+        while (true) {
+            adjustHeading(0, 0.5f, 0);
+            if (tfod != null) {
+            updatedRecognitions = tfod.getUpdatedRecognitions();
+                if (updatedRecognitions != null) {
+                    for (Recognition recognition : updatedRecognitions){
+                        if((recognition.getLabel().equals(LABEL_SILVER_MINERAL))|| (recognition.getLabel().equals((LABEL_GOLD_MINERAL)))){
+                            counter++;
+                            if (! (counter == 3)) {
+                                Wait(0.8);
+                            }
+                        }
+                    }
+                }
+                if(counter ==3) {
                     return;
                 }
             }

@@ -162,6 +162,8 @@ public class TeleOp1819 extends OpMode
            mineralLiftR.setPower(1);
         else if(dpad_down)
             mineralLiftR.setPower(-1);
+        else
+            mineralLiftR.setPower(0);
 
         if(leftPad)
             slideMotor.setPower(1);
