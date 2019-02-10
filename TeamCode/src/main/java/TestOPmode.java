@@ -26,7 +26,7 @@ public class TestOPmode extends LinearOpMode {
             expectedLeft = -this.gamepad1.left_stick_y;
             expectedRight = this.gamepad1.right_stick_y;
 
-            //set motorpower
+            //set motor power
             leftMotor.setPower(expectedLeft);
             rightMotor.setPower(expectedRight);
 
