@@ -1,5 +1,5 @@
 //Razzle Dazzle of Fantazzmagazzles Code
-//This was a collective effort by team 13383
+//This was a collective effort by Team 13383
 //The code was worked on by: Aniketh Kolla, Vasudev Menon, and Vedang Singhal
 
 package org.firstinspires.ftc.teamcode;
@@ -22,13 +22,13 @@ public class holoDrive extends OpMode {
     DcMotor back_left;
     DcMotor front_left;
     DcMotor front_right;
-    DcMotor lift;
+    //DcMotor lift;
     DcMotor dustbinIntake;
     DcMotor extendIntake;
     DcMotor moveIntake;
     Servo dustBinServo;
     Servo liftLockServo;
-    DigitalChannel stop;
+    //DigitalChannel stop;
 
     @Override
     public void init() {
@@ -37,13 +37,13 @@ public class holoDrive extends OpMode {
         back_left = hardwareMap.dcMotor.get("back_left");
         front_left = hardwareMap.dcMotor.get("front_left");
         front_right = hardwareMap.dcMotor.get("front_right");
-        lift = hardwareMap.dcMotor.get("lift");
+        //lift = hardwareMap.dcMotor.get("lift");
         dustbinIntake = hardwareMap.dcMotor.get("arm_Intake");
         extendIntake = hardwareMap.dcMotor.get("extend_Intake");
         moveIntake = hardwareMap.dcMotor.get("move_intake");
         dustBinServo = hardwareMap.servo.get("dust_bin");
         liftLockServo = hardwareMap.servo.get("lift_lock");
-        stop.setMode(DigitalChannel.Mode.INPUT);
+        //stop.setMode(DigitalChannel.Mode.INPUT);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class holoDrive extends OpMode {
         double yPower = gamepad1.left_stick_y;  //power to spin holonomic
         double xPower = gamepad1.left_stick_x;  //power to drive holonomic
         double spinPower = -gamepad1.right_stick_x/2; //power to drive holonomic
-        double liftPower = gamepad2.left_stick_y; //power for lift
+        //double liftPower = gamepad2.left_stick_y; //power for lift
         double extendPower = gamepad2.right_stick_y/4; //power for intake extension
         double movePower = gamepad2.left_stick_x/2; //power to move arm
         double dustbinPower = -gamepad2.right_stick_x/6; //power for intake dustbin
@@ -121,13 +121,23 @@ public class holoDrive extends OpMode {
         }
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        if (stop.getState() == true && liftPower>=0) {
-            lift.setPower(liftPower);
-        }
-        else{
-            lift.setPower(0.5);
-        }
         //this controls the lift
+//        if (stop.getState() == false) {
+//            lift.setPower(0.5);
+//        }
+//        else if(stop.getState() == true && liftPower>=0){
+//            lift.setPower(liftPower);
+//        }
+        //lift.setPower(liftPower);
+
+        if (gamepad2.x == true){
+            telemetry.addData("gamepad2 x true", "%f", 0.1);
+            liftLockServo.setPosition(0.1);
+        }
+       else if (gamepad2.a == true) {
+        telemetry.addData("gamepad2 b true", "%f", 1.0);
+        liftLockServo.setPosition(1.0);
+        }
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //these are the intake controls
 
@@ -149,20 +159,19 @@ public class holoDrive extends OpMode {
             dustBinServo.setPosition(0.9);
         }
 
-
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //this lets us see the power the motors are being set to
         telemetry.addData("xPower", "%.2f",  xPower);
         telemetry.addData("yPower", "%.2f",  yPower);
-        telemetry.addData("liftPower", "%.2f",  liftPower);
+        //telemetry.addData("liftPower", "%.2f",  liftPower);
         telemetry.addData("extendPower", "%.2f",  extendPower);
         telemetry.addData("movePower", "%.2f",  movePower);
-        if (stop.getState() == true) {
-            telemetry.addData("stop", "Is Not Pressed");
-        }
-        else {
-            telemetry.addData("stop", "Is Pressed");
-        }
+//        if (stop.getState() == true) {
+//            telemetry.addData("stop", "Is Not Pressed");
+//        }
+//        else {
+//            telemetry.addData("stop", "Is Pressed");
+//        }
         telemetry.update();
     }
 }

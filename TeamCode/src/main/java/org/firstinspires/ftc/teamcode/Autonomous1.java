@@ -35,6 +35,7 @@ public class Autonomous1 extends LinearOpMode {
     DcMotor back_left;
     DcMotor front_left;
     DcMotor front_right;
+    DcMotor moveIntake;
     Servo liftLockServo;
     Servo dustBinServo;
     private ElapsedTime runtime = new ElapsedTime();
@@ -42,16 +43,17 @@ public class Autonomous1 extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         lift = hardwareMap.dcMotor.get("lift");
-        liftLockServo = hardwareMap.servo.get("lift_lock");
         back_right = hardwareMap.dcMotor.get("back_right");
         back_left = hardwareMap.dcMotor.get("back_left");
         front_left = hardwareMap.dcMotor.get("front_left");
         front_right = hardwareMap.dcMotor.get("front_right");
+        moveIntake = hardwareMap.dcMotor.get("move_intake");
+        liftLockServo = hardwareMap.servo.get("lift_lock");
         dustBinServo = hardwareMap.servo.get("dust_bin");
 
         waitForStart();
 
-        //
+
         lift.setPower(-1);
         int turnCount = 0;
         lift.setPower(-1);
@@ -69,36 +71,25 @@ public class Autonomous1 extends LinearOpMode {
         }
         runtime.reset();
         //move right
-        while (opModeIsActive() && (runtime.seconds() < 1.7)) {
-            front_left.setPower(0.5);
-            back_left.setPower(-0.5);
-            back_right.setPower(0.5);
-            front_right.setPower(-0.5);
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+            front_left.setPower(-0.5);
+            back_left.setPower(0.5);
+            back_right.setPower(-0.5);
+            front_right.setPower(0.5);
         }
 
         runtime.reset();
         //move back
-        while (opModeIsActive() && (runtime.seconds() < 1.7)) {
-            front_left.setPower(-0.5);
-            back_left.setPower(-0.5);
+        while (opModeIsActive() && (runtime.seconds() < 3.4)) {
+            front_left.setPower(0.5);
+            back_left.setPower(0.5);
             back_right.setPower(-0.5);
             front_right.setPower(-0.5);
         }
+
         runtime.reset();
-        //spin 180 degrees so that the robo front is facing depot/crater
-        while (opModeIsActive() && (runtime.seconds() < 1.7)) {
-            back_right.setPower(-0.5);
-            back_left.setPower(0.5);
-            front_left.setPower(0.5);
-            front_right.setPower(-0.5);
-        }
-        runtime.reset();
-        //moves forward
-        while (opModeIsActive() && (runtime.seconds() < 1.7)) {
-            back_right.setPower(0.5);
-            back_left.setPower(0.5);
-            front_left.setPower(0.5);
-            front_right.setPower(0.5);
+        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+            moveIntake.setPower(0.5);
         }
         // drops the marker on the
         //dustBinServo.setPosition(0.55);
