@@ -55,11 +55,11 @@ public class MinerControl {
     }
 
     public void Extend() {
-        LinearMinerM.setPower(LINEAR_SPEED);
+        LinearMinerM.setPower(-LINEAR_SPEED);
     }
 
     public void Retract() {
-        LinearMinerM.setPower(-LINEAR_SPEED);
+        LinearMinerM.setPower(LINEAR_SPEED);
     }
 
     public void MinerStop() {
@@ -87,12 +87,12 @@ public class MinerControl {
     }
 
     public void IntakeRaise() {
-        MinerLeftS.setPosition(0);
-        MinerRightS.setPosition(0);
+        MinerLeftS.setPosition(0.5);
+        MinerRightS.setPosition(0.5);
     }
 
     public void IntakeLower() {
         MinerLeftS.setPosition(1);
-        MinerRightS.setPosition(1);
+        MinerRightS.setPosition(0);
     }
 }
