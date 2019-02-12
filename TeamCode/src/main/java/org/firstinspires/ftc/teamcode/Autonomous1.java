@@ -51,40 +51,50 @@ public class Autonomous1 extends LinearOpMode {
         liftLockServo = hardwareMap.servo.get("lift_lock");
         dustBinServo = hardwareMap.servo.get("dust_bin");
 
+
+
+
         waitForStart();
 
 
-        lift.setPower(-1);
-        int turnCount = 0;
-        lift.setPower(-1);
-        liftLockServo.setPosition(0.96);
-        lift.setPower(-1);
-        liftLockServo.setPosition(0.97);
-        lift.setPower(-1);
-        liftLockServo.setPosition(0.98);
-        lift.setPower(-1);
-        liftLockServo.setPosition(0.99);
-        lift.setPower(-1);
-        liftLockServo.setPosition(1.0);
-        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
-            lift.setPower(0.5);
-        }
-        runtime.reset();
+//        lift.setPower(-1);
+//        int turnCount = 0;
+//        lift.setPower(-1);
+//        liftLockServo.setPosition(0.96);
+//        lift.setPower(-1);
+//        liftLockServo.setPosition(0.97);
+//        lift.setPower(-1);
+//        liftLockServo.setPosition(0.98);
+//        lift.setPower(-1);
+//        liftLockServo.setPosition(0.99);
+//        lift.setPower(-1);
+//        liftLockServo.setPosition(1.0);
+//        while (opModeIsActive() && (runtime.seconds() < 1.5)) {
+//            lift.setPower(0.5);
+//        }
+//        runtime.reset();
         //move right
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+//        while (opModeIsActive() && (runtime.seconds() < 3.4)) {
+//            front_left.setPower(0.5);
+//            back_left.setPower(0.5);
+//            back_right.setPower(-0.5);
+//            front_right.setPower(-0.5);
+//        }
+//
+          runtime.reset();
+        //move back
+        while (opModeIsActive() && (runtime.seconds() < 0.75)) {
             front_left.setPower(-0.5);
-            back_left.setPower(0.5);
-            back_right.setPower(-0.5);
+            back_left.setPower(-0.5);
+            back_right.setPower(0.5);
             front_right.setPower(0.5);
         }
 
-        runtime.reset();
-        //move back
-        while (opModeIsActive() && (runtime.seconds() < 3.4)) {
-            front_left.setPower(0.5);
-            back_left.setPower(0.5);
-            back_right.setPower(-0.5);
-            front_right.setPower(-0.5);
+        while (opModeIsActive() && (runtime.seconds() < 0.35)) {
+            back_right.setPower(1);
+            back_left.setPower(1);
+            front_left.setPower(-1);
+            front_right.setPower(-1);
         }
 
         runtime.reset();
