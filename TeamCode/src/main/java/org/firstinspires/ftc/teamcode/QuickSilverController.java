@@ -372,10 +372,10 @@ public class QuickSilverController extends OpMode {
             boolean extendIn = gamepad1.left_bumper;
             double lifterManualPower = 0.0;
             if (extendOut) {
-                lifterManualPower = -1.0;
+                lifterManualPower = 1.0;
             }
             if (extendIn) {
-                lifterManualPower = 1.0;
+                lifterManualPower = -1.0;
             }
             if (lifterManualPower != 0.0 || lifterState == 0) {
                 // we get here if we ar ealready in manual control, or if we are in the process of moving to a preset,

@@ -16,8 +16,8 @@ public abstract class ChickenSquat extends StandardChassis {
     public void init() {
         initMotors();
         initArm();
-        initGyroscope();
-        initTimeouts();
+       // initGyroscope();
+       initTimeouts();
     }
 
     /**

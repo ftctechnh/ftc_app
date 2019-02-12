@@ -70,7 +70,7 @@ public class ChassisConfig {
                 false,
                 false,
                 false,
-                false,
+                true,
                 true);
     }
 
