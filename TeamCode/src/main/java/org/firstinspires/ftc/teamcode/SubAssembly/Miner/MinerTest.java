@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.SubAssembly.Miner;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Miner.MinerControl;
 import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
 
@@ -20,11 +21,13 @@ public class MinerTest extends LinearOpMode {
         /* initialize sub-assemblies
          */
         MinerControl Miner = new MinerControl();
+        LedControl Led = new LedControl();
 
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
         Miner.init(this);
+        Led.init(this);
         telemetry.update();
 
         //waits for that giant PLAY button to be pressed on RC
@@ -52,16 +55,24 @@ public class MinerTest extends LinearOpMode {
                 Miner.Stoptake();
             }
 
-            if (egamepad2.left_trigger.released) {
+            /*if (egamepad2.left_trigger.released) {
                 Miner.Undump();
             } else if (egamepad2.left_bumper.released) {
                 Miner.Dump();
-            }
+            }*/
 
             if (egamepad2.y.released) {
                 Miner.IntakeLower();
+                Led.orange();
             } else if (egamepad2.x.released) {
                 Miner.IntakeRaise();
+                Led.white();
+            }
+
+            if (egamepad2.left_trigger.released) {
+                Miner.deployDown();
+            } else if (egamepad2.left_bumper.released) {
+                Miner.deployUp();
             }
 
 

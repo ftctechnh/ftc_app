@@ -6,6 +6,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
+import org.firstinspires.ftc.teamcode.SubAssembly.Sample.SampleTemplate;
+import org.firstinspires.ftc.teamcode.Utilities.EnumWrapper;
+import org.firstinspires.ftc.teamcode.Utilities.ServoControl;
+
+import java.util.EnumMap;
+
 /* Sub Assembly Class
  */
 public class MinerControl {
@@ -21,6 +27,14 @@ public class MinerControl {
     private Servo MinerLeftS;
     private Servo MinerRightS;
     private Servo DeployerS;
+
+    private EnumMap<SampleTemplate.Setpoints, Double> MapDepServo;
+
+    public ServoControl<SampleTemplate.Setpoints, EnumMap<SampleTemplate.Setpoints, Double>> DeployerServo;
+
+    public enum Setpoints implements EnumWrapper<SampleTemplate.Setpoints> {
+        Undump, Middump, Dump;
+    }
 
     /* Declare public class object */
     public TouchSensor MinerButtonI;
@@ -40,6 +54,14 @@ public class MinerControl {
         opmode = opMode;
         hwMap = opMode.hardwareMap;
 
+        MapDepServo = new EnumMap<SampleTemplate.Setpoints, Double>(SampleTemplate.Setpoints.class);
+
+
+        /* Assign setpoint values */
+        MapDepServo.put(SampleTemplate.Setpoints.POS_1, 0.2);
+        MapDepServo.put(SampleTemplate.Setpoints.POS_2, 0.65);
+        MapDepServo.put(SampleTemplate.Setpoints.POS_3, 1.0);
+
         /* Map hardware devices */
         LinearMinerM = hwMap.dcMotor.get("LinearMinerM");
         IntakeM = hwMap.dcMotor.get("IntakeM");
@@ -52,6 +74,8 @@ public class MinerControl {
         LinearMinerM.setPower(0);
         IntakeM.setPower(0);
         DeployerS.setPosition(1);
+
+        DeployerServo = new ServoControl(DeployerS, MapDepServo, SampleTemplate.Setpoints.POS_1, true);
     }
 
     public void Extend() {
@@ -70,7 +94,7 @@ public class MinerControl {
         IntakeM.setPower(INTAKE_SPEED);
     }
 
-    public void Stoptake()  {
+    public void Stoptake() {
         IntakeM.setPower(0);
     }
 
@@ -78,13 +102,17 @@ public class MinerControl {
         IntakeM.setPower(-INTAKE_SPEED);
     }
 
-    public void Dump() {
-        DeployerS.setPosition(0);
-    }
-
-    public void Undump() {
+    /*public void Dump() {
         DeployerS.setPosition(1);
-    }
+    }*/
+
+    /*public void Middump() {
+        DeployerS.setPosition(0.6);
+    }*/
+
+    /*public void Undump() {
+        DeployerS.setPosition(0.2);
+    }*/
 
     public void IntakeRaise() {
         MinerLeftS.setPosition(0.5);
@@ -94,5 +122,13 @@ public class MinerControl {
     public void IntakeLower() {
         MinerLeftS.setPosition(1);
         MinerRightS.setPosition(0);
+    }
+
+    public void deployUp() {
+        DeployerServo.nextSetpoint(true);
+    }
+
+    public void deployDown() {
+        DeployerServo.prevSetpoint(true);
     }
 }

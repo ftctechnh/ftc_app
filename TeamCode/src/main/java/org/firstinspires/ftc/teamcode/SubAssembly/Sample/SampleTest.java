@@ -32,6 +32,9 @@ public class SampleTest extends LinearOpMode {
             SubAssembly.test();
             telemetry.update();
 
+            SubAssembly.Servo_1.setSetpoint(SampleTemplate.Setpoints.POS_2);
+            SubAssembly.Servo_1.nextSetpoint();
+
             //let the robot have a little rest, sleep is healthy
             sleep(40);
         }
