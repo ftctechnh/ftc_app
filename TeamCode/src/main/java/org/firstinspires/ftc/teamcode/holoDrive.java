@@ -120,14 +120,14 @@ public class holoDrive extends OpMode {
             front_right.setPower(0);
         }
 
-//---------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        if (stop.getState() == true && liftPower>=0) {
-            lift.setPower(liftPower);
-        }
-        else{
+//---------------------------------------------------------------------------------------------------------------------------------------------------------------------//        if (stop.getState() == false) {
+        if (stop.getState() == false) {
             lift.setPower(0.5);
         }
-        //this controls the lift
+        else if(stop.getState() == true && liftPower>=0){
+            lift.setPower(liftPower);
+        }
+//        this controls the lift
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //these are the intake controls
 
