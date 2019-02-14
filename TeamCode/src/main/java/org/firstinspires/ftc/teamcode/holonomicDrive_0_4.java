@@ -63,10 +63,6 @@ public class holonomicDrive_0_4 extends LinearOpMode
                 auto = false;
             if(g2.right_stick_button)
 
-            if(robot.manualEffect(g2)) //we can always change the arm manually
-                auto = false;
-            if(auto)
-                robot.endEffector.flipUp(timer.seconds()); //we only do it autonomously when auto == true
 
 
             robot.manualLift(g1.y, g1.a);
