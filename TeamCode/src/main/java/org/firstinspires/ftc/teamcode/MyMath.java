@@ -50,8 +50,8 @@ public class MyMath {
     static double loopAngle(double target, double current)
     {
         double d = target - current;
-        if(d < -Math.PI) d += 2 * Math.PI; //keeps it between -pi and pi
-        if(d >  Math.PI) d -= 2 * Math.PI;
+        while(d < -Math.PI) d += 2 * Math.PI; //keeps it between -pi and pi
+        while(d >  Math.PI) d -= 2 * Math.PI;
         return d;
     }
 
