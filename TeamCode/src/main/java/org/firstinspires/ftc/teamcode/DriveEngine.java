@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -16,7 +17,7 @@ class DriveEngine {
     Sensors sensors;
 
     static double effectiveWheelDiameter = 5.32;
-    static double effectiverobotRadius = 7.15;
+    static double effectiveRobotRadius = 7.15;
 
     private double motorSpacing;
 
@@ -77,30 +78,6 @@ class DriveEngine {
         timer = new ElapsedTime();
     }
 
-    //If we ever use weirdly placed wheels
-    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, double[]... motorParams) {
-        this.telemetry = telemetry;
-        this.sensors = sensors;
-
-        int n = 0;
-        for (double[] motorParam : motorParams) {
-            double radius = motorParam[0];
-            double angle = motorParam[1];
-
-            motors.add(hardwareMap.dcMotor.get("motor" + n));
-        }
-
-
-        for(DcMotor motor: motors)
-        {
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor.setDirection(DcMotor.Direction.FORWARD);
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-
-        timer = new ElapsedTime();
-    }
 
     DriveEngine() {
     }
@@ -181,6 +158,7 @@ class DriveEngine {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
+        reportPositionsToScreen();
     }
 
     boolean justRestarted;
@@ -195,15 +173,15 @@ class DriveEngine {
 
     private double[] cumulativeDistance = new double[]{0,0};
 
-    ArrayList<Boolean> checkpoint = new ArrayList<>();
+    ArrayList<Boolean> checkpoints = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
-        return moveOnPath(false, false, args);
+        return moveOnPath(false, args);
     }
-    boolean moveOnPath(String key, boolean flow, double[] ... args){
+    boolean moveOnPath(String key, double[] ... args){
         if(keyList.contains(key))
             return true;
-        if(moveOnPath(false, flow, args)){
+        if(moveOnPath(false, args)){
             keyList.add(key);
             return true;
         }
@@ -213,37 +191,25 @@ class DriveEngine {
     /*
         Continuous means that the function will never return true and restart,
         it will continue to correct for error.
-        Flow means that once within the target radius, the robot will stop giving the
-        driveEngine new values.
-        If flow is enabled, you must start giving the driveEngine new values immediately,
-        else the robot will drift away.
 
-        c: true  f: true  – When the code does not change to a new task based on moveOnPath
-                            and there may be an overriding force in the other method of motion.
-                            Ex: when rotating to a point, but the driver may translate at the same time
-        c: true  f: false – When you continually test moving to different points,
-                            and moveOnPath is the only driving force.
-        c: false f: true  – When using two moveOnPath methods in conjunction?
-        c: false f: false – When the code changes to a new task after completion,
-                            and you want to stop once you reach a point.
+        c: true  – When you continually test moving to different points.
+        c: false – When the code changes to a new task after completion.
      */
-    boolean moveOnPath(boolean continuous, boolean flow, double[] ... args)
+    boolean moveOnPath(boolean continuous, double[] ... args)
     {
-        if(checkpoint.isEmpty()){
-            for (double[] arg : args) checkpoint.add(false);
+        if(checkpoints.isEmpty()){
+            for (double[] arg : args) checkpoints.add(false);
         }
 
         int c = 0;
-        for(boolean b: checkpoint)
+        for(boolean b: checkpoints)
             if(b)
                 c++;
 
-        telemetry.addData("checkpoint count", c);
-        if(c == checkpoint.size())
+        telemetry.addData("checkpoints count", c);
+        if(c == checkpoints.size())
         {
-            checkpoint.clear();
-            if(!flow)
-                stop();
+            checkpoints.clear();
             return true;
         }
 
@@ -254,22 +220,19 @@ class DriveEngine {
                 targetAngle = forward + args[c][0];
 
                 if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < MyMath.radians(2)) {
-                    if(continuous) {
-                        if(!flow)
-                            rotate(face(targetAngle));
-                    }
+                    if(continuous && c == checkpoints.size() - 1)
+                        ;
                     else{
-                        if(!flow)
-                            stop();
+                        stop();
                         forward += args[c][0];
                         sumSpinError = 0;
-                        checkpoint.set(c, true);
+                        checkpoints.set(c, true);
                         cumulativeDistance = new double[]{0,0};
                         resetDistances();
+                        break;
                     }
                 }
-                else
-                    rotate(face(targetAngle));
+                rotate(face(targetAngle));
                 break;
             case 3:
                 targetAngle = forward + args[c][2];
@@ -283,7 +246,12 @@ class DriveEngine {
                 double r = Math.hypot(deltaX, deltaY);
 
                 double[] drive = move(deltaX, deltaY);
-                drive = smoothDrive(drive[0], drive[1], .2, false);
+
+                //smooth the driving when revving to a high speed, then reset the average to 0.
+                if(Math.hypot(drive[0],drive[1]) > .3)
+                    drive = smoothDrive(drive[0], drive[1], 1, false);
+                else
+                    smoothDrive(0,0, 1, false);
 
                 double driveX = drive[0];
                 double driveY = drive[1];
@@ -292,19 +260,18 @@ class DriveEngine {
                 telemetry.addData("deltaY", deltaY);
 
                 if(r <= .5 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
-                    if(continuous) {
-                        drive(spin);
+                    if(continuous && c == checkpoints.size() - 1) {
+                        drive(driveX, driveY, spin);
                         drdtArray = new ArrayList<>();
                         dThdtArray = new ArrayList<>();
                     }
                     else {
-                        if(!flow)
-                            stop();
+                        stop();
                         if(args[c].length == 3) {
                             forward += args[c][2];
                             sumSpinError = 0;
                         }
-                        this.checkpoint.set(c, true);
+                        this.checkpoints.set(c, true);
                         cumulativeDistance[0] += args[c][0];
                         cumulativeDistance[1] += args[c][1];
                         drdtArray = new ArrayList<>();
@@ -345,6 +312,56 @@ class DriveEngine {
                             Math.sin(smoothTheta? thetaAve : theta) * rAve};
     }
 
+    ArrayList<Double> smoothRList = new ArrayList<>();
+    ArrayList<Double> smoothThetaList = new ArrayList<>();
+    ArrayList<Double> smoothSpinList = new ArrayList<>();
+    double[] smoothDrive2(double x, double y, double spin, double rSeconds, boolean smoothTheta)
+    {
+        int rListSize = (int)Math.round(rSeconds / Bogg.averageClockTime);
+        int thetaListSize = (int)Math.round(.66 / Bogg.averageClockTime);
+        int spinListSize = (int)Math.round(4 / Bogg.averageClockTime);
+
+        while(smoothRList.size() > rListSize)
+            smoothRList.remove(0);
+
+        while(smoothThetaList.size() > thetaListSize)
+            smoothThetaList.remove(0);
+
+        while(smoothSpinList.size() > spinListSize)
+            smoothSpinList.remove(0);
+
+        double r = Math.hypot(x,y);
+        double theta = Math.atan2(y, x);
+
+        if(r > 1)
+            r = 1;
+        if(r == 0) {
+            for (int i = 0; i < rListSize; i++)
+                smoothRList.set(i, 0.0);
+
+            smoothThetaList.clear();
+        }
+
+        if(spin > 1)
+            spin = 1;
+        if(spin == 0) {
+            for (int i = 0; i < spinListSize; i++)
+                smoothSpinList.set(i, 0.0);
+        }
+
+        smoothRList.add(r);
+        smoothSpinList.add(spin);
+
+        thetaAve = 0;
+        for (int n = 0; n < thetaListSize; n++) {
+            thetaAve += MyMath.loopAngle(smoothThetaList.get(n), thetaAve) / (n+1);
+        }
+
+        return new double[]{Math.cos(smoothTheta? thetaAve : theta) * MyMath.ave(smoothRList),
+                            Math.sin(smoothTheta? thetaAve : theta) * MyMath.ave(smoothRList),
+                            MyMath.ave(smoothSpinList)};
+    }
+
 
     double smoothSpin(double spin)
     {
@@ -369,7 +386,7 @@ class DriveEngine {
 
         double deltaAngle = Math.abs(MyMath.loopAngle(target, current));
 
-        if(deltaAngle < MyMath.radians(5)) //if we are in the controllable zone
+        if(MyMath.degrees(deltaAngle) < 5) //if we are in the controllable zone
             return face(target, true);
 
         else
@@ -381,7 +398,7 @@ class DriveEngine {
     private double lastSpinError = 0;
     private double lastSpinTime = 0;
 
-    double sP = .20; // .25 per radian
+    double sP = .20; // .20 per radian
     double sI = 8; //Time to correct past error
     double sD = .05; //fully account for this much time in the future at current error decreasing rate
 
@@ -423,7 +440,7 @@ class DriveEngine {
     private double lastT = 0;
     double mP = .015; //power per inch
     double mD = 0.1;  //fully account for this much time in the future at current error decreasing rate
-    double tD = 0.01;
+    double tD = 0.05;
 
     ArrayList<Double> drdtArray = new ArrayList<>();
     ArrayList<Double> dThdtArray = new ArrayList<>();
@@ -448,14 +465,14 @@ class DriveEngine {
         double drdt = dr / dt;
         drdtArray.add(drdt);
 
-        if(drdtArray.size() > 7) //keep the size to 7
+        if(drdtArray.size() > 5) //keep the size to 5
             drdtArray.remove(0);
 
 
         double dThdt =  dTheta / dt;
         dThdtArray.add(dThdt);
 
-        if(dThdtArray.size() > 7) //keep the size to 7
+        if(dThdtArray.size() > 11) //keep the size to 11
             dThdtArray.remove(0);
 
 
@@ -463,14 +480,14 @@ class DriveEngine {
         telemetry.addData("dTheta", dTheta);
 
         //negative because our target is zero
-        double tangentPower = MyMath.limitMagnitude(-mP * (tD * MyMath.ave(dThdtArray) * r), .1);
+        double tangentPower = -Range.clip(mP * (tD * MyMath.ave(dThdtArray) * r), -.1, .1);
         //dTheta*r / dt is in inches / sec
         //therefore tD is in seconds
 
-//        if(Math.abs(dTheta / dt) > 2){ //2 rad per second
-//            telemetry.addData("dtheta/dt", dTheta/dt);
-//            return new double[]{0,0};
-//        }
+        if(Math.abs(dTheta / dr / r ) > 2){ //2 rad per inch^2
+            telemetry.addData("dtheta/dt / r", dTheta/dt/r);
+            return new double[]{0,0};
+        }
 
         double power = mP * (r +  mD * MyMath.ave(drdtArray));
         telemetry.addData("moveD term", mD * MyMath.ave(drdtArray));
@@ -493,7 +510,7 @@ class DriveEngine {
     void orbit(double radius, double angle, double speed)
     {
         telemetry.addData("orbit radius", radius);
-        radius /= effectiverobotRadius;
+        radius /= effectiveRobotRadius;
 
         double[] powers = new double[motors.size()];
 

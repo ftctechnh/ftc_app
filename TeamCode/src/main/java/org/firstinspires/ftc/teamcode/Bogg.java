@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,16 +18,12 @@ public class Bogg
     ElapsedTime timer;
     Servo brake;
     Servo drop;
-    Servo dServo;
     Name name;
 
     static double averageClockTime = 0;
     double liftAlpha = .12;
     double liftAve = 0;
     double raisePosition;
-    double lastClockTime = 0;
-    double lastTime = 0;
-    double n = 0;
 
     boolean rotating = false;
 
@@ -62,6 +59,7 @@ public class Bogg
         {
             case Bogg:
                 lift  = hardwareMap.dcMotor.get("lift");
+                lift.setDirection(DcMotorSimple.Direction.FORWARD);
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 brake = hardwareMap.servo.get("brake");
                 drop = hardwareMap.servo.get("drop");
@@ -69,7 +67,7 @@ public class Bogg
 
             case MiniBogg:
                 lift  = hardwareMap.dcMotor.get("lift");
-                lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+                lift.setDirection(DcMotorSimple.Direction.FORWARD);
                 break;
 
             case Fauxbot:
@@ -199,11 +197,11 @@ public class Bogg
         switch (direction)
         {
             case Down:
-                drop.setPosition(-.6);
+                drop.setPosition(.3);
                 break;
             case Up:
             default:
-                drop.setPosition(0);
+                drop.setPosition(.1);
                 break;
         }
     }
@@ -219,6 +217,29 @@ public class Bogg
         telemetry.addLine("Note: y is negated");
 
         driveEngine.drive(op, leftX, leftY);
+    }
+
+    ElapsedTime spinTimer = new ElapsedTime();
+    void manualDrive2(boolean op, double x, double y, double spin)
+    {
+        if(spin != 0)
+            spinTimer.reset();
+        if(spinTimer.seconds() < .5)
+            driveEngine.resetForward();
+        else
+            spin = -driveEngine.faceForward();
+
+        double[] drive = driveEngine.smoothDrive2(x, -y, -spin, op? 1:3, true);
+        double driveX = drive[0];
+        double driveY = drive[1];
+        double driveS = drive[2];
+
+        telemetry.addData("gamepad x", x);
+        telemetry.addData("gamepad y", y);
+        telemetry.addData("gamepad spin", spin);
+        telemetry.addLine("Note: y and spin are negated");
+
+        driveEngine.drive(op, driveX, driveY, driveS);
     }
 
     void manualDriveAutoCorrect(boolean op, double x, double y, double t)
@@ -297,38 +318,20 @@ public class Bogg
             manualCurvy(gDrive.left_stick_button, gDrive.left_stick_x, gDrive.left_stick_y, gRotate.right_stick_x);
     }
 
-    
-    boolean manualEffect(Gamepad g)
+    void floatMotors()
     {
-        //deals with the length of the arm
-        endEffector.extend(2 * g.right_stick_x);
-
-        //deals with the servos to release the minerals
-        if(g.y || g.b || g.right_bumper)
-            endEffector.open();
-        else
-            endEffector.close();
-
-        //deals with the angle of the arm
-        raisePosition += (g.left_stick_x + g.left_stick_y) * MyMath.radians(5) * averageClockTime;
-
-        if(Math.hypot(g.left_stick_x,g.left_stick_y) > 0)
+        driveEngine.floatMotors();
+        if(name == Name.Bogg)
         {
-            endEffector.pivot((int) raisePosition);
+            endEffector.floatMotors();
+            lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+            telemetry.addData("lift position", lift.getCurrentPosition());
         }
-
-        if(g.dpad_down)
-            endEffector.pivot(0);
-        if(g.dpad_up)
-            endEffector.pivot((int)raisePosition);
-
-        return Math.abs(g.right_stick_x) != 0 || g.y || g.b || g.right_bumper || g.dpad_down || g.dpad_up ||
-                Math.hypot(g.left_stick_x, g.left_stick_y) > 0;
     }
 
 
-
-
+    double n = 0;
+    double lastTime = 0;
     /**
      * Should only be called once per loop
      * @return the average time for one loop
@@ -336,24 +339,19 @@ public class Bogg
     void update()
     {
         double t = timer.seconds();
-        double clockTime = .5 * lastClockTime + .5 * (t - lastTime); // exponential average
-        lastClockTime = clockTime;
+        double clockTime = t - lastTime;
         lastTime = t;
 
-        if(averageClockTime == 500) {
-            averageClockTime = clockTime;
-            return;
-        }
-        if(averageClockTime == 0) {
-            averageClockTime = 500;
+        if(n==0){
+            n++;
             return;
         }
 
         averageClockTime = (clockTime + n * averageClockTime) / (n+1); //cumulative average
 
         n++;
-
-        telemetry.addData("clockTime", averageClockTime);
+        telemetry.addData("currentClockTime", clockTime);
+        telemetry.addData("averageClockTime", averageClockTime);
     }
 
     static double getAlpha(double seconds)

@@ -143,19 +143,19 @@ public class Auto {
     private int i = 0;
     Mode pushGoldNoCamera()
     {
-        if (robot.driveEngine.moveOnPath( "Move Right", true,
+        if (robot.driveEngine.moveOnPath( "Move Right",
                 new double[]{23, 28 + approachGold})) {
 
             if (i < 3) {
                 if(robot.sensors.getLowDistance() > 6)
-                    if (robot.driveEngine.moveOnPath( "Push gold" + i, true,
+                    if (robot.driveEngine.moveOnPath( "Push gold" + i,
                             new double[]{0, 12},
                             new double[]{0, -(12 + approachGold)})){
                         slide2X = 51 - 17 * (i);
                         return Mode.Slide2;
                     }
                 else
-                    if(robot.driveEngine.moveOnPath("moveLeft" + i, true,
+                    if(robot.driveEngine.moveOnPath("moveLeft" + i,
                             new double[]{-17,0}))
                         i++;
             }
@@ -219,7 +219,7 @@ public class Auto {
     Mode dropMarker()
     {
         robot.dropMarker(Bogg.Direction.Down);
-        //robot.endEffector.moveToPosition(30, 0);
+        //robot.endEffector.
 
         if(getTime() > .5)  //time to drop marker
             return Mode.MoveToCrater;
@@ -305,7 +305,7 @@ public class Auto {
                 return true;
             else
             {
-                robot.driveEngine.moveOnPath(true, false, drive);
+                robot.driveEngine.moveOnPath(true, drive);
             }
         }
         return false;
@@ -332,11 +332,11 @@ public class Auto {
             double headingToTarget = drive[2];
             double r = Math.hypot(delta_x, delta_y);
 
-            if(Math.abs(headingToTarget) < 5 && r < .5)
+            if(Math.abs(MyMath.degrees(headingToTarget)) < 5 && r < .5)
                 return true;
             else
             {
-                robot.driveEngine.moveOnPath(true, false, drive);
+                robot.driveEngine.moveOnPath(true, drive);
             }
         }
         return false;
