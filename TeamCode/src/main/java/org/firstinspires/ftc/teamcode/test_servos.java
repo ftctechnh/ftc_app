@@ -14,6 +14,7 @@ public class test_servos extends LinearOpMode
     double pinch = .44;
     double swing = 0.25;
     double drop = 0;
+    double brake = .55;
 
     @Override
     public void runOpMode()
@@ -44,10 +45,18 @@ public class test_servos extends LinearOpMode
             robot.drop.setPosition(drop);
             telemetry.addData("drop", drop);
 
+            if(gamepad1.left_stick_button)
+                brake -= .1 * Bogg.averageClockTime;
+            if(gamepad1.right_stick_button)
+                brake += .1 * Bogg.averageClockTime;
+
+            robot.brake.setPosition(brake);
+            telemetry.addData("brake", brake);
+
 
             telemetry.update();
+            sleep(50);
             robot.update();
-            sleep(500);
             idle();
         }
     }
