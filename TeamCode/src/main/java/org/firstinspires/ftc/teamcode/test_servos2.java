@@ -29,36 +29,42 @@ public class test_servos2 extends LinearOpMode
         while (opModeIsActive())
         {
             double t = timer.seconds();
-            if(t > 1) {
+            if(t < 1) {
                 robot.endEffector.swing.setPosition(0);
                 robot.endEffector.pinch.setPosition(0);
                 robot.drop.setPosition(0);
             }
-            else if(t > 3) {
+            else if(t < 3) {
                 robot.endEffector.swing.setPosition(.5);
                 robot.endEffector.pinch.setPosition(.5);
                 robot.drop.setPosition(.5);
             }
-            else if(t > 5) {
-                robot.endEffector.swing.setPosition(-1);
-                robot.endEffector.pinch.setPosition(-1);
-                robot.drop.setPosition(-1);
+            else if(t < 5) {
+                robot.endEffector.swing.setPosition(.25);
+                robot.endEffector.pinch.setPosition(.25);
+                robot.drop.setPosition(.25);
             }
-            else if(t > 7) {
-                robot.endEffector.swing.setPosition(0);
-                robot.endEffector.pinch.setPosition(0);
-                robot.drop.setPosition(0);
+            else if(t < 7) {
+                robot.endEffector.swing.setPosition(.75);
+                robot.endEffector.pinch.setPosition(.75);
+                robot.drop.setPosition(.75);
             }
-            else if(t > 9) {
+            else if(t < 9) {
                 robot.endEffector.swing.setPosition(1);
                 robot.endEffector.pinch.setPosition(1);
                 robot.drop.setPosition(1);
             }
+            else if(t < 11) {
+                robot.endEffector.swing.setPosition(0);
+                robot.endEffector.pinch.setPosition(0);
+                robot.drop.setPosition(0);
+            }
 
 
-            telemetry.addData("pinch", pinch);
-            telemetry.addData("swing", swing);
-            telemetry.addData("drop", drop);
+            telemetry.addData("time", t);
+            telemetry.addData("pinch", robot.endEffector.pinch.getPosition());
+            telemetry.addData("swing", robot.endEffector.swing.getPosition());
+            telemetry.addData("drop", robot.drop.getPosition());
 
 
             telemetry.update();
