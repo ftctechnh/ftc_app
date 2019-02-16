@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.TouchSensor;
 
-import org.firstinspires.ftc.teamcode.SubAssembly.Sample.SampleTemplate;
 import org.firstinspires.ftc.teamcode.Utilities.EnumWrapper;
 import org.firstinspires.ftc.teamcode.Utilities.ServoControl;
 
@@ -28,11 +27,11 @@ public class MinerControl {
     private Servo MinerRightS;
     private Servo DeployerS;
 
-    private EnumMap<SampleTemplate.Setpoints, Double> MapDepServo;
+    private EnumMap<Setpoints, Double> MapDepServo;
 
-    public ServoControl<SampleTemplate.Setpoints, EnumMap<SampleTemplate.Setpoints, Double>> DeployerServo;
+    public ServoControl<Setpoints, EnumMap<Setpoints, Double>> DeployerServo;
 
-    public enum Setpoints implements EnumWrapper<SampleTemplate.Setpoints> {
+    public enum Setpoints implements EnumWrapper<Setpoints> {
         Undump, Middump, Dump;
     }
 
@@ -54,13 +53,13 @@ public class MinerControl {
         opmode = opMode;
         hwMap = opMode.hardwareMap;
 
-        MapDepServo = new EnumMap<SampleTemplate.Setpoints, Double>(SampleTemplate.Setpoints.class);
+        MapDepServo = new EnumMap<Setpoints, Double>(Setpoints.class);
 
 
         /* Assign setpoint values */
-        MapDepServo.put(SampleTemplate.Setpoints.POS_1, 0.2);
-        MapDepServo.put(SampleTemplate.Setpoints.POS_2, 0.65);
-        MapDepServo.put(SampleTemplate.Setpoints.POS_3, 1.0);
+        MapDepServo.put(Setpoints.Undump, 0.15);
+        MapDepServo.put(Setpoints.Middump, 0.65);
+        MapDepServo.put(Setpoints.Dump, 1.0);
 
         /* Map hardware devices */
         LinearMinerM = hwMap.dcMotor.get("LinearMinerM");
@@ -75,7 +74,7 @@ public class MinerControl {
         IntakeM.setPower(0);
         DeployerS.setPosition(1);
 
-        DeployerServo = new ServoControl(DeployerS, MapDepServo, SampleTemplate.Setpoints.POS_1, true);
+        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, true);
     }
 
     public void Extend() {
@@ -111,7 +110,7 @@ public class MinerControl {
     }*/
 
     /*public void Undump() {
-        DeployerS.setPosition(0.2);
+        DeployerS.setPosition(0.12);
     }*/
 
     public void IntakeRaise() {

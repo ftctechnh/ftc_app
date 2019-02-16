@@ -15,14 +15,14 @@ import org.firstinspires.ftc.teamcode.Utilities.GamepadWrapper;
  * This TeleOp OpMode is used to test the functionality of the specific sub assembly
  */
 // Assign OpMode type (TeleOp or Autonomous), name, and grouping
-@TeleOp(name = "teleop", group = "Drive")
-public class teleop extends LinearOpMode {
+@TeleOp(name = "Good Morning", group = "Drive")
+public class goodMorning extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         telemetry.setAutoClear(false);
-        telemetry.addLine("TeleOp");
+        telemetry.addLine("Good Morning");
 
         double DriveSpeed = 1;
         double TurnSpeed = DriveSpeed / 2;
@@ -30,7 +30,6 @@ public class teleop extends LinearOpMode {
 
         /* initialize sub-assemblies
          */
-        DriveControl Drive = new DriveControl();
         LiftControl Lift = new LiftControl();
         TofControl Tof = new TofControl();
         LedControl Led = new LedControl();
@@ -39,7 +38,6 @@ public class teleop extends LinearOpMode {
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
-        Drive.init(this);
         Lift.init(this);
         Tof.init(this);
         Led.init(this);
@@ -57,57 +55,6 @@ public class teleop extends LinearOpMode {
 
             egamepad1.updateEdge();
             egamepad2.updateEdge();
-
-            //Ready Player One
-
-            //reverse control
-            if (egamepad1.b.released) {
-                reverse = reverse * -1;
-            }
-
-            //latch speed setting
-            if (egamepad1.a.released) {
-                if (DriveSpeed == 2 * TurnSpeed) {
-                    DriveSpeed = 0.25;
-                    TurnSpeed = 0.25;
-                } else {
-                    DriveSpeed = 1;
-                    TurnSpeed = 0.5;
-                }
-            }
-
-            //drive speed control
-            if (egamepad1.right_bumper.pressed) {
-                DriveSpeed += 0.25;
-                if (DriveSpeed > 3) DriveSpeed = 3;
-            }
-            if (egamepad1.right_trigger.pressed) {
-                DriveSpeed -= 0.25;
-                if (DriveSpeed <= 0) DriveSpeed = 0.25;
-            }
-
-            //turning speed control
-            if (egamepad1.left_bumper.pressed) {
-                TurnSpeed += 0.25;
-                if (TurnSpeed > 3) TurnSpeed = 3;
-            }
-            if (egamepad1.left_trigger.pressed) {
-                TurnSpeed -= 0.25;
-                if (TurnSpeed <= 0) TurnSpeed = 0.25;
-            }
-
-            //drive controls
-            if (-gamepad1.left_stick_y < -0.4) {
-                Drive.moveBackward(reverse * DriveSpeed);
-            } else if (-gamepad1.left_stick_y > 0.4) {
-                Drive.moveForward(reverse * DriveSpeed);
-            } else if (gamepad1.left_stick_x > 0.4) {
-                Drive.turnRight(TurnSpeed);
-            } else if (gamepad1.left_stick_x < -0.4) {
-                Drive.turnLeft(TurnSpeed);
-            } else {
-                Drive.stop();
-            }
 
             //Ready Player Two
 
