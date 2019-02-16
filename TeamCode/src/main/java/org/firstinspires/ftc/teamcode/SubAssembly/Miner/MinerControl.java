@@ -57,7 +57,7 @@ public class MinerControl {
 
 
         /* Assign setpoint values */
-        MapDepServo.put(Setpoints.Undump, 0.15);
+        MapDepServo.put(Setpoints.Undump, 0.18);
         MapDepServo.put(Setpoints.Middump, 0.65);
         MapDepServo.put(Setpoints.Dump, 1.0);
 
@@ -101,17 +101,6 @@ public class MinerControl {
         IntakeM.setPower(-INTAKE_SPEED);
     }
 
-    /*public void Dump() {
-        DeployerS.setPosition(1);
-    }*/
-
-    /*public void Middump() {
-        DeployerS.setPosition(0.6);
-    }*/
-
-    /*public void Undump() {
-        DeployerS.setPosition(0.12);
-    }*/
 
     public void IntakeRaise() {
         MinerLeftS.setPosition(0.5);
