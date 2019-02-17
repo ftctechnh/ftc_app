@@ -43,6 +43,7 @@ public class holoDrive extends OpMode {
         moveIntake = hardwareMap.dcMotor.get("move_intake");
         dustBinServo = hardwareMap.servo.get("dust_bin");
         liftLockServo = hardwareMap.servo.get("lift_lock");
+        stop = hardwareMap.digitalChannel.get("stop");
         stop.setMode(DigitalChannel.Mode.INPUT);
     }
 

@@ -56,16 +56,24 @@ public class Autonomous1 extends LinearOpMode {
         moveIntake = hardwareMap.dcMotor.get("move_intake");
         dustBinServo = hardwareMap.servo.get("dust_bin");
         liftLockServo = hardwareMap.servo.get("lift_lock");
+        stop = hardwareMap.digitalChannel.get("stop");
         stop.setMode(DigitalChannel.Mode.INPUT);
 
 
         waitForStart();
 
+        while (opModeIsActive() && (runtime.seconds()<0.5)) {
+            moveIntake.setPower(-0.4);
+        }
 
         runtime.reset();
         while (opModeIsActive() && stop.getState() == true) {
             lift.setPower(-0.25);
         }
+
+        runtime.reset();
+        while (opModeIsActive())
+            liftLockServo.setPosition(1);
 
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
