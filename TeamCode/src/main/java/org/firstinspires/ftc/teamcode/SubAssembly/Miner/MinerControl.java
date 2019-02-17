@@ -43,7 +43,7 @@ public class MinerControl {
     public MinerControl() {
     }
 
-    public void init(LinearOpMode opMode) {
+    public void init(LinearOpMode opMode, boolean teleop) {
         HardwareMap hwMap;
 
         opMode.telemetry.addLine("Lift Control" + " initialize");
@@ -57,8 +57,8 @@ public class MinerControl {
 
 
         /* Assign setpoint values */
-        MapDepServo.put(Setpoints.Undump, 0.18);
-        MapDepServo.put(Setpoints.Middump, 0.65);
+        MapDepServo.put(Setpoints.Undump, 0.15);
+        MapDepServo.put(Setpoints.Middump, 0.58);
         MapDepServo.put(Setpoints.Dump, 1.0);
 
         /* Map hardware devices */
@@ -74,7 +74,7 @@ public class MinerControl {
         IntakeM.setPower(0);
         DeployerS.setPosition(1);
 
-        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, true);
+        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, teleop);
     }
 
     public void Extend() {
@@ -103,13 +103,13 @@ public class MinerControl {
 
 
     public void IntakeRaise() {
-        MinerLeftS.setPosition(0.5);
-        MinerRightS.setPosition(0.5);
+        MinerLeftS.setPosition(0);
+        MinerRightS.setPosition(1);
     }
 
     public void IntakeLower() {
-        MinerLeftS.setPosition(1);
-        MinerRightS.setPosition(0);
+        MinerLeftS.setPosition(0.9);
+        MinerRightS.setPosition(0.1);
     }
 
     public void deployUp() {

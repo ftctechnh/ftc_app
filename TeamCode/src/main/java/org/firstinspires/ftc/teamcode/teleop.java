@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
 
@@ -26,7 +27,7 @@ public class teleop extends LinearOpMode {
 
         double DriveSpeed = 1;
         double TurnSpeed = DriveSpeed / 2;
-        int reverse = -1;
+        int reverse = 1;
 
         /* initialize sub-assemblies
          */
@@ -43,7 +44,14 @@ public class teleop extends LinearOpMode {
         Lift.init(this);
         Tof.init(this);
         Led.init(this);
-        Miner.init(this);
+        Miner.init(this, true);
+
+        //time based variables
+        ElapsedTime runtime = new ElapsedTime();
+        double lastReset = 0;
+        double now = 0;
+        boolean Silver = false;
+        boolean silver = false;
 
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");
@@ -54,6 +62,7 @@ public class teleop extends LinearOpMode {
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {
 
+            now = runtime.seconds() - lastReset;
 
             egamepad1.updateEdge();
             egamepad2.updateEdge();
@@ -109,6 +118,22 @@ public class teleop extends LinearOpMode {
                 Drive.stop();
             }
 
+            if (egamepad1.dpad_down.released) {
+                /*if (Miner.DeployerServo.getSetpoint() == MinerControl.Setpoints.Undump && Miner.MinerButtonI.isPressed()){
+                    Miner.Extend();
+                    Drive.TimeDelay(0.2);
+                    Miner.MinerStop();
+                }*/
+                Miner.deployDown();
+            } else if (egamepad1.dpad_up.released) {
+                /*if (Miner.DeployerServo.getSetpoint() == MinerControl.Setpoints.Undump && Miner.MinerButtonI.isPressed()){
+                    Miner.Extend();
+                    Drive.TimeDelay(0.2);
+                    Miner.MinerStop();
+                }*/
+                Miner.deployUp();
+            }
+
             //Ready Player Two
 
             //lift control
@@ -133,29 +158,37 @@ public class teleop extends LinearOpMode {
             if (egamepad2.y.released) {
                 Miner.IntakeLower();
                 Led.orange();
+                Silver = false;
             } else if (egamepad2.x.released) {
                 Miner.IntakeRaise();
                 Led.white();
-            }
-
-            if (egamepad2.left_trigger.released) {
-                Miner.deployDown();
-            } else if (egamepad2.left_bumper.released) {
-                Miner.deployUp();
+                Silver = true;
             }
 
             if ((gamepad2.left_stick_y < -0.4) && (!Miner.MinerButtonO.isPressed())) {
                 Miner.Extend();
+                //resets the clock
+                lastReset = runtime.seconds();
+                if (silver) {
+                    Miner.IntakeRaise();
+                    silver = false;
+                }
             } else if ((gamepad2.left_stick_y > 0.4) && (!Miner.MinerButtonI.isPressed())) {
                 Miner.Retract();
+                if (now > 1 && Silver) {
+                    Miner.IntakeLower();
+                    silver = true;
+                }
             } else {
                 Miner.MinerStop();
+                //resets the clock
+                lastReset = runtime.seconds();
             }
 
             if (gamepad2.right_stick_y < -0.4) {
-                Miner.Untake();
-            } else if (gamepad2.right_stick_y > 0.4) {
                 Miner.Intake();
+            } else if (gamepad2.right_stick_y > 0.4) {
+                Miner.Untake();
             } else  {
                 Miner.Stoptake();
             }

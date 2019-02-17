@@ -100,9 +100,9 @@ public class goodMorning extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y < -0.4) {
-                Miner.Untake();
-            } else if (gamepad2.right_stick_y > 0.4) {
                 Miner.Intake();
+            } else if (gamepad2.right_stick_y > 0.4) {
+                Miner.Untake();
             } else  {
                 Miner.Stoptake();
             }

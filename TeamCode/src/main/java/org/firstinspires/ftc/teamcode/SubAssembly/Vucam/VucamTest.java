@@ -37,6 +37,17 @@ public class VucamTest extends LinearOpMode {
             telemetry.addLine("Unknown");
         }
         telemetry.update();
+        Vucam.setSamplePos();
+        if (Vucam.sample == VucamControl.Sample.LEFT) {
+            telemetry.addLine("Left");
+        } else if (Vucam.sample == VucamControl.Sample.RIGHT) {
+            telemetry.addLine("Right");
+        } else if (Vucam.sample == VucamControl.Sample.CENTER) {
+            telemetry.addLine("Center");
+        } else {
+            telemetry.addLine("Unknown");
+        }
+        telemetry.update();
 
         //telling the code to run until you press that giant STOP button on RC
         while (opModeIsActive()) {

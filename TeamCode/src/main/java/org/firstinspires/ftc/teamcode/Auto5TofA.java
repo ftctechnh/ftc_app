@@ -1,4 +1,3 @@
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -6,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.SubAssembly.Miner.MinerControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.Vucam.VucamControl;
 import org.firstinspires.ftc.teamcode.Utilities.UserControl;
 import org.firstinspires.ftc.teamcode.SubAssembly.DriveTrain.DriveControl;
@@ -14,14 +14,15 @@ import org.firstinspires.ftc.teamcode.SubAssembly.Claimer.ClaimerControl;
 import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 
-@Autonomous(name = "Auto5ToFree", group = "Auto")
-public class Auto5ToFree extends LinearOpMode {
+@Autonomous(name = "Auto5Tof", group = "Auto")
+public class Auto5TofA extends LinearOpMode {
 
     /* Sub assemblies */
     UserControl User = new UserControl();
     VucamControl Vucam = new VucamControl();
     DriveControl Drive = new DriveControl();
     ClaimerControl Claimer = new ClaimerControl();
+    MinerControl Miner = new MinerControl();
     LiftControl Lift = new LiftControl();
     LedControl Led = new LedControl();
 
@@ -134,6 +135,7 @@ public class Auto5ToFree extends LinearOpMode {
         Vucam.init(this);
         Drive.init(this);
         Claimer.init(this);
+        Miner.init(this, false);
         Lift.init(this);
         Led.init(this);
 
@@ -183,6 +185,10 @@ public class Auto5ToFree extends LinearOpMode {
                     Led.red();
                     telemetry.addLine("Land");
                     telemetry.update();
+                    Lift.Extend();
+                    Miner.Extend();
+                    Drive.TimeDelay(0.25);
+                    Miner.MinerStop();
                     while (!Lift.LifterButtonT.isPressed()) {
                         Lift.Extend();
                     }
@@ -200,7 +206,9 @@ public class Auto5ToFree extends LinearOpMode {
                     }
                     telemetry.update();
 
-                    Drive.moveForward(0.5, 0.2);
+                    Miner.Retract();
+                    Drive.moveForward(0.5, 0.14);
+                    Miner.MinerStop();
                     sleep(100);
                     if (orientation == Start.Crater) {
                         newState(State.Sample_Crater);
@@ -222,7 +230,7 @@ public class Auto5ToFree extends LinearOpMode {
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 9);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
-                        Drive.forwardUntilDistance(0.3, 17);
+                        Drive.forwardUntilDistance4Time(0.3, 17, 6);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, 45);
                         Drive.TimeDelay(0.1);
@@ -265,13 +273,14 @@ public class Auto5ToFree extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -80);
                     Drive.TimeDelay(0.1);
-                    Drive.forwardUntilDistance(0.3, 23);
+                    Drive.moveForward(0.3, 3);
+                    //Drive.forwardUntilDistance4Time(0.3, 30.5, 5);
                     Drive.TimeDelay(0.1);
                     Drive.turn2Angle(TURN_SPEED, -135);
                     Drive.TimeDelay(0.1);
-                    Drive.forwardUntilDistance(0.3, 12.5);
-                    Drive.moveForward(0.5, 2.5);
+                    Drive.forwardUntilDistance(0.3, 17); // changed for now
                     if (doubleSample) {
+                        Claimer.drop();
                         newState(State.Double_Sample);
                     } else {
                         newState(State.Claim);
@@ -283,22 +292,25 @@ public class Auto5ToFree extends LinearOpMode {
                     telemetry.update();
                     if (Vucam.sample == Vucam.sample.LEFT) {
                         Drive.turn2Angle(TURN_SPEED, -60);
+                        Claimer.reset();
                         Drive.TimeDelay(0.1);
                         Drive.moveBackward(0.8, 0.45);
                         Drive.TimeDelay(0.1);
-                        Drive.forwardUntilDistance(0.3, 12.5);
+                        Drive.forwardUntilDistance4Time(0.3, 13.5, 5);
                     } else if (Vucam.sample == Vucam.sample.CENTER) {
                         Drive.turn2Angle(TURN_SPEED, -90);
+                        Claimer.reset();
                         Drive.TimeDelay(0.1);
                         Drive.moveBackward(0.8, 0.4);
                         Drive.TimeDelay(0.1);
-                        Drive.forwardUntilDistance(0.3, 19);
+                        Drive.forwardUntilDistance4Time(0.3, 21,6);
                     } else {
                         Drive.turn2Angle(TURN_SPEED, -120);
+                        Claimer.reset();
                         Drive.TimeDelay(0.1);
                         Drive.moveBackward(0.8, 0.45);
                         Drive.TimeDelay(0.1);
-                        Drive.forwardUntilDistance(0.3, 12.5);
+                        Drive.forwardUntilDistance4Time(0.3, 13.5, 5);
                     }
                     newState(State.Claim);
                     break;
@@ -329,20 +341,7 @@ public class Auto5ToFree extends LinearOpMode {
                     if (!allianceCrater) {
                         Drive.turn2Angle(TURN_SPEED, -45);
                     }
-
-                    if (Vucam.sample == Vucam.sample.LEFT && orientation == Start.Depot) {
-                        Drive.moveBackward(0.5, 1.7);
-                        Drive.TimeDelay(0.1);
-                        Drive.turn2Angle(TURN_SPEED, -18);
-                        Drive.TimeDelay(0.1);
-                        Drive.moveBackward(0.4, 0.4);
-                        Drive.TimeDelay(0.1);
-                        Drive.turn2Angle(TURN_SPEED, -48);
-                        Drive.TimeDelay(0.1);
-                        Drive.moveBackward(0.5, 0.5);
-                    } else {
-                        Drive.moveBackward(0.5, 3.2);
-                    }
+                    Drive.moveBackward(0.65, 2.3); //dropped for w/ 11454
                     newState(State.Stop);
                     break;
 

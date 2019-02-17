@@ -26,7 +26,7 @@ public class MinerTest extends LinearOpMode {
         GamepadWrapper egamepad1 = new GamepadWrapper(gamepad1);
         GamepadWrapper egamepad2 = new GamepadWrapper(gamepad2);
 
-        Miner.init(this);
+        Miner.init(this, true);
         Led.init(this);
         telemetry.update();
 
@@ -48,9 +48,9 @@ public class MinerTest extends LinearOpMode {
             }
 
             if (gamepad2.right_stick_y < -0.4) {
-                Miner.Untake();
-            } else if (gamepad2.right_stick_y > 0.4) {
                 Miner.Intake();
+            } else if (gamepad2.right_stick_y > 0.4) {
+                Miner.Untake();
             } else  {
                 Miner.Stoptake();
             }
