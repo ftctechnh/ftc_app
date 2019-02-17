@@ -76,8 +76,18 @@ public class Autonomous1 extends LinearOpMode {
             liftLockServo.setPosition(1);
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+        while (opModeIsActive() && stop.getState() == true) {
+            lift.setPower(-0.25);
+        }
 
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 1.0)) {
+            liftLockServo.setPosition(1);
+        }
+
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 0.5) {
+            lift.setPower(-0.25);
         }
 
         runtime.reset();
