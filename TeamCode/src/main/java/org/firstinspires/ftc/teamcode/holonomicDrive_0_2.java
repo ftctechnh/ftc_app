@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="holonomicDrive Curvy", group="Testing")
+@TeleOp(name="holonomicDrive Competition", group="Testing")
 public class holonomicDrive_0_2 extends LinearOpMode
 {
     Bogg robot;
@@ -82,49 +82,74 @@ public class holonomicDrive_0_2 extends LinearOpMode
             //Arm and drive automatic
             //When down
             if(g2.left_stick_button) {
+                autoOverride = true;
                 if(!leftButtonPressed) {
                     timer.reset();
                     leftButtonPressed = true;
                 }
                 if(timer.seconds() > 1)
-                    autoOverride = !robot.driveEngine.moveOnPath(true, new double[]{Math.PI});
+                    robot.driveEngine.moveOnPath(true, new double[]{Math.PI});
+                else
+                    robot.driveEngine.drive(0);
 
                 robot.endEffector.flipUp(timer.seconds());
             }
-            else
+            else {
                 leftButtonPressed = false;
+                autoOverride = false;
+            }
 
 
             //When up
             if(g2.right_stick_button) {
+                autoOverride = true;
                 if(!rightButtonPressed) {
                     timer.reset();
                     rightButtonPressed = true;
                 }
                 if(timer.seconds() > .5)
-                    autoOverride = !robot.driveEngine.moveOnPath(true, new double[]{Math.PI});
+                    robot.driveEngine.moveOnPath(true, new double[]{Math.PI});
+                else
+                    robot.driveEngine.drive(0);
 
                 robot.endEffector.flipDown(timer.seconds());
             }
-            else
+            else {
                 rightButtonPressed = false;
+                autoOverride = false;
+            }
 
 
             //Arm and drive manual
             if(!autoOverride) {
-                if (!robot.manualRotate(true, g2.right_stick_x / 3))
-                    if (!robot.manualRotate(true, -g2.left_stick_x / 3))
-                        robot.manualCurvy(
-                                g1.left_stick_button,
-                                g1.left_stick_x,
-                                g1.left_stick_y,
-                                g1.right_stick_x);
+                robot.manualDrive2(false, 0,0,g2.right_stick_x / 3);
+                robot.manualDrive2(false, 0,0,-g2.left_stick_x / 3);
+                robot.manualDrive2(
+                        g1.left_stick_button,
+                        g1.left_stick_x,
+                        g1.left_stick_y,
+                        g1.right_stick_x);
 
                 robot.driveEngine.driveAtAngle(MyMath.loopAngle(driveAngle, robot.sensors.getImuHeading()));
 
                 //if the moveOnPaths have finished
                 robot.driveEngine.checkpoints.clear();
-                robot.driveEngine.resetForward();
+
+                if(g2.y)
+                {
+                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.endEffector.pivot.setPower(-1);
+                }
+                else if(g2.a)
+                {
+                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.endEffector.pivot.setPower(1);
+                }
+                else
+                {
+                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.endEffector.pivot.setPower(0);
+                }
             }
 
             if(!robot.endEffector.extend(-g2.left_stick_y)){
@@ -132,22 +157,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     robot.endEffector.contract.setPower(0);
             }
 
-
-            if(g2.y)
-            {
-                robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.endEffector.pivot.setPower(-1);
-            }
-            else if(g2.a)
-            {
-                robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.endEffector.pivot.setPower(1);
-            }
-            else
-            {
-                robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                robot.endEffector.pivot.setPower(1);
-            }
 
             //even if we never finish the turn, enable manual driving
             autoOverride = false;
@@ -157,9 +166,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
             // Display the current values
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
-            robot.driveEngine.reportPositionsToScreen();
 
-            telemetry.update();
             robot.update();
             idle();
         }
