@@ -80,7 +80,9 @@ class Sensors {
      */
     double getImuHeading()
     {
-        return imu.getAngularOrientation().firstAngle * Math.PI / 180;
+        if(usingImu)
+            return MyMath.radians(imu.getAngularOrientation().firstAngle);
+        return 0;
     }
 
     boolean touchTopIsPressed() {
