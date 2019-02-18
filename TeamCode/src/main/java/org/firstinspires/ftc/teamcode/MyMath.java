@@ -10,7 +10,6 @@ public class MyMath {
         Double[] copy = values.toArray(new Double[values.size()]);
         Arrays.sort(copy);
 
-
         int size = values.size();
         int half = size / 2;
 
@@ -42,27 +41,45 @@ public class MyMath {
 
 
     /**
-     *
      * @param target angle
      * @param current angle
      * @return the smallest signed difference between the two angles
      */
-    static double loopAngle(double target, double current)
+    static double loopAngle(Number target, Number current)
     {
-        double d = target - current;
+        double d = target.doubleValue() - current.doubleValue();
         while(d < -Math.PI) d += 2 * Math.PI; //keeps it between -pi and pi
         while(d >  Math.PI) d -= 2 * Math.PI;
         return d;
     }
 
+    static double loopAve(ArrayList<? extends Number> angles)
+    {
+        double thetaAve = 0;
+        for (int n = 0; n < angles.size(); n++) {
+            thetaAve += MyMath.loopAngle(angles.get(n), thetaAve) / (n+1);
+        }
+        return thetaAve;
+    }
+
     static double max(double... numbers)
     {
-        double max = numbers[0];
+        double max = Double.NEGATIVE_INFINITY;
         for (double n: numbers) {
             if(n > max)
                 max = n;
         }
         return max;
+    }
+
+    static double max(ArrayList<? extends Number> numbers)
+    {
+        Number max = Double.NEGATIVE_INFINITY;
+        for (Number n: numbers) {
+            if(n.doubleValue() > max.doubleValue())
+                max = n;
+        }
+        return max.doubleValue();
     }
 
     static double absoluteMax(double... numbers)
@@ -71,6 +88,14 @@ public class MyMath {
         for (double n: numbers)
             if(Math.abs(n) > max)
                 max = Math.abs(n);
+        return max;
+    }
+    static double absoluteMax(ArrayList<? extends Number> numbers)
+    {
+        double max = 0;
+        for (Number n: numbers)
+            if(Math.abs(n.doubleValue()) > max)
+                max = Math.abs(n.doubleValue());
         return max;
     }
 
@@ -98,6 +123,20 @@ public class MyMath {
     static double limitMagnitude(double value, double limit)
     {
         return closestToZero(value, limit * Math.signum(value));
+    }
+
+    static void trimFromFront(ArrayList<?> list, int size)
+    {
+        while(list.size() > size && size > 0) {
+            list.remove(0);
+        }
+    }
+
+    static void fill(ArrayList<Double> doubles, Number n)
+    {
+        for (int i = 0; i < doubles.size(); i++) {
+            doubles.set(i, n.doubleValue());
+        }
     }
 
     static double radians(double degrees)
