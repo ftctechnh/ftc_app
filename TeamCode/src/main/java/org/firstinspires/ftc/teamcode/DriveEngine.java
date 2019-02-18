@@ -360,47 +360,37 @@ class DriveEngine {
     ArrayList<Double> smoothRList = new ArrayList<>();
     ArrayList<Double> smoothThetaList = new ArrayList<>();
     ArrayList<Double> smoothSpinList = new ArrayList<>();
-    double[] smoothDrive2(double x, double y, double spin, double rSeconds, boolean smoothTheta)
+    private int smoothAdditions = 0;
+    void smoothDrive2(boolean op, double x, double y, double spin,
+                          double rSeconds, boolean smoothTheta, int precedence)
     {
-        int rListSize = (int)Math.round(rSeconds / Bogg.averageClockTime);
-        int thetaListSize = (int)Math.round(.66 / Bogg.averageClockTime);
-        int spinListSize = (int)Math.round(4 / Bogg.averageClockTime);
-
-        while(smoothRList.size() > rListSize)
-            smoothRList.remove(0);
-
-        while(smoothThetaList.size() > thetaListSize)
-            smoothThetaList.remove(0);
-
-        while(smoothSpinList.size() > spinListSize)
-            smoothSpinList.remove(0);
+        if(precedence < MyMath.max(precedences))
+            return;
+        if(MyMath.absoluteMax(x, y, spin) == 0) {
+            drive(precedence, op, 0);
+            return;
+        }
+        if(smoothAdditions > 0) {
+            smoothRList.remove(smoothRList.size() - 1);
+            smoothSpinList.remove(smoothSpinList.size() - 1);
+            smoothThetaList.remove(smoothThetaList.size() - 1);
+        }
+        smoothAdditions++;
 
         double r = Math.hypot(x,y);
         double theta = Math.atan2(y, x);
 
-        if(r > 1)
-            r = 1;
-        if(r == 0) {
-            for (int i = 0; i < rListSize; i++)
-                smoothRList.set(i, 0.0);
-
-            smoothThetaList.clear();
-        }
-
-        if(spin > 1)
-            spin = 1;
-        if(spin == 0) {
-            for (int i = 0; i < spinListSize; i++)
-                smoothSpinList.set(i, 0.0);
-        }
-
         smoothRList.add(r);
         smoothSpinList.add(spin);
+        smoothThetaList.add(theta);
 
-        thetaAve = 0;
-        for (int n = 0; n < thetaListSize; n++) {
-            thetaAve += MyMath.loopAngle(smoothThetaList.get(n), thetaAve) / (n+1);
-        }
+        MyMath.trimFromFront(smoothRList,     (int)Math.round(rSeconds / Bogg.averageClockTime));
+        MyMath.trimFromFront(smoothSpinList,  (int)Math.round(       4 / Bogg.averageClockTime));
+        MyMath.trimFromFront(smoothThetaList, (int)Math.round(     .66 / Bogg.averageClockTime));
+
+        r     = (r==0)?      0 : MyMath.ave(smoothRList);
+        spin  = (spin==0)?   0 : MyMath.ave(smoothSpinList);
+        theta = smoothTheta? MyMath.loopAve(smoothThetaList) : theta;
 
         drive(precedence, op,Math.cos(theta) * r, Math.sin(theta) * r, spin);
     }
