@@ -12,14 +12,14 @@ public class holonomicDrive_0_5 extends LinearOpMode
 
     Gamepad g1;
 
-    double initialAngle = 0;
+    double driveAngle, initialAngle = Math.PI;
 
     @Override
     public void runOpMode()
     {
 
         robot = Bogg.determineRobot(hardwareMap, telemetry);
-        robot.driveEngine.driveAtAngle(initialAngle);
+        robot.driveEngine.driveAtAngle(driveAngle);
         g1 = gamepad1;
         waitForStart();
 
@@ -28,11 +28,10 @@ public class holonomicDrive_0_5 extends LinearOpMode
 
         while (opModeIsActive())
         {
-            if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
-            {
-                robot.driveEngine.driveAtAngle(MyMath.loopAngle(initialAngle, robot.sensors.getImuHeading()));
-                robot.manualDrive(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
-            }
+            robot.manualDrive2(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y, g1.right_stick_x);
+
+            if(g1.x)
+                driveAngle = initialAngle + robot.sensors.getImuHeading();
 
             if(robot.name == Bogg.Name.Bogg)
             {
@@ -57,7 +56,6 @@ public class holonomicDrive_0_5 extends LinearOpMode
             }
 
 
-            telemetry.update();
             robot.update();
             idle();
         }

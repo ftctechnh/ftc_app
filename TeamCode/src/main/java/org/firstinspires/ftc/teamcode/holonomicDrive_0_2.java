@@ -19,7 +19,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
     private boolean autoOverride = false;
 
     double pinch = .44;
-    double driveAngle = Math.PI;
+    double driveAngle, initialAngle = Math.PI;
 
     @Override
     public void runOpMode()
@@ -77,7 +77,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
             //Drive angle
             if(g1.x)
-                driveAngle = robot.sensors.getImuHeading();
+                driveAngle = initialAngle + robot.sensors.getImuHeading();
 
             //Arm and drive automatic
             //When down

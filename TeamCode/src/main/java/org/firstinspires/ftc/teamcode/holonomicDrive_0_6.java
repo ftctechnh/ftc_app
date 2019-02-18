@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="holonomicDrive Linear", group="Testing")
@@ -12,7 +11,7 @@ public class holonomicDrive_0_6 extends LinearOpMode
 
     Gamepad g1;
 
-    double driveAngle = Math.PI;
+    double driveAngle, initialAngle = Math.PI;
 
     @Override
     public void runOpMode()
@@ -22,13 +21,11 @@ public class holonomicDrive_0_6 extends LinearOpMode
         g1 = gamepad1;
         waitForStart();
 
-        robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.endEffector.contract.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         while (opModeIsActive())
         {
+            telemetry.addLine(""+robot.name);
             if(g1.x)
-                driveAngle = robot.sensors.getImuHeading();
+                driveAngle = initialAngle + robot.sensors.getImuHeading();
             robot.driveEngine.driveAtAngle(MyMath.loopAngle(driveAngle, robot.sensors.getImuHeading()));
 
             robot.manualDrive2(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y, g1.right_stick_x);
@@ -56,7 +53,6 @@ public class holonomicDrive_0_6 extends LinearOpMode
             }
 
 
-            telemetry.update();
             robot.update();
             idle();
         }
