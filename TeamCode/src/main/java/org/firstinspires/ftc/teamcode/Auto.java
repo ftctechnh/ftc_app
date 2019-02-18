@@ -236,10 +236,10 @@ public class Auto {
         telemetry.addData("usingImu", robot.sensors.usingImu);
 
         if(robot.sensors.usingImu) {
-            if (robot.sensors.isTilted())
+            if (robot.sensors.isTilted() || robot.driveEngine.yDist() < -12 * 10)
                 return Mode.Stop;
         }
-        else if (robot.driveEngine.yDist() < -12 * 5.5)
+        else if (robot.driveEngine.yDist() < -12 * 10)
         {
             return Mode.Stop;
         }
