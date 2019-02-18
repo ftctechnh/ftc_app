@@ -42,7 +42,6 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
 
             // Display the current values
             telemetry.addData("mode", action);         //put this before the things that break
-            telemetry.update();
             auto.update();
             idle();
         }

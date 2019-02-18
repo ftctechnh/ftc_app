@@ -41,7 +41,6 @@ public class holonomicDrive_0_1 extends LinearOpMode
             robot.manualLift(g1.y, g1.a);
 
 
-            telemetry.update();
             robot.update();
             idle();
         }

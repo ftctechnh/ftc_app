@@ -71,7 +71,6 @@ public class prepAutonomous extends LinearOpMode
             telemetry.addData("time: ", t);
             telemetry.addData("touch ", robot.sensors.touchBottomIsPressed());
             telemetry.addData("mode", action);
-            telemetry.update();
             robot.update();
             idle();
         }

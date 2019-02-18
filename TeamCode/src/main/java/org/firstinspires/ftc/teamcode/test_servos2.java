@@ -67,7 +67,6 @@ public class test_servos2 extends LinearOpMode
             telemetry.addData("drop", robot.drop.getPosition());
 
 
-            telemetry.update();
             robot.update();
             idle();
         }

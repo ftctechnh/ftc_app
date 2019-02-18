@@ -38,7 +38,6 @@ public class encoderTest extends LinearOpMode
             {
                 robot.driveEngine.drive(0,0);
             }
-            telemetry.update();
             robot.update();
             idle();
         }

@@ -29,7 +29,6 @@ public class manuallyMoveArm extends LinearOpMode
             robot.endEffector.pivot.setPower(-gamepad1.right_stick_y);
             robot.endEffector.contract.setPower(-gamepad1.left_stick_y);
 
-            telemetry.update();
             robot.update();
             idle();
         }

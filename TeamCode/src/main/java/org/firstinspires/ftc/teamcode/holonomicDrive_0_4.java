@@ -74,7 +74,6 @@ public class holonomicDrive_0_4 extends LinearOpMode
             telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
             telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 
-            telemetry.update();
             robot.update();
             idle();
         }

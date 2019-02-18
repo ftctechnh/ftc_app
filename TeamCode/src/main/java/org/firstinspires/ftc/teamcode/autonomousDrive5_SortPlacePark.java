@@ -59,7 +59,6 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
 
             // Display the current values
             telemetry.addData("mode:", action);
-            telemetry.update();
             auto.update();
             idle();
         }

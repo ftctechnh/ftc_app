@@ -54,7 +54,6 @@ public class test_servos extends LinearOpMode
             telemetry.addData("brake", brake);
 
 
-            telemetry.update();
             sleep(50);
             robot.update();
             idle();

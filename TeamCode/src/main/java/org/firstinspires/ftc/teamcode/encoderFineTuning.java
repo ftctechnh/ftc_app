@@ -75,7 +75,6 @@ public class encoderFineTuning extends LinearOpMode
                 break;
             }
 
-            telemetry.update();
             robot.update();
             idle();
         }
