@@ -55,8 +55,10 @@ class EndEffector {
 
         contract = hardwareMap.dcMotor.get("contract");
         contract.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        contract.setDirection(DcMotorSimple.Direction.FORWARD);
+        contract.setDirection(DcMotorSimple.Direction.REVERSE);
         contract.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        swing.setPosition(.9);
     }
 
     void open() {
@@ -92,22 +94,26 @@ class EndEffector {
     private int initialPivotTicks = 0;
     void flipUp(double t) {
         close();
+        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivot.setPower(1);
         if(t < 1){
             initialPivotTicks = pivot.getCurrentPosition();
         }
         if (t > 1) {
-            pivot.setTargetPosition(initialPivotTicks - 1000);
+            pivot.setTargetPosition(initialPivotTicks + 1500);
             pickleUp();
         }
     }
 
     void flipDown(double t) {
         open();
+        pivot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        pivot.setPower(1);
         if(t < .5){
             initialPivotTicks = pivot.getCurrentPosition();
         }
         if (t > .5) {
-            pivot.setTargetPosition(initialPivotTicks + 1000);
+            pivot.setTargetPosition(initialPivotTicks - 1500);
         }
         if (t > 1)
             pickleDown();
