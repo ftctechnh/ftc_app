@@ -44,7 +44,7 @@ public class teleop extends LinearOpMode {
         Lift.init(this);
         Tof.init(this);
         Led.init(this);
-        Miner.init(this, true);
+        Miner.init(this);
 
         //time based variables
         ElapsedTime runtime = new ElapsedTime();

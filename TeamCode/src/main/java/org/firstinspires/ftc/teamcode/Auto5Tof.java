@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Utilities.AutoTransitioner;
 import org.firstinspires.ftc.teamcode.SubAssembly.Leds.LedControl;
 
 @Autonomous(name = "Auto5Tof", group = "Auto")
-public class Auto5TofA extends LinearOpMode {
+public class Auto5Tof extends LinearOpMode {
 
     /* Sub assemblies */
     UserControl User = new UserControl();
@@ -273,7 +273,7 @@ public class Auto5TofA extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -80);
                     Drive.TimeDelay(0.1);
-                    Drive.moveForward(0.3, 3);
+                    Drive.moveForward(0.3, 2.8);
                     //Drive.forwardUntilDistance4Time(0.3, 30.5, 5);
                     Drive.TimeDelay(0.1);
                     Drive.turn2Angle(TURN_SPEED, -135);

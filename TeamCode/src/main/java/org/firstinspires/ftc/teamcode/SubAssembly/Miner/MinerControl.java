@@ -43,7 +43,11 @@ public class MinerControl {
     public MinerControl() {
     }
 
-    public void init(LinearOpMode opMode, boolean teleop) {
+    public void init(LinearOpMode opMode) {
+        init(opMode, true);
+    }
+
+    public void init(LinearOpMode opMode, boolean init_servo) {
         HardwareMap hwMap;
 
         opMode.telemetry.addLine("Lift Control" + " initialize");
@@ -74,7 +78,7 @@ public class MinerControl {
         IntakeM.setPower(0);
         DeployerS.setPosition(1);
 
-        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, teleop);
+        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, init_servo);
     }
 
     public void Extend() {
