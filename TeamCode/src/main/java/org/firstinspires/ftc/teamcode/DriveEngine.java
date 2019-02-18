@@ -82,20 +82,58 @@ class DriveEngine {
     DriveEngine() {
     }
 
+    ArrayList<double[][]> potentials = new ArrayList<>();
+    ArrayList<Integer> precedences = new ArrayList<>();
+
+    void stop(){
+        drive(2,false, 0.);
+    }
+
+    void rotate(double spin){
+        drive(spin);
+    }
+
+    void rotate(double precedence, double spin){
+        drive(precedence, spin);
+    }
+
     void drive(double... args) {
         drive(false,args);
     }
 
-    void rotate(double spin){
-        drive(false, spin);
+    void drive(boolean op, double ... args){drive(0, op, args);}
+
+    void drive(int precedence, boolean op, double ... args) {
+        if(precedences.size() != 0){
+            if (precedence < MyMath.max(precedences))
+                return;
+            if(MyMath.absoluteMax(args) == 0)
+                return;
+        }
+        precedences.add(precedence);
+        double[][] potential = new double[2][];
+        potential[0] = new double[]{op? 1.:0.};
+        potential[1] = args;
+        potentials.add(0, potential);
     }
 
-    void stop(){
-        drive(0);
+    void update(){
+        telemetry.addLine("updating");
+        drive();
+        precedences.clear();
+        potentials.clear();
+        smoothAdditions = 0;
     }
-
-    void drive(boolean op, double ... args) {
+    protected void drive(){
         double x = 0,y = 0,spin = 0;
+
+        if(potentials.size() == 0){
+            potentials.add(new double[][]{new double[]{0}, new double[]{0}});
+        }
+
+        boolean op = potentials.get(0)[0][0] == 1;
+        double[] args = potentials.get(0)[1];
+
         switch (args.length)    //assign x, y and spin
         {
             case 3:
@@ -111,6 +149,13 @@ class DriveEngine {
                 stop();
                 return;
         }
+
+        if(MyMath.absoluteMax(x, y, spin) == 0) {
+            smoothThetaList.clear();
+            MyMath.fill(smoothRList, 0);
+            MyMath.fill(smoothSpinList, 0);
+        }
+
         double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
         double yPrime = x * Math.sin(theta) + y * Math.cos(theta);
 
@@ -259,7 +304,7 @@ class DriveEngine {
                 telemetry.addData("deltaX", deltaX);
                 telemetry.addData("deltaY", deltaY);
 
-                if(r <= .5 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
+                if(r <= .75 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
                     if(continuous && c == checkpoints.size() - 1) {
                         drive(driveX, driveY, spin);
                         drdtArray = new ArrayList<>();
@@ -299,7 +344,7 @@ class DriveEngine {
         else
             rAve = alpha * r + (1-alpha) * rAve;
 
-        if(thetaAve > Math.PI)  thetaAve -= 2 * Math.PI;
+        if(thetaAve >  Math.PI) thetaAve -= 2 * Math.PI;
         if(thetaAve < -Math.PI) thetaAve += 2 * Math.PI;
 
         //find the nearest value: must be within pi

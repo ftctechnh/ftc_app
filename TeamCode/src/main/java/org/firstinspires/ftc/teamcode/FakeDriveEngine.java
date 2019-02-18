@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class FakeDriveEngine extends DriveEngine{
+public class FakeDriveEngine extends DriveEngine {
 
     private double theta = 0;
     private double root3 = Math.sqrt(3);
@@ -20,8 +20,17 @@ public class FakeDriveEngine extends DriveEngine{
 
 
     @Override
-    void drive(boolean op, double... args) {
+    protected void drive() {
         double x = 0,y = 0,spin = 0;
+
+        if(potentials.size() == 0){
+            potentials.add(new double[][]{new double[]{0}, new double[]{0}});
+        }
+
+        boolean op = potentials.get(0)[0][0] == 1;
+        double[] args = potentials.get(0)[1];
+
+
         switch (args.length)    //assign x, y and spin
         {
             case 3:
@@ -36,6 +45,12 @@ public class FakeDriveEngine extends DriveEngine{
             default:
                 stop();
                 return;
+        }
+
+        if(MyMath.absoluteMax(x, y, spin) == 0) {
+            smoothThetaList.clear();
+            MyMath.fill(smoothRList, 0);
+            MyMath.fill(smoothSpinList, 0);
         }
 
         double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
@@ -57,9 +72,9 @@ public class FakeDriveEngine extends DriveEngine{
         }
 
         //Estimated 4 feet per second at full power
-        double dX = (6 * 12 ) * x * Bogg.averageClockTime;
-        double dY = (6 * 12 ) * y * Bogg.averageClockTime;
-        double dS = (6 * 12 ) * spin * Bogg.averageClockTime;
+        double dX = (4 * 12 ) * x * Bogg.averageClockTime;
+        double dY = (4 * 12 ) * y * Bogg.averageClockTime;
+        double dS = (4 * 12 ) * spin * Bogg.averageClockTime;
         xDistance += dX;
         yDistance += dY;
         sDistance += dS;
