@@ -357,9 +357,7 @@ class DriveEngine {
             thetaAve += MyMath.loopAngle(smoothThetaList.get(n), thetaAve) / (n+1);
         }
 
-        return new double[]{Math.cos(smoothTheta? thetaAve : theta) * MyMath.ave(smoothRList),
-                            Math.sin(smoothTheta? thetaAve : theta) * MyMath.ave(smoothRList),
-                            MyMath.ave(smoothSpinList)};
+        drive(precedence, op,Math.cos(theta) * r, Math.sin(theta) * r, spin);
     }
 
 

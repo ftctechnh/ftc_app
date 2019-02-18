@@ -229,17 +229,12 @@ public class Bogg
         else
             spin = -driveEngine.faceForward();
 
-        double[] drive = driveEngine.smoothDrive2(x, -y, -spin, op? 1:3, true);
-        double driveX = drive[0];
-        double driveY = drive[1];
-        double driveS = drive[2];
+        driveEngine.smoothDrive2(op, x, -y, -spin, op? 1:2.5, true, precedence);
 
         telemetry.addData("gamepad x", x);
         telemetry.addData("gamepad y", y);
         telemetry.addData("gamepad spin", spin);
         telemetry.addLine("Note: y and spin are negated");
-
-        driveEngine.drive(op, driveX, driveY, driveS);
     }
 
     void manualDriveAutoCorrect(boolean op, double x, double y, double t)
