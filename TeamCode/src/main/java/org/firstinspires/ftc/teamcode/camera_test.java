@@ -1,15 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.graphics.drawable.GradientDrawable;
-
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-
-import java.util.ArrayList;
 @TeleOp(name="  camera_test", group="Testing")
 public class camera_test extends LinearOpMode
 {

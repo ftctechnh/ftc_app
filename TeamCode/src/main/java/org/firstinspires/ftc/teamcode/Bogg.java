@@ -220,11 +220,14 @@ public class Bogg
     }
 
     ElapsedTime spinTimer = new ElapsedTime();
-    void manualDrive2(boolean op, double x, double y, double spin)
+    void manualDrive2(boolean op, double x, double y, double spin){
+        manualDrive2(op,x,y,spin,0);
+    }
+    void manualDrive2(boolean op, double x, double y, double spin, int precedence)
     {
         if(spin != 0)
             spinTimer.reset();
-        if(spinTimer.seconds() < .5)
+        if(spinTimer.seconds() < 1)
             driveEngine.resetForward();
         else
             spin = -driveEngine.faceForward();
@@ -345,6 +348,8 @@ public class Bogg
         averageClockTime = (clockTime + n * averageClockTime) / (n+1); //cumulative average
 
         n++;
+        driveEngine.update();
+        telemetry.update();
         telemetry.addData("currentClockTime", clockTime);
         telemetry.addData("averageClockTime", averageClockTime);
     }
