@@ -281,7 +281,7 @@ public class Auto5Tof extends LinearOpMode {
                     Drive.turn2Angle(TURN_SPEED, -80);
                     Drive.TimeDelay(0.1);
                     if(Vucam.sample == Vucam.sample.RIGHT){
-                        Drive.moveForward(0.3, 3);
+                        Drive.moveForward(0.3, 3.2);
                     }
                     else {
                         Drive.moveForward(0.3, 2.8);
