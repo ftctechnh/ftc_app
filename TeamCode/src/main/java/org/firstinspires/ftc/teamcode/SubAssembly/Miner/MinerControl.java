@@ -78,7 +78,7 @@ public class MinerControl {
         IntakeM.setPower(0);
         DeployerS.setPosition(1);
 
-        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, init_servo);
+        DeployerServo = new ServoControl(DeployerS, MapDepServo, Setpoints.Undump, true);
     }
 
     public void Extend() {
