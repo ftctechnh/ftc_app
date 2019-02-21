@@ -51,7 +51,6 @@ public class teleop extends LinearOpMode {
         double lastReset = 0;
         double now = 0;
         boolean Silver = false;
-        boolean silver = false;
 
         //waits for that giant PLAY button to be pressed on RC
         telemetry.addLine(">> Press PLAY to start");
@@ -169,20 +168,35 @@ public class teleop extends LinearOpMode {
                 Miner.Extend();
                 //resets the clock
                 lastReset = runtime.seconds();
-                if (silver) {
+                if (Silver) {
                     Miner.IntakeRaise();
-                    silver = false;
                 }
             } else if ((gamepad2.left_stick_y > 0.4) && (!Miner.MinerButtonI.isPressed())) {
                 Miner.Retract();
-                if (now > 1 && Silver) {
-                    Miner.IntakeLower();
-                    silver = true;
-                }
-            } else {
-                Miner.MinerStop();
                 //resets the clock
                 lastReset = runtime.seconds();
+            } else {
+                if (Silver && Miner.MinerButtonI.isPressed()) {
+                    if (now == 1.0) {
+                        Drive.moveForward(0.35, 0.2);
+                        Miner.IntakeRaise();
+                        Miner.Stoptake();
+                        Miner.Extend();
+                    }
+                    else if (now > 1.2 && now < 1.3){
+                        Miner.IntakeRaise();
+                        Miner.Stoptake();
+                        Miner.Extend();
+                    }
+                    else {
+                        Miner.MinerStop();
+                        Miner.IntakeLower();
+                        Miner.Intake();
+                    }
+                }
+                else {
+                    Miner.MinerStop();
+                }
             }
 
             if (gamepad2.right_stick_y < -0.4) {
