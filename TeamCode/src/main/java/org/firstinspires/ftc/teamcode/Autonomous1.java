@@ -63,42 +63,53 @@ public class Autonomous1 extends LinearOpMode {
         waitForStart();
 
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 0.125) {
-            lift.setPower(-0.25);
+        while (opModeIsActive() && stop.getState() == true) {
+            lift.setPower(1);
         }
 
         runtime.reset();
-        while (opModeIsActive())
+        while (opModeIsActive() && runtime.seconds() < 0.15)
+            lift.setPower(0);
+
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 0.85)
             liftLockServo.setPosition(1);
 
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 1.0) {
-            lift.setPower(0.25);
+        while (opModeIsActive() && runtime.seconds() < 2.0) {
+            lift.setPower(-1);
         }
 
+        runtime.reset();
+        while (opModeIsActive() && stop.getState() == true) {
+            lift.setPower(1);
+        }
 
         runtime.reset();
-        //move back
+        while (opModeIsActive() && runtime.seconds() < 0.15)
+            lift.setPower(0);
+
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 0.85)
+            liftLockServo.setPosition(1);
+
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 2.0) {
+            lift.setPower(-1);
+        }
+
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 0.5)
+            lift.setPower(0);
+
+        runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < 1.0)) {
-            front_left.setPower(-0.5);
+            back_right.setPower(-0.5);
             back_left.setPower(-0.5);
-            back_right.setPower(0.5);
+            front_left.setPower(0.5);
             front_right.setPower(0.5);
         }
 
-        while (opModeIsActive() && (runtime.seconds() < 0.35)) {
-            back_right.setPower(1);
-            back_left.setPower(1);
-            front_left.setPower(-1);
-            front_right.setPower(-1);
-        }
-
-        runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.25)) {
-            moveIntake.setPower(-0.25);
-        }
-        // drops the marker on the
-        //dustBinServo.setPosition(0.55);
     }
 
 }

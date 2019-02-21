@@ -55,9 +55,7 @@ public class holoDrive extends OpMode {
         double xPower = gamepad1.left_stick_x;  //power to drive holonomic
         double spinPower = -gamepad1.right_stick_x/2; //power to drive holonomic
         double liftPower = gamepad2.left_stick_y; //power for lift
-        double extendPower = gamepad2.right_stick_y/4; //power for intake extension
-        double movePower = gamepad2.left_stick_x/2; //power to move arm
-        double dustbinPower = -gamepad2.right_stick_x/6; //power for intake dustbin
+        double movePower = gamepad2.right_stick_y; //power to move arm
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //the first if statement spins the robot
@@ -121,11 +119,12 @@ public class holoDrive extends OpMode {
             front_right.setPower(0);
         }
 
+
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------//        if (stop.getState() == false) {
         if (stop.getState() == false) {
-            lift.setPower(0.5);
+            lift.setPower(-0.5);
         }
-        else if(stop.getState() == true && liftPower>=0){
+        else if(stop.getState() == true && Math.abs(liftPower)>=0){
             lift.setPower(liftPower);
         }
 //        this controls the lift
@@ -133,30 +132,23 @@ public class holoDrive extends OpMode {
         //these are the intake controls
 
         //controls dustBinServo
-        dustbinIntake.setPower(dustbinPower);
-
-        extendIntake.setPower(extendPower);
         //controls the intake extention
 
         moveIntake.setPower(movePower);
         //controls intake moving up and down
 
-        if (gamepad2.y == true) {
-            telemetry.addData("gamepad2 y true", "%f", 0.1 );
-            dustBinServo.setPosition(0.1);
+        if (gamepad2.b == true) {
+            liftLockServo.setPosition(1);
         }
-        else if (gamepad2.a == true) {
-            telemetry.addData("gamepad2 a true", "%f", 0.35 );
-            dustBinServo.setPosition(0.9);
+        else if (gamepad2.x == true) {
+            liftLockServo.setPosition(0);
         }
-
 
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //this lets us see the power the motors are being set to
         telemetry.addData("xPower", "%.2f",  xPower);
         telemetry.addData("yPower", "%.2f",  yPower);
         telemetry.addData("liftPower", "%.2f",  liftPower);
-        telemetry.addData("extendPower", "%.2f",  extendPower);
         telemetry.addData("movePower", "%.2f",  movePower);
         if (stop.getState() == true) {
             telemetry.addData("stop", "Is Not Pressed");
