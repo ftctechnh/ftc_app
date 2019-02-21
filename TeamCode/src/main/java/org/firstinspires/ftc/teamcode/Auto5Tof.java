@@ -118,13 +118,13 @@ public class Auto5Tof extends LinearOpMode {
         } else {
             telemetry.addData("Time Delay set to ", timeDelay);
         }
-        if (User.getYesNo("Remove Lift?")) {
+        /*if (User.getYesNo("Remove Lift?")) {
             telemetry.addLine("No Lift");
             noLift = true;
         }else {
             telemetry.addLine("Yes Lift");
             noLift=false;
-        }
+        }*/
             telemetry.update();
 
     }
@@ -190,7 +190,7 @@ public class Auto5Tof extends LinearOpMode {
                 case Deploy:
                     Led.red();
 
-                    if (noLift=false){
+                    //if (noLift=false){
                         telemetry.addLine("Land");
                         telemetry.update();
                         Lift.Extend();
@@ -199,9 +199,9 @@ public class Auto5Tof extends LinearOpMode {
                             Lift.Extend();
                         }
                         Lift.Stop();
-                    }else {
+                    //}else {
                         telemetry.addLine("Lift Removed");
-                    }
+                    //}
 
                     Vucam.setSamplePos();
                     if (Vucam.sample == VucamControl.Sample.LEFT) {
