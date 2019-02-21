@@ -22,7 +22,6 @@ public class Auto5Tof extends LinearOpMode {
     VucamControl Vucam = new VucamControl();
     DriveControl Drive = new DriveControl();
     ClaimerControl Claimer = new ClaimerControl();
-    MinerControl Miner = new MinerControl();
     LiftControl Lift = new LiftControl();
     LedControl Led = new LedControl();
 
@@ -75,6 +74,7 @@ public class Auto5Tof extends LinearOpMode {
     private Start orientation;
     private boolean doubleSample;
     private boolean allianceCrater;
+    private boolean noLift;
     private int timeDelay = 0;
 
 
@@ -118,7 +118,14 @@ public class Auto5Tof extends LinearOpMode {
         } else {
             telemetry.addData("Time Delay set to ", timeDelay);
         }
-
+        if (User.getYesNo("Remove Lift?")) {
+            telemetry.addLine("No Lift");
+            noLift = true;
+        }else {
+            telemetry.addLine("Yes Lift");
+            noLift=false;
+        }
+            telemetry.update();
 
     }
 
@@ -135,7 +142,6 @@ public class Auto5Tof extends LinearOpMode {
         Vucam.init(this);
         Drive.init(this);
         Claimer.init(this);
-        Miner.init(this, false);
         Lift.init(this);
         Led.init(this);
 
@@ -183,16 +189,19 @@ public class Auto5Tof extends LinearOpMode {
 
                 case Deploy:
                     Led.red();
-                    telemetry.addLine("Land");
-                    telemetry.update();
-                    Lift.Extend();
-                    Miner.Extend();
-                    Drive.TimeDelay(0.25);
-                    Miner.MinerStop();
-                    while (!Lift.LifterButtonT.isPressed()) {
+
+                    if (noLift=false){
+                        telemetry.addLine("Land");
+                        telemetry.update();
                         Lift.Extend();
+                        Drive.TimeDelay(0.25);
+                        while (!Lift.LifterButtonT.isPressed()) {
+                            Lift.Extend();
+                        }
+                        Lift.Stop();
+                    }else {
+                        telemetry.addLine("Lift Removed");
                     }
-                    Lift.Stop();
 
                     Vucam.setSamplePos();
                     if (Vucam.sample == VucamControl.Sample.LEFT) {
@@ -206,9 +215,7 @@ public class Auto5Tof extends LinearOpMode {
                     }
                     telemetry.update();
 
-                    Miner.Retract();
                     Drive.moveForward(0.5, 0.14);
-                    Miner.MinerStop();
                     sleep(100);
                     if (orientation == Start.Crater) {
                         newState(State.Sample_Crater);
@@ -273,7 +280,12 @@ public class Auto5Tof extends LinearOpMode {
                     telemetry.update();
                     Drive.turn2Angle(TURN_SPEED, -80);
                     Drive.TimeDelay(0.1);
-                    Drive.moveForward(0.3, 2.8);
+                    if(Vucam.sample == Vucam.sample.RIGHT){
+                        Drive.moveForward(0.3, 3.2);
+                    }
+                    else {
+                        Drive.moveForward(0.3, 2.8);
+                    }
                     //Drive.forwardUntilDistance4Time(0.3, 30.5, 5);
                     Drive.TimeDelay(0.1);
                     Drive.turn2Angle(TURN_SPEED, -135);
