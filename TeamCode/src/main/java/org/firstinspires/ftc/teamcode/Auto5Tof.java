@@ -190,7 +190,7 @@ public class Auto5Tof extends LinearOpMode {
                 case Deploy:
                     Led.red();
 
-                    //if (noLift=false){
+                    //if (noLift == false){
                         telemetry.addLine("Land");
                         telemetry.update();
                         Lift.Extend();
@@ -243,7 +243,7 @@ public class Auto5Tof extends LinearOpMode {
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 9);
                         Drive.TimeDelay(0.1);
-                        Drive.turn2Angle(TURN_SPEED, -45);
+                        Drive.turn2Angle(TURN_SPEED, -50);
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 9);
                         //Turn back toward depot
