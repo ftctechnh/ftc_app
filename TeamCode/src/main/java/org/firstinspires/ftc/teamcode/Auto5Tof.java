@@ -243,7 +243,7 @@ public class Auto5Tof extends LinearOpMode {
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 9);
                         Drive.TimeDelay(0.1);
-                        Drive.turn2Angle(TURN_SPEED, -50);
+                        Drive.turn2Angle(TURN_SPEED, -48);
                         Drive.TimeDelay(0.1);
                         Drive.forwardUntilDistance(0.3, 9);
                         //Turn back toward depot
