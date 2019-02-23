@@ -370,7 +370,7 @@ class DriveEngine {
     ArrayList<Double> smoothSpinList = new ArrayList<>();
     private int smoothAdditions = 0;
     void smoothDrive2(boolean op, double x, double y, double spin,
-                          double rSeconds, boolean smoothTheta, int precedence)
+                          double rSeconds, boolean smoothSpin, boolean smoothTheta, int precedence)
     {
         if(precedence < MyMath.max(precedences))
             return;
@@ -397,7 +397,7 @@ class DriveEngine {
         MyMath.trimFromFront(smoothThetaList, (int)Math.round(     .66 / Bogg.averageClockTime));
 
         r     = (r==0)?      0 : MyMath.ave(smoothRList);
-        spin  = (spin==0)?   0 : MyMath.ave(smoothSpinList);
+        spin  = (spin==0 || !smoothSpin)?   spin : MyMath.ave(smoothSpinList);
         theta = smoothTheta? MyMath.loopAve(smoothThetaList) : theta;
 
         drive(precedence, op,Math.cos(theta) * r, Math.sin(theta) * r, spin);
@@ -534,6 +534,7 @@ class DriveEngine {
 
         lastR = r;
         lastT = t;
+        lastTheta = theta;
 
         return new double[]{Math.cos(theta) * power - Math.sin(theta) * tangentPower,
                             Math.sin(theta) * power + Math.cos(theta) * tangentPower};
