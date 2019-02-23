@@ -338,6 +338,15 @@ class DriveEngine {
         return false;
     }
 
+    boolean moveToAbsolutePosition(double x, double y)
+    {
+        double angle = spinAngle();
+        double newX =  trueX * Math.cos(-angle) - trueY * Math.sin(-angle) + x;
+        double newY =  trueX * Math.sin(-angle) + trueY * Math.cos(-angle) + y;
+        return moveOnPath(new double[]{xDist() -newX - cumulativeDistance[0],
+                yDist() -newY - cumulativeDistance[1]});
+    }
+
     double[] smoothDrive(double x, double y, double rSeconds, boolean smoothTheta)
     {
         double alpha = Bogg.getAlpha(rSeconds);
