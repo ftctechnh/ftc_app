@@ -29,10 +29,10 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
                 //We don't correct until a second has passed.
                 if(timer.seconds() < 1){
                     robot.driveEngine.resetForward();
-                    robot.manualDrive(g1.left_stick_button, g1.left_stick_x, -g1.left_stick_y);
+                    robot.manualDrive(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
                 }
                 else
-                    robot.manualDriveAutoCorrect(g1.left_stick_button, g1.left_stick_x, -g1.left_stick_y, timer.seconds());
+                    robot.manualDriveAutoCorrect(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y, timer.seconds());
             }
             else //if we are rotating
                 timer.reset();
@@ -54,8 +54,6 @@ public class holonomicDrive_0_1_5 extends LinearOpMode
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
-            telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
-            telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 
             robot.update();
             idle();

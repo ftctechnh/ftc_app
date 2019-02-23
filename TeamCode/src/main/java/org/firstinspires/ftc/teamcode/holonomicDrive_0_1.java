@@ -23,7 +23,7 @@ public class holonomicDrive_0_1 extends LinearOpMode
         {
             if(!robot.manualRotate(g1.right_stick_button, g1.right_stick_x)) //if we're not rotating
             {
-                robot.manualDrive(g1.left_stick_button, g1.left_stick_x, -g1.left_stick_y);
+                robot.manualDrive(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y);
             }
 
             if(g1.dpad_down)
