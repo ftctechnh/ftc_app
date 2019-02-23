@@ -227,12 +227,14 @@ public class Bogg
     {
         if(spin != 0)
             spinTimer.reset();
+        boolean smoothSpin = true;
         if(spinTimer.seconds() < 1)
             driveEngine.resetForward();
-        else
+        else {
             spin = -driveEngine.faceForward();
-
-        driveEngine.smoothDrive2(op, x, -y, -spin, op? 1:2.5, true, precedence);
+            smoothSpin = false;
+        }
+        driveEngine.smoothDrive2(op, x, -y, -spin, op? 1:2.5, smoothSpin, true, precedence);
 
         telemetry.addData("gamepad x", x);
         telemetry.addData("gamepad y", y);
@@ -345,7 +347,7 @@ public class Bogg
             return;
         }
 
-        averageClockTime = (clockTime + n * averageClockTime) / (n+1); //cumulative average
+        averageClockTime = (clockTime * .02 + averageClockTime * .98); //expontential average
 
         n++;
         driveEngine.update();
