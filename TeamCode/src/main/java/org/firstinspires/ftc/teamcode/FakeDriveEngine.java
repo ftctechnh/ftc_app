@@ -72,9 +72,9 @@ public class FakeDriveEngine extends DriveEngine {
         }
 
         //Estimated 4 feet per second at full power
-        double dX = (4 * 12 ) * x * Bogg.averageClockTime;
-        double dY = (4 * 12 ) * y * Bogg.averageClockTime;
-        double dS = (4 * 12 ) * spin * Bogg.averageClockTime;
+        double dX = (1.5 * 12 ) * x * Bogg.averageClockTime;
+        double dY = (1.5 * 12 ) * y * Bogg.averageClockTime;
+        double dS = (1.5 * 12 ) * spin * Bogg.averageClockTime;
         xDistance += dX;
         yDistance += dY;
         sDistance += dS;
