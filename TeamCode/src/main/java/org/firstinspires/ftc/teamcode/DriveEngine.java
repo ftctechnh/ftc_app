@@ -150,11 +150,12 @@ class DriveEngine {
                 return;
         }
 
-        if(MyMath.absoluteMax(x, y, spin) == 0) {
+        if(MyMath.absoluteMax(x, y) == 0) {
             smoothThetaList.clear();
             MyMath.fill(smoothRList, 0);
-            MyMath.fill(smoothSpinList, 0);
         }
+        if(spin == 0)
+            MyMath.fill(smoothSpinList, 0);
 
         double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
         double yPrime = x * Math.sin(theta) + y * Math.cos(theta);
@@ -177,7 +178,7 @@ class DriveEngine {
                 powers[i] /= max;            // Or maximize a motor to one
 
 
-
+        blackValues = new double[]{x,y,spin};
         telemetry.addData("driveE x", x);
         telemetry.addData("driveE y", y);
         telemetry.addData("driveE rotate", spin);
@@ -190,6 +191,7 @@ class DriveEngine {
         reportPositionsToScreen();
     }
 
+    double[] blackValues = new double[3];
 
     void driveAtAngle(double theta)
     {
@@ -216,8 +218,9 @@ class DriveEngine {
         justRestarted = true;
     }
 
-    private double[] cumulativeDistance = new double[]{0,0};
+    double[] cumulativeDistance = new double[]{0,0};
 
+    boolean justResetTarget = false;
     ArrayList<Boolean> checkpoints = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
@@ -244,6 +247,7 @@ class DriveEngine {
     {
         if(checkpoints.isEmpty()){
             for (double[] arg : args) checkpoints.add(false);
+            justResetTarget = true;
         }
 
         int c = 0;
@@ -274,10 +278,12 @@ class DriveEngine {
                         checkpoints.set(c, true);
                         cumulativeDistance = new double[]{0,0};
                         resetDistances();
+                        justResetTarget = true;
                         break;
                     }
                 }
                 rotate(face(targetAngle));
+                justResetTarget = false;
                 break;
             case 3:
                 targetAngle = forward + args[c][2];
@@ -321,10 +327,12 @@ class DriveEngine {
                         cumulativeDistance[1] += args[c][1];
                         drdtArray = new ArrayList<>();
                         dThdtArray = new ArrayList<>();
+                        justResetTarget = true;
                     }
                 }
                 else
                     drive(driveX, driveY, spin);
+                justResetTarget = false;
                 break;
         }
         return false;
@@ -408,23 +416,7 @@ class DriveEngine {
 
 
     double faceForward(){
-        return face(forward, true);
-    }
-    double face(double target)
-    {
-        double current = spinAngle();
-        telemetry.addData("current angle", current);
-        if(target == forward)
-            return face(forward, true);
-
-        double deltaAngle = Math.abs(MyMath.loopAngle(target, current));
-
-        if(MyMath.degrees(deltaAngle) < 5) //if we are in the controllable zone
-            return face(target, true);
-
-        else
-            sumSpinError = 0;  //if we need to catch up
-            return face(target,false);
+        return face(forward);
     }
 
     private double sumSpinError = 0;
@@ -433,9 +425,9 @@ class DriveEngine {
 
     double sP = .20; // .20 per radian
     double sI = 8; //Time to correct past error
-    double sD = .05; //fully account for this much time in the future at current error decreasing rate
+    double sD = .4; //fully account for this much time in the future at current error decreasing rate
 
-    private double face(double angle, boolean Integral)
+    private double face(double angle)
     {
         //    u(t) = MV(t) = P *( e(t) + 1/I* integral(0,t) (e(tau) *dtau) + 1/D *de(t)/dt )
         //    where
@@ -446,15 +438,23 @@ class DriveEngine {
         //    t is the time or instantaneous time
         //    tau is the variable of integration (takes on values from time zero to the present t).
         //power per degree
-        double i = Integral? sI : 10000;
+        double i = sI;
 
         double e = MyMath.loopAngle(angle, spinAngle());
         double de = e - lastSpinError; //change in angle
         double t = timer.seconds();
         double dt = t - lastSpinTime;  //change in t
+        telemetry.addData("de/dt", de/dt);
         sumSpinError += e * dt;        //cumulative error
 
+        if(Math.abs(e) > MyMath.radians(5)) {
+            sumSpinError = 0;
+            i = 10000;
+        }
+        telemetry.addData("sum Spin Error", sumSpinError);
+
         double power = sP * (e  +  1/ i * sumSpinError +  sD * de/dt);
+        telemetry.addData("correction Power", power);
         //e is current error, sumSpinError is the integral, de/dt is the derivative
 
         lastSpinError = e;
@@ -494,7 +494,8 @@ class DriveEngine {
         double t = timer.seconds();
         double dt = t - lastT;
         double dTheta = MyMath.loopAngle(theta, lastTheta);
-
+        if(justResetTarget)
+            dTheta = 0;
         double drdt = dr / dt;
         drdtArray.add(drdt);
 
@@ -517,8 +518,8 @@ class DriveEngine {
         //dTheta*r / dt is in inches / sec
         //therefore tD is in seconds
 
-        if(Math.abs(dTheta / dr / r ) > 2){ //2 rad per inch^2
-            telemetry.addData("dtheta/dt / r", dTheta/dt/r);
+        telemetry.addData("dtheta/dt / r", dTheta/dr/r);
+        if(dr != 0 && Math.abs(dTheta / dr / r ) > 2){ //2 rad per inch^2
             return new double[]{0,0};
         }
 
