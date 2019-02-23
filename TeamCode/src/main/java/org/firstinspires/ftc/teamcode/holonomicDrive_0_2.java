@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="holonomicDrive Competition", group="Testing")
+@TeleOp(name="holonomicDrive Competition", group="Competition")
 public class holonomicDrive_0_2 extends LinearOpMode
 {
     Bogg robot;
@@ -19,7 +19,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
     private boolean autoOverride = false;
 
     double pinch = .44;
-    double driveAngle, initialAngle = Math.PI;
+    double driveAngle = Math.PI, initialAngle = Math.PI;
 
     @Override
     public void runOpMode()

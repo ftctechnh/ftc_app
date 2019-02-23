@@ -11,7 +11,7 @@ public class holonomicDrive_0_6 extends LinearOpMode
 
     Gamepad g1;
 
-    double driveAngle, initialAngle = Math.PI;
+    double driveAngle = Math.PI, initialAngle = Math.PI;
 
     @Override
     public void runOpMode()
@@ -24,9 +24,14 @@ public class holonomicDrive_0_6 extends LinearOpMode
         while (opModeIsActive())
         {
             telemetry.addLine(""+robot.name);
+            double heading = robot.sensors.getImuHeading();
             if(g1.x)
-                driveAngle = initialAngle + robot.sensors.getImuHeading();
-            robot.driveEngine.driveAtAngle(MyMath.loopAngle(driveAngle, robot.sensors.getImuHeading()));
+                driveAngle = initialAngle + heading;
+            double loopAngle = MyMath.loopAngle(driveAngle, heading);
+            robot.driveEngine.driveAtAngle(loopAngle);
+            telemetry.addData("Drive angle", driveAngle);
+            telemetry.addData("Linear loop angle", loopAngle);
+            telemetry.addData("Heading", heading);
 
             robot.manualDrive2(g1.left_stick_button, g1.left_stick_x, g1.left_stick_y, g1.right_stick_x);
 

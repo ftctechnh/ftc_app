@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 @TeleOp(name="holonomicDrive Deliver Valentines", group="Testing")
@@ -12,7 +11,7 @@ public class holonomicDrive_0_5 extends LinearOpMode
 
     Gamepad g1;
 
-    double driveAngle, initialAngle = Math.PI;
+    double driveAngle = Math.PI, initialAngle = Math.PI;
 
     @Override
     public void runOpMode()
@@ -23,8 +22,6 @@ public class holonomicDrive_0_5 extends LinearOpMode
         g1 = gamepad1;
         waitForStart();
 
-        robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.endEffector.contract.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         while (opModeIsActive())
         {
