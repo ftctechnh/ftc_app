@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="holonomicDrive Retriever", group="Testing")
-public class holonomicDrive_Retriever extends LinearOpMode
+public class holonomicDrive_0_7 extends LinearOpMode
 {
     Bogg robot;
 
@@ -17,7 +17,7 @@ public class holonomicDrive_Retriever extends LinearOpMode
     public void runOpMode()
     {
         robot = Bogg.determineRobot(hardwareMap, telemetry);
-        robot.driveEngine.driveAtAngle(Math.PI);
+        robot.driveEngine.driveAtAngle(0);
         timer = new ElapsedTime();
         g1 = gamepad1;
         boolean runBack = false;
@@ -30,13 +30,7 @@ public class holonomicDrive_Retriever extends LinearOpMode
 
             if(runBack)
             {
-                double trueX = robot.driveEngine.trueX;
-                double trueY = robot.driveEngine.trueY;
-                double angle = robot.driveEngine.spinAngle();
-                double newX =  trueX * Math.cos(-angle) - trueY * Math.sin(-angle);
-                double newY =  trueX * Math.sin(-angle) + trueY * Math.cos(-angle);
-                if(robot.driveEngine.moveOnPath(new double[]{-newX, -newY}))
-                    runBack = false;
+                runBack = robot.driveEngine.moveToAbsolutePosition(0,0);
             }
             else
                 robot.manualDrive2(g1.left_stick_button,g1.left_stick_x, g1.left_stick_y, g1.right_stick_x);
@@ -57,8 +51,6 @@ public class holonomicDrive_Retriever extends LinearOpMode
             // Display the current value
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
             telemetry.addLine("Set brake: d-down. Remove brake: d-up.");
-            telemetry.addData("touchBottom", robot.sensors.touchBottomIsPressed());
-            telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
 
             robot.update();
             idle();
