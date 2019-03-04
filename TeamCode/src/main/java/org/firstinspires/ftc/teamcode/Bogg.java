@@ -17,6 +17,7 @@ public class Bogg
     Sensors sensors;
     ElapsedTime timer;
     Servo brake;
+    Servo brake2;
     Servo drop;
     Name name;
 
@@ -62,6 +63,7 @@ public class Bogg
                 lift.setDirection(DcMotorSimple.Direction.FORWARD);
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 brake = hardwareMap.servo.get("brake");
+                brake2 = hardwareMap.servo.get("brake2");
                 drop = hardwareMap.servo.get("drop");
                 break;
 
@@ -183,12 +185,25 @@ public class Bogg
         if(name == Name.Bogg)
         switch (d) {
             case On:
-                brake.setPosition(.5);
+                brake.setPosition(.45);
                 break;
             case Off:
-                brake.setPosition(.6);
+                brake.setPosition(.62);
         }
     }
+
+    void setBrake2(Direction d)
+    {
+        if(name == Name.Bogg)
+            switch (d) {
+                case On:
+                    brake2.setPosition(.45);
+                    break;
+                case Off:
+                    brake2.setPosition(.62);
+            }
+    }
+
 
 
     void dropMarker(Direction direction)

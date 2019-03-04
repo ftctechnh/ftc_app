@@ -50,11 +50,18 @@ public class holonomicDrive_0_2 extends LinearOpMode
             else if(g1.dpad_up)
                 robot.setBrake(Bogg.Direction.Off);
 
+            if(g1.dpad_left)
+                robot.setBrake2(Bogg.Direction.On);
+            else if(g1.dpad_right)
+                robot.setBrake2(Bogg.Direction.Off);
+
 
             if(g1.left_bumper)
                 robot.dropMarker(Bogg.Direction.Left);
             else if(g1.right_bumper)
                 robot.dropMarker(Bogg.Direction.Right);
+            else
+                robot.dropMarker(Bogg.Direction.Up);
 
             if(g2.dpad_right){
                 pinch += .1 * Bogg.averageClockTime;
@@ -88,7 +95,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     leftButtonPressed = true;
                 }
                 if(timer.seconds() > 1)
-                    robot.driveEngine.moveOnPath(true, new double[]{Math.PI});
+                    robot.driveEngine.moveOnPath(true, false, new double[]{Math.PI});
                 else
                     robot.driveEngine.drive(0);
 
@@ -108,7 +115,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     rightButtonPressed = true;
                 }
                 if(timer.seconds() > .5)
-                    robot.driveEngine.moveOnPath(true, new double[]{Math.PI});
+                    robot.driveEngine.moveOnPath(true, false, new double[]{Math.PI});
                 else
                     robot.driveEngine.drive(0);
 

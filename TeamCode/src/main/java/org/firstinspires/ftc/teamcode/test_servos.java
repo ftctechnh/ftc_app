@@ -15,6 +15,7 @@ public class test_servos extends LinearOpMode
     double swing = 0.25;
     double drop = 0;
     double brake = .55;
+    double brake2 = .5;
 
     @Override
     public void runOpMode()
@@ -50,8 +51,15 @@ public class test_servos extends LinearOpMode
             if(gamepad1.right_stick_button)
                 brake += .1 * Bogg.averageClockTime;
 
+            if(gamepad1.x)
+                brake2 -= .1 * Bogg.averageClockTime;
+            if(gamepad1.b)
+                brake2 += .1 * Bogg.averageClockTime;
+
             robot.brake.setPosition(brake);
+            robot.brake2.setPosition(brake2);
             telemetry.addData("brake", brake);
+            telemetry.addData("brake2", brake2);
 
 
             sleep(50);
