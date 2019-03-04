@@ -49,7 +49,7 @@ public class Auto {
         {
             timer = new ElapsedTime();
         }
-        if (getTime() < 1) //for the first second
+        if (getTime() < 1.5) //for the first second
         {
             telemetry.addData("time", getTime());
             if (!robot.sensors.touchTopIsPressed()) //helps with testing
@@ -94,7 +94,7 @@ public class Auto {
 
     Mode slide1()
     {
-        if (robot.driveEngine.moveOnPath(
+        if (robot.driveEngine.moveOnPath(false, true,
                 new double[]{-2.5, 0}))
         {
             return Mode.PushGold;
@@ -172,13 +172,14 @@ public class Auto {
 
     Mode slide2()
     {
-        if (robot.driveEngine.moveOnPath(
-                new double[]{0, slide2Y},
-                new double[]{-slide2X, 0},
-                new double[]{Math.PI / 4}))
-        {
-            return Mode.TurnByCamera;
-        }
+        if (robot.driveEngine.moveOnPath("slide2 Y",
+                new double[]{0, slide2Y}))
+            if(robot.driveEngine.moveOnPath(false, true,
+                    new double[]{-33, 28},
+                    new double[]{Math.PI / 4}))
+            {
+                return Mode.TurnByCamera;
+            }
         return Mode.Slide2;
     }
 
@@ -305,7 +306,7 @@ public class Auto {
                 return true;
             else
             {
-                robot.driveEngine.moveOnPath(true, drive);
+                robot.driveEngine.moveOnPath(true, false,drive);
             }
         }
         return false;
@@ -336,7 +337,7 @@ public class Auto {
                 return true;
             else
             {
-                robot.driveEngine.moveOnPath(true, drive);
+                robot.driveEngine.moveOnPath(true, false, drive);
             }
         }
         return false;
