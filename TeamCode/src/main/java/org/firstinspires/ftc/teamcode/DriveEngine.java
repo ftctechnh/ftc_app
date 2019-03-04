@@ -24,12 +24,14 @@ class DriveEngine {
     static double ticksPerRev = 1120;
     static double inPerRev(){return Math.PI * effectiveWheelDiameter;}
     static double inPerTicks(){return inPerRev() / ticksPerRev;}
+    static void setEffectiveWheelDiameter(double inches, double ticks)
+    {
+        double revolutions = ticks / ticksPerRev;
+        double circumference = inches / revolutions;
+        effectiveWheelDiameter = circumference / Math.PI;
+    }
 
-    double spinAve = 0;
-    double rAve = 0;
-    double thetaAve = 0;
-    private double theta = 0;
-    private double forward = 0;
+    private double spinAve,rAve,thetaAve,theta,forward;
     ElapsedTime timer;
     Telemetry telemetry;
 
@@ -69,57 +71,83 @@ class DriveEngine {
 
         for(DcMotor motor: motors)
         {
+            //We reset the encoders to 0
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //We tell the motors to brake, not spin or float. They resist movement with friction.
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            //The drive engine motors should always move forward. Always!
             motor.setDirection(DcMotorSimple.Direction.FORWARD);
+            //We run using velocity, not power.
+            //The motors do this by checking the speed using change in position over time.
+            //They use PID control to keep the speed constant.
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
 
         timer = new ElapsedTime();
     }
 
-
+    //Used in the FakeDriveEngine
     DriveEngine() {
     }
 
+    //Potential drive values
     ArrayList<double[][]> potentials = new ArrayList<>();
+
+    //Answers the question: which drive value do we choose?
     ArrayList<Integer> precedences = new ArrayList<>();
 
+    //Explicit stopping takes high precedence
     void stop(){
         drive(2,false, 0.);
     }
 
+    //Rotation is done in the same drive method.
     void rotate(double spin){
         drive(spin);
     }
 
+    //We can also give a rotation precedence
     void rotate(double precedence, double spin){
         drive(precedence, spin);
     }
 
+    //The... means you can put in any number of values.
     void drive(double... args) {
         drive(false,args);
     }
 
+    //Op means overpowered: When op, a motor is maxed out if the overall power > .9
     void drive(boolean op, double ... args){drive(0, op, args);}
 
     void drive(int precedence, boolean op, double ... args) {
+        //If we've already logged power values this loop
         if(precedences.size() != 0){
+            //If our precedence is too low, we break out, no more math needed.
             if (precedence < MyMath.max(precedences))
                 return;
+            //Driving with non-zero values takes precedence over stopping.
+            //If the values are zero, we break out.
             if(MyMath.absoluteMax(args) == 0)
                 return;
         }
+        //If we've made it to this point, we want to keep our drive values.
+        //We save the precedence
         precedences.add(precedence);
+        //We save op and args into an array.
         double[][] potential = new double[2][];
         potential[0] = new double[]{op? 1.:0.};
         potential[1] = args;
+        //We put our drive values in the first spot in the potential ArrayList.
         potentials.add(0, potential);
     }
 
     void update(){
+        //If all is working, this line should appear.
+        //It might not if the update method is left out of an OpMode.
         telemetry.addLine("updating");
+        //One per loop, we update the motor powers.
         drive();
+        //We prepare for the next loop by clearing one-loop lists and counters.
         precedences.clear();
         potentials.clear();
         smoothAdditions = 0;
@@ -127,32 +155,34 @@ class DriveEngine {
     protected void drive(){
         double x = 0,y = 0,spin = 0;
 
+        //If we haven't been given any drive values, we stop.
         if(potentials.size() == 0){
             potentials.add(new double[][]{new double[]{0}, new double[]{0}});
         }
 
+        //We convert op back to a boolean: Does it equal one?
         boolean op = potentials.get(0)[0][0] == 1;
         double[] args = potentials.get(0)[1];
 
         switch (args.length)    //assign x, y and spin
         {
             case 3:
-                spin = args[2];
+                spin = args[2];  //x,y,spin
             case 2:
-                x = args[0];
+                x = args[0];     //x,y
                 y = args[1];
                 break;
             case 1:
-                spin = args[0];
+                spin = args[0];  //spin
                 break;
-            default:
-                stop();
-                return;
+            default:      //This shouldn't happen
+                telemetry.addLine("Argument length of zero in drive");
+                break;
         }
 
-        if(MyMath.absoluteMax(x, y) == 0) {
-            smoothThetaList.clear();
-            MyMath.fill(smoothRList, 0);
+        if(MyMath.absoluteMax(x, y) == 0) {  //If we are to stop,
+            smoothThetaList.clear();         //Reset our direction: no delay
+            MyMath.fill(smoothRList, 0);  //Stop immediately
         }
         if(spin == 0)
             MyMath.fill(smoothSpinList, 0);
@@ -224,12 +254,12 @@ class DriveEngine {
     ArrayList<Boolean> checkpoints = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
-        return moveOnPath(false, args);
+        return moveOnPath(false, false,args);
     }
     boolean moveOnPath(String key, double[] ... args){
         if(keyList.contains(key))
             return true;
-        if(moveOnPath(false, args)){
+        if(moveOnPath(false, false, args)){
             keyList.add(key);
             return true;
         }
@@ -243,7 +273,7 @@ class DriveEngine {
         c: true  – When you continually test moving to different points.
         c: false – When the code changes to a new task after completion.
      */
-    boolean moveOnPath(boolean continuous, double[] ... args)
+    boolean moveOnPath(boolean continuous, boolean absolute, double[] ... args)
     {
         if(checkpoints.isEmpty()){
             for (double[] arg : args) checkpoints.add(false);
@@ -263,12 +293,13 @@ class DriveEngine {
         }
 
         double targetAngle = forward;
+        double currentAngle = spinAngle();
         switch (args[c].length)
         {
             case 1:
                 targetAngle = forward + args[c][0];
 
-                if(Math.abs(MyMath.loopAngle(targetAngle, spinAngle())) < MyMath.radians(2)) {
+                if(Math.abs(MyMath.loopAngle(targetAngle, currentAngle)) < MyMath.radians(2)) {
                     if(continuous && c == checkpoints.size() - 1)
                         ;
                     else{
@@ -292,8 +323,22 @@ class DriveEngine {
                 double[] point = args[c];
                 double spin = face(targetAngle);
 
-                double deltaX = point[0] + cumulativeDistance[0] - xDist();
-                double deltaY = point[1] + cumulativeDistance[1] - yDist();
+                double deltaX;
+                double deltaY;
+
+                if(absolute)
+                {
+                    double angle = currentAngle;
+                    double trueDeltaX = point[0] - trueX;
+                    double trueDeltaY = point[1] - trueY;
+                    deltaX =  trueDeltaX * Math.cos(-angle) - trueDeltaY * Math.sin(-angle);
+                    deltaY =  trueDeltaX * Math.sin(-angle) + trueDeltaY * Math.cos(-angle);
+                }
+                else
+                {
+                    deltaX = point[0] + cumulativeDistance[0] - xDist();
+                    deltaY = point[1] + cumulativeDistance[1] - yDist();
+                }
                 double r = Math.hypot(deltaX, deltaY);
 
                 double[] drive = move(deltaX, deltaY);
@@ -341,10 +386,12 @@ class DriveEngine {
     boolean moveToAbsolutePosition(double x, double y)
     {
         double angle = spinAngle();
-        double newX =  trueX * Math.cos(-angle) - trueY * Math.sin(-angle) + x;
-        double newY =  trueX * Math.sin(-angle) + trueY * Math.cos(-angle) + y;
-        return moveOnPath(new double[]{xDist() -newX - cumulativeDistance[0],
-                yDist() -newY - cumulativeDistance[1]});
+        double trueDeltaX = x - trueX;
+        double trueDeltaY = y - trueY;
+        double newDeltaX =  trueDeltaX * Math.cos(-angle) - trueDeltaY * Math.sin(-angle);
+        double newDeltaY =  trueDeltaX * Math.sin(-angle) + trueDeltaY * Math.cos(-angle);
+        return moveOnPath(new double[]{xDist() +newDeltaX - cumulativeDistance[0],
+                yDist() +newDeltaY - cumulativeDistance[1]});
     }
 
     double[] smoothDrive(double x, double y, double rSeconds, boolean smoothTheta)
@@ -480,7 +527,7 @@ class DriveEngine {
     private double lastR = 0;
     private double lastTheta = 0;
     private double lastT = 0;
-    double mP = .015; //power per inch
+    double mP = .02; //power per inch
     double mD = 0.1;  //fully account for this much time in the future at current error decreasing rate
     double tD = 0.05;
 
@@ -538,7 +585,7 @@ class DriveEngine {
         telemetry.addData("moveD / power",mD * MyMath.ave(drdtArray) / power);
 
         telemetry.addData("moveT term", tangentPower);
-        if(power > .4) power = .4;
+        if(power > .5) power = .5;
         //Don't worry, it's smoothed
 
         lastR = r;
