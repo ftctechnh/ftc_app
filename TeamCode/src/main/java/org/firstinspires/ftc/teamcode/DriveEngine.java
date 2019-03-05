@@ -91,7 +91,7 @@ class DriveEngine {
     }
 
     //Potential drive values
-    ArrayList<double[][]> potentials = new ArrayList<>();
+    ArrayList<double[][]> potentialDriveValues = new ArrayList<>();
 
     //Answers the question: which drive value do we choose?
     ArrayList<Integer> precedences = new ArrayList<>();
@@ -138,7 +138,7 @@ class DriveEngine {
         potential[0] = new double[]{op? 1.:0.};
         potential[1] = args;
         //We put our drive values in the first spot in the potential ArrayList.
-        potentials.add(0, potential);
+        potentialDriveValues.add(0, potential);
     }
 
     void update(){
@@ -149,20 +149,20 @@ class DriveEngine {
         drive();
         //We prepare for the next loop by clearing one-loop lists and counters.
         precedences.clear();
-        potentials.clear();
+        potentialDriveValues.clear();
         smoothAdditions = 0;
     }
     protected void drive(){
         double x = 0,y = 0,spin = 0;
 
         //If we haven't been given any drive values, we stop.
-        if(potentials.size() == 0){
-            potentials.add(new double[][]{new double[]{0}, new double[]{0}});
+        if(potentialDriveValues.size() == 0){
+            potentialDriveValues.add(new double[][]{new double[]{0}, new double[]{0}});
         }
 
         //We convert op back to a boolean: Does it equal one?
-        boolean op = potentials.get(0)[0][0] == 1;
-        double[] args = potentials.get(0)[1];
+        boolean op = potentialDriveValues.get(0)[0][0] == 1;
+        double[] args = potentialDriveValues.get(0)[1];
 
         switch (args.length)    //assign x, y and spin
         {
