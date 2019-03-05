@@ -23,12 +23,12 @@ public class FakeDriveEngine extends DriveEngine {
     protected void drive() {
         double x = 0,y = 0,spin = 0;
 
-        if(potentials.size() == 0){
-            potentials.add(new double[][]{new double[]{0}, new double[]{0}});
+        if(potentialDriveValues.size() == 0){
+            potentialDriveValues.add(new double[][]{new double[]{0}, new double[]{0}});
         }
 
-        boolean op = potentials.get(0)[0][0] == 1;
-        double[] args = potentials.get(0)[1];
+        boolean op = potentialDriveValues.get(0)[0][0] == 1;
+        double[] args = potentialDriveValues.get(0)[1];
 
 
         switch (args.length)    //assign x, y and spin

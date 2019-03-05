@@ -197,10 +197,10 @@ public class Bogg
         if(name == Name.Bogg)
             switch (d) {
                 case On:
-                    brake2.setPosition(.45);
+                    brake2.setPosition(.95);
                     break;
                 case Off:
-                    brake2.setPosition(.62);
+                    brake2.setPosition(.43);
             }
     }
 

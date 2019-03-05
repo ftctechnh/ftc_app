@@ -57,9 +57,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
 
             if(g1.left_bumper)
-                robot.dropMarker(Bogg.Direction.Left);
-            else if(g1.right_bumper)
-                robot.dropMarker(Bogg.Direction.Right);
+                robot.dropMarker(Bogg.Direction.Down);
             else
                 robot.dropMarker(Bogg.Direction.Up);
 
