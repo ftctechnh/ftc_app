@@ -118,12 +118,12 @@ public class Auto5Tof extends LinearOpMode {
         } else {
             telemetry.addData("Time Delay set to ", timeDelay);
         }
-        /*if (User.getYesNo("Remove Lift?")) {
+        /*if (User.getYesNo("Enable Lift?")) {
             telemetry.addLine("No Lift");
-            noLift = true;
+            enableLift = false;
         }else {
-            telemetry.addLine("Yes Lift");
-            noLift=false;
+            telemetry.addLine("Enable Lift");
+            enableLift=true;
         }*/
             telemetry.update();
 
@@ -190,7 +190,7 @@ public class Auto5Tof extends LinearOpMode {
                 case Deploy:
                     Led.red();
 
-                    //if (noLift == false){
+                    //if (!enableLift){
                         telemetry.addLine("Land");
                         telemetry.update();
                         Lift.Extend();
