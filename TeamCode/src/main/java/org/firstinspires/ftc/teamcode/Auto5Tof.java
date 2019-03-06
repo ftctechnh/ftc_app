@@ -104,13 +104,13 @@ public class Auto5Tof extends LinearOpMode {
         }
         telemetry.update();
 
-        if (User.getLeftRight("Left or Right Crater?")) {
+        /*if (User.getLeftRight("Left or Right Crater?")) {
             allianceCrater = true;
             telemetry.addLine("Alliance Crater");
         } else {
             allianceCrater = false;
             telemetry.addLine("Opponent Crater");
-        }
+        }*/
 
         timeDelay = User.getInt("Time Delay");
         if (timeDelay < 1) {
@@ -350,9 +350,9 @@ public class Auto5Tof extends LinearOpMode {
                     Led.darkBlue();
                     telemetry.addLine("Depot to crater");
                     telemetry.update();
-                    if (!allianceCrater) {
+                    /*if (!allianceCrater) {
                         Drive.turn2Angle(TURN_SPEED, -45);
-                    }
+                    }*/
                     Drive.moveBackward(0.65, 2.3); //dropped for w/ 11454
                     newState(State.Stop);
                     break;
@@ -361,7 +361,9 @@ public class Auto5Tof extends LinearOpMode {
                     Led.lawnGreen();
                     telemetry.addLine("Start at Depot, to crater");
                     telemetry.update();
-                    if (!allianceCrater) {
+                    Drive.turn2Angle(TURN_SPEED, 45);
+                    Drive.moveBackward(0.5, 3.2);
+                    /*if (!allianceCrater) {
                         Drive.turn2Angle(TURN_SPEED, 45);
                     }
 
@@ -377,7 +379,7 @@ public class Auto5Tof extends LinearOpMode {
                         Drive.moveBackward(0.5, 0.9);
                     } else {
                         Drive.moveBackward(0.5, 3.2);
-                    }
+                    }*/
                     newState(State.Stop);
                     break;
 
