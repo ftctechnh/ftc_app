@@ -25,7 +25,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
     public void runOpMode()
     {
         robot = new Bogg(hardwareMap, telemetry, Bogg.Name.Bogg);
-        robot.endEffector.contract.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         telemetry.addLine("ready");
         waitForStart();
 
@@ -50,11 +49,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
             else if(g1.dpad_up)
                 robot.setBrake(Bogg.Direction.Off);
 
-            if(g1.dpad_left)
-                robot.setBrake2(Bogg.Direction.On);
-            else if(g1.dpad_right)
-                robot.setBrake2(Bogg.Direction.Off);
-
 
             if(g1.left_bumper)
                 robot.dropMarker(Bogg.Direction.Down);
@@ -78,7 +72,8 @@ public class holonomicDrive_0_2 extends LinearOpMode
             telemetry.addData("swing", robot.endEffector.swing.getPosition());
 
             //Lift
-            robot.manualLift(g1.y, g1.a);
+            if(robot.manualLift(g1.y, g1.a))
+                robot.driveEngine.stop();
 
             //Drive angle
             if(g1.x)
@@ -101,7 +96,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
             }
             else {
                 leftButtonPressed = false;
-                autoOverride = false;
             }
 
 
@@ -121,8 +115,10 @@ public class holonomicDrive_0_2 extends LinearOpMode
             }
             else {
                 rightButtonPressed = false;
-                autoOverride = false;
             }
+
+            if(!g2.right_stick_button && !g2.left_stick_button)
+                autoOverride = false;
 
 
             //Arm and drive manual
@@ -140,21 +136,16 @@ public class holonomicDrive_0_2 extends LinearOpMode
                 //if the moveOnPaths have finished
                 robot.driveEngine.checkpoints.clear();
 
+
+                robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
                 if(g2.y)
-                {
-                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.endEffector.pivot.setPower(-1);
-                }
+                    robot.endEffector.pivot.setPower(-.5);
                 else if(g2.a)
-                {
-                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                    robot.endEffector.pivot.setPower(1);
-                }
+                    robot.endEffector.pivot.setPower(.5);
                 else
-                {
-                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                     robot.endEffector.pivot.setPower(0);
-                }
             }
 
             if(!robot.endEffector.extend(-g2.left_stick_y)){

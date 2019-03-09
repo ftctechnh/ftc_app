@@ -17,7 +17,6 @@ public class Bogg
     Sensors sensors;
     ElapsedTime timer;
     Servo brake;
-    Servo brake2;
     Servo drop;
     Name name;
 
@@ -63,7 +62,6 @@ public class Bogg
                 lift.setDirection(DcMotorSimple.Direction.FORWARD);
                 lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                 brake = hardwareMap.servo.get("brake");
-                brake2 = hardwareMap.servo.get("brake2");
                 drop = hardwareMap.servo.get("drop");
                 break;
 
@@ -93,8 +91,8 @@ public class Bogg
             case MiniBogg:
                 driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
                 driveEngine.mP *= 5;
-                driveEngine.ticksPerRev = 290;
-                driveEngine.effectiveWheelDiameter = 3.5;
+                DriveEngine.ticksPerRev = 290;
+                DriveEngine.effectiveWheelDiameter = 3.5;
                 break;
 
             case Fauxbot:
@@ -140,7 +138,12 @@ public class Bogg
         return liftAve;
     }
 
-    void manualLift(boolean up, boolean down)
+    /**
+     * @param up
+     * @param down
+     * @return if pulling arm down
+     */
+    boolean manualLift(boolean up, boolean down)
     {
         if(name == Name.Bogg)
         if(up && !sensors.touchTopIsPressed())
@@ -152,8 +155,10 @@ public class Bogg
             if (sensors.touchBottomIsPressed())
             {
                 lift.setPower(smoothLift(-.02));
+                return true;
             } else {
                 lift.setPower(smoothLift(-1));
+                return true;
             }
         }
         else
@@ -165,8 +170,9 @@ public class Bogg
             }
             else if(down){
                 lift.setPower(smoothLift(-1));
+                return true;
             }
-
+        return false;
     }
 
     void lift(double power)
@@ -192,17 +198,6 @@ public class Bogg
         }
     }
 
-    void setBrake2(Direction d)
-    {
-        if(name == Name.Bogg)
-            switch (d) {
-                case On:
-                    brake2.setPosition(.95);
-                    break;
-                case Off:
-                    brake2.setPosition(.43);
-            }
-    }
 
 
 
