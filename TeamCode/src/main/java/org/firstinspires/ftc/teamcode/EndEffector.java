@@ -56,7 +56,7 @@ class EndEffector {
         contract = hardwareMap.dcMotor.get("contract");
         contract.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         contract.setDirection(DcMotorSimple.Direction.REVERSE);
-        contract.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        contract.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         swing.setPosition(.9);
     }
@@ -70,11 +70,11 @@ class EndEffector {
     }
 
     void pickleUp() {
-        swing.setPosition(0);
+        swing.setPosition(.45);
     }
 
     void pickleDown() {
-        swing.setPosition(.5);
+        swing.setPosition(.66);
     }
 
     boolean extend(double power) {
