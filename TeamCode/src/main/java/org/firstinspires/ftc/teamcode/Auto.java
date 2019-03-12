@@ -63,7 +63,8 @@ public class Auto {
         else {
             timer.reset();
             robot.lift(0);
-            robot.driveEngine.resetDistances();
+            robot.driveEngine.trueX = 0;
+            robot.driveEngine.trueY = 0;
 
             return Mode.LookForMinerals;
         }
