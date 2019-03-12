@@ -95,7 +95,7 @@ public class Auto {
     Mode slide1()
     {
         if (robot.driveEngine.moveOnPath(false, true,
-                new double[]{-2.5, 0}))
+                new double[]{-3.5, 0}))
         {
             return Mode.PushGold;
         }
