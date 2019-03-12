@@ -49,7 +49,7 @@ public class Auto {
         {
             timer = new ElapsedTime();
         }
-        if (getTime() < 1.5) //for the first second
+        if (getTime() < 3) //for the first second
         {
             telemetry.addData("time", getTime());
             if (!robot.sensors.touchTopIsPressed()) //helps with testing
