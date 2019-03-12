@@ -158,6 +158,8 @@ public class holonomicDrive_0_2 extends LinearOpMode
             autoOverride = false;
 
 
+            if(g1.back || g2.back)
+                break;
 
             // Display the current values
             telemetry.addLine("'Pressing A must move the arm down/robot up.'");
