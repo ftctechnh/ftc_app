@@ -16,7 +16,7 @@ class DriveEngine {
 
     Sensors sensors;
 
-    static double effectiveWheelDiameter = 5.32;
+    static double effectiveWheelDiameter = 6;
     static double effectiveRobotRadius = 7.15;
 
     private double motorSpacing;
@@ -145,13 +145,19 @@ class DriveEngine {
         //If all is working, this line should appear.
         //It might not if the update method is left out of an OpMode.
         telemetry.addLine("updating");
-        //One per loop, we update the motor powers.
+        //Once per loop, we update the motor powers.
         drive();
         //We prepare for the next loop by clearing one-loop lists and counters.
         precedences.clear();
         potentialDriveValues.clear();
         smoothAdditions = 0;
     }
+
+    /**
+     * This method actually sends powers to the motors.
+     * We retrieve x, y, and spin values from an ArrayList: potentialDriveValues.
+     * The first
+     */
     protected void drive(){
         double x = 0,y = 0,spin = 0;
 
@@ -195,7 +201,7 @@ class DriveEngine {
 
         double[] powers = new double[motors.size()];
 
-        for (int i = 0; i < motors.size(); i++)
+        for (int i = 0; i < motors.size(); i++)  //Calculate motor powers
             powers[i] = x * Math.cos(i * motorSpacing)
                     +   y * Math.sin(i * motorSpacing)
                     +   spin;
@@ -479,9 +485,9 @@ class DriveEngine {
     private double lastSpinError = 0;
     private double lastSpinTime = 0;
 
-    double sP = .20; // .20 per radian
+    double sP = .16; // .16 per radian
     double sI = 8; //Time to correct past error
-    double sD = .4; //fully account for this much time in the future at current error decreasing rate
+    double sD = .5; //fully account for this much time in the future at current error decreasing rate
 
     private double face(double angle)
     {
@@ -528,8 +534,8 @@ class DriveEngine {
     private double lastTheta = 0;
     private double lastT = 0;
     double mP = .02; //power per inch
-    double mD = 0.1;  //fully account for this much time in the future at current error decreasing rate
-    double tD = 0.05;
+    double mD = 0.5;  //fully account for this much time in the future at current error decreasing rate
+    double tD = 0.08;
 
     ArrayList<Double> drdtArray = new ArrayList<>();
     ArrayList<Double> dThdtArray = new ArrayList<>();
@@ -657,9 +663,11 @@ class DriveEngine {
     double xDist()
     {
         double smallSum = 0;
+        telemetry.addData("motors size", motors.size());
         for (int i = 0; i < motors.size(); i++) {
             smallSum += Math.abs(Math.cos(i * motorSpacing));
         }
+        telemetry.addData("smallSum", smallSum);
 
         double sum = 0;
         for (int i = 0; i < motors.size(); i++) {

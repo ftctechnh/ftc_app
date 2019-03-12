@@ -50,7 +50,7 @@ class Sensors {
                 //dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
             case MiniBogg:
                 usingImu = true;
-                if(usingImu && imu == null) {
+                if(imu == null) {
                     BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
                     parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
                     parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;

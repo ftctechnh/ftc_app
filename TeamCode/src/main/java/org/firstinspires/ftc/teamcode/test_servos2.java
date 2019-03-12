@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp(name="test servos2", group="Testing")
+@TeleOp(name="test servos on path", group="Testing")
 public class test_servos2 extends LinearOpMode
 {
     Bogg robot;
