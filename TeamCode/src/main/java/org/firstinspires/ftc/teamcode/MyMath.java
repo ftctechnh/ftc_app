@@ -72,6 +72,16 @@ public class MyMath {
         return max;
     }
 
+    static double min(double... numbers)
+    {
+        double min = Double.POSITIVE_INFINITY;
+        for (double n: numbers) {
+            if(n < min)
+                min = n;
+        }
+        return min;
+    }
+
     static double max(ArrayList<? extends Number> numbers)
     {
         Number max = Double.NEGATIVE_INFINITY;
