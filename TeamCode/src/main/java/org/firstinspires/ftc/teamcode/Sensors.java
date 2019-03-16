@@ -126,6 +126,18 @@ class Sensors {
         return highAverage;
     }
 
+    MyColorSensor myColorSensor;
+    void initializeColorSensor()
+    {
+        if(myColorSensor == null)
+            myColorSensor = new MyColorSensor(hardwareMap);
+    }
+
+    boolean isGold()
+    {
+        return myColorSensor.isColor(MyColorSensor.Color.Gold);
+    }
+
     boolean isTilted()
     {
         if(usingImu)
