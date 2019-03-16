@@ -12,7 +12,6 @@ public class Auto {
     Telemetry telemetry;
     private ElapsedTime timer = null;
     private int iSP = -1; //initialSlopePositivity
-    private double slide2X = 28;
     private double slide2Y = 28;
 
     Auto(Bogg.Name name, HardwareMap hardwareMap, Telemetry telemetry)
@@ -63,7 +62,7 @@ public class Auto {
         else {
             timer.reset();
             robot.lift(0);
-            robot.driveEngine.trueX = 0;
+            robot.driveEngine.trueX = 4;
             robot.driveEngine.trueY = 0;
 
             return Mode.LookForMinerals;
@@ -112,7 +111,6 @@ public class Auto {
                         new double[]{0, 28},
                         new double[]{-17,0},
                         new double[]{0, 12})) {
-                    slide2X = 17;
                     slide2Y = -12;
                     return Mode.Slide2;
                 }
@@ -129,7 +127,6 @@ public class Auto {
                 if (robot.driveEngine.moveOnPath(
                         new double[]{17,40},
                         new double[]{0, -12})) {
-                    slide2X = 51;
                     slide2Y = 0;
                     return Mode.Slide2;
                 }
@@ -144,15 +141,15 @@ public class Auto {
     private int i = 0;
     Mode pushGoldNoCamera()
     {
+        robot.sensors.initializeColorSensor();
         if (robot.driveEngine.moveOnPath( "Move Right",
                 new double[]{23, 28 + approachGold})) {
 
             if (i < 3) {
-                if(robot.sensors.getLowDistance() > 6)
-                    if (robot.driveEngine.moveOnPath( "Push gold" + i,
+                if(robot.sensors.isGold())
+                    if (robot.driveEngine.moveOnPath(
                             new double[]{0, 12},
                             new double[]{0, -(12 + approachGold)})){
-                        slide2X = 51 - 17 * (i);
                         return Mode.Slide2;
                     }
                 else
@@ -162,7 +159,6 @@ public class Auto {
             }
             else {
                 // i==3: shouldn't happen
-                slide2X = 0;
                 if(robot.driveEngine.moveOnPath(
                         new double[]{0, -approachGold}))
                     return Mode.Slide2;
