@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="3: Drop and move to wall", group = "Testing")
-public class autonomousDrive3_DropMoveToWall extends LinearOpMode
+@Autonomous(name="1: Drop", group = "Testing")
+public class autonomousDrive1_Drop extends LinearOpMode
 {
     private Auto auto;
     private Auto.Mode action;
@@ -27,14 +27,8 @@ public class autonomousDrive3_DropMoveToWall extends LinearOpMode
                     break;
                 case LookForMinerals:
                 case Slide1:
-                    action = auto.slide1();
-                    break;
-                case PushGold:
-                case Slide2:
-                    action = auto.slide2();
-                    break;
-                case TurnByCamera:
-                    action = auto.turnByCamera();
+                    auto.robot.driveEngine.moveOnPath(true, true,
+                            new double[]{0,0});
                     break;
                 default:
                     auto.stop();
