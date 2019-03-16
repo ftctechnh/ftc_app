@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="4: Competition", group = "Testing")
+@Autonomous(name="4: Competition", group = "Competition")
 public class autonomousDrive4_DropPlacePark extends LinearOpMode
 {
     Auto auto;
