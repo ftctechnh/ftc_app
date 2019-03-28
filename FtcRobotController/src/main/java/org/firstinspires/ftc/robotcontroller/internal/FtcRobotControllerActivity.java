@@ -755,22 +755,41 @@ public class FtcRobotControllerActivity extends Activity {
     return false;
   }
 
-  public void placeImage(double X, double Y, double spin) {
-    int touchX = (int) X;
-    int touchY = (int) Y;
+  /**
+   * This method runs on a FtcRobotControllerActivity object, on the UI thread.
+   * It sets the textbox's text, positioning, size, and rotation.
+   * @param X
+   * @param Y
+   * @param spin
+   */
+  public void placeImage(int X, int Y, double spin) {
 
-    // placing at bottom right of touch
     if (textOpMode == null)
       return;
-    textOpMode.layout(touchX, touchY, touchX + 20, touchY + 35);
+
+    //Sets the boundaries of the textbox.
+    int textThickness = 25;
+    int textHeight = 40;
+    textOpMode.layout(X, Y, X + textThickness, Y + textHeight);
+
     textOpMode.setText("O");
     textOpMode.setTextSize(20);
     textOpMode.setRotation((float) -spin);
   }
 
+  /**
+   * This static method changes where the robot is located on the screen.
+   * @param x
+   * @param y
+   * @param spin
+   */
   public static void moveRobot(double x, double y, final double spin) {
-    imageX = (int) x + 225;
-    imageY = (int) y + 300;
+    //The origin point must be moved to where you want it on the field.
+    //On the phone, 0,0 is in the top left corner.
+    //Positive is down and to the right.
+    imageX = (int) x + 350;
+    imageY = (int) y + 500;
+
     a.runOnUiThread(new Runnable() {
       @Override
       public void run() {

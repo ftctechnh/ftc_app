@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -21,11 +20,9 @@ public class Bogg
     Name name;
 
     static double averageClockTime = 0;
-    double liftAlpha = .12;
-    double liftAve = 0;
-    double raisePosition;
+    private double liftAve = 0;
 
-    boolean rotating = false;
+    private boolean rotating = false;
 
 
     Telemetry telemetry;
@@ -75,7 +72,7 @@ public class Bogg
                 break;
 
             case Fakebot:
-                driveEngine = new FakeDriveEngine(hardwareMap, telemetry);
+                driveEngine = new FakeDriveEngine(telemetry);
                 break;
         }
 
@@ -84,19 +81,19 @@ public class Bogg
         switch (whichRobot)
         {
             case Bogg:
-                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
+                driveEngine = new OmniWheelDriveEngine(hardwareMap, telemetry, sensors, 3);
                 endEffector = new EndEffector(hardwareMap, telemetry, sensors);
                 break;
 
             case MiniBogg:
-                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 3);
+                driveEngine = new OmniWheelDriveEngine(hardwareMap, telemetry, sensors, 3);
                 driveEngine.mP *= 5;
-                DriveEngine.ticksPerRev = 290;
-                DriveEngine.effectiveWheelDiameter = 3.5;
+                OmniWheelDriveEngine.ticksPerRev = 290;
+                OmniWheelDriveEngine.effectiveWheelDiameter = 3.5;
                 break;
 
             case Fauxbot:
-                driveEngine = new DriveEngine(hardwareMap, telemetry, sensors, 2);
+                driveEngine = new OmniWheelDriveEngine(hardwareMap, telemetry, sensors, 2);
                 break;
         }
     }
@@ -127,20 +124,21 @@ public class Bogg
 
     private double smoothLift(double l)
     {
+        double liftAlpha = .12;
         if(l* liftAve < 0 || l == 0)
             liftAve = 0;
         else if(l == -.02)
         {
-            liftAve = liftAlpha * l + (1-liftAlpha) * liftAve;
+            liftAve = liftAlpha * l + (1- liftAlpha) * liftAve;
         }
         else
-            liftAve = liftAlpha/3 * l + (1-liftAlpha/3) * liftAve;
+            liftAve = liftAlpha /3 * l + (1- liftAlpha /3) * liftAve;
         return liftAve;
     }
 
     /**
-     * @param up
-     * @param down
+     * @param up is whether the up button is pushed
+     * @param down is whether the down button is pushed
      * @return if pulling arm down
      */
     boolean manualLift(boolean up, boolean down)
@@ -164,14 +162,6 @@ public class Bogg
         else
             lift.setPower(smoothLift(0));
 
-        if(name == Name.MiniBogg)
-            if(up) {
-                lift.setPower(smoothLift(1));
-            }
-            else if(down){
-                lift.setPower(smoothLift(-1));
-                return true;
-            }
         return false;
     }
 
@@ -230,9 +220,26 @@ public class Bogg
     }
 
     ElapsedTime spinTimer = new ElapsedTime();
+
+    /**
+     * The default precedence is 0.
+     * @param op: Determines if 
+     * @param x: Power in the x direction
+     * @param y: Power in the y direction
+     * @param spin: Power towards rotation
+     */
     void manualDrive2(boolean op, double x, double y, double spin){
         manualDrive2(op,x,y,spin,0);
     }
+
+    /**
+     *
+     * @param op:
+     * @param x: Power in the x direction
+     * @param y: Power in the y direction
+     * @param spin: Power towards rotation
+     * @param precedence
+     */
     void manualDrive2(boolean op, double x, double y, double spin, int precedence)
     {
         if(spin != 0)
@@ -259,7 +266,7 @@ public class Bogg
             manualDrive(op, x, y);
         }
 
-        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3, true);
+        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3);
         double leftX = drive[0];
         double leftY = drive[1];
         double spin = driveEngine.faceForward();
@@ -314,15 +321,13 @@ public class Bogg
 
     void manualDriveVarOrbit(boolean op, double y, double x, double spin, boolean orbit)
     {
-        double y = gDrive.left_stick_y;
-        double x = gDrive.left_stick_x;
         double max = Math.max(Math.abs(x), Math.abs(y));
 
         if(orbit) {
             if (max == Math.abs(y))
-                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, gDrive.left_stick_y / 2);
+                driveEngine.orbit(derivedRadius + driveEngine.xDist(), 0, y / 2);
             else
-                driveEngine.drive(gDrive.left_stick_x, 0);
+                driveEngine.drive(x, 0);
         }
         else
             manualCurvy(op, x, y, spin);
