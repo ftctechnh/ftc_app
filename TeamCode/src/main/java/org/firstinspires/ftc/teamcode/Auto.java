@@ -19,8 +19,7 @@ public class Auto {
         this.robot = Bogg.determineRobot(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(0);
         this.telemetry = telemetry;
-        if(name != Bogg.Name.Fakebot)
-            camera = new Camera(hardwareMap, telemetry);
+        camera = new Camera(hardwareMap, telemetry, false, false);
         telemetry.addLine("Camera Loaded");
         telemetry.addLine("Wait for start");
         telemetry.update();
@@ -44,13 +43,20 @@ public class Auto {
 
     Mode drop()
     {
+        int g = camera.getGoldPosition();
+        if(g != -1)
+            goldPosition = g;
+
         if(timer == null) //TODO: Don't fix what's not broken
         {
             timer = new ElapsedTime();
+            while (!robot.sensors.touchTopIsPressed())
+                robot.lift.setPower(-1);
         }
-        if (getTime() < 3) //for the first second
+        if (getTime() < 4.5) //for the first second
         {
             telemetry.addData("time", getTime());
+
             if (!robot.sensors.touchTopIsPressed()) //helps with testing
                 robot.lift(-1); //pull while we
             robot.setBrake(Bogg.Direction.Off); //disengage the brake
@@ -62,7 +68,7 @@ public class Auto {
         else {
             timer.reset();
             robot.lift(0);
-            robot.driveEngine.trueX = 4;
+            robot.driveEngine.trueX = -4;
             robot.driveEngine.trueY = 0;
 
             return Mode.LookForMinerals;
@@ -75,6 +81,10 @@ public class Auto {
     Mode lookForMinerals()
     {
         telemetry.addLine("Looking for minerals");
+
+        if(goldPosition != -1)
+            return Mode.Slide1;
+
         switch(camera.getGoldPosition())
         {
             case 0:
@@ -108,9 +118,7 @@ public class Auto {
         switch (goldPosition) {
             case 0:
                 if (robot.driveEngine.moveOnPath(
-                        new double[]{0, 28},
-                        new double[]{-17,0},
-                        new double[]{0, 12})) {
+                        new double[]{-17, 40})) {
                     slide2Y = -12;
                     return Mode.Slide2;
                 }
@@ -169,6 +177,7 @@ public class Auto {
 
     Mode slide2()
     {
+        telemetry.addData("time", getTime());
         if (robot.driveEngine.moveOnPath("slide2 Y",
                 new double[]{0, slide2Y}))
             if(robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
