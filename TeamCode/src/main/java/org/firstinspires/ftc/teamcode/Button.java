@@ -7,8 +7,8 @@ class Button {
     private Location location;
     private Type type;
     private boolean lastPressed = false;
-    private boolean on = false;
-    private int count = 0;
+    boolean on = false;
+    int count = 0;
 
     enum Location
     {
@@ -88,7 +88,7 @@ class Button {
                     on = true;
                 return on;
             case Click:
-                if(isPressed() ^ lastPressed)
+                if(isPressed() && !lastPressed)
                     on = !on;
                 lastPressed = isPressed();
                 return on;
@@ -103,7 +103,7 @@ class Button {
         switch (type)
         {
             case Increment:
-                if(isPressed() ^ lastPressed) {
+                if(isPressed() && !lastPressed) {
                     on = !on;
                     if(on)
                         count ++;
