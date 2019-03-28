@@ -12,7 +12,7 @@ public class NavigationTest extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        camera = new Camera(hardwareMap, telemetry);
+        camera = new Camera(hardwareMap, telemetry, true, false);
 
         waitForStart();
 

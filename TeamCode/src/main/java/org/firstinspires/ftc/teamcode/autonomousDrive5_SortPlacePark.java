@@ -13,7 +13,6 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        auto = new Auto(Bogg.Name.Bogg, hardwareMap, telemetry);
         action = Auto.Mode.Drop;
         waitForStart();
 

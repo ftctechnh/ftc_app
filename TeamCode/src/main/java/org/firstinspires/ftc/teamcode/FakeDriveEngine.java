@@ -12,7 +12,7 @@ public class FakeDriveEngine extends DriveEngine {
 
     double xDistance = 0, yDistance = 0, sDistance = 0;
 
-    FakeDriveEngine(HardwareMap hardwareMap, Telemetry telemetry)
+    FakeDriveEngine(Telemetry telemetry)
     {
         this.telemetry = telemetry;
         timer = new ElapsedTime();

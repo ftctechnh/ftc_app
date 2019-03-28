@@ -10,7 +10,7 @@ public class camera_test extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        camera = new Camera(hardwareMap, telemetry);
+        camera = new Camera(hardwareMap, telemetry, false, true);
         waitForStart();
 
         while (opModeIsActive())

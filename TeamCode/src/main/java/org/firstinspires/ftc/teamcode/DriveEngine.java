@@ -265,7 +265,7 @@ class DriveEngine {
     boolean moveOnPath(String key, double[] ... args){
         if(keyList.contains(key))
             return true;
-        if(moveOnPath(false, false, args)){
+        if(moveOnPath(Positioning.Relative, false, args)){
             keyList.add(key);
             return true;
         }
@@ -279,7 +279,7 @@ class DriveEngine {
         c: true  – When you continually test moving to different points.
         c: false – When the code changes to a new task after completion.
      */
-    boolean moveOnPath(boolean continuous, boolean absolute, double[] ... args)
+    boolean moveOnPath(Positioning positioning, boolean continuous, double[] ... args)
     {
         if(checkpoints.isEmpty()){
             for (double[] arg : args) checkpoints.add(false);
@@ -400,7 +400,7 @@ class DriveEngine {
                 yDist() +newDeltaY - cumulativeDistance[1]});
     }
 
-    double[] smoothDrive(double x, double y, double rSeconds, boolean smoothTheta)
+    double[] smoothDrive(double x, double y, double rSeconds)
     {
         double alpha = Bogg.getAlpha(rSeconds);
         double thetaAlpha = Bogg.getAlpha(.25);

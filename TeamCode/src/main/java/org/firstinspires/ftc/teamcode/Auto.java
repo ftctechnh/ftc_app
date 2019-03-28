@@ -14,7 +14,7 @@ public class Auto {
     private int iSP = -1; //initialSlopePositivity
     private double slide2Y = 28;
 
-    Auto(Bogg.Name name, HardwareMap hardwareMap, Telemetry telemetry)
+    Auto(HardwareMap hardwareMap, Telemetry telemetry)
     {
         this.robot = Bogg.determineRobot(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(0);
@@ -94,8 +94,8 @@ public class Auto {
 
     Mode slide1()
     {
-        if (robot.driveEngine.moveOnPath(false, true,
-                new double[]{-3.5, 0}))
+        if (robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
+                new double[]{4.5   , 0}))
         {
             return Mode.PushGold;
         }
@@ -171,7 +171,7 @@ public class Auto {
     {
         if (robot.driveEngine.moveOnPath("slide2 Y",
                 new double[]{0, slide2Y}))
-            if(robot.driveEngine.moveOnPath(false, true,
+            if(robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
                     new double[]{-33, 28},
                     new double[]{Math.PI / 4}))
             {
@@ -228,7 +228,7 @@ public class Auto {
 
     Mode moveToCrater()
     {
-        double[] drive = robot.driveEngine.smoothDrive(0, -1, 2, false);
+        double[] drive = robot.driveEngine.smoothDrive(0, -1, 2);
         robot.driveEngine.drive(drive[0], drive[1]);
         telemetry.addData("yDist", robot.driveEngine.yDist());
         telemetry.addData("usingImu", robot.sensors.usingImu);
@@ -303,7 +303,8 @@ public class Auto {
                 return true;
             else
             {
-                robot.driveEngine.moveOnPath(true, false,drive);
+                robot.driveEngine.moveOnPath(DriveEngine.Positioning.Relative, true,
+                        drive);
             }
         }
         return false;
@@ -334,7 +335,8 @@ public class Auto {
                 return true;
             else
             {
-                robot.driveEngine.moveOnPath(true, false, drive);
+                robot.driveEngine.moveOnPath(DriveEngine.Positioning.Relative,true,
+                        drive);
             }
         }
         return false;

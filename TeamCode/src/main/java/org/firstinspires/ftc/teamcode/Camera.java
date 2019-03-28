@@ -160,7 +160,7 @@ public class Camera{
      * Run to initialize camera parameters
      * @param hardwareMap
      */
-    public void startCamera(HardwareMap hardwareMap) {
+    public void startCamera(HardwareMap hardwareMap, boolean showVuforia, boolean showTfod) {
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);

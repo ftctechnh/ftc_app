@@ -37,7 +37,8 @@ public class holonomicDrive_0_4 extends LinearOpMode
             else if(g1.b)
                 orbit = false;
 
-            robot.manualDriveVarOrbit(g1, g1, orbit);
+            robot.manualDriveVarOrbit(g1.left_stick_button,g1.left_stick_y,g1.left_stick_y,
+                    g1.right_stick_x, orbit);
 
             if(g1.dpad_down)
                 robot.setBrake(Bogg.Direction.On);

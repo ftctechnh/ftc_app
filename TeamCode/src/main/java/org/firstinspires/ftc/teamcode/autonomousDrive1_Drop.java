@@ -13,7 +13,7 @@ public class autonomousDrive1_Drop extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        auto = new Auto(Bogg.Name.Bogg, hardwareMap, telemetry);
+        auto = new Auto(hardwareMap, telemetry);
 
         waitForStart();
         action = Auto.Mode.Drop;
@@ -27,8 +27,8 @@ public class autonomousDrive1_Drop extends LinearOpMode
                     break;
                 case LookForMinerals:
                 case Slide1:
-                    auto.robot.driveEngine.moveOnPath(true, true,
-                            new double[]{0,0});
+                    auto.robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,
+                            true, new double[]{0,0});
                     break;
                 default:
                     auto.stop();

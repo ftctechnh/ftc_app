@@ -14,7 +14,7 @@ public class autonomousDriveZ_simulate extends LinearOpMode
     @Override
     public void runOpMode()
     {
-        auto = new Auto(Bogg.Name.Fakebot, hardwareMap, telemetry);
+        auto = new Auto(hardwareMap, telemetry);
         gamepad1 = new Gamepad();
         gamepad1.setGamepadId(5);
 

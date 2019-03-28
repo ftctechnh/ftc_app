@@ -17,7 +17,7 @@ public class testColorSensor extends LinearOpMode
         robot = Bogg.determineRobot(hardwareMap, telemetry);
         robot.driveEngine.driveAtAngle(Math.PI);
         g1 = gamepad1;
-        MyColorSensor myColorSensor = new MyColorSensor(hardwareMap, telemetry);
+        MyColorSensor myColorSensor = new MyColorSensor(hardwareMap);
         waitForStart();
 
         while (opModeIsActive())

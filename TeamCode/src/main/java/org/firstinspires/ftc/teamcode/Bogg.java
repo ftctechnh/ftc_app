@@ -218,7 +218,7 @@ public class Bogg
 
     void manualDrive(boolean op, double x, double y)
     {
-        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3, true);
+        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3);
         double leftX = drive[0];
         double leftY = drive[1];
 
@@ -272,7 +272,7 @@ public class Bogg
 
     void manualCurvy(boolean op, double x, double y, double s)
     {
-        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3, true);
+        double[] drive = driveEngine.smoothDrive(x, -y, op? 1:3);
         double leftX = drive[0];
         double leftY = drive[1];
         double spin = driveEngine.smoothSpin(-s/3);
@@ -312,7 +312,7 @@ public class Bogg
         derivedRadius = endEffector.getRadius();
     }
 
-    void manualDriveVarOrbit(Gamepad gDrive, Gamepad gRotate, boolean orbit)
+    void manualDriveVarOrbit(boolean op, double y, double x, double spin, boolean orbit)
     {
         double y = gDrive.left_stick_y;
         double x = gDrive.left_stick_x;
@@ -325,7 +325,7 @@ public class Bogg
                 driveEngine.drive(gDrive.left_stick_x, 0);
         }
         else
-            manualCurvy(gDrive.left_stick_button, gDrive.left_stick_x, gDrive.left_stick_y, gRotate.right_stick_x);
+            manualCurvy(op, x, y, spin);
     }
 
     void floatMotors()
