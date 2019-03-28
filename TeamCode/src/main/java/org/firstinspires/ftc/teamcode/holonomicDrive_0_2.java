@@ -18,7 +18,6 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
     private boolean autoOverride = false;
 
-    double pinch = .44;
     double driveAngle = Math.PI, initialAngle = Math.PI;
 
     @Override
@@ -28,10 +27,14 @@ public class holonomicDrive_0_2 extends LinearOpMode
         telemetry.addLine("ready");
         waitForStart();
 
-        robot.endEffector.pivot.setPower(1);
+        if(robot.name == Bogg.Name.Bogg)
+            robot.endEffector.pivot.setPower(1);
         timer = new ElapsedTime();
         Gamepad g1 = gamepad1;
         Gamepad g2 = gamepad2;
+
+        Button rightButton = new Button(gamepad2, Button.Location.D_Right, Button.Type.Click);
+
 
         while (opModeIsActive())
         {
@@ -50,26 +53,29 @@ public class holonomicDrive_0_2 extends LinearOpMode
                 robot.setBrake(Bogg.Direction.Off);
 
 
-            if(g1.left_bumper)
+            if(g1.right_bumper)
                 robot.dropMarker(Bogg.Direction.Down);
             else
                 robot.dropMarker(Bogg.Direction.Up);
 
-            if(g2.dpad_right){
-                pinch += .1 * Bogg.averageClockTime;
-                robot.endEffector.pinch.setPosition(pinch);
+
+            if(rightButton.isOn()) {
+                    robot.endEffector.close();
             }
-            else if(g2.dpad_left) {
-                pinch -= .1 * Bogg.averageClockTime;
-                robot.endEffector.pinch.setPosition(pinch);
+            else {
+                    robot.endEffector.open();
             }
-            telemetry.addData("pinch", pinch);
+            telemetry.addData("rightButton", rightButton.on);
+
 
             if(g2.dpad_up)
                 robot.endEffector.pickleUp();
             if(g2.dpad_down)
                 robot.endEffector.pickleDown();
-            telemetry.addData("swing", robot.endEffector.swing.getPosition());
+            if(g2.left_bumper)
+                robot.endEffector.pickleAllTheWay();
+            if(robot.name == Bogg.Name.Bogg)
+                telemetry.addData("swing", robot.endEffector.swing.getPosition());
 
             //Lift
             if(robot.manualLift(g1.y, g1.a))
@@ -77,7 +83,7 @@ public class holonomicDrive_0_2 extends LinearOpMode
 
             //Drive angle
             if(g1.x)
-                driveAngle = initialAngle + robot.sensors.getImuHeading();
+                driveAngle = initialAngle + robot.driveEngine.spinAngle();
 
             //Arm and drive automatic
             //When down
@@ -88,11 +94,13 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     leftButtonPressed = true;
                 }
                 if(timer.seconds() > 1)
-                    robot.driveEngine.moveOnPath(true, false, new double[]{Math.PI});
+                    robot.driveEngine.moveOnPath(DriveEngine.Positioning.Relative,
+                            true,new double[]{Math.PI});
                 else
                     robot.driveEngine.drive(0);
 
-                robot.endEffector.flipUp(timer.seconds());
+                if(robot.name == Bogg.Name.Bogg)
+                    robot.endEffector.flipUp(timer.seconds());
             }
             else {
                 leftButtonPressed = false;
@@ -107,11 +115,13 @@ public class holonomicDrive_0_2 extends LinearOpMode
                     rightButtonPressed = true;
                 }
                 if(timer.seconds() > .5)
-                    robot.driveEngine.moveOnPath(true, false, new double[]{Math.PI});
+                    robot.driveEngine.moveOnPath(DriveEngine.Positioning.Relative, true,
+                            new double[]{Math.PI});
                 else
                     robot.driveEngine.drive(0);
 
-                robot.endEffector.flipDown(timer.seconds());
+                if(robot.name == Bogg.Name.Bogg)
+                    robot.endEffector.flipDown(timer.seconds());
             }
             else {
                 rightButtonPressed = false;
@@ -131,27 +141,29 @@ public class holonomicDrive_0_2 extends LinearOpMode
                         g1.left_stick_y,
                         g1.right_stick_x);
 
-                robot.driveEngine.driveAtAngle(MyMath.loopAngle(driveAngle, robot.sensors.getImuHeading()));
+                robot.driveEngine.driveAtAngle(MyMath.loopAngle(driveAngle, robot.driveEngine.spinAngle()));
 
                 //if the moveOnPaths have finished
                 robot.driveEngine.checkpoints.clear();
 
+                if(robot.name == Bogg.Name.Bogg) {
+                    robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-                robot.endEffector.pivot.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                robot.endEffector.pivot.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-                if(g2.y)
-                    robot.endEffector.pivot.setPower(-.5);
-                else if(g2.a)
-                    robot.endEffector.pivot.setPower(.5);
-                else
-                    robot.endEffector.pivot.setPower(0);
+                    if (g2.y)
+                        robot.endEffector.pivot.setPower(-.5);
+                    else if (g2.a)
+                        robot.endEffector.pivot.setPower(.5);
+                    else
+                        robot.endEffector.pivot.setPower(0);
+                }
             }
 
-            if(!robot.endEffector.extend(-g2.left_stick_y)){
-                if(!robot.endEffector.extend(g2.right_stick_y))
-                    robot.endEffector.contract.setPower(0);
-            }
+            if(robot.name == Bogg.Name.Bogg)
+                if(!robot.endEffector.extend(-g2.left_stick_y)){
+                    if(!robot.endEffector.extend(g2.right_stick_y))
+                        robot.endEffector.contract.setPower(0);
+                }
 
 
             //even if we never finish the turn, enable manual driving
