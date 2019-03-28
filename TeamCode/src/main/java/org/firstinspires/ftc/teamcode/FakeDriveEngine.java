@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-public class FakeDriveEngine extends DriveEngine {
+public class FakeDriveEngine extends OmniWheelDriveEngine {
 
-    private double theta = 0;
     private double root3 = Math.sqrt(3);
 
-    double xDistance = 0, yDistance = 0, sDistance = 0;
+    private double xDistance = 0, yDistance = 0, sDistance = 0;
 
     FakeDriveEngine(Telemetry telemetry)
     {
@@ -20,44 +18,11 @@ public class FakeDriveEngine extends DriveEngine {
 
 
     @Override
-    protected void drive() {
-        double x = 0,y = 0,spin = 0;
-
-        if(potentialDriveValues.size() == 0){
-            potentialDriveValues.add(new double[][]{new double[]{0}, new double[]{0}});
-        }
-
-        boolean op = potentialDriveValues.get(0)[0][0] == 1;
-        double[] args = potentialDriveValues.get(0)[1];
-
-
-        switch (args.length)    //assign x, y and spin
-        {
-            case 3:
-                spin = args[2];
-            case 2:
-                x = args[0];
-                y = args[1];
-                break;
-            case 1:
-                spin = args[0];
-                break;
-            default:
-                stop();
-                return;
-        }
-
-        if(MyMath.absoluteMax(x, y, spin) == 0) {
-            smoothThetaList.clear();
-            MyMath.fill(smoothRList, 0);
-            MyMath.fill(smoothSpinList, 0);
-        }
-
-        double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
-        double yPrime = x * Math.sin(theta) + y * Math.cos(theta);
-
-        x = xPrime;
-        y = yPrime;
+    double[] processMotorPowersFromDriveValues(double[] driveValues){
+        boolean op = driveValues[0] == 1;
+        double x = driveValues[1];
+        double y = driveValues[2];
+        double spin = driveValues[3];
 
         double backPower  = x                + spin;
         double rightPower = -x/2 + y*root3/2 + spin;
@@ -72,9 +37,10 @@ public class FakeDriveEngine extends DriveEngine {
         }
 
         //Estimated 4 feet per second at full power
-        double dX = (1.5 * 12 ) * x * Bogg.averageClockTime;
-        double dY = (1.5 * 12 ) * y * Bogg.averageClockTime;
-        double dS = (1.5 * 12 ) * spin * Bogg.averageClockTime;
+        double dX = (4 * 12 ) * x * Bogg.averageClockTime;
+        double dY = (4 * 12 ) * y * Bogg.averageClockTime;
+        double dS = (2 * 12 ) * spin * Bogg.averageClockTime;
+
         xDistance += dX;
         yDistance += dY;
         sDistance += dS;
@@ -88,6 +54,8 @@ public class FakeDriveEngine extends DriveEngine {
         telemetry.addData("backPower", backPower);
         telemetry.addData("rightPower", rightPower);
         telemetry.addData("leftPower", leftPower);
+
+        return new double[]{};
     }
 
     @Override
@@ -98,9 +66,7 @@ public class FakeDriveEngine extends DriveEngine {
     }
 
     @Override
-    void floatMotors() {
-        ;
-    }
+    void floatMotors() {}
 
     @Override
     double spinAngle() {
@@ -109,9 +75,7 @@ public class FakeDriveEngine extends DriveEngine {
 
 
     @Override
-    void orbit(double radius, double angle, double speed) {
-        ;
-    }
+    void orbit(double radius, double angle, double speed) {}
 
     @Override
     double xDist() {

@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -11,77 +9,26 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import java.util.ArrayList;
 
-class DriveEngine {
+abstract class DriveEngine {
     ArrayList<DcMotor> motors = new ArrayList<>();
 
     Sensors sensors;
 
     static double effectiveWheelDiameter = 6;
-    static double effectiveRobotRadius = 7.15;
 
-    private double motorSpacing;
-
-    static double ticksPerRev = 1120;
-    static double inPerRev(){return Math.PI * effectiveWheelDiameter;}
-    static double inPerTicks(){return inPerRev() / ticksPerRev;}
-    static void setEffectiveWheelDiameter(double inches, double ticks)
-    {
-        double revolutions = ticks / ticksPerRev;
-        double circumference = inches / revolutions;
-        effectiveWheelDiameter = circumference / Math.PI;
-    }
-
-    private double spinAve,rAve,thetaAve,theta,forward;
+    private double spinAve,rAve,forward;
+    private double driveAngle;
     ElapsedTime timer;
     Telemetry telemetry;
+
+    double[] blackValues = new double[3];
 
     double trueX;
     double trueY;
 
-    DriveEngine(HardwareMap hardwareMap, Telemetry telemetry, Sensors sensors, int numMotors) {
+    DriveEngine(Telemetry telemetry, Sensors sensors) {
         this.telemetry = telemetry;
         this.sensors = sensors;
-
-        switch (numMotors) //order matters, we go counterclockwise
-        {
-            case 4:
-                motors.add(hardwareMap.dcMotor.get("back"));
-                motors.add(hardwareMap.dcMotor.get("right"));
-                motors.add(hardwareMap.dcMotor.get("front"));
-                motors.add(hardwareMap.dcMotor.get("left"));
-                motorSpacing = Math.PI / 2;
-                break;
-            case 3:
-                motors.add(hardwareMap.dcMotor.get("back"));
-                motors.add(hardwareMap.dcMotor.get("right"));
-                motors.add(hardwareMap.dcMotor.get("left"));
-                motorSpacing = Math.PI * 2/3;
-                break;
-            case 2:
-                motors.add(hardwareMap.dcMotor.get("right"));
-                motors.add(hardwareMap.dcMotor.get("left"));
-                motorSpacing = Math.PI;
-                break;
-            default:
-                //starts at zero, motor0 is on x-axis.
-                for (int i = 0; i < numMotors; i++) {
-                    motors.add(hardwareMap.dcMotor.get("motor" + i));
-                }
-        }
-
-        for(DcMotor motor: motors)
-        {
-            //We reset the encoders to 0
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            //We tell the motors to brake, not spin or float. They resist movement with friction.
-            motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            //The drive engine motors should always move forward. Always!
-            motor.setDirection(DcMotorSimple.Direction.FORWARD);
-            //We run using velocity, not power.
-            //The motors do this by checking the speed using change in position over time.
-            //They use PID control to keep the speed constant.
-            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
 
         timer = new ElapsedTime();
     }
@@ -91,44 +38,65 @@ class DriveEngine {
     }
 
     //Potential drive values
-    ArrayList<double[][]> potentialDriveValues = new ArrayList<>();
+    private ArrayList<double[][]> potentialDriveValues = new ArrayList<>();
 
     //Answers the question: which drive value do we choose?
-    ArrayList<Integer> precedences = new ArrayList<>();
+    private ArrayList<Integer> precedences = new ArrayList<>();
 
-    //Explicit stopping takes high precedence
+    /**
+     *  Drives with zero power and high precedence
+     */
     void stop(){
-        drive(2,false, 0.);
+        drive(2,false, 0);
     }
 
-    //Rotation is done in the same drive method.
+    /**
+     * Drives with one double input.
+     * @param spin: The rotation speed of the robot.
+     */
     void rotate(double spin){
         drive(spin);
     }
 
-    //We can also give a rotation precedence
-    void rotate(double precedence, double spin){
-        drive(precedence, spin);
-    }
 
-    //The... means you can put in any number of values.
+    /**
+     * When only numbers are provided, we assume op is false.
+     * @param args: drive values such as x, y, and spin
+     */
     void drive(double... args) {
         drive(false,args);
     }
 
-    //Op means overpowered: When op, a motor is maxed out if the overall power > .9
+    /**
+     * The default precedence is 0.
+     * @param op means overpowered: When op, a motor is maxed out if the overall power > .9
+     * @param args: drive values such as x, y, and spin
+     */
     void drive(boolean op, double ... args){drive(0, op, args);}
 
+    /**
+     * This method adds drive values to the list of potential drive values.
+     * It doesn't actually send powers to the motors.
+     * Explicit precedence is followed.
+     * Ties are broken like such: non-zero values are chosen over stopping.
+     * More recent values are chosen over old ones.
+     *
+     * @param precedence The precedence of the drive values
+     * @param op means overpowered: When op, one motor is maxed out if the overall power > .9
+     * @param args: drive values such as x, y, and spin
+     */
     void drive(int precedence, boolean op, double ... args) {
         //If we've already logged power values this loop
         if(precedences.size() != 0){
             //If our precedence is too low, we break out, no more math needed.
             if (precedence < MyMath.max(precedences))
                 return;
-            //Driving with non-zero values takes precedence over stopping.
+            //Driving with non-zero values takes precedence over stopping,
+            //Unless stopping has explicit precedence.
             //If the values are zero, we break out.
-            if(MyMath.absoluteMax(args) == 0)
-                return;
+            if(precedence == MyMath.max(precedences))
+                if(MyMath.absoluteMax(args) == 0)
+                    return;
         }
         //If we've made it to this point, we want to keep our drive values.
         //We save the precedence
@@ -141,24 +109,44 @@ class DriveEngine {
         potentialDriveValues.add(0, potential);
     }
 
+    /**
+     * This method should be called once per loop.
+     * It calls drive(), which updates the motor powers.
+     * It clears some objects for use in the next loop.
+     */
     void update(){
         //If all is working, this line should appear.
         //It might not if the update method is left out of an OpMode.
         telemetry.addLine("updating");
+
         //Once per loop, we update the motor powers.
-        drive();
+        double[] motorPowers = processMotorPowersFromDriveValues(processPotentials());
+
+        for (int i = 0; i < motors.size(); i++) {
+            motors.get(i).setPower(motorPowers[i]);
+            telemetry.addData("motor" + i + " power", motorPowers[i]);
+        }
+
+
         //We prepare for the next loop by clearing one-loop lists and counters.
         precedences.clear();
         potentialDriveValues.clear();
         smoothAdditions = 0;
+        reportPositionsToScreen();
     }
 
     /**
      * This method actually sends powers to the motors.
-     * We retrieve x, y, and spin values from an ArrayList: potentialDriveValues.
-     * The first
+     * This method should call processPotentials() to retrieve x, y, and spin.
      */
-    protected void drive(){
+    abstract double[] processMotorPowersFromDriveValues(double[] driveValues);
+
+    /**
+     * This method selects the proper drive values from the potentials.
+     * It processes the varargs into x, y and spin for use in drive().
+     */
+    private double[] processPotentials()
+    {
         double x = 0,y = 0,spin = 0;
 
         //If we haven't been given any drive values, we stop.
@@ -193,48 +181,32 @@ class DriveEngine {
         if(spin == 0)
             MyMath.fill(smoothSpinList, 0);
 
-        double xPrime = x * Math.cos(theta) - y * Math.sin(theta); //adjust for angle
-        double yPrime = x * Math.sin(theta) + y * Math.cos(theta);
+        double xPrime = x * Math.cos(driveAngle) - y * Math.sin(driveAngle); //adjust for angle
+        double yPrime = x * Math.sin(driveAngle) + y * Math.cos(driveAngle);
 
         x = xPrime;
         y = yPrime;
 
-        double[] powers = new double[motors.size()];
-
-        for (int i = 0; i < motors.size(); i++)  //Calculate motor powers
-            powers[i] = x * Math.cos(i * motorSpacing)
-                    +   y * Math.sin(i * motorSpacing)
-                    +   spin;
-
-
-        double max = MyMath.absoluteMax(powers);
-
-        if(max > 1 || (op && Math.hypot(x,y) > .90))
-            for (int i = 0; i < powers.length; i++)   // Adjust all motors to less than one
-                powers[i] /= max;            // Or maximize a motor to one
-
-
-        blackValues = new double[]{x,y,spin};
         telemetry.addData("driveE x", x);
         telemetry.addData("driveE y", y);
         telemetry.addData("driveE rotate", spin);
 
-        for (int i = 0; i < motors.size(); i++) {
-            motors.get(i).setPower(powers[i]);
-            telemetry.addData("motor" + i + " power", powers[i]);
-        }
+        blackValues = new double[]{x,y,spin};
 
-        reportPositionsToScreen();
+        return new double[]{op? 1:0, x, y, spin};
     }
 
-    double[] blackValues = new double[3];
 
-    void driveAtAngle(double theta)
+    void driveAtAngle(double angle)
     {
-        this.theta = theta;
+        driveAngle = angle;
     }
 
 
+    /**
+     * Sets all motors to float instead of brake.
+     * This is useful when testing positions for the encoders.
+     */
     void floatMotors()
     {
         for (DcMotor motor: motors) {
@@ -254,13 +226,13 @@ class DriveEngine {
         justRestarted = true;
     }
 
-    double[] cumulativeDistance = new double[]{0,0};
+    private double[] cumulativeDistance = new double[]{0,0};
 
-    boolean justResetTarget = false;
+    private boolean justResetTarget = false;
     ArrayList<Boolean> checkpoints = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
     boolean moveOnPath(double[] ... args){
-        return moveOnPath(false, false,args);
+        return moveOnPath(Positioning.Relative, false, args);
     }
     boolean moveOnPath(String key, double[] ... args){
         if(keyList.contains(key))
@@ -272,17 +244,29 @@ class DriveEngine {
         return false;
     }
 
-    /*
-        Continuous means that the function will never return true and restart,
-        it will continue to correct for error.
+    enum Positioning
+    {
+        Absolute,
+        Relative
+    }
 
-        c: true  – When you continually test moving to different points.
-        c: false – When the code changes to a new task after completion.
+    /**
+     *@param positioning is the type of positioning system.
+     *      *               Absolute is relative the origin point.
+     *      *               Relative is relative to robot's last position.
+     * @param continuous means that the function will never return true and restart;
+     *         it will continue to correct for error.
+     *         Use true when you continually test moving to different points.
+     *         Use false when the code changes to a new task after completion.
+     * @param args is a list of a set of points. Each set looks like this: {3,4}
+     *             and is encapsulated in a double[].
+     *             The double[]s are added with commas to separate them.
+     * @return if all checkpoints have been completed.
      */
     boolean moveOnPath(Positioning positioning, boolean continuous, double[] ... args)
     {
         if(checkpoints.isEmpty()){
-            for (double[] arg : args) checkpoints.add(false);
+            for (double[] ignored : args) checkpoints.add(false);
             justResetTarget = true;
         }
 
@@ -306,9 +290,7 @@ class DriveEngine {
                 targetAngle = forward + args[c][0];
 
                 if(Math.abs(MyMath.loopAngle(targetAngle, currentAngle)) < MyMath.radians(2)) {
-                    if(continuous && c == checkpoints.size() - 1)
-                        ;
-                    else{
+                    if(!continuous || c != checkpoints.size() - 1){
                         stop();
                         forward += args[c][0];
                         sumSpinError = 0;
@@ -329,31 +311,31 @@ class DriveEngine {
                 double[] point = args[c];
                 double spin = face(targetAngle);
 
-                double deltaX;
-                double deltaY;
+                double deltaX = 0;
+                double deltaY = 0;
 
-                if(absolute)
+                switch (positioning)
                 {
-                    double angle = currentAngle;
-                    double trueDeltaX = point[0] - trueX;
-                    double trueDeltaY = point[1] - trueY;
-                    deltaX =  trueDeltaX * Math.cos(-angle) - trueDeltaY * Math.sin(-angle);
-                    deltaY =  trueDeltaX * Math.sin(-angle) + trueDeltaY * Math.cos(-angle);
+                    case Absolute:
+                        double trueDeltaX = point[0] - trueX;
+                        double trueDeltaY = point[1] - trueY;
+                        deltaX =  trueDeltaX * Math.cos(-currentAngle) - trueDeltaY * Math.sin(-currentAngle);
+                        deltaY =  trueDeltaX * Math.sin(-currentAngle) + trueDeltaY * Math.cos(-currentAngle);
+                        break;
+                    case Relative:
+                        deltaX = point[0] + cumulativeDistance[0] - xDist();
+                        deltaY = point[1] + cumulativeDistance[1] - yDist();
                 }
-                else
-                {
-                    deltaX = point[0] + cumulativeDistance[0] - xDist();
-                    deltaY = point[1] + cumulativeDistance[1] - yDist();
-                }
+
                 double r = Math.hypot(deltaX, deltaY);
 
                 double[] drive = move(deltaX, deltaY);
 
                 //smooth the driving when revving to a high speed, then reset the average to 0.
                 if(Math.hypot(drive[0],drive[1]) > .3)
-                    drive = smoothDrive(drive[0], drive[1], 1, false);
+                    drive = smoothDrive(drive[0], drive[1], 1);
                 else
-                    smoothDrive(0,0, 1, false);
+                    smoothDrive(0,0, 1);
 
                 double driveX = drive[0];
                 double driveY = drive[1];
@@ -389,21 +371,10 @@ class DriveEngine {
         return false;
     }
 
-    boolean moveToAbsolutePosition(double x, double y)
-    {
-        double angle = spinAngle();
-        double trueDeltaX = x - trueX;
-        double trueDeltaY = y - trueY;
-        double newDeltaX =  trueDeltaX * Math.cos(-angle) - trueDeltaY * Math.sin(-angle);
-        double newDeltaY =  trueDeltaX * Math.sin(-angle) + trueDeltaY * Math.cos(-angle);
-        return moveOnPath(new double[]{xDist() +newDeltaX - cumulativeDistance[0],
-                yDist() +newDeltaY - cumulativeDistance[1]});
-    }
 
     double[] smoothDrive(double x, double y, double rSeconds)
     {
         double alpha = Bogg.getAlpha(rSeconds);
-        double thetaAlpha = Bogg.getAlpha(.25);
         double r = Math.hypot(x,y);
         double theta = Math.atan2(y, x);
 
@@ -414,22 +385,13 @@ class DriveEngine {
         else
             rAve = alpha * r + (1-alpha) * rAve;
 
-        if(thetaAve >  Math.PI) thetaAve -= 2 * Math.PI;
-        if(thetaAve < -Math.PI) thetaAve += 2 * Math.PI;
-
-        //find the nearest value: must be within pi
-        if(theta - thetaAve > Math.PI) theta -= 2 * Math.PI;
-        if(thetaAve - theta > Math.PI) theta += 2 * Math.PI;
-
-        thetaAve = thetaAlpha * theta + (1-thetaAlpha) * thetaAve;
-
-        return new double[]{Math.cos(smoothTheta? thetaAve : theta) * rAve,
-                            Math.sin(smoothTheta? thetaAve : theta) * rAve};
+        return new double[]{Math.cos(theta) * rAve,
+                            Math.sin(theta) * rAve};
     }
 
-    ArrayList<Double> smoothRList = new ArrayList<>();
-    ArrayList<Double> smoothThetaList = new ArrayList<>();
-    ArrayList<Double> smoothSpinList = new ArrayList<>();
+    private ArrayList<Double> smoothRList = new ArrayList<>();
+    private ArrayList<Double> smoothThetaList = new ArrayList<>();
+    private ArrayList<Double> smoothSpinList = new ArrayList<>();
     private int smoothAdditions = 0;
     void smoothDrive2(boolean op, double x, double y, double spin,
                           double rSeconds, boolean smoothSpin, boolean smoothTheta, int precedence)
@@ -537,8 +499,8 @@ class DriveEngine {
     double mD = 0.5;  //fully account for this much time in the future at current error decreasing rate
     double tD = 0.08;
 
-    ArrayList<Double> drdtArray = new ArrayList<>();
-    ArrayList<Double> dThdtArray = new ArrayList<>();
+    private ArrayList<Double> drdtArray = new ArrayList<>();
+    private ArrayList<Double> dThdtArray = new ArrayList<>();
 
     double[] move(double deltaX, double deltaY)
     {
@@ -604,109 +566,43 @@ class DriveEngine {
 
     
 
-    void orbit(double radius, double angle, double speed)
-    {
-        telemetry.addData("orbit radius", radius);
-        radius /= effectiveRobotRadius;
+    abstract void orbit(double radius, double angle, double speed);
 
-        double[] powers = new double[motors.size()];
-
-        for (int i = 0; i < powers.length; i++) {
-            powers[i] = 1 + radius * Math.sin(angle + i * motorSpacing);
-        }
-
-        double max = MyMath.absoluteMax(powers);
-
-        for (int i = 0; i < motors.size(); i++) {
-            motors.get(i).setPower(powers[i] * speed / max);
-        }
-    }
-
-
-//    X = B—L/2—R/2
-//    Y = R*√3/2—L*√3/2   These are the force and torque equations
-//    S = B+R+L
-
-//    B = X*2/3 + S/3
-//    R = Y*√3/3 – X/3 + S/3  These are solved for the motor powers
-//    L = -Y*√3/3 – X/3 + S/3
-
-
-
-    // Say that the robot moves a distance of 1 in the direction of x.
-    // Find the distance each motor moved, call it d.
-    // Assign this as a coefficient to each motor.
-    // Create a constant equal to the sum of the terms,
-    // multiplying each coefficient by the distance each motor moved
-    // Call this constant k.
-    // Divide the equation by k to give 1 when x = 1.
-
-//    B = X + S
-//    R = Y*√3/2 – X/2 + S  These are the motor distances
-//    L = -Y*√3/2 – X/2 + S
-
-//    X = (B—R/2—L/2) * 2/3
-//    Y = (R*√3/2—L*√3/2) * 2/3  These are solved for the directional distances
-//    S = (B+R+L) /3
 
     /**
-     *
-     * @param angle
-     * @return
+     * A method for finding distance travelled in a direction.
+     * @param angle, the angle in radians.
+     * @return the total distance travelled in the direction of angle.
      */
     double getDistance(double angle)
     {
-        return (xDist() * Math.cos(angle) + yDist() * Math.sin(angle)) * inPerTicks();
+        return trueX * Math.cos(angle) + trueY * Math.sin(angle);
     }
 
-    ArrayList<Double> xDistances = new ArrayList<>();
-    double xDist()
-    {
-        double smallSum = 0;
-        telemetry.addData("motors size", motors.size());
-        for (int i = 0; i < motors.size(); i++) {
-            smallSum += Math.abs(Math.cos(i * motorSpacing));
-        }
-        telemetry.addData("smallSum", smallSum);
+    /**
+     * A method for finding distance travelled.
+     * This method should assume the robot does not rotate.
+     * X is in the direction of 0, or right.
+     *
+     * @return inches travelled in the x direction
+     */
+    abstract double xDist();
 
-        double sum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            sum += motors.get(i).getCurrentPosition() * Math.cos(i * motorSpacing);
-        }
+    /**
+     * A method for finding distance travelled.
+     * This method should assume the robot does not rotate.
+     * Y is in the direction of pi/2, or forward.
+     *
+     * @return inches travelled in the y direction
+     */
+    abstract double yDist();
 
-        double xDistance = sum / smallSum * inPerTicks();
-        telemetry.addData("xDist", xDistance);
-        xDistances.add(xDistance);
-
-        if(xDistances.size() > 5) //keep the size to 5
-            xDistances.remove(0);
-
-        return MyMath.median(xDistances);
-    }
-
-    ArrayList<Double> yDistances = new ArrayList<>();
-    double yDist()
-    {
-        double smallSum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            smallSum += Math.abs(Math.sin(i * motorSpacing));
-        }
-
-        double sum = 0;
-        for (int i = 0; i < motors.size(); i++) {
-            sum += motors.get(i).getCurrentPosition() * Math.sin(i * motorSpacing);
-        }
-
-        double yDistance = sum / smallSum * inPerTicks();
-        telemetry.addData("yDist", yDistance);
-
-        yDistances.add(yDistance);
-        if(yDistances.size() > 5) //keep the size to 5
-            yDistances.remove(0);
-
-        return MyMath.median(yDistances);
-    }
-
+    /**
+     * This method uses the IMU's gyroscope to find the heading.
+     * If we are not using the IMU, this method assumes an OmniWheelDriveEngine.
+     * This method may need to be overridden if this is false.
+     * @return The angle the robot has spun.
+     */
     double spinAngle()
     {
         if(sensors.usingImu)
@@ -724,6 +620,12 @@ class DriveEngine {
 
     double lastX = 0;
     double lastY = 0;
+
+    /**
+     * This method reports the motor positions to the screen.
+     * It also updates trueX and trueY, and calls moveRobotOnScreen().
+     * This method is essential for absolute positioning.
+     */
     void reportPositionsToScreen()
     {
         for (int i = 0; i < motors.size(); i++) {
@@ -742,8 +644,8 @@ class DriveEngine {
             dY = 0;
         }
 
-        double xPrime = dX * Math.cos(spin) - dY * Math.sin(spinAngle());
-        double yPrime = dX * Math.sin(spin) + dY * Math.cos(spinAngle());
+        double xPrime = dX * Math.cos(spin) - dY * Math.sin(spin);
+        double yPrime = dX * Math.sin(spin) + dY * Math.cos(spin);
 
         trueX += xPrime;
         trueY += yPrime;
@@ -754,6 +656,11 @@ class DriveEngine {
         lastY = y;
     }
 
+    /**
+     * This method moves the onscreen robot.
+     * You can change the x and y multipliers to align the robot coordinate system
+     * to the phone coordinate system.
+     */
     void moveRobotOnScreen()
     {
         FtcRobotControllerActivity.moveRobot(trueX * 4.5, -trueY * 5.5, MyMath.degrees(spinAngle()));
