@@ -148,9 +148,9 @@ public class Camera{
     boolean canUseTFOD = true;
 
 
-    public Camera(HardwareMap hardwareMap, Telemetry telemetry){
+    public Camera(HardwareMap hardwareMap, Telemetry telemetry, boolean showVuforia, boolean showTfod){
         this.telemetry = telemetry;
-        startCamera(hardwareMap);
+        startCamera(hardwareMap, showVuforia, showTfod);
         if (tfod != null) {
             tfod.activate();
         }
@@ -167,8 +167,11 @@ public class Camera{
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        //VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+        VuforiaLocalizer.Parameters parameters;
+        if(showVuforia)
+            parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        else
+            parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY ;
         parameters.cameraDirection   = CAMERA_CHOICE;
@@ -307,7 +310,11 @@ public class Camera{
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                     "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-            TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+            TFObjectDetector.Parameters tfodParameters;
+            if(showTfod)
+                tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+            else
+                tfodParameters = new TFObjectDetector.Parameters();
             tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
             tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
         } else {
@@ -502,10 +509,10 @@ public class Camera{
                             return 0;
                         } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
                             telemetry.addData("Gold Mineral Position", "Right");
-                            return 1;
+                            return 2;
                         } else {
                             telemetry.addData("Gold Mineral Position", "Center");
-                            return 2;
+                            return 1;
                         }
                     }
                 }
