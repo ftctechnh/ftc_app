@@ -13,23 +13,14 @@ public class camera_test extends LinearOpMode
         camera = new Camera(hardwareMap, telemetry, false, true);
         waitForStart();
 
+        int goldPosition = -1;
         while (opModeIsActive())
         {
-            Double wallHeading = camera.headingToWall();
-
-            if(wallHeading != null)
-            {
-                telemetry.addData("wall heading", wallHeading);
-                if(Math.abs(wallHeading) < 2)
-                    telemetry.addLine("Done!");
-                else
-                {
-                    if(wallHeading > 0)
-                        telemetry.addData("rotate", .08);
-                    else
-                        telemetry.addData("rotate", -.08);
-                }
-            }
+            int g = camera.getGoldPosition();
+            telemetry.addData("gold position", g);
+            if(g != -1)
+                goldPosition = g;
+            telemetry.addData("saved", goldPosition);
             telemetry.update();
             idle();
         }
