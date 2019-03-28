@@ -58,11 +58,11 @@ class EndEffector {
         contract.setDirection(DcMotorSimple.Direction.REVERSE);
         contract.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        swing.setPosition(.9);
+        pickleAllTheWay();
     }
 
     void open() {
-        pinch.setPosition(.44);
+        pinch.setPosition(.54);
     }
 
     void close() {
@@ -76,6 +76,9 @@ class EndEffector {
     void pickleDown() {
         swing.setPosition(.66);
     }
+
+    void pickleAllTheWay(){swing.setPosition(.9);}
+
 
     boolean extend(double power) {
         if(power == 0)
@@ -118,8 +121,6 @@ class EndEffector {
         if (t > 1)
             pickleDown();
     }
-
-
 
 
 

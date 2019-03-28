@@ -28,6 +28,8 @@ public class autonomousDriveZ_simulate extends LinearOpMode
             switch(action)
             {
                 case Drop:
+                    action = auto.drop();
+                    break;
                 case LookForMinerals:
                 case Slide1:
                     action = auto.slide1();

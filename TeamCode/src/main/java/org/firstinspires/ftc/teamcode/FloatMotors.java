@@ -19,7 +19,6 @@ public class floatMotors extends LinearOpMode
         {
             robot.floatMotors();
 
-            telemetry.update();
             robot.update();
             idle();
         }
