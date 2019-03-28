@@ -19,7 +19,6 @@ class Sensors {
 
     private TouchSensor touchTop;
     private TouchSensor touchBottom;
-    private TouchSensor touchLander;
     private DistanceSensor dLow;
     private DistanceSensor dHigh;
 
@@ -45,7 +44,6 @@ class Sensors {
             case Bogg:
                 touchTop = hardwareMap.get(TouchSensor.class, "touchTop");
                 touchBottom = hardwareMap.get(TouchSensor.class, "touchBottom");
-                touchLander = hardwareMap.get(TouchSensor.class, "touchLander");
                 //dLow = hardwareMap.get(DistanceSensor.class, "dLow");
                 //dHigh = hardwareMap.get(DistanceSensor.class, "dHigh");
             case MiniBogg:
@@ -91,10 +89,6 @@ class Sensors {
 
     boolean touchBottomIsPressed() {
         return touchBottom.isPressed();
-    }
-
-    boolean touchLanderIsPressed(){
-        return touchLander.isPressed();
     }
 
     ArrayList<Double> lowDistances = new ArrayList<>();
