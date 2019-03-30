@@ -25,10 +25,10 @@ public class autonomousDrive4_DropPlacePark extends LinearOpMode
                 case Drop:
                     action = auto.drop();
                     break;
-                case LookForMinerals:
                 case Slide1:
                     action = auto.slide1();
                     break;
+                case LookForMinerals:
                 case PushGold:
                 case Slide2:
                     action = auto.slide2();

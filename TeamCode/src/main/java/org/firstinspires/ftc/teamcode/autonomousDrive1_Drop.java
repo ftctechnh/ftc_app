@@ -25,7 +25,6 @@ public class autonomousDrive1_Drop extends LinearOpMode
                 case Drop:
                     action = auto.drop();
                     break;
-                case LookForMinerals:
                 case Slide1:
                     auto.robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,
                             true, new double[]{0,0});
