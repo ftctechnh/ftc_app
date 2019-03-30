@@ -132,7 +132,8 @@ abstract class DriveEngine {
         precedences.clear();
         potentialDriveValues.clear();
         smoothAdditions = 0;
-        reportPositionsToScreen();
+        updateTrueDistances();
+        moveRobotOnScreen();
     }
 
     /**
@@ -213,7 +214,7 @@ abstract class DriveEngine {
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         }
-        reportPositionsToScreen();
+        updateTrueDistances();
     }
 
     boolean justRestarted;
@@ -327,6 +328,9 @@ abstract class DriveEngine {
                         deltaY = point[1] + cumulativeDistance[1] - yDist();
                 }
 
+                telemetry.addData("deltaX", deltaX);
+                telemetry.addData("deltaY", deltaY);
+
                 double r = Math.hypot(deltaX, deltaY);
 
                 double[] drive = move(deltaX, deltaY);
@@ -334,14 +338,11 @@ abstract class DriveEngine {
                 //smooth the driving when revving to a high speed, then reset the average to 0.
                 if(Math.hypot(drive[0],drive[1]) > .3)
                     drive = smoothDrive(drive[0], drive[1], 1);
-                else
+                if(Math.hypot(drive[0],drive[1]) < .1)
                     smoothDrive(0,0, 1);
 
                 double driveX = drive[0];
                 double driveY = drive[1];
-
-                telemetry.addData("deltaX", deltaX);
-                telemetry.addData("deltaY", deltaY);
 
                 if(r <= .75 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
                     if(continuous && c == checkpoints.size() - 1) {
@@ -622,11 +623,11 @@ abstract class DriveEngine {
     double lastY = 0;
 
     /**
-     * This method reports the motor positions to the screen.
-     * It also updates trueX and trueY, and calls moveRobotOnScreen().
+     * This method updates trueX and trueY.
+     * It also reports the motor positions to the screen.
      * This method is essential for absolute positioning.
      */
-    void reportPositionsToScreen()
+    void updateTrueDistances()
     {
         for (int i = 0; i < motors.size(); i++) {
             telemetry.addData("motor " + i + " position", motors.get(i).getCurrentPosition());
@@ -649,8 +650,6 @@ abstract class DriveEngine {
 
         trueX += xPrime;
         trueY += yPrime;
-
-        moveRobotOnScreen();
 
         lastX = x;
         lastY = y;

@@ -45,7 +45,7 @@ public class FakeDriveEngine extends OmniWheelDriveEngine {
         yDistance += dY;
         sDistance += dS;
 
-        reportPositionsToScreen();
+        updateTrueDistances();
 
         telemetry.addData("driveE x", x);
         telemetry.addData("driveE y", y);
@@ -88,7 +88,7 @@ public class FakeDriveEngine extends OmniWheelDriveEngine {
     }
 
     @Override
-    void reportPositionsToScreen() {
+    void updateTrueDistances() {
         double dX = xDist() - lastX;
         double dY = yDist() - lastY;
 
