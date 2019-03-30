@@ -117,6 +117,16 @@ public class Camera{
     private static final float mmFTCFieldWidth  = (12*6) * mmPerInch;       // the width of the FTC field (from the center point to the outer panels)
     private static final float mmTargetHeight   = (6) * mmPerInch;          // the height of the center of the target image above the floor
 
+    private int lengthPixels = 1280;
+    private int midLength = lengthPixels / 2;
+    private int q1Length = midLength / 2;
+    private int q3Length = q1Length * 3;
+
+    private int widthPixels = 720;
+    private int midWidth = widthPixels / 2;
+    private int q1Width = midWidth / 2;
+    private int q3Width = q1Width * 3;
+
     // Select which camera you want use.  The FRONT camera is the one on the same side as the screen.
     // Valid choices are:  BACK or FRONT
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
@@ -484,16 +494,17 @@ public class Camera{
 
     int getGoldPosition()
     {
+        int goldPosition = -1;
+
         if (tfod != null) {
             // getUpdatedRecognitions() will return null if no new information is available since
             // the last time that call was made.
             List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
             if (updatedRecognitions != null) {
                 telemetry.addData("# Object Detected", updatedRecognitions.size());
-                if (updatedRecognitions.size() == 3) {
-                    int goldMineralX = -1;
-                    int silverMineral1X = -1;
-                    int silverMineral2X = -1;
+                if (updatedRecognitions.size() >= 2) {
+                    int goldMineralX = -1, silverMineral1X = -1, silverMineral2X = -1;
+
                     for (Recognition recognition : updatedRecognitions) {
                         if (recognition.getLabel().equals(LABEL_GOLD_MINERAL)) {
                             goldMineralX = (int) recognition.getLeft();
@@ -503,22 +514,52 @@ public class Camera{
                             silverMineral2X = (int) recognition.getLeft();
                         }
                     }
-                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1) {
-                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Left");
-                            return 0;
-                        } else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X) {
-                            telemetry.addData("Gold Mineral Position", "Right");
-                            return 2;
-                        } else {
-                            telemetry.addData("Gold Mineral Position", "Center");
-                            return 1;
+                    if (goldMineralX != -1 && silverMineral1X != -1 && silverMineral2X != -1)
+                    {
+                        if (goldMineralX < silverMineral1X && goldMineralX < silverMineral2X)
+                            goldPosition = 0;
+                        else if (goldMineralX > silverMineral1X && goldMineralX > silverMineral2X)
+                            goldPosition = 2;
+                        else
+                            goldPosition = 1;
+                    }
+                    else if(updatedRecognitions.size() == 2)
+                    {
+                        if(goldMineralX != -1)
+                        {
+                            if(goldMineralX < q1Length)
+                                return 0;
+                            else if(goldMineralX > q3Length)
+                                return 2;
+                            else
+                                return 1;
+                        }
+                        else
+                        {
+                            if(silverMineral1X > q1Length && silverMineral2X > q1Length)
+                                return 0;
+                            else if(silverMineral1X < q3Length && silverMineral2X < q3Length)
+                                return 2;
+                            else
+                                return 1;
                         }
                     }
                 }
             }
         }
-        return -1;
+        switch (goldPosition)
+        {
+            case 0:
+                telemetry.addData("Gold Mineral Position", "Left");
+                break;
+            case 1:
+                telemetry.addData("Gold Mineral Position", "Center");
+                break;
+            case 2:
+                telemetry.addData("Gold Mineral Position", "Right");
+                break;
+        }
+        return goldPosition;
     }
 
 
