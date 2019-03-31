@@ -110,6 +110,22 @@ public class Autonomous1 extends LinearOpMode {
             front_right.setPower(0.5);
         }
 
+<<<<<<< HEAD
+=======
+        while (opModeIsActive() && (runtime.seconds() < 0.35)) {
+            back_right.setPower(1);
+            back_left.setPower(1);
+            front_left.setPower(-1);
+            front_right.setPower(-1);
+        }
+
+        runtime.reset();
+        while (opModeIsActive() && (runtime.seconds() < 8.25)) {
+            moveIntake.setPower(-0.25);
+        }
+        // drops the marker on the
+        //dustBinServo.setPosition(0.55);
+>>>>>>> b1930edb66d07b34f2369dfd037898dd26798b14
     }
 
 }
