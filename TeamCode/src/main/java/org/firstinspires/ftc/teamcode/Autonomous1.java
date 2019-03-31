@@ -97,7 +97,7 @@ public class Autonomous1 extends LinearOpMode {
         }
 
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 1.25)) {
+        while (opModeIsActive() && (runtime.seconds() < 8.25)) {
             moveIntake.setPower(-0.25);
         }
         // drops the marker on the
