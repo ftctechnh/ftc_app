@@ -205,10 +205,15 @@ public class Autonomous_Alhambra extends LinearOpMode {
 
     private boolean checkingClearance() {
         boolean result = true;
-        double frontDistance = robot.sensorDistance.getDistance(DistanceUnit.CM);
-        if (frontDistance != distanceOutOfRange && frontDistance <= DISTANCE_THRESHOLD) {
+        if (robot.digitalTouch.getState() == false) {
             result = false;
             robot.beep();
+        } else {
+            double frontDistance = robot.sensorDistance.getDistance(DistanceUnit.CM);
+            if (frontDistance != distanceOutOfRange && frontDistance <= DISTANCE_THRESHOLD) {
+                result = false;
+                robot.beep();
+            }
         }
         return result;
     }

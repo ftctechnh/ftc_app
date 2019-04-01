@@ -36,9 +36,11 @@ import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.android.AndroidTextToSpeech;
@@ -80,6 +82,8 @@ class HardwareAlhambra {
     BNO055IMU imu;
     ColorSensor sensorColor = null;
     DistanceSensor sensorDistance = null;
+    DigitalChannel digitalTouch = null;
+
     private AndroidTextToSpeech tts = null;
     private int beepSoundID;
     /* local OpMode members. */
@@ -136,6 +140,7 @@ class HardwareAlhambra {
         handServo = hwMap.servo.get("servo_3");
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
+        digitalTouch = hwMap.get(DigitalChannel.class, "sensor_digital");
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
