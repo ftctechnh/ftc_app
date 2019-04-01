@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -51,21 +50,22 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name = "Gamepad", group = "Linear Opmode")
-@Disabled
-public class Gamepad extends LinearOpMode {
+//@Disabled
+public class Gamepad_Alhambra extends LinearOpMode {
 
     private final double SERVO_CYCLE = 50d;
     private final double SERVO_INCREMENT_MIN = 0.005d;
     private final double SERVO_INCREMENT_MAX = 0.01d;
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private Hardware15091 robot = new Hardware15091();
+    private HardwareAlhambra robot = new HardwareAlhambra();
     private ElapsedTime armTime = new ElapsedTime();
     private ElapsedTime handTime = new ElapsedTime();
     private ElapsedTime driveTime = new ElapsedTime();
-    private int armSequence = 0;
     private double lastRuntime = 0d;
-    private boolean wasBeep = false;
+    private boolean wasBeep = false, doorFlag = false, handFlag = false;
+    private boolean aPressed = false, yPressed = false;
+    private int armSequence = 0;
 
     @Override
     public void runOpMode() {
@@ -146,50 +146,25 @@ public class Gamepad extends LinearOpMode {
         double handPosition = robot.handServo.getPosition();
 
         if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
-            Hardware15091.ArmInfo armInfo = robot.setArmTarget(1.305d);
-            armPower = armInfo.PowerToSet;
-            if (armInfo.Done) {
-                //armPosition = 0.7139d;
-                armPosition = 0.3778d;
-                handPosition = 0.3539d;
-                if (!wasBeep) {
-                    robot.beep();
-                    wasBeep = true;
-                }
-            }
-        } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
-            armPower = robot.setArmTarget(2.329d).PowerToSet;
-            //armPosition = 0.9394d;
-            armPosition = 0.1528d;
-            handPosition = 0.8261d;
-        } else if (gamepad2.y || gamepad1.y) { //End game
-            Hardware15091.ArmInfo armInfo = robot.setArmTarget(1.305d);
-            armPower = armInfo.PowerToSet;
-            if (armInfo.Done) {
-                handPosition = 0d;
-                armPosition = 1d;
-                if (!wasBeep) {
-                    robot.beep();
-                    wasBeep = true;
-                }
-            }
-        } else if (gamepad2.x || gamepad1.x) { //retract arm
             if (armSequence == 0) {
-                Hardware15091.ArmInfo armInfo = robot.setArmTarget(0.980d);
+                HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(1.5d);
                 armPower = armInfo.PowerToSet;
                 if (armInfo.Done) {
-                    handPosition = 0d;
-                    armPosition = 1d;
+                    armPosition = 0.25d;
                     armSequence = 1;
                 }
             }
             if (armSequence == 1) {
-                armPower = robot.setArmTarget(0.745d).PowerToSet;
+                armPower = robot.setArmTarget(1d).PowerToSet;
             }
+        } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
+            armPower = robot.setArmTarget(2.329d).PowerToSet;
+            armPosition = 0.7578d;
+            handPosition = 0.1284d;
         } else {
-            armSequence = 0;
             robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             wasBeep = false;
+            armSequence = 0;
 
             if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
                 armTime.reset();
@@ -219,11 +194,23 @@ public class Gamepad extends LinearOpMode {
         }
 
         if (gamepad2.a || gamepad1.a) {
-            robot.pickupServo.setPosition(0.9d);
-        } else if (gamepad2.b || gamepad1.b) {
-            robot.pickupServo.setPosition(0.1d);
+            if (!aPressed) {
+                aPressed = true;
+                doorFlag = !doorFlag;
+                robot.doorServo.setPosition(doorFlag ? 0.3d : 1d);
+            }
         } else {
-            robot.pickupServo.setPosition(0.5d);
+            aPressed = false;
+        }
+
+        if (gamepad2.y || gamepad1.y) {
+            if (!yPressed) {
+                yPressed = true;
+                handFlag = !handFlag;
+                handPosition = handFlag ? 0.5d : 0.15d;
+            }
+        } else {
+            yPressed = false;
         }
 
         robot.setArmPower(armPower);

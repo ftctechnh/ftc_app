@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Size;
@@ -62,7 +63,7 @@ import org.opencv.core.Size;
  */
 
 @Autonomous(name = "Rover Ruckus", group = "Pushbot")
-//@Disabled
+@Disabled
 public class RoverRuckus15091_DepotSide extends RoverRuckus15091 {
 
     @Override

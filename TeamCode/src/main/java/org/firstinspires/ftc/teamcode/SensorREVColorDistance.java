@@ -40,6 +40,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 import java.util.Locale;
 
+import static com.qualcomm.robotcore.hardware.DistanceSensor.distanceOutOfRange;
+
 /*
  * This is an example LinearOpMode that shows how to use
  * the REV Robotics Color-Distance Sensor.
@@ -105,9 +107,15 @@ public class SensorREVColorDistance extends LinearOpMode {
                     (int) (robot.sensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
 
+            double frontDistance = robot.sensorDistance.getDistance(DistanceUnit.CM);
+            if (frontDistance != distanceOutOfRange && frontDistance <= 10d)
+            {
+                robot.beep();
+            }
+
             // send the info back to driver station using telemetry function.
             telemetry.addData("Distance (cm)",
-                    String.format(Locale.US, "%.02f", robot.sensorDistance.getDistance(DistanceUnit.CM)));
+                    String.format(Locale.US, "%.02f", frontDistance));
             telemetry.addData("Alpha", robot.sensorColor.alpha());
             telemetry.addData("Red  ", robot.sensorColor.red());
             telemetry.addData("Green", robot.sensorColor.green());
