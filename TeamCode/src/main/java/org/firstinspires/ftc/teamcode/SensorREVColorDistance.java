@@ -71,7 +71,7 @@ public class SensorREVColorDistance extends LinearOpMode {
      * In this example, we  also use the distance sensor to display the distance
      * to the target object.  Note that the distance sensor saturates at around 2" (5 cm).
      */
-    private Hardware15091 robot = new Hardware15091();
+    private HardwareAlhambra robot = new HardwareAlhambra();
 
     @Override
     public void runOpMode() {
@@ -110,6 +110,9 @@ public class SensorREVColorDistance extends LinearOpMode {
             double frontDistance = robot.sensorDistance.getDistance(DistanceUnit.CM);
             if (frontDistance != distanceOutOfRange && frontDistance <= 10d)
             {
+                robot.beep();
+            }
+            if (robot.digitalFront.getState() == false) {
                 robot.beep();
             }
 

@@ -81,8 +81,19 @@ public class Autonomous_Alhambra extends LinearOpMode {
     private static final double P_DRIVE_COEFF = 0.16d;     // Larger is more responsive, but also less stable
     private static final double DISTANCE_THRESHOLD = 15d; // 5cm
 
-    /* Declare OpMode members. */
-    HardwareAlhambra robot = new HardwareAlhambra();   // Use a Pushbot's hardware
+    private final double SERVO_CYCLE = 50d;
+    private final double SERVO_INCREMENT_MIN = 0.005d;
+    private final double SERVO_INCREMENT_MAX = 0.01d;
+    // Declare OpMode members.
+    private ElapsedTime runtime = new ElapsedTime();
+    private HardwareAlhambra robot = new HardwareAlhambra();
+    private ElapsedTime armTime = new ElapsedTime();
+    private ElapsedTime handTime = new ElapsedTime();
+    private ElapsedTime driveTime = new ElapsedTime();
+    private double lastRuntime = 0d;
+    private boolean wasBeep = false, doorFlag = false, handFlag = false;
+    private boolean aPressed = false, yPressed = false;
+    private int armSequence = 0;
 
     @Override
     public void runOpMode() {
@@ -122,24 +133,29 @@ public class Autonomous_Alhambra extends LinearOpMode {
             turnAndDrive(50d, 0d);
 
             //scooping stuff
-            //move arm
-            robot.setArmTarget(2.329d);
-            robot.setArmPower(1d);
-            sleep(15L);
-            while(robot.armDrive.isBusy()) {
-                double armPower = robot.setArmTarget(2.329d).PowerToSet;
-                robot.setArmPower(armPower);
-                idle();
-            }
+            //move hand
+            robot.handServo.setPosition(0.1284d);
+            //move arm servo
+            robot.armServo.setPosition(0.7578d);
+            //open door
+            robot.doorServo.setPosition(1d);
+            sleep(100L);
+
+            //move arm down
+            moveArm(2.329d);
+
+            //close door
+            robot.doorServo.setPosition(0.3d);
+            sleep(1000L);
+
+            //move arm middle
+            moveArm(1.5d);
 
             //move arm servo
-            robot.armServo.setPosition(0.5d);
+            robot.armServo.setPosition(0.25d);
 
-            //move hand
-            robot.handServo.setPosition(0.5d);
-
-            //move door
-            robot.doorServo.setPosition(0.5d);
+            //move arm up
+            moveArm(0.988d);
 
             turnAndDrive(-50d, 0d);
             turnAndDrive(-21d, 90d);
@@ -157,15 +173,32 @@ public class Autonomous_Alhambra extends LinearOpMode {
         }
 
         while (opModeIsActive()) {
+            DriveControl();
+
+            ArmControl();
+        }
+    }
+
+    private void moveArm(double targetPosition) {
+        runtime.reset();
+        HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(targetPosition);
+        robot.setArmPower(armInfo.PowerToSet);
+        while (robot.armDrive.isBusy() &&
+                (armInfo.Done == false) &&
+                (runtime.seconds() < 5d)) {
+            armInfo = robot.setArmTarget(targetPosition);
+            robot.armDrive.setPower(armInfo.PowerToSet);
             idle();
         }
+        robot.armDrive.setPower(0d);
     }
 
     private void turnAndDrive(double distance, double angle) {
         gyroTurn(DRIVE_SPEED, angle);
         boolean succussful = gyroDrive(DRIVE_SPEED, distance, angle);
         if (!succussful) {
-            encoderDrive(DRIVE_SPEED, -2d, -2d, 1d);
+            double distanceToMove = distance > 0 ? -2d : 2d;
+            encoderDrive(DRIVE_SPEED, distanceToMove, distanceToMove, 1d);
         }
     }
 
@@ -203,13 +236,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
             while (opModeIsActive() &&
                     (runtime.seconds() < timeoutS) &&
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
-
-                // Display it for the driver.
-                telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
-                telemetry.addData("Path2", "Running at %7d :%7d",
-                        robot.leftDrive.getCurrentPosition(),
-                        robot.rightDrive.getCurrentPosition());
-                telemetry.update();
+                idle();
             }
 
             // Stop all motion;
@@ -235,14 +262,29 @@ public class Autonomous_Alhambra extends LinearOpMode {
         robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    private boolean checkingClearance() {
+    private boolean checkingFrontClearance() {
         boolean result = true;
-        if (robot.digitalTouch.getState() == false) {
+        if (robot.digitalFront.getState() == false) {
             result = false;
             robot.beep();
         } else {
             double frontDistance = robot.sensorDistance.getDistance(DistanceUnit.CM);
             if (frontDistance != distanceOutOfRange && frontDistance <= DISTANCE_THRESHOLD) {
+                result = false;
+                robot.beep();
+            }
+        }
+        return result;
+    }
+
+    private boolean checkingRearClearance() {
+        boolean result = true;
+        if (robot.digitalRear.getState() == false) {
+            result = false;
+            robot.beep();
+        } else {
+            double rearDistance = robot.sensorRange.getDistance(DistanceUnit.CM);
+            if (rearDistance != distanceOutOfRange && rearDistance <= DISTANCE_THRESHOLD) {
                 result = false;
                 robot.beep();
             }
@@ -291,7 +333,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
             while (opModeIsActive() &&
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
-                result = checkingClearance();
+                result = distance > 0d ? checkingFrontClearance() : checkingRearClearance();
                 if (!result) {
                     break;
                 }
@@ -393,5 +435,114 @@ public class Autonomous_Alhambra extends LinearOpMode {
 
     private double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+    }
+
+    private void DriveControl() {
+        double drive = 0d;
+        double turn = 0d;
+        if (gamepad1.dpad_down || gamepad2.dpad_down) {
+            drive = -0.5d - (driveTime.milliseconds() / 800d);
+        } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
+            drive = 0.5d + (driveTime.milliseconds() / 800d);
+        }
+
+        if (gamepad1.dpad_right || gamepad2.dpad_right) {
+            turn = -0.5d - (driveTime.milliseconds() / 1200d);
+        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
+            turn = 0.5d + (driveTime.milliseconds() / 1200d);
+        }
+
+        if (!gamepad1.dpad_down && !gamepad2.dpad_down &&
+                !gamepad1.dpad_up && !gamepad2.dpad_up &&
+                !gamepad1.dpad_right && !gamepad2.dpad_right &&
+                !gamepad1.dpad_left && !gamepad2.dpad_left) {
+            driveTime.reset();
+        }
+
+        double leftPower = Range.clip(drive - turn, -1d, 1d);
+        double rightPower = Range.clip(drive + turn, -1d, 1d);
+
+        // Send calculated power to wheels
+        robot.leftDrive.setPower(leftPower);
+        robot.rightDrive.setPower(rightPower);
+    }
+
+    private void ArmControl() {
+        double armPower = 0d;
+        double armPosition = robot.armServo.getPosition();
+        double handPosition = robot.handServo.getPosition();
+
+        if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
+            if (armSequence == 0) {
+                HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(1.5d);
+                armPower = armInfo.PowerToSet;
+                if (armInfo.Done) {
+                    armPosition = 0.25d;
+                    armSequence = 1;
+                }
+
+            }
+            if (armSequence == 1) {
+                armPower = robot.setArmTarget(1d).PowerToSet;
+            }
+        } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
+            armPower = robot.setArmTarget(2.329d).PowerToSet;
+            armPosition = 0.7578d;
+            handPosition = 0.1284d;
+        } else {
+            robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            wasBeep = false;
+            armSequence = 0;
+
+            if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
+                armTime.reset();
+                armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            } else if (gamepad2.left_stick_y > 0d && armTime.milliseconds() > SERVO_CYCLE) {
+                armTime.reset();
+                armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            }
+
+            if (gamepad2.right_stick_y < 0d && handTime.milliseconds() > SERVO_CYCLE) {
+                handTime.reset();
+                handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE) {
+                handTime.reset();
+                handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
+            }
+
+            if (gamepad2.left_trigger > 0d) { //Arm going up
+                armPower = Range.clip(gamepad2.left_trigger, 0d, 1d);
+            } else if (gamepad2.right_trigger > 0d) { //Arm going down
+                armPower = -Range.clip(gamepad2.right_trigger, 0d, 1d);
+            } else if (gamepad1.left_trigger > 0d) { //Arm going up
+                armPower = Range.clip(gamepad1.left_trigger, 0d, 1d);
+            } else if (gamepad1.right_trigger > 0d) { //Arm going down
+                armPower = -Range.clip(gamepad1.right_trigger, 0d, 1d);
+            }
+        }
+
+        if (gamepad2.a || gamepad1.a) {
+            if (!aPressed) {
+                aPressed = true;
+                doorFlag = !doorFlag;
+                robot.doorServo.setPosition(doorFlag ? 0.3d : 1d);
+            }
+        } else {
+            aPressed = false;
+        }
+
+        if (gamepad2.y || gamepad1.y) {
+            if (!yPressed) {
+                yPressed = true;
+                handFlag = !handFlag;
+                handPosition = handFlag ? 0.5d : 0.15d;
+            }
+        } else {
+            yPressed = false;
+        }
+
+        robot.setArmPower(armPower);
+        robot.armServo.setPosition(armPosition);
+        robot.handServo.setPosition(handPosition);
     }
 }

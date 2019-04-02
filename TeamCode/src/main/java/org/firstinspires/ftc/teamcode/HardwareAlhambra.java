@@ -82,7 +82,9 @@ class HardwareAlhambra {
     BNO055IMU imu;
     ColorSensor sensorColor = null;
     DistanceSensor sensorDistance = null;
-    DigitalChannel digitalTouch = null;
+    DistanceSensor sensorRange = null;
+    DigitalChannel digitalFront = null;
+    DigitalChannel digitalRear = null;
 
     private AndroidTextToSpeech tts = null;
     private int beepSoundID;
@@ -140,7 +142,9 @@ class HardwareAlhambra {
         handServo = hwMap.servo.get("servo_3");
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
-        digitalTouch = hwMap.get(DigitalChannel.class, "sensor_digital");
+        digitalFront = hwMap.get(DigitalChannel.class, "sensor_digital_7");
+        digitalRear = hwMap.get(DigitalChannel.class, "sensor_digital_1");
+        sensorRange = hwMap.get(DistanceSensor.class, "sensor_range");
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
