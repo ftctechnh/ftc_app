@@ -110,16 +110,48 @@ public class Autonomous_Alhambra extends LinearOpMode {
 
         if (opModeIsActive()) {
             turnAndDrive(50d, 0d);
-            turnAndDrive(50d, 90d);
-            turnAndDrive(30d, 180d);
-            turnAndDrive(30d, 270d);
-            turnAndDrive(50d, 180d);
-            turnAndDrive(50d, 90d);
-            turnAndDrive(30d, 0d);
-            turnAndDrive(50d, 90d);
-            turnAndDrive(50d, 180d);
-            turnAndDrive(50d, 90d);
+            turnAndDrive(35d, 90d);
+            turnAndDrive(25d, 180d);
+            turnAndDrive(15d, 270d);
+            turnAndDrive(25d, 180d);
+            turnAndDrive(35d, 90d);
             turnAndDrive(50d, 0d);
+            turnAndDrive(35d, 90d);
+            turnAndDrive(50d, 180d);
+            turnAndDrive(21d, 90d);
+            turnAndDrive(50d, 0d);
+
+            //scooping stuff
+            //move arm
+            robot.setArmTarget(2.329d);
+            robot.setArmPower(1d);
+            sleep(15L);
+            while(robot.armDrive.isBusy()) {
+                double armPower = robot.setArmTarget(2.329d).PowerToSet;
+                robot.setArmPower(armPower);
+                idle();
+            }
+
+            //move arm servo
+            robot.armServo.setPosition(0.5d);
+
+            //move hand
+            robot.handServo.setPosition(0.5d);
+
+            //move door
+            robot.doorServo.setPosition(0.5d);
+
+            turnAndDrive(-50d, 0d);
+            turnAndDrive(-21d, 90d);
+            turnAndDrive(-50d, 180d);
+            turnAndDrive(-35d, 270d);
+            turnAndDrive(-50d, 180d);
+            turnAndDrive(-35d, 90d);
+            turnAndDrive(-25d, 0d);
+            turnAndDrive(-15d, 90d);
+            turnAndDrive(-25d, 180d);
+            turnAndDrive(-35d, 90d);
+            turnAndDrive(-50d, 0d);
 
             robot.beep();
         }
