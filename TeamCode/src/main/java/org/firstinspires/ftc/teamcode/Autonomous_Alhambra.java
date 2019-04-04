@@ -79,7 +79,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
     private static final double HEADING_THRESHOLD = 1d;      // As tight as we can make it with an integer gyro
     private static final double P_TURN_COEFF = 0.09d;     // Larger is more responsive, but also less stable
     private static final double P_DRIVE_COEFF = 0.16d;     // Larger is more responsive, but also less stable
-    private static final double DISTANCE_THRESHOLD = 15d; // 5cm
+    private static final double DISTANCE_THRESHOLD = 10d; // 10cm
 
     private final double SERVO_CYCLE = 50d;
     private final double SERVO_INCREMENT_MIN = 0.005d;
@@ -120,21 +120,22 @@ public class Autonomous_Alhambra extends LinearOpMode {
         }
 
         if (opModeIsActive()) {
-            turnAndDrive(50d, 0d);
-            turnAndDrive(35d, 90d);
-            turnAndDrive(25d, 180d);
-            turnAndDrive(15d, 270d);
-            turnAndDrive(25d, 180d);
-            turnAndDrive(35d, 90d);
-            turnAndDrive(50d, 0d);
-            turnAndDrive(35d, 90d);
-            turnAndDrive(50d, 180d);
-            turnAndDrive(21d, 90d);
-            turnAndDrive(50d, 0d);
-
+            //move arm up
+            moveArm(0.988d);
+            turnAndDrive(47.5d, 0d);
+            turnAndDrive(33.5d, 90d);
+            turnAndDrive(21d, 180d);
+            turnAndDrive(13.5d, 270d);
+            turnAndDrive(21d, 180d);
+            turnAndDrive(33d, 90d);
+            turnAndDrive(47.5d, 0d);
+            turnAndDrive(31d, 90d);
+            turnAndDrive(45d, 180d);
+            turnAndDrive(20d, 90d);
+            turnAndDrive(0d, 0d);
             //scooping stuff
             //move hand
-            robot.handServo.setPosition(0.1284d);
+            robot.handServo.setPosition(0.13d);
             //move arm servo
             robot.armServo.setPosition(0.7578d);
             //open door
@@ -143,6 +144,9 @@ public class Autonomous_Alhambra extends LinearOpMode {
 
             //move arm down
             moveArm(2.329d);
+            turnAndDrive(26d, 0d);
+
+
 
             //close door
             robot.doorServo.setPosition(0.3d);
@@ -157,17 +161,17 @@ public class Autonomous_Alhambra extends LinearOpMode {
             //move arm up
             moveArm(0.988d);
 
-            turnAndDrive(-50d, 0d);
+            turnAndDrive(-24d, 0d);
             turnAndDrive(-21d, 90d);
-            turnAndDrive(-50d, 180d);
-            turnAndDrive(-35d, 270d);
-            turnAndDrive(-50d, 180d);
-            turnAndDrive(-35d, 90d);
-            turnAndDrive(-25d, 0d);
-            turnAndDrive(-15d, 90d);
-            turnAndDrive(-25d, 180d);
-            turnAndDrive(-35d, 90d);
-            turnAndDrive(-50d, 0d);
+            turnAndDrive(-45d, 180d);
+            turnAndDrive(-33d, 90d);
+            turnAndDrive(-47.5d, 0d);
+            turnAndDrive(-34d, 90d);
+            turnAndDrive(-21d, 180d);
+            turnAndDrive(-13.5d, 270d);
+            turnAndDrive(-21d, 180d);
+            turnAndDrive(-33d, 90d);
+            turnAndDrive(-47.5d, 0d);
 
             robot.beep();
         }
@@ -194,10 +198,13 @@ public class Autonomous_Alhambra extends LinearOpMode {
     }
 
     private void turnAndDrive(double distance, double angle) {
+        robot.speak("turn " + angle);
         gyroTurn(DRIVE_SPEED, angle);
-        boolean succussful = gyroDrive(DRIVE_SPEED, distance, angle);
-        if (!succussful) {
-            double distanceToMove = distance > 0 ? -2d : 2d;
+        robot.speak("drive " + distance);
+
+        boolean successful = gyroDrive(DRIVE_SPEED, distance, angle);
+        if (!successful) {
+            double distanceToMove = distance > 0 ? -1d : 1d;
             encoderDrive(DRIVE_SPEED, distanceToMove, distanceToMove, 1d);
         }
     }
