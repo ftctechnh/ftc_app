@@ -42,6 +42,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefau
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import com.vuforia.CameraDevice;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.AxesOrder.YZX;
 import static org.firstinspires.ftc.robotcore.external.navigation.AxesReference.EXTRINSIC;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.BACK;
 import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection.FRONT;
+
 
 
 /**
@@ -161,6 +163,7 @@ public class Camera{
     public Camera(HardwareMap hardwareMap, Telemetry telemetry, boolean showVuforia, boolean showTfod){
         this.telemetry = telemetry;
         startCamera(hardwareMap, showVuforia, showTfod);
+
         if (tfod != null) {
             tfod.activate();
         }
@@ -171,6 +174,7 @@ public class Camera{
      * @param hardwareMap
      */
     public void startCamera(HardwareMap hardwareMap, boolean showVuforia, boolean showTfod) {
+
         /*
          * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
          * We can pass Vuforia the handle to a camera preview resource (on the RC phone);

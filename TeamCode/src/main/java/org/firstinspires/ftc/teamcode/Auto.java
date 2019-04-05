@@ -12,7 +12,7 @@ public class Auto {
     Telemetry telemetry;
     private ElapsedTime timer = null;
     private int iSP = -1; //initialSlopePositivity
-    private double slide2Y = 28;
+    private int goldPosition = -1;
 
     Auto(HardwareMap hardwareMap, Telemetry telemetry)
     {
@@ -21,6 +21,7 @@ public class Auto {
         this.telemetry = telemetry;
         camera = new Camera(hardwareMap, telemetry, false, true);
         telemetry.addLine("Camera Loaded");
+        telemetry.addData("Gold Pos: ", camera.getGoldPosition());
         telemetry.addLine("Wait for start");
         telemetry.update();
         timer = new ElapsedTime();
@@ -43,9 +44,9 @@ public class Auto {
 
     Mode drop()
     {
-        int g = camera.getGoldPosition();
-        if(g != -1)
-            goldPosition = g;
+//        int g = camera.getGoldPosition();
+//        if(g != -1)
+//            goldPosition = g;
 
         if(timer == null) //TODO: Don't fix what's not broken
         {
@@ -53,7 +54,7 @@ public class Auto {
             while (!robot.sensors.touchTopIsPressed())
                 robot.lift.setPower(-1);
         }
-        if (getTime() < 4.5) //for the first second
+        if (getTime() <= 1) //for the first second
         {
             telemetry.addData("time", getTime());
 
@@ -71,43 +72,29 @@ public class Auto {
             robot.driveEngine.trueX = -4;
             robot.driveEngine.trueY = 0;
 
-            return Mode.Slide1;
+            return Mode.LookForMinerals;
         }
         return Mode.Drop;
+    }
+
+    Mode lookForMinerals()
+    {
+        telemetry.addLine("Looking for minerals");
+        goldPosition = camera.getGoldPosition();
+        if(goldPosition != -1) {
+            return Mode.Slide1;
+        }
+        return Mode.LookForMinerals;
     }
 
     Mode slide1()
     {
         if (robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
-                new double[]{4.5   , 0}))
+                new double[]{0   , 0}))
         {
-            return Mode.LookForMinerals;
+            return Mode.PushGold;
         }
         return Mode.Slide1;
-    }
-
-    private int goldPosition = -1;
-    Mode lookForMinerals()
-    {
-        telemetry.addLine("Looking for minerals");
-
-        if(goldPosition != -1)
-            return Mode.PushGold;
-
-        switch(camera.getGoldPosition())
-        {
-            case 0:
-                goldPosition = 0;
-                return Mode.PushGold;
-            case 1:
-                goldPosition = 1;
-                return Mode.PushGold;
-            case 2:
-                goldPosition = 2;
-                return Mode.PushGold;
-            default:
-                return Mode.LookForMinerals;
-        }
     }
 
     Mode pushGold()
@@ -116,24 +103,22 @@ public class Auto {
         switch (goldPosition) {
             case 0:
                 if (robot.driveEngine.moveOnPath(
-                        new double[]{-17, 37})) {
-                    slide2Y = -9;
+                        new double[]{-17, 36},
+                        new double[]{0, -16})) {
                     return Mode.Slide2;
                 }
                 break;
             case 1:
                 if (robot.driveEngine.moveOnPath(
-                        new double[]{0, 37},
-                        new double[]{0, -9})) {
-                    slide2Y = 0;
+                        new double[]{0, 36},
+                        new double[]{0, -16})) {
                     return Mode.Slide2;
                 }
                 break;
             case 2:
                 if (robot.driveEngine.moveOnPath(
-                        new double[]{17,37},
-                        new double[]{0, -9})) {
-                    slide2Y = 0;
+                        new double[]{17, 36},
+                        new double[]{0, -16})) {
                     return Mode.Slide2;
                 }
                 break;
@@ -146,14 +131,12 @@ public class Auto {
     Mode slide2()
     {
         telemetry.addData("time", getTime());
-        if (robot.driveEngine.moveOnPath("slide2 Y",
-                new double[]{0, slide2Y}))
-            if(robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
-                    new double[]{-33, 28},
-                    new double[]{Math.PI / 4}))
-            {
-                return Mode.TurnByCamera;
-            }
+        if(robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
+                new double[]{-38, 25},
+                new double[]{Math.PI / 4}))
+        {
+            return Mode.TurnByCamera;
+        }
         return Mode.Slide2;
     }
 
@@ -183,7 +166,8 @@ public class Auto {
 
     Mode moveToDepot()
     {
-        if(robot.driveEngine.moveOnPath(new double[]{-iSP * 48,0},
+        if(robot.driveEngine.moveOnPath(new double[]{0, 2},
+                                        new double[]{-iSP * 48,0},
                                         new double[]{iSP * Math.PI/2})) {
             timer.reset();
             return Mode.DropMarker;

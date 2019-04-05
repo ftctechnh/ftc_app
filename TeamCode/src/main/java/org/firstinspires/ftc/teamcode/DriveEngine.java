@@ -232,9 +232,11 @@ abstract class DriveEngine {
     private boolean justResetTarget = false;
     ArrayList<Boolean> checkpoints = new ArrayList<>();
     private ArrayList<String> keyList = new ArrayList<>();
+
     boolean moveOnPath(double[] ... args){
         return moveOnPath(Positioning.Relative, false, args);
     }
+
     boolean moveOnPath(String key, double[] ... args){
         if(keyList.contains(key))
             return true;
@@ -337,9 +339,9 @@ abstract class DriveEngine {
 
                 //smooth the driving when revving to a high speed, then reset the average to 0.
                 if(Math.hypot(drive[0],drive[1]) > .3)
-                    drive = smoothDrive(drive[0], drive[1], 1);
+                    drive = smoothDrive(drive[0], drive[1], .25);
                 if(Math.hypot(drive[0],drive[1]) < .1)
-                    smoothDrive(0,0, 1);
+                    smoothDrive(0,0, .25);
 
                 double driveX = drive[0];
                 double driveY = drive[1];

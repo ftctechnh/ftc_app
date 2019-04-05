@@ -9,7 +9,6 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
     Auto auto;
     Auto.Mode action;
 
-
     @Override
     public void runOpMode()
     {
@@ -24,32 +23,41 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
                 case Drop:
                     action = auto.drop();
                     break;
-                case Slide1:
-                    action = auto.slide1();
-                    break;
+
+                    //Can't reliably see all minerals after slide...
                 case LookForMinerals:
                     if(auto.camera.canUseTFOD) {
                         action = auto.lookForMinerals();
                         break;
                     }
+
+                case Slide1:
+                    action = auto.slide1();
+                    break;
+
                 case PushGold:
                     action = auto.pushGold();
                     break;
+
                 case Slide2:
                     action = auto.slide2();
                     break;
+
                 case TurnByCamera:
                     action = auto.turnByCamera();
                     break;
+
                 case MoveToDepot:
                     action = auto.moveToDepot();
                     break;
-                case DropMarker:
-                    action = auto.dropMarker();
-                    break;
-                case MoveToCrater:
-                    action = auto.moveToCrater();
-                    break;
+//
+//                case DropMarker:
+//                    action = auto.dropMarker();
+//                    break;
+
+//                case MoveToCrater:
+//                    action = auto.moveToCrater();
+//                    break;
                 default:
                     action = auto.stop();
             }
