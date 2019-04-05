@@ -79,7 +79,7 @@ public class Gamepad_Alhambra extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        new Thread() {
+        Thread firstTread = new Thread() {
             public void run() {
                 while (opModeIsActive()) {// Show the elapsed game time and wheel power.
                     double elapsed = runtime.milliseconds() - lastRuntime;
@@ -100,7 +100,9 @@ public class Gamepad_Alhambra extends LinearOpMode {
                     telemetry.update();
                 }
             }
-        }.start();
+        };
+
+        firstTread.start();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -146,21 +148,12 @@ public class Gamepad_Alhambra extends LinearOpMode {
         double handPosition = robot.handServo.getPosition();
 
         if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
-            if (armSequence == 0) {
-                HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(1.5d);
-                armPower = armInfo.PowerToSet;
-                if (armInfo.Done) {
-                    armPosition = 0.25d;
-                    armSequence = 1;
-                }
-            }
-            if (armSequence == 1) {
-                armPower = robot.setArmTarget(1d).PowerToSet;
-            }
+            armPower = robot.setArmTarget(1d).PowerToSet;
+            armPosition = Range.scale(robot.armAngle.getVoltage(), 2.3d, 1d, 0.75d, 0.25d);
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
             armPower = robot.setArmTarget(2.329d).PowerToSet;
             armPosition = 0.7578d;
-            handPosition = 0.1284d;
+            handPosition = 0.1d;
         } else {
             robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             wasBeep = false;
@@ -207,7 +200,7 @@ public class Gamepad_Alhambra extends LinearOpMode {
             if (!yPressed) {
                 yPressed = true;
                 handFlag = !handFlag;
-                handPosition = handFlag ? 0.5d : 0.15d;
+                handPosition = handFlag ? 0.5d : 0.12d;
             }
         } else {
             yPressed = false;

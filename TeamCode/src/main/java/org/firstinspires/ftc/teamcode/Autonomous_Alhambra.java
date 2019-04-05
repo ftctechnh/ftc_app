@@ -31,12 +31,15 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+
+import java.util.concurrent.TimeUnit;
 
 import static com.qualcomm.robotcore.hardware.DistanceSensor.distanceOutOfRange;
 
@@ -67,9 +70,9 @@ import static com.qualcomm.robotcore.hardware.DistanceSensor.distanceOutOfRange;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Autonomous(name = "Alhambra", group = "Pushbot")
+//@TeleOp(name = "Alhambra (Side A)", group = "Linear Opmode")
 //@Disabled
-public class Autonomous_Alhambra extends LinearOpMode {
+public abstract class Autonomous_Alhambra extends LinearOpMode {
     static final double DRIVE_SPEED = 1d;
     private static final double COUNTS_PER_MOTOR_REV = 288d;    // eg: TETRIX Motor Encoder
     private static final double DRIVE_GEAR_REDUCTION = 26d / 15d;     // This is < 1.0 if geared UP, eg. 26d/10d
@@ -85,15 +88,20 @@ public class Autonomous_Alhambra extends LinearOpMode {
     private final double SERVO_INCREMENT_MIN = 0.005d;
     private final double SERVO_INCREMENT_MAX = 0.01d;
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private HardwareAlhambra robot = new HardwareAlhambra();
+    protected ElapsedTime runtime = new ElapsedTime();
+    protected HardwareAlhambra robot = new HardwareAlhambra();
     private ElapsedTime armTime = new ElapsedTime();
     private ElapsedTime handTime = new ElapsedTime();
     private ElapsedTime driveTime = new ElapsedTime();
-    private double lastRuntime = 0d;
+    protected double lastRuntime = 0d;
     private boolean wasBeep = false, doorFlag = false, handFlag = false;
     private boolean aPressed = false, yPressed = false;
     private int armSequence = 0;
+
+    protected boolean TimeOK() {
+        double elapsed = runtime.time(TimeUnit.SECONDS);
+        return (elapsed <= 120d);
+    }
 
     @Override
     public void runOpMode() {
@@ -120,16 +128,18 @@ public class Autonomous_Alhambra extends LinearOpMode {
         }
 
         if (opModeIsActive()) {
+            runtime.reset();
+
             //move arm up
             moveArm(0.988d);
-            turnAndDrive(47.5d, 0d);
-            turnAndDrive(33.5d, 90d);
-            turnAndDrive(21d, 180d);
-            turnAndDrive(13.5d, 270d);
-            turnAndDrive(21d, 180d);
-            turnAndDrive(33d, 90d);
-            turnAndDrive(47.5d, 0d);
-            turnAndDrive(31d, 90d);
+            turnAndDrive(50d, 0d);
+            turnAndDrive(50d, 90d);
+            turnAndDrive(25d, 180d);
+            turnAndDrive(15d, 270d);
+            turnAndDrive(25d, 180d);
+            turnAndDrive(35d, 90d);
+            turnAndDrive(50d, 0d);
+            turnAndDrive(35d, 90d);
             turnAndDrive(45d, 180d);
             turnAndDrive(20d, 90d);
             turnAndDrive(0d, 0d);
@@ -146,8 +156,6 @@ public class Autonomous_Alhambra extends LinearOpMode {
             moveArm(2.329d);
             turnAndDrive(26d, 0d);
 
-
-
             //close door
             robot.doorServo.setPosition(0.3d);
             sleep(1000L);
@@ -161,17 +169,17 @@ public class Autonomous_Alhambra extends LinearOpMode {
             //move arm up
             moveArm(0.988d);
 
-            turnAndDrive(-24d, 0d);
-            turnAndDrive(-21d, 90d);
-            turnAndDrive(-45d, 180d);
-            turnAndDrive(-33d, 90d);
-            turnAndDrive(-47.5d, 0d);
-            turnAndDrive(-34d, 90d);
-            turnAndDrive(-21d, 180d);
-            turnAndDrive(-13.5d, 270d);
-            turnAndDrive(-21d, 180d);
-            turnAndDrive(-33d, 90d);
-            turnAndDrive(-47.5d, 0d);
+            turnAndDrive(-25d, 0d);
+            turnAndDrive(-25d, 90d);
+            turnAndDrive(-50d, 180d);
+            turnAndDrive(-37.5d, 90d);
+            turnAndDrive(-50d, 0d);
+            turnAndDrive(-35d, 90d);
+            turnAndDrive(-25d, 180d);
+            turnAndDrive(-15d, 270d);
+            turnAndDrive(-25d, 180d);
+            turnAndDrive(-40d, 90d);
+            turnAndDrive(-50d, 0d);
 
             robot.beep();
         }
@@ -183,13 +191,15 @@ public class Autonomous_Alhambra extends LinearOpMode {
         }
     }
 
-    private void moveArm(double targetPosition) {
-        runtime.reset();
+    protected void moveArm(double targetPosition) {
+        ElapsedTime armTimeout = new ElapsedTime();
+        armTimeout.reset();
         HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(targetPosition);
         robot.setArmPower(armInfo.PowerToSet);
         while (robot.armDrive.isBusy() &&
+                TimeOK() &&
                 (armInfo.Done == false) &&
-                (runtime.seconds() < 5d)) {
+                (armTimeout.time(TimeUnit.SECONDS) < 5d)) {
             armInfo = robot.setArmTarget(targetPosition);
             robot.armDrive.setPower(armInfo.PowerToSet);
             idle();
@@ -197,10 +207,10 @@ public class Autonomous_Alhambra extends LinearOpMode {
         robot.armDrive.setPower(0d);
     }
 
-    private void turnAndDrive(double distance, double angle) {
-        robot.speak("turn " + angle);
+    protected void turnAndDrive(double distance, double angle) {
+        //robot.speak("turn " + angle);
         gyroTurn(DRIVE_SPEED, angle);
-        robot.speak("drive " + distance);
+        //robot.speak("drive " + distance);
 
         boolean successful = gyroDrive(DRIVE_SPEED, distance, angle);
         if (!successful) {
@@ -214,7 +224,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
                                       double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
-        ElapsedTime runtime = new ElapsedTime();
+        ElapsedTime runtimeEncoder = new ElapsedTime();
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
@@ -230,7 +240,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
             robot.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             // reset the timeout time and start motion.
-            runtime.reset();
+            runtimeEncoder.reset();
             robot.leftDrive.setPower(Math.abs(speed));
             robot.rightDrive.setPower(Math.abs(speed));
 
@@ -241,7 +251,8 @@ public class Autonomous_Alhambra extends LinearOpMode {
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
             while (opModeIsActive() &&
-                    (runtime.seconds() < timeoutS) &&
+                    TimeOK() &&
+                    (runtimeEncoder.seconds() < timeoutS) &&
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
                 idle();
             }
@@ -338,6 +349,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
+                    TimeOK() &&
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
                 result = distance > 0d ? checkingFrontClearance() : checkingRearClearance();
@@ -367,12 +379,12 @@ public class Autonomous_Alhambra extends LinearOpMode {
                 robot.rightDrive.setPower(rightSpeed);
 
                 // Display drive status for the driver.
-                telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
+                /*telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
                 telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
                 telemetry.addData("Actual", "%7d:%7d", robot.leftDrive.getCurrentPosition(),
                         robot.rightDrive.getCurrentPosition());
                 telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
-                telemetry.update();
+                telemetry.update();*/
             }
 
             // Stop all motion;
@@ -390,7 +402,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
     private void gyroTurn(double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+        while (TimeOK() && opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
@@ -422,9 +434,9 @@ public class Autonomous_Alhambra extends LinearOpMode {
         robot.rightDrive.setPower(rightSpeed);
 
         // Display it for the driver.
-        telemetry.addData("Target", "%5.2f", angle);
+        /*telemetry.addData("Target", "%5.2f", angle);
         telemetry.addData("Err/St", "%5.2f/%5.2f", error, steer);
-        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);
+        telemetry.addData("Speed.", "%5.2f:%5.2f", leftSpeed, rightSpeed);*/
 
         return onTarget;
     }
@@ -444,7 +456,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
         return Range.clip(error * PCoeff, -1, 1);
     }
 
-    private void DriveControl() {
+    protected void DriveControl() {
         double drive = 0d;
         double turn = 0d;
         if (gamepad1.dpad_down || gamepad2.dpad_down) {
@@ -474,7 +486,7 @@ public class Autonomous_Alhambra extends LinearOpMode {
         robot.rightDrive.setPower(rightPower);
     }
 
-    private void ArmControl() {
+    protected void ArmControl() {
         double armPower = 0d;
         double armPosition = robot.armServo.getPosition();
         double handPosition = robot.handServo.getPosition();
