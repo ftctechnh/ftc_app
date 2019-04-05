@@ -98,7 +98,7 @@ public class Autonomous_Alhambra_SideA extends Autonomous_Alhambra {
             runtime.reset();
 
             //move arm up
-            moveArm(0.988d);
+            moveArm(0.988d, true);
             turnAndDrive(50d, 0d);
             turnAndDrive(50d, 90d);
             turnAndDrive(25d, 180d);
@@ -109,32 +109,30 @@ public class Autonomous_Alhambra_SideA extends Autonomous_Alhambra {
             turnAndDrive(35d, 90d);
             turnAndDrive(45d, 180d);
             turnAndDrive(20d, 90d);
-            turnAndDrive(0d, 0d);
+
             //scooping stuff
-            //move hand
-            robot.handServo.setPosition(0.13d);
             //move arm servo
             robot.armServo.setPosition(0.7578d);
+            //move hand
+            robot.handServo.setPosition(0.13d);
+            //move arm down
+            moveArm(2.329d);
+
+            turnAndDrive(0d, 0d);
+            sleep(150L);
+
             //open door
             robot.doorServo.setPosition(1d);
             sleep(100L);
 
-            //move arm down
-            moveArm(2.329d);
-            turnAndDrive(26d, 0d);
+            turnAndDrive(26d, 0d, false);
 
             //close door
             robot.doorServo.setPosition(0.3d);
-            sleep(1000L);
+            sleep(500L);
 
-            //move arm middle
-            moveArm(1.5d);
-
-            //move arm servo
-            robot.armServo.setPosition(0.25d);
-
-            //move arm up
-            moveArm(0.988d);
+            //move arm up and servo together
+            moveArm(0.988d, true);
 
             turnAndDrive(-25d, 0d);
             turnAndDrive(-25d, 90d);
@@ -150,6 +148,8 @@ public class Autonomous_Alhambra_SideA extends Autonomous_Alhambra {
 
             robot.beep();
         }
+
+        resetMotors(DcMotor.ZeroPowerBehavior.FLOAT);
 
         while (opModeIsActive()) {
             DriveControl();

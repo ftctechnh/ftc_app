@@ -35,6 +35,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -51,21 +53,7 @@ import com.qualcomm.robotcore.util.Range;
 
 @TeleOp(name = "Gamepad", group = "Linear Opmode")
 //@Disabled
-public class Gamepad_Alhambra extends LinearOpMode {
-
-    private final double SERVO_CYCLE = 50d;
-    private final double SERVO_INCREMENT_MIN = 0.005d;
-    private final double SERVO_INCREMENT_MAX = 0.01d;
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private HardwareAlhambra robot = new HardwareAlhambra();
-    private ElapsedTime armTime = new ElapsedTime();
-    private ElapsedTime handTime = new ElapsedTime();
-    private ElapsedTime driveTime = new ElapsedTime();
-    private double lastRuntime = 0d;
-    private boolean wasBeep = false, doorFlag = false, handFlag = false;
-    private boolean aPressed = false, yPressed = false;
-    private int armSequence = 0;
+public class Gamepad_Alhambra extends Autonomous_Alhambra {
 
     @Override
     public void runOpMode() {
@@ -79,7 +67,7 @@ public class Gamepad_Alhambra extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        Thread firstTread = new Thread() {
+        new Thread() {
             public void run() {
                 while (opModeIsActive()) {// Show the elapsed game time and wheel power.
                     double elapsed = runtime.milliseconds() - lastRuntime;
@@ -100,9 +88,7 @@ public class Gamepad_Alhambra extends LinearOpMode {
                     telemetry.update();
                 }
             }
-        };
-
-        firstTread.start();
+        }.start();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -110,104 +96,5 @@ public class Gamepad_Alhambra extends LinearOpMode {
 
             DriveControl();
         }
-    }
-
-    private void DriveControl() {
-        double drive = 0d;
-        double turn = 0d;
-        if (gamepad1.dpad_down || gamepad2.dpad_down) {
-            drive = -0.5d - (driveTime.milliseconds() / 800d);
-        } else if (gamepad1.dpad_up || gamepad2.dpad_up) {
-            drive = 0.5d + (driveTime.milliseconds() / 800d);
-        }
-
-        if (gamepad1.dpad_right || gamepad2.dpad_right) {
-            turn = -0.5d - (driveTime.milliseconds() / 1200d);
-        } else if (gamepad1.dpad_left || gamepad2.dpad_left) {
-            turn = 0.5d + (driveTime.milliseconds() / 1200d);
-        }
-
-        if (!gamepad1.dpad_down && !gamepad2.dpad_down &&
-                !gamepad1.dpad_up && !gamepad2.dpad_up &&
-                !gamepad1.dpad_right && !gamepad2.dpad_right &&
-                !gamepad1.dpad_left && !gamepad2.dpad_left) {
-            driveTime.reset();
-        }
-
-        double leftPower = Range.clip(drive - turn, -1d, 1d);
-        double rightPower = Range.clip(drive + turn, -1d, 1d);
-
-        // Send calculated power to wheels
-        robot.leftDrive.setPower(leftPower);
-        robot.rightDrive.setPower(rightPower);
-    }
-
-    private void ArmControl() {
-        double armPower = 0d;
-        double armPosition = robot.armServo.getPosition();
-        double handPosition = robot.handServo.getPosition();
-
-        if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
-            armPower = robot.setArmTarget(1d).PowerToSet;
-            armPosition = Range.scale(robot.armAngle.getVoltage(), 2.3d, 1d, 0.75d, 0.25d);
-        } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
-            armPower = robot.setArmTarget(2.329d).PowerToSet;
-            armPosition = 0.7578d;
-            handPosition = 0.1d;
-        } else {
-            robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            wasBeep = false;
-            armSequence = 0;
-
-            if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
-                armTime.reset();
-                armPosition += Range.scale(gamepad2.left_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-            } else if (gamepad2.left_stick_y > 0d && armTime.milliseconds() > SERVO_CYCLE) {
-                armTime.reset();
-                armPosition -= Range.scale(gamepad2.left_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-            }
-
-            if (gamepad2.right_stick_y < 0d && handTime.milliseconds() > SERVO_CYCLE) {
-                handTime.reset();
-                handPosition += Range.scale(gamepad2.right_stick_y, 0d, -1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-            } else if (gamepad2.right_stick_y > 0d && handTime.milliseconds() > SERVO_CYCLE) {
-                handTime.reset();
-                handPosition -= Range.scale(gamepad2.right_stick_y, 0d, 1d, SERVO_INCREMENT_MIN, SERVO_INCREMENT_MAX);
-            }
-
-            if (gamepad2.left_trigger > 0d) { //Arm going up
-                armPower = Range.clip(gamepad2.left_trigger, 0d, 1d);
-            } else if (gamepad2.right_trigger > 0d) { //Arm going down
-                armPower = -Range.clip(gamepad2.right_trigger, 0d, 1d);
-            } else if (gamepad1.left_trigger > 0d) { //Arm going up
-                armPower = Range.clip(gamepad1.left_trigger, 0d, 1d);
-            } else if (gamepad1.right_trigger > 0d) { //Arm going down
-                armPower = -Range.clip(gamepad1.right_trigger, 0d, 1d);
-            }
-        }
-
-        if (gamepad2.a || gamepad1.a) {
-            if (!aPressed) {
-                aPressed = true;
-                doorFlag = !doorFlag;
-                robot.doorServo.setPosition(doorFlag ? 0.3d : 1d);
-            }
-        } else {
-            aPressed = false;
-        }
-
-        if (gamepad2.y || gamepad1.y) {
-            if (!yPressed) {
-                yPressed = true;
-                handFlag = !handFlag;
-                handPosition = handFlag ? 0.5d : 0.12d;
-            }
-        } else {
-            yPressed = false;
-        }
-
-        robot.setArmPower(armPower);
-        robot.armServo.setPosition(armPosition);
-        robot.handServo.setPosition(handPosition);
     }
 }

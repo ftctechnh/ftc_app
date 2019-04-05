@@ -141,7 +141,7 @@ class HardwareAlhambra {
         doorServo = hwMap.servo.get("servo_5");
         handServo = hwMap.servo.get("servo_3");
         sensorColor = hwMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_color_distance");
+        sensorDistance = hwMap.get(DistanceSensor.class, "sensor_distance");
         digitalFront = hwMap.get(DigitalChannel.class, "sensor_digital_7");
         digitalRear = hwMap.get(DigitalChannel.class, "sensor_digital_1");
         sensorRange = hwMap.get(DistanceSensor.class, "sensor_range");

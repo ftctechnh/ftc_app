@@ -94,125 +94,53 @@ public abstract class Autonomous_Alhambra extends LinearOpMode {
     private ElapsedTime handTime = new ElapsedTime();
     private ElapsedTime driveTime = new ElapsedTime();
     protected double lastRuntime = 0d;
-    private boolean wasBeep = false, doorFlag = false, handFlag = false;
+    private boolean doorFlag = false, handFlag = false;
     private boolean aPressed = false, yPressed = false;
     private int armSequence = 0;
 
     protected boolean TimeOK() {
-        double elapsed = runtime.time(TimeUnit.SECONDS);
+        double elapsed = runtime.seconds();
         return (elapsed <= 120d);
     }
 
-    @Override
-    public void runOpMode() {
-        /*
-         * Initialize the drive system variables.
-         * The init() method of the hardware class does all the work here
-         */
-        robot.init(hardwareMap);
-
-        resetMotors();
-
-        while (!robot.imu.isGyroCalibrated()) {
-            idle();
-        }
-
-        Telemetry.Item headingItem = telemetry.addData("Heading: ", "%.4f", robot.getHeading());
-
-        robot.beep();
-
-        // Wait for the game to start (driver presses PLAY)
-        while (!isStarted()) {
-            headingItem.setValue("%.4f", robot.getHeading());
-            telemetry.update();
-        }
-
-        if (opModeIsActive()) {
-            runtime.reset();
-
-            //move arm up
-            moveArm(0.988d);
-            turnAndDrive(50d, 0d);
-            turnAndDrive(50d, 90d);
-            turnAndDrive(25d, 180d);
-            turnAndDrive(15d, 270d);
-            turnAndDrive(25d, 180d);
-            turnAndDrive(35d, 90d);
-            turnAndDrive(50d, 0d);
-            turnAndDrive(35d, 90d);
-            turnAndDrive(45d, 180d);
-            turnAndDrive(20d, 90d);
-            turnAndDrive(0d, 0d);
-            //scooping stuff
-            //move hand
-            robot.handServo.setPosition(0.13d);
-            //move arm servo
-            robot.armServo.setPosition(0.7578d);
-            //open door
-            robot.doorServo.setPosition(1d);
-            sleep(100L);
-
-            //move arm down
-            moveArm(2.329d);
-            turnAndDrive(26d, 0d);
-
-            //close door
-            robot.doorServo.setPosition(0.3d);
-            sleep(1000L);
-
-            //move arm middle
-            moveArm(1.5d);
-
-            //move arm servo
-            robot.armServo.setPosition(0.25d);
-
-            //move arm up
-            moveArm(0.988d);
-
-            turnAndDrive(-25d, 0d);
-            turnAndDrive(-25d, 90d);
-            turnAndDrive(-50d, 180d);
-            turnAndDrive(-37.5d, 90d);
-            turnAndDrive(-50d, 0d);
-            turnAndDrive(-35d, 90d);
-            turnAndDrive(-25d, 180d);
-            turnAndDrive(-15d, 270d);
-            turnAndDrive(-25d, 180d);
-            turnAndDrive(-40d, 90d);
-            turnAndDrive(-50d, 0d);
-
-            robot.beep();
-        }
-
-        while (opModeIsActive()) {
-            DriveControl();
-
-            ArmControl();
-        }
+    protected void moveArm(double targetPosition) {
+        moveArm(targetPosition, false);
     }
 
-    protected void moveArm(double targetPosition) {
-        ElapsedTime armTimeout = new ElapsedTime();
-        armTimeout.reset();
-        HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(targetPosition);
-        robot.setArmPower(armInfo.PowerToSet);
-        while (robot.armDrive.isBusy() &&
-                TimeOK() &&
-                (armInfo.Done == false) &&
-                (armTimeout.time(TimeUnit.SECONDS) < 5d)) {
-            armInfo = robot.setArmTarget(targetPosition);
-            robot.armDrive.setPower(armInfo.PowerToSet);
-            idle();
-        }
-        robot.armDrive.setPower(0d);
+    protected void moveArm(final double targetPosition, final boolean moveArmServo) {
+        new Thread() {
+            public void run() {
+                ElapsedTime armTimeout = new ElapsedTime();
+                armTimeout.reset();
+                HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(targetPosition);
+                robot.setArmPower(armInfo.PowerToSet);
+                while (robot.armDrive.isBusy() &&
+                        TimeOK() &&
+                        (armTimeout.milliseconds() < 5000d))
+                {
+                    armInfo = robot.setArmTarget(targetPosition);
+                    robot.armDrive.setPower(armInfo.PowerToSet);
+                    if (moveArmServo) {
+                        double armServoPosition = Range.scale(robot.armAngle.getVoltage(), 2.3d, 1d, 0.75d, 0.25d);
+                        robot.armServo.setPosition(armServoPosition);
+                    }
+                    idle();
+                }
+                robot.armDrive.setPower(0d);
+            }
+        }.start();
     }
 
     protected void turnAndDrive(double distance, double angle) {
+        turnAndDrive(distance, angle, true);
+    }
+
+    protected void turnAndDrive(double distance, double angle, boolean checkClearance) {
         //robot.speak("turn " + angle);
         gyroTurn(DRIVE_SPEED, angle);
         //robot.speak("drive " + distance);
 
-        boolean successful = gyroDrive(DRIVE_SPEED, distance, angle);
+        boolean successful = gyroDrive(DRIVE_SPEED, distance, angle, checkClearance);
         if (!successful) {
             double distanceToMove = distance > 0 ? -1d : 1d;
             encoderDrive(DRIVE_SPEED, distanceToMove, distanceToMove, 1d);
@@ -269,15 +197,19 @@ public abstract class Autonomous_Alhambra extends LinearOpMode {
         }
     }
 
-    final void resetMotors() {
+    final void resetMotors(DcMotor.ZeroPowerBehavior powerBehavior) {
         robot.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        robot.rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        robot.leftDrive.setZeroPowerBehavior(powerBehavior);
+        robot.rightDrive.setZeroPowerBehavior(powerBehavior);
+    }
+
+    final void resetMotors() {
+        resetMotors(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     private boolean checkingFrontClearance() {
@@ -315,7 +247,8 @@ public abstract class Autonomous_Alhambra extends LinearOpMode {
      */
     final boolean gyroDrive(double speed,
                             double distance,
-                            double angle) {
+                            double angle,
+                            boolean checkClearance) {
 
         int newLeftTarget;
         int newRightTarget;
@@ -352,9 +285,11 @@ public abstract class Autonomous_Alhambra extends LinearOpMode {
                     TimeOK() &&
                     (robot.leftDrive.isBusy() && robot.rightDrive.isBusy())) {
 
-                result = distance > 0d ? checkingFrontClearance() : checkingRearClearance();
-                if (!result) {
-                    break;
+                if (checkClearance) {
+                    result = distance > 0d ? checkingFrontClearance() : checkingRearClearance();
+                    if (!result) {
+                        break;
+                    }
                 }
 
                 // adjust relative speed based on heading error.
@@ -492,25 +427,14 @@ public abstract class Autonomous_Alhambra extends LinearOpMode {
         double handPosition = robot.handServo.getPosition();
 
         if (gamepad2.left_bumper || gamepad1.left_bumper) { //set arm to drop mineral
-            if (armSequence == 0) {
-                HardwareAlhambra.ArmInfo armInfo = robot.setArmTarget(1.5d);
-                armPower = armInfo.PowerToSet;
-                if (armInfo.Done) {
-                    armPosition = 0.25d;
-                    armSequence = 1;
-                }
-
-            }
-            if (armSequence == 1) {
-                armPower = robot.setArmTarget(1d).PowerToSet;
-            }
+            armPower = robot.setArmTarget(1d).PowerToSet;
+            armPosition = Range.scale(robot.armAngle.getVoltage(), 2.3d, 1d, 0.75d, 0.25d);
         } else if (gamepad2.right_bumper || gamepad1.right_bumper) { //set arm to pickup mineral
             armPower = robot.setArmTarget(2.329d).PowerToSet;
             armPosition = 0.7578d;
-            handPosition = 0.1284d;
+            handPosition = 0.1d;
         } else {
             robot.armDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            wasBeep = false;
             armSequence = 0;
 
             if (gamepad2.left_stick_y < 0d && armTime.milliseconds() > SERVO_CYCLE) {
