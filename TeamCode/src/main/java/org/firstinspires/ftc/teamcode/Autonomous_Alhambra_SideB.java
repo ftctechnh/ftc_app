@@ -102,15 +102,15 @@ public class Autonomous_Alhambra_SideB extends Autonomous_Alhambra {
             //move arm up
             moveArm(0.988d, true);
             turnAndDrive(50d, 0d);
-            turnAndDrive(50d, 90d);
+            turnAndDrive(50d, 270d);
             turnAndDrive(25d, 180d);
-            turnAndDrive(15d, 270d);
+            turnAndDrive(15d, 90d);
             turnAndDrive(25d, 180d);
-            turnAndDrive(35d, 90d);
+            turnAndDrive(35d, 270d);
             turnAndDrive(50d, 0d);
-            turnAndDrive(35d, 90d);
+            turnAndDrive(35d, 270d);
             turnAndDrive(45d, 180d);
-            turnAndDrive(20d, 90d);
+            turnAndDrive(20d, 270d);
 
             //scooping stuff
             //move arm servo
@@ -127,7 +127,7 @@ public class Autonomous_Alhambra_SideB extends Autonomous_Alhambra {
             robot.doorServo.setPosition(1d);
             sleep(100L);
 
-            turnAndDrive(26d, 0d, false);
+            turnAndDrive(35d, 0d, false);
 
             //close door
             robot.doorServo.setPosition(0.3d);
@@ -137,15 +137,15 @@ public class Autonomous_Alhambra_SideB extends Autonomous_Alhambra {
             moveArm(0.988d, true);
 
             turnAndDrive(-25d, 0d);
-            turnAndDrive(-25d, 90d);
+            turnAndDrive(-25d, 270d);
             turnAndDrive(-50d, 180d);
-            turnAndDrive(-37.5d, 90d);
+            turnAndDrive(-37.5d, 2700d);
             turnAndDrive(-50d, 0d);
-            turnAndDrive(-35d, 90d);
+            turnAndDrive(-35d, 270d);
             turnAndDrive(-25d, 180d);
-            turnAndDrive(-15d, 270d);
+            turnAndDrive(-15d, 90d);
             turnAndDrive(-25d, 180d);
-            turnAndDrive(-40d, 90d);
+            turnAndDrive(-40d, 270d);
             turnAndDrive(-50d, 0d);
 
             robot.beep();

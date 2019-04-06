@@ -125,7 +125,7 @@ public class Autonomous_Alhambra_SideA extends Autonomous_Alhambra {
             robot.doorServo.setPosition(1d);
             sleep(100L);
 
-            turnAndDrive(26d, 0d, false);
+            turnAndDrive(35d, 0d, false);
 
             //close door
             robot.doorServo.setPosition(0.3d);
