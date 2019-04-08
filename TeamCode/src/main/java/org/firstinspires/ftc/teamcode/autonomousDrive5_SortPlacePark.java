@@ -14,8 +14,11 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
     {
         auto = new Auto(hardwareMap, telemetry);
         action = Auto.Mode.Drop;
+//        auto.robot.setBrake(Bogg.Direction.On);
+//        auto.robot.dropMarker(Bogg.Direction.Up);
         waitForStart();
 
+        auto.timer.reset();
         while (opModeIsActive())
         {
             switch(action)
@@ -50,18 +53,19 @@ public class autonomousDrive5_SortPlacePark extends LinearOpMode
                 case MoveToDepot:
                     action = auto.moveToDepot();
                     break;
-//
-//                case DropMarker:
-//                    action = auto.dropMarker();
-//                    break;
 
+                case DropMarker:
+                    action = auto.dropMarker();
+                    break;
+//
 //                case MoveToCrater:
 //                    action = auto.moveToCrater();
 //                    break;
                 default:
                     action = auto.stop();
             }
-
+            telemetry.addData("TouchTop: ", auto.robot.sensors.touchTopIsPressed());
+            telemetry.addData("TouchBottom: ", auto.robot.sensors.touchBottomIsPressed());
             // Display the current values
             telemetry.addData("mode:", action);
             auto.update();

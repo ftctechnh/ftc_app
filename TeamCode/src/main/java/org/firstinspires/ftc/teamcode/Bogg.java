@@ -181,15 +181,12 @@ public class Bogg
         if(name == Name.Bogg)
         switch (d) {
             case On:
-                brake.setPosition(.45);
+                brake.setPosition(.73);
                 break;
             case Off:
-                brake.setPosition(.62);
+                brake.setPosition(.60);
         }
     }
-
-
-
 
     void dropMarker(Direction direction)
     {
@@ -201,7 +198,7 @@ public class Bogg
                 break;
             case Up:
             default:
-                drop.setPosition(.1);
+                drop.setPosition(0);
                 break;
         }
     }

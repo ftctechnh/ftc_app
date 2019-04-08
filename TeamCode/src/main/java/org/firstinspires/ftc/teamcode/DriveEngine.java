@@ -348,7 +348,8 @@ abstract class DriveEngine {
 
                 if(r <= .75 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
                     if(continuous && c == checkpoints.size() - 1) {
-                        drive(driveX, driveY, spin);
+                        drive(100, false, driveX, driveY, spin);
+//                        drive(driveX, driveY, spin);
                         drdtArray = new ArrayList<>();
                         dThdtArray = new ArrayList<>();
                     }
@@ -367,7 +368,8 @@ abstract class DriveEngine {
                     }
                 }
                 else
-                    drive(driveX, driveY, spin);
+                    drive(100, false, driveX, driveY, spin);
+//                    drive(driveX, driveY, spin);
                 justResetTarget = false;
                 break;
         }

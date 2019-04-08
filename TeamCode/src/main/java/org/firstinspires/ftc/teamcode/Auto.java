@@ -10,7 +10,7 @@ public class Auto {
     Bogg robot;
     Camera camera;
     Telemetry telemetry;
-    private ElapsedTime timer = null;
+    ElapsedTime timer = null;
     private int iSP = -1; //initialSlopePositivity
     private int goldPosition = -1;
 
@@ -23,6 +23,8 @@ public class Auto {
         telemetry.addLine("Camera Loaded");
         telemetry.addData("Gold Pos: ", camera.getGoldPosition());
         telemetry.addLine("Wait for start");
+        telemetry.addData("TouchTop: ", robot.sensors.touchTopIsPressed());
+        telemetry.addData("TouchBottom: ", robot.sensors.touchBottomIsPressed());
         telemetry.update();
         timer = new ElapsedTime();
     }
@@ -42,36 +44,39 @@ public class Auto {
     }
 
 
+    //Robot starts in the air with touchBottom and touchTop both false
+    //Pull robot up until touchBottom is true
+    //Then move break
+    //Then lower robot until touchTop is true
+//    boolean breakIsSet = true;
+    boolean breakIsSet = false;
+    boolean movingBreak = false;
     Mode drop()
     {
-//        int g = camera.getGoldPosition();
-//        if(g != -1)
-//            goldPosition = g;
-
-        if(timer == null) //TODO: Don't fix what's not broken
+        if(breakIsSet && !robot.sensors.touchTopIsPressed() && !robot.sensors.touchBottomIsPressed())
         {
-            timer = new ElapsedTime();
-            while (!robot.sensors.touchTopIsPressed())
-                robot.lift.setPower(-1);
+            robot.lift(-1);
         }
-        if (getTime() <= 1) //for the first second
+        else if(breakIsSet && !robot.sensors.touchTopIsPressed())
         {
-            telemetry.addData("time", getTime());
-
-            if (!robot.sensors.touchTopIsPressed()) //helps with testing
-                robot.lift(-1); //pull while we
-            robot.setBrake(Bogg.Direction.Off); //disengage the brake
-        } else if (!robot.sensors.touchTopIsPressed()) //if the robot is still off the ground
+            if(!movingBreak)
+            {
+                movingBreak = true;
+                timer.reset();
+                robot.setBrake(Bogg.Direction.Off);
+            }
+            else if(timer.seconds() > 1)
+                breakIsSet = false;
+        }
+        else if(!breakIsSet && !robot.sensors.touchTopIsPressed())
         {
-            telemetry.addData("touchTop", robot.sensors.touchTopIsPressed());
             robot.lift(.2); //push up, which drops the robot
         }
-        else {
+        else if(robot.sensors.touchTopIsPressed()){
             timer.reset();
-            robot.lift(0);
+            robot.lift(0); //Turns motor off
             robot.driveEngine.trueX = -4;
             robot.driveEngine.trueY = 0;
-
             return Mode.LookForMinerals;
         }
         return Mode.Drop;
@@ -90,7 +95,7 @@ public class Auto {
     Mode slide1()
     {
         if (robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,false,
-                new double[]{0   , 0}))
+                new double[]{0, 0}))
         {
             return Mode.PushGold;
         }
@@ -167,8 +172,8 @@ public class Auto {
     Mode moveToDepot()
     {
         if(robot.driveEngine.moveOnPath(new double[]{0, 2},
-                                        new double[]{-iSP * 48,0},
-                                        new double[]{iSP * Math.PI/2})) {
+                                        new double[]{-iSP * 48,0})) {
+//                                        new double[]{iSP * Math.PI/2})) {
             timer.reset();
             return Mode.DropMarker;
         }
@@ -180,8 +185,10 @@ public class Auto {
     {
         robot.dropMarker(Bogg.Direction.Down);
 
-        if(getTime() > .5)  //time to drop marker
+        if(getTime() > .5) {  //time to drop marker
+            robot.driveEngine.moveOnPath(new double[]{iSP * Math.PI/2});
             return Mode.MoveToCrater;
+        }
 
         return Mode.DropMarker;
     }
