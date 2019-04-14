@@ -144,8 +144,6 @@ public class holoDrive extends OpMode {
             liftLockServo.setPosition(0);
         }
 
-<<<<<<< HEAD
-=======
         if (gamepad2.x == true) {
             telemetry.addData("gamepad2 x true", "%f", 0.1 );
             dustBinServo.setPosition(0.1);
@@ -156,7 +154,6 @@ public class holoDrive extends OpMode {
         }
 
 
->>>>>>> b1930edb66d07b34f2369dfd037898dd26798b14
 //---------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //this lets us see the power the motors are being set to
         telemetry.addData("xPower", "%.2f",  xPower);
