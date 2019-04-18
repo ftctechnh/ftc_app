@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+@Disabled
 @Autonomous(name="4: Competition", group = "Competition")
 public class autonomousDrive4_DropPlacePark extends LinearOpMode
 {

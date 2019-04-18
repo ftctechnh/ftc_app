@@ -3,38 +3,71 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="1: Drop", group = "Testing")
+@Autonomous(name="Start on Lander Competition", group = "Competition")
 public class autonomousDrive1_Drop extends LinearOpMode
 {
     private Auto auto;
     private Auto.Mode action;
 
 
-    @Override
     public void runOpMode()
     {
         auto = new Auto(hardwareMap, telemetry);
-
-        waitForStart();
         action = Auto.Mode.Drop;
+        auto.robot.setBrake(Bogg.Direction.On);
+        auto.robot.dropMarker(Bogg.Direction.Up);
+        waitForStart();
 
+        auto.timer.reset();
         while (opModeIsActive())
         {
             switch(action)
             {
                 case Drop:
-                    action = auto.drop();
+                    action = auto.actuallyDrop();
                     break;
-                case Slide1:
-                    auto.robot.driveEngine.moveOnPath(DriveEngine.Positioning.Absolute,
-                            true, new double[]{0,0});
-                    break;
-                default:
-                    auto.stop();
-            }
 
+                //Can't reliably see all minerals after slide...
+                case LookForMinerals:
+                    if(auto.camera.canUseTFOD) {
+                        action = auto.lookForMinerals();
+                        break;
+                    }
+
+                case Slide1:
+                    action = auto.slide1();
+                    break;
+
+                case PushGold:
+                    action = auto.pushGold();
+                    break;
+
+                case Slide2:
+                    action = auto.slide2();
+                    break;
+
+                case TurnByCamera:
+                    action = auto.turnByCamera();
+                    break;
+
+                case MoveToDepot:
+                    action = auto.moveToDepot();
+                    break;
+
+                case DropMarker:
+                    action = auto.dropMarker();
+                    break;
+//
+//                case MoveToCrater:
+//                    action = auto.moveToCrater();
+//                    break;
+                default:
+                    action = auto.stop();
+            }
+            telemetry.addData("TouchTop: ", auto.robot.sensors.touchTopIsPressed());
+            telemetry.addData("TouchBottom: ", auto.robot.sensors.touchBottomIsPressed());
             // Display the current values
-            telemetry.addData("mode", action);         //put this before the things that break
+            telemetry.addData("mode:", action);
             auto.update();
             idle();
         }

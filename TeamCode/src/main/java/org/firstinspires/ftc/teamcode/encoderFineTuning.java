@@ -38,7 +38,7 @@ public class encoderFineTuning extends LinearOpMode
                 deltaS = 0;
             }
 
-            DriveEngine.effectiveWheelDiameter += gamepad1.right_stick_y / 3 * Bogg.averageClockTime;
+            //DriveEngine.effectiveWheelDiameter += gamepad1.right_stick_y / 3 * Bogg.averageClockTime;
             telemetry.addData("wheelDiameter", DriveEngine.effectiveWheelDiameter);
 
 

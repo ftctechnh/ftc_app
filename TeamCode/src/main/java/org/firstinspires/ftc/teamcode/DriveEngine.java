@@ -237,10 +237,10 @@ abstract class DriveEngine {
         return moveOnPath(Positioning.Relative, false, args);
     }
 
-    boolean moveOnPath(String key, double[] ... args){
+    boolean moveOnPath(String key, Positioning positioning, double[] ... args){
         if(keyList.contains(key))
             return true;
-        if(moveOnPath(Positioning.Relative, false, args)){
+        if(moveOnPath(positioning, false, args)){
             keyList.add(key);
             return true;
         }
@@ -346,7 +346,7 @@ abstract class DriveEngine {
                 double driveX = drive[0];
                 double driveY = drive[1];
 
-                if(r <= .75 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
+                if(r <= 1.25 || Math.hypot(driveX, driveY) == 0) { //happens when theta changes rapidly
                     if(continuous && c == checkpoints.size() - 1) {
                         drive(100, false, driveX, driveY, spin);
 //                        drive(driveX, driveY, spin);
@@ -454,7 +454,7 @@ abstract class DriveEngine {
 
     double sP = .16; // .16 per radian
     double sI = 8; //Time to correct past error
-    double sD = .5; //fully account for this much time in the future at current error decreasing rate
+    double sD = .7; //fully account for this much time in the future at current error decreasing rate
 
     private double face(double angle)
     {

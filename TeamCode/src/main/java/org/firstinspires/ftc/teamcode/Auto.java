@@ -46,9 +46,9 @@ public class Auto {
 
     //Robot starts in the air with touchBottom and touchTop both false
     //Pull robot up until touchBottom is true
-    //Then move break
+    //Then move brake
     //Then lower robot until touchTop is true
-//    boolean breakIsSet = true;
+    boolean breakIsActuallySet = true;
     boolean breakIsSet = false;
     boolean movingBreak = false;
     Mode drop()
@@ -69,6 +69,35 @@ public class Auto {
                 breakIsSet = false;
         }
         else if(!breakIsSet && !robot.sensors.touchTopIsPressed())
+        {
+            robot.lift(.2); //push up, which drops the robot
+        }
+        else if(robot.sensors.touchTopIsPressed()){
+            timer.reset();
+            robot.lift(0); //Turns motor off
+            robot.driveEngine.trueX = -4;
+            robot.driveEngine.trueY = 0;
+            return Mode.LookForMinerals;
+        }
+        return Mode.Drop;
+    }
+
+    Mode actuallyDrop()
+    {
+        if(!movingBreak)
+        {
+            timer.reset();
+            movingBreak = true;
+        }
+        if(timer.seconds() < 2)
+        {
+            robot.lift(-1);
+        }
+        else if(timer.seconds() < 3)
+        {
+            robot.setBrake(Bogg.Direction.Off);
+        }
+        else if(!robot.sensors.touchTopIsPressed())
         {
             robot.lift(.2); //push up, which drops the robot
         }
@@ -172,7 +201,7 @@ public class Auto {
     Mode moveToDepot()
     {
         if(robot.driveEngine.moveOnPath(new double[]{0, 2},
-                                        new double[]{-iSP * 48,0})) {
+                                        new double[]{-iSP * 45,0})) {
 //                                        new double[]{iSP * Math.PI/2})) {
             timer.reset();
             return Mode.DropMarker;
