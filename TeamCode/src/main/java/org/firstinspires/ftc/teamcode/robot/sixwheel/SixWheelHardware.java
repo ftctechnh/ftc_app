@@ -125,6 +125,7 @@ public class SixWheelHardware {
         log.add("Total time " + lT.millis() + " ms; Calibrate time " + cT.millis() + " ms");
     }
 
+    public void initBulkReadTelemetry() {
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
         for (int i = 0; i < 4; i++) {
