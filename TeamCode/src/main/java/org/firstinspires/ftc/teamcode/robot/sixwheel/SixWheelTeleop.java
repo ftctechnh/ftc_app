@@ -13,11 +13,12 @@ public class SixWheelTeleop extends LinearOpMode {
         robot = new SixWheelHardware(this);
         waitForStart();
 
+        telemetry.clearAll();
         robot.initBulkReadTelemetry();
 
         while (opModeIsActive()) {
             RevBulkData data = robot.performBulkRead();
-            
+
             double left = clamp(gamepad1.left_stick_y + gamepad1.right_stick_x);
             double right = clamp(gamepad1.left_stick_y - gamepad1.right_stick_x);
             robot.driveLeft.setPower(left);

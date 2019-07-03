@@ -32,6 +32,9 @@ public class SixWheelHardware {
     private Telemetry.Item[] telEncoders;
     private Telemetry.Item[] telAnalog;
     private Telemetry.Item telDigital;
+    private Telemetry.Item telLoopTime;
+    private Telemetry.Item telHertz;
+    private long lastTelemetryUpdate;
 
     public LynxModule chassisLynxHub;
     public ExpansionHubEx chassisHub;
@@ -123,6 +126,8 @@ public class SixWheelHardware {
 
         // Load information
         log.add("Total time " + lT.millis() + " ms; Calibrate time " + cT.millis() + " ms");
+        telemetry.update();
+        lastTelemetryUpdate = System.nanoTime();
     }
 
     public void initBulkReadTelemetry() {
@@ -135,27 +140,41 @@ public class SixWheelHardware {
         Telemetry.Line analogLine = telemetry.addLine();
         telAnalog = new Telemetry.Item[4];
         for (int i = 0; i < 4; i++) {
-            telAnalog[i] = encoderLine.addData("A" + i, -1);
+            telAnalog[i] = analogLine.addData("A" + i, -1);
         }
 
         telDigital = telemetry.addLine().addData("DIGITALS", "0 0 0 0 0 0 0 0");
+
+        Telemetry.Line timingLine = telemetry.addLine("LOOP ");
+        telHertz = timingLine.addData("Hertz", -1);
+        telLoopTime = timingLine.addData("Millis", -1);
+
     }
 
     public RevBulkData performBulkRead() {
         RevBulkData data = chassisHub.getBulkInputData();
 
+        // Adjust encoders and analog inputs
         for (int i = 0; i < 4; i++) {
             telEncoders[i].setValue(data.getMotorCurrentPosition(i));
             telAnalog[i].setValue(data.getAnalogInputValue(i));
         }
 
+        // Adjust digital inputs
         String digitals = "";
         for (int i = 0; i < 8; i++) {
             digitals += (data.getDigitalInputState(i) ? 1 : 0) + " ";
         }
         telDigital.setValue(digitals);
 
+        // Adjust elapsed time
+        int elapsed = (int) ((System.nanoTime() - lastTelemetryUpdate) / 1000000);
+        telLoopTime.setValue(elapsed);
+        telHertz.setValue(1000 / elapsed);
+
+        // Finalize telemetry update
         telemetry.update();
+        lastTelemetryUpdate = System.nanoTime();
         return data;
     }
 }
