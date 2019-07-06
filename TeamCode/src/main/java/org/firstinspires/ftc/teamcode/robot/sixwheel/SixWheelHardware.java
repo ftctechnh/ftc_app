@@ -12,18 +12,18 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Device;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
-import java.util.*;
 
 public class SixWheelHardware {
 
@@ -55,17 +55,17 @@ public class SixWheelHardware {
         LoadTimer loadTime = new LoadTimer();
         RevExtensions2.init();
 
-        driveLeft = opMode.hardwareMap.get(DcMotorEx.class, "frontLeft");
-        driveRight = opMode.hardwareMap.get(DcMotorEx.class, "frontRight");
-        PTOLeft = opMode.hardwareMap.get(DcMotorEx.class, "backLeft");
-        PTORight = opMode.hardwareMap.get(DcMotorEx.class, "backRight");
+        driveLeft = opMode.hardwareMap.get(DcMotorEx.class, "driveLeft");
+        driveRight = opMode.hardwareMap.get(DcMotorEx.class, "driveRight");
+        PTOLeft = opMode.hardwareMap.get(DcMotorEx.class, "PTOLeft");
+        PTORight = opMode.hardwareMap.get(DcMotorEx.class, "PTORight");
 
-        chassisLynxHub = opMode.hardwareMap.get(LynxModule.class, "frontHub");
-        chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "frontHub");
+        chassisLynxHub = opMode.hardwareMap.get(LynxModule.class, "chassisHub");
+        chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
 
         // Reverse right hand motors
-        driveRight.setDirection(DcMotor.Direction.REVERSE);
-        PTORight.setDirection(DcMotor.Direction.REVERSE);
+        driveLeft.setDirection(DcMotor.Direction.REVERSE);
+        PTOLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Set up fast access linked lists
         chassisMotors = Arrays.asList(driveLeft, driveRight, PTOLeft, PTORight);
@@ -73,6 +73,7 @@ public class SixWheelHardware {
         PTOMotors = Arrays.asList(PTOLeft, PTORight);
         leftChassisMotors = Arrays.asList(driveLeft, PTOLeft);
         rightChassisMotors = Arrays.asList(driveRight, PTORight);
+
 
         // Perform calibration
         LoadTimer calTime = new LoadTimer();
@@ -99,9 +100,9 @@ public class SixWheelHardware {
         log.add("-- 8802 RC by Gavin Uberti --");
 
         // Build information
-        Date buildDate = new Date(Build.TIME);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd at HH:mm:ss");
-        String javaVersion = System.getProperty("java.version");
+        Date buildDate = new Date(BuildConfig.TIMESTAMP);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm:ss");
+        String javaVersion = System.getProperty("java.runtime.version");
         log.add("Built " + dateFormat.format(buildDate) + " with Java " + javaVersion);
 
         // Device information
@@ -120,7 +121,7 @@ public class SixWheelHardware {
         List<AnalogInput> analog = hardwareMap.getAll(AnalogInput.class);
         List<I2cDevice> i2c = hardwareMap.getAll(I2cDevice.class);
         log.add(revHubs.size() + " Hubs; " + motors.size() + " Motors; " + servos.size() +
-                " Servos; " + digital.size() + analog.size() + i2c.size() + " Sensors");
+                " Servos; " + (digital.size() + analog.size() + i2c.size()) + " Sensors");
 
         lT.stop();
 
@@ -168,9 +169,9 @@ public class SixWheelHardware {
         telDigital.setValue(digitals);
 
         // Adjust elapsed time
-        int elapsed = (int) ((System.nanoTime() - lastTelemetryUpdate) / 1000000);
-        telLoopTime.setValue(elapsed);
-        telHertz.setValue(1000 / elapsed);
+        double elapsed = ((System.nanoTime() - lastTelemetryUpdate) / 1000000.0);
+        telLoopTime.setValue("%.1f", elapsed);
+        telHertz.setValue("%.1f", 1000 / elapsed);
 
         // Finalize telemetry update
         telemetry.update();
