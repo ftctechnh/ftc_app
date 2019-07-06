@@ -6,15 +6,15 @@ apply plugin: 'com.android.library'
 android {
 
     defaultConfig {
-        // Min SDK version is for Nexus 5
-        minSdkVersion 23
+        // Min SDK version is for Nexus 5 is 23
         // Moto E4 (only 5 GHz FTC phone) runs Android 7.1 Nougat
         // Which corresponds to targetSDK version 25
         //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 25
+        minSdkVersion 23
+        targetSdkVersion 26
     }
 
-    compileSdkVersion 25
+    compileSdkVersion 28
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

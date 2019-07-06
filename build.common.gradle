@@ -21,7 +21,7 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 25
+    compileSdkVersion 28
 
     signingConfigs {
         debug {
@@ -38,9 +38,9 @@ android {
 
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
+
         minSdkVersion 23
-        //noinspection ExpiredTargetSdkVersion
-        targetSdkVersion 25
+        targetSdkVersion 26
 
         // Add build timestamp we can read programmatically
         buildConfigField "long", "TIMESTAMP", System.currentTimeMillis() + "L"
