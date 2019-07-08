@@ -98,9 +98,9 @@ public class Auto_Facing_Depot extends LinearOpMode {
         robot.dropper.setPower(0.5);
         sleep(5000);
         robot.dropper.setPower(0);
-        encoderDrive(DRIVE_SPEED, -27, 27, 5.0);
+        encoderDrive(DRIVE_SPEED, -23, 23, 5.0);
         encoderDrive(DRIVE_SPEED, -40, -40, 5.0);
-        encoderDrive(DRIVE_SPEED, 18,-18,5.0 );
+        encoderDrive(DRIVE_SPEED, 22,-22,5.0 );
         encoderDrive(DRIVE_SPEED, -41,-41,5.0 );
         robot.marker.setPosition(-0.5);
         sleep(1000);

@@ -118,9 +118,9 @@ public class Auto_Facing_Crater extends LinearOpMode {
         robot.dropper.setPower(0.5);
         sleep(5000);
         robot.dropper.setPower(0);
-        encoderDrive(DRIVE_SPEED, -10, 10, 5.0);
-        encoderDrive(DRIVE_SPEED, -40, -40, 5.0);
-        encoderDrive(DRIVE_SPEED, 19,-19,5.0 );
+        encoderDrive(DRIVE_SPEED, -6, 6, 5.0);
+        encoderDrive(DRIVE_SPEED, -37, -37, 5.0);
+        encoderDrive(DRIVE_SPEED, 24,-24,5.0 );
         encoderDrive(DRIVE_SPEED, -60,-60,5.0 );
         robot.marker.setPosition(-0.5);
         sleep(1000);
