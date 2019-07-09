@@ -55,7 +55,7 @@ import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
  */
 
 @TeleOp(name="Pushbot: Teleop Tank", group="Pushbot")
-//@Disabled
+@Disabled
 public class PushbotTeleopTankTest extends OpMode{
 
     /* Declare OpMode members. */

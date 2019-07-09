@@ -37,8 +37,8 @@ import com.qualcomm.robotcore.util.Range;
 //import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
 import org.firstinspires.ftc.teamcode.HardwareMapOne;
 
-@TeleOp(name="BasicTeleop", group="Pushbot")
-public class TeleopOne extends OpMode{
+@TeleOp(name="ExampleTeleOp", group="Pushbot")
+public class ExampleTeleOp extends OpMode{
 
 
     HardwareMapOne robot       = new HardwareMapOne();

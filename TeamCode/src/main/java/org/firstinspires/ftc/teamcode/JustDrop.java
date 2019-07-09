@@ -33,12 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.HardwarePushbotdemo;
-import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
-import org.firstinspires.ftc.teamcode.ConceptTensorFlowObjectDetection;
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file illustrates the concept of driving a path based on time.
@@ -62,7 +57,7 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
  */
 
 @Autonomous(name="Pushbot:Only dropping", group="Pushbot")
-//@Disabled
+@Disabled
 public class JustDrop extends LinearOpMode {
 
     /* Declare OpMode members. */

@@ -29,54 +29,51 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.Range;
-
-//import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
-import org.firstinspires.ftc.teamcode.HardwareMapOne;
-
-@TeleOp(name="BasicTeleop", group="Pushbot")
-public class TeleopOne extends OpMode{
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-    HardwareMapOne robot       = new HardwareMapOne();
-    double speed=0;
+@Autonomous(name="Pushbot: ExampleAuto", group="Pushbot")
+//@Disabled
+public class ExampleAuto extends LinearOpMode {
 
+    ExampleHardwareMap         robot   = new ExampleHardwareMap();   // Use a Pushbot's hardware
+    private ElapsedTime     runtime = new ElapsedTime();
+
+
+    static final double     FORWARD_SPEED = 0.6;
+    static final double     TURN_SPEED    = 0.5;
 
     @Override
-    public void init() {
+    public void runOpMode() {
 
+        /*
+         * Initialize the drive system variables.
+         * The init() method of the hardware class does all the work here
+         */
         robot.init(hardwareMap);
-    }
-    @Override
-    public void init_loop(){
-    }
+
+        // Send telemetry message to signify robot waiting;
+        telemetry.addData("Status", "Ready to run");    //
+        telemetry.update();
+
+        // Wait for the game to start (driver presses PLAY)
+        waitForStart();
+
+        // Step through each leg of the path, ensuring that the Auto mode has not been stopped along the way
+
+        // Step 1:  Drive forward for 3 seconds
+        robot.Andy.setPower(FORWARD_SPEED);
+        runtime.reset();
+
+        // Step 2:  Spin right for 1.3 seconds
+        robot.Andy.setPower(TURN_SPEED);
+        runtime.reset();
 
 
-    @Override
-    public void start() {
+        // Step 3:  Drive Backwards for 1 Second
+        robot.Andy.setPower(-FORWARD_SPEED);
+        runtime.reset();
 
-    }
-    @Override
-    public void loop() {
-
-
-        double analog;
-
-
-        analog = gamepad1.right_stick_y;
-        robot.Andy.setPower(analog);
-
-
-        if (gamepad1.a) {
-            robot.Seral.setPosition(1);
-        } else if (gamepad1.b) {
-            robot.Seral.setPosition(-1);
-        }
-    }
-    @Override
-    public void stop() {
-    }
-}
+    }}

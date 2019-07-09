@@ -30,7 +30,7 @@
 package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import java.util.List;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -38,22 +38,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Came
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.teamcode.HardwarePushbotdemo;
-import org.firstinspires.ftc.teamcode.DriveBaseHardwareMap;
-
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
-
-
-
 
 
 @Autonomous(name="Pushbot: Auto Facing Depot with TensorFlow", group="Pushbot")
-//@Disabled
+@Disabled
 public class Auto_Depot_TensorFlow extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";

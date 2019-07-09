@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class HardwareMapOne {
+public class ExampleHardwareMap {
     //Say what exists
     public DcMotor  Andy   = null;
     public Servo    Seral  = null;
@@ -15,7 +15,7 @@ public class HardwareMapOne {
     //Random Garbage
     HardwareMap hwMap =  null;
     private ElapsedTime period  = new ElapsedTime();
-    public HardwareMapOne(){}
+    public ExampleHardwareMap(){}
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
