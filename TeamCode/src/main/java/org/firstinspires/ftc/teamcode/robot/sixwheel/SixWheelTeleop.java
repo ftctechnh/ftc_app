@@ -5,6 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.openftc.revextensions2.RevBulkData;
 
+import static org.firstinspires.ftc.teamcode.common.MathUtil.clamp;
+import static org.firstinspires.ftc.teamcode.common.MathUtil.deadZone;
+
 @TeleOp
 public class SixWheelTeleop extends LinearOpMode {
 
@@ -27,18 +30,6 @@ public class SixWheelTeleop extends LinearOpMode {
             robot.driveRight.setPower(right);
             robot.PTOLeft.setPower(left);
             robot.PTORight.setPower(right);
-        }
-    }
-
-    private double clamp(double d) {
-        return Math.min(Math.max(d, -1), 1);
-    }
-
-    private double deadZone(double d, double thresh) {
-        if (Math.abs(d) < thresh) {
-            return 0;
-        } else {
-            return d;
         }
     }
 }
