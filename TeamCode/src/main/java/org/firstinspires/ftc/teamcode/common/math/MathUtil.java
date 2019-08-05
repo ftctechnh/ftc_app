@@ -1,7 +1,4 @@
-package org.firstinspires.ftc.teamcode.common;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+package org.firstinspires.ftc.teamcode.common.math;
 
 public class MathUtil {
     private static final double EPSILON = 1e-6;

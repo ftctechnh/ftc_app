@@ -1,12 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.util.Range;
-
-import org.apache.commons.math3.geometry.euclidean.twod.Segment;
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
-import org.firstinspires.ftc.teamcode.common.Line;
-import org.firstinspires.ftc.teamcode.common.MathUtil;
-import org.firstinspires.ftc.teamcode.common.Point;
+import org.firstinspires.ftc.teamcode.common.math.Line;
+import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 
@@ -33,6 +28,6 @@ public class PurePursuitController {
         Point center = minDistPerpBisector.intersect(perpHeading);
         double radius = Line.distance(robot.localizer.pos(), center);
 
-
+        return null;
     }
 }

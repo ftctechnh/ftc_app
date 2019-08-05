@@ -1,18 +1,12 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 import org.apache.commons.math3.linear.RealMatrix;
-import org.firstinspires.ftc.teamcode.common.MathUtil;
-import org.firstinspires.ftc.teamcode.common.Point;
-import org.firstinspires.ftc.teamcode.common.Pose;
-import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
+import org.firstinspires.ftc.teamcode.common.math.MathUtil;
+import org.firstinspires.ftc.teamcode.common.math.Point;
+import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.openftc.revextensions2.RevBulkData;
 
 
@@ -20,9 +14,6 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.DecompositionSolver;
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
-
-import java.util.Arrays;
-import java.util.List;
 
 /*
  * Sample tracking wheel localizer implementation assuming the standard configuration:

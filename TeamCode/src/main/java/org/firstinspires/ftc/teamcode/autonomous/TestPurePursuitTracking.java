@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 
-import static org.firstinspires.ftc.teamcode.common.MathUtil.clamp;
-import static org.firstinspires.ftc.teamcode.common.MathUtil.deadZone;
+import static org.firstinspires.ftc.teamcode.common.math.MathUtil.clamp;
+import static org.firstinspires.ftc.teamcode.common.math.MathUtil.deadZone;
 
 @TeleOp
 public class TestPurePursuitTracking extends LinearOpMode {

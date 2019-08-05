@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.common;
-
-import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
+package org.firstinspires.ftc.teamcode.common.math;
 
 public class Line {
     double slope;

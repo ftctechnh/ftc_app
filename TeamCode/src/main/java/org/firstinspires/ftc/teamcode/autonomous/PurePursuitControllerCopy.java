@@ -1,15 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.teamcode.common.MathUtil;
+import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
-import org.openftc.revextensions2.RevBulkData;
-
-import static org.firstinspires.ftc.teamcode.common.MathUtil.clamp;
-import static org.firstinspires.ftc.teamcode.common.MathUtil.deadZone;
 
 public class PurePursuitControllerCopy {
 
