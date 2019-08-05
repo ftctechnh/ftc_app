@@ -5,7 +5,6 @@ import android.os.Build;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxModule;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -14,7 +13,6 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Hardware;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -201,11 +199,11 @@ public class SixWheelHardware {
         }
 
         // Adjust digital inputs
-        String digitals = "";
+        StringBuilder digitals = new StringBuilder();
         for (int i = 0; i < 8; i++) {
-            digitals += (data.getDigitalInputState(i) ? 1 : 0) + " ";
+            digitals.append(data.getDigitalInputState(i) ? 1 : 0).append(" ");
         }
-        telDigital.setValue(digitals);
+        telDigital.setValue(digitals.toString());
 
         // Adjust elapsed time
         double elapsed = ((System.nanoTime() - lastTelemetryUpdate) / 1000000.0);

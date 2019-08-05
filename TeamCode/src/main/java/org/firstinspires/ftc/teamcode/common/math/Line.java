@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.common.math;
 
-import java.util.Objects;
-
 public class Line {
     double slope;
     double intercept;
