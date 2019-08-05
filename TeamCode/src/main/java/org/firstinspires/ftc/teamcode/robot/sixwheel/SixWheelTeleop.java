@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.openftc.revextensions2.RevBulkData;
 
-import static org.firstinspires.ftc.teamcode.common.MathUtil.clamp;
-import static org.firstinspires.ftc.teamcode.common.MathUtil.deadZone;
+import static org.firstinspires.ftc.teamcode.common.math.MathUtil.clamp;
+import static org.firstinspires.ftc.teamcode.common.math.MathUtil.deadZone;
 
 @TeleOp
 public class SixWheelTeleop extends LinearOpMode {

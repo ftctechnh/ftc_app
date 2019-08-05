@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.sixwheel;
 
-import org.firstinspires.ftc.teamcode.common.MathUtil;
+import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 
 public class SixWheelPowers {
     public double left;
