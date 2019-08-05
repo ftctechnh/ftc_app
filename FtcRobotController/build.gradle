@@ -10,7 +10,7 @@ android {
         // Moto E4 (only 5 GHz FTC phone) runs Android 7.1 Nougat
         // Which corresponds to targetSDK version 25
         //noinspection ExpiredTargetSdkVersion
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 26
     }
 
