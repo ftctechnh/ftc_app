@@ -5,8 +5,9 @@ public class MathUtil {
 
     public static double angleWrap(double angle) {
         double negTauToTau = angle % (Math.PI * 2);
+
         if (Math.abs(negTauToTau) > Math.PI) {
-            negTauToTau += -Math.copySign(negTauToTau, Math.PI * 2);
+            negTauToTau -= Math.copySign(Math.PI * 2, negTauToTau);
         }
         return negTauToTau;
     }
