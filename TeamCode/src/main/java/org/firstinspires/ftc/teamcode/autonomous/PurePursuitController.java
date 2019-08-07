@@ -28,7 +28,6 @@ public class PurePursuitController {
     public static double pointPoseMinAngle(Pose start, Point target) {
         double targetAngle = Math.atan2(target.y - start.y, target.x - start.x);
         return MathUtil.angleWrap(targetAngle - start.heading);
-
     }
 
     // Our goal - determine a ciruclar arc that goes from our current robot position and heading
