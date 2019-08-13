@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.common.math;
 
-public class Point {
+public class Point implements Comparable {
     public double x;
     public double y;
 
@@ -22,5 +22,18 @@ public class Point {
         Point point = (Point) o;
         return MathUtil.approxEquals(point.x, x) &&
                 MathUtil.approxEquals(point.y, y);
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.valueOf(x).hashCode() ^ Double.valueOf(y).hashCode();
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if (this == o) return 0;
+        if (o == null || getClass() != o.getClass()) return -1;
+        Point p = (Point) o;
+        return Integer.compare(this.hashCode(), o.hashCode());
     }
 }

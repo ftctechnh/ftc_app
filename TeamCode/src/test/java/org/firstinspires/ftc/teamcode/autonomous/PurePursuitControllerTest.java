@@ -48,5 +48,7 @@ class PurePursuitControllerTest {
 
     @Test
     void goToPosition() {
+        // First task - a 180 degree turn moving the robot three feet laterally
+
     }
 }

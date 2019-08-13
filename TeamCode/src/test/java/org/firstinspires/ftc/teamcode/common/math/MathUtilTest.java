@@ -2,6 +2,10 @@ package org.firstinspires.ftc.teamcode.common.math;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Set;
+import java.util.TreeSet;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class MathUtilTest {
@@ -48,5 +52,23 @@ class MathUtilTest {
     void approxEquals() {
         assertTrue(MathUtil.approxEquals(0, 1e-8));
         assertFalse(MathUtil.approxEquals(0, 1e-2));
+    }
+
+    @Test
+    void lineSegmentCircleIntersection() {
+        // Simple case with circle at (0, 0) and line segment with slope 1 through origin
+        Point[] expected = {
+                new Point(Math.sqrt(2), Math.sqrt(2)),
+                new Point(-Math.sqrt(2), -Math.sqrt(2))
+        };
+
+        assertEquals(
+                MathUtil.lineSegmentCircleIntersection(
+                        new Point(-5, -5),
+                        new Point(5, 5),
+                        new Point(0, 0),
+                        2),
+                new TreeSet<>(Arrays.asList(expected))
+        );
     }
 }

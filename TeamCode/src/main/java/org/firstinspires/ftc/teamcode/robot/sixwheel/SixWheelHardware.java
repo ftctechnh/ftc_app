@@ -59,6 +59,9 @@ public class SixWheelHardware {
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
 
+    // Inches
+    public static double TRACK_WIDTH = 16.5;
+    public static double WHEEL_DIAMETER = 4;
 
     public SixWheelHardware(OpMode opMode) {
         LoadTimer loadTime = new LoadTimer();

@@ -7,10 +7,12 @@ import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 
+import java.util.ArrayList;
+
 public class PurePursuitController {
 
-    final static double PREFERRED_ANGLE = 0;
-    final static double DECELERATION_RATE = Math.toRadians(30);
+    // Start slowing down when we're 24 inches away
+    public static double START_DECELERATION_THRESH = 24;
 
     // To find the radius, we first need to find the center. To do this, we'll find the
     // intersection of two lines - the perpendicular bisector of the start and endpoint,
@@ -25,25 +27,32 @@ public class PurePursuitController {
         return minDistPerpBisector.intersect(perpHeading);
     }
 
+    // Standard counter-clockwise angle conventions apply
     public static double pointPoseMinAngle(Pose start, Point target) {
         double targetAngle = Math.atan2(target.y - start.y, target.x - start.x);
         return MathUtil.angleWrap(targetAngle - start.heading);
     }
 
-    // Our goal - determine a ciruclar arc that goes from our current robot position and heading
-    // to our target robot position and heading. Once we know the radius of that circle, we can
-    // use the track width to calculate the power difference ratio
-    public static SixWheelPowers goToPosition(SixWheelHardware robot, Point target, double speedFactor) {
-        // To find the radius, we first need to find the center. To do this, we'll find the
-        // intersection of two lines - the perpendicular bisector of the start and endpoint,
-        // and the line perpendicular to robot's current heading passing through robot's current
-        // position
-
+    // Note - this algorithm *only* moves the robot forward. That's fine for now, but is
+    // a pretty big limitation in the long run
+    public static SixWheelPowers goToPosition(SixWheelHardware robot, Point target) {
         Point center = arcCenterFromStartTangentPointAndEndpoint(robot.localizer.pose(), target);
         double radius = Line.distance(robot.localizer.pos(), center);
+        double angle = pointPoseMinAngle(robot.localizer.pose(), target);
 
-        // Determine which direction we need to turn
+        // Compute how much of torque budget to expend from distance to target
+        double distance = radius * angle;
+        double greater_pow = Math.max(distance / START_DECELERATION_THRESH, 1);
 
-        return null;
+        // Now compute turn powers
+        double m_c = 2 * radius / SixWheelHardware.TRACK_WIDTH;
+        double lesser_pow = greater_pow * (m_c - 1) / (m_c + 1);
+
+        if (angle >= 0) { // If we're turning counter-clockwise
+            return new SixWheelPowers(lesser_pow, greater_pow);
+        } else { // For clockwise, bigger power is on the left
+            return new SixWheelPowers(greater_pow, lesser_pow);
+        }
     }
+
 }
