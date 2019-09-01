@@ -21,6 +21,7 @@ import org.firstinspires.ftc.teamcode.autonomous.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.common.AxesSigns;
 import org.firstinspires.ftc.teamcode.common.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
+import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.openftc.revextensions2.ExpansionHubEx;
 import org.openftc.revextensions2.RevBulkData;
 import org.openftc.revextensions2.RevExtensions2;
@@ -37,16 +38,20 @@ public class SixWheelHardware {
     private Telemetry.Item[] telOdometry;
     private Telemetry.Item[] telEncoders;
     private Telemetry.Item[] telAnalog;
+
+    private Telemetry.Item telLeftWheelPower;
+    private Telemetry.Item telRightWheelPower;
+
     private Telemetry.Item telDigital;
     private Telemetry.Item telLoopTime;
     private Telemetry.Item telHertz;
     private long lastTelemetryUpdate;
 
-    public LynxModule chassisLynxHub;
-    public ExpansionHubEx chassisHub;
+    private LynxModule chassisLynxHub;
+    private ExpansionHubEx chassisHub;
     private BNO055IMU imu;
 
-    public StandardTrackingWheelLocalizer localizer;
+    private StandardTrackingWheelLocalizer localizer;
 
     public DcMotorEx driveLeft;
     public DcMotorEx driveRight;
@@ -101,6 +106,12 @@ public class SixWheelHardware {
         this.telemetry = opMode.telemetry;
         initTelemetry();
         logBootTelemetry(opMode.hardwareMap, loadTime, calTime);
+    }
+
+    public SixWheelHardware() {} // Used for debugging
+
+    public Pose pose() {
+        return localizer.pose();
     }
 
     private void initTelemetry() {
@@ -164,6 +175,10 @@ public class SixWheelHardware {
         telOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
         telOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
 
+        Telemetry.Line wheelPowers = telemetry.addLine();
+        wheelPowers.addData("Left", "%.3f", "-1");
+        wheelPowers.addData("Right", "%.3f", "-1");
+
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
         for (int i = 0; i < 4; i++) {
@@ -220,6 +235,9 @@ public class SixWheelHardware {
     }
 
     public void setWheelPowers(SixWheelPowers powers) {
+        telLeftWheelPower.setValue(powers.left);
+        telRightWheelPower.setValue(powers.right);
+
         this.PTOLeft.setPower(powers.left);
         this.driveLeft.setPower(powers.left);
         this.driveRight.setPower(powers.right);

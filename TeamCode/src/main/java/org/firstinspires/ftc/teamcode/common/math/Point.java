@@ -15,6 +15,17 @@ public class Point implements Comparable {
         return new Point(newX, newY);
     }
 
+    public Point add(Point p) {
+        return new Point(this.x + p.x, this.y + p.y);
+    }
+    public Point minus(Point p) {
+        return new Point(this.x - p.x, this.y - p.y);
+    }
+
+    public double atan() {
+        return Math.atan2(y, x);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

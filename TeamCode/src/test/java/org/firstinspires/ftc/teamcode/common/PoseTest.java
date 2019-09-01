@@ -23,6 +23,6 @@ class PoseTest {
         Pose sum2 = p2.add(p1);
 
         assertEquals(sum, sum2);
-        assertEquals(sum, new Pose(10, 6, -5));
+        assertEquals(sum, new Pose(10, 6, -3002));
     }
 }

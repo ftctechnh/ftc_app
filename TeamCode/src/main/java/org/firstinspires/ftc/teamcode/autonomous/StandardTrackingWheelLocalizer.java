@@ -102,7 +102,7 @@ public class StandardTrackingWheelLocalizer {
     }
 
     public double x() { return currentPosition.x; }
-    public double y() { return currentPosition.y; }
+    public double y() { return -currentPosition.y; }
     public double h() { return currentPosition.heading; }
     public Point pos() {
         return new Point(currentPosition.x, currentPosition.y);
