@@ -10,18 +10,21 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketTimeoutException;
 
-class UDPThread {
+class TXHandler {
     private final static String PYTHON_SERVER_HOST = "localhost";
     private final static int PYTHON_SERVER_PORT = 4446;
 
     protected DatagramSocket txsocket;
     protected InetAddress txhost;
+    protected DatagramSocket rxhost;
+
     Gson gson;
     double framerate;
     int index;
 
-    public UDPThread(double framerate) throws IOException {
+    public TXHandler(double framerate) throws IOException {
         txhost = InetAddress.getByName(PYTHON_SERVER_HOST);
         txsocket = new DatagramSocket();
         gson = new Gson();
