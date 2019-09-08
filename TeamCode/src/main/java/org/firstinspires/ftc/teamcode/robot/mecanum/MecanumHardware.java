@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.sixwheel;
+package org.firstinspires.ftc.teamcode.robot.mecanum;
 
 
 import android.os.Build;
@@ -15,11 +15,8 @@ import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.autonomous.StandardTrackingWheelLocalizer;
-import org.firstinspires.ftc.teamcode.common.AxesSigns;
-import org.firstinspires.ftc.teamcode.common.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.openftc.revextensions2.ExpansionHubEx;
@@ -31,7 +28,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class SixWheelHardware {
+public class MecanumHardware {
 
     public Telemetry telemetry;
 
@@ -46,47 +43,43 @@ public class SixWheelHardware {
 
     private LynxModule chassisLynxHub;
     private ExpansionHubEx chassisHub;
-    private BNO055IMU imu;
+    public BNO055IMU imu;
 
     private StandardTrackingWheelLocalizer localizer;
 
-    public DcMotorEx driveLeft;
-    public DcMotorEx driveRight;
-    public DcMotorEx PTOLeft;
-    public DcMotorEx PTORight;
+    public DcMotorEx frontLeft;
+    public DcMotorEx frontRight;
+    public DcMotorEx backLeft;
+    public DcMotorEx backRight;
 
     public List<DcMotorEx> chassisMotors;
-    public List<DcMotorEx> driveMotors;
-    public List<DcMotorEx> PTOMotors;
     public List<DcMotorEx> leftChassisMotors;
     public List<DcMotorEx> rightChassisMotors;
 
     // Inches
-    public static double TRACK_WIDTH = 16.5;
-    public static double WHEEL_DIAMETER = 4;
+    public static final double TRACK_WIDTH = 16.5;
+    public static final double WHEEL_DIAMETER = 4;
 
-    public SixWheelHardware(OpMode opMode) {
+    public MecanumHardware(OpMode opMode) {
         LoadTimer loadTime = new LoadTimer();
         RevExtensions2.init();
 
-        driveLeft = opMode.hardwareMap.get(DcMotorEx.class, "driveLeft");
-        driveRight = opMode.hardwareMap.get(DcMotorEx.class, "driveRight");
-        PTOLeft = opMode.hardwareMap.get(DcMotorEx.class, "PTOLeft");
-        PTORight = opMode.hardwareMap.get(DcMotorEx.class, "PTORight");
+        frontLeft = opMode.hardwareMap.get(DcMotorEx.class, "LeftFront");
+        frontRight = opMode.hardwareMap.get(DcMotorEx.class, "RightFront");
+        backLeft = opMode.hardwareMap.get(DcMotorEx.class, "LeftBack");
+        backRight = opMode.hardwareMap.get(DcMotorEx.class, "RightBack");
 
         chassisLynxHub = opMode.hardwareMap.get(LynxModule.class, "chassisHub");
         chassisHub = opMode.hardwareMap.get(ExpansionHubEx.class, "chassisHub");
 
         // Reverse left hand motors
-        driveLeft.setDirection(DcMotor.Direction.REVERSE);
-        PTOLeft.setDirection(DcMotor.Direction.REVERSE);
+        frontLeft.setDirection(DcMotor.Direction.REVERSE);
+        backLeft.setDirection(DcMotor.Direction.REVERSE);
 
         // Set up fast access linked lists
-        chassisMotors = Arrays.asList(driveLeft, driveRight, PTOLeft, PTORight);
-        driveMotors = Arrays.asList(driveLeft, driveRight);
-        PTOMotors = Arrays.asList(PTOLeft, PTORight);
-        leftChassisMotors = Arrays.asList(driveLeft, PTOLeft);
-        rightChassisMotors = Arrays.asList(driveRight, PTORight);
+        chassisMotors = Arrays.asList(frontLeft, frontRight, backLeft, backRight);
+        leftChassisMotors = Arrays.asList(frontLeft, backLeft);
+        rightChassisMotors = Arrays.asList(frontRight, backRight);
 
         // Perform calibration
         LoadTimer calTime = new LoadTimer();
@@ -105,7 +98,7 @@ public class SixWheelHardware {
         logBootTelemetry(opMode.hardwareMap, loadTime, calTime);
     }
 
-    public SixWheelHardware() {} // Used for debugging
+    public MecanumHardware() {} // Used for debugging
 
     public Pose pose() {
         return localizer.pose();
@@ -162,7 +155,6 @@ public class SixWheelHardware {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
         imu.initialize(parameters);
-        BNO055IMUUtil.remapAxes(imu, AxesOrder.XYZ, AxesSigns.NPN);
     }
 
     public void initBulkReadTelemetry() {
@@ -171,6 +163,10 @@ public class SixWheelHardware {
         telOdometry[0] = odometryLine.addData("X", "%.1f", "-1");
         telOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
         telOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
+
+        Telemetry.Line wheelPowers = telemetry.addLine();
+        wheelPowers.addData("Left", "%.3f", "-1");
+        wheelPowers.addData("Right", "%.3f", "-1");
 
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
@@ -227,10 +223,10 @@ public class SixWheelHardware {
         return data;
     }
 
-    public void setWheelPowers(SixWheelPowers powers) {
-        this.PTOLeft.setPower(powers.left);
-        this.driveLeft.setPower(powers.left);
-        this.driveRight.setPower(powers.right);
-        this.PTORight.setPower(powers.right);
+    public void setPowers(MecanumPowers powers) {
+        frontLeft.setPower(powers.frontLeft);
+        frontRight.setPower(powers.frontRight);
+        backLeft.setPower(powers.backLeft);
+        backRight.setPower(powers.backRight);
     }
 }
