@@ -12,7 +12,7 @@ import static org.firstinspires.ftc.teamcode.common.math.MathUtil.clamp;
 import static org.firstinspires.ftc.teamcode.common.math.MathUtil.deadZone;
 
 @TeleOp
-public class TestPurePursuitTracking extends LinearOpMode {
+public class PurePursuitSquare extends LinearOpMode {
     SixWheelHardware robot;
 
     @Override
@@ -31,8 +31,7 @@ public class TestPurePursuitTracking extends LinearOpMode {
                 while (elapsed.seconds() < 5) {
                     robot.performBulkRead();
                     SixWheelPowers p = PurePursuitController.goToPosition(robot.pose(), new Point(0, 0));
-                    robot.setWheelPowers(new SixWheelPowers(-p.left, -p.right));
-                    sleep(20);
+                    robot.setWheelPowers(p);
                 }
             }
 
@@ -42,8 +41,6 @@ public class TestPurePursuitTracking extends LinearOpMode {
             robot.driveRight.setPower(right);
             robot.PTOLeft.setPower(left);
             robot.PTORight.setPower(right);
-
-            sleep(20);
         }
     }
 }

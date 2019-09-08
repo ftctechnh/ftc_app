@@ -14,6 +14,7 @@ public class PurePursuitController {
 
     // Start slowing down when we're 24 inches away
     public static double START_DECELERATION_THRESH = 24;
+    public static double TOLERANCE = 0.1; // in
 
     // To find the radius, we first need to find the center. To do this, we'll find the
     // intersection of two lines - the perpendicular bisector of the start and endpoint,
@@ -34,9 +35,12 @@ public class PurePursuitController {
         return MathUtil.angleWrap(targetAngle - start.heading);
     }
 
-    // Note - this algorithm *only* moves the robot forward (not backward). That's fine for now,
-    // but is a pretty big limitation in the long run
     public static SixWheelPowers goToPosition(Pose robotPose, Point target) {
+        // If we're really close, just don't move
+        if (robotPose.minus(target).radius() < TOLERANCE) {
+            return new SixWheelPowers(0, 0);
+        }
+
         // The same regardless of if we're going forward or backwards
         Point center = arcCenterFromStartTangentPointAndEndpoint(robotPose, target);
         double radius = Line.distance(robotPose, center);
@@ -66,5 +70,10 @@ public class PurePursuitController {
         } else { // For clockwise, bigger power is on the left
             return new SixWheelPowers(Math.max(greaterPow, lesserPow), Math.min(greaterPow, lesserPow));
         }
+    }
+
+    public static SixWheelPowers followPath(Pose robotPose) {
+        // Get closest position
+        return null;
     }
 }

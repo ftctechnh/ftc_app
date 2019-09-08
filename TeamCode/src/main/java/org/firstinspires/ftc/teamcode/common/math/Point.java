@@ -26,6 +26,11 @@ public class Point implements Comparable {
         return Math.atan2(y, x);
     }
 
+    public double radius() {
+        return Math.sqrt(x * x + y * y);
+    }
+    public double distance(Point p) {return minus(p).radius(); }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

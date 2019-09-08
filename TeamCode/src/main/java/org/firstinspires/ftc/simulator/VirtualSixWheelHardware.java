@@ -2,6 +2,7 @@ package org.firstinspires.ftc.simulator;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
@@ -9,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 
 public class VirtualSixWheelHardware extends SixWheelHardware implements VirtualRobot {
     double TRACK_WIDTH = 17;
-    double MAX_SPEED = 40; // Per second
+    double MAX_SPEED = 60; // Per second
 
     Pose position;
     double time;
@@ -35,11 +36,19 @@ public class VirtualSixWheelHardware extends SixWheelHardware implements Virtual
 
     @Override
     public void elapse(double ms) {
+        if (Math.abs(wheelPowers.left) > 1 || Math.abs(wheelPowers.right) > 1) {
+            throw new AssertionError();
+        }
+
         Pose relativeOdometry = new Pose(
-                MAX_SPEED * (wheelPowers.left + wheelPowers.right) / 2,
+                (wheelPowers.left + wheelPowers.right) / 2,
                 0,
-                MAX_SPEED * (wheelPowers.right - wheelPowers.left) / TRACK_WIDTH
-        ).scale(MAX_SPEED * ms / 1000);
+                (wheelPowers.right - wheelPowers.left) / TRACK_WIDTH
+        ).scale(MAX_SPEED * ms / 1000.0);
+
+        System.out.println(relativeOdometry.x);
+        System.out.println(relativeOdometry.y);
+        System.out.println(relativeOdometry.heading);
 
         position = MathUtil.relativeOdometryUpdate(position, relativeOdometry);
         time += ms;

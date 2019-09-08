@@ -76,8 +76,12 @@ public class StandardTrackingWheelLocalizer {
         currentPosition = new Pose(0, 0, 0);
     }
 
-    private static double encoderTicksToInches(int ticks) {
+    public static double encoderTicksToInches(int ticks) {
         return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    }
+
+    public static int inchesToEncoderTicks(double inches) {
+        return (int) Math.round(inches * TICKS_PER_REV / (WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO));
     }
 
     public void update(RevBulkData data) {
