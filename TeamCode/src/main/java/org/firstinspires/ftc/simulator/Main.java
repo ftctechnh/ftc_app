@@ -9,28 +9,27 @@ import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 import java.io.IOException;
 
 public class Main {
-
+    double FRAMERATE = 20;
 
     public static void main(String[] args) throws IOException {
         new Main().run();
     }
 
     public void run() throws IOException {
-        VirtualSixWheelHardware robot = new VirtualSixWheelHardware(this);
-        UDPThread udpServer = new UDPThread(20);
+        VirtualSixWheelHardware robot = new VirtualSixWheelHardware(new Pose(20, 20, 0));
+        TXHandler udpServer = new TXHandler(FRAMERATE);
 
-        double angle = 0;
         while(true) {
-            double y = Math.sin(angle);
-            Pose pose = new Pose(y * 20, 0, 0);
-            udpServer.sendMessage(pose);
+            SixWheelPowers p = PurePursuitController.goToPosition(robot.pose(), new Point(0, 0));
+            robot.setWheelPowers(new SixWheelPowers(-p.left, -p.right));
+            robot.elapse(1000 / FRAMERATE);
+            udpServer.sendMessage(robot.position);
 
             try {
                 Thread.sleep(10);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            angle += 0.1;
         }
     }
 }
