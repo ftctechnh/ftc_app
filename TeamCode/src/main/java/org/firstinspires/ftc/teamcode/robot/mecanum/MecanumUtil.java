@@ -12,11 +12,17 @@ public class MecanumUtil {
     }
 
     public static MecanumPowers powersFromAngle(double theta, double thetaScale, double turn) {
+
+        theta -= - Math.PI/4;
+
+        double maxTrig = Math.max(Math.abs(Math.sin(theta)), Math.abs(Math.cos(theta)));
+        double scaleFactor = thetaScale / maxTrig;
+
         return new MecanumPowers(
-                clipScale(Math.sin(theta), thetaScale) - turn,
-                clipScale(Math.cos(theta), thetaScale) + turn,
-                clipScale(Math.cos(theta), thetaScale) - turn,
-                clipScale(Math.sin(theta), thetaScale) + turn
+                clipScale(Math.sin(theta), scaleFactor) - turn,
+                clipScale(Math.cos(theta), scaleFactor) + turn,
+                clipScale(Math.cos(theta), scaleFactor) - turn,
+                clipScale(Math.sin(theta), scaleFactor) + turn
         );
     }
 }

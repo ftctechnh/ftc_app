@@ -25,4 +25,24 @@ public class MecanumPowers {
                 MathUtil.approxEquals(mecanumPowers.backLeft, this.backLeft) &&
                 MathUtil.approxEquals(mecanumPowers.backRight, this.backRight);
     }
+
+
+    /*
+    %.1f----%.1f
+    | Front |
+    |       |
+    |       |
+    %.1f----%.1f
+     */
+    @Override
+    public String toString() {
+        return String.format(
+                "\n" +
+                "%.1f---%.1f\n" +
+                "| Front |\n" +
+                "|       |\n" +
+                "|       |\n" +
+                "%.1f---%.1f\n"
+                , frontLeft, frontRight, backLeft, backRight);
+    }
 }

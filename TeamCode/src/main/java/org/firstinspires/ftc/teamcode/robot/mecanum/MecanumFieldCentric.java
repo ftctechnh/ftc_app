@@ -32,7 +32,7 @@ public class MecanumFieldCentric extends LinearOpMode {
 
             double leftX = gamepad1.left_stick_x;
             double leftY = gamepad1.left_stick_y;
-            double angle = Math.atan2(leftY, leftX) - Math.PI/4 + angles.firstAngle;
+            double angle = Math.atan2(leftY, leftX) + angles.firstAngle;
             double driveScale = Math.sqrt(Math.pow(leftX, 2) + Math.pow(leftY, 2));
             driveScale = Range.clip(driveScale, 0, 1);
             robot.setPowers(MecanumUtil.powersFromAngle(angle, driveScale, gamepad1.right_stick_x));
