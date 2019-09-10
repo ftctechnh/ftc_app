@@ -3,6 +3,21 @@ package org.firstinspires.ftc.teamcode.robot.mecanum;
 import com.qualcomm.robotcore.util.Range;
 
 public class MecanumUtil {
+
+    public static final MecanumPowers FORWARD =
+            MecanumUtil.powersFromAngle(0, 1, 0);
+    public static final MecanumPowers LEFT =
+            MecanumUtil.powersFromAngle(-Math.PI / 2, 1, 0);
+    public static final MecanumPowers BACKWARD =
+            MecanumUtil.powersFromAngle(-Math.PI, 1, 0);
+    public static final MecanumPowers RIGHT =
+            MecanumUtil.powersFromAngle(-3 * Math.PI / 2, 1, 0);
+
+    public static final MecanumPowers COUNTERCLOCKWISE =
+            MecanumUtil.powersFromAngle(0, 0, 1);
+    public static final MecanumPowers CLOCKWISE =
+            MecanumUtil.powersFromAngle(0, 0, -1);
+
     private static double clipScale(double d, double scale) {
         return Range.clip(d * scale, -1, 1);
     }

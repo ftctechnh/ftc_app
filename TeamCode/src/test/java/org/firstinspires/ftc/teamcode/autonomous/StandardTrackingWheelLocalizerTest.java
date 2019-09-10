@@ -31,7 +31,7 @@ class StandardTrackingWheelLocalizerTest {
     }
 
     @Test
-    void update() {
+    void testTrackingWheelUpdate() {
         // Move forward 24 inches
         StandardTrackingWheelLocalizer straightLocalizer = getNewLocalizer();
         for (int i = 1; i <= 10; i++) {
