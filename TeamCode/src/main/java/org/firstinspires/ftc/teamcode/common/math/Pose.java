@@ -31,6 +31,6 @@ public class Pose extends Point {
 
     @Override
     public String toString() {
-        return String.format("{x: %.1f, y: %.1f, θ: %.1f}", x, y, heading);
+        return String.format("{x: %.3f, y: %.3f, θ: %.3f}", x, y, heading);
     }
 }
