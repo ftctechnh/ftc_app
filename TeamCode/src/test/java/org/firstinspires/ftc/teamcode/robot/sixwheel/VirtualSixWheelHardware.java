@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.simulator;
+package org.firstinspires.ftc.teamcode.robot.sixwheel;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+import org.firstinspires.ftc.simulator.VirtualRobot;
 import org.firstinspires.ftc.teamcode.BuildConfig;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
@@ -45,10 +46,6 @@ public class VirtualSixWheelHardware extends SixWheelHardware implements Virtual
                 0,
                 (wheelPowers.right - wheelPowers.left) / TRACK_WIDTH
         ).scale(MAX_SPEED * ms / 1000.0);
-
-        System.out.println(relativeOdometry.x);
-        System.out.println(relativeOdometry.y);
-        System.out.println(relativeOdometry.heading);
 
         position = MathUtil.relativeOdometryUpdate(position, relativeOdometry);
         time += ms;

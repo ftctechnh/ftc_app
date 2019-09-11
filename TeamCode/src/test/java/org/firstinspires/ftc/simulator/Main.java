@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.autonomous.PurePursuitController;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
+import org.firstinspires.ftc.teamcode.robot.sixwheel.VirtualSixWheelHardware;
 
 import java.io.IOException;
 
@@ -23,7 +24,7 @@ public class Main {
             SixWheelPowers p = PurePursuitController.goToPosition(robot.pose(), new Point(0, 0));
             robot.setWheelPowers(new SixWheelPowers(-p.left, -p.right));
             robot.elapse(1000 / FRAMERATE);
-            udpServer.sendMessage(robot.position);
+            udpServer.sendMessage(robot.pose());
 
             try {
                 Thread.sleep(10);

@@ -60,27 +60,27 @@ class MecanumUtilTest {
 
         // Top left (+x +y) diagonal movement
         assertEquals(
-                MecanumUtil.powersFromAngle(-Math.PI/4, 1, 0),
+                MecanumUtil.powersFromAngle(Math.PI/4, 1, 0),
                 new MecanumPowers(0, 1, 1, 0));
 
         // Left movement
         assertEquals(
-                MecanumUtil.powersFromAngle(-Math.PI/2, 1, 0),
+                MecanumUtil.powersFromAngle(Math.PI/2, 1, 0),
                 new MecanumPowers(-1, 1, 1, -1));
 
         // Bottom left (+x +y) diagonal movement
         assertEquals(
-                MecanumUtil.powersFromAngle(-3 * Math.PI/4, 1, 0),
+                MecanumUtil.powersFromAngle(3 * Math.PI/4, 1, 0),
                 new MecanumPowers(-1, 0, 0, -1));
 
         // Backward movement
         assertEquals(
-                MecanumUtil.powersFromAngle(-Math.PI, 1, 0),
+                MecanumUtil.powersFromAngle(Math.PI, 1, 0),
                 new MecanumPowers(-1, -1, -1, -1));
 
         // Right movement
         assertEquals(
-                MecanumUtil.powersFromAngle(-3 * Math.PI/2, 1, 0),
+                MecanumUtil.powersFromAngle(3 * Math.PI/2, 1, 0),
                 new MecanumPowers(1, -1, -1, 1));
 
         // Basic scaling
@@ -91,7 +91,7 @@ class MecanumUtilTest {
 
         // Slow right movement
         assertEquals(
-                MecanumUtil.powersFromAngle(-3 * Math.PI/2, 0.5, 0),
+                MecanumUtil.powersFromAngle(3 * Math.PI/2, 0.5, 0),
                 new MecanumPowers(0.5, -0.5, -0.5, 0.5));
     }
 }

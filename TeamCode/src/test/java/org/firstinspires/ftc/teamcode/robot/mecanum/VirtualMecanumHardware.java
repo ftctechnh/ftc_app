@@ -1,11 +1,16 @@
-package org.firstinspires.ftc.simulator;
+package org.firstinspires.ftc.teamcode.robot.mecanum;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.simulator.VirtualRobot;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumHardware;
 import org.firstinspires.ftc.teamcode.robot.mecanum.MecanumPowers;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
+import org.mockito.Mockito;
 
 public class VirtualMecanumHardware extends MecanumHardware implements VirtualRobot {
     double TRACK_WIDTH = 17;
@@ -27,6 +32,10 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
         this.wheelPowers = new MecanumPowers(0, 0, 0, 0);
     }
 
+    public void initBNO055IMU(HardwareMap hardwareMap) {
+        this.imu = Mockito.mock(BNO055IMU.class);
+    }
+
     @Override
     public void setPowers(MecanumPowers powers) {
         this.wheelPowers = powers;
@@ -37,7 +46,7 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
     }
 
     @Override
-    public void elapse(double ms) {
+    public void elapse(double secs) {
         if (
                 Math.abs(wheelPowers.frontLeft) > 1 ||
                 Math.abs(wheelPowers.frontRight) > 1 ||
@@ -67,14 +76,12 @@ public class VirtualMecanumHardware extends MecanumHardware implements VirtualRo
                         wheelPowers.backRight +
                         -wheelPowers.frontLeft +
                         -wheelPowers.backLeft) / 4
-        ).scale(ms / 1000.0);
+        ).scale(secs);
 
-        System.out.println(relativeOdometry.x);
-        System.out.println(relativeOdometry.y);
-        System.out.println(relativeOdometry.heading);
+        System.out.println(relativeOdometry.toString());
 
         position = MathUtil.relativeOdometryUpdate(position, relativeOdometry);
-        time += ms;
+        time += secs;
     }
 
     @Override

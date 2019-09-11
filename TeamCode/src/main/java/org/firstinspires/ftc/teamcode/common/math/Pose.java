@@ -28,4 +28,9 @@ public class Pose extends Point {
         Pose pose = (Pose) o;
         return MathUtil.approxEquals(pose.heading, heading);
     }
+
+    @Override
+    public String toString() {
+        return String.format("{x: %.1f, y: %.1f, θ: %.1f}", x, y, heading);
+    }
 }
