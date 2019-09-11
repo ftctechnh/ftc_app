@@ -25,11 +25,11 @@ ROBOT_WIDTH_IN = 18
 SCREEN_CENTER = tuple(x / 2 for x in SCREEN_DIMS)
 SCALE_FACTOR = SCREEN_DIMS[0] / FIELD_WIDTH_IN
 
-RR2_BACKGROUND_FIELD = pygame.image.load("res/rr2_field.png")
+RR2_BACKGROUND_FIELD = pygame.image.load("res/ss_field_real.png")
 RR2_BACKGROUND_FIELD = pygame.transform.scale(RR2_BACKGROUND_FIELD, SCREEN_DIMS)
 
 ROBOT_DIMS = tuple(ROBOT_WIDTH_IN * x // FIELD_WIDTH_IN for x in SCREEN_DIMS)
-ROBOT = pygame.image.load("res/robot.png")
+ROBOT = pygame.image.load("res/mecanum.png")
 ROBOT = pygame.transform.scale(ROBOT, (ROBOT_DIMS))
 
 SECS_BETWEEN_FRAMES = 1 / 20
