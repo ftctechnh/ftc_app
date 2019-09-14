@@ -7,11 +7,11 @@ public class MecanumUtil {
     public static final MecanumPowers FORWARD =
             MecanumUtil.powersFromAngle(0, 1, 0);
     public static final MecanumPowers LEFT =
-            MecanumUtil.powersFromAngle(-Math.PI / 2, 1, 0);
+            MecanumUtil.powersFromAngle(Math.PI / 2, 1, 0);
     public static final MecanumPowers BACKWARD =
-            MecanumUtil.powersFromAngle(-Math.PI, 1, 0);
+            MecanumUtil.powersFromAngle(Math.PI, 1, 0);
     public static final MecanumPowers RIGHT =
-            MecanumUtil.powersFromAngle(-3 * Math.PI / 2, 1, 0);
+            MecanumUtil.powersFromAngle(3 * Math.PI / 2, 1, 0);
 
     public static final MecanumPowers COUNTERCLOCKWISE =
             MecanumUtil.powersFromAngle(0, 0, 1);

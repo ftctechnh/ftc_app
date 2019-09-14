@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.BuildConfig;
-import org.firstinspires.ftc.teamcode.autonomous.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
 import org.openftc.revextensions2.ExpansionHubEx;

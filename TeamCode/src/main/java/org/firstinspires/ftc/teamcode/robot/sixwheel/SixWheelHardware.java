@@ -17,7 +17,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.teamcode.BuildConfig;
-import org.firstinspires.ftc.teamcode.autonomous.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.TwoWheelTrackingLocalizer;
 import org.firstinspires.ftc.teamcode.common.AxesSigns;
 import org.firstinspires.ftc.teamcode.common.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.common.LoadTimer;
@@ -35,8 +36,10 @@ public class SixWheelHardware {
 
     public Telemetry telemetry;
 
-    private Telemetry.Item[] telOdometry;
+    private Telemetry.Item[] threeWheelOdometry;
+    private Telemetry.Item[] twoWheelOdometry;
     private Telemetry.Item[] telEncoders;
+    private Telemetry.Item[] telEncodersDist;
     private Telemetry.Item[] telAnalog;
 
     private Telemetry.Item telDigital;
@@ -48,7 +51,8 @@ public class SixWheelHardware {
     private ExpansionHubEx chassisHub;
     private BNO055IMU imu;
 
-    private StandardTrackingWheelLocalizer localizer;
+    private StandardTrackingWheelLocalizer threeWheelLocalizer;
+    private TwoWheelTrackingLocalizer twoWheelLocalizer;
 
     public DcMotorEx driveLeft;
     public DcMotorEx driveRight;
@@ -97,7 +101,8 @@ public class SixWheelHardware {
         calTime.stop();
 
         // Set up localization with motor names the wheels are connected to
-        localizer = new StandardTrackingWheelLocalizer(0, 1, 2);
+        threeWheelLocalizer = new StandardTrackingWheelLocalizer(0, 1, 2);
+        twoWheelLocalizer = new TwoWheelTrackingLocalizer(0, 1);
 
         // Set up telemetry
         this.telemetry = opMode.telemetry;
@@ -108,7 +113,7 @@ public class SixWheelHardware {
     public SixWheelHardware() {} // Used for debugging
 
     public Pose pose() {
-        return localizer.pose();
+        return twoWheelLocalizer.pose();
     }
 
     private void initTelemetry() {
@@ -167,15 +172,26 @@ public class SixWheelHardware {
 
     public void initBulkReadTelemetry() {
         Telemetry.Line odometryLine = telemetry.addLine();
-        telOdometry = new Telemetry.Item[4];
-        telOdometry[0] = odometryLine.addData("X", "%.1f", "-1");
-        telOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
-        telOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
+        threeWheelOdometry = new Telemetry.Item[3];
+        threeWheelOdometry[0] = odometryLine.addData("X", "%.1f", "-1");
+        threeWheelOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
+        threeWheelOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
+
+        twoWheelOdometry = new Telemetry.Item[3];
+        twoWheelOdometry[0] = odometryLine.addData("RX", "%.1f", "-1");
+        twoWheelOdometry[1] = odometryLine.addData("RY", "%.1f", "-1");
+        twoWheelOdometry[2] = odometryLine.addData("Rθ", "%.3f", "-1");
 
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
         for (int i = 0; i < 4; i++) {
             telEncoders[i] = encoderLine.addData("E" + i, -1);
+        }
+
+        Telemetry.Line encoderLineDist = telemetry.addLine();
+        telEncodersDist = new Telemetry.Item[4];
+        for (int i = 0; i < 4; i++) {
+            telEncodersDist[i] = encoderLineDist.addData("ED" + i, -1);
         }
 
         Telemetry.Line analogLine = telemetry.addLine();
@@ -196,16 +212,27 @@ public class SixWheelHardware {
         RevBulkData data = chassisHub.getBulkInputData();
 
         // Update localizer
-        localizer.update(data);
+        threeWheelLocalizer.update(data);
+        double heading = imu.getAngularOrientation().firstAngle;
+        twoWheelLocalizer.update(data, heading);
 
         // Adjust telemetry localizer info
-        telOdometry[0].setValue(String.format("%.1f", localizer.x()));
-        telOdometry[1].setValue(String.format("%.1f", localizer.y()));
-        telOdometry[2].setValue(String.format("%.3f", localizer.h()));
+        threeWheelOdometry[0].setValue(String.format("%.2f", threeWheelLocalizer.x()));
+        threeWheelOdometry[1].setValue(String.format("%.2f", threeWheelLocalizer.y()));
+        threeWheelOdometry[2].setValue(String.format("%.3f", threeWheelLocalizer.h()));
+        twoWheelOdometry[0].setValue(String.format("%.2f", twoWheelLocalizer.x()));
+        twoWheelOdometry[1].setValue(String.format("%.2f", twoWheelLocalizer.y()));
+        twoWheelOdometry[2].setValue(String.format("%.3f", twoWheelLocalizer.h()));
 
         // Adjust encoders and analog inputs
         for (int i = 0; i < 4; i++) {
             telEncoders[i].setValue(data.getMotorCurrentPosition(i));
+            telEncodersDist[0].setValue(Math.round(100 * StandardTrackingWheelLocalizer.encoderTicksToInches(
+                    data.getMotorCurrentPosition(0), StandardTrackingWheelLocalizer.LEFT_WHEEL_RADIUS)) / 100.0);
+            telEncodersDist[1].setValue(Math.round(100 * StandardTrackingWheelLocalizer.encoderTicksToInches(
+                    data.getMotorCurrentPosition(1), StandardTrackingWheelLocalizer.RIGHT_WHEEL_RADIUS)) / 100.0);
+            telEncodersDist[2].setValue(Math.round(100 * StandardTrackingWheelLocalizer.encoderTicksToInches(
+                    data.getMotorCurrentPosition(2), StandardTrackingWheelLocalizer.LAT_WHEEL_RADIUS)) / 100.0);
             telAnalog[i].setValue(data.getAnalogInputValue(i));
         }
 
