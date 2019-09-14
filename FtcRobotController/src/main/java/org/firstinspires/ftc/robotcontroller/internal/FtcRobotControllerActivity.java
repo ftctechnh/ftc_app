@@ -673,8 +673,7 @@ public class FtcRobotControllerActivity extends Activity
         return service.getRobot().eventLoopManager;
       }
     });
-    // TODO Once rbrott publishes new version of FTC Dashboard uncomment this line
-    //FtcDashboard.attachWebServer(service.getWebServer());
+    FtcDashboard.attachWebServer(service.getWebServer());
   }
 
   private void updateUIAndRequestRobotSetup() {
