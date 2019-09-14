@@ -38,6 +38,7 @@ public class SixWheelHardware {
 
     private Telemetry.Item[] threeWheelOdometry;
     private Telemetry.Item[] twoWheelOdometry;
+    private Telemetry.Item[] twoWheelRelOdometry;
     private Telemetry.Item[] telEncoders;
     private Telemetry.Item[] telEncodersDist;
     private Telemetry.Item[] telAnalog;
@@ -171,16 +172,24 @@ public class SixWheelHardware {
     }
 
     public void initBulkReadTelemetry() {
-        Telemetry.Line odometryLine = telemetry.addLine();
+        Telemetry.Line threeWheelOdometryLine = telemetry.addLine();
         threeWheelOdometry = new Telemetry.Item[3];
-        threeWheelOdometry[0] = odometryLine.addData("X", "%.1f", "-1");
-        threeWheelOdometry[1] = odometryLine.addData("Y", "%.1f", "-1");
-        threeWheelOdometry[2] = odometryLine.addData("θ", "%.3f", "-1");
+        threeWheelOdometry[0] = threeWheelOdometryLine.addData("X", "%.1f", "-1");
+        threeWheelOdometry[1] = threeWheelOdometryLine.addData("Y", "%.1f", "-1");
+        threeWheelOdometry[2] = threeWheelOdometryLine.addData("θ", "%.3f", "-1");
 
+        Telemetry.Line twoWheelOdometryLine = telemetry.addLine();
         twoWheelOdometry = new Telemetry.Item[3];
-        twoWheelOdometry[0] = odometryLine.addData("RX", "%.1f", "-1");
-        twoWheelOdometry[1] = odometryLine.addData("RY", "%.1f", "-1");
-        twoWheelOdometry[2] = odometryLine.addData("Rθ", "%.3f", "-1");
+        twoWheelOdometry[0] = twoWheelOdometryLine.addData("RX", "%.1f", "-1");
+        twoWheelOdometry[1] = twoWheelOdometryLine.addData("RY", "%.1f", "-1");
+        twoWheelOdometry[2] = twoWheelOdometryLine.addData("Rθ", "%.3f", "-1");
+        twoWheelOdometry[3] = twoWheelOdometryLine.addData("IMU", "%.3f", "-1");
+
+        Telemetry.Line twoWheelRelOdometryLine = telemetry.addLine();
+        twoWheelRelOdometry = new Telemetry.Item[3];
+        twoWheelRelOdometry[0] = twoWheelRelOdometryLine.addData("RX", "%.1f", "-1");
+        twoWheelRelOdometry[1] = twoWheelRelOdometryLine.addData("RY", "%.1f", "-1");
+        twoWheelRelOdometry[2] = twoWheelRelOdometryLine.addData("Rθ", "%.3f", "-1");
 
         Telemetry.Line encoderLine = telemetry.addLine();
         telEncoders = new Telemetry.Item[4];
@@ -219,10 +228,16 @@ public class SixWheelHardware {
         // Adjust telemetry localizer info
         threeWheelOdometry[0].setValue(String.format("%.2f", threeWheelLocalizer.x()));
         threeWheelOdometry[1].setValue(String.format("%.2f", threeWheelLocalizer.y()));
-        threeWheelOdometry[2].setValue(String.format("%.3f", threeWheelLocalizer.h()));
+        threeWheelOdometry[2].setValue(String.format("%.3f", Math.toDegrees(threeWheelLocalizer.h())));
+
         twoWheelOdometry[0].setValue(String.format("%.2f", twoWheelLocalizer.x()));
         twoWheelOdometry[1].setValue(String.format("%.2f", twoWheelLocalizer.y()));
-        twoWheelOdometry[2].setValue(String.format("%.3f", twoWheelLocalizer.h()));
+        twoWheelOdometry[2].setValue(String.format("%.3f", Math.toDegrees(twoWheelLocalizer.h())));
+        twoWheelOdometry[3].setValue(String.format("%.3f", Math.toDegrees(heading)));
+
+        twoWheelRelOdometry[0].setValue(String.format("%.2f", twoWheelLocalizer.relativeRobotMovement.x));
+        twoWheelRelOdometry[1].setValue(String.format("%.2f", twoWheelLocalizer.relativeRobotMovement.y));
+        twoWheelRelOdometry[2].setValue(String.format("%.3f", Math.toDegrees(twoWheelLocalizer.relativeRobotMovement.heading)));
 
         // Adjust encoders and analog inputs
         for (int i = 0; i < 4; i++) {
