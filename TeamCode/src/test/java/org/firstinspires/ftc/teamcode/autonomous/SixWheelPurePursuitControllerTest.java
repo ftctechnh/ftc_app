@@ -1,15 +1,15 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import org.firstinspires.ftc.teamcode.autonomous.controllers.SixWheelPurePursuitController;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
-import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PurePursuitControllerTest {
+class SixWheelPurePursuitControllerTest {
 
     @Test
     void arcCenterFromStartTangentPointAndEndpoint() {
@@ -23,7 +23,7 @@ class PurePursuitControllerTest {
                 new Point(-Math.sqrt(3)/2, -1.0/2),
         };
         for (Point endpoint : ends) {
-            assertEquals(PurePursuitController.
+            assertEquals(SixWheelPurePursuitController.
                     arcCenterFromStartTangentPointAndEndpoint(start, endpoint), center);
         }
 
@@ -35,7 +35,7 @@ class PurePursuitControllerTest {
                 new Point(6, -2)
         };
         for (Point endpoint2 : ends2) {
-            assertEquals(PurePursuitController.
+            assertEquals(SixWheelPurePursuitController.
                     arcCenterFromStartTangentPointAndEndpoint(start2, endpoint2), center2);
         }
     }
@@ -45,25 +45,25 @@ class PurePursuitControllerTest {
         Pose h1 = new Pose(5, 4, 0);
         Point p1 = new Point(5, 100);
         Point p2 = new Point(5, -100);
-        assertEquals(PurePursuitController.pointPoseMinAngle(h1, p1), Math.PI/2);
-        assertEquals(PurePursuitController.pointPoseMinAngle(h1, p2), -Math.PI/2);
+        assertEquals(SixWheelPurePursuitController.pointPoseMinAngle(h1, p1), Math.PI/2);
+        assertEquals(SixWheelPurePursuitController.pointPoseMinAngle(h1, p2), -Math.PI/2);
     }
 
     @Test
     void goToPosition() {
         // Robot shouldn't move if it's already at its target position
-        SixWheelPowers atTarget = PurePursuitController.goToPosition(new Pose(0, 0, 0), new Point(0, 0));
+        SixWheelPowers atTarget = SixWheelPurePursuitController.goToPosition(new Pose(0, 0, 0), new Point(0, 0));
         //assertEquals(atTarget.left, 0);
         //assertEquals(atTarget.right, 0);
         //assertEquals(atTarget, new SixWheelPowers(0, 0));
 
 
         // Backing up and going forward
-        SixWheelPowers backup = PurePursuitController.goToPosition(new Pose(10, 0, 0), new Point(0, 0));
+        SixWheelPowers backup = SixWheelPurePursuitController.goToPosition(new Pose(10, 0, 0), new Point(0, 0));
         assertEquals(backup.left, backup.right, MathUtil.EPSILON);
         assertTrue(backup.left < 0);
 
-        SixWheelPowers forward = PurePursuitController.goToPosition(new Pose(-10, 0, 0), new Point(0, 0));
+        SixWheelPowers forward = SixWheelPurePursuitController.goToPosition(new Pose(-10, 0, 0), new Point(0, 0));
         assertEquals(forward.left, forward.right, MathUtil.EPSILON);
         assertTrue(forward.left > 0);
         /*
@@ -110,11 +110,11 @@ class PurePursuitControllerTest {
 
         for (int i = 0; i < 16; i++) {
             double[] p = cases[i];
-            //double d = PurePursuitController.goToPositionDebug(new Pose(p[0], p[1], p[2]), new Point(0, 0));
+            //double d = SixWheelPurePursuitController.goToPositionDebug(new Pose(p[0], p[1], p[2]), new Point(0, 0));
             System.out.println("Corrcheck: " + " | " + p[3] + " | " + p[4]);
 
             //System.out.println("Checking case " + (i + 1));
-            SixWheelPowers powers = PurePursuitController.goToPosition(new Pose(p[0], p[1], p[2]), new Point(0, 0));
+            SixWheelPowers powers = SixWheelPurePursuitController.goToPosition(new Pose(p[0], p[1], p[2]), new Point(0, 0));
 
             // Assert we're traveling forward/backward correctly
             assertTrue(powers.left * p[3] > 0);

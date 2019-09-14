@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.odometry;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.apache.commons.math3.linear.RealMatrix;
+import org.firstinspires.ftc.teamcode.autonomous.odometry.EncoderWheel;
 import org.firstinspires.ftc.teamcode.common.math.MathUtil;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.common.math.Pose;
@@ -31,12 +32,15 @@ import org.apache.commons.math3.linear.MatrixUtils;
 @Config
 public class StandardTrackingWheelLocalizer {
     static final double TICKS_PER_REV = 4 * 600;
-    static final double WHEEL_RADIUS = 1.14426;
+    public static double LEFT_WHEEL_RADIUS = 1.14426;
+    public static double RIGHT_WHEEL_RADIUS = 1.14426;
+    public static double LAT_WHEEL_RADIUS = 1.14426;
+
     static final double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    static final double LEFT_Y_POS = 2.85;
-    static final double RIGHT_Y_POS = -3.25;
-    static final double LAT_X_POS = -7.25;
+    public static double LEFT_Y_POS = 2.85;
+    public static double RIGHT_Y_POS = -3.25;
+    public static double LAT_X_POS = -7.25;
 
     static final EncoderWheel[] WHEELS = {
             new EncoderWheel(0, LEFT_Y_POS, 0.0, 0), // left
@@ -45,6 +49,7 @@ public class StandardTrackingWheelLocalizer {
     };
 
     public Pose currentPosition;
+    public Pose relativeRobotMovement;
     int[] prevWheelPositions;
     DecompositionSolver forwardSolver;
     int[] wheelPorts;
@@ -74,21 +79,28 @@ public class StandardTrackingWheelLocalizer {
 
         wheelPorts = new int[] {leftParallelEncoder, rightParallelEncoder, lateralEncoder};
         currentPosition = new Pose(0, 0, 0);
+        relativeRobotMovement = new Pose(0, 0, 0);
     }
 
-    public static double encoderTicksToInches(int ticks) {
-        return WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
+    public static double encoderTicksToInches(int ticks, double wheel_radius) {
+        return wheel_radius * 2 * Math.PI * GEAR_RATIO * ticks / TICKS_PER_REV;
     }
 
     public static int inchesToEncoderTicks(double inches) {
-        return (int) Math.round(inches * TICKS_PER_REV / (WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO));
+        return (int) Math.round(inches * TICKS_PER_REV / (LEFT_WHEEL_RADIUS * 2 * Math.PI * GEAR_RATIO));
     }
 
     public void update(RevBulkData data) {
-        double[] wheelDeltas = new double[3];
+        double[] wheelDeltas = new double[] {
+                encoderTicksToInches(data.getMotorCurrentPosition(0) - prevWheelPositions[0],
+                LEFT_WHEEL_RADIUS),
+                encoderTicksToInches(data.getMotorCurrentPosition(1) - prevWheelPositions[1],
+                        RIGHT_WHEEL_RADIUS),
+                encoderTicksToInches(data.getMotorCurrentPosition(2) - prevWheelPositions[2],
+                        LAT_WHEEL_RADIUS),
+        };
+
         for (int i = 0; i < 3; i++) {
-            wheelDeltas[i] = encoderTicksToInches(
-                    data.getMotorCurrentPosition(i) - prevWheelPositions[i]);
             prevWheelPositions[i] = data.getMotorCurrentPosition(i);
         }
 
@@ -102,6 +114,8 @@ public class StandardTrackingWheelLocalizer {
                 rawPoseDelta.getEntry(2, 0)
         );
 
+        relativeRobotMovement = relativeRobotMovement.add(robotPoseDelta);
+
         currentPosition = MathUtil.relativeOdometryUpdate(currentPosition, robotPoseDelta);
     }
 
@@ -114,6 +128,5 @@ public class StandardTrackingWheelLocalizer {
     public Pose pose() {
         return new Pose(currentPosition.x, currentPosition.y, currentPosition.heading);
     }
-
 }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.autonomous;
+package org.firstinspires.ftc.teamcode.autonomous.controllers;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.common.math.Line;
@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
 
 import java.util.ArrayList;
 
-public class PurePursuitController {
+public class SixWheelPurePursuitController {
 
     // Start slowing down when we're 24 inches away
     public static double START_DECELERATION_THRESH = 24;
@@ -70,10 +70,5 @@ public class PurePursuitController {
         } else { // For clockwise, bigger power is on the left
             return new SixWheelPowers(Math.max(greaterPow, lesserPow), Math.min(greaterPow, lesserPow));
         }
-    }
-
-    public static SixWheelPowers followPath(Pose robotPose) {
-        // Get closest position
-        return null;
     }
 }
