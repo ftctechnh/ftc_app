@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.autonomous.controllers.SixWheelPurePursuitController;
 import org.firstinspires.ftc.teamcode.common.math.Point;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelHardware;
 import org.firstinspires.ftc.teamcode.robot.sixwheel.SixWheelPowers;
@@ -30,7 +31,7 @@ public class TestPurePursuitTracking extends LinearOpMode {
                 ElapsedTime elapsed = new ElapsedTime();
                 while (elapsed.seconds() < 5) {
                     robot.performBulkRead();
-                    SixWheelPowers p = PurePursuitController.goToPosition(robot.pose(), new Point(0, 0));
+                    SixWheelPowers p = SixWheelPurePursuitController.goToPosition(robot.pose(), new Point(0, 0));
                     robot.setWheelPowers(new SixWheelPowers(-p.left, -p.right));
                     sleep(20);
                 }
