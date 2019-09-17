@@ -18,7 +18,7 @@
 GRANTED BY THIS
 * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
 CONTRIBUTORS
-* &quot;AS IS&quot; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
 TO,
 * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
 PURPOSE
@@ -74,9 +74,9 @@ name.
 * Remove or comment out the @Disabled line to add this opmode to the Driver Station
 OpMode list
 *
-* @see &lt;a href=&quot;http://www.adafruit.com/products/2472&quot;&gt;Adafruit IMU&lt;/a&gt;
+* @see &lt;a href="http://www.adafruit.com/products/2472"&gt;Adafruit IMU&lt;/a&gt;
 */
-@TeleOp(name = &quot;MiddleNoCraterIMU&quot;, group = &quot;Sensor&quot;)
+@TeleOp(name = "MiddleNoCraterIMU", group = "Sensor")
 public class MiddleNoCraterIMU extends LinearOpMode
 {
 DcMotor armLift;
@@ -93,16 +93,16 @@ Orientation angles;
 Acceleration gravity;
 
 //Vuforia below here
-private static final String TFOD_MODEL_ASSET = &quot;RoverRuckus.tflite&quot;;
-private static final String LABEL_GOLD_MINERAL = &quot;Gold Mineral&quot;;
-private static final String LABEL_SILVER_MINERAL = &quot;Silver Mineral&quot;;
+private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
 private static final String VUFORIA_KEY =
-&quot;AdyWFXL/////AAABmabVwW2af0mcoL7Qkzy/QyRW/zL4XEWo6n5WTnfKvZz0u1WmcbupVi9llI
+"AdyWFXL/////AAABmabVwW2af0mcoL7Qkzy/QyRW/zL4XEWo6n5WTnfKvZz0u1WmcbupVi9llI
 cYkk6bwAlxDmgCwk5v3RIFtvs5lLJVB8S+mAIlcc1psXZ29NY4Ve0E8VrELpDuufEV9sj4GJ9sSr
 LcyMmIG5B5UjrphdJ5XRdG4eNPcUe8fyEABeEiKgTgHS+ybe2dQTMaKBl1sDzacK5g9xDBYm
 /kFJx6P2PY6Pe1ncsVIVAzT54qqTOMXq2la69ztU/iLs0NQZR/IHJ3zv8HLlCquNULYGww2yWe
 UoR7QpzePPqqO7i23LqJa7BL3cqf06zAU7GE3eJNt4PKNxgQlI5wiV93w1klo8zL4GQrZd7EeZ
-Rks/D4bv9q&quot;;
+Rks/D4bv9q";
 /**
 * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
 * localization engine.
@@ -117,11 +117,11 @@ private TFObjectDetector tfod;
 {
 initializeIMU();
 
-armInitEnc(&quot;armLift&quot;);
-wheelInit(&quot;frontLeft&quot;, &quot;frontRight&quot;, &quot;backLeft&quot;, &quot;backRight&quot;);
+armInitEnc("armLift");
+wheelInit("frontLeft", "frontRight", "backLeft", "backRight");
 boolean look = false;
 
-markerDropInit(&quot;markerDrop&quot;);
+markerDropInit("markerDrop");
 // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create
 that
 // first.
@@ -129,10 +129,10 @@ initVuforia();
 if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
 initTfod();
 } else {
-telemetry.addData(&quot;Sorry!&quot;, &quot;This device is not compatible with TFOD&quot;);
+telemetry.addData("Sorry!", "This device is not compatible with TFOD");
 }
 /** Wait for the game to begin */
-telemetry.addData(&quot;&gt;&quot;, &quot;Press Play to start tracking&quot;);
+telemetry.addData("&gt;", "Press Play to start tracking");
 telemetry.update();
 // Wait until we&#39;re told to go
 waitForStart();
@@ -153,15 +153,15 @@ int scanTime = scanTimeStart;
 double scanIncrement = 0.00001;
 
 armMove(-.25, 3300);
-wheelDrive(&quot;RIGHT&quot;, 0.2, 500);
+wheelDrive("RIGHT", 0.2, 500);
 sleep(250);
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 700);
-wheelDrive(&quot;LEFT&quot;, 0.2, 800);
+wheelDrive("BACKWARD", 0.2, 700);
+wheelDrive("LEFT", 0.2, 800);
 
 while (scanTime &gt; 0 &amp;&amp; right == false) // scanning for the cube on right
 {
 scanTime -= scanIncrement;
-telemetry.addData(&quot;Scanning For Right&quot;, &quot; Bro&quot; );
+telemetry.addData("Scanning For Right", " Bro" );
 if (tfod != null)
 {
 // getUpdatedRecognitions() will return null if no new information is available since
@@ -169,7 +169,7 @@ if (tfod != null)
 List&lt;Recognition&gt; updatedRecognitions = tfod.getUpdatedRecognitions();
 if (updatedRecognitions != null)
 {
-telemetry.addData(&quot;# Object Detected&quot;, updatedRecognitions.size());
+telemetry.addData("# Object Detected", updatedRecognitions.size());
 if(updatedRecognitions.size() &gt; 0)
 {
 }
@@ -177,7 +177,7 @@ for (Recognition recognition : updatedRecognitions)
 {
 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL))
 {
-telemetry.addData(&quot;YO&quot;, &quot;IT WORKS NOW WE CAN FIND THE PROBLEM&quot; )
+telemetry.addData("YO", "IT WORKS NOW WE CAN FIND THE PROBLEM" )
 ;
 telemetry.update();
 right = true;
@@ -191,21 +191,21 @@ telemetry.update();
 scanTime = scanTimeStart;
 if (right == true)
 {
-telemetry.addData(&quot;Right&quot;, &quot;True&quot;);
+telemetry.addData("Right", "True");
 telemetry.update();
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;LEFT&quot;, 0.25);
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;RIGHT&quot;, 0.25);
-wheelDrive(&quot;FORWARD&quot;, 0.2, 1200);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("LEFT", 0.25);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("RIGHT", 0.25);
+wheelDrive("FORWARD", 0.2, 1200);
 }
 else
 {
-wheelDrive(&quot;RIGHT&quot;, 0.2, 1250);
+wheelDrive("RIGHT", 0.2, 1250);
 while (scanTime &gt; 0 &amp;&amp; middle == false) // scanning for the cube in middle
 {
 scanTime -= scanIncrement;
-telemetry.addData(&quot;Scanning For Middle&quot;, &quot; Bro&quot; );
+telemetry.addData("Scanning For Middle", " Bro" );
 if (tfod != null)
 {
 // getUpdatedRecognitions() will return null if no new information is available since
@@ -213,7 +213,7 @@ if (tfod != null)
 List&lt;Recognition&gt; updatedRecognitions = tfod.getUpdatedRecognitions();
 if (updatedRecognitions != null)
 {
-telemetry.addData(&quot;# Object Detected&quot;, updatedRecognitions.size());
+telemetry.addData("# Object Detected", updatedRecognitions.size());
 if(updatedRecognitions.size() &gt; 0)
 {
 
@@ -222,7 +222,7 @@ for (Recognition recognition : updatedRecognitions)
 {
 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL))
 {
-telemetry.addData(&quot;YO&quot;, &quot;IT WORKS NOW WE CAN FIND THE PROBLEM&quot; )
+telemetry.addData("YO", "IT WORKS NOW WE CAN FIND THE PROBLEM" )
 ;
 telemetry.update();
 middle = true;
@@ -235,22 +235,22 @@ telemetry.update();
 scanTime = scanTimeStart;
 if (middle == true)
 {
-telemetry.addData(&quot;Middle&quot;, &quot;True&quot;);
+telemetry.addData("Middle", "True");
 telemetry.update();
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;LEFT&quot;, 0.25);
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;RIGHT&quot;, 0.25);
-wheelDrive(&quot;FORWARD&quot;, 0.2, 1200);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("LEFT", 0.25);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("RIGHT", 0.25);
+wheelDrive("FORWARD", 0.2, 1200);
 }
 else
 {
-wheelDrive(&quot;RIGHT&quot;, 0.2, 1250);
+wheelDrive("RIGHT", 0.2, 1250);
 while (scanTime &gt; 0 &amp;&amp; left == false) // scanning for the cube on left
 {
 scanTime -= scanIncrement;
 
-telemetry.addData(&quot;Scanning For Left&quot;, &quot; Bro&quot; );
+telemetry.addData("Scanning For Left", " Bro" );
 if (tfod != null)
 {
 // getUpdatedRecognitions() will return null if no new information is available since
@@ -258,7 +258,7 @@ if (tfod != null)
 List&lt;Recognition&gt; updatedRecognitions = tfod.getUpdatedRecognitions();
 if (updatedRecognitions != null)
 {
-telemetry.addData(&quot;# Object Detected&quot;, updatedRecognitions.size());
+telemetry.addData("# Object Detected", updatedRecognitions.size());
 if(updatedRecognitions.size() &gt; 0)
 {
 }
@@ -266,7 +266,7 @@ for (Recognition recognition : updatedRecognitions)
 {
 if (recognition.getLabel().equals(LABEL_GOLD_MINERAL))
 {
-telemetry.addData(&quot;YO&quot;, &quot;IT WORKS NOW WE CAN FIND THE PROBLEM&quot; )
+telemetry.addData("YO", "IT WORKS NOW WE CAN FIND THE PROBLEM" )
 ;
 telemetry.update();
 left = true;
@@ -278,34 +278,34 @@ telemetry.update();
 }
 if (left == true)
 {
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;LEFT&quot;, 0.25);
-wheelTurn45(&quot;LEFT&quot;, 0.25);
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;RIGHT&quot;, 0.25);
-wheelDrive(&quot;FORWARD&quot;, 0.2, 1200);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("LEFT", 0.25);
+wheelTurn45("LEFT", 0.25);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("RIGHT", 0.25);
+wheelDrive("FORWARD", 0.2, 1200);
 }
 
 else
 {
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;LEFT&quot;, 0.25);
-wheelTurn45(&quot;LEFT&quot;, 0.25);
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 400);
-wheelTurn45(&quot;RIGHT&quot;, 0.25);
-wheelDrive(&quot;FORWARD&quot;, 0.2, 1200);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("LEFT", 0.25);
+wheelTurn45("LEFT", 0.25);
+wheelDrive("BACKWARD", 0.2, 400);
+wheelTurn45("RIGHT", 0.25);
+wheelDrive("FORWARD", 0.2, 1200);
 }
 }
 }
 /*
-wheelDrive(&quot;BACKWARD&quot;, 0.2, 1500);
+wheelDrive("BACKWARD", 0.2, 1500);
 wheelPark(250);
-wheelTurn45(&quot;RIGHT&quot;, 0.25);
+wheelTurn45("RIGHT", 0.25);
 wheelPark(250);
 dropMarkerTest(0.25, 650);
-wheelDrive(&quot;FORWARD&quot;, 0.25, 2450);
+wheelDrive("FORWARD", 0.25, 2450);
 telemetry.update();
-wheelDrive(&quot;BACKWARD&quot;, 0, 0);
+wheelDrive("BACKWARD", 0, 0);
 */
 stop();
 
@@ -362,14 +362,14 @@ backRightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 }
 public void wheelDrive(String direction,double speed, int milliseconds)
 {
-if(direction == &quot;FORWARD&quot;)
+if(direction == "FORWARD")
 {
 frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 backRightDrive.setDirection(DcMotor.Direction.FORWARD);
 backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 }
-if(direction == &quot;BACKWARD&quot;)
+if(direction == "BACKWARD")
 {
 frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -377,14 +377,14 @@ backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 
 backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
 }
-if(direction == &quot;LEFT&quot;)
+if(direction == "LEFT")
 {
 frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
 }
-if(direction == &quot;RIGHT&quot;)
+if(direction == "RIGHT")
 {
 frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 backRightDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -407,7 +407,7 @@ backRightDrive.setPower(0);
 public void wheelTurn45(String direction,double speed)
 {
 double targetHeading;
-if(direction == &quot;RIGHT&quot;)
+if(direction == "RIGHT")
 {
 frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
@@ -415,7 +415,7 @@ backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 
 }
-if(direction == &quot;LEFT&quot;)
+if(direction == "LEFT")
 {
 frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -426,14 +426,14 @@ backLeftDrive.setDirection(DcMotor.Direction.FORWARD);
 }
 public void wheelTurn(String direction,double speed, int milliseconds)
 {
-if(direction == &quot;RIGHT&quot;)
+if(direction == "RIGHT")
 {
 frontRightDrive.setDirection(DcMotor.Direction.REVERSE);
 frontLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 backRightDrive.setDirection(DcMotor.Direction.REVERSE);
 backLeftDrive.setDirection(DcMotor.Direction.REVERSE);
 }
-if(direction == &quot;LEFT&quot;)
+if(direction == "LEFT")
 {
 frontRightDrive.setDirection(DcMotor.Direction.FORWARD);
 frontLeftDrive.setDirection(DcMotor.Direction.FORWARD);
@@ -473,15 +473,15 @@ void initializeIMU()
 BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
 parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-parameters.calibrationDataFile = &quot;BNO055IMUCalibration.json&quot;; // see the calibration
+parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration
 sample opmode
 parameters.loggingEnabled = true;
-parameters.loggingTag = &quot;IMU&quot;;
+parameters.loggingTag = "IMU";
 parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
-// on a Core Device Interface Module, configured to be a sensor of type &quot;AdaFruit IMU&quot;,
-// and named &quot;imu&quot;.
-imu = hardwareMap.get(BNO055IMU.class, &quot;imu&quot;);
+// on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+// and named "imu".
+imu = hardwareMap.get(BNO055IMU.class, "imu");
 imu.initialize(parameters);
 // Set up our telemetry dashboard
 composeTelemetry();
@@ -504,42 +504,42 @@ gravity = imu.getGravity();
 }
 });
 telemetry.addLine()
-.addData(&quot;status&quot;, new Func&lt;String&gt;() {
+.addData("status", new Func&lt;String&gt;() {
 @Override public String value() {
 return imu.getSystemStatus().toShortString();
 }
 })
-.addData(&quot;calib&quot;, new Func&lt;String&gt;() {
+.addData("calib", new Func&lt;String&gt;() {
 @Override public String value() {
 return imu.getCalibrationStatus().toString();
 }
 });
 telemetry.addLine()
-.addData(&quot;heading&quot;, new Func&lt;String&gt;() {
+.addData("heading", new Func&lt;String&gt;() {
 @Override public String value() {
 return formatAngle(angles.angleUnit, angles.firstAngle);
 }
 })
-.addData(&quot;roll&quot;, new Func&lt;String&gt;() {
+.addData("roll", new Func&lt;String&gt;() {
 @Override public String value() {
 return formatAngle(angles.angleUnit, angles.secondAngle);
 }
 })
 
-.addData(&quot;pitch&quot;, new Func&lt;String&gt;() {
+.addData("pitch", new Func&lt;String&gt;() {
 @Override public String value() {
 return formatAngle(angles.angleUnit, angles.thirdAngle);
 }
 });
 telemetry.addLine()
-.addData(&quot;grvty&quot;, new Func&lt;String&gt;() {
+.addData("grvty", new Func&lt;String&gt;() {
 @Override public String value() {
 return gravity.toString();
 }
 })
-.addData(&quot;mag&quot;, new Func&lt;String&gt;() {
+.addData("mag", new Func&lt;String&gt;() {
 @Override public String value() {
-return String.format(Locale.getDefault(), &quot;%.3f&quot;,
+return String.format(Locale.getDefault(), "%.3f",
 Math.sqrt(gravity.xAccel*gravity.xAccel
 + gravity.yAccel*gravity.yAccel
 + gravity.zAccel*gravity.zAccel));
@@ -553,7 +553,7 @@ String formatAngle(AngleUnit angleUnit, double angle) {
 return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
 }
 String formatDegrees(double degrees){
-return String.format(Locale.getDefault(), &quot;%.1f&quot;, AngleUnit.DEGREES.normalize(degrees));
+return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
 }
 /**
 * Initialize the Vuforia localization engine.
@@ -575,7 +575,7 @@ vuforia = ClassFactory.getInstance().createVuforia(parameters);
 */
 private void initTfod() {
 int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-&quot;tfodMonitorViewId&quot;, &quot;id&quot;, hardwareMap.appContext.getPackageName());
+"tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
 TFObjectDetector.Parameters tfodParameters = new
 TFObjectDetector.Parameters(tfodMonitorViewId);
 tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
