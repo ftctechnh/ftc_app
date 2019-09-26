@@ -1,3 +1,8 @@
+# TEAM SBEV's BEAUTIFUL GITHUB REPOSITORY
+
+This is where we share code and shit.
+If you aren't a contributor, ask me and I'll invite you.
+
 ## NOTICE
 
 This repository contains v5.0 of the FTC SDK.  No further versions will pushed to https://github.com/ftctechnh/ftc_app.
