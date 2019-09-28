@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.team6417.MecanumDrive;
 
 @TeleOp(name = "mechanum driving opmode", group = "ftc6417")
-public class MecanumDrivingOpMode extends OpMode {
+public class MecanumDriveOpMode extends OpMode {
     private MecanumDrive mecanumDrive = new MecanumDrive();
 
     // Code to run ONCE when the driver hits INIT
