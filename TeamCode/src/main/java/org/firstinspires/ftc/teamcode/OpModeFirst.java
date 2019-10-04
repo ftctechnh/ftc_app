@@ -49,6 +49,13 @@ public class OpModeFirst extends OpMode {
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
+        //Precision Mode
+        boolean precisionMode = gamepad1.left_bumper;
+        if (precisionMode) {
+            leftPower *= 0.1;
+            rightPower *= 0.1;
+        }
+
         FL.setPower(leftPower);
         BL.setPower(leftPower);
 
