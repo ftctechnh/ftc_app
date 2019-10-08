@@ -16,6 +16,7 @@ public class OpModeFirst extends OpMode {
     private DcMotor FR = null;
     private DcMotor BL = null;
     private DcMotor BR = null;
+    private DcMotor SV = null;
 
 
     @Override
@@ -26,11 +27,13 @@ public class OpModeFirst extends OpMode {
         FR = hardwareMap.get(DcMotor.class, "fr");
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
+        SV = hardwareMap.get(DcMotor.class,"sv" );
 
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
         FR.setDirection(DcMotor.Direction.FORWARD);
         BR.setDirection(DcMotor.Direction.FORWARD);
+        SV.setDirection(DcMotor.Direction.FORWARD);
 
     }
     @Override
@@ -42,12 +45,14 @@ public class OpModeFirst extends OpMode {
     public void loop() {
         double leftPower;
         double rightPower;
+        double servoPower:
 
         double drive = -gamepad1.left_stick_y;
         double turn = gamepad1.right_stick_x;
 
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
+
 
         FL.setPower(leftPower);
         BL.setPower(leftPower);
