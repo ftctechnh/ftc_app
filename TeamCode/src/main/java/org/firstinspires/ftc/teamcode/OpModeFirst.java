@@ -11,7 +11,7 @@ public class OpModeFirst extends OpMode {
     //time
     private ElapsedTime runtime = new ElapsedTime();
 
-    // Motor bois
+    // Motor variables
     private DcMotor FL = null;
     private DcMotor FR = null;
     private DcMotor BL = null;
@@ -20,13 +20,16 @@ public class OpModeFirst extends OpMode {
 
     @Override
     public void init() {
+        //telemetry
         telemetry.addData("Status", "Initialized");
 
+        //getting all the motors
         FL = hardwareMap.get(DcMotor.class, "fl");
         FR = hardwareMap.get(DcMotor.class, "fr");
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
 
+        //accounting for how the motors are mounted
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
         FR.setDirection(DcMotor.Direction.FORWARD);
@@ -40,25 +43,28 @@ public class OpModeFirst extends OpMode {
 
     @Override
     public void loop() {
+        //these variables store power for left wheels and right wheels
         double leftPower;
         double rightPower;
 
+        //stores gamepad sticks in variables
         double drive = -gamepad1.left_stick_y;
         double turn = gamepad1.right_stick_x;
 
+        //sets left and right power
         leftPower = Range.clip(drive + turn, -1.0, 1.0);
         rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
         //Precision Mode
         boolean precisionMode = gamepad1.left_bumper;
-        if (precisionMode) {
+        if (precisionMode) {  //if precision mode is on, left power and right power are set to 10% of what they would otherwise be.
             leftPower *= 0.1;
             rightPower *= 0.1;
         }
 
+
         FL.setPower(leftPower);
         BL.setPower(leftPower);
-
         FR.setPower(rightPower);
         BR.setPower(rightPower);
 
