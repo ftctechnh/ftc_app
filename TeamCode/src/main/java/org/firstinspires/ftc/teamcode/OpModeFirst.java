@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import static org.firstinspires.ftc.teamcode.Utils.getBatteryVoltage;
+
 @TeleOp(name="Sbev's first steps", group="Iterative Opmode")
 public class OpModeFirst extends OpMode {
     //time
@@ -39,6 +41,7 @@ public class OpModeFirst extends OpMode {
     @Override
     public void start(){
         runtime.reset();
+
     }
 
     @Override
@@ -46,6 +49,10 @@ public class OpModeFirst extends OpMode {
         //these variables store power for left wheels and right wheels
         double leftPower;
         double rightPower;
+        if (Utils.getBatteryVoltage(hardwareMap) < 12.0d) {
+            telemetry.addLine("Warning! Battery voltage is low");
+        }
+        telemetry.addData("Battery", "Voltage: ", getBatteryVoltage(hardwareMap));
 
         //stores gamepad sticks in variables
         double drive = -gamepad1.left_stick_y;
@@ -72,4 +79,6 @@ public class OpModeFirst extends OpMode {
         telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
 
     }
+
+
 }
