@@ -18,6 +18,7 @@ public class OpModeFirst extends OpMode {
     private DcMotor FR = null;
     private DcMotor BL = null;
     private DcMotor BR = null;
+    private DcMotor SV = null;
 
 
     @Override
@@ -30,12 +31,14 @@ public class OpModeFirst extends OpMode {
         FR = hardwareMap.get(DcMotor.class, "fr");
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
+        SV = hardwareMap.get(DcMotor.class,"sv" );
 
         //accounting for how the motors are mounted
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
         FR.setDirection(DcMotor.Direction.FORWARD);
         BR.setDirection(DcMotor.Direction.FORWARD);
+        SV.setDirection(DcMotor.Direction.FORWARD);
 
     }
     @Override
@@ -49,10 +52,12 @@ public class OpModeFirst extends OpMode {
         //these variables store power for left wheels and right wheels
         double leftPower;
         double rightPower;
+
         if (Utils.getBatteryVoltage(hardwareMap) < 12.0d) {
             telemetry.addLine("Warning! Battery voltage is low");
         }
         telemetry.addData("Battery", "Voltage: ", getBatteryVoltage(hardwareMap));
+
 
         //stores gamepad sticks in variables
         double drive = -gamepad1.left_stick_y;

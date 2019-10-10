@@ -1,6 +1,6 @@
 # TEAM SBEV's BEAUTIFUL GITHUB REPOSITORY
 
-This is where we share code and shit.
+This is where we share code.
 If you aren't a contributor, ask me and I'll invite you.
 
 ## NOTICE
