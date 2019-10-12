@@ -85,9 +85,9 @@ public class Hardware6417
         rightFront = hwMap.get(DcMotor.class, "RightFrontDrive");
         rightBack = hwMap.get(DcMotor.class, "RightBackDrive");
 
-        flip = hwMap.get(Servo.class, "flip_servo");
-        hand = hwMap.get(Servo.class, "hand_servo");
-        arm = hwMap.get(Servo.class, "arm_servo");
+        //flip = hwMap.get(Servo.class, "flip_servo");
+        //hand = hwMap.get(Servo.class, "hand_servo");
+        //arm = hwMap.get(Servo.class, "arm_servo");
 
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
