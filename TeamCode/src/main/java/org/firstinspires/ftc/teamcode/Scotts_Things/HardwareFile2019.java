@@ -18,7 +18,7 @@ public class HardwareFile2019 {
 
     }
 
-    public void init(HardwareMap ahwMap) {
+    public void mapHardware(HardwareMap ahwMap) {
         // Save reference to Hardware map
         hwMap = ahwMap;
 
@@ -32,6 +32,8 @@ public class HardwareFile2019 {
         frontRight.setDirection(DcMotor.Direction.FORWARD);
         backRight.setDirection(DcMotor.Direction.FORWARD);
 
+        runWithEncoders();
+
         wheelStop();
 
     }
@@ -43,9 +45,6 @@ public class HardwareFile2019 {
         backRight.setPower(0);
     }
 
-    public void mapHardware(HardwareMap aHwMap) {
-        init(aHwMap);
-    }
 
     public void resetEncoders() {
         frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -53,9 +52,15 @@ public class HardwareFile2019 {
         backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        runWithEncoders();
+    }
+
+    public void runWithEncoders() {
+
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
 }
