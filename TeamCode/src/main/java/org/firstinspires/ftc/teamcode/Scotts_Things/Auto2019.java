@@ -70,7 +70,5 @@ public class Auto2019 extends LinearOpMode {
 
         robot.runWithEncoders();
 
-        sleep(250);
-
     }
 }
