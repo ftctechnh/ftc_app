@@ -24,24 +24,24 @@ public class TeleOp2019 extends LinearOpMode {
 
         Float leftPower = null;
         Float rightPower = null;
+        Float max = null;
+
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            leftPower = gamepad1.left_stick_y;
-            rightPower = gamepad1.left_stick_y;
+            Float drive = - gamepad1.left_stick_y;
+            Float turn = gamepad1.right_stick_y;
 
-            if (gamepad1.left_stick_x > .25) {
+            leftPower = drive + turn;
+            rightPower = drive - turn;
 
-                leftPower = Math.abs(gamepad1.left_stick_y);
-                rightPower = -1 * Math.abs(gamepad1.left_stick_y);
-
-            } else if (gamepad1.left_stick_x < .25) {
-
-                leftPower = -1 * Math.abs(gamepad1.left_stick_y);
-                rightPower = Math.abs(gamepad1.left_stick_y);
-
+            max = Math.max(Math.abs(leftPower), Math.abs(rightPower));
+            if (max > 1.0)
+            {
+                leftPower /= max;
+                rightPower /= max;
             }
 
             frontLeft.setPower(leftPower);
