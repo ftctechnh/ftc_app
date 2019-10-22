@@ -30,11 +30,23 @@
 
 package org.firstinspires.ftc.team6417;
 
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+import org.firstinspires.ftc.team6417.CameraPreview;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import java.io.ByteArrayOutputStream;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
+import android.hardware.Camera;
+import android.util.Log;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 
 /**
@@ -62,12 +74,14 @@ public class MecanumDriveOpMode extends LinearOpMode {
     double frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed;
 
 
+
     @Override
     public void runOpMode() {
 
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
+
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -104,5 +118,8 @@ public class MecanumDriveOpMode extends LinearOpMode {
             robot.rightBack.setPower(backRightSpeed / largest);
 
         }
+
+        }
+
+
     }
-}

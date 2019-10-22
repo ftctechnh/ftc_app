@@ -6,6 +6,10 @@
           android:versionName="5.0">
 
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+  <uses-permission android:name="android.permission.CAMERA" />
+
+  <uses-feature android:name="android.hardware.camera" />
+  <uses-feature android:name="android.hardware.camera.front" />
 
   <application
     android:allowBackup="true"

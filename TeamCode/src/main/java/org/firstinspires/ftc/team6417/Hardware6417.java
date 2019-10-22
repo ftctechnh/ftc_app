@@ -29,11 +29,22 @@
 
 package org.firstinspires.ftc.team6417;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageFormat;
+import android.graphics.Rect;
+import android.graphics.YuvImage;
+import android.hardware.Camera;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  * This is NOT an opmode.
@@ -70,8 +81,35 @@ public class Hardware6417
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
+    private Camera camera;
+    public CameraPreview preview;
+    public Bitmap image;
+    private int width;
+    private int height;
+    private YuvImage yuvImage = null;
+    private int looped = 0;
+    private String data;
+
     /* Constructor */
     public Hardware6417(){
+    }
+
+    private Camera.PreviewCallback previewCallback = new Camera.PreviewCallback() {
+        public void onPreviewFrame(byte[] data, Camera camera)
+        {
+            Camera.Parameters parameters = camera.getParameters();
+            width = parameters.getPreviewSize().width;
+            height = parameters.getPreviewSize().height;
+            yuvImage = new YuvImage(data, ImageFormat.NV21, width, height, null);
+            looped += 1;
+        }
+    };
+
+    private void convertImage() {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        yuvImage.compressToJpeg(new Rect(0, 0, width, height), 0, out);
+        byte[] imageBytes = out.toByteArray();
+        image = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
     }
 
     /* Initialize standard Hardware interfaces */
@@ -108,5 +146,6 @@ public class Hardware6417
         leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
     }
 }
