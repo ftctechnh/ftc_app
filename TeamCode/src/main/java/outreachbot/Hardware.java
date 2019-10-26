@@ -27,24 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.team6417;
+package outreachbot;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
-import android.hardware.Camera;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-
-import java.io.ByteArrayOutputStream;
 
 /**
  * This is NOT an opmode.
@@ -62,28 +51,24 @@ import java.io.ByteArrayOutputStream;
  * Servo channel:  Servo to open left claw:  "left_hand"
  * Servo channel:  Servo to open right claw: "right_hand"
  */
+
 // Based on HardwarePushbot
-public class Hardware6417
+public class Hardware
 {
     /* Public OpMode members. */
-    public DcMotor  leftFront = null;
-    public DcMotor  rightFront = null;
-    public DcMotor  leftBack = null;
-    public DcMotor  rightBack = null;
-    public DcMotor  armMotor = null;
+    public DcMotor  backLeft = null;
+    public DcMotor  backRight = null;
+    public DcMotor  turnTable = null;
+    public DcMotor  wormGear = null;
 
-    public Servo flip = null;
-    public Servo grab = null;
-    public Servo drag = null;
-
-    public static final double TURN_POWER_LIFT =  0.5 ;
+    public Servo grabyboi = null;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
     private ElapsedTime period  = new ElapsedTime();
 
     /* Constructor */
-    public Hardware6417(){
+    public Hardware(){
     }
 
     /* Initialize standard Hardware interfaces */
@@ -92,41 +77,30 @@ public class Hardware6417
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftFront = hwMap.get(DcMotor.class, "LeftFrontDrive");
-        leftBack = hwMap.get(DcMotor.class, "LeftBackDrive");
-        rightFront = hwMap.get(DcMotor.class, "RightFrontDrive");
-        rightBack = hwMap.get(DcMotor.class, "RightBackDrive");
+        backLeft = hwMap.get(DcMotor.class, "BackLeft");
+        backRight = hwMap.get(DcMotor.class, "BackRight");
+        turnTable = hwMap.get(DcMotor.class, "TurnTable");
+        wormGear = hwMap.get(DcMotor.class, "WormGear");
 
-        armMotor = hwMap.get(DcMotor.class, "ArmMotor");
+        grabyboi = hwMap.get(Servo.class, "Grabyboi");
 
-        flip = hwMap.get(Servo.class, "flip_servo");
-        grab = hwMap.get(Servo.class, "GrabHand");
-        drag = hwMap.get(Servo.class, "DragHand");
-
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
-        leftBack.setDirection(DcMotor.Direction.REVERSE);
-        rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
-
+        backLeft.setDirection(DcMotor.Direction.FORWARD);
+        backRight.setDirection(DcMotor.Direction.REVERSE);
 
         // Set all motors to zero power
-        leftFront.setPower(0);
-        leftBack.setPower(0);
-        rightFront.setPower(0);
-        rightBack.setPower(0);
-        armMotor.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        turnTable.setPower(0);
+        wormGear.setPower(0);
 
-
-        flip.setPosition(0);
-        grab.setPosition(0);
-        drag.setPosition(0);
+        grabyboi.setPosition(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        turnTable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        wormGear.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
 }

@@ -30,19 +30,6 @@
 
 package org.firstinspires.ftc.team6417;
 
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-import org.firstinspires.ftc.team6417.CameraPreview;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import java.io.ByteArrayOutputStream;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
-import android.hardware.Camera;
-import android.util.Log;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -71,7 +58,8 @@ public class MecanumDriveOpMode extends LinearOpMode {
     Hardware6417 robot = new Hardware6417();
 
     double forward, strafe, rotate;
-    double frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed;
+    double frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed, armUpPower, armDownPower,
+            flipPosition, grabPosition, dragPosition;
 
 
 
@@ -116,6 +104,33 @@ public class MecanumDriveOpMode extends LinearOpMode {
             robot.rightFront.setPower(frontRightSpeed / largest);
             robot.leftBack.setPower(backLeftSpeed / largest);
             robot.rightBack.setPower(backRightSpeed / largest);
+
+            armUpPower = gamepad1.right_trigger;
+            armDownPower = gamepad1.left_trigger;
+
+            robot.armMotor.setPower(armUpPower - armDownPower);
+
+            if(gamepad1.a) {
+                robot.flip.setPosition(0);
+            }
+            else if(gamepad1.b){
+                robot.flip.setPosition(0.5);
+            }
+
+            if(gamepad1.x){
+                robot.grab.setPosition(0);
+            }
+            else if(gamepad1.y){
+                robot.grab.setPosition(0.5);
+            }
+
+            if(gamepad1.dpad_up){
+                robot.drag.setPosition(0);
+            }
+            else if(gamepad1.dpad_down){
+                robot.drag.setPosition(0.5);
+            }
+
 
         }
 
