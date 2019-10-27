@@ -32,7 +32,7 @@ public class TeleOp2019 extends LinearOpMode {
         while (opModeIsActive()) {
 
             Float drive = - gamepad1.left_stick_y;
-            Float turn = gamepad1.right_stick_y;
+            Float turn = gamepad1.right_stick_x;
 
             leftPower = drive + turn;
             rightPower = drive - turn;
