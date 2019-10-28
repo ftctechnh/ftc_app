@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -18,8 +19,15 @@ public class OpModeFirst extends OpMode {
     private DcMotor FR = null;
     private DcMotor BL = null;
     private DcMotor BR = null;
-    private DcMotor SV = null;
-
+    //------------------------------------------// claw variables:
+    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    static final int CYCLE_MS = 50;     // period of each cycle
+    static final double MAX_POS = 1.0;     // Maximum rotational position
+    static final double MIN_POS = 0.0;     // Minimum rotational position
+    private double leftPower;
+    private double rightPower;
+    private double clawPosition;
+    private Servo claw = null;
 
     @Override
     public void init() {
@@ -31,32 +39,46 @@ public class OpModeFirst extends OpMode {
         FR = hardwareMap.get(DcMotor.class, "fr");
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
-        SV = hardwareMap.get(DcMotor.class,"sv" );
+        claw = hardwareMap.get(Servo.class, "claw");
 
         //accounting for how the motors are mounted
         FL.setDirection(DcMotor.Direction.REVERSE);
         BL.setDirection(DcMotor.Direction.REVERSE);
         FR.setDirection(DcMotor.Direction.FORWARD);
         BR.setDirection(DcMotor.Direction.FORWARD);
-        SV.setDirection(DcMotor.Direction.FORWARD);
 
     }
     @Override
     public void start(){
         runtime.reset();
+        claw.setPosition(0.50);
 
     }
 
     @Override
     public void loop() {
         //these variables store power for left wheels and right wheels
-        double leftPower;
-        double rightPower;
+
+        setDrivePower();
+        setClawPosition();
+
+        FL.setPower(leftPower);
+        BL.setPower(leftPower);
+        FR.setPower(rightPower);
+        BR.setPower(rightPower);
+        claw.setPosition(clawPosition);
+
+        telemetry.addData("Status", "Run Time: " + runtime.toString());
+        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
+
+    }
+
+    void setDrivePower() {
 
         if (Utils.getBatteryVoltage(hardwareMap) < 12.0d) {
             telemetry.addLine("Warning! Battery voltage is low");
         }
-        telemetry.addData("Battery", "Voltage: ", getBatteryVoltage(hardwareMap));
+        telemetry.addData("Battery", "Voltage: %.2f", getBatteryVoltage(hardwareMap));
 
 
         //stores gamepad sticks in variables
@@ -75,14 +97,12 @@ public class OpModeFirst extends OpMode {
         }
 
 
-        FL.setPower(leftPower);
-        BL.setPower(leftPower);
-        FR.setPower(rightPower);
-        BR.setPower(rightPower);
+    }
 
-        telemetry.addData("Status", "Run Time: " + runtime.toString());
-        telemetry.addData("Motors", "left (%.2f), right (%.2f)", leftPower, rightPower);
-
+    void setClawPosition() {
+        double position = (-gamepad2.right_stick_y + 1) / 2;
+        telemetry.addData("Servo", "position: %.2f", position);
+        clawPosition = position;
     }
 
 
