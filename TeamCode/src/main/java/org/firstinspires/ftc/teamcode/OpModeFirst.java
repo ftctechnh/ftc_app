@@ -103,6 +103,7 @@ public class OpModeFirst extends OpMode {
         double position = (-gamepad2.right_stick_y + 1) / 2;
         telemetry.addData("Servo", "position: %.2f", position);
         clawPosition = position;
+
     }
 
 
