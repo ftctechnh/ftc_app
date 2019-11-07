@@ -11,7 +11,7 @@ import static org.firstinspires.ftc.teamcode.Scotts_Things.HardwareFile2019.*;
 
 @Autonomous(name = "AutoTestEncoders2019")
 @Disabled
-public class Auto2019 extends LinearOpMode {
+public class AutoPushbotEncoder extends LinearOpMode {
 
     static final double COUNTS_PER_MOTOR_REV = 1440;    // eg: TETRIX Motor Encoder
     static final double DRIVE_GEAR_REDUCTION = 2.0;     // This is < 1.0 if geared UP

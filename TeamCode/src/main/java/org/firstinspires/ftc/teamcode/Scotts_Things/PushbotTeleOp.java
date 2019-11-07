@@ -10,7 +10,7 @@ import static org.firstinspires.ftc.teamcode.Scotts_Things.HardwareFile2019.*;
 
 @TeleOp(name = "TeleOpTesting 2069")
 @Disabled
-public class TeleOp2019 extends LinearOpMode {
+public class PushbotTeleOp extends LinearOpMode {
 
     HardwareFile2019 robot = new HardwareFile2019();
 
