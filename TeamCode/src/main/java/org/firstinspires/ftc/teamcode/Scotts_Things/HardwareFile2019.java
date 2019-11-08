@@ -39,7 +39,7 @@ public class HardwareFile2019 {
 
     }
 
-    public void directionConfig(){
+    public void directionConfig() {
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -84,21 +84,21 @@ public class HardwareFile2019 {
 
         if (zR > zL) {
             Z = zR;
-        } else {
+        } else if (zL > zR) {
             Z = -1 * zL;
         }
 
         return Z;
     }
 
-    public boolean RightSideInverted(){
+    public boolean RightSideInverted() {
         return frontRight.getDirection() == DcMotorSimple.Direction.REVERSE && backRight.getDirection() == DcMotorSimple.Direction.REVERSE;
     }
 
-    public void setRightSideInversionModifier(){
-        if (RightSideInverted()){
+    public void setRightSideInversionModifier() {
+        if (RightSideInverted()) {
             rightSideInversionModifier = -1;
-        }else{
+        } else {
             rightSideInversionModifier = 1;
         }
     }
