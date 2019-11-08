@@ -20,10 +20,9 @@ public class OpModeFirst extends OpMode {
     private DcMotor BL = null;
     private DcMotor BR = null;
     //------------------------------------------// claw variables:
-    static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
-    static final int CYCLE_MS = 50;     // period of each cycle
-    static final double MAX_POS = 1.0;     // Maximum rotational position
-    static final double MIN_POS = 0.0;     // Minimum rotational position
+    private static final double INCREMENT = 0.01;     // amount to slew servo each CYCLE_MS cycle
+    private static final double MAX_POS = 1.0;     // Maximum rotational position
+    private static final double MIN_POS = 0.5;     // Minimum rotational position
     private double leftPower;
     private double rightPower;
     private double clawPosition;
@@ -51,7 +50,7 @@ public class OpModeFirst extends OpMode {
     @Override
     public void start(){
         runtime.reset();
-        claw.setPosition(0.50);
+        claw.setPosition((MAX_POS + MIN_POS) / 2);
 
     }
 
@@ -100,7 +99,9 @@ public class OpModeFirst extends OpMode {
     }
 
     void setClawPosition() {
-        double position = (-gamepad2.right_stick_y + 1) / 2;
+        double position = claw.getPosition();
+        double increment = ((-gamepad2.right_stick_y + 1) / 2) * INCREMENT;
+        position = Math.min(Math.max(position + increment, MIN_POS), MAX_POS);
         telemetry.addData("Servo", "position: %.2f", position);
         clawPosition = position;
 

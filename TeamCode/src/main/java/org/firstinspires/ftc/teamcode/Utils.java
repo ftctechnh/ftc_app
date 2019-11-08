@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
@@ -17,5 +18,10 @@ public class Utils {
         return result;
     }
 
+    void MoveToEncoderPosition(DcMotor motor, int position) {
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setTargetPosition(position);
+        motor.setPower(1);
+    }
 
 }

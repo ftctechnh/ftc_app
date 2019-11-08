@@ -46,4 +46,24 @@ public class AutonomousFirst extends LinearOpMode {
             rightPower = rPower;
         }
     }
+
+    //TODO: Measure wheel diameter accurately (or find number)
+    static final double wheelDiameter = 10; //-ish centimeters
+    static final double countsPerCm = 1440 / (wheelDiameter * Math.PI);
+
+    //TODO: Finish this
+    void DriveEncoder(double speed, double leftCm, double rightCm) {
+        int leftTarget;  //Target positions (in ticks)
+        int rightTarget; //for the left and right motors.
+
+        //IF THIS DOESN'T WORK, MAKE INDIVIDUAL VARIABLES FOR EACH MOTOR.
+
+        leftTarget = (int) (FL.getCurrentPosition() + (leftCm * countsPerCm));
+        rightTarget = (int) (FR.getCurrentPosition() + (rightCm * countsPerCm));
+        FL.setTargetPosition(leftTarget);
+        FR.setTargetPosition(rightTarget);
+        BL.setTargetPosition(leftTarget);
+        BR.setTargetPosition(rightTarget);
+
+    }
 }
