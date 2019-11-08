@@ -43,7 +43,7 @@ public class TeleOpMecanum extends LinearOpMode {
 
 
             telemetry.addData("Gamepad Values", "Left Stick X:" + gamepadX + "||"
-                    + "Left Stick Y:" + gamepadY);
+                    + "Left Stick Y:" + gamepadY + "||" + "Rotation Z:" + gamepadZ);
             telemetry.update();
         }
     }
