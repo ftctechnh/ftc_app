@@ -1,18 +1,13 @@
 package org.firstinspires.ftc.teamcode.Scotts_Things;
 
-import android.widget.Switch;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import java.*;
-
-import org.firstinspires.ftc.teamcode.Scotts_Things.HardwareFile2019;
-
 import static org.firstinspires.ftc.teamcode.Scotts_Things.HardwareFile2019.*;
 
-@TeleOp(name = "Mechanum")
+@TeleOp(name = "Mecanum")
 @Disabled
 public class TeleOpMecanum extends LinearOpMode {
 
