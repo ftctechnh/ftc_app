@@ -62,7 +62,6 @@ public class MecanumDriveOpMode extends LinearOpMode {
             flipPosition, grabPosition, dragPosition;
 
 
-
     @Override
     public void runOpMode() {
 
@@ -98,7 +97,6 @@ public class MecanumDriveOpMode extends LinearOpMode {
             largest = Math.max(largest, Math.abs(frontRightSpeed));
             largest = Math.max(largest, Math.abs(backLeftSpeed));
             largest = Math.max(largest, Math.abs(backRightSpeed));
-
 
             robot.leftFront.setPower(frontLeftSpeed / largest);
             robot.rightFront.setPower(frontRightSpeed / largest);

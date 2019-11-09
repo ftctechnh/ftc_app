@@ -77,6 +77,11 @@ public class Hardware6417
     public Servo drag = null;
 
     public static final double TURN_POWER_LIFT =  0.5 ;
+    public static final int TICKS = 1440;
+    public static final int DIAMETER = 100; //millimeters
+    public static final int BLOCK_HEIGHT = 127; //millimeters
+
+    public int counter;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -121,12 +126,78 @@ public class Hardware6417
         grab.setPosition(0);
         drag.setPosition(0);
 
+        counter = 0;
+
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
+
+    public void driveForwardPosition(int d, double power){
+
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int distance = (int)((DIAMETER * Math.PI) / TICKS) * d;
+
+        leftFront.setTargetPosition(distance);
+        rightFront.setTargetPosition(distance);
+        leftBack.setTargetPosition(distance);
+        rightBack.setTargetPosition(distance);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+        rightBack.setPower(power);
+
+        while(leftFront.isBusy() || rightFront.isBusy() || leftBack.isBusy() || rightBack.isBusy()){
+        }
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+    public void liftArm(double power){
+
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        counter++;
+        armMotor.setTargetPosition(counter * BLOCK_HEIGHT); // redo the math later
+
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        armMotor.setPower(power);
+
+        while(armMotor.isBusy()){
+        }
+
+        armMotor.setPower(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+    public void strafePosition(int g){
+
+    }
+
 }
