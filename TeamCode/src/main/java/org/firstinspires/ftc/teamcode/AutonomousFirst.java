@@ -25,15 +25,24 @@ public class AutonomousFirst extends LinearOpMode {
     private double clawPosition;
     private Servo claw = null;
 
+    static final double robotWidth = 0; //TODO: measure
+    private static final double wheelDiameter = 10.16;
+    private static final double countsPerCm = 1440 / (wheelDiameter * Math.PI);
+
     @Override
     public void runOpMode() throws InterruptedException {
+        //setup
+        FL = hardwareMap.get(DcMotor.class, "fl");
+        FR = hardwareMap.get(DcMotor.class, "fr");
+        BL = hardwareMap.get(DcMotor.class, "bl");
+        BR = hardwareMap.get(DcMotor.class, "br");
         runtime.reset();
 
+        //begin of actual code (move forwards 5cm, then spin a bit [idk how much])
+        DriveEncoder(1, 5, 5);
+        DriveEncoder(1, 3, -3);
     }
 
-    void setDrivePower() {
-
-    }
 
     void setClawPosition() {
 
@@ -47,23 +56,54 @@ public class AutonomousFirst extends LinearOpMode {
         }
     }
 
-    //TODO: Measure wheel diameter accurately (or find number)
-    static final double wheelDiameter = 10; //-ish centimeters
-    static final double countsPerCm = 1440 / (wheelDiameter * Math.PI);
 
-    //TODO: Finish this
-    void DriveEncoder(double speed, double leftCm, double rightCm) {
-        int leftTarget;  //Target positions (in ticks)
-        int rightTarget; //for the left and right motors.
+    /**
+     * Drives some amount of centimeters on each side at some speed.
+     *
+     * @param speed   the speed, between 0 and 1 please.
+     * @param leftCm  the distance in cm to move the left of the robot.
+     * @param rightCm the distance in cm to move the right of the robot.
+     */
+    private void DriveEncoder(double speed, double leftCm, double rightCm) {
+        int FLTarget;  //Target positions (in ticks)
+        int FRTarget; //for the motors.
+        int BLTarget;
+        int BRTarget;
 
-        //IF THIS DOESN'T WORK, MAKE INDIVIDUAL VARIABLES FOR EACH MOTOR.
+        FLTarget = (int) (FL.getCurrentPosition() + (leftCm * countsPerCm)); //maths
+        FRTarget = (int) (FR.getCurrentPosition() + (rightCm * countsPerCm));
+        BLTarget = (int) (BL.getCurrentPosition() + (leftCm * countsPerCm));
+        BRTarget = (int) (BR.getCurrentPosition() + (rightCm * countsPerCm));
 
-        leftTarget = (int) (FL.getCurrentPosition() + (leftCm * countsPerCm));
-        rightTarget = (int) (FR.getCurrentPosition() + (rightCm * countsPerCm));
-        FL.setTargetPosition(leftTarget);
-        FR.setTargetPosition(rightTarget);
-        BL.setTargetPosition(leftTarget);
-        BR.setTargetPosition(rightTarget);
+        FL.setTargetPosition(FLTarget); //set the target positions mmmm
+        FR.setTargetPosition(FRTarget);
+        BL.setTargetPosition(BLTarget);
+        BR.setTargetPosition(BRTarget);
+
+        FL.setMode(DcMotor.RunMode.RUN_TO_POSITION); //set the run mode to the correct one
+        FR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        BR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        FL.setPower(Math.abs(speed)); //go fast (or slow, i guess. you do you)
+        FR.setPower(Math.abs(speed));
+        BL.setPower(Math.abs(speed));
+        BR.setPower(Math.abs(speed));
+
+        while (opModeIsActive() && FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy()) { //yell debug stuff. I should probably add more later for *debug purposes* owo
+            telemetry.addData("Path:", "%.3f cm :%.3f cm", leftCm, rightCm);
+            telemetry.update();
+        }
+
+        FL.setPower(0); //HALT!
+        FR.setPower(0); //HALT!
+        BL.setPower(0); //HALT!
+        BR.setPower(0); //HALT!
+
+        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //set motors back to normal.
+        FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 }

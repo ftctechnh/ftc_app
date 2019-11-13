@@ -72,7 +72,7 @@ public class OpModeFirst extends OpMode {
 
     }
 
-    void setDrivePower() {
+    private void setDrivePower() {
 
         if (Utils.getBatteryVoltage(hardwareMap) < 12.0d) {
             telemetry.addLine("Warning! Battery voltage is low");
@@ -98,7 +98,7 @@ public class OpModeFirst extends OpMode {
 
     }
 
-    void setClawPosition() {
+    private void setClawPosition() {
         double position = claw.getPosition();
         double increment = ((-gamepad2.right_stick_y + 1) / 2) * INCREMENT;
         position = Math.min(Math.max(position + increment, MIN_POS), MAX_POS);

@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 public class Utils {
 
+
     // Computes the current battery voltage
     static double getBatteryVoltage(HardwareMap hardwareMap) {
         double result = Double.POSITIVE_INFINITY;
@@ -18,7 +19,7 @@ public class Utils {
         return result;
     }
 
-    void MoveToEncoderPosition(DcMotor motor, int position) {
+    public void moveToEncoderPosition(DcMotor motor, int position) {
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setTargetPosition(position);
         motor.setPower(1);
