@@ -25,7 +25,7 @@ public class AutonomousFirst extends LinearOpMode {
     private double clawPosition;
     private Servo claw = null;
 
-    static final double robotWidth = 0; //TODO: measure
+    private static final double robotWidth = 41; //cm. From wheel to wheel. TODO: get a more accurate #
     private static final double wheelDiameter = 10.16;
     private static final double countsPerCm = 1440 / (wheelDiameter * Math.PI);
 
@@ -38,9 +38,12 @@ public class AutonomousFirst extends LinearOpMode {
         BR = hardwareMap.get(DcMotor.class, "br");
         runtime.reset();
 
-        //begin of actual code (move forwards 5cm, then spin a bit [idk how much])
-        DriveEncoder(1, 5, 5);
-        DriveEncoder(1, 3, -3);
+        //begin of actual code
+        DriveEncoder(0.25, 50, 50);
+        turnDegrees(0.25, 270);
+        turnDegrees(0.25, -90);
+        DriveEncoder(0.25, 50, 50);
+        turnDegrees(1, 180);
     }
 
 
@@ -64,7 +67,7 @@ public class AutonomousFirst extends LinearOpMode {
      * @param leftCm  the distance in cm to move the left of the robot.
      * @param rightCm the distance in cm to move the right of the robot.
      */
-    private void DriveEncoder(double speed, double leftCm, double rightCm) {
+    void DriveEncoder(double speed, double leftCm, double rightCm) {
         int FLTarget;  //Target positions (in ticks)
         int FRTarget; //for the motors.
         int BLTarget;
@@ -105,5 +108,17 @@ public class AutonomousFirst extends LinearOpMode {
         BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+    }
+
+    /**
+     * Executes a point turn for given number of degrees
+     *
+     * @param speed   the speed to turn at, between 0 and 1 please.
+     * @param degrees how far to turn, from -360 to 360. Turns right if positive, left if negative.
+     */
+    void turnDegrees(double speed, double degrees) {
+        double radians = Math.toRadians(degrees);
+        double turnDistance = radians * robotWidth / 2;
+        DriveEncoder(speed, -turnDistance, turnDistance);
     }
 }
