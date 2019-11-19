@@ -25,25 +25,31 @@ public class AutonomousFirst extends LinearOpMode {
     private double clawPosition;
     private Servo claw = null;
 
-    private static final double robotWidth = 41; //cm. From wheel to wheel. TODO: get a more accurate #
-    private static final double wheelDiameter = 10.16;
-    private static final double countsPerCm = 1440 / (wheelDiameter * Math.PI);
+    private static final double ROBOT_WIDTH = 41; //cm. From wheel to wheel. TODO: get a more accurate #
+    private static final double WHEEL_DIAMETER = 10.16;
+    private static final double COUNTS_PER_CM = 1440 / (WHEEL_DIAMETER * Math.PI);
 
     @Override
     public void runOpMode() throws InterruptedException {
+        runSetup();
+        //begin of actual code
+        driveEncoder(0.25, 50, 50);
+        turnDegrees(0.25, 270);
+        turnDegrees(0.25, -90);
+        driveEncoder(0.25, 50, 50);
+        turnDegrees(1, 180);
+    }
+
+    /**
+     * Sets up motors and resets the runtime.
+     */
+    public void runSetup() {
         //setup
         FL = hardwareMap.get(DcMotor.class, "fl");
         FR = hardwareMap.get(DcMotor.class, "fr");
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
         runtime.reset();
-
-        //begin of actual code
-        DriveEncoder(0.25, 50, 50);
-        turnDegrees(0.25, 270);
-        turnDegrees(0.25, -90);
-        DriveEncoder(0.25, 50, 50);
-        turnDegrees(1, 180);
     }
 
 
@@ -51,6 +57,7 @@ public class AutonomousFirst extends LinearOpMode {
 
     }
 
+    //felt cute, might delete later, idk
     void DriveForSeconds(double seconds, double rPower, double lPower) {
         double targetTime = runtime.time() + seconds;
         while (runtime.time() < targetTime && opModeIsActive()) {
@@ -67,16 +74,16 @@ public class AutonomousFirst extends LinearOpMode {
      * @param leftCm  the distance in cm to move the left of the robot.
      * @param rightCm the distance in cm to move the right of the robot.
      */
-    void DriveEncoder(double speed, double leftCm, double rightCm) {
+    void driveEncoder(double speed, double leftCm, double rightCm) {
         int FLTarget;  //Target positions (in ticks)
         int FRTarget; //for the motors.
         int BLTarget;
         int BRTarget;
 
-        FLTarget = (int) (FL.getCurrentPosition() + (leftCm * countsPerCm)); //maths
-        FRTarget = (int) (FR.getCurrentPosition() + (rightCm * countsPerCm));
-        BLTarget = (int) (BL.getCurrentPosition() + (leftCm * countsPerCm));
-        BRTarget = (int) (BR.getCurrentPosition() + (rightCm * countsPerCm));
+        FLTarget = (int) (FL.getCurrentPosition() + (leftCm * COUNTS_PER_CM)); //maths
+        FRTarget = (int) (FR.getCurrentPosition() + (rightCm * COUNTS_PER_CM));
+        BLTarget = (int) (BL.getCurrentPosition() + (leftCm * COUNTS_PER_CM));
+        BRTarget = (int) (BR.getCurrentPosition() + (rightCm * COUNTS_PER_CM));
 
         FL.setTargetPosition(FLTarget); //set the target positions mmmm
         FR.setTargetPosition(FRTarget);
@@ -93,6 +100,8 @@ public class AutonomousFirst extends LinearOpMode {
         BL.setPower(Math.abs(speed));
         BR.setPower(Math.abs(speed));
 
+        //keep looping while opmode is active and the motors are working.
+        //do the telemetry so i know what the hell is going on.
         while (opModeIsActive() && FL.isBusy() && FR.isBusy() && BL.isBusy() && BR.isBusy()) { //yell debug stuff. I should probably add more later for *debug purposes* owo
             telemetry.addData("Path:", "%.3f cm :%.3f cm", leftCm, rightCm);
             telemetry.update();
@@ -101,9 +110,9 @@ public class AutonomousFirst extends LinearOpMode {
         FL.setPower(0); //HALT!
         FR.setPower(0); //HALT!
         BL.setPower(0); //HALT!
-        BR.setPower(0); //HALT!
+        BR.setPower(0); //HALT! Who goes there?
 
-        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //set motors back to normal.
+        FL.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //set motors back to normal run mode w/ encoders very cool.
         FR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -111,14 +120,14 @@ public class AutonomousFirst extends LinearOpMode {
     }
 
     /**
-     * Executes a point turn for given number of degrees
+     * Executes a point turn for given number of degrees.
      *
      * @param speed   the speed to turn at, between 0 and 1 please.
      * @param degrees how far to turn, from -360 to 360. Turns right if positive, left if negative.
      */
     void turnDegrees(double speed, double degrees) {
         double radians = Math.toRadians(degrees);
-        double turnDistance = radians * robotWidth / 2;
-        DriveEncoder(speed, -turnDistance, turnDistance);
+        double turnDistance = radians * ROBOT_WIDTH / 2;
+        driveEncoder(speed, -turnDistance, turnDistance);
     }
 }
