@@ -26,7 +26,7 @@ public class AutonomousFirst extends LinearOpMode {
     private Servo claw = null;
 
     private static final double ROBOT_WIDTH = 41; //cm. From wheel to wheel. TODO: get a more accurate #
-    private static final double WHEEL_DIAMETER = 10.16;
+    private static final double WHEEL_DIAMETER = 10.16; //cm.
     private static final double COUNTS_PER_CM = 1440 / (WHEEL_DIAMETER * Math.PI);
 
     @Override
@@ -43,7 +43,7 @@ public class AutonomousFirst extends LinearOpMode {
     /**
      * Sets up motors and resets the runtime.
      */
-    public void runSetup() {
+    void runSetup() {
         //setup
         FL = hardwareMap.get(DcMotor.class, "fl");
         FR = hardwareMap.get(DcMotor.class, "fr");
