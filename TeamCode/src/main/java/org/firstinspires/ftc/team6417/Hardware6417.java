@@ -80,10 +80,10 @@ public class Hardware6417
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftFront = hwMap.get(DcMotor.class, "LeftFrontDrive");
-        leftBack = hwMap.get(DcMotor.class, "LeftBackDrive");
-        rightFront = hwMap.get(DcMotor.class, "RightFrontDrive");
-        rightBack = hwMap.get(DcMotor.class, "RightBackDrive");
+        leftFront = hwMap.get(DcMotor.class, "FrontLeft");
+        leftBack = hwMap.get(DcMotor.class, "BackLeft");
+        rightFront = hwMap.get(DcMotor.class, "FrontRight");
+        rightBack = hwMap.get(DcMotor.class, "BackRight");
 
         //flip = hwMap.get(Servo.class, "flip_servo");
         //hand = hwMap.get(Servo.class, "hand_servo");
