@@ -34,8 +34,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -90,12 +88,16 @@ public class MecanumDriveOpMode extends LinearOpMode {
             strafe = -gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
 
-            setMotorSpeeds(forward, strafe, rotate);
+            setDriveSpeeds(forward, strafe, rotate);
+
+            double armUpSpeed = gamepad2.right_trigger;
+            double armDownSpeed = gamepad2.left_trigger;
+            robot.armMotor.setPower(armUpSpeed - armDownSpeed);
         }
     }
 
     // moves robot in direction controlled by top gamepad button for a moment
-    private void setMotorSpeeds(double forward, double strafe, double rotate) {
+    private void setDriveSpeeds(double forward, double strafe, double rotate) {
 
         double frontLeftSpeed = forward + strafe - rotate;
         double frontRightSpeed = forward - strafe - rotate;
@@ -120,16 +122,16 @@ public class MecanumDriveOpMode extends LinearOpMode {
     private void nudgeRobot(Direction dir) {
         switch(dir) {
             case FORWARD:
-                setMotorSpeeds(1, 0, 0);
+                setDriveSpeeds(1, 0, 0);
                 break;
             case BACKWARD:
-                setMotorSpeeds(-1, 0, 0);
+                setDriveSpeeds(-1, 0, 0);
                 break;
             case LEFT:
-                setMotorSpeeds(0, 0, 1);
+                setDriveSpeeds(0, 0, 1);
                 break;
             case RIGHT:
-                setMotorSpeeds(0, 0, -1);
+                setDriveSpeeds(0, 0, -1);
                 break;
         }
 
@@ -140,7 +142,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
             e.printStackTrace();
             return;
         }
-        setMotorSpeeds(0, 0, 0);
+        setDriveSpeeds(0, 0, 0);
 
     }
 }
