@@ -7,31 +7,22 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-import java.io.ByteArrayOutputStream;
-
-@Autonomous(name="Auto6417", group="Autonomous")
+@Autonomous(name="BlueWaffleAuto", group="6417")
 public class Auto6417 extends LinearOpMode {
 
-    DcMotor frontleft;
-    DcMotor frontright;
-    DcMotor backleft;
-    DcMotor backright;
-    //28 * 20 / (2ppi * 4.125)
     Double width = 16.0; //inches
-    Integer cpr = 28; //counts per rotation
-    Integer gearratio = 26;
-    Double diameter = 4.125;
-    Double cpi = (cpr * gearratio)/(Math.PI * diameter); //counts per inch, 28cpr * gear ratio / (2 * pi * diameter (in inches, in the center))
-    Double bias = 1.0;//default 0.8
-    Double meccyBias = 0.9;//change to adjust only strafing movement
-
+    Integer cpr = 28;
+    Integer gearratio = 53;
+    Double diameter = 3.93701;
+    Double cpi = (cpr * gearratio)/(Math.PI * diameter);
+    Double bias = 0.8;
+    Double meccyBias = 0.9;
     Double conversion = cpi * bias;
     Boolean exit = false;
 
@@ -39,75 +30,68 @@ public class Auto6417 extends LinearOpMode {
     Orientation angles;
     Acceleration gravity;
 
-    public void runOpMode() {
-        //
+    Hardware6417 robot = new Hardware6417();
+
+
+    public void runOpMode(){
+
         initGyro();
-        //
-        frontleft = hardwareMap.dcMotor.get("LeftFrontDrive");
-        frontright = hardwareMap.dcMotor.get("RightFrontDrive");
-        backleft = hardwareMap.dcMotor.get("LeftBackDrive");
-        backright = hardwareMap.dcMotor.get("RightBackDrive");
-
-        frontright.setDirection(DcMotorSimple.Direction.REVERSE);
-        backright.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        robot.init(hardwareMap);
 
         waitForStartify();
 
-        /***
 
-         moveToPosition(26, 0.2);
-
-         moveToPosition(-6, 0.2);
-
-         strafeToPosition(-76.6, 0.2);
-
-         moveToPosition(26.4, 0.2);
-
-         moveToPosition(-45, 0.2);
-
-         strafeToPosition(-18.8, 0.2);
-         ***/
+        strafeToPosition(1, 0.2);
+        /**
+        moveToPosition(77.4, 0.2);
+        turnWithGyro(90, 0.2);
+        robot.dragLeft.setPosition(0.25);
+        robot.dragRight.setPosition(0.25);
+        moveToPosition(-5, 0.2);
+        robot.dragLeft.setPosition(-0.25);
+        robot.dragRight.setPosition(-0.25);
+         **/
 
     }
-
     //
     /*
     This function's purpose is simply to drive forward or backward.
     To drive backward, simply make the inches input negative.
      */
+
+
     public void moveToPosition(double inches, double speed){
         //
         int move = (int)(Math.round(inches*conversion));
         //
-        backleft.setTargetPosition(backleft.getCurrentPosition() + move);
-        frontleft.setTargetPosition(frontleft.getCurrentPosition() + move);
-        backright.setTargetPosition(backright.getCurrentPosition() + move);
-        frontright.setTargetPosition(frontright.getCurrentPosition() + move);
+        robot.leftBack.setTargetPosition(robot.leftBack.getCurrentPosition() + move);
+        robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + move);
+        robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition() + move);
+        robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition() + move);
         //
-        frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //
-        frontleft.setPower(speed);
-        backleft.setPower(speed);
-        frontright.setPower(speed);
-        backright.setPower(speed);
+        robot.leftFront.setPower(speed);
+        robot.leftBack.setPower(speed);
+        robot.rightFront.setPower(speed);
+        robot.rightBack.setPower(speed);
         //
-        while (frontleft.isBusy() && frontright.isBusy() && backleft.isBusy() && backright.isBusy()){
+        while (robot.leftFront.isBusy() && robot.rightFront.isBusy() && robot.leftBack.isBusy() && robot.rightBack.isBusy()){
             if (exit){
-                frontright.setPower(0);
-                frontleft.setPower(0);
-                backright.setPower(0);
-                backleft.setPower(0);
+                robot.leftFront.setPower(0);
+                robot.rightFront.setPower(0);
+                robot.leftBack.setPower(0);
+                robot.rightBack.setPower(0);
                 return;
             }
         }
-        frontright.setPower(0);
-        frontleft.setPower(0);
-        backright.setPower(0);
-        backleft.setPower(0);
+        robot.rightFront.setPower(0);
+        robot.leftFront.setPower(0);
+        robot.rightBack.setPower(0);
+        robot.leftBack.setPower(0);
         return;
     }
     //
@@ -206,21 +190,24 @@ public class Auto6417 extends LinearOpMode {
                 telemetry.addData("second after", convertify(second));
                 telemetry.update();
             }
-            frontleft.setPower(0);
-            frontright.setPower(0);
-            backleft.setPower(0);
-            backright.setPower(0);
+            robot.leftFront.setPower(0);
+            robot.rightFront.setPower(0);
+            robot.leftBack.setPower(0);
+            robot.rightBack.setPower(0);
         }
         //</editor-fold>
         //
-        frontleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        backright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
     }
     //
     /*
@@ -231,26 +218,34 @@ public class Auto6417 extends LinearOpMode {
         //
         int move = (int)(Math.round(inches * cpi * meccyBias));
         //
-        backleft.setTargetPosition(backleft.getCurrentPosition() - move);
-        frontleft.setTargetPosition(frontleft.getCurrentPosition() + move);
-        backright.setTargetPosition(backright.getCurrentPosition() + move);
-        frontright.setTargetPosition(frontright.getCurrentPosition() - move);
+        robot.leftBack.setTargetPosition(robot.leftBack.getCurrentPosition() - move);
+        robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + move);
+        robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition() + move);
+        robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition() - move);
         //
-        frontleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backleft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backright.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //
-        frontleft.setPower(speed);
-        backleft.setPower(speed);
-        frontright.setPower(speed);
-        backright.setPower(speed);
+        robot.leftFront.setPower(speed);
+        robot.leftBack.setPower(speed);
+        robot.rightFront.setPower(speed);
+        robot.rightBack.setPower(speed);
         //
-        while (frontleft.isBusy() && frontright.isBusy() && backleft.isBusy() && backright.isBusy()){}
-        frontright.setPower(0);
-        frontleft.setPower(0);
-        backright.setPower(0);
-        backleft.setPower(0);
+        while (robot.leftFront.isBusy() && robot.rightFront.isBusy() && robot.leftBack.isBusy() && robot.rightBack.isBusy()){
+            if (exit){
+                robot.leftFront.setPower(0);
+                robot.rightFront.setPower(0);
+                robot.leftBack.setPower(0);
+                robot.rightBack.setPower(0);
+                return;
+            }
+        }
+        robot.rightFront.setPower(0);
+        robot.leftFront.setPower(0);
+        robot.rightBack.setPower(0);
+        robot.leftBack.setPower(0);
         return;
     }
     //
@@ -305,15 +300,15 @@ public class Auto6417 extends LinearOpMode {
     encoder mode and turn.
      */
     public void turnWithEncoder(double input){
-        frontleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        //
-        frontleft.setPower(input);
-        backleft.setPower(input);
-        frontright.setPower(-input);
-        backright.setPower(-input);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.leftFront.setPower(input);
+        robot.leftBack.setPower(input);
+        robot.rightFront.setPower(-input);
+        robot.rightBack.setPower(-input);
     }
     //
 }

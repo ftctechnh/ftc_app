@@ -36,6 +36,7 @@ import android.graphics.Rect;
 import android.graphics.YuvImage;
 import android.hardware.Camera;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -66,20 +67,15 @@ import java.io.ByteArrayOutputStream;
 public class Hardware6417
 {
     /* Public OpMode members. */
-    public DcMotor  leftFront = null;
-    public DcMotor  rightFront = null;
-    public DcMotor  leftBack = null;
-    public DcMotor  rightBack = null;
-    public DcMotor  armMotor = null;
+    public DcMotor  leftFront = null, rightFront = null, leftBack = null, rightBack = null,
+            armMotor = null, extendArm = null;
 
-    public Servo flip = null;
-    public Servo grab = null;
-    public Servo drag = null;
+    public Servo dragRight = null, dragLeft = null, grabberServo = null;
 
     public static final double TURN_POWER_LIFT =  0.5 ;
-    public static final int TICKS = 1440;
-    public static final int DIAMETER = 100; //millimeters
-    public static final int BLOCK_HEIGHT = 127; //millimeters
+    public static final int CPR = 1440;
+    public static final double DIAMETER = 3.93701; //inches
+    //public static final int BLOCK_HEIGHT = 127; //millimeters
 
     public int counter;
 
@@ -102,11 +98,14 @@ public class Hardware6417
         rightFront = hwMap.get(DcMotor.class, "RightFrontDrive");
         rightBack = hwMap.get(DcMotor.class, "RightBackDrive");
 
+        /***
         armMotor = hwMap.get(DcMotor.class, "ArmMotor");
+        grabberServo = hwMap.get(Servo.class, "grabberServo");
+        extendArm = hwMap.get(DcMotor.class, "extendArm");
 
-        flip = hwMap.get(Servo.class, "flip_servo");
-        grab = hwMap.get(Servo.class, "GrabHand");
-        drag = hwMap.get(Servo.class, "DragHand");
+        dragLeft = hwMap.get(Servo.class, "dragLeft");
+        dragRight = hwMap.get(Servo.class, "dragRight");
+         ***/
 
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
@@ -119,14 +118,16 @@ public class Hardware6417
         leftBack.setPower(0);
         rightFront.setPower(0);
         rightBack.setPower(0);
+
+        /***
         armMotor.setPower(0);
+        extendArm.setPower(0);
+         ***/
 
-
-        flip.setPosition(0);
-        grab.setPosition(0);
-        drag.setPosition(0);
-
-        counter = 0;
+        /**
+        dragLeft.setPosition(0);
+        dragRight.setPosition(0);
+         **/
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -134,18 +135,41 @@ public class Hardware6417
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        /***
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extendArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+         ***/
 
     }
 
-    public void driveForwardPosition(int d, double power){
+    public void liftArm(double power){
+
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        counter++;
+        //armMotor.setTargetPosition(counter * BLOCK_HEIGHT); // redo the math later
+
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        armMotor.setPower(power);
+
+        while(armMotor.isBusy()){ }
+
+        armMotor.setPower(0);
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+    /***
+
+    public void drivetoPosition(int d, double power){
 
         leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        int distance = (int)((DIAMETER * Math.PI) / TICKS) * d;
+        int distance = (int)(CPR / (DIAMETER * Math.PI) * d);
 
         leftFront.setTargetPosition(distance);
         rightFront.setTargetPosition(distance);
@@ -162,8 +186,7 @@ public class Hardware6417
         leftBack.setPower(power);
         rightBack.setPower(power);
 
-        while(leftFront.isBusy() || rightFront.isBusy() || leftBack.isBusy() || rightBack.isBusy()){
-        }
+        while(leftFront.isBusy() || rightFront.isBusy() || leftBack.isBusy() || rightBack.isBusy()){ }
 
         leftFront.setPower(0);
         rightFront.setPower(0);
@@ -177,27 +200,51 @@ public class Hardware6417
 
     }
 
-    public void liftArm(double power){
 
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void strafeToPosition(int d, double power){
 
-        counter++;
-        armMotor.setTargetPosition(counter * BLOCK_HEIGHT); // redo the math later
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        int distance = (int)(CPR / (DIAMETER * Math.PI) * d);
 
-        armMotor.setPower(power);
+        leftFront.setTargetPosition(distance);
+        rightFront.setTargetPosition(-distance);
+        leftBack.setTargetPosition(-distance);
+        rightBack.setTargetPosition(distance);
 
-        while(armMotor.isBusy()){
-        }
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        armMotor.setPower(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+        rightBack.setPower(power);
+
+        while(leftFront.isBusy() || rightFront.isBusy() || leftBack.isBusy() || rightBack.isBusy()){ }
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     }
 
-    public void strafePosition(int g){
-
+    public void turnWithEncoder(double input){
+        leftFront.setPower(input);
+        leftBack.setPower(input);
+        rightFront.setPower(-input);
+        rightBack.setPower(-input);
     }
+     ***/
 
 }

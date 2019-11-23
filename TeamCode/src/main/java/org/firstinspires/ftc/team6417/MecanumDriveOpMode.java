@@ -109,25 +109,19 @@ public class MecanumDriveOpMode extends LinearOpMode {
             robot.armMotor.setPower(armUpPower - armDownPower);
 
             if(gamepad1.a) {
-                robot.flip.setPosition(0);
+                robot.grabberServo.setPosition(0);
             }
             else if(gamepad1.b){
-                robot.flip.setPosition(0.5);
+                robot.grabberServo.setPosition(0.5);
             }
 
-            if(gamepad1.x){
-                robot.grab.setPosition(0);
+            while(gamepad1.x){
+                robot.extendArm.setPower(0.5);
             }
-            else if(gamepad1.y){
-                robot.grab.setPosition(0.5);
+            while(gamepad1.y){
+                robot.extendArm.setPower(-0.5);
             }
-
-            if(gamepad1.dpad_up){
-                robot.drag.setPosition(0);
-            }
-            else if(gamepad1.dpad_down){
-                robot.drag.setPosition(0.5);
-            }
+            robot.extendArm.setPower(0);
 
 
         }
