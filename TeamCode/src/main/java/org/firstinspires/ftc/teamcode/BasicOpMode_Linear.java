@@ -62,8 +62,11 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor right_front = null;
     private DcMotor left_back = null;
     private DcMotor right_back = null;
+
     private DcMotor arm_1 = null;
     private DcMotor arm_2 = null;
+    private DcMotor out = null;
+    private DcMotor grab = null;
     private CRServo foundation = null;
 
     @Override
@@ -78,8 +81,12 @@ public class BasicOpMode_Linear extends LinearOpMode {
         right_front = hardwareMap.get(DcMotor.class, "right_front");
         left_back = hardwareMap.get(DcMotor.class, "left_back");
         right_back = hardwareMap.get(DcMotor.class, "right_back");
+
         arm_1 = hardwareMap.get(DcMotor.class, "arm_1");
         arm_2 = hardwareMap.get(DcMotor.class, "arm_2");
+        out = hardwareMap.get(DcMotor.class, "out");
+        grab = hardwareMap.get(DcMotor.class, "grab");
+
         foundation = hardwareMap.get(CRServo.class, "foundation");
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -89,8 +96,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
         left_back.setDirection(DcMotor.Direction.FORWARD);
         right_back.setDirection(DcMotor.Direction.REVERSE);
 
-        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -120,6 +127,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 right_front.setPower(0.5*rightPower);
                 right_back.setPower(0.5*rightPower);
             }
+
             //foundation
             if (gamepad1.left_trigger > 0.05) {
                 foundation.setPower(1);
@@ -128,19 +136,20 @@ public class BasicOpMode_Linear extends LinearOpMode {
             } else {
                 foundation.setPower(0);
             }
+
             //arm movement
             if (gamepad2.x) {
-                if(arm_1.getCurrentPosition() > -200) {
+//                if(arm_1.getCurrentPosition() > -200) {
                     arm_1.setPower(-1);
-                } else {
-                    arm_1.setPower(0.25);
-                }
+//                } else {
+//                    arm_1.setPower(0.25);
+//                }
             } else if (gamepad2.y) {
-                if(arm_1.getCurrentPosition() < -2000) {
+//                if(arm_1.getCurrentPosition() < -2000) {
                     arm_1.setPower(1);
-                } else {
-                    arm_1.setPower(0.5);
-                }
+//                } else {
+//                    arm_1.setPower(0.5);
+//                }
             } else {
                 arm_1.setPower(0);
             }
@@ -152,6 +161,25 @@ public class BasicOpMode_Linear extends LinearOpMode {
             } else {
                 arm_2.setPower(0);
             }
+
+            //out
+            if(gamepad2.dpad_up) {
+                out.setPower(1);
+            } else if(gamepad2.dpad_down) {
+                out.setPower(-1);
+            } else {
+                out.setPower(0);
+            }
+
+            //grab
+            if(gamepad1.x) {
+                grab.setPower(1);
+            } else if (gamepad1.y) {
+                grab.setPower(-1);
+            } else {
+                grab.setPower(0);
+            }
+
             telemetry.addData("toehnu", arm_1.getCurrentPosition());
             telemetry.update();
         }
