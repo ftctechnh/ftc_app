@@ -25,19 +25,21 @@ public class AutonomousFirst extends LinearOpMode {
     private double clawPosition;
     private Servo claw = null;
 
-    private static final double ROBOT_WIDTH = 41; //cm. From wheel to wheel. TODO: get a more accurate #
+    private static final double ROBOT_WIDTH = 32.8; //cm. From wheel to wheel. THIS VALUE IS NOT CORRECT TODO: get a more accurate #
     private static final double WHEEL_DIAMETER = 10.16; //cm.
     private static final double COUNTS_PER_CM = 1440 / (WHEEL_DIAMETER * Math.PI);
 
     @Override
     public void runOpMode() throws InterruptedException {
         runSetup();
+
+
         //begin of actual code
         driveEncoder(0.25, 50, 50);
-        turnDegrees(0.25, 270);
+        /*turnDegrees(0.25, 270);
         turnDegrees(0.25, -90);
         driveEncoder(0.25, 50, 50);
-        turnDegrees(1, 180);
+        turnDegrees(1, 180);*/
     }
 
     /**
@@ -49,7 +51,15 @@ public class AutonomousFirst extends LinearOpMode {
         FR = hardwareMap.get(DcMotor.class, "fr");
         BL = hardwareMap.get(DcMotor.class, "bl");
         BR = hardwareMap.get(DcMotor.class, "br");
+
+        //accounting for how the motors are mounted
+        FL.setDirection(DcMotor.Direction.REVERSE);
+        BL.setDirection(DcMotor.Direction.REVERSE);
+        FR.setDirection(DcMotor.Direction.FORWARD);
+        BR.setDirection(DcMotor.Direction.FORWARD);
         runtime.reset();
+
+        waitForStart();
     }
 
 
@@ -127,6 +137,7 @@ public class AutonomousFirst extends LinearOpMode {
      */
     void turnDegrees(double speed, double degrees) {
         double radians = Math.toRadians(degrees);
+        telemetry.addData("Radians: ", "%.3f", radians);
         double turnDistance = radians * ROBOT_WIDTH / 2;
         driveEncoder(speed, -turnDistance, turnDistance);
     }
