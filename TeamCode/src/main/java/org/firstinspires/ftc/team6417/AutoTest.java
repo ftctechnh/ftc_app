@@ -1,126 +1,121 @@
 package org.firstinspires.ftc.team6417;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 @Autonomous(name="AutoTest", group="Autonomous")
 public class AutoTest extends LinearOpMode {
+
+    IntegratingGyroscope gyro;
+    ModernRoboticsI2cGyro modernRoboticsI2cGyro;
 
     Hardware6417 robot = new Hardware6417();
     private ElapsedTime runtime = new ElapsedTime();
 
     public void runOpMode() {
 
-        robot.init(hardwareMap);
+        boolean lastResetState = false;
+        boolean curResetState  = false;
 
-        telemetry.addData("Status", "Ready to run");
-        telemetry.update();
-        waitForStart();
+        // Get a reference to a Modern Robotics gyro object. We use several interfaces
+        // on this object to illustrate which interfaces support which functionality.
+        modernRoboticsI2cGyro = hardwareMap.get(ModernRoboticsI2cGyro.class, "gyro");
+        gyro = (IntegratingGyroscope)modernRoboticsI2cGyro;
+        // If you're only interested int the IntegratingGyroscope interface, the following will suffice.
+        // gyro = hardwareMap.get(IntegratingGyroscope.class, "gyro");
+        // A similar approach will work for the Gyroscope interface, if that's all you need.
 
-        drivetoPosition(1, 0.2);
+        // Start calibrating the gyro. This takes a few seconds and is worth performing
+        // during the initialization phase at the start of each opMode.
+        telemetry.log().add("Gyro Calibrating. Do Not Move!");
+        modernRoboticsI2cGyro.calibrate();
 
-        /***
-        robot.drivetoPosition(60, 0.2);
-
-        //turn
-
-        robot.dragLeft.setPosition(robot.dragLeft.getPosition() + 0.5);
-        robot.dragRight.setPosition(robot.dragRight.getPosition() + 0.5);
-
-        robot.dragLeft.setPosition(robot.dragLeft.getPosition() - 0.5);
-        robot.dragRight.setPosition(robot.dragRight.getPosition() - 0.5);
-        robot.strafeToPosition(-40, 0.2);
-         ***/
-
-    }
-
-    public void drivetoPosition(int d, double power){
-
-        int distance = (int)(robot.CPR / (robot.DIAMETER * Math.PI) * d);
-        telemetry.addData("Distance: ", distance);
-        telemetry.update();
-
-        robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + distance);
-        robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition() + distance);
-        robot.leftBack.setTargetPosition(robot.leftBack.getCurrentPosition() + distance);
-        robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition() + distance);
-
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.leftFront.setPower(power);
-        robot.rightFront.setPower(power);
-        robot.leftBack.setPower(power);
-        robot.rightBack.setPower(power);
-
-        while(robot.leftFront.isBusy() || robot.rightFront.isBusy() || robot.leftBack.isBusy() || robot.rightBack.isBusy()){
-            telemetry.addData("Position:", robot.leftFront.getCurrentPosition());
+        // Wait until the gyro calibration is complete
+        runtime.reset();
+        while (!isStopRequested() && modernRoboticsI2cGyro.isCalibrating())  {
+            telemetry.addData("calibrating", "%s", Math.round(runtime.seconds())%2==0 ? "|.." : "..|");
             telemetry.update();
+            sleep(50);
         }
 
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
+        telemetry.log().clear(); telemetry.log().add("Gyro Calibrated. Press Start.");
+        telemetry.clear(); telemetry.update();
 
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        // Wait for the start button to be pressed
+        waitForStart();
+        telemetry.log().clear();
+        telemetry.log().add("Press A & B to reset heading");
+
+        robot.strafe(0.2);
+        if (robot.colorSensor.blue() > robot.colorSensor.green() + robot.colorSensor.red()) {
+            robot.stop();
+        }
+
+        // Loop until we're asked to stop
+        while (opModeIsActive())  {
+
+            // If the A and B buttons are pressed just now, reset Z heading.
+            curResetState = (gamepad1.a && gamepad1.b);
+            if (curResetState && !lastResetState) {
+                modernRoboticsI2cGyro.resetZAxisIntegrator();
+            }
+            lastResetState = curResetState;
+
+            // The raw() methods report the angular rate of change about each of the
+            // three axes directly as reported by the underlying sensor IC.
+            int rawX = modernRoboticsI2cGyro.rawX();
+            int rawY = modernRoboticsI2cGyro.rawY();
+            int rawZ = modernRoboticsI2cGyro.rawZ();
+            int heading = modernRoboticsI2cGyro.getHeading();
+            int integratedZ = modernRoboticsI2cGyro.getIntegratedZValue();
+
+            // Read dimensionalized data from the gyro. This gyro can report angular velocities
+            // about all three axes. Additionally, it internally integrates the Z axis to
+            // be able to report an absolute angular Z orientation.
+            AngularVelocity rates = gyro.getAngularVelocity(AngleUnit.DEGREES);
+            float zAngle = gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+
+            // Read administrative information from the gyro
+            int zAxisOffset = modernRoboticsI2cGyro.getZAxisOffset();
+            int zAxisScalingCoefficient = modernRoboticsI2cGyro.getZAxisScalingCoefficient();
+
+            telemetry.addLine()
+                    .addData("dx", formatRate(rates.xRotationRate))
+                    .addData("dy", formatRate(rates.yRotationRate))
+                    .addData("dz", "%s deg/s", formatRate(rates.zRotationRate));
+            telemetry.addData("angle", "%s deg", formatFloat(zAngle));
+            telemetry.addData("heading", "%3d deg", heading);
+            telemetry.addData("integrated Z", "%3d", integratedZ);
+            telemetry.addLine()
+                    .addData("rawX", formatRaw(rawX))
+                    .addData("rawY", formatRaw(rawY))
+                    .addData("rawZ", formatRaw(rawZ));
+            telemetry.addLine().addData("z offset", zAxisOffset).addData("z coeff", zAxisScalingCoefficient);
+            telemetry.update();
+
+        }
 
     }
 
-
-    public void strafeToPosition(int d, double power){
-
-        robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        int distance = (int)(robot.CPR / (robot.DIAMETER * Math.PI) * d);
-
-        robot.leftFront.setTargetPosition(distance);
-        robot.rightFront.setTargetPosition(-distance);
-        robot.leftBack.setTargetPosition(-distance);
-        robot.rightBack.setTargetPosition(distance);
-
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        robot.leftFront.setPower(power);
-        robot.rightFront.setPower(power);
-        robot.leftBack.setPower(power);
-        robot.rightBack.setPower(power);
-
-        while(robot.leftFront.isBusy() || robot.rightFront.isBusy() || robot.leftBack.isBusy() || robot.rightBack.isBusy()){ }
-
-        robot.leftFront.setPower(0);
-        robot.rightFront.setPower(0);
-        robot.leftBack.setPower(0);
-        robot.rightBack.setPower(0);
-
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+    String formatRaw(int rawValue) {
+        return String.format("%d", rawValue);
     }
 
-    public void turnWithEncoder(double input){
-        robot.leftFront.setPower(input);
-        robot.leftBack.setPower(input);
-        robot.rightFront.setPower(-input);
-        robot.rightBack.setPower(-input);
+    String formatRate(float rate) {
+        return String.format("%.3f", rate);
     }
 
-
-
+    String formatFloat(float rate) {
+        return String.format("%.3f", rate);
+    }
 
 }

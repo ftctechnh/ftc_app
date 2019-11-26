@@ -35,7 +35,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
  * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
@@ -53,14 +52,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 //@Disabled
 public class MecanumDriveOpMode extends LinearOpMode {
 
+    enum Direction {
+        FORWARD, BACKWARD, LEFT, RIGHT;
+    }
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     Hardware6417 robot = new Hardware6417();
 
-    double forward, strafe, rotate;
-    double frontLeftSpeed, frontRightSpeed, backLeftSpeed, backRightSpeed, armUpPower, armDownPower,
-            flipPosition, grabPosition, dragPosition;
-
+    boolean hasNudged = false;
 
     @Override
     public void runOpMode() {
@@ -68,7 +68,6 @@ public class MecanumDriveOpMode extends LinearOpMode {
         robot.init(hardwareMap);
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -80,53 +79,70 @@ public class MecanumDriveOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        double forward, strafe, rotate;
+
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            forward = gamepad1.left_stick_y * -1;
-            strafe = gamepad1.left_stick_x;
+            forward = -gamepad1.left_stick_y;
+            strafe = -gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
 
-            frontLeftSpeed = forward + strafe - rotate;
-            frontRightSpeed = forward - strafe - rotate;
-            backLeftSpeed = forward - strafe + rotate;
-            backRightSpeed = forward + strafe + rotate;
+            setDriveSpeeds(forward, strafe, rotate);
 
-            double largest = 1.0;
-            largest = Math.max(largest, Math.abs(frontLeftSpeed));
-            largest = Math.max(largest, Math.abs(frontRightSpeed));
-            largest = Math.max(largest, Math.abs(backLeftSpeed));
-            largest = Math.max(largest, Math.abs(backRightSpeed));
+            double armUpSpeed = gamepad2.right_trigger;
+            double armDownSpeed = gamepad2.left_trigger;
+            robot.armMotor.setPower(armUpSpeed - armDownSpeed);
+        }
+    }
 
-            robot.leftFront.setPower(frontLeftSpeed / largest);
-            robot.rightFront.setPower(frontRightSpeed / largest);
-            robot.leftBack.setPower(backLeftSpeed / largest);
-            robot.rightBack.setPower(backRightSpeed / largest);
+    // moves robot in direction controlled by top gamepad button for a moment
+    private void setDriveSpeeds(double forward, double strafe, double rotate) {
 
-            armUpPower = gamepad1.right_trigger;
-            armDownPower = gamepad1.left_trigger;
+        double frontLeftSpeed = forward + strafe - rotate;
+        double frontRightSpeed = forward - strafe - rotate;
+        double backLeftSpeed = forward - strafe + rotate;
+        double backRightSpeed = forward + strafe + rotate;
 
-            robot.armMotor.setPower(armUpPower - armDownPower);
-
-            if(gamepad1.a) {
-                robot.grabberServo.setPosition(0);
-            }
-            else if(gamepad1.b){
-                robot.grabberServo.setPosition(0.5);
-            }
-
-            while(gamepad1.x){
-                robot.extendArm.setPower(0.5);
-            }
-            while(gamepad1.y){
-                robot.extendArm.setPower(-0.5);
-            }
-            robot.extendArm.setPower(0);
+        double largest = 1.0;
+        largest = Math.max(largest, Math.abs(frontLeftSpeed));
+        largest = Math.max(largest, Math.abs(frontRightSpeed));
+        largest = Math.max(largest, Math.abs(backLeftSpeed));
+        largest = Math.max(largest, Math.abs(backRightSpeed));
 
 
+        robot.leftFront.setPower(frontLeftSpeed / largest);
+        robot.rightFront.setPower(frontRightSpeed / largest);
+        robot.leftBack.setPower(backLeftSpeed / largest);
+        robot.rightBack.setPower(backRightSpeed / largest);
+    }
+
+    // nudges robot based on direction passed in
+    // directions will be dealt with in runOpMode
+    private void nudgeRobot(Direction dir) {
+        switch(dir) {
+            case FORWARD:
+                setDriveSpeeds(1, 0, 0);
+                break;
+            case BACKWARD:
+                setDriveSpeeds(-1, 0, 0);
+                break;
+            case LEFT:
+                setDriveSpeeds(0, 0, 1);
+                break;
+            case RIGHT:
+                setDriveSpeeds(0, 0, -1);
+                break;
         }
 
+        // nudge lasts 200 milliseconds
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return;
         }
-
+        setDriveSpeeds(0, 0, 0);
 
     }
+}

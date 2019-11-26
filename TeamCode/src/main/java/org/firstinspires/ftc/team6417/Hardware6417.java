@@ -37,6 +37,7 @@ import android.graphics.YuvImage;
 import android.hardware.Camera;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -72,6 +73,8 @@ public class Hardware6417
 
     public Servo dragRight = null, dragLeft = null, grabberServo = null;
 
+    ColorSensor colorSensor;
+
     public static final double TURN_POWER_LIFT =  0.5 ;
     public static final int CPR = 1440;
     public static final double DIAMETER = 3.93701; //inches
@@ -98,6 +101,8 @@ public class Hardware6417
         rightFront = hwMap.get(DcMotor.class, "RightFrontDrive");
         rightBack = hwMap.get(DcMotor.class, "RightBackDrive");
 
+        colorSensor = hwMap.colorSensor.get("color");
+
         /***
         armMotor = hwMap.get(DcMotor.class, "ArmMotor");
         grabberServo = hwMap.get(Servo.class, "grabberServo");
@@ -107,6 +112,7 @@ public class Hardware6417
         dragRight = hwMap.get(Servo.class, "dragRight");
          ***/
 
+        // Set motor directions based on orientation of motors on robot
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
@@ -129,8 +135,7 @@ public class Hardware6417
         dragRight.setPosition(0);
          **/
 
-        // Set all motors to run without encoders.
-        // May want to use RUN_USING_ENCODERS if encoders are installed.
+        // Set all motors to run with encoders
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -143,24 +148,6 @@ public class Hardware6417
 
     }
 
-    public void liftArm(double power){
-
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        counter++;
-        //armMotor.setTargetPosition(counter * BLOCK_HEIGHT); // redo the math later
-
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        armMotor.setPower(power);
-
-        while(armMotor.isBusy()){ }
-
-        armMotor.setPower(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-    }
-    /***
 
     public void drivetoPosition(int d, double power){
 
@@ -239,12 +226,42 @@ public class Hardware6417
 
     }
 
+    public void strafe(double power){
+
+        // Set all motors to the same power
+        // rightFront and leftBack go in the opposite directions to strafe
+        leftFront.setPower(power);
+        rightFront.setPower(-power);
+        leftBack.setPower(-power);
+        rightBack.setPower(power);
+
+    }
+
+    public void drive(double power){
+
+        // Set all motors to the same power to drive forward
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+        rightBack.setPower(power);
+
+    }
+
+    public void stop(){
+
+        // Set all motors to 0 power
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+    }
+
     public void turnWithEncoder(double input){
         leftFront.setPower(input);
         leftBack.setPower(input);
         rightFront.setPower(-input);
         rightBack.setPower(-input);
     }
-     ***/
 
 }
