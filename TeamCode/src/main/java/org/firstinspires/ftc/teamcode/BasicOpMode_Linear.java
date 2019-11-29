@@ -67,6 +67,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
     private DcMotor arm_2 = null;
     private DcMotor out = null;
     private DcMotor grab = null;
+
     private CRServo foundation = null;
 
     @Override
@@ -122,10 +123,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 right_front.setPower(-rightPower);
                 right_back.setPower(rightPower);
             } else {
-                left_front.setPower(0.5*leftPower);
-                left_back.setPower(0.5*leftPower);
-                right_front.setPower(0.5*rightPower);
-                right_back.setPower(0.5*rightPower);
+                left_front.setPower(-0.5*leftPower);
+                left_back.setPower(-0.5*leftPower);
+                right_front.setPower(-0.5*rightPower);
+                right_back.setPower(-0.5*rightPower);
             }
 
             //foundation
@@ -172,15 +173,18 @@ public class BasicOpMode_Linear extends LinearOpMode {
             }
 
             //grab
+            int grabstate = 0;
+
             if(gamepad1.x) {
                 grab.setPower(1);
-            } else if (gamepad1.y) {
+            } else if (gamepad1.y) { //hold soon (tm)
                 grab.setPower(-1);
             } else {
                 grab.setPower(0);
             }
 
             telemetry.addData("toehnu", arm_1.getCurrentPosition());
+            telemetry.addData("runtime", getRuntime());
             telemetry.update();
         }
     }
