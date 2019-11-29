@@ -42,7 +42,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Driver Controlled robot 2", group="Linear Opmode")
-@Disabled
+//@Disabled
 
 public class OmniOpMode extends LinearOpMode {
 
@@ -93,7 +93,7 @@ public class OmniOpMode extends LinearOpMode {
             double driveFwd = - ( gamepad1.left_stick_y + gamepad1.right_stick_y ) / 2;
             double driveClockwise = - gamepad1.left_stick_x;
 
-            if(gamepad1.left_bumper||gamepad1.right_bumper){                driveNW.setPower(driveClockwise);
+            if(gamepad1.left_bumper||gamepad1.right_bumper){
                 driveNW.setPower(driveClockwise);
                 driveNE.setPower(driveClockwise);
                 driveSW.setPower(driveClockwise);
