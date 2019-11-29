@@ -113,8 +113,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             //left stick position
 
-            leftPower  = gamepad1.left_stick_y - gamepad1.left_stick_x;
-            rightPower = gamepad1.left_stick_y + gamepad1.left_stick_x;
+            leftPower  = - gamepad1.left_stick_y - gamepad1.left_stick_x;
+            rightPower = - gamepad1.left_stick_y + gamepad1.left_stick_x;
 
             //if left bumper, sideways movement
             if (gamepad1.left_bumper) {
@@ -123,10 +123,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 right_front.setPower(-rightPower);
                 right_back.setPower(rightPower);
             } else {
-                left_front.setPower(-0.5*leftPower);
-                left_back.setPower(-0.5*leftPower);
-                right_front.setPower(-0.5*rightPower);
-                right_back.setPower(-0.5*rightPower);
+                left_front.setPower(0.5*leftPower);
+                left_back.setPower(0.5*leftPower);
+                right_front.setPower(0.5*rightPower);
+                right_back.setPower(0.5*rightPower);
             }
 
             //foundation
@@ -141,13 +141,13 @@ public class BasicOpMode_Linear extends LinearOpMode {
             //arm movement
             if (gamepad2.x) {
 //                if(arm_1.getCurrentPosition() > -200) {
-                    arm_1.setPower(-1);
+                    arm_1.setPower(1);
 //                } else {
 //                    arm_1.setPower(0.25);
 //                }
             } else if (gamepad2.y) {
 //                if(arm_1.getCurrentPosition() < -2000) {
-                    arm_1.setPower(1);
+                    arm_1.setPower(-1);
 //                } else {
 //                    arm_1.setPower(0.5);
 //                }
