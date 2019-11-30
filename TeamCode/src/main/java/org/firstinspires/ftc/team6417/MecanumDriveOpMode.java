@@ -90,9 +90,21 @@ public class MecanumDriveOpMode extends LinearOpMode {
 
             setDriveSpeeds(forward, strafe, rotate);
 
-            double armUpSpeed = gamepad2.right_trigger;
-            double armDownSpeed = gamepad2.left_trigger;
-            robot.armMotor.setPower(armUpSpeed - armDownSpeed);
+            double armSpeed = gamepad2.left_stick_y;
+            robot.armMotor.setPower(armSpeed);
+
+            double extendSpeed = gamepad2.right_stick_y;
+            robot.extendMotor.setPower(extendSpeed);
+
+            // -----------------------
+            // SERVO STUFF STARTS HERE
+            // -----------------------
+
+            if(gamepad2.left_trigger > 0)
+                robot.grabServo.setPosition(0);
+            else if(gamepad2.right_trigger > 0)
+                robot.grabServo.setPosition(0.5);
+
         }
     }
 

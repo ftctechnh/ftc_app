@@ -30,7 +30,6 @@
 package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -60,6 +59,8 @@ public class Hardware6417
     public DcMotor  leftBack = null;
     public DcMotor  rightBack = null;
     public DcMotor armMotor = null;
+    public DcMotor extendMotor = null;
+    public Servo grabServo = null;
 
     public static final double TURN_POWER_LIFT =  0.5 ;
 
@@ -82,12 +83,14 @@ public class Hardware6417
         rightFront = hwMap.get(DcMotor.class, "FrontRight");
         rightBack = hwMap.get(DcMotor.class, "BackRight");
         armMotor = hwMap.get(DcMotor.class, "ArmMotor");
+        extendMotor = hwMap.get(DcMotor.class, "ExtendMotor");
 
         leftFront.setDirection(DcMotor.Direction.FORWARD);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.REVERSE);
         armMotor.setDirection(DcMotor.Direction.FORWARD);
+        extendMotor.setDirection(DcMotor.Direction.FORWARD);
 
         // Set all motors to zero power
         leftFront.setPower(0);
@@ -95,6 +98,7 @@ public class Hardware6417
         rightFront.setPower(0);
         rightBack.setPower(0);
         armMotor.setPower(0);
+        extendMotor.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
@@ -103,5 +107,12 @@ public class Hardware6417
         rightFront.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        extendMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // -----------------------
+        // SERVO STUFF STARTS HERE
+        // -----------------------
+
+        grabServo = hwMap.get(Servo.class, "GrabServo");
     }
 }
