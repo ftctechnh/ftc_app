@@ -100,10 +100,11 @@ public class OmniOpModeA extends LinearOpMode {
 
         sleep(500);
 
+        sleep(3000);
+
         driveNW.setPower(0);
         driveNE.setPower(0);
         driveSE.setPower(0);
         driveSW.setPower(0);
         lslider.setPower(0);
-  }
 }
