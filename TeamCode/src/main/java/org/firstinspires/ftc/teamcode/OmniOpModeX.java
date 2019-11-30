@@ -50,10 +50,10 @@ public class OmniOpModeX extends LinearOpMode {
 
   // Declare OpMode members.
   private ElapsedTime runtime = new ElapsedTime();
-  private DcMotor driveSW = null;
+  private DcMotor driveNW = null;
   private DcMotor driveNE = null;
   private DcMotor driveSE = null;
-  private DcMotor driveNW = null;
+  private DcMotor driveSW = null;
   private DcMotor lslider = null;
   private Servo grabber = null;
   
@@ -71,19 +71,19 @@ public class OmniOpModeX extends LinearOpMode {
     // Initialize the hardware variables. Note that the strings used here as parameters
     // to 'get' must correspond to the names assigned during the robot configuration
     // step (using the FTC Robot Controller app on the phone).
-    driveNE  = hardwareMap.get(DcMotor.class, "driveNE");
-    driveSW = hardwareMap.get(DcMotor.class, "driveSW");
     driveNW = hardwareMap.get(DcMotor.class, "driveNW");
+    driveNE  = hardwareMap.get(DcMotor.class, "driveNE");
     driveSE = hardwareMap.get(DcMotor.class, "driveSE");
+    driveSW = hardwareMap.get(DcMotor.class, "driveSW");
     lslider = hardwareMap.get(DcMotor.class, "lslider");
     grabber = hardwareMap.get(Servo.class, "grabber");
 
     // Most robots need the motor on one side to be reversed to drive forward
     // Reverse the motor that runs backwards when connected directly to the battery
-    driveSW.setDirection(DcMotor.Direction.FORWARD);
-    driveNE.setDirection(DcMotor.Direction.FORWARD);
     driveNW.setDirection(DcMotor.Direction.FORWARD);
+    driveNE.setDirection(DcMotor.Direction.FORWARD);
     driveSE.setDirection(DcMotor.Direction.FORWARD);
+    driveSW.setDirection(DcMotor.Direction.FORWARD);
 
     // Wait for the game to start (driver presses PLAY)
     waitForStart();
@@ -94,6 +94,10 @@ public class OmniOpModeX extends LinearOpMode {
 
       if(gamepad1.x||gamepad2.x){ //panic button
 
+        driveNW.setPower(0);
+        driveNE.setPower(0);
+        driveSW.setPower(0);
+        driveSE.setPower(0);
         sleep(1000);
 
       }else{
@@ -101,16 +105,16 @@ public class OmniOpModeX extends LinearOpMode {
         driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
         driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
 
-        if(gamepad1.left_bumper||gamepad2.left_bumper){
+        if(gamepad1.left_bumper||gamepad2.left_bumper||gamepad1.left_stick||gamepad2.left_stick){
           driveNW.setPower(-driveC);
           driveNE.setPower(-driveC);
-          driveSW.setPower(-driveC);
           driveSE.setPower(-driveC);
-        }else if(gamepad1.right_bumper||gamepad2.right_bumper){
+          driveSW.setPower(-driveC);
+        }else if(gamepad1.right_bumper||gamepad2.right_bumper||gamepad1.right_stick||gamepad2.right_stick){
           driveNW.setPower(driveC);
           driveNE.setPower(driveC);
-          driveSW.setPower(driveC);
           driveSE.setPower(driveC);
+          driveSW.setPower(driveC);
         }else{
           driveNW.setPower(driveRht + driveFwd);
           driveNE.setPower(driveRht - driveFwd);
@@ -139,8 +143,6 @@ public class OmniOpModeX extends LinearOpMode {
           grabber.setPosition(0);
         }
 
-        telemetry.addData("SERVO", grabber.getPosition());
-        telemetry.update();
       }
     }
   }
