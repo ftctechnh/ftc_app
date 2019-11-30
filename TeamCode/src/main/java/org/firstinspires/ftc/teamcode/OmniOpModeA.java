@@ -48,68 +48,69 @@ import com.qualcomm.robotcore.util.Range;
 
 public class OmniOpModeA extends LinearOpMode {
 
-    // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor driveNW = null;
-    private DcMotor driveNE = null;
-    private DcMotor driveSE = null;
-    private DcMotor driveSW = null;
-    private DcMotor lslider = null;
-    private Servo grabber = null;
+  // Declare OpMode members.
+  private ElapsedTime runtime = new ElapsedTime();
+  private DcMotor driveNW = null;
+  private DcMotor driveNE = null;
+  private DcMotor driveSE = null;
+  private DcMotor driveSW = null;
+  private DcMotor lslider = null;
+  private Servo grabber = null;
+  
+  double driveRht = 0;
+  double driveFwd = 0;
+  double driveC = -0.5;
+  
+  boolean isGrabbing = false;
 
-    double driveRht = 0;
-    double driveFwd = 0;
-    double driveC = -0.5;
+  @Override
+  public void runOpMode() {
+    telemetry.addData("Status", "Initialized");
+    telemetry.update();
 
-    boolean isGrabbing = false;
+    // Initialize the hardware variables. Note that the strings used here as parameters
+    // to 'get' must correspond to the names assigned during the robot configuration
+    // step (using the FTC Robot Controller app on the phone).
+    driveNW = hardwareMap.get(DcMotor.class, "driveNW");
+    driveNE  = hardwareMap.get(DcMotor.class, "driveNE");
+    driveSE = hardwareMap.get(DcMotor.class, "driveSE");
+    driveSW = hardwareMap.get(DcMotor.class, "driveSW");
+    lslider = hardwareMap.get(DcMotor.class, "lslider");
+    grabber = hardwareMap.get(Servo.class, "grabber");
 
-    @Override
-    public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+    // Most robots need the motor on one side to be reversed to drive forward
+    // Reverse the motor that runs backwards when connected directly to the battery
+    driveNW.setDirection(DcMotor.Direction.FORWARD);
+    driveNE.setDirection(DcMotor.Direction.FORWARD);
+    driveSE.setDirection(DcMotor.Direction.FORWARD);
+    driveSW.setDirection(DcMotor.Direction.FORWARD);
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        driveNW = hardwareMap.get(DcMotor.class, "driveNW");
-        driveNE  = hardwareMap.get(DcMotor.class, "driveNE");
-        driveSE = hardwareMap.get(DcMotor.class, "driveSE");
-        driveSW = hardwareMap.get(DcMotor.class, "driveSW");
-        lslider = hardwareMap.get(DcMotor.class, "lslider");
-        grabber = hardwareMap.get(Servo.class, "grabber");
+    // Wait for the game to start (driver presses PLAY)
+    waitForStart();
+    runtime.reset();
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        driveNW.setDirection(DcMotor.Direction.FORWARD);
-        driveNE.setDirection(DcMotor.Direction.FORWARD);
-        driveSE.setDirection(DcMotor.Direction.FORWARD);
-        driveSW.setDirection(DcMotor.Direction.FORWARD);
+    driveNW.setPower(-1);
+    driveNE.setPower(-1);
+    driveSE.setPower(1);
+    driveSW.setPower(1);
+    
+    sleep(500);
+    
+    grabber.setPosition(0);
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        runtime.reset();
-
-        driveNW.setPower(-1);
-        driveNE.setPower(-1);
-        driveSE.setPower(1);
-        driveSW.setPower(1);
-
-        sleep(500);
-
-        grabber.setPosition(0);
-
-        sleep(1000);
-
-        driveNW.setPower(1);
-        driveNE.setPower(-1);
-        driveSE.setPower(1);
-        driveSW.setPower(-1);
-
-        sleep(1000);
-
-        driveNW.setPower(0);
-        driveNE.setPower(0);
-        driveSE.setPower(0);
-        driveSW.setPower(0);
-        lslider.setPower(0);
+    sleep(1000);
+    
+    driveNW.setPower(1);
+    driveNE.setPower(-1);
+    driveSE.setPower(1);
+    driveSW.setPower(-1);
+    
+    sleep(1000);
+    
+    driveNW.setPower(0);
+    driveNE.setPower(0);
+    driveSE.setPower(0);
+    driveSW.setPower(0);
+    lslider.setPower(0);
+  }
 }
