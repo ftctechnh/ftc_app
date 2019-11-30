@@ -98,10 +98,14 @@ public class OmniOpModeA extends LinearOpMode {
     
     grabber.setPosition(0);
 
-    sleep(500);
+    sleep(1000);
     
+    driveNW.setPower(1);
+    driveNE.setPower(-1);
+    driveSE.setPower(1);
+    driveSW.setPower(-1);
     
-    sleep(3000);
+    sleep(1000);
     
     driveNW.setPower(0);
     driveNE.setPower(0);
