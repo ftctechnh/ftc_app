@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.Range;
  * This file is used for an omnidrive.
  */
 
-@Autonomous(name="AutoOmni", group="Auto Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutoOmni", group="Linear Opmode")
 //@Disabled
 
 public class OmniOpModeX extends LinearOpMode {
@@ -100,5 +100,10 @@ public class OmniOpModeX extends LinearOpMode {
 
     sleep(500);
     
+    driveNW.setPower(0);
+    driveNE.setPower(0);
+    driveSE.setPower(0);
+    driveSW.setPower(0);
+    lslider.setPower(0);
   }
 }
