@@ -32,7 +32,9 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -42,7 +44,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
-@Disabled
+//@Disabled
 
 public class OmniOpModeX extends LinearOpMode {
 
@@ -53,7 +55,7 @@ public class OmniOpModeX extends LinearOpMode {
   private DcMotor driveSE = null;
   private DcMotor driveNW = null;
   private DcMotor lslider = null;
-  private Servo grabber = null;
+  private CRServo grabber = null;
 
   @Override
   public void runOpMode() {
@@ -68,7 +70,7 @@ public class OmniOpModeX extends LinearOpMode {
     driveNW = hardwareMap.get(DcMotor.class, "front_drive");
     driveSE = hardwareMap.get(DcMotor.class, "back_drive");
     lslider = hardwareMap.get(DcMotor.class, "lslider");
-    grabber = hardwareMap.get(DcMotor.class, "grabber");
+    grabber = hardwareMap.get(CRServo.class, "grabber");
 
     // Most robots need the motor on one side to be reversed to drive forward
     // Reverse the motor that runs backwards when connected directly to the battery
@@ -81,6 +83,7 @@ public class OmniOpModeX extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
+    int servopos = 0;
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive()) {
 
@@ -92,13 +95,13 @@ public class OmniOpModeX extends LinearOpMode {
         driveSE.setPower(0);
         lslider.setPower(0);
         grabber.setPower(0);
-        
+
       }else{
         
         double driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
         double driveFwd = - ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
-        int driveCC = 0.2;
-        int driveC = -0.2;
+        double driveCC = 0.2;
+        double driveC = -0.2;
   
         if(gamepad1.left_bumper||gamepad2.left_bumper){
           driveNW.setPower(driveCC);
@@ -122,7 +125,8 @@ public class OmniOpModeX extends LinearOpMode {
         }else if(gamepad2.dpad_right||gamepad2.dpad_right){
           lslider.setPower(-1);
         }
-        
+
+
         if(gamepad1.dpad_up||gamepad2.dpad_up){
           grabber.setPower(1);
         }else if(gamepad2.dpad_down||gamepad2.dpad_down){
