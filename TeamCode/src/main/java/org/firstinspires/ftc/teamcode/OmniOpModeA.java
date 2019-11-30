@@ -63,7 +63,7 @@ public class OmniOpModeA extends LinearOpMode {
   
   boolean isGrabbing = false;
 
-  @Override
+
   
   private void driveRht(double force,int time){
     
@@ -85,6 +85,7 @@ public class OmniOpModeA extends LinearOpMode {
     sleep(time);
   }
   
+  @Override
   public void runOpMode() {
     telemetry.addData("Status", "Initialized");
     telemetry.update();
