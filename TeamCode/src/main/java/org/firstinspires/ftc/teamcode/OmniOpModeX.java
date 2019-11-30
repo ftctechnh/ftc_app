@@ -55,7 +55,13 @@ public class OmniOpModeX extends LinearOpMode {
   private DcMotor driveSE = null;
   private DcMotor driveNW = null;
   private DcMotor lslider = null;
-  private CRServo grabber = null;
+  private Servo grabber = null;
+  
+  double driveRht = 0;
+  double driveFwd = 0;
+  double driveC = 0.5;
+  
+  int servoPos = 0;
 
   @Override
   public void runOpMode() {
@@ -70,7 +76,7 @@ public class OmniOpModeX extends LinearOpMode {
     driveNW = hardwareMap.get(DcMotor.class, "driveNW");
     driveSE = hardwareMap.get(DcMotor.class, "driveSE");
     lslider = hardwareMap.get(DcMotor.class, "lslider");
-    grabber = hardwareMap.get(CRServo.class, "grabber");
+    grabber = hardwareMap.get(Servo.class, "grabber");
 
     // Most robots need the motor on one side to be reversed to drive forward
     // Reverse the motor that runs backwards when connected directly to the battery
@@ -87,26 +93,19 @@ public class OmniOpModeX extends LinearOpMode {
     while (opModeIsActive()) {
 
       if(gamepad1.x||gamepad2.x){ //panic button
-        
-        driveNW.setPower(0);
-        driveNE.setPower(0);
-        driveSW.setPower(0);
-        driveSE.setPower(0);
-        lslider.setPower(0);
-        grabber.setPower(0);
+
+        sleep(1000)
 
       }else{
         
-        double driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
-        double driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
-        double driveCC = 0.5;
-        double driveC = -0.5;
-  
+        driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
+        driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
+
         if(gamepad1.left_bumper||gamepad2.left_bumper){
-          driveNW.setPower(driveCC);
-          driveNE.setPower(driveCC);
-          driveSW.setPower(driveCC);
-          driveSE.setPower(driveCC);
+          driveNW.setPower(-driveC);
+          driveNE.setPower(-driveC);
+          driveSW.setPower(-driveC);
+          driveSE.setPower(-driveC);
         }else if(gamepad1.right_bumper||gamepad2.right_bumper){
           driveNW.setPower(driveC);
           driveNE.setPower(driveC);
@@ -129,15 +128,18 @@ public class OmniOpModeX extends LinearOpMode {
 
 
         if(gamepad1.dpad_up||gamepad2.dpad_up){
-          grabber.setPower(1);
+          servoPos -= 1;
+          if(servoPos < 0){
+            servoPos = 0;
+          }
         }else if(gamepad1.dpad_down||gamepad2.dpad_down){
-          grabber.setPower(-1);
-          telemetry.addData("dentuha.", "teduhoxua");
-          telemetry.update();
-        }else{
-          grabber.setPower(0);
+          servoPos += 1;
+          if(servoPos > 2){
+            servoPos = 0;
+          }
         }
         
+        grabber.setPosition(servoPos*50);
       }
     }
   }
