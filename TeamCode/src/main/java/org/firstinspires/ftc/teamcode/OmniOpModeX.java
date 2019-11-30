@@ -65,10 +65,10 @@ public class OmniOpModeX extends LinearOpMode {
     // Initialize the hardware variables. Note that the strings used here as parameters
     // to 'get' must correspond to the names assigned during the robot configuration
     // step (using the FTC Robot Controller app on the phone).
-    driveNE  = hardwareMap.get(DcMotor.class, "left_drive");
-    driveSW = hardwareMap.get(DcMotor.class, "right_drive");
-    driveNW = hardwareMap.get(DcMotor.class, "front_drive");
-    driveSE = hardwareMap.get(DcMotor.class, "back_drive");
+    driveNE  = hardwareMap.get(DcMotor.class, "driveNE");
+    driveSW = hardwareMap.get(DcMotor.class, "driveSW");
+    driveNW = hardwareMap.get(DcMotor.class, "driveNW");
+    driveSE = hardwareMap.get(DcMotor.class, "driveSE");
     lslider = hardwareMap.get(DcMotor.class, "lslider");
     grabber = hardwareMap.get(CRServo.class, "grabber");
 
@@ -99,8 +99,13 @@ public class OmniOpModeX extends LinearOpMode {
         
         double driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
         double driveFwd = - ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
+<<<<<<< HEAD
         double driveCC = 0.2;
         double driveC = -0.2;
+=======
+        double driveCC = 1;
+        double driveC = -1;
+>>>>>>> 70f364e1464eb39d9ede10ebc50f53d49bb5c2be
   
         if(gamepad1.left_bumper||gamepad2.left_bumper){
           driveNW.setPower(driveCC);
@@ -115,8 +120,8 @@ public class OmniOpModeX extends LinearOpMode {
         }else{
           driveNW.setPower(driveRht + driveFwd);
           driveNE.setPower(driveRht - driveFwd);
-          driveSW.setPower(- driveRht + driveFwd);
           driveSE.setPower(- driveRht - driveFwd);
+          driveSW.setPower(- driveRht + driveFwd);
         }
         
         if(gamepad1.dpad_left||gamepad2.dpad_left){
@@ -133,11 +138,6 @@ public class OmniOpModeX extends LinearOpMode {
         }
         
       }
-      
-      telemetry.addData("Status", "Run Time: " + runtime.toString());
-      telemetry.addData("Motors", "left (%.2f), right (%.2f)", driveNW, driveSE);
-      telemetry.update();
-
     }
   }
 }
