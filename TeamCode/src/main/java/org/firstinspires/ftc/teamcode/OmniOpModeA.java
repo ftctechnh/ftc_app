@@ -79,8 +79,8 @@ public class OmniOpModeA extends LinearOpMode {
     
     driveNW.setPower(-force);
     driveNE.setPower(force);
-    driveSE.setPower(-force);
-    driveSW.setPower(force);
+    driveSE.setPower(force);
+    driveSW.setPower(-force);
     
     sleep(time);
   }
@@ -111,11 +111,11 @@ public class OmniOpModeA extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    driveRht(1,1000);
+    driveRht(1,1200);
     
     grabber.setPosition(0);
 
-    driveFwd(1,1000);
+    driveFwd(1,500);
     
     driveNW.setPower(0);
     driveNE.setPower(0);
