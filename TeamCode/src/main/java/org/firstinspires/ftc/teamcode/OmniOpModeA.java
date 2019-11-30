@@ -64,6 +64,27 @@ public class OmniOpModeA extends LinearOpMode {
   boolean isGrabbing = false;
 
   @Override
+  
+  private void driveRht(double force,int time){
+    
+    driveNW.setPower(-force);
+    driveNE.setPower(-force);
+    driveSE.setPower(force);
+    driveSW.setPower(force);
+    
+    sleep(time);
+  }
+  
+  private void driveFwd(double force,int time){
+    
+    driveNW.setPower(-force);
+    driveNE.setPower(force);
+    driveSE.setPower(-force);
+    driveSW.setPower(force);
+    
+    sleep(time);
+  }
+  
   public void runOpMode() {
     telemetry.addData("Status", "Initialized");
     telemetry.update();
@@ -89,23 +110,11 @@ public class OmniOpModeA extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    driveNW.setPower(-1);
-    driveNE.setPower(-1);
-    driveSE.setPower(1);
-    driveSW.setPower(1);
-    
-    sleep(500);
+    driveRht(1,1000);
     
     grabber.setPosition(0);
 
-    sleep(1000);
-    
-    driveNW.setPower(1);
-    driveNE.setPower(-1);
-    driveSE.setPower(1);
-    driveSW.setPower(-1);
-    
-    sleep(1000);
+    driveFwd(1,1000);
     
     driveNW.setPower(0);
     driveNE.setPower(0);
