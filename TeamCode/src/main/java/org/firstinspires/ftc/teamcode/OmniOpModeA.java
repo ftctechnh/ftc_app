@@ -85,6 +85,17 @@ public class OmniOpModeA extends LinearOpMode {
     sleep(time);
   }
 
+  private void grab(boolean shouldGrab){
+    
+    if(shouldGrab){
+      grabber.setPosition(0.7);
+    }else{
+      grabber.setPosition(0);
+    }
+    
+    sleep(1000);
+  }
+  
   @Override
   public void runOpMode() {
     telemetry.addData("Status", "Initialized");
@@ -111,11 +122,16 @@ public class OmniOpModeA extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    driveRht(1,1200);
+    driveRht(1,700);
     
-    grabber.setPosition(0);
+    grab(false);
 
-    driveFwd(1,500);
+    driveRht(1,800);
+
+    driveFwd(1,100);
+    
+    grab(true);
+
     
     driveNW.setPower(0);
     driveNE.setPower(0);
