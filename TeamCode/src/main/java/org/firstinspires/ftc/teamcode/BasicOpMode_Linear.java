@@ -100,6 +100,18 @@ public class BasicOpMode_Linear extends LinearOpMode {
 //        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+        //encoders becau
+        left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -118,8 +130,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             //if left bumper, sideways movement
             if (gamepad1.left_bumper) {
-                left_front.setPower(leftPower);
-                left_back.setPower(-leftPower);
+                left_front.setPower(-leftPower);
+                left_back.setPower(leftPower);
                 right_front.setPower(-rightPower);
                 right_back.setPower(rightPower);
             } else {

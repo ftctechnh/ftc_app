@@ -59,7 +59,7 @@ public class OmniOpModeX extends LinearOpMode {
   
   double driveRht = 0;
   double driveFwd = 0;
-  double driveC = 0.5;
+  double driveC = -0.5;
   
   boolean isGrabbing = false;
 
