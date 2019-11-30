@@ -94,7 +94,7 @@ public class OmniOpModeX extends LinearOpMode {
 
       if(gamepad1.x||gamepad2.x){ //panic button
 
-        sleep(1000)
+        sleep(1000);
 
       }else{
         
