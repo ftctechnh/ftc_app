@@ -65,10 +65,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
     private DcMotor arm_1 = null;
     private DcMotor arm_2 = null;
-    private DcMotor out = null;
-    private DcMotor grab = null;
 
     private CRServo foundation = null;
+    private CRServo rotate = null;
+    private CRServo grab = null;
 
     @Override
     public void runOpMode() {
@@ -85,10 +85,10 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
         arm_1 = hardwareMap.get(DcMotor.class, "arm_1");
         arm_2 = hardwareMap.get(DcMotor.class, "arm_2");
-        out = hardwareMap.get(DcMotor.class, "out");
-        grab = hardwareMap.get(DcMotor.class, "grab");
 
         foundation = hardwareMap.get(CRServo.class, "foundation");
+        rotate = hardwareMap.get(CRServo.class, "rotate");
+        grab = hardwareMap.get(CRServo.class, "grab");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -97,8 +97,6 @@ public class BasicOpMode_Linear extends LinearOpMode {
         left_back.setDirection(DcMotor.Direction.FORWARD);
         right_back.setDirection(DcMotor.Direction.REVERSE);
 
-        out.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        out.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 //        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -165,22 +163,21 @@ public class BasicOpMode_Linear extends LinearOpMode {
                 arm_2.setPower(0);
             }
 
-            //out
-
-            if(gamepad2.dpad_up) {
-                outpos++;
-            } else if(gamepad2.dpad_down) {
-                outpos--;
-            }
-            out.setTargetPosition(outpos);
-            //grab
-            int grabstate = 0;
-
-            if(gamepad1.x) {
-                grab.setPower(1);
-            } else if (gamepad1.y) { //hold soon (tm)
-                grab.setPower(-1);
+            //rotate
+            if(gamepad2.dpad_left) {
+                rotate.setPower(1);
+            } else if (gamepad2.dpad_right) {
+                rotate.setPower(-1);
             } else {
+                rotate.setPower(0);
+            }
+
+            //grab
+            if (gamepad2.dpad_down) {
+                grab.setPower(1);
+            } else if (gamepad2.dpad_up) {
+                grab.setPower(-1);
+            } else if (gamepad2.left_trigger > 0.05 || gamepad2.right_trigger > 0.05) {
                 grab.setPower(0);
             }
 
