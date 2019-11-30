@@ -109,8 +109,27 @@ public class red_stone_out extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
+        drive(0.5);
+        sleep(500);
+        pause();
         
 
         telemetry.update();
+    }
+    public void stop() {
+        left_front.setPower(0);
+        right_front.setPower(0);
+        left_back.setPower(0);
+        right_back.setPower(0);
+    }
+    public void pause() {
+        stop();
+        sleep(200);
+    }
+    public void drive(double power) {
+        left_front.setPower(power);
+        right_front.setPower(power);
+        left_back.setPower(power);
+        right_back.setPower(power);
     }
 }
