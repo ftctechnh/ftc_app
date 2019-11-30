@@ -46,7 +46,7 @@ import com.qualcomm.robotcore.util.Range;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutoOmni", group="Linear Opmode")
 //@Disabled
 
-public class OmniOpModeX extends LinearOpMode {
+public class OmniOpModeA extends LinearOpMode {
 
   // Declare OpMode members.
   private ElapsedTime runtime = new ElapsedTime();
@@ -96,7 +96,7 @@ public class OmniOpModeX extends LinearOpMode {
     
     sleep(500);
     
-    grabber.setPosition(0)
+    grabber.setPosition(0);
 
     sleep(500);
     
