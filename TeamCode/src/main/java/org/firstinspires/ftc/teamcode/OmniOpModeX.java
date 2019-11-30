@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.Range;
  * This file is used for an omnidrive.
  */
 
-@TeleOp(name="Basic: Linear OpMode", group="Linear Opmode")
+@TeleOp(name="XingOmni", group="Linear Opmode")
 //@Disabled
 
 public class OmniOpModeX extends LinearOpMode {
