@@ -151,15 +151,15 @@ public class OmniOpModeR0 extends LinearOpMode {
     
     grab(true);
 
-    driveRht(-1,450);
+    driveRht(-1,250);
 
     grab(true);
 
-    driveFwd(-1,900);
+    driveFwd(-1,700);
 
     grab(true);
 
-    driveC(-1,700)
+    driveC(-1,700);
 
     grab(true);
     
