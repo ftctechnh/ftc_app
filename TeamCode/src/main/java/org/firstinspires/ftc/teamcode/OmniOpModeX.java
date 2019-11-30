@@ -134,10 +134,13 @@ public class OmniOpModeX extends LinearOpMode {
         }
         
         if(isGrabbing){
-          grabber.setPosition(200);
+          grabber.setPosition(0.68);
         }else{
-          grabber.setPosition(50);
+          grabber.setPosition(0);
         }
+
+        telemetry.addData("SERVO", grabber.getPosition());
+        telemetry.update();
       }
     }
   }

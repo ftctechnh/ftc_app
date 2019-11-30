@@ -131,9 +131,9 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
             //foundation
             if (gamepad1.left_trigger > 0.05) {
-                foundation.setPower(1);
+                foundation.setPower(0.5);
             } else if (gamepad1.right_trigger > 0.05) {
-                foundation.setPower(-1);
+                foundation.setPower(-0.5);
             } else {
                 foundation.setPower(0);
             }
