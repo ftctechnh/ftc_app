@@ -84,6 +84,15 @@ public class OmniOpModeA extends LinearOpMode {
     
     sleep(time);
   }
+  
+  private void driveRst(){
+    
+    driveNW.setPower(0);
+    driveNE.setPower(0);
+    driveSE.setPower(0);
+    driveSW.setPower(0);
+    
+  }
 
   private void grab(boolean shouldGrab){
     
@@ -122,13 +131,13 @@ public class OmniOpModeA extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    driveRht(1,700);
+    driveRht(1,400);
     
     grab(false);
 
-    driveRht(1,800);
-
-    driveFwd(1,100);
+    driveFwd(1,200);
+    
+    driveRst();
     
     grab(true);
 
