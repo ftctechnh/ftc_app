@@ -134,7 +134,7 @@ public class OmniOpModeX extends LinearOpMode {
         }
         
         if(isGrabbing){
-          grabber.setPosition(0.68);
+          grabber.setPosition(0.7);
         }else{
           grabber.setPosition(0);
         }
