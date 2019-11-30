@@ -83,7 +83,6 @@ public class OmniOpModeX extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    int servopos = 0;
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive()) {
 
