@@ -127,7 +127,7 @@ public class SensorMRColor extends LinearOpMode {
         isSkystone = false;
       }
 
-      telemetry.addData("isSkystone", isSkystone;
+      telemetry.addData("isSkystone", isSkystone);
 
       // change the background color to match the color detected by the RGB sensor.
       // pass a reference to the hue, saturation, and value array as an argument
