@@ -61,7 +61,7 @@ public class OmniOpModeX extends LinearOpMode {
   double driveFwd = 0;
   double driveC = 0.5;
   
-  int servoPos = 0;
+  boolean isGrabbing = false;
 
   @Override
   public void runOpMode() {
@@ -128,18 +128,16 @@ public class OmniOpModeX extends LinearOpMode {
 
 
         if(gamepad1.dpad_up||gamepad2.dpad_up){
-          servoPos -= 1;
-          if(servoPos < 0){
-            servoPos = 0;
-          }
+          isGrabbing = false;
         }else if(gamepad1.dpad_down||gamepad2.dpad_down){
-          servoPos += 1;
-          if(servoPos > 2){
-            servoPos = 0;
-          }
+          isGrabbing = true;
         }
         
-        grabber.setPosition(servoPos*50);
+        if(isGrabbing){
+          grabber.setPosition(200);
+        }else{
+          grabber.setPosition(50);
+        }
       }
     }
   }
