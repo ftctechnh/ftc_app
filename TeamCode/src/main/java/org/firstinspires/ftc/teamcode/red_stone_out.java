@@ -31,12 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 
 /**
@@ -52,9 +49,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Driver Controlled", group="Linear Opmode")
-//@Disabled
-public class BasicOpMode_Linear extends LinearOpMode {
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous shell", group="Linear Opmode")
+@Disabled
+public class red_stone_out extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -97,97 +94,23 @@ public class BasicOpMode_Linear extends LinearOpMode {
         left_back.setDirection(DcMotor.Direction.FORWARD);
         right_back.setDirection(DcMotor.Direction.REVERSE);
 
-        out.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        out.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //encoders because autonomous is autonomous
+        left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-        int outpos = 0;
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+        
 
-            //left stick position
-
-            leftPower  = - gamepad1.left_stick_y - gamepad1.left_stick_x;
-            rightPower = - gamepad1.left_stick_y + gamepad1.left_stick_x;
-
-            //if left bumper, sideways movement
-            if (gamepad1.left_bumper) {
-                left_front.setPower(leftPower);
-                left_back.setPower(-leftPower);
-                right_front.setPower(-rightPower);
-                right_back.setPower(rightPower);
-            } else {
-                left_front.setPower(0.5*leftPower);
-                left_back.setPower(0.5*leftPower);
-                right_front.setPower(0.5*rightPower);
-                right_back.setPower(0.5*rightPower);
-            }
-
-            //foundation
-            if (gamepad1.left_trigger > 0.05) {
-                foundation.setPower(1);
-            } else if (gamepad1.right_trigger > 0.05) {
-                foundation.setPower(-1);
-            } else {
-                foundation.setPower(0);
-            }
-
-            //arm movement
-            if (gamepad2.x) {
-//                if(arm_1.getCurrentPosition() > -200) {
-                    arm_1.setPower(1);
-//                } else {
-//                    arm_1.setPower(0.25);
-//                }
-            } else if (gamepad2.y) {
-//                if(arm_1.getCurrentPosition() < -2000) {
-                    arm_1.setPower(-1);
-//                } else {
-//                    arm_1.setPower(0.5);
-//                }
-            } else {
-                arm_1.setPower(0);
-            }
-
-            if(gamepad2.a) {
-                arm_2.setPower(1);
-            } else if (gamepad2.b) {
-                arm_2.setPower(-1);
-            } else {
-                arm_2.setPower(0);
-            }
-
-            //out
-
-            if(gamepad2.dpad_up) {
-                outpos++;
-            } else if(gamepad2.dpad_down) {
-                outpos--;
-            }
-            out.setTargetPosition(outpos);
-            //grab
-            int grabstate = 0;
-
-            if(gamepad1.x) {
-                grab.setPower(1);
-            } else if (gamepad1.y) { //hold soon (tm)
-                grab.setPower(-1);
-            } else {
-                grab.setPower(0);
-            }
-
-            telemetry.addData("toehnu", arm_1.getCurrentPosition());
-            telemetry.addData("runtime", getRuntime());
-            telemetry.addData("outpos", outpos);
-            telemetry.update();
-        }
+        telemetry.update();
     }
 }
