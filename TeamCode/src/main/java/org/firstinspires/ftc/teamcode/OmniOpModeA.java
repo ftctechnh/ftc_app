@@ -31,7 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -43,7 +43,7 @@ import com.qualcomm.robotcore.util.Range;
  * This file is used for an omnidrive.
  */
 
-@TeleOp(name="XingOmni", group="Linear Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="AutoOmni", group="Linear Opmode")
 //@Disabled
 
 public class OmniOpModeX extends LinearOpMode {
@@ -89,61 +89,21 @@ public class OmniOpModeX extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    // run until the end of the match (driver presses STOP)
-    while (opModeIsActive()) {
+    driveNW.setPower(-1);
+    driveNE.setPower(-1);
+    driveSE.setPower(1);
+    driveSW.setPower(1);
+    
+    sleep(500);
+    
+    grabber.setPosition(0)
 
-      if(gamepad1.x||gamepad2.x){ //panic button
-
-        driveNW.setPower(0);
-        driveNE.setPower(0);
-        driveSW.setPower(0);
-        driveSE.setPower(0);
-        sleep(1000);
-
-      }else{
-        
-        driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
-        driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
-
-        if(gamepad1.left_bumper||gamepad2.left_bumper||gamepad1.left_stick||gamepad2.left_stick){
-          driveNW.setPower(-driveC);
-          driveNE.setPower(-driveC);
-          driveSE.setPower(-driveC);
-          driveSW.setPower(-driveC);
-        }else if(gamepad1.right_bumper||gamepad2.right_bumper||gamepad1.right_stick||gamepad2.right_stick){
-          driveNW.setPower(driveC);
-          driveNE.setPower(driveC);
-          driveSE.setPower(driveC);
-          driveSW.setPower(driveC);
-        }else{
-          driveNW.setPower(driveRht + driveFwd);
-          driveNE.setPower(driveRht - driveFwd);
-          driveSE.setPower(- driveRht - driveFwd);
-          driveSW.setPower(- driveRht + driveFwd);
-        }
-        
-        if(gamepad1.dpad_left||gamepad2.dpad_left){
-          lslider.setPower(1);
-        }else if(gamepad1.dpad_right||gamepad2.dpad_right){
-          lslider.setPower(-1);
-        }else{
-          lslider.setPower(0);
-        }
-
-
-        if(gamepad1.dpad_up||gamepad2.dpad_up){
-          isGrabbing = false;
-        }else if(gamepad1.dpad_down||gamepad2.dpad_down){
-          isGrabbing = true;
-        }
-        
-        if(isGrabbing){
-          grabber.setPosition(0.7);
-        }else{
-          grabber.setPosition(0);
-        }
-
-      }
-    }
+    sleep(500);
+    
+    driveNW.setPower(0);
+    driveNE.setPower(0);
+    driveSE.setPower(0);
+    driveSW.setPower(0);
+    lslider.setPower(0);
   }
 }
