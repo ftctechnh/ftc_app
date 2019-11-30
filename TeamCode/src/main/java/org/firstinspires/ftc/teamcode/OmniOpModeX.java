@@ -121,7 +121,7 @@ public class OmniOpModeX extends LinearOpMode {
         
         if(gamepad1.dpad_left||gamepad2.dpad_left){
           lslider.setPower(1);
-        }else if(gamepad2.dpad_right||gamepad2.dpad_right){
+        }else if(gamepad1.dpad_right||gamepad2.dpad_right){
           lslider.setPower(-1);
         }else{
           lslider.setPower(0);
@@ -130,8 +130,10 @@ public class OmniOpModeX extends LinearOpMode {
 
         if(gamepad1.dpad_up||gamepad2.dpad_up){
           grabber.setPower(1);
-        }else if(gamepad2.dpad_down||gamepad2.dpad_down){
+        }else if(gamepad1.dpad_down||gamepad2.dpad_down){
           grabber.setPower(-1);
+          telemetry.addData("dentuha.", "teduhoxua");
+          telemetry.update();
         }else{
           grabber.setPower(0);
         }
