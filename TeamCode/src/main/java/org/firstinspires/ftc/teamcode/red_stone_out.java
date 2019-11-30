@@ -134,6 +134,9 @@ public class red_stone_out extends LinearOpMode {
         right_back.setPower(power);
     }
     private void turn(double powerL, double powerR) {
-
+        left_front.setPower(powerL);
+        right_front.setPower(powerR);
+        left_back.setPower(powerL);
+        right_front.setPower(powerR);
     }
 }
