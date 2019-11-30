@@ -98,10 +98,10 @@ public class OmniOpModeX extends LinearOpMode {
       }else{
         
         double driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
-        double driveFwd = - ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
-        double driveCC = 1;
-        double driveC = -1;
-
+        double driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
+        double driveCC = 0.5;
+        double driveC = -0.5;
+  
         if(gamepad1.left_bumper||gamepad2.left_bumper){
           driveNW.setPower(driveCC);
           driveNE.setPower(driveCC);
@@ -123,6 +123,8 @@ public class OmniOpModeX extends LinearOpMode {
           lslider.setPower(1);
         }else if(gamepad2.dpad_right||gamepad2.dpad_right){
           lslider.setPower(-1);
+        }else{
+          lslider.setPower(0);
         }
 
 
@@ -130,6 +132,8 @@ public class OmniOpModeX extends LinearOpMode {
           grabber.setPower(1);
         }else if(gamepad2.dpad_down||gamepad2.dpad_down){
           grabber.setPower(-1);
+        }else{
+          grabber.setPower(0);
         }
         
       }
