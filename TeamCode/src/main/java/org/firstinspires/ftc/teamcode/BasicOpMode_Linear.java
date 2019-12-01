@@ -57,146 +57,137 @@ import com.qualcomm.robotcore.util.Range;
 public class BasicOpMode_Linear extends LinearOpMode {
 
     // Declare OpMode members.
-    private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor left_front = null;
-    private DcMotor right_front = null;
-    private DcMotor left_back = null;
-    private DcMotor right_back = null;
+  private ElapsedTime runtime = new ElapsedTime();
+  private DcMotor left_front = null;
+  private DcMotor right_front = null;
+  private DcMotor left_back = null;
+  private DcMotor right_back = null;
 
-    private DcMotor arm_1 = null;
-    private DcMotor arm_2 = null;
+  private DcMotor arm_1 = null;
+  private DcMotor arm_2 = null;
 
-    private CRServo foundation = null;
-    private CRServo rotate = null;
-    private CRServo grab = null;
+  private CRServo foundation = null;
+  private CRServo rotate = null;
+  private CRServo grab = null;
 
-    @Override
-    public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+  double driveRht = 0;
+  double driveFwd = 0;
 
-        // Initialize the hardware variables. Note that the strings used here as parameters
-        // to 'get' must correspond to the names assigned during the robot configuration
-        // step (using the FTC Robot Controller app on the phone).
-        left_front  = hardwareMap.get(DcMotor.class, "left_front");
-        right_front = hardwareMap.get(DcMotor.class, "right_front");
-        left_back = hardwareMap.get(DcMotor.class, "left_back");
-        right_back = hardwareMap.get(DcMotor.class, "right_back");
+  @Override
+  public void runOpMode() {
+    telemetry.addData("Status", "Initialized");
+    telemetry.update();
 
-        arm_1 = hardwareMap.get(DcMotor.class, "arm_1");
-        arm_2 = hardwareMap.get(DcMotor.class, "arm_2");
+    // Initialize the hardware variables. Note that the strings used here as parameters
+    // to 'get' must correspond to the names assigned during the robot configuration
+    // step (using the FTC Robot Controller app on the phone).
+    left_front  = hardwareMap.get(DcMotor.class, "left_front");
+    right_front = hardwareMap.get(DcMotor.class, "right_front");
+    left_back = hardwareMap.get(DcMotor.class, "left_back");
+    right_back = hardwareMap.get(DcMotor.class, "right_back");
 
-        foundation = hardwareMap.get(CRServo.class, "foundation");
-        rotate = hardwareMap.get(CRServo.class, "rotate");
-        grab = hardwareMap.get(CRServo.class, "grab");
+    arm_1 = hardwareMap.get(DcMotor.class, "arm_1");
+    arm_2 = hardwareMap.get(DcMotor.class, "arm_2");
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        left_front.setDirection(DcMotor.Direction.FORWARD);
-        right_front.setDirection(DcMotor.Direction.REVERSE);
-        left_back.setDirection(DcMotor.Direction.FORWARD);
-        right_back.setDirection(DcMotor.Direction.REVERSE);
+    foundation = hardwareMap.get(CRServo.class, "foundation");
+    rotate = hardwareMap.get(CRServo.class, "rotate");
+    grab = hardwareMap.get(CRServo.class, "grab");
+
+    // Most robots need the motor on one side to be reversed to drive forward
+    // Reverse the motor that runs backwards when connected directly to the battery
+    left_front.setDirection(DcMotor.Direction.FORWARD);
+    right_front.setDirection(DcMotor.Direction.REVERSE);
+    left_back.setDirection(DcMotor.Direction.FORWARD);
+    right_back.setDirection(DcMotor.Direction.REVERSE);
 
 //        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //encoders becau
-        left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    //encoders becau
+    left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    right_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    left_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    right_back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    left_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    right_front.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    left_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    right_back.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-        runtime.reset();
-        int outpos = 0;
-        // run until the end of the match (driver presses STOP)
-        while (opModeIsActive()) {
+    // Wait for the game to start (driver presses PLAY)
+    waitForStart();
+    runtime.reset();
+    int outpos = 0;
+    // run until the end of the match (driver presses STOP)
+    while (opModeIsActive()) {
 
-            // Setup a variable for each drive wheel to save power level for telemetry
-            double leftPower;
-            double rightPower;
+      driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
+      driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
 
-            //left stick position
+      //if left bumper, sideways movement
+      
+      left_front.setPower(driveFwd + driveRht);
+      left_back.setPower(driveFwd - driveRht);
+      right_front.setPower(driveFwd + driveRht);
+      right_back.setPower(driveFwd - driveRht);
 
-            leftPower  = - gamepad1.left_stick_y - gamepad1.left_stick_x;
-            rightPower = - gamepad1.left_stick_y + gamepad1.left_stick_x;
+      //foundation
+      if (gamepad1.left_trigger > 0.05) {
+        foundation.setPower(0.5);
+      } else if (gamepad1.right_trigger > 0.05) {
+        foundation.setPower(-0.5);
+      } else {
+        foundation.setPower(0);
+      }
 
-            //if left bumper, sideways movement
-            if (gamepad1.left_bumper) {
-                left_front.setPower(-leftPower);
-                left_back.setPower(leftPower);
-                right_front.setPower(-rightPower);
-                right_back.setPower(rightPower);
-            } else {
-                left_front.setPower(0.5*leftPower);
-                left_back.setPower(0.5*leftPower);
-                right_front.setPower(0.5*rightPower);
-                right_back.setPower(0.5*rightPower);
-            }
-
-            //foundation
-            if (gamepad1.left_trigger > 0.05) {
-                foundation.setPower(0.5);
-            } else if (gamepad1.right_trigger > 0.05) {
-                foundation.setPower(-0.5);
-            } else {
-                foundation.setPower(0);
-            }
-
-            //arm movement
-            if (gamepad2.x) {
+      //arm movement
+      if (gamepad2.x) {
 //                if(arm_1.getCurrentPosition() > -200) {
-                    arm_1.setPower(1);
+              arm_1.setPower(1);
 //                } else {
 //                    arm_1.setPower(0.25);
 //                }
-            } else if (gamepad2.y) {
+      } else if (gamepad2.y) {
 //                if(arm_1.getCurrentPosition() < -2000) {
-                    arm_1.setPower(-1);
+        arm_1.setPower(-1);
 //                } else {
 //                    arm_1.setPower(0.5);
 //                }
-            } else {
-                arm_1.setPower(0);
-            }
+      } else {
+        arm_1.setPower(0);
+      }
 
-            if(gamepad2.a) {
-                arm_2.setPower(1);
-            } else if (gamepad2.b) {
-                arm_2.setPower(-1);
-            } else {
-                arm_2.setPower(0);
-            }
+      if(gamepad2.a) {
+        arm_2.setPower(1);
+      } else if (gamepad2.b) {
+        arm_2.setPower(-1);
+      } else {
+        arm_2.setPower(0);
+      }
 
-            //rotate
-            if(gamepad2.dpad_left) {
-                rotate.setPower(1);
-            } else if (gamepad2.dpad_right) {
-                rotate.setPower(-1);
-            } else {
-                rotate.setPower(0);
-            }
+      //rotate
+      if(gamepad2.dpad_left) {
+        rotate.setPower(1);
+      } else if (gamepad2.dpad_right) {
+        rotate.setPower(-1);
+      } else {
+        rotate.setPower(0);
+      }
 
-            //grab
-            if (gamepad2.dpad_down) {
-                grab.setPower(1);
-            } else if (gamepad2.dpad_up) {
-                grab.setPower(-1);
-            } else if (gamepad2.left_trigger > 0.05 || gamepad2.right_trigger > 0.05) {
-                grab.setPower(0);
-            }
+      //grab
+      if (gamepad2.dpad_down) {
+        grab.setPower(1);
+      } else if (gamepad2.dpad_up) {
+        grab.setPower(-1);
+      } else if (gamepad2.left_trigger > 0.05 || gamepad2.right_trigger > 0.05) {
+        grab.setPower(0);
+      }
 
-            telemetry.addData("toehnu", arm_1.getCurrentPosition());
-            telemetry.addData("runtime", getRuntime());
-            telemetry.addData("outpos", outpos);
-            telemetry.update();
-        }
+      telemetry.addData("toehnu", arm_1.getCurrentPosition());
+      telemetry.addData("runtime", getRuntime());
+      telemetry.addData("outpos", outpos);
+      telemetry.update();
     }
+  }
 }
