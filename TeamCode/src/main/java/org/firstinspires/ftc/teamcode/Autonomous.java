@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous shell", group="Linear Opmode")
-@Disabled
+//@Disabled
 public class Autonomous extends LinearOpMode {
 
     // Declare OpMode members.
@@ -109,7 +109,32 @@ public class Autonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
+        
+        drive(0.5, 750);
 
         telemetry.update();
+    }
+    private void pause() {
+        left_front.setPower(0);
+        right_front.setPower(0);
+        left_back.setPower(0);
+        right_back.setPower(0);
+        sleep(200);
+    }
+    private void drive(double power, int time) {
+        left_front.setPower(power);
+        right_front.setPower(power);
+        left_back.setPower(power);
+        right_back.setPower(power);
+
+        sleep(time);
+    }
+    private void turn(double powerL, double powerR, int time) {
+        left_front.setPower(powerL);
+        right_front.setPower(powerR);
+        left_back.setPower(powerL);
+        right_front.setPower(powerR);
+
+        sleep(time);
     }
 }

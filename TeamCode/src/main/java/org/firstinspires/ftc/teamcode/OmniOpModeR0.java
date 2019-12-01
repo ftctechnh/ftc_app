@@ -85,7 +85,7 @@ public class OmniOpModeR0 extends LinearOpMode {
     sleep(time);
   }
   
-  private void driveC(double force,int time){
+  private void driveCC(double force,int time){
     
     driveNW.setPower(force);
     driveNE.setPower(force);
@@ -141,11 +141,13 @@ public class OmniOpModeR0 extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    driveRht(1,450);
-    
+    driveRht(1,1050);
+
     grab(false);
 
-    driveFwd(1,300);
+    driveRht(-1,570);
+
+    driveFwd(1,400);
     
     driveRst();
     
@@ -155,11 +157,13 @@ public class OmniOpModeR0 extends LinearOpMode {
 
     grab(true);
 
-    driveFwd(-1,700);
+    driveFwd(-1,600);
+
+    driveRst();
 
     grab(true);
 
-    driveC(-1,700);
+    driveCC(-1,100);
 
     grab(true);
     
