@@ -29,9 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -50,9 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous shell", group="Linear Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="red foundation out", group="Linear Opmode")
 //@Disabled
-public class Autonomous extends LinearOpMode {
+public class red_foundation_out extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -109,8 +107,28 @@ public class Autonomous extends LinearOpMode {
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
-        
-        drive(0.5, 750);
+
+        arm_1.setPower(-1); //move arm up
+        drive(0.5, 1150); //drive to foundation
+        arm_1.setPower(0);
+        pause();
+        sideways(1, 750);
+        drive(0.5, 150);
+        pause();
+        foundation.setPower(1); //grab foundation
+        sleep(3000);
+        foundation.setPower(0.5);
+        drive(-0.5, 1500); //move back into build site
+        pause();
+        foundation.setPower(-1);
+        sleep(3000);
+        arm_1.setPower(0.25);
+        arm_2.setPower(1);
+        sideways(-1, 1250);
+        arm_1.setPower(0);
+        arm_2.setPower(0);
+        sideways(-1, 750);
+        pause();
 
         telemetry.update();
     }
@@ -135,6 +153,13 @@ public class Autonomous extends LinearOpMode {
         left_back.setPower(powerL);
         right_front.setPower(powerR);
 
+        sleep(time);
+    }
+    private void sideways(double power, int time) {
+        left_front.setPower(-power);
+        right_front.setPower(power);
+        left_back.setPower(power);
+        right_back.setPower(-power);
         sleep(time);
     }
 }

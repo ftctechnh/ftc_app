@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -49,9 +48,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="red stone out", group="Linear Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="blue foundation out", group="Linear Opmode")
 //@Disabled
-public class red_stone_out extends LinearOpMode {
+public class blue_foundation_out extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -109,10 +108,28 @@ public class red_stone_out extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drive(0.5, 750);
+        arm_1.setPower(-1); //move arm up
+        drive(0.5, 1050); //drive to foundation
+        arm_1.setPower(0);
         pause();
-        turn(-0.25, 0.25, 500);
-
+        sideways(-1, 600);
+        drive(0.5, 150);
+        pause();
+        foundation.setPower(1); //grab foundation
+        sleep(3000);
+        foundation.setPower(0.5);
+        drive(-0.5, 1500); //move back into build site
+        pause();
+        foundation.setPower(-1);
+        sleep(3000);
+        arm_1.setPower(0.25);
+        arm_2.setPower(1);
+        sideways(1, 1250);
+        arm_1.setPower(0);
+        arm_2.setPower(0);
+        sideways(1, 800);
+        pause();
+        drive(-1, 200);
 
         telemetry.update();
     }
@@ -137,6 +154,13 @@ public class red_stone_out extends LinearOpMode {
         left_back.setPower(powerL);
         right_front.setPower(powerR);
 
+        sleep(time);
+    }
+    private void sideways(double power, int time) {
+        left_front.setPower(-power);
+        right_front.setPower(power);
+        left_back.setPower(power);
+        right_back.setPower(-power);
         sleep(time);
     }
 }

@@ -72,7 +72,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
   double driveRht = 0;
   double driveFwd = 0;
-  double driveC = 0.2
+  double driveC = 0.3;
 
   @Override
   public void runOpMode() {
@@ -123,26 +123,33 @@ public class BasicOpMode_Linear extends LinearOpMode {
     // run until the end of the match (driver presses STOP)
     while (opModeIsActive()) {
 
-      driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2;
-      driveFwd = ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 2;
+      driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2.5;
+      driveFwd = - ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 4;
 
       //if left bumper, sideways movement
       
-      left_front.setPower(driveFwd + driveRht);
-      left_back.setPower(driveFwd - driveRht);
-      right_front.setPower(driveFwd + driveRht);
-      right_back.setPower(driveFwd - driveRht);
-      
+
       if(gamepad1.left_bumper){
-        left_front.setPower(-driveC);
-        left_back.setPower(-driveC);
-        right_front.setPower(driveC);
-        right_back.setPower(driveC);
-      }else if(gamepad1.right_bumper){
+
         left_front.setPower(driveC);
         left_back.setPower(driveC);
         right_front.setPower(-driveC);
         right_back.setPower(-driveC);
+
+      }else if(gamepad1.right_bumper){
+
+        left_front.setPower(-driveC);
+        left_back.setPower(-driveC);
+        right_front.setPower(driveC);
+        right_back.setPower(driveC);
+
+      }else{
+
+        left_front.setPower(driveFwd + (driveRht*4));
+        left_back.setPower(driveFwd - driveRht);
+        right_front.setPower(driveFwd - (driveRht*4));
+        right_back.setPower(driveFwd + driveRht);
+
       }
 
       //foundation
@@ -173,7 +180,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
       if(gamepad2.a) {
         arm_2.setPower(1);
-      } else if (gamepad2.b) {
+      } else if (gamepad2.b && ! gamepad2.start) {
         arm_2.setPower(-1);
       } else {
         arm_2.setPower(0);

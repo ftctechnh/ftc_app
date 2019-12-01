@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -49,9 +50,9 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="red stone out", group="Linear Opmode")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name="Autonomous shell", group="Linear Opmode")
 //@Disabled
-public class red_stone_out extends LinearOpMode {
+public class Autonomourcgfys extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -109,11 +110,10 @@ public class red_stone_out extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        drive(0.5, 750);
+        arm_1.setPower(0.25);
+        arm_2.setPower(1);
+        drive(0.25, 1500);
         pause();
-        turn(-0.25, 0.25, 500);
-
-
         telemetry.update();
     }
     private void pause() {
