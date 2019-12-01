@@ -72,6 +72,7 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
   double driveRht = 0;
   double driveFwd = 0;
+  double driveC = 0.2
 
   @Override
   public void runOpMode() {
@@ -131,6 +132,18 @@ public class BasicOpMode_Linear extends LinearOpMode {
       left_back.setPower(driveFwd - driveRht);
       right_front.setPower(driveFwd + driveRht);
       right_back.setPower(driveFwd - driveRht);
+      
+      if(gamepad1.left_bumper){
+        left_front.setPower(-driveC);
+        left_back.setPower(-driveC);
+        right_front.setPower(driveC);
+        right_back.setPower(driveC);
+      }else if(gamepad1.right_bumper){
+        left_front.setPower(driveC);
+        left_back.setPower(driveC);
+        right_front.setPower(-driveC);
+        right_back.setPower(-driveC);
+      }
 
       //foundation
       if (gamepad1.left_trigger > 0.05) {
