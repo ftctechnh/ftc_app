@@ -141,29 +141,28 @@ public class OmniOpModeR0 extends LinearOpMode {
     waitForStart();
     runtime.reset();
 
-    driveRht(1,1050);
+    driveRht(1,1100);
 
     grab(false);
 
-    driveRht(-1,570);
+    driveRht(-1,550);
 
     driveFwd(1,400);
-    
     driveRst();
     
     grab(true);
 
-    driveRht(-1,250);
-
-    grab(true);
-
-    driveFwd(-1,600);
-
+    driveRht(-1,500);
     driveRst();
 
     grab(true);
 
-    driveCC(-1,100);
+    driveFwd(-1,650);
+    driveRst();
+
+    grab(true);
+
+    driveCC(1,100);
 
     grab(true);
     
