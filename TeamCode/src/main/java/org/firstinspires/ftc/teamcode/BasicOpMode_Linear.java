@@ -1,32 +1,3 @@
-/* Copyright (c) 2017 FIRST. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted (subject to the limitations in the disclaimer below) provided that
- * the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this list
- * of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the name of FIRST nor the names of its contributors may be used to endorse or
- * promote products derived from this software without specific prior written permission.
- *
- * NO EXPRESS OR IMPLIED LICENSES TO ANY PARTY'S PATENT RIGHTS ARE GRANTED BY THIS
- * LICENSE. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -38,41 +9,26 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- *
- * This particular OpMode just executes a basic Tank Drive Teleop for a two wheeled robot
- * It includes all the skeletal structure that all linear OpModes contain.
- *
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
-
 @TeleOp(name="Driver Controlled", group="Linear Opmode")
 //@Disabled
 public class BasicOpMode_Linear extends LinearOpMode {
 
-    // Declare OpMode members.
   private ElapsedTime runtime = new ElapsedTime();
   private DcMotor left_front = null;
   private DcMotor right_front = null;
   private DcMotor left_back = null;
   private DcMotor right_back = null;
 
-  private DcMotor arm_1 = null;
-  private DcMotor arm_2 = null;
+  private DcMotor armH = null;
+  private DcMotor armV = null;
 
   private CRServo foundation = null;
   private CRServo rotate = null;
-  private CRServo grab = null;
+  private CRCerSergrab = null;
 
   double driveRht = 0;
   double driveFwd = 0;
-  double driveC = 0.3;
+  double driveC = 0;
 
   @Override
   public void runOpMode() {
@@ -87,8 +43,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
     left_back = hardwareMap.get(DcMotor.class, "left_back");
     right_back = hardwareMap.get(DcMotor.class, "right_back");
 
-    arm_1 = hardwareMap.get(DcMotor.class, "arm_1");
-    arm_2 = hardwareMap.get(DcMotor.class, "arm_2");
+    armH = hardwareMap.get(DcMotor.class, "armH");
+    armV = hardwareMap.get(DcMotor.class, "armV");
 
     foundation = hardwareMap.get(CRServo.class, "foundation");
     rotate = hardwareMap.get(CRServo.class, "rotate");
@@ -101,8 +57,8 @@ public class BasicOpMode_Linear extends LinearOpMode {
     left_back.setDirection(DcMotor.Direction.FORWARD);
     right_back.setDirection(DcMotor.Direction.REVERSE);
 
-//        arm_1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        arm_1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        armH.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//        armH.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
     //encoders becau
     left_front.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -125,86 +81,41 @@ public class BasicOpMode_Linear extends LinearOpMode {
 
       driveRht = - ( gamepad1.left_stick_x + gamepad1.right_stick_x + gamepad2.left_stick_x + gamepad2.right_stick_x ) / 2.5;
       driveFwd = - ( gamepad1.left_stick_y + gamepad1.right_stick_y + gamepad2.left_stick_y + gamepad2.right_stick_y ) / 4;
+      driveC = gamepad1.left_trigger - gamepad1.right_trigger;
 
-      //if left bumper, sideways movement
+      //mecanums
       
-
-      if(gamepad1.left_bumper){
-
-        left_front.setPower(driveC);
-        left_back.setPower(driveC);
-        right_front.setPower(-driveC);
-        right_back.setPower(-driveC);
-
-      }else if(gamepad1.right_bumper){
-
-        left_front.setPower(-driveC);
-        left_back.setPower(-driveC);
-        right_front.setPower(driveC);
-        right_back.setPower(driveC);
-
-      }else{
-
-        left_front.setPower(driveFwd + (driveRht*4));
-        left_back.setPower(driveFwd - driveRht);
-        right_front.setPower(driveFwd - (driveRht*4));
-        right_back.setPower(driveFwd + driveRht);
-
-      }
+      left_front.setPower(  driveFwd + (driveRht*2) + driveC);
+      left_back.setPower(   driveFwd - (driveRht*1) + driveC);
+      right_front.setPower( driveFwd - (driveRht*1) - driveC);
+      right_back.setPower(  driveFwd + (driveRht*2) - driveC);
 
       //foundation
-      if (gamepad1.left_trigger > 0.05) {
+      if(gamepad1.dpad_up) {
         foundation.setPower(0.5);
-      } else if (gamepad1.right_trigger > 0.05) {
+      }else if(gamepad1.dpad_down) {
         foundation.setPower(-0.5);
-      } else {
+      }else{
         foundation.setPower(0);
       }
 
       //arm movement
-      if (gamepad2.x) {
-//                if(arm_1.getCurrentPosition() > -200) {
-              arm_1.setPower(1);
-//                } else {
-//                    arm_1.setPower(0.25);
-//                }
-      } else if (gamepad2.y) {
-//                if(arm_1.getCurrentPosition() < -2000) {
-        arm_1.setPower(-1);
-//                } else {
-//                    arm_1.setPower(0.5);
-//                }
-      } else {
-        arm_1.setPower(0);
-      }
-
-      if(gamepad2.a) {
-        arm_2.setPower(1);
-      } else if (gamepad2.b && ! gamepad2.start) {
-        arm_2.setPower(-1);
-      } else {
-        arm_2.setPower(0);
-      }
+      armH.setPower(gamepad2.left_stick_x);
+      armV.setPower(gamepad2.left_stick_y);
 
       //rotate
-      if(gamepad2.dpad_left) {
-        rotate.setPower(1);
-      } else if (gamepad2.dpad_right) {
-        rotate.setPower(-1);
-      } else {
-        rotate.setPower(0);
-      }
+      rotate.setPower(gamepad2.right_stick_y);
 
       //grab
-      if (gamepad2.dpad_down) {
+      if(gamepad2.dpad_down) {
         grab.setPower(1);
-      } else if (gamepad2.dpad_up) {
+      }else if(gamepad2.dpad_up) {
         grab.setPower(-1);
-      } else if (gamepad2.left_trigger > 0.05 || gamepad2.right_trigger > 0.05) {
+      }else if(gamepad2.left_trigger > 0.05 || gamepad2.right_trigger > 0.05) {
         grab.setPower(0);
       }
 
-      telemetry.addData("toehnu", arm_1.getCurrentPosition());
+      telemetry.addData("toehnu", armH.getCurrentPosition());
       telemetry.addData("runtime", getRuntime());
       telemetry.addData("outpos", outpos);
       telemetry.update();
