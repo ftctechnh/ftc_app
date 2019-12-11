@@ -69,9 +69,9 @@ public class Hardware6417
 {
     /* Public OpMode members. */
     public DcMotor  leftFront = null, rightFront = null, leftBack = null, rightBack = null,
-            armMotor = null, extendArm = null;
+            armMotor = null, extendMotor = null;
 
-    public Servo dragRight = null, dragLeft = null, grabberServo = null;
+    public Servo grabServo = null, alignServo = null;
 
     ColorSensor colorSensor;
 
@@ -96,27 +96,26 @@ public class Hardware6417
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftFront = hwMap.get(DcMotor.class, "LeftFrontDrive");
-        leftBack = hwMap.get(DcMotor.class, "LeftBackDrive");
-        rightFront = hwMap.get(DcMotor.class, "RightFrontDrive");
-        rightBack = hwMap.get(DcMotor.class, "RightBackDrive");
+        leftFront = hwMap.get(DcMotor.class, "FrontLeft");
+        leftBack = hwMap.get(DcMotor.class, "BackLeft");
+        rightFront = hwMap.get(DcMotor.class, "FrontRight");
+        rightBack = hwMap.get(DcMotor.class, "BackRight");
+        armMotor = hwMap.get(DcMotor.class, "ArmMotor");
+        extendMotor = hwMap.get(DcMotor.class, "ExtendMotor");
+
+        alignServo = hwMap.get(Servo.class, "AlignServo");
+
 
         colorSensor = hwMap.colorSensor.get("color");
 
-        /***
-        armMotor = hwMap.get(DcMotor.class, "ArmMotor");
-        grabberServo = hwMap.get(Servo.class, "grabberServo");
-        extendArm = hwMap.get(DcMotor.class, "extendArm");
-
-        dragLeft = hwMap.get(Servo.class, "dragLeft");
-        dragRight = hwMap.get(Servo.class, "dragRight");
-         ***/
-
         // Set motor directions based on orientation of motors on robot
-        leftFront.setDirection(DcMotor.Direction.FORWARD);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
-        rightBack.setDirection(DcMotor.Direction.REVERSE);
+        rightBack.setDirection(DcMotor.Direction.FORWARD);
+
+        armMotor.setDirection(DcMotor.Direction.FORWARD);
+        extendMotor.setDirection(DcMotor.Direction.FORWARD);
 
 
         // Set all motors to zero power
@@ -134,6 +133,8 @@ public class Hardware6417
         dragLeft.setPosition(0);
         dragRight.setPosition(0);
          **/
+
+        grabServo = hwMap.get(Servo.class, "GrabServo");
 
         // Set all motors to run with encoders
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

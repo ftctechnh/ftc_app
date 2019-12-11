@@ -79,30 +79,60 @@ public class MecanumDriveOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        double forward, strafe, rotate;
+        double forward, strafe, rotate, spin;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
             forward = -gamepad1.left_stick_y;
-            strafe = -gamepad1.left_stick_x;
+            strafe = gamepad1.left_stick_x;
             rotate = gamepad1.right_stick_x;
 
             setDriveSpeeds(forward, strafe, rotate);
 
-            double armUpSpeed = gamepad2.right_trigger;
-            double armDownSpeed = gamepad2.left_trigger;
-            robot.armMotor.setPower(armUpSpeed - armDownSpeed);
+            double armSpeed = gamepad2.left_stick_y;
+            robot.armMotor.setPower(armSpeed);
+            if(gamepad2.left_stick_y != 0){
+                telemetry.addData("Servo Position:", robot.alignServo.getPosition());
+                telemetry.update();
+                robot.alignServo.setPosition(robot.alignServo.getPosition() - (gamepad2.left_stick_y / 10100)); // calibrate
+            }
+
+            double extendSpeed = gamepad2.right_stick_y;
+            robot.extendMotor.setPower(-extendSpeed);
+
+            // -----------------------
+            // SERVO STUFF STARTS HERE
+            // -----------------------
+
+            if(gamepad2.left_trigger > 0)
+                robot.grabServo.setPosition(0);
+            else if(gamepad2.right_trigger > 0)
+                robot.grabServo.setPosition(0.5);
+
+            if(gamepad1.y || gamepad2.y){
+                nudgeRobot(Direction.FORWARD);
+            }
+            else if(gamepad1.x || gamepad2.x){
+                nudgeRobot(Direction.LEFT);
+            }
+            else if(gamepad1.a || gamepad2.a){
+                nudgeRobot(Direction.BACKWARD);
+            }
+            else if(gamepad1.b || gamepad2.b){
+                nudgeRobot(Direction.RIGHT);
+            }
+
         }
     }
 
     // moves robot in direction controlled by top gamepad button for a moment
     private void setDriveSpeeds(double forward, double strafe, double rotate) {
 
-        double frontLeftSpeed = forward + strafe - rotate;
+        double frontLeftSpeed = forward + strafe + rotate;
         double frontRightSpeed = forward - strafe - rotate;
         double backLeftSpeed = forward - strafe + rotate;
-        double backRightSpeed = forward + strafe + rotate;
+        double backRightSpeed = forward + strafe - rotate;
 
         double largest = 1.0;
         largest = Math.max(largest, Math.abs(frontLeftSpeed));
@@ -120,6 +150,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
     // nudges robot based on direction passed in
     // directions will be dealt with in runOpMode
     private void nudgeRobot(Direction dir) {
+
         switch(dir) {
             case FORWARD:
                 setDriveSpeeds(1, 0, 0);
@@ -135,13 +166,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
                 break;
         }
 
-        // nudge lasts 200 milliseconds
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return;
-        }
+        sleep(20);
         setDriveSpeeds(0, 0, 0);
 
     }
