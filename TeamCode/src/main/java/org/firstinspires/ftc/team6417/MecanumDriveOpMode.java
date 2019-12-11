@@ -95,7 +95,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
             if(gamepad2.left_stick_y != 0){
                 telemetry.addData("Servo Position:", robot.alignServo.getPosition());
                 telemetry.update();
-                robot.alignServo.setPosition(robot.alignServo.getPosition() - (gamepad2.left_stick_y / 10100)); // calibrate
+                robot.alignServo.setPosition(robot.alignServo.getPosition() - (gamepad2.left_stick_y / 10100)); // calibrate this part - between 10000 and 11000
             }
 
             double extendSpeed = gamepad2.right_stick_y;
