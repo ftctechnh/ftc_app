@@ -32,6 +32,7 @@ package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -79,48 +80,63 @@ public class MecanumDriveOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        double forward, strafe, rotate, spin;
+        double forward, strafe, rotate, lift;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            forward = -gamepad1.left_stick_y;
-            strafe = gamepad1.left_stick_x;
-            rotate = gamepad1.right_stick_x;
+            forward = -gamepad1.left_stick_y * 0.75;
+            strafe = gamepad1.left_stick_x * 0.75;
+            rotate = gamepad1.right_stick_x * 0.75;
+
+            lift = -gamepad2.left_stick_y;
 
             setDriveSpeeds(forward, strafe, rotate);
 
             double armSpeed = gamepad2.left_stick_y;
+
             robot.armMotor.setPower(armSpeed);
             if(gamepad2.left_stick_y != 0){
-                telemetry.addData("Servo Position:", robot.alignServo.getPosition());
-                telemetry.update();
-                robot.alignServo.setPosition(robot.alignServo.getPosition() - (gamepad2.left_stick_y / 10100)); // calibrate this part - between 10000 and 11000
+                if(lift > 0){
+                    robot.alignServo.setDirection(Servo.Direction.FORWARD);
+                    if(robot.alignServo.getPosition() < 0.23) {
+                        robot.alignServo.setPosition(robot.alignServo.getPosition() + (lift / 1900));
+                    }
+                }
+                else{
+                    robot.alignServo.setDirection(Servo.Direction.REVERSE);
+                    robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / 1900));
+                }
+
             }
 
             double extendSpeed = gamepad2.right_stick_y;
             robot.extendMotor.setPower(-extendSpeed);
-
-            // -----------------------
-            // SERVO STUFF STARTS HERE
-            // -----------------------
 
             if(gamepad2.left_trigger > 0)
                 robot.grabServo.setPosition(0);
             else if(gamepad2.right_trigger > 0)
                 robot.grabServo.setPosition(0.5);
 
-            if(gamepad1.y || gamepad2.y){
+            if(gamepad1.dpad_up || gamepad2.dpad_up){
                 nudgeRobot(Direction.FORWARD);
             }
-            else if(gamepad1.x || gamepad2.x){
+            else if(gamepad1.dpad_left || gamepad2.dpad_left){
                 nudgeRobot(Direction.LEFT);
             }
-            else if(gamepad1.a || gamepad2.a){
+            else if(gamepad1.dpad_down || gamepad2.dpad_down){
                 nudgeRobot(Direction.BACKWARD);
             }
-            else if(gamepad1.b || gamepad2.b){
+            else if(gamepad1.dpad_right || gamepad2.dpad_right){
                 nudgeRobot(Direction.RIGHT);
+            }
+            if(gamepad2.y){
+                robot.leftGrab.setPosition(0);
+                robot.rightGrab.setPosition(0);
+            }
+            else if(gamepad2.a){
+                robot.leftGrab.setPosition(0.75);
+                robot.rightGrab.setPosition(0.75);
             }
 
         }
@@ -153,20 +169,20 @@ public class MecanumDriveOpMode extends LinearOpMode {
 
         switch(dir) {
             case FORWARD:
-                setDriveSpeeds(1, 0, 0);
+                setDriveSpeeds(0.2, 0, 0);
                 break;
             case BACKWARD:
-                setDriveSpeeds(-1, 0, 0);
+                setDriveSpeeds(-0.2, 0, 0);
                 break;
             case LEFT:
-                setDriveSpeeds(0, 0, 1);
+                setDriveSpeeds(0, 0, 0.2);
                 break;
             case RIGHT:
-                setDriveSpeeds(0, 0, -1);
+                setDriveSpeeds(0, 0, -0.2);
                 break;
         }
 
-        sleep(20);
+        sleep(10);
         setDriveSpeeds(0, 0, 0);
 
     }

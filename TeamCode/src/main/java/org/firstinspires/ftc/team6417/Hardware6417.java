@@ -71,7 +71,7 @@ public class Hardware6417
     public DcMotor  leftFront = null, rightFront = null, leftBack = null, rightBack = null,
             armMotor = null, extendMotor = null;
 
-    public Servo grabServo = null, alignServo = null;
+    public Servo grabServo = null, alignServo = null, leftGrab = null, rightGrab = null;
 
     ColorSensor colorSensor;
 
@@ -104,6 +104,17 @@ public class Hardware6417
         extendMotor = hwMap.get(DcMotor.class, "ExtendMotor");
 
         alignServo = hwMap.get(Servo.class, "AlignServo");
+        alignServo.setDirection(Servo.Direction.REVERSE);
+        alignServo.setPosition(1.0);
+
+        leftGrab = hwMap.get(Servo.class, "leftGrab");
+        rightGrab = hwMap.get(Servo.class, "rightGrab");
+
+        leftGrab.setDirection(Servo.Direction.FORWARD);
+        rightGrab.setDirection(Servo.Direction.FORWARD);
+
+        rightGrab.setPosition(0);
+        leftGrab.setPosition(0);
 
 
         colorSensor = hwMap.colorSensor.get("color");
