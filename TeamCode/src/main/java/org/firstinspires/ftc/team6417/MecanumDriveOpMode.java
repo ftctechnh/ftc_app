@@ -134,7 +134,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
                 robot.leftGrab.setPosition(0);
                 robot.rightGrab.setPosition(0);
             }
-            else if(gamepad2.a){
+            else if(gamepad2.x){
                 robot.leftGrab.setPosition(0.75);
                 robot.rightGrab.setPosition(0.75);
             }
