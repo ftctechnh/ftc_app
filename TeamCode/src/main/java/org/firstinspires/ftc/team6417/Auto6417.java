@@ -5,7 +5,6 @@ import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,50 +12,46 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-@Autonomous(name="BlueWaffleAuto", group="6417")
+
+//@disabled
+@Autonomous(name="WAFFLE BOI RED", group="Autonomous")
 public class Auto6417 extends LinearOpMode {
-
-    Double width = 16.0; //inches
-    Integer cpr = 28;
-    Integer gearratio = 53;
-    Double diameter = 3.93701;
-    Double cpi = (cpr * gearratio)/(Math.PI * diameter);
-    Double bias = 0.8;
-    Double meccyBias = 0.9;
-    Double conversion = cpi * bias;
-    Boolean exit = false;
-
-    BNO055IMU imu;
-    Orientation angles;
-    Acceleration gravity;
 
     Hardware6417 robot = new Hardware6417();
 
-
+    //28 * 20 / (2ppi * 4.125)
+    Double width = 16.0; //inches
+    Integer cpr = 28; //counts per rotation
+    Integer gearratio = 40;
+    Double diameter = 4.125;
+    Double cpi = (cpr * gearratio)/(Math.PI * diameter); //counts per inch, 28cpr * gear ratio / (2 * pi * diameter (in inches, in the center))
+    Double bias = 0.8;//default 0.8
+    Double meccyBias = 0.9;//change to adjust only strafing movement
+    //
+    Double conversion = cpi * bias;
+    Boolean exit = false;
+    //
+    BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
+    //
     public void runOpMode(){
 
-        initGyro();
         robot.init(hardwareMap);
-
-        strafeToPosition(1, 0.2);
-        /**
-        moveToPosition(77.4, 0.2);
+        initGyro();
+        waitForStartify();
+        moveToPosition(-46.4, 0.2);
+        moveToPosition(46.4, 0.2);
+        strafeToPosition(23.6, 0.2);
+        moveToPosition(-22.8, 0.2);
         turnWithGyro(90, 0.2);
-        robot.dragLeft.setPosition(0.25);
-        robot.dragRight.setPosition(0.25);
-        moveToPosition(-5, 0.2);
-        robot.dragLeft.setPosition(-0.25);
-        robot.dragRight.setPosition(-0.25);
-         **/
-
+        moveToPosition(22.8, 0.2);
+        robot.leftDragServo.setPosition(0.75);
+        robot.rightDragServo.setPosition(0.75);
     }
-    //
     /*
-    This function's purpose is simply to drive forward or backward.
-    To drive backward, simply make the inches input negative.
+    This function's purpose is simply to drive forward.
      */
-
-
     public void moveToPosition(double inches, double speed){
         //
         int move = (int)(Math.round(inches*conversion));
@@ -66,35 +61,37 @@ public class Auto6417 extends LinearOpMode {
         robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition() + move);
         robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition() + move);
         //
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //
-        robot.leftFront.setPower(speed);
         robot.leftBack.setPower(speed);
-        robot.rightFront.setPower(speed);
+        robot.leftFront.setPower(speed);
         robot.rightBack.setPower(speed);
+        robot.rightFront.setPower(speed);
         //
         while (robot.leftFront.isBusy() && robot.rightFront.isBusy() && robot.leftBack.isBusy() && robot.rightBack.isBusy()){
             if (exit){
-                robot.leftFront.setPower(0);
-                robot.rightFront.setPower(0);
                 robot.leftBack.setPower(0);
+                robot.leftFront.setPower(0);
                 robot.rightBack.setPower(0);
+                robot.rightFront.setPower(0);
                 return;
             }
         }
-        robot.rightFront.setPower(0);
+        robot.leftBack.setPower(0);
         robot.leftFront.setPower(0);
         robot.rightBack.setPower(0);
-        robot.leftBack.setPower(0);
+        robot.rightFront.setPower(0);
+        robot.leftDragServo.setPosition(0);
+        robot.rightDragServo.setPosition(0);
         return;
+
     }
     //
     /*
-    This function uses the Expansion Hub IMU Integrated Gyro to turn a precise number of degrees (+/- 5).
-    Degrees should always be positive, make speedDirection negative to turn left.
+    This function uses the Expansion Hub IMU Gyro to turn a 90 degrees.
      */
     public void turnWithGyro(double degrees, double speedDirection){
         //<editor-fold desc="Initialize">
@@ -187,29 +184,27 @@ public class Auto6417 extends LinearOpMode {
                 telemetry.addData("second after", convertify(second));
                 telemetry.update();
             }
-            robot.leftFront.setPower(0);
-            robot.rightFront.setPower(0);
             robot.leftBack.setPower(0);
+            robot.leftFront.setPower(0);
             robot.rightBack.setPower(0);
+            robot.rightFront.setPower(0);
         }
         //</editor-fold>
         //
-
         robot.leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
     //
     /*
     This function uses the encoders to strafe left or right.
-    Negative input for inches results in left strafing.
+    This section of the code strafes the bot towards the center of the field
      */
     public void strafeToPosition(double inches, double speed){
         //
@@ -230,26 +225,14 @@ public class Auto6417 extends LinearOpMode {
         robot.rightFront.setPower(speed);
         robot.rightBack.setPower(speed);
         //
-        while (robot.leftFront.isBusy() && robot.rightFront.isBusy() && robot.leftBack.isBusy() && robot.rightBack.isBusy()){
-            if (exit){
-                robot.leftFront.setPower(0);
-                robot.rightFront.setPower(0);
-                robot.leftBack.setPower(0);
-                robot.rightBack.setPower(0);
-                return;
-            }
-        }
+        while (robot.leftFront.isBusy() && robot.rightFront.isBusy() && robot.leftBack.isBusy() && robot.rightBack.isBusy()){}
         robot.rightFront.setPower(0);
         robot.leftFront.setPower(0);
         robot.rightBack.setPower(0);
         robot.leftBack.setPower(0);
         return;
     }
-    //
-    /*
-    A tradition within the Thunder Pengwins code, we always start programs with waitForStartify,
-    our way of adding personality to our programs.
-     */
+
     public void waitForStartify(){
         waitForStart();
     }
@@ -298,10 +281,10 @@ public class Auto6417 extends LinearOpMode {
      */
     public void turnWithEncoder(double input){
         robot.leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+        //
         robot.leftFront.setPower(input);
         robot.leftBack.setPower(input);
         robot.rightFront.setPower(-input);
