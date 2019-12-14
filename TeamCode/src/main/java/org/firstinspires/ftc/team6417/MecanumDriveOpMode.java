@@ -57,11 +57,12 @@ public class MecanumDriveOpMode extends LinearOpMode {
         FORWARD, BACKWARD, LEFT, RIGHT;
     }
 
+    // higher lift factor means less adjustment for grab hand during height change
+    private final int LIFT_FACTOR = 1500;
+
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
     Hardware6417 robot = new Hardware6417();
-
-    boolean hasNudged = false;
 
     @Override
     public void runOpMode() {
@@ -102,17 +103,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
             // at a 90 degree angle so we can stack it on top of the building
 
             if(gamepad2.left_stick_y != 0){
-                if(lift > 0){
-                    robot.alignServo.setDirection(Servo.Direction.FORWARD);
-                    if(robot.alignServo.getPosition() < 0.23) {
-                        robot.alignServo.setPosition(robot.alignServo.getPosition() + (lift / 1900));
-                    }
-                }
-                else{
-                    robot.alignServo.setDirection(Servo.Direction.REVERSE);
-                    robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / 1900));
-                }
-
+                robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
             }
 
             // extend and retract the arm's extrusions
@@ -142,15 +133,18 @@ public class MecanumDriveOpMode extends LinearOpMode {
             }
 
             // latch and unlatch onto the building platform
-            if(gamepad2.y){
-                robot.leftGrab.setPosition(0);
-                robot.rightGrab.setPosition(0);
+            if(gamepad1.left_trigger > 0) {
+                robot.leftDragServo.setPosition(0);
+                robot.rightDragServo.setPosition(0);
             }
-            else if(gamepad2.x){
-                robot.leftGrab.setPosition(0.75);
-                robot.rightGrab.setPosition(0.75);
+            else if(gamepad1.right_trigger > 0){
+                robot.leftDragServo.setPosition(0.75);
+                robot.rightDragServo.setPosition(0.75);
             }
 
+            if(gamepad2.y) {
+                resetArm();
+            }
         }
     }
 
@@ -162,7 +156,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
         double backLeftSpeed = forward - strafe + rotate;
         double backRightSpeed = forward + strafe - rotate;
 
-        double largest = 1.0;
+        double largest = 1.2;
         largest = Math.max(largest, Math.abs(frontLeftSpeed));
         largest = Math.max(largest, Math.abs(frontRightSpeed));
         largest = Math.max(largest, Math.abs(backLeftSpeed));
@@ -197,5 +191,11 @@ public class MecanumDriveOpMode extends LinearOpMode {
         sleep(10);
         setDriveSpeeds(0, 0, 0);
 
+    }
+
+    // resets grab hand angle to perpendicular to arm
+    // used in case the auto adjust code messes up for whatever reason
+    private void resetArm() {
+        robot.alignServo.setPosition(.75);
     }
 }

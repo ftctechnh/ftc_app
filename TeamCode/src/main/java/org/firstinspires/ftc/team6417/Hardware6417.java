@@ -58,7 +58,7 @@ public class Hardware6417
     public DcMotor  leftFront = null, rightFront = null, leftBack = null, rightBack = null,
             armMotor = null, extendMotor = null;
 
-    public Servo grabServo = null, alignServo = null, leftGrab = null, rightGrab = null;
+    public Servo grabServo = null, alignServo = null, leftDragServo = null, rightDragServo = null;
 
     ColorSensor colorSensor;
 
@@ -92,8 +92,8 @@ public class Hardware6417
 
         // Define and initialize servos
         alignServo = hwMap.get(Servo.class, "AlignServo");
-        leftGrab = hwMap.get(Servo.class, "leftGrab");
-        rightGrab = hwMap.get(Servo.class, "rightGrab");
+        leftDragServo = hwMap.get(Servo.class, "leftDragServo");
+        rightDragServo = hwMap.get(Servo.class, "rightDragServo");
         grabServo = hwMap.get(Servo.class, "GrabServo");
 
         colorSensor = hwMap.colorSensor.get("color");
@@ -107,13 +107,13 @@ public class Hardware6417
         extendMotor.setDirection(DcMotor.Direction.FORWARD);
 
         alignServo.setDirection(Servo.Direction.REVERSE);
-        leftGrab.setDirection(Servo.Direction.FORWARD);
-        rightGrab.setDirection(Servo.Direction.FORWARD);
+        leftDragServo.setDirection(Servo.Direction.FORWARD);
+        rightDragServo.setDirection(Servo.Direction.FORWARD);
 
         // Set initial servo positions
         //alignServo.setPosition(1.0);
-        rightGrab.setPosition(0);
-        leftGrab.setPosition(0);
+        rightDragServo.setPosition(0);
+        leftDragServo.setPosition(0);
 
         // Set all motors to zero power
         leftFront.setPower(0);
