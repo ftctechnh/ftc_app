@@ -108,7 +108,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
             if(gamepad2.left_trigger > 0)
                 robot.grabServo.setPosition(0);
             else if(gamepad2.right_trigger > 0)
-                robot.grabServo.setPosition(0.5);
+                robot.grabServo.setPosition(0.75);
 
             if(gamepad1.dpad_up || gamepad2.dpad_up){
                 nudgeRobot(Direction.FORWARD);
