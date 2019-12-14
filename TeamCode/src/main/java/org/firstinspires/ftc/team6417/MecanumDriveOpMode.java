@@ -77,25 +77,30 @@ public class MecanumDriveOpMode extends LinearOpMode {
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         // Wait for the game to start (driver presses PLAY)
+
         waitForStart();
         runtime.reset();
 
-        double forward, strafe, rotate, lift;
+        double forward, strafe, rotate, lift, armSpeed;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            forward = -gamepad1.left_stick_y * 0.75;
-            strafe = gamepad1.left_stick_x * 0.75;
-            rotate = gamepad1.right_stick_x * 0.75;
-
+            forward = -gamepad1.left_stick_y;
+            strafe = gamepad1.left_stick_x;
+            rotate = gamepad1.right_stick_x;
             lift = -gamepad2.left_stick_y;
 
             setDriveSpeeds(forward, strafe, rotate);
 
-            double armSpeed = gamepad2.left_stick_y;
-
+            // code to raise and lower arm
+            armSpeed = gamepad2.left_stick_y;
             robot.armMotor.setPower(armSpeed);
+
+            // this section rotates the grabber claw on a servo so that it is always
+            // aligned perpendicular to the ground. This helps us keep the skystone
+            // at a 90 degree angle so we can stack it on top of the building
+
             if(gamepad2.left_stick_y != 0){
                 if(lift > 0){
                     robot.alignServo.setDirection(Servo.Direction.FORWARD);
@@ -110,14 +115,19 @@ public class MecanumDriveOpMode extends LinearOpMode {
 
             }
 
+            // extend and retract the arm's extrusions
             double extendSpeed = gamepad2.right_stick_y;
             robot.extendMotor.setPower(-extendSpeed);
 
+            // latch and unlatch the grabber claw onto the skystone
             if(gamepad2.left_trigger > 0)
                 robot.grabServo.setPosition(0);
             else if(gamepad2.right_trigger > 0)
                 robot.grabServo.setPosition(0.5);
 
+
+            // nudging allows us to move a small distance more precisely
+            // than we can with the gamepad sticks
             if(gamepad1.dpad_up || gamepad2.dpad_up){
                 nudgeRobot(Direction.FORWARD);
             }
@@ -130,6 +140,8 @@ public class MecanumDriveOpMode extends LinearOpMode {
             else if(gamepad1.dpad_right || gamepad2.dpad_right){
                 nudgeRobot(Direction.RIGHT);
             }
+
+            // latch and unlatch onto the building platform
             if(gamepad2.y){
                 robot.leftGrab.setPosition(0);
                 robot.rightGrab.setPosition(0);

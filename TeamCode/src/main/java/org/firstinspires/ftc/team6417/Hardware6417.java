@@ -29,24 +29,11 @@
 
 package org.firstinspires.ftc.team6417;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageFormat;
-import android.graphics.Rect;
-import android.graphics.YuvImage;
-import android.hardware.Camera;
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
-
-import java.io.ByteArrayOutputStream;
 
 /**
  * This is NOT an opmode.
@@ -95,7 +82,7 @@ public class Hardware6417
         // Save reference to Hardware map
         hwMap = ahwMap;
 
-        // Define and Initialize Motors
+        // Define and initialize motors
         leftFront = hwMap.get(DcMotor.class, "FrontLeft");
         leftBack = hwMap.get(DcMotor.class, "BackLeft");
         rightFront = hwMap.get(DcMotor.class, "FrontRight");
@@ -103,31 +90,30 @@ public class Hardware6417
         armMotor = hwMap.get(DcMotor.class, "ArmMotor");
         extendMotor = hwMap.get(DcMotor.class, "ExtendMotor");
 
+        // Define and initialize servos
         alignServo = hwMap.get(Servo.class, "AlignServo");
-        alignServo.setDirection(Servo.Direction.REVERSE);
-        alignServo.setPosition(1.0);
-
         leftGrab = hwMap.get(Servo.class, "leftGrab");
         rightGrab = hwMap.get(Servo.class, "rightGrab");
-
-        leftGrab.setDirection(Servo.Direction.FORWARD);
-        rightGrab.setDirection(Servo.Direction.FORWARD);
-
-        rightGrab.setPosition(0);
-        leftGrab.setPosition(0);
-
+        grabServo = hwMap.get(Servo.class, "GrabServo");
 
         colorSensor = hwMap.colorSensor.get("color");
 
-        // Set motor directions based on orientation of motors on robot
+        // Set motor and servo directions based on orientation of motors on robot
         leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftBack.setDirection(DcMotor.Direction.REVERSE);
         rightFront.setDirection(DcMotor.Direction.FORWARD);
         rightBack.setDirection(DcMotor.Direction.FORWARD);
-
         armMotor.setDirection(DcMotor.Direction.FORWARD);
         extendMotor.setDirection(DcMotor.Direction.FORWARD);
 
+        alignServo.setDirection(Servo.Direction.REVERSE);
+        leftGrab.setDirection(Servo.Direction.FORWARD);
+        rightGrab.setDirection(Servo.Direction.FORWARD);
+
+        // Set initial servo positions
+        //alignServo.setPosition(1.0);
+        rightGrab.setPosition(0);
+        leftGrab.setPosition(0);
 
         // Set all motors to zero power
         leftFront.setPower(0);
@@ -135,28 +121,11 @@ public class Hardware6417
         rightFront.setPower(0);
         rightBack.setPower(0);
 
-        /***
-        armMotor.setPower(0);
-        extendArm.setPower(0);
-         ***/
-
-        /**
-        dragLeft.setPosition(0);
-        dragRight.setPosition(0);
-         **/
-
-        grabServo = hwMap.get(Servo.class, "GrabServo");
-
         // Set all motors to run with encoders
         leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        /***
-        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        extendArm.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-         ***/
 
     }
 
