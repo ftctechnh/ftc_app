@@ -32,7 +32,6 @@ package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -82,7 +81,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        double forward, strafe, rotate, lift, armSpeed;
+        double forward, strafe, rotate, lift, armSpeed, extendSpeed;
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -92,30 +91,40 @@ public class MecanumDriveOpMode extends LinearOpMode {
             rotate = gamepad1.right_stick_x;
             lift = -gamepad2.left_stick_y;
 
-            setDriveSpeeds(forward, strafe, rotate);
+            if(Math.abs(forward) > 0.3 || Math.abs(strafe) > 0.3 || Math.abs(rotate) > 0.3){
+                setDriveSpeeds(forward, strafe, rotate);
+            }
+            else{
+                setDriveSpeeds(0, 0, 0);
+            }
 
             // code to raise and lower arm
-            armSpeed = gamepad2.left_stick_y;
+            if(Math.abs(lift) > 0.3){
+                armSpeed = gamepad2.left_stick_y;
+            }
+            else{
+                armSpeed = 0;
+            }
+
             robot.armMotor.setPower(armSpeed);
 
             // this section rotates the grabber claw on a servo so that it is always
             // aligned perpendicular to the ground. This helps us keep the skystone
             // at a 90 degree angle so we can stack it on top of the building
 
-            if(gamepad2.left_stick_y != 0){
-                robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
-            }
+            robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
 
             // extend and retract the arm's extrusions
-            double extendSpeed = gamepad2.right_stick_y;
+            extendSpeed = gamepad2.right_stick_y;
             robot.extendMotor.setPower(-extendSpeed);
 
             // latch and unlatch the grabber claw onto the skystone
-            if(gamepad2.left_trigger > 0)
+            if(gamepad2.left_trigger > 0) {
                 robot.grabServo.setPosition(0);
-            else if(gamepad2.right_trigger > 0)
+            }
+            else if(gamepad2.right_trigger > 0) {
                 robot.grabServo.setPosition(0.75);
-
+            }
 
             // nudging allows us to move a small distance more precisely
             // than we can with the gamepad sticks
@@ -156,12 +165,11 @@ public class MecanumDriveOpMode extends LinearOpMode {
         double backLeftSpeed = forward - strafe + rotate;
         double backRightSpeed = forward + strafe - rotate;
 
-        double largest = 1.2;
+        double largest = 1.0;
         largest = Math.max(largest, Math.abs(frontLeftSpeed));
         largest = Math.max(largest, Math.abs(frontRightSpeed));
         largest = Math.max(largest, Math.abs(backLeftSpeed));
         largest = Math.max(largest, Math.abs(backRightSpeed));
-
 
         robot.leftFront.setPower(frontLeftSpeed / largest);
         robot.rightFront.setPower(frontRightSpeed / largest);
@@ -181,10 +189,10 @@ public class MecanumDriveOpMode extends LinearOpMode {
                 setDriveSpeeds(-0.2, 0, 0);
                 break;
             case LEFT:
-                setDriveSpeeds(0, 0, 0.2);
+                setDriveSpeeds(0, 0, -0.2);
                 break;
             case RIGHT:
-                setDriveSpeeds(0, 0, -0.2);
+                setDriveSpeeds(0, 0, 0.2);
                 break;
         }
 
@@ -196,6 +204,6 @@ public class MecanumDriveOpMode extends LinearOpMode {
     // resets grab hand angle to perpendicular to arm
     // used in case the auto adjust code messes up for whatever reason
     private void resetArm() {
-        robot.alignServo.setPosition(.75);
+        robot.alignServo.setPosition(.5);
     }
 }

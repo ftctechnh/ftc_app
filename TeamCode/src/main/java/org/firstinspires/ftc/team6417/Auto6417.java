@@ -40,6 +40,7 @@ public class Auto6417 extends LinearOpMode {
         robot.init(hardwareMap);
         initGyro();
         waitForStartify();
+
         moveToPosition(-46.4, 0.2);
         moveToPosition(46.4, 0.2);
         strafeToPosition(23.6, 0.2);

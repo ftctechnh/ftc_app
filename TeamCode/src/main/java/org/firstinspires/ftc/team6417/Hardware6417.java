@@ -29,11 +29,19 @@
 
 package org.firstinspires.ftc.team6417;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 
 /**
  * This is NOT an opmode.
@@ -67,7 +75,7 @@ public class Hardware6417
     public static final double DIAMETER = 3.93701; //inches
     //public static final int BLOCK_HEIGHT = 127; //millimeters
 
-    public int counter;
+    BNO055IMU imu;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -75,6 +83,14 @@ public class Hardware6417
 
     /* Constructor */
     public Hardware6417(){
+    }
+
+    private void checkOrientation() {
+        // read the orientation of the robot
+        Orientation angles = this.imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        this.imu.getPosition();
+        // and save the heading
+        double curHeading = angles.firstAngle;
     }
 
     /* Initialize standard Hardware interfaces */
@@ -127,6 +143,121 @@ public class Hardware6417
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
+    }
+
+    public void drivetoPosition(int d, double power){
+
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int distance = (int)(CPR / (DIAMETER * Math.PI) * d);
+
+        leftFront.setTargetPosition(distance);
+        rightFront.setTargetPosition(distance);
+        leftBack.setTargetPosition(distance);
+        rightBack.setTargetPosition(distance);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+        rightBack.setPower(power);
+
+        while(leftFront.isBusy() || rightFront.isBusy() || leftBack.isBusy() || rightBack.isBusy()){ }
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+
+    public void strafeToPosition(int d, double power){
+
+        leftFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        int distance = (int)(CPR / (DIAMETER * Math.PI) * d);
+
+        leftFront.setTargetPosition(distance);
+        rightFront.setTargetPosition(-distance);
+        leftBack.setTargetPosition(-distance);
+        rightBack.setTargetPosition(distance);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+        rightBack.setPower(power);
+
+        while(leftFront.isBusy() || rightFront.isBusy() || leftBack.isBusy() || rightBack.isBusy()){ }
+
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+        leftFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+    }
+
+    public void strafe(double power){
+
+        // Set all motors to the same power
+        // rightFront and leftBack go in the opposite directions to strafe
+        leftFront.setPower(power);
+        rightFront.setPower(-power);
+        leftBack.setPower(-power);
+        rightBack.setPower(power);
+
+    }
+
+    public void drive(double power){
+
+        // Set all motors to the same power to drive forward
+        leftFront.setPower(power);
+        rightFront.setPower(power);
+        leftBack.setPower(power);
+        rightBack.setPower(power);
+
+    }
+
+    public void stop(){
+
+        // Set all motors to 0 power
+        leftFront.setPower(0);
+        rightFront.setPower(0);
+        leftBack.setPower(0);
+        rightBack.setPower(0);
+
+    }
+
+    public void turnWithEncoder(double input){
+        leftFront.setPower(input);
+        leftBack.setPower(input);
+        rightFront.setPower(-input);
+        rightBack.setPower(-input);
     }
 
 }
