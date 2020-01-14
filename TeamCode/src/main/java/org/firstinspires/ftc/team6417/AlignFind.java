@@ -29,11 +29,13 @@
 
 package org.firstinspires.ftc.team6417;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -42,6 +44,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -52,7 +55,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 @Autonomous(name="VueBoi", group ="Linear Opmode")
 
-public class AlignFind extends LinearOpMode{
+public class AlignFind extends LinearOpMode {
 
     private ElapsedTime searchTime = new ElapsedTime(0);
 
@@ -70,35 +73,64 @@ public class AlignFind extends LinearOpMode{
     private static final VuforiaLocalizer.CameraDirection CAMERA_CHOICE = BACK;
     private static final boolean PHONE_IS_PORTRAIT = true;
 
-
     /**
      * This is the webcam we are to use. As with other hardware devices such as motors and
      * servos, this device is identified using the robot configuration tool in the FTC application.
      */
 
-
     private boolean targetVisible = false;
 
     private int skystonePosition = 4;
 
+    Hardware6417 robot = new Hardware6417();
+    BNO055IMU imu;
+    Orientation angles;
+    Acceleration gravity;
+
     //private WebcamName webcamName = null;
 
 
+    /**
+     * This method initiates vuforia. Make sure to pass a webcam object
+     * <p>
+     * // * @param awebcamName The webcam object
+     */
 
-
-
-    /** This method initiates vuforia. Make sure to pass a webcam object
-     *
-     // * @param awebcamName The webcam object
-     * */
-
-    public void runOpMode(){
+    public void runOpMode() {
 
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
 
+        telemetry.addLine("initialized camera");
+        telemetry.update();
+
+        //robot.drivetoPosition(20, 0.5);
+
         blueInit();
-        visionTest();
+        telemetry.addLine("blueInit");
+        telemetry.update();
+
+        try {
+            skystonePosition = visionTest();
+            telemetry.addData("SkyStone position:", skystonePosition);
+            telemetry.update();
+
+        } catch (Exception e) {
+            telemetry.addLine(e.getMessage());
+            telemetry.update();
+        }
+
+
+        /***
+
+         if(skystonePosition == 0){
+         robot.strafeToPosition(-8, 0.5);
+
+         } else if(skystonePosition == 2){
+         robot.strafeToPosition(8, 0.5);
+         }
+         ***/
+
 
     }
 
@@ -122,50 +154,68 @@ public class AlignFind extends LinearOpMode{
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
-        float mmPerInch        = 25.4f;
-        float mmBotWidth       = 18 * mmPerInch;
-        float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;
+        float mmPerInch = 25.4f;
+        float mmBotWidth = 18 * mmPerInch;
+        float mmFTCFieldWidth = (12 * 12 - 2) * mmPerInch;
 
         OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(mmBotWidth/2,0,0)
+                .translation(mmBotWidth / 2, 0, 0)
                 .multiplied(Orientation.getRotationMatrix(
                         AxesReference.EXTRINSIC, AxesOrder.YZY,
                         AngleUnit.DEGREES, -90, 0, 0));
 
     }
 
+    public int visionTest() throws VuforiaException {
 
-    public int visionTest() {
-
-        VuforiaTrackables targetsSkyStone = vuforia.loadTrackablesFromAsset("Skystone");
+        VuforiaTrackables targetsSkyStone = this.vuforia.loadTrackablesFromAsset("Skystone");
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);
         stoneTarget.setName("Skystone");
 
-
-
-
         targetsSkyStone.activate();
+
         boolean noFoundSkystone = true;
+
         searchTime.reset();
-        while (searchTime.seconds() <= 5) {
+        while (!isStopRequested()) {
+            //Just  a refresh timer, don't actually need this
+            //if(timer.milliseconds() == 3) continue;
+            boolean stoneVisible = false;
 
-            // check all the trackable targets to see which one (if any) is visible.
+            // check to see if the skystone is visible.
             if (((VuforiaTrackableDefaultListener) stoneTarget.getListener()).isVisible()) {
-                skystonePositionCoords = ((VuforiaTrackableDefaultListener) stoneTarget.getListener()).getVuforiaCameraFromTarget(); //give pose of trackable, returns null if not visible
-                VectorF skystoneCoords = skystonePositionCoords.getTranslation();
-                float closestX = Range.clip(skystoneCoords.get(0), -10f, 10f);
-                if (closestX == -10) skystonePosition = 1;
-                else skystonePosition = 2;
-                break;
+                telemetry.addData("Visible Target", stoneTarget.getName()); //just returns "Stone Target"
+                /*In these coordinates, the X axis goes from the left (negative) to the right (positive).
+                    The Y axis goes up and down on the middle of the screen, and the Z axis goes from the camera outward. */
+
+                //command to get the relative position as provided by vuforia
+                OpenGLMatrix location = ((VuforiaTrackableDefaultListener) stoneTarget.getListener()).getVuforiaCameraFromTarget();
+                if (location != null) {
+                    // Get the positional part of the coordinates
+                    VectorF translation = location.getTranslation();
+                    //clip the actual X to see if it is closer to the left or right
+                    float closestX = Range.clip(translation.get(0), -20f, 20f);
+                    /*"center" because we (my team) only looks at the right two in the farthest set of three in the quarry,
+                    so the leftmost image would be the center of the three stones concerned */
+                    if (closestX == -20) telemetry.addData("Skystone Target:", "Center");
+                    //Right most stone of the two
+                    if (closestX == 20) telemetry.addData("Skystone Target:", "Right");
+                    //Also express the relative pose (for info purposes)
+                    telemetry.addData("Pos (in)", "{X, Y, Z} = %.1f, %.1f, %.1f",
+                            translation.get(0), translation.get(1), translation.get(2));
+                }
+            } else {
+                telemetry.addData( "Visible Target", "none");
             }
+            telemetry.update();
+            //timer.reset();
+
+            if (skystonePosition != 1 && skystonePosition != 2) skystonePosition = 0;
+
+            // Disable Tracking when we are done;
+            targetsSkyStone.deactivate();
+
         }
-        if(skystonePosition != 1 && skystonePosition != 2) skystonePosition = 0;
-
-
-
-        // Disable Tracking when we are done;
-        targetsSkyStone.deactivate();
         return skystonePosition;
-
     }
 }

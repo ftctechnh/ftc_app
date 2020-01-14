@@ -32,6 +32,8 @@ package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
@@ -53,7 +55,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class MecanumDriveOpMode extends LinearOpMode {
 
     enum Direction {
-        FORWARD, BACKWARD, LEFT, RIGHT;
+        FORWARD, BACKWARD, LEFT, RIGHT, STLEFT, STRIGHT;
     }
 
     // higher lift factor means less adjustment for grab hand during height change
@@ -82,6 +84,8 @@ public class MecanumDriveOpMode extends LinearOpMode {
         runtime.reset();
 
         double forward, strafe, rotate, lift, armSpeed, extendSpeed;
+        robot.leftDragServo.setPosition(0);
+        robot.rightDragServo.setPosition(0);
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -112,11 +116,13 @@ public class MecanumDriveOpMode extends LinearOpMode {
             // aligned perpendicular to the ground. This helps us keep the skystone
             // at a 90 degree angle so we can stack it on top of the building
 
-            robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
+            if(gamepad2.left_stick_y != 0) {
+                robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
+            }
 
             // extend and retract the arm's extrusions
             extendSpeed = gamepad2.right_stick_y;
-            robot.extendMotor.setPower(-extendSpeed);
+            robot.extendMotor.setPower(-extendSpeed / 2);
 
             // latch and unlatch the grabber claw onto the skystone
             if(gamepad2.left_trigger > 0) {
@@ -129,25 +135,31 @@ public class MecanumDriveOpMode extends LinearOpMode {
             // nudging allows us to move a small distance more precisely
             // than we can with the gamepad sticks
             if(gamepad1.dpad_up || gamepad2.dpad_up){
-                nudgeRobot(Direction.FORWARD);
+                nudgeRobot(Direction.FORWARD, 10);
             }
             else if(gamepad1.dpad_left || gamepad2.dpad_left){
-                nudgeRobot(Direction.LEFT);
+                nudgeRobot(Direction.LEFT, 10);
             }
             else if(gamepad1.dpad_down || gamepad2.dpad_down){
-                nudgeRobot(Direction.BACKWARD);
+                nudgeRobot(Direction.BACKWARD, 10);
             }
             else if(gamepad1.dpad_right || gamepad2.dpad_right){
-                nudgeRobot(Direction.RIGHT);
+                nudgeRobot(Direction.RIGHT, 10);
+            }
+            else if(gamepad1.left_bumper || gamepad2.left_bumper){
+                nudgeRobot(Direction.STLEFT, 20);
+            }
+            else if(gamepad2.right_bumper || gamepad1.right_bumper){
+                nudgeRobot(Direction.STRIGHT, 20);
             }
 
             // latch and unlatch onto the building platform
             if(gamepad1.left_trigger > 0) {
-                robot.leftDragServo.setPosition(0);
+                robot.leftDragServo.setPosition(0.75);
                 robot.rightDragServo.setPosition(0);
             }
             else if(gamepad1.right_trigger > 0){
-                robot.leftDragServo.setPosition(0.75);
+                robot.leftDragServo.setPosition(0);
                 robot.rightDragServo.setPosition(0.75);
             }
 
@@ -179,7 +191,7 @@ public class MecanumDriveOpMode extends LinearOpMode {
 
     // nudges robot based on direction passed in
     // directions will be dealt with in runOpMode
-    private void nudgeRobot(Direction dir) {
+    private void nudgeRobot(Direction dir, int sl) {
 
         switch(dir) {
             case FORWARD:
@@ -194,9 +206,15 @@ public class MecanumDriveOpMode extends LinearOpMode {
             case RIGHT:
                 setDriveSpeeds(0, 0, 0.2);
                 break;
+            case STLEFT:
+                setDriveSpeeds(0, -0.2, 0);
+                break;
+            case STRIGHT:
+                setDriveSpeeds(0, 0.2, 0);
+                break;
         }
 
-        sleep(10);
+        sleep(sl);
         setDriveSpeeds(0, 0, 0);
 
     }

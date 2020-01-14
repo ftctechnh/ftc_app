@@ -7,28 +7,32 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @Autonomous(name="Calibrate", group="6417")
 public class Calibrate extends LinearOpMode {
-    //
-    DcMotor frontleft;
-    DcMotor frontright;
-    DcMotor backleft;
-    DcMotor backright;
-    Integer cpr = 1440;
-    Integer gearratio = 53;
+    Integer cpr = 28;
+    Integer gearratio = 26;
     Double diameter = 3.93701;
     Double cpi = (cpr * gearratio) / (Math.PI * diameter);
-    Double bias = 0.8;
+    Double bias = 0.5;
+    Boolean exit = false;
+
+    Hardware6417 robot = new Hardware6417();
+
     //
     Double conversion = cpi * bias;
     //
     public void runOpMode() {
         //
-        frontleft = hardwareMap.dcMotor.get("LeftFrontDrive");
-        frontright = hardwareMap.dcMotor.get("RightFrontDrive");
-        backleft = hardwareMap.dcMotor.get("LeftBackDrive");
-        backright = hardwareMap.dcMotor.get("RightBackDrive");
-        frontright.setDirection(DcMotorSimple.Direction.REVERSE);//If your robot goes backward, switch this from right to left
-        backright.setDirection(DcMotorSimple.Direction.REVERSE);//If your robot goes backward, switch this from right to left
+        /***
+        frontleft = hardwareMap.dcMotor.get("FrontLeft");
+        frontright = hardwareMap.dcMotor.get("FrontRight");
+        backleft = hardwareMap.dcMotor.get("BackLeft");
+        backright = hardwareMap.dcMotor.get("BackRight");
+        frontleft.setDirection(DcMotorSimple.Direction.REVERSE);//If your robot goes backward, switch this from right to left
+        backleft.setDirection(DcMotorSimple.Direction.REVERSE);//If your robot goes backward, switch this from right to left
         //
+         ***/
+
+        robot.init(hardwareMap);
+
         waitForStartify();
         //
         moveToPosition(20, .2);//Don't change this line, unless you want to calibrate with different speeds
@@ -39,6 +43,48 @@ public class Calibrate extends LinearOpMode {
     This function's purpose is simply to drive forward or backward.
     To drive backward, simply make the inches input negative.
      */
+
+    public void moveToPosition(double inches, double speed){
+        //
+        int move = (int)(Math.round(inches*conversion));
+        //
+        robot.leftBack.setTargetPosition(robot.leftBack.getCurrentPosition() + move);
+        robot.leftFront.setTargetPosition(robot.leftFront.getCurrentPosition() + move);
+        robot.rightBack.setTargetPosition(robot.rightBack.getCurrentPosition() + move);
+        robot.rightFront.setTargetPosition(robot.rightFront.getCurrentPosition() + move);
+        //
+        robot.leftBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.leftFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightBack.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.rightFront.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //
+        robot.leftBack.setPower(speed);
+        robot.leftFront.setPower(speed);
+        robot.rightBack.setPower(speed);
+        robot.rightFront.setPower(speed);
+        //
+        while (robot.leftFront.isBusy() && robot.rightFront.isBusy() && robot.leftBack.isBusy() && robot.rightBack.isBusy()){
+
+            if (exit){
+                robot.leftBack.setPower(0);
+                robot.leftFront.setPower(0);
+                robot.rightBack.setPower(0);
+                robot.rightFront.setPower(0);
+                return;
+            }
+
+        }
+        robot.leftBack.setPower(0);
+        robot.leftFront.setPower(0);
+        robot.rightBack.setPower(0);
+        robot.rightFront.setPower(0);
+        robot.leftDragServo.setPosition(0);
+        robot.rightDragServo.setPosition(0);
+        return;
+
+    }
+
+    /***
     public void moveToPosition(double inches, double speed) {
         //
         if (inches < 5) {
@@ -109,6 +155,7 @@ public class Calibrate extends LinearOpMode {
         }
         return;
     }
+     ***/
     /*
     A tradition within the Thunder Pengwins code, we always start programs with waitForStartify,
     our way of adding personality to our programs.

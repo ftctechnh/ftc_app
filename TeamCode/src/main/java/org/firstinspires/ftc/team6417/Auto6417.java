@@ -21,8 +21,8 @@ public class Auto6417 extends LinearOpMode {
 
     //28 * 20 / (2ppi * 4.125)
     Double width = 16.0; //inches
-    Integer cpr = 28; //counts per rotation
-    Integer gearratio = 40;
+    Integer cpr = 723; //counts per rotation
+    Integer gearratio = 26;
     Double diameter = 4.125;
     Double cpi = (cpr * gearratio)/(Math.PI * diameter); //counts per inch, 28cpr * gear ratio / (2 * pi * diameter (in inches, in the center))
     Double bias = 0.8;//default 0.8
@@ -42,6 +42,8 @@ public class Auto6417 extends LinearOpMode {
         waitForStartify();
 
         moveToPosition(-46.4, 0.2);
+
+        /***
         moveToPosition(46.4, 0.2);
         strafeToPosition(23.6, 0.2);
         moveToPosition(-22.8, 0.2);
@@ -49,6 +51,8 @@ public class Auto6417 extends LinearOpMode {
         moveToPosition(22.8, 0.2);
         robot.leftDragServo.setPosition(0.75);
         robot.rightDragServo.setPosition(0.75);
+         ***/
+
     }
     /*
     This function's purpose is simply to drive forward.

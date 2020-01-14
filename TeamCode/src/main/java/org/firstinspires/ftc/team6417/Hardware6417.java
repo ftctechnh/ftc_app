@@ -30,10 +30,12 @@
 package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -128,8 +130,8 @@ public class Hardware6417
 
         // Set initial servo positions
         //alignServo.setPosition(1.0);
-        rightDragServo.setPosition(0);
-        leftDragServo.setPosition(0);
+        //rightDragServo.setPosition(0);
+        //leftDragServo.setPosition(0);
 
         // Set all motors to zero power
         leftFront.setPower(0);
