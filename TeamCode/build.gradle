@@ -13,3 +13,9 @@
 
 // Include common definitions from above.
 apply from: '../build.common.gradle'
+
+dependencies {
+    implementation project(path: ':bluejay')
+    implementation project(path: ':openCVLibrary3')
+    implementation project(path: ':DogeCV')
+}

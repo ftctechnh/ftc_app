@@ -19,8 +19,6 @@ public class Waffle {
 
     public void runOpMode(){
 
-
-
     }
 
 }
