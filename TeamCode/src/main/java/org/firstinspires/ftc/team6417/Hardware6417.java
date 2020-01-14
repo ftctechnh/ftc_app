@@ -30,6 +30,7 @@
 package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxEmbeddedIMU;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -77,7 +78,7 @@ public class Hardware6417
     public static final double DIAMETER = 3.93701; //inches
     //public static final int BLOCK_HEIGHT = 127; //millimeters
 
-    BNO055IMU imu;
+    public LynxEmbeddedIMU imu;
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -144,6 +145,10 @@ public class Hardware6417
         leftBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        LynxEmbeddedIMU imu = hwMap.get(LynxEmbeddedIMU.class, "imu");
+        BNO055IMU.Parameters params = new BNO055IMU.Parameters();
+        imu.initialize(params);
 
     }
 
