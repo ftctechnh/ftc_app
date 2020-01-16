@@ -36,6 +36,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -83,9 +87,12 @@ public class MecanumDriveOpMode extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-        double forward, strafe, rotate, lift, armSpeed, extendSpeed;
+        double forward, strafe, rotate, lift, armSpeed, extendSpeed, armangle;
         robot.leftDragServo.setPosition(0);
         robot.rightDragServo.setPosition(0);
+
+        telemetry.log().add("Gyro Calibrating...");
+        robot.alignGyro.calibrate();
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
@@ -116,13 +123,14 @@ public class MecanumDriveOpMode extends LinearOpMode {
             // aligned perpendicular to the ground. This helps us keep the skystone
             // at a 90 degree angle so we can stack it on top of the building
 
-            if(gamepad2.left_stick_y != 0) {
-                robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
-            }
+            armangle = robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
+            telemetry.addData("Gyro reading:", armangle);
+            telemetry.update();
+            robot.alignServo.setPosition(robot.alignServo.getPosition() - (lift / LIFT_FACTOR));
 
             // extend and retract the arm's extrusions
             extendSpeed = gamepad2.right_stick_y;
-            robot.extendMotor.setPower(-extendSpeed / 2);
+            robot.extendMotor.setPower(extendSpeed / 2);
 
             // latch and unlatch the grabber claw onto the skystone
             if(gamepad2.left_trigger > 0) {
@@ -222,6 +230,6 @@ public class MecanumDriveOpMode extends LinearOpMode {
     // resets grab hand angle to perpendicular to arm
     // used in case the auto adjust code messes up for whatever reason
     private void resetArm() {
-        robot.alignServo.setPosition(.5);
+        robot.alignServo.setPosition(.8);
     }
 }

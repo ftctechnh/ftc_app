@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.vuforia.Image;
 import com.vuforia.PIXEL_FORMAT;
 import com.vuforia.Vuforia;
+
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.matrices.VectorF;
@@ -25,7 +26,7 @@ import static org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocaliz
 
 public class ImageDetector extends StartStoppable implements Localizer{
 	private static final String VUFORIA_KEY =
-			"<--Key Here-->";
+			"ARuvZIj/////AAABmVkUSkLsEkjjhzixTaJVlaFNlxHEjVM47c6y7GtSCjJmsGR3bNdALVunnoGjmIog/AUoVdmCsQmzWc2WS0R1Qh+EVA5/H+39wEZ1sohFZ9UGpyWT/1da4Mm0sUbB4/atlnNbCs9PzFCnd0cFDpbzWRSmQjkaxdBlDY9rFnOGrqdEzdT9hWK2NznebhyCFWITMTu94TYY1vbuiyD+08KBIgsMPypNZ8tVSrB405WNTN3ZEqU1a+tQd7ppLUOIYfcYLKuXHRIsmiybps87PkhD84d+/NiE1pinNwBhtxhMPYgqGf1HrE7H+AzKYJpgla1DyG8AMLL1pwJKsA3penrUGwGENWr6EkVHkMLfsQoe6Jym";
 	//phone attributes
 	private static final boolean PHONE_IS_PORTRAIT = false;
 	// Everything is in mm
@@ -55,9 +56,9 @@ public class ImageDetector extends StartStoppable implements Localizer{
 		if (isVuforiaInitialized()) return;
 		
 		setupVuforia(useDisplay, opMode.hardwareMap.appContext);
-		
-		allTrackables = vuforia.loadTrackablesFromAsset("Skystone");
-		
+
+		allTrackables = this.vuforia.loadTrackablesFromAsset("Skystone");
+
 		setupTrackables(allTrackables);
 		
 		setupPhone();
@@ -226,6 +227,7 @@ public class ImageDetector extends StartStoppable implements Localizer{
 	
 	public void end() {
 		allTrackables.deactivate();
+		//vuforia.close();
 	}
 
 	@Override

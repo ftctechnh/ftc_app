@@ -32,6 +32,7 @@ package org.firstinspires.ftc.team6417;
 
 import android.util.Log;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -58,7 +59,7 @@ import detectors.StoneDetector;
     been spent on the OpenCVDetector, so don't criticize the 10 minutes I spent on the other stuff...
  */
 
-@TeleOp(name = "The Three <<Holy Systems>>", group = "Primordial Artifact")
+@Autonomous(name = "DuoDou", group = "Autonomous")
 public class DuoDou extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
@@ -67,6 +68,7 @@ public class DuoDou extends LinearOpMode {
 
         telemetry.addData("Booting Up", " . . .");
         telemetry.update();
+
         OpenCvDetector fieldDetector = new OpenCvDetector(this);
         //ImageDetector detector = new ImageDetector(this, false);
         //StoneDetector stone = new StoneDetector(this, false);

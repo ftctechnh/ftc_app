@@ -32,9 +32,11 @@ public class Pipeline {
 
 
     public static Mat process(Mat source0){
+
     	if(FtcRobotControllerActivity.PercentAvailable<FtcRobotControllerActivity.LOW_MEMORY_THRESHOLD_PERCENT){
 	        System.gc();
         }
+
 
     	return process(source0, 640, 480);
 

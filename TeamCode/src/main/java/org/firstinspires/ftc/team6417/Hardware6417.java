@@ -31,10 +31,13 @@ package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.lynx.LynxEmbeddedIMU;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.GyroSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -72,6 +75,9 @@ public class Hardware6417
     public Servo grabServo = null, alignServo = null, leftDragServo = null, rightDragServo = null;
 
     ColorSensor colorSensor;
+
+    ModernRoboticsI2cGyro alignGyro;
+    IntegratingGyroscope gyro;
 
     public static final double TURN_POWER_LIFT =  0.5 ;
     public static final int CPR = 1440;
@@ -115,7 +121,10 @@ public class Hardware6417
         rightDragServo = hwMap.get(Servo.class, "rightDragServo");
         grabServo = hwMap.get(Servo.class, "GrabServo");
 
-        colorSensor = hwMap.colorSensor.get("color");
+        colorSensor = hwMap.get(ColorSensor.class, "color");
+
+        alignGyro = hwMap.get(ModernRoboticsI2cGyro.class, "alignGyro");
+        gyro = (IntegratingGyroscope)alignGyro;
 
         // Set motor and servo directions based on orientation of motors on robot
         leftFront.setDirection(DcMotor.Direction.REVERSE);
@@ -146,9 +155,12 @@ public class Hardware6417
         rightFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        LynxEmbeddedIMU imu = hwMap.get(LynxEmbeddedIMU.class, "imu");
+
+        /***
+        LynxEmbeddedIMU imu = hwMap.get(LynxEmbeddedIMU.class, "AlignGyro");
         BNO055IMU.Parameters params = new BNO055IMU.Parameters();
         imu.initialize(params);
+         ***/
 
     }
 

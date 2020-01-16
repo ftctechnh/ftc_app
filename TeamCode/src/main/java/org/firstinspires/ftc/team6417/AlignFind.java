@@ -27,7 +27,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.team6417.irrelevent;
+package org.firstinspires.ftc.team6417;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -47,6 +47,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.team6417.Hardware6417;
 
+import detectors.ClosableVuforiaLocalizer;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
@@ -62,7 +64,7 @@ public class AlignFind extends LinearOpMode {
 
     /* vuforia key */
     private static final String VUFORIA_KEY =
-            "AarvkvP/////AAABmUGlrY1/5k8ZlPGkwMHuu6wNmXRu7oo06n2KRf3TtubqLyTqBB8UaH9dAba0CjYVCdgFOih0PbY3y5tEmjUIE9HWvfLjG9HeweLBQYq9OBX2KF9PXPJbu64ZNMTOjp2/B3rJEmZd7IBkml4EfSyzaG/J5ESPSKqZMYwRVHNqMR8PhPY26KmGOWFzOsAe474/YAWJEnBgBApocG6jQ9mBjbFp5boU+ZfML3LFa7KhL3liocD8AXO9x6pG32yZ9zmVjjnCRhvVJ4vSfsKbhdhHXl5EoWMra/p+By6mElbeqwdxdfl3AgUKxG1zXyAKVFVHUMJ1pYuooNgvkliHad68CTUW1DbMIcI1frUNqlQxIlkj";
+            "ARuvZIj/////AAABmVkUSkLsEkjjhzixTaJVlaFNlxHEjVM47c6y7GtSCjJmsGR3bNdALVunnoGjmIog/AUoVdmCsQmzWc2WS0R1Qh+EVA5/H+39wEZ1sohFZ9UGpyWT/1da4Mm0sUbB4/atlnNbCs9PzFCnd0cFDpbzWRSmQjkaxdBlDY9rFnOGrqdEzdT9hWK2NznebhyCFWITMTu94TYY1vbuiyD+08KBIgsMPypNZ8tVSrB405WNTN3ZEqU1a+tQd7ppLUOIYfcYLKuXHRIsmiybps87PkhD84d+/NiE1pinNwBhtxhMPYgqGf1HrE7H+AzKYJpgla1DyG8AMLL1pwJKsA3penrUGwGENWr6EkVHkMLfsQoe6Jym";
 
     private static final int skystoneMid = -100; //X positions of skystone positions
     private static final int skystoneCenter = 100;
@@ -153,7 +155,7 @@ public class AlignFind extends LinearOpMode {
          */
 
         //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+        vuforia = new ClosableVuforiaLocalizer(parameters);
 
         float mmPerInch = 25.4f;
         float mmBotWidth = 18 * mmPerInch;
@@ -167,7 +169,7 @@ public class AlignFind extends LinearOpMode {
 
     }
 
-    public int visionTest() throws VuforiaException {
+    public int visionTest() {
 
         VuforiaTrackables targetsSkyStone = this.vuforia.loadTrackablesFromAsset("Skystone");
         VuforiaTrackable stoneTarget = targetsSkyStone.get(0);

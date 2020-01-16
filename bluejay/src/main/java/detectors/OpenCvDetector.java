@@ -33,7 +33,7 @@ public class OpenCvDetector extends StartStoppable {
 
 
 	public OpenCvDetector(OpMode opMode) {
-		this.vuforia = new ImageDetector(opMode);
+		this.vuforia = new ImageDetector(opMode, true);
 	}
 
 	@Override
@@ -60,7 +60,9 @@ public class OpenCvDetector extends StartStoppable {
 	private void updateObjects() {
 		//get raw image
 		//raw image for camera
+		start();
 		Bitmap image = vuforia.getImage();
+		end();
 
 		//raw to Mat
 		//image converted to OpenCV Mat
