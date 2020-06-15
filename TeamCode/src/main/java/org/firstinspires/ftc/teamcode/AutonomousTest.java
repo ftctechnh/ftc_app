@@ -7,9 +7,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @Autonomous (name = "AutonomousTest", group = "Tests")
 public class AutonomousTest extends LinearOpMode {
-
-        //Sets global variables.
-        private static final double CLAW_DOWN_POSITION = 0.5;
+    //Sets global variables outside of the run opmode method.
+         private static final double CLAW_DOWN_POSITION = 0.5;
         private static final double CLAW_UP_POSITION = 0;
 
         @Override
