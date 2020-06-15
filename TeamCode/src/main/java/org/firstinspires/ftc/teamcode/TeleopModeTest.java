@@ -9,7 +9,7 @@ import java.util.*;
 @TeleOp(name = "TeleOpTest", group = "Tests")
 public class TeleopModeTest extends LinearOpMode {
 
-    //Initializes motors and servos.
+    //Initializes motors and servos
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
