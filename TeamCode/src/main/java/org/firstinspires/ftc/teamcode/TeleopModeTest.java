@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import java.util.*;
 
 @TeleOp(name = "TeleOpTest", group = "Tests")
@@ -15,6 +16,7 @@ public class TeleopModeTest extends LinearOpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
 
+
     private DcMotor Slide;
 
     private Servo claw;
@@ -25,20 +27,7 @@ public class TeleopModeTest extends LinearOpMode {
 
     private int power;
 
-    //Method sets motor powers to make the robot strafe left or right based on sign of input power.
-    public void Strafe(int power) {
-        frontLeft.setPower(-power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(-power);
-    }
-    //Method sets all motors to 0 (makes robot stop).
-    public void Stop() {
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
-    }
+
 
     //Main runOpMode method.
     @Override
@@ -52,6 +41,8 @@ public class TeleopModeTest extends LinearOpMode {
         Slide = hardwareMap.dcMotor.get("Slide");
 
         claw = hardwareMap.servo.get("claw");
+
+        Robot robot = new Robot(frontLeft, frontRight, backLeft, backRight);
 //Reverses left side motors to make the robot go forward on positive power.
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
@@ -69,14 +60,14 @@ public class TeleopModeTest extends LinearOpMode {
 //Uses gamepad button/bumper inputs to set servo positions.
 
             if (gamepad1.right_bumper) {
-                Strafe(1);
+                robot.Strafe(1);
             }
             else if (gamepad1.left_bumper) {
-                Strafe(-1);
+                robot.Strafe(-1);
             }
 //Stops the motors so that the robot only moves while the buttons are being pressed.
             else {
-                Stop();
+                robot.Stop();
             }
 //Allows the driver to drive slower for more precise movements when needed (by pressing the right trigger).
             if (gamepad1.right_trigger <= 0.5){

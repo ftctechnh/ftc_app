@@ -11,6 +11,7 @@ public class AutonomousTest extends LinearOpMode {
         private static final double CLAW_DOWN_POSITION = 0.5;
         private static final double CLAW_UP_POSITION = 0;
 
+
         @Override
         public void runOpMode() throws InterruptedException {
 
