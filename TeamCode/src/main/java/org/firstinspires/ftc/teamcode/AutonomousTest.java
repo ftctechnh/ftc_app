@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import java.util.*;
 
 @Autonomous (name = "AutonomousTest", group = "Tests")
 public class AutonomousTest extends LinearOpMode {
@@ -30,9 +31,9 @@ public class AutonomousTest extends LinearOpMode {
             backLeft = hardwareMap.dcMotor.get("backLeft");
             backRight = hardwareMap.dcMotor.get("backRight");
 
-            DcMotor slide = hardwareMap.dcMotor.get("slide");
+            slide = hardwareMap.dcMotor.get("slide");
 
-            Servo claw = hardwareMap.servo.get("claw");
+            claw = hardwareMap.servo.get("claw");
 
 //Reverses the left motors so the robot can move forward on positive power.
             frontLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -84,3 +85,4 @@ public class AutonomousTest extends LinearOpMode {
             telemetry.update();
         }
     }
+
