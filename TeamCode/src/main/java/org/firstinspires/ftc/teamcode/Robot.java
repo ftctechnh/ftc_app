@@ -66,18 +66,14 @@ public class Robot {
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()){
-            telemetry.addData("Satus", "Driving");
-            telemetry.update();
-        }
+
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
-        telemetry.addData("Status", "Driving Complete");
-        telemetry.update();
+        
     }
 
 

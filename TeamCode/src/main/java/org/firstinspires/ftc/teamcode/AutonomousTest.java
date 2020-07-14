@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-//Test comment
 
 @Autonomous (name = "AutonomousTest", group = "Tests")
 public class AutonomousTest extends LinearOpMode {
@@ -31,6 +30,8 @@ public class AutonomousTest extends LinearOpMode {
             frontRight = hardwareMap.dcMotor.get("frontRight");
             backLeft = hardwareMap.dcMotor.get("backLeft");
             backRight = hardwareMap.dcMotor.get("backRight");
+
+            Robot robot = new Robot(frontLeft, frontRight, backLeft, backRight);
 
             slide = hardwareMap.dcMotor.get("slide");
 
