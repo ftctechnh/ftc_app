@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+//Test comment
+
 @Autonomous (name = "AutonomousTest", group = "Tests")
 public class AutonomousTest extends LinearOpMode {
     //Sets global variables outside of the run opmode method.
