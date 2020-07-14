@@ -5,8 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import java.util.*;
-
 @TeleOp(name = "TeleOpTest", group = "Tests")
 public class TeleopModeTest extends LinearOpMode {
 

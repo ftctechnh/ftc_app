@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import java.util.*;
 
 @Autonomous (name = "AutonomousTest", group = "Tests")
 public class AutonomousTest extends LinearOpMode {
@@ -43,46 +42,6 @@ public class AutonomousTest extends LinearOpMode {
 
 
         }
-        public void DriveForwardDistance(int inches, int power){
-            int diameter = 1;
 
-            //Rest Encoders.
-            frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-            double circumference = 3.14*diameter;
-            double rotationsNeeded = inches/circumference;
-            int encoderDrivingTarget = (int)(rotationsNeeded*1120);
-
-            frontLeft.setTargetPosition(encoderDrivingTarget);
-            frontRight.setTargetPosition(encoderDrivingTarget);
-            backLeft.setTargetPosition(encoderDrivingTarget);
-            backRight.setTargetPosition(encoderDrivingTarget);
-
-            frontLeft.setPower(power);
-            frontRight.setPower(power);
-            backLeft.setPower(power);
-            backRight.setPower(power);
-
-            frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()){
-                telemetry.addData("Satus", "Driving");
-                telemetry.update();
-            }
-
-            frontLeft.setPower(0);
-            frontRight.setPower(0);
-            backLeft.setPower(0);
-            backRight.setPower(0);
-
-            telemetry.addData("Status", "Driving Complete");
-            telemetry.update();
-        }
     }
 
