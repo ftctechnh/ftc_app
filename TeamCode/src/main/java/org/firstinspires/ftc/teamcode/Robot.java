@@ -34,7 +34,12 @@ public class Robot {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
+<<<<<<< HEAD
     public void DriveForwardDistance(double inches, double power){
+=======
+    public void DriveForwardDistance(double inches, double power)
+    {
+>>>>>>> 30e61260dde27a6360155718746af703f82ef06d
         int diameter = 1;
 
         //Rest Encoders.
@@ -66,16 +71,29 @@ public class Robot {
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+<<<<<<< HEAD
         while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy() )
         {
             //Do nothing until motors catch up.
         }
+=======
+
+>>>>>>> 30e61260dde27a6360155718746af703f82ef06d
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
+<<<<<<< HEAD
+=======
+        while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy() )
+        {
+            //Do nothing until all motors catch up.
+        }
+
+        
+>>>>>>> 30e61260dde27a6360155718746af703f82ef06d
     }
 
 
