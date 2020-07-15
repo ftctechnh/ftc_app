@@ -34,7 +34,7 @@ public class Robot {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
-    public void DriveForwardDistance(int inches, int power){
+    public void DriveForwardDistance(double inches, double power){
         int diameter = 1;
 
         //Rest Encoders.
@@ -66,8 +66,9 @@ public class Robot {
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy()){
-            //do nothing until motors catch up.
+        while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy() )
+        {
+            //Do nothing until motors catch up.
         }
 
         frontLeft.setPower(0);

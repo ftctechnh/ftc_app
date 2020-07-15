@@ -39,8 +39,7 @@ public class AutonomousTest extends LinearOpMode {
             backLeft.setDirection(DcMotor.Direction.REVERSE);
 
             waitForStart();
-
-
+            
         }
 
     }
