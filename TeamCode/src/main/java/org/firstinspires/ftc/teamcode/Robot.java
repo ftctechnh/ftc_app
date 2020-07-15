@@ -34,7 +34,7 @@ public class Robot {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
-    public void DriveForwardDistance(int inches, int power)
+    public void DriveForwardDistance(double inches, double power)
     {
         int diameter = 1;
 
