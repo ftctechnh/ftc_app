@@ -25,12 +25,12 @@ public class TeleopModeTest extends LinearOpMode {
 
     private int power;
 
-//test comment
+
 
     //Main runOpMode method.
     @Override
     public void runOpMode() throws InterruptedException {
-//Sets previously initialized motors and servos to their proper match in the DriverStation config.
+        //Sets previously initialized motors and servos to their proper match in the DriverStation config.
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
@@ -41,33 +41,33 @@ public class TeleopModeTest extends LinearOpMode {
         claw = hardwareMap.servo.get("claw");
 
         Robot robot = new Robot(frontLeft, frontRight, backLeft, backRight);
-//Reverses left side motors to make the robot go forward on positive power.
+        //Reverses left side motors to make the robot go forward on positive power.
         frontRight.setDirection(DcMotor.Direction.REVERSE);
         backRight.setDirection(DcMotor.Direction.REVERSE);
 
         waitForStart();
 
         while (opModeIsActive()) {
-//Sets the motor powers to the inputs given by the gamepad's analog sticks (gamepad y-values are inverted).
+            //Sets the motor powers to the inputs given by the gamepad's analog sticks (gamepad y-values are inverted).
             frontLeft.setPower(gamepad1.left_stick_y);
             backLeft.setPower(gamepad1.left_stick_y);
             frontRight.setPower(gamepad1.right_stick_y);
             backRight.setPower(gamepad1.right_stick_y);
 
             Slide.setPower(gamepad2.right_stick_y);
-//Uses gamepad button/bumper inputs to set servo positions.
 
+            //Uses gamepad button/bumper inputs to set servo positions.
             if (gamepad1.right_bumper) {
                 robot.Strafe(1);
             }
             else if (gamepad1.left_bumper) {
                 robot.Strafe(-1);
             }
-//Stops the motors so that the robot only moves while the buttons are being pressed.
+            //Stops the motors so that the robot only moves while the buttons are being pressed.
             else {
                 robot.Stop();
             }
-//Allows the driver to drive slower for more precise movements when needed (by pressing the right trigger).
+            //Allows the driver to drive slower for more precise movements when needed (by pressing the right trigger).
             if (gamepad1.right_trigger <= 0.5){
                 frontLeft.setPower(-gamepad1.left_stick_y / 2);
                 backLeft.setPower(-gamepad1.left_stick_y / 2);
@@ -83,7 +83,7 @@ public class TeleopModeTest extends LinearOpMode {
                 claw.setPosition(CLAW_UP_POSITION);
             }
 
-//Gives the hardware a small amount of time to catch up before looping again.
+            //Gives the hardware a small amount of time to catch up before looping again.
             idle();
         }
     }
