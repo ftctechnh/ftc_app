@@ -43,6 +43,8 @@ public class AutonomousTest extends LinearOpMode {
 
             waitForStart();
 
+            robot.Strafe(0.5);
+
             robot.DriveForwardDistance(5,0.5);
 
         }

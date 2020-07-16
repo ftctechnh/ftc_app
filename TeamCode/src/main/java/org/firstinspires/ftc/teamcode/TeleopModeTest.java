@@ -25,7 +25,7 @@ public class TeleopModeTest extends LinearOpMode {
 
     private int power;
 
-//test comment
+ //test comment
 
     //Main runOpMode method.
     @Override

@@ -19,7 +19,7 @@ public class Robot {
         backRight = bR;
     }
 
-    public void Strafe(int power)
+    public void Strafe(double power)
     {
         frontLeft.setPower(power);
         backRight.setPower(power);
@@ -34,6 +34,7 @@ public class Robot {
         backRight.setPower(0);
         backLeft.setPower(0);
     }
+
     public void DriveForwardDistance(double inches, double power)
     {
         int diameter = 1;
@@ -67,19 +68,16 @@ public class Robot {
         backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
+        while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy() )
+        {
+            //Do nothing until motors catch up.
+        }
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
 
-        while(frontLeft.isBusy() || frontRight.isBusy() || backLeft.isBusy() || backRight.isBusy() )
-        {
-            //Do nothing until all motors catch up.
-        }
-
-        
     }
 
 
