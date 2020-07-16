@@ -42,7 +42,9 @@ public class AutonomousTest extends LinearOpMode {
             backLeft.setDirection(DcMotor.Direction.REVERSE);
 
             waitForStart();
-            
+
+            robot.Strafe(0.5);
+
             robot.DriveForwardDistance(5,0.5);
 
         }
