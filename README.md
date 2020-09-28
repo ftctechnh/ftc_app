@@ -2,6 +2,10 @@
 
 This repository contains v5.0 of the FTC SDK.  No further versions will pushed to https://github.com/ftctechnh/ftc_app.
 
+If you are looking for the most current version of the FTC SDK software, please visit the FtcRobotController GitHub repository:
+
+[FtcRobotController Repository](https://github.com/FIRST-Tech-Challenge/FtcRobotController)
+
 v5.0 has also been posted to https://github.com/FIRST-Tech-Challenge/SkyStone where all further releases will be posted for the 2019/20 season.
 
 Why are we doing this?  Git/GitHub is not designed to store large binary blobs.  As such the ftc_app repository has grown to over 1GB.  Not only does this violate GitHub's usage policies, but puts an undue burden on users of the repository when they download it.  For the foreseeable future a season specific version of the repository will be hosted at the url above.  Different approaches to prevent the size problem from recurring are being evaluated by the FTC Technology Team.  We realize that this creates a problem with teams that have maintained a history of software within the ftc_app workspace.  We appreciate your patience and understanding as work to migrate to a permanent solution.
