@@ -200,4 +200,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     android:layout_width="1dp"
     android:layout_height="1dp" />
 
+  <FrameLayout
+      android:layout_width="100dp"
+      android:layout_height="100dp"
+      android:layout_below="@+id/textErrorMessage"
+      android:layout_centerHorizontal="true"
+      android:id="@+id/previewLayout">
+  </FrameLayout>
+
 </LinearLayout>

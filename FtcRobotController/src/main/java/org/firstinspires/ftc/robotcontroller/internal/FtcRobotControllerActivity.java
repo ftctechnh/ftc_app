@@ -31,7 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 package org.firstinspires.ftc.robotcontroller.internal;
 
+
 import android.app.ActionBar;
+import android.hardware.Camera;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -44,9 +46,11 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.view.Menu;
@@ -54,6 +58,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -132,8 +137,11 @@ public class FtcRobotControllerActivity extends Activity
   public static final String TAG = "RCActivity";
   public String getTag() { return TAG; }
 
+  private final float CHECK_MEMORY_FREQ_SECONDS = 0.5f;
   private static final int REQUEST_CONFIG_WIFI_CHANNEL = 1;
+  public static final float LOW_MEMORY_THRESHOLD_PERCENT = 30.0f;
   private static final int NUM_GAMEPADS = 2;
+  private Handler memoryHandler_;
 
   protected WifiManager.WifiLock wifiLock;
   protected RobotConfigFileManager cfgFileMgr;
@@ -171,6 +179,10 @@ public class FtcRobotControllerActivity extends Activity
   protected WifiMuteStateMachine wifiMuteStateMachine;
   protected MotionDetection motionDetection;
 
+  static public long used;
+  static public long total;
+  static public float PercentAvailable;
+
   private static boolean permissionsValidated = false;
 
   private WifiDirectChannelChanger wifiDirectChannelChanger;
@@ -182,6 +194,8 @@ public class FtcRobotControllerActivity extends Activity
     }
 
   }
+
+  public Camera camera;
 
   protected boolean serviceShouldUnbind = false;
   protected ServiceConnection connection = new ServiceConnection() {
@@ -264,6 +278,9 @@ public class FtcRobotControllerActivity extends Activity
     if (enforcePermissionValidator()) {
       return;
     }
+
+    memoryHandler_ = new Handler();
+    checkAppMemory();
 
     RobotLog.onApplicationStart();  // robustify against onCreate() following onDestroy() but using the same app instance, which apparently does happen
     RobotLog.vv(TAG, "onCreate()");
@@ -812,4 +829,22 @@ public class FtcRobotControllerActivity extends Activity
       wifiMuteStateMachine.consumeEvent(WifiMuteEvent.USER_ACTIVITY);
     }
   }
+
+    public void checkAppMemory(){
+      //Log.d("MEMORY","           ");
+      // Get app memory info
+      used = Debug.getNativeHeapAllocatedSize();
+      total = Debug.getNativeHeapSize();
+
+      //Log.d("MEMORY",String.valueOf((used*1.0)/total));
+
+      // Check for & and handle low memory state
+      PercentAvailable = 100f * (1f - ((float) used / total ));
+
+      // Repeat after a delay
+      memoryHandler_.postDelayed( new Runnable(){ public void run() {
+        checkAppMemory();
+      }}, (int)(CHECK_MEMORY_FREQ_SECONDS * 1000) );
+    }
+
 }
