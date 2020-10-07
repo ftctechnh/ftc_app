@@ -1,3 +1,38 @@
+## General Info for 2018 Code:
+
+```
+DRIVETRAIN CONFIGURATION
+       front
+       C   D
+  left       right
+       B   A
+       back
+       
+      Works with the hub:port configuration
+```
+
+Competition Autonomous: Cratersample2
+* drops and turns left to unhook
+* linear OpMode
+
+Competition TeleOp: FourwdTeleop2
+* gamepad1 for drivetrain, gamepad2 for the other 4 motors
+* uses tuner to adjust drivetrain multiplier and senscurve exponents
+* iterative opmode
+
+Tuner:
+* use this to adjust values of something while program is running. 
+
+
+look in individual classes for more info.
+
+
+
+
+
+
+## ABOUT THE APP
+=======
 ## NOTICE
 
 This repository contains v5.0 of the FTC SDK.  No further versions will pushed to https://github.com/ftctechnh/ftc_app.
